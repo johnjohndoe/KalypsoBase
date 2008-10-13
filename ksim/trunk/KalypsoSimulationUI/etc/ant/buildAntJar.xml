@@ -38,9 +38,6 @@
 					<include name="KalypsoSimulationCore/build/bin" />
 					<include name="KalypsoSimulationUI/build/bin" />
 				</dirset>
-				<fileset dir="${workspace}">
-					<include name="JWSDPInstallation/jwsdp/**/*.jar" />
-				</fileset>
 				<fileset dir="${eclipse.home}">
 					<include name="plugins/org.eclipse.equinox.common*.jar" />
 					<include name="plugins/org.eclipse.core.runtime*.jar" />

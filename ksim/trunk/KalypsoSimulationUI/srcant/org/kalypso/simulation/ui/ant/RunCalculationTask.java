@@ -49,7 +49,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -72,7 +74,7 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
- * 
+ *
  * @author belger
  */
 public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
@@ -83,7 +85,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
 
   private final Modeldata m_modeldata;
 
-  private IFolder m_calcCaseFolder;
+  private IContainer m_calcCaseFolder;
 
   public RunCalculationTask( )
   {
@@ -126,9 +128,11 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       throw new BuildException( "calcCaseFolder is not set" );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    m_calcCaseFolder = root.getFolder( new Path( m_calcCasePath ) );
-    if( m_calcCaseFolder == null )
+    IResource member = root.findMember( Path.fromPortableString( m_calcCasePath ) );
+    if( !(member instanceof  IContainer) )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
+
+    m_calcCaseFolder = (IContainer) member;
   }
 
   /**
@@ -182,7 +186,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     try
     {
       // TODO: why don't we call ModelNature#runCalculation instead? Refaktor...
-      
+
       // TODO: we now always calculate via WPS...
       // So local calculation (for NA) does not work any more? Probably we should add a switch for that
 // final IProject calcProject = m_calcCaseFolder.getProject();

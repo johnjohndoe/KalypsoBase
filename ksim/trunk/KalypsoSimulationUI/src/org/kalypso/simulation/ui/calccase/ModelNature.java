@@ -557,13 +557,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     attributes.setProperty( "kalypso.currentTime", Mapper.mapJavaValueToXml( now ) );
 
-    attributes.setProperty( "simulation_project_loc", project.getLocation().toOSString() );
+    attributes.setProperty( "simulation_project_loc", project.getLocation().toPortableString() );
 
-    attributes.setProperty( "calc.dir", folder.getLocation().toOSString() );
-    attributes.setProperty( "project.dir", project.getLocation().toOSString() );
+    attributes.setProperty( "calc.dir", folder.getLocation().toPortableString() );
+    attributes.setProperty( "project.dir", project.getLocation().toPortableString() );
 
-    attributes.setProperty( "calc.path", folder.getFullPath().toOSString() );
-    attributes.setProperty( "project.path", project.getFullPath().toOSString() );
+    attributes.setProperty( "calc.path", folder.getFullPath().toPortableString() );
+    attributes.setProperty( "project.path", project.getFullPath().toPortableString() );
 
     try
     {
