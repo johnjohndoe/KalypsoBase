@@ -1,8 +1,10 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -78,11 +80,33 @@ public class DragEditHandler implements IChartDragHandler
     }
   }
 
+  private final boolean canSnap( final Point point )
+  {
+    IEditableChartLayer[] eLayers = m_chart.getChartModel().getLayerManager().getEditableLayers();
+    for( final IEditableChartLayer layer : eLayers )
+    {
+      if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
+        return true;
+    }
+    return false;
+  }
+
   /**
    * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
    */
   public void mouseMove( final MouseEvent e )
   {
+    final PlotCanvas plot = m_chart.getPlot();
+    if( plot.isEditing() || canSnap( new Point( e.x, e.y ) ) )
+    {
+
+      plot.setCursor( Display.getDefault().getSystemCursor( SWT.CURSOR_HAND ) );
+    }
+    else
+    {
+      if( plot.getCursor() != null )
+        plot.setCursor( Display.getDefault().getSystemCursor( SWT.CURSOR_ARROW ) );
+    }
 
     if( m_clickInfo == null || m_clickInfo.m_layer == null )
       return;
@@ -93,7 +117,6 @@ public class DragEditHandler implements IChartDragHandler
 
     if( m_editInfo != null )
     {
-      final PlotCanvas plot = m_chart.getPlot();
       final ITooltipChartLayer layer = m_editInfo.m_layer;
       if( layer instanceof IEditableChartLayer )
       {
