@@ -99,7 +99,6 @@ public class DragEditHandler implements IChartDragHandler
     final PlotCanvas plot = m_chart.getPlot();
     if( plot.isEditing() || canSnap( new Point( e.x, e.y ) ) )
     {
-
       plot.setCursor( Display.getDefault().getSystemCursor( SWT.CURSOR_HAND ) );
     }
     else
