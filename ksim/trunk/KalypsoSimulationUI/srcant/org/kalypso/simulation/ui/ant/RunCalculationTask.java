@@ -42,23 +42,18 @@
 package org.kalypso.simulation.ui.ant;
 
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -66,18 +61,15 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
-import org.kalypso.service.wps.client.WPSRequest;
-import org.kalypso.service.wps.client.simulation.SimulationDelegate;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
  *
  * @author belger
  */
-public class RunCalculationTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
+public class RunCalculationTask extends Task
 {
   private static final org.kalypso.simulation.core.simspec.ObjectFactory OF = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
@@ -128,7 +120,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
       throw new BuildException( "calcCaseFolder is not set" );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IResource member = root.findMember( Path.fromPortableString( m_calcCasePath ) );
+    final IResource member = root.findMember( Path.fromPortableString( m_calcCasePath ) );
     if( !(member instanceof  IContainer) )
       throw new BuildException( "calcCaseFolder not found: " + m_calcCaseFolder );
 
@@ -145,13 +137,13 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     validateInput();
 
     final Project antProject = getProject();
-    final Hashtable references = antProject == null ? null : antProject.getReferences();
+    final Hashtable< ? , ? > references = antProject == null ? null : antProject.getReferences();
     final IProgressMonitor monitor = references == null ? null : (IProgressMonitor) references.get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
 
     IStatus status = null;
     try
     {
-      status = execute( new SubProgressMonitor( monitor, 1 ) );
+      status = ModelNature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 1 ), m_modeldata );
     }
     catch( final Throwable t )
     {
@@ -176,49 +168,7 @@ public class RunCalculationTask extends Task implements ICoreRunnableWithProgres
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Berechnung wird durchgeführt", 3000 );
-
-    try
-    {
-      // TODO: why don't we call ModelNature#runCalculation instead? Refaktor...
-
-      // TODO: we now always calculate via WPS...
-      // So local calculation (for NA) does not work any more? Probably we should add a switch for that
-// final IProject calcProject = m_calcCaseFolder.getProject();
-// final ModelNature nature = (ModelNature)calcProject.getNature( ModelNature.ID );
-// return nature.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 2500 ), m_modeldata );
-
-      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
-      final WPSRequest simulationJob = new WPSRequest( m_modeldata.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
-      simulationJob.init( progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
-
-      final SimulationDelegate delegate = new SimulationDelegate( m_modeldata.getTypeID(), m_calcCaseFolder, m_modeldata );
-      delegate.init();
-      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 500, SubMonitor.SUPPRESS_NONE ) );
-      final List<String> outputs = delegate.createOutputs();
-
-      final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 2000, SubMonitor.SUPPRESS_NONE ) );
-      if( !status.isOK() )
-        return status;
-
-      delegate.finish();
-
-      delegate.copyResults( simulationJob.getReferences() );
-
-      return status;
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  public void handleError( final Shell shell, final IStatus status )
+  private void handleError( final Shell shell, final IStatus status )
   {
     shell.getDisplay().syncExec( new Runnable()
     {

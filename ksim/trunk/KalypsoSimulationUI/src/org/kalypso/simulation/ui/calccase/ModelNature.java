@@ -108,6 +108,9 @@ import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
+import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.calccase.CalcJobHandler;
+import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -891,12 +894,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1;
   }
 
-  public IStatus runCalculation( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public IStatus runCalculation( final IContainer folder, final IProgressMonitor monitor ) throws CoreException
   {
     return runCalculation( folder, monitor, MODELLTYP_MODELSPEC_XML );
   }
 
-  public IStatus runCalculation( final IFolder calcCaseFolder, final IProgressMonitor monitor, final String modelSpec ) throws CoreException
+  public IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final String modelSpec ) throws CoreException
   {
     if( modelSpec == null )
       return runCalculation( calcCaseFolder, monitor );
@@ -921,19 +924,29 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      // TODO: we now always calculate via WPS...
-      // So local calculation (for NA) does not work any more? Probably we should add a switch for that
-// final String typeID = modelspec.getTypeID();
-// final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-// monitor.worked( 500 );
-// final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-// return cjHandler.runJob( calcCaseFolder, new SubProgressMonitor( monitor, 5000 ) );
-
       final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
-      final WPSRequest simulationJob = new WPSRequest( modelspec.getTypeID(), serviceEndpoint, 1000 * 60 * 60 );
-      simulationJob.init( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
 
-      final SimulationDelegate delegate = new SimulationDelegate( modelspec.getTypeID(), calcCaseFolder, modelspec );
+      final String typeID = modelspec.getTypeID();
+
+      // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
+      // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
+      // and find out, which ones are available for calculation this typeID.
+      // If more than one is available, the user should be able to choose.
+      if( serviceEndpoint == null )
+      {
+        // TODO: the extension-point for ISimulationService is not used anymore. Remove it.
+// final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+        final ISimulationService calcService = new LocalSimulationService();
+        final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
+        return cjHandler.runJob( calcCaseFolder, progress.newChild( 1000 ) );
+      }
+
+      final WPSRequest simulationJob = new WPSRequest( typeID, serviceEndpoint, 1000 * 60 * 60 );
+      final IStatus requestInitStatus = simulationJob.init( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      if( !requestInitStatus.isOK() )
+        return requestInitStatus;
+
+      final SimulationDelegate delegate = new SimulationDelegate( typeID, calcCaseFolder, modelspec );
       delegate.init();
       final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final List<String> outputs = delegate.createOutputs();
