@@ -62,7 +62,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -93,10 +92,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.EmptyCommand;
@@ -264,7 +259,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   };
 
-  private final Action[] m_customActions;
+  private final IAction[] m_customActions;
 
   /**
    * The constructor.
@@ -834,7 +829,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateStylePanel();
   }
 
-  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent, final Action[] customActions )
+  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent, final IAction[] customActions )
   {
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
@@ -938,7 +933,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       return;
 
     /* Add custom actions. */
-    for( final Action customAction : customActions )
+    for( final IAction customAction : customActions )
       createButton( toolkit, parent, customAction );
   }
 
@@ -1033,9 +1028,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
 
     final Shell shell = event.display.getActiveShell();
-
-    final ISelection selection = getSelectionForAdd();
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, (IStructuredSelection) selection, m_gridFolder );
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, m_gridFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return;
@@ -1073,35 +1066,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     ErrorDialog.openError( shell, "Kachel hinzufügen", "Die Kachel konnte nicht hinzugeladen werden.", status );
   }
 
-  /**
-   * Used to find the potential parent folder for new grids in the case if no folder is explicitly set from outside.<br>
-   * At the moment, tries to find the selection from eclipses Resource-Navigator resp. ProjectExplorer.
-   */
-  private ISelection getSelectionForAdd( )
-  {
-    /* No selection if gridFolder is set; in this case, the new grid will be automatically created inside this folder */
-    if( m_gridFolder != null )
-      return null;
-
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if( window == null )
-      return null;
-
-    final IWorkbenchPage page = window.getActivePage();
-    if( page == null )
-      return null;
-
-    final IViewPart navView = page.findView( IPageLayout.ID_RES_NAV );
-    if( navView != null )
-      return navView.getSite().getSelectionProvider().getSelection();
-
-    final IViewPart explView = page.findView( "org.eclipse.ui.navigator.ProjectExplorer" );
-    if( explView != null )
-      return explView.getSite().getSelectionProvider().getSelection();
-
-    return null;
-  }
-
   protected void handleCoverageExport( final Event event )
   {
     if( m_selectedCoverage == null )
@@ -1132,16 +1096,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         {
           final CommandableWorkspace workspace = theme.getWorkspace();
 
-          /* Delete underlying grid grid file */
-          final IStatus status = CoverageManagementHelper.deleteGridFile( selectedCoverage );
-          if( !status.isOK() )
-            return status;
-
           /* Delete coverage from collection */
           final Feature coverageFeature = selectedCoverage.getFeature();
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           theme.postCommand( command, refreshRunnable );
+
+          /* Delete underlying grid file */
+          final IStatus status = CoverageManagementHelper.deleteGridFile( selectedCoverage );
+          if( !status.isOK() )
+            return status;
 
           /* save the model */
           final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();

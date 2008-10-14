@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -73,8 +72,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class AddRectifiedGridCoveragesWizard extends Wizard
 {
-  private final IStructuredSelection m_selection;
-
   private PageSelectGeodataFiles m_pageSelect;
 
   private final ICoverageCollection m_coverages;
@@ -87,10 +84,9 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
    * @param gridFolder
    *          The new grid gets imported into this folder. If <code>null</code>, the user will be asked for the folder.
    */
-  public AddRectifiedGridCoveragesWizard( final ICoverageCollection coverages, final IStructuredSelection selection, final IContainer gridFolder )
+  public AddRectifiedGridCoveragesWizard( final ICoverageCollection coverages, final IContainer gridFolder )
   {
     m_coverages = coverages;
-    m_selection = selection;
     m_gridFolder = gridFolder;
 
     final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" );
@@ -139,20 +135,23 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
           final RectifiedGridDomain[] domains = ImportGridUtilities.readDomains( selectedFiles, crs, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
           final File[] convertedGrids = ImportGridUtilities.convertGrids( selectedFiles, crs, progress.newChild( 80, SubMonitor.SUPPRESS_NONE ) );
           final IFile[] importedFiles = ImportGridUtilities.importExternalFiles( getShell(), convertedGrids, gridFolder, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
-          final ICoverage[] coverages = addCoverages( domains, importedFiles, coverageCollection, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
+          final String[] names = new String[selectedFiles.length];
+          for( int i = 0; i < selectedFiles.length; i++ )
+            names[i] = selectedFiles[i].getName();
+          final ICoverage[] coverages = addCoverages( names, domains, importedFiles, coverageCollection, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
           final GM_Envelope bbox = FeatureHelper.getEnvelope( coverages );
           setBoundingBox( bbox );
 
           return Status.OK_STATUS;
         }
 
-        public ICoverage[] addCoverages( final RectifiedGridDomain[] domains, final IFile[] gridFiles, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
+        public ICoverage[] addCoverages( final String[] names, final RectifiedGridDomain[] domains, final IFile[] gridFiles, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
         {
           Assert.isTrue( domains.length == gridFiles.length );
 
           final ICoverage[] result = new ICoverage[domains.length];
           for( int i = 0; i < result.length; i++ )
-            result[i] = ImportGridUtilities.addCoverage( gridFiles[i].getName(), domains[i], gridFiles[i], coverages, monitor );
+            result[i] = ImportGridUtilities.addCoverage( names[i], domains[i], gridFiles[i], coverages, monitor );
 
           return result;
         }

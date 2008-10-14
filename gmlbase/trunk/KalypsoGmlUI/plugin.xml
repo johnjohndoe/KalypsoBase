@@ -150,21 +150,18 @@
 				</command>
 			</menu>
 		</menuContribution>
-		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?after=additions">
+		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
 			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
 				<visibleWhen checkEnabled="false">
 					<and>
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
 						<reference definitionId="mapContext" />
 						<with variable="activeMapPanel">
 							<test property="org.kalypso.ui.activeThemeQName" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
-				
-					<!--
-					<with variable="activeEditorId">
-						<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
-					</with>
-					-->
 				</visibleWhen>
 			</command>		
 		</menuContribution>

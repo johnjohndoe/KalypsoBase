@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map;
 
@@ -94,11 +94,14 @@ public class CoverageManagementHelper
     try
     {
       final URL url = new URL( workspace.getContext(), fileName );
-
+      // TODO: this is obviously too quick... often the file does not gets deleted
+      // maybe schedule it in a task?
       final File gridFile = getGridFile( url );
-      gridFile.delete();
+      if( gridFile != null )
+        gridFile.delete();
       final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
-      eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+      if( eclipseFile != null )
+        eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
     }
     catch( final MalformedURLException e )
     {

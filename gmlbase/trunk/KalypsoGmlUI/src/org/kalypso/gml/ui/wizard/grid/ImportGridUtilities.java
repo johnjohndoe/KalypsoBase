@@ -210,19 +210,18 @@ public class ImportGridUtilities
 
       final String mimeType = "image/" + gridFile.getFileExtension();
 
-      // TODO: make file path relative to gml path
-      final URL outputGridUrl = ResourceUtilities.createURL( gridFile );
-      final String fileName = outputGridUrl.toExternalForm();
+      final Feature coveragesFeature = coverages.getFeature();
+      final GMLWorkspace workspace = coveragesFeature.getWorkspace();
 
-      final ICoverage newCoverage = CoverageCollection.addCoverage( coverages, domain, fileName, mimeType );
+      final URL context = workspace.getContext();
+      final String filePath = createRelativeGridPath( context, gridFile );
+
+      final ICoverage newCoverage = CoverageCollection.addCoverage( coverages, domain, filePath, mimeType );
       newCoverage.setName( name );
 
       ProgressUtilities.worked( progress, 1 );
 
-      final Feature coveragesFeature = coverages.getFeature();
-
       /* Fire model event */
-      final GMLWorkspace workspace = coveragesFeature.getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
       return newCoverage;
@@ -233,6 +232,21 @@ public class ImportGridUtilities
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Ungültiger Dateipfad: " + gridFile.getFullPath().toOSString(), e );
       throw new CoreException( status );
     }
+  }
+
+  private static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException
+  {
+    final IFile contextFile = ResourceUtilities.findFileFromURL( context );
+    if( contextFile != null )
+    {
+      // Most common case, grid file in same folder as gml file
+      if( contextFile.getParent().equals( gridFile.getParent() ) )
+        return gridFile.getName();
+    }
+
+    // TODO: make file path relative to gml path
+    final URL outputGridUrl = ResourceUtilities.createURL( gridFile );
+    return outputGridUrl.toExternalForm();
   }
 
   public static RectifiedGridDomain[] readDomains( final File[] selectedFiles, final String crs, final IProgressMonitor monitor ) throws CoreException
