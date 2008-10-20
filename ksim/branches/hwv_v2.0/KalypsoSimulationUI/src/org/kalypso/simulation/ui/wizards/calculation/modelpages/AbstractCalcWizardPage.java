@@ -422,7 +422,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     public void notHandled( final String commandId, final org.eclipse.core.commands.NotHandledException exception )
     {
-      handleExecutionFailure( exception );
     }
 
     public void postExecuteFailure( final String commandId, final ExecutionException exception )
@@ -484,6 +483,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         final WizardView view = (WizardView) container;
         final IWorkbenchPartSite site = view.getSite();
         final ICommandService cmdService = (ICommandService) site.getService( ICommandService.class );
+        // TODO: not good: will answer to any command execution
+        // We should restrict this somehow to commands from the map toolbar
         cmdService.addExecutionListener( m_cmdExecutionListener );
 
         view.addPageChangingListener( m_pageChangingListener );
@@ -751,9 +752,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
         final WizardView wizardView = (WizardView) getWizard().getContainer();
         final IWorkbenchPartSite site = wizardView.getSite();
-
         final CommandContributionItem item = new CommandContributionItem( site, ObjectUtils.identityToString( this ) + commandId, commandId, new HashMap<String, String>(), null, null, null, null, null, null, SWT.PUSH );
-
         manager.add( item );
       }
     }
@@ -1631,7 +1630,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * Default behaviour is to unhook any registered context-activations.<br>
    * Client who want to override should call the super implementation, if they return <code>true</code>.
    * 
-   * @return <code>false</code>, if the the page shall not be exited now.
+   * @return <code>false</code>, if the page shall not be exited now.
    */
   protected boolean handlePageChanging( )
   {
