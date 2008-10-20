@@ -40,17 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.sei;
 
+import java.io.IOException;
+
 import javax.jws.WebService;
 
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * Facade of the ProjectDatabase
+ * 
+ * @author Dirk Kuch
  */
 @WebService
 public interface IProjectDatabase
 {
-  KalypsoProjectBean[] getProjects( );
+  /**
+   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
+   *         project)
+   */
+  KalypsoProjectBean[] getHeadProjects( );
+
+  /**
+   * @param url
+   *          location of incoming project zip
+   * @param name
+   *          of project
+   * @return newly created project
+   */
+  KalypsoProjectBean createProject( String url, String name ) throws IOException;
 
   String testMethod( );
 }
