@@ -68,4 +68,8 @@ public interface IKalypsoProject extends Serializable
   public KalypsoProjectBean[] getChildren( );
 
   public String getUrl( );
+
+  public String getProjectType( );
+
+  public void setProjectType( final String projectType );
 }
