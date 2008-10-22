@@ -261,6 +261,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final IAction[] m_customActions;
 
+  private String m_partName;
+
   /**
    * The constructor.
    */
@@ -273,9 +275,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * The constructor.
    * 
    * @param name
-   *            The name of the widget.
+   *          The name of the widget.
    * @param tooltip
-   *            The tooltip of the widget.
+   *          The tooltip of the widget.
    */
   public CoverageManagementWidget( final String name, final String tooltip )
   {
@@ -286,15 +288,29 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * The constructor.
    * 
    * @param name
-   *            The name of the widget.
+   *          The name of the widget.
    * @param tooltip
-   *            The tooltip of the widget.
+   *          The tooltip of the widget.
    */
   public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions )
+  {
+    this( name, tooltip, customActions, null );
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param name
+   *          The name of the widget.
+   * @param tooltip
+   *          The tooltip of the widget.
+   */
+  public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions, final String partName )
   {
     super( name, tooltip );
 
     m_customActions = customActions;
+    m_partName = partName;
   }
 
   /**
@@ -652,7 +668,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * returns the first {@link RasterSymbolizer} from the given user styles
    * 
    * @param styles
-   *            The styles in which the raster symbolizer is
+   *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
    */
   private RasterSymbolizer findRasterSymbolizer( final UserStyle[] styles )
@@ -1256,5 +1272,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Empty the selection. */
     m_themeCombo.setSelection( new StructuredSelection() );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return m_partName;
   }
 }
