@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoteProjectRowBuilder implements IProjectRowBuilder
+public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
   private final IKalypsoProject m_bean;
 
@@ -65,8 +66,10 @@ public class RemoteProjectRowBuilder implements IProjectRowBuilder
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    final Label label = toolkit.createLabel( body, String.format( "remote: %s", m_bean.getName() ) );
-    label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    lnk.setImage( IMG_REMOTE_PROJECT );
+    lnk.setText( m_bean.getName() );
   }
 
 }

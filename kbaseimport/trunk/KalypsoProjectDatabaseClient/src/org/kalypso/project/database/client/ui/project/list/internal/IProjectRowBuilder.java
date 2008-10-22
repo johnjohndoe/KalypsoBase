@@ -48,5 +48,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IProjectRowBuilder
 {
+
   void render( Composite body, FormToolkit toolkit );
 }
