@@ -54,4 +54,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
 
   protected static Image IMG_REMOTE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
+
+  protected static Image IMG_REMOTE_INFO = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+
 }
