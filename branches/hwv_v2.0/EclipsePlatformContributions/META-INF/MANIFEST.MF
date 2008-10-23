@@ -34,6 +34,5 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.kalypso.contribs.java,
  org.eclipse.ui.browser;visibility:=reexport,
  org.eclipse.ui.intro,
- org.eclipse.core.runtime.compatibility.auth,
  org.eclipse.ui.forms;bundle-version="3.3.100";visibility:=reexport
 Eclipse-LazyStart: true
