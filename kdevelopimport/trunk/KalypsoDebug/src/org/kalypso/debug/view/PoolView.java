@@ -125,12 +125,11 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     final TableViewer viewer = m_viewer;
     final ResourcePool pool = m_pool;
 
-    if( m_pool == null || viewer == null )
+    if( (m_pool == null) || (viewer == null) )
       return;
 
     final Table table = viewer.getTable();
-    if( table != null && !table.isDisposed() )
-    {
+    if( (table != null) && !table.isDisposed() )
       table.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
@@ -140,7 +139,6 @@ public class PoolView extends ViewPart implements ITableLabelProvider
             viewer.setInput( pool.getInfos() );
         }
       } );
-    }
   }
 
   /**
@@ -168,7 +166,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       public void open( final OpenEvent event )
       {
         final ISelection selection = event.getSelection();
-        if( !selection.isEmpty() && selection instanceof IStructuredSelection )
+        if( !selection.isEmpty() && (selection instanceof IStructuredSelection) )
         {
           final KeyInfo info = (KeyInfo) ((IStructuredSelection) selection).getFirstElement();
 
@@ -317,8 +315,6 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     final Table table = m_viewer.getTable();
     final TableColumn[] columns = table.getColumns();
     for( final TableColumn column : columns )
-    {
       memento.putInteger( column.getText(), column.getWidth() );
-    }
   }
 }
