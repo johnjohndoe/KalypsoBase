@@ -107,7 +107,6 @@ public class ScrolledSection
   public Composite setup( final String title, final GridData secLayoutExpanded, final GridData secLayoutCollapsed )
   {
     m_section = m_toolkit.createSection( m_parent, m_sectionStyle );
-
     m_section.setText( title );
 
     setLayout( secLayoutExpanded, secLayoutCollapsed );
