@@ -480,6 +480,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       {
         if( tr != null )
           tr.dispose();
+        gc.setTransform( null );
       }
     }
 

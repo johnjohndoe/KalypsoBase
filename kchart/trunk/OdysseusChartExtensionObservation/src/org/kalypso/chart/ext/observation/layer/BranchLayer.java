@@ -46,7 +46,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -469,8 +468,6 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
   public void dispose( )
   {
     super.dispose();
-
-    Set<Entry<Object, IPointStyle>> set = m_mapping.entrySet();
 
     m_mapping.clear();
   }
