@@ -66,7 +66,6 @@ import org.kalypso.project.database.sei.IProjectDatabase;
  */
 public class CommitProjectWorker implements ICoreRunnableWithProgress
 {
-
   private final ProjectHandler m_handler;
 
   public CommitProjectWorker( final ProjectHandler handler )
