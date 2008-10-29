@@ -76,7 +76,7 @@ public class ProjectTemplatePage extends WizardPage
    */
   public ProjectTemplatePage( final String categoryId )
   {
-    super( "demoProjectPage" );
+    super( "projectTemplatePage" );
 
     m_projectsTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId );
 
@@ -90,7 +90,7 @@ public class ProjectTemplatePage extends WizardPage
 
   public ProjectTemplatePage( final ProjectTemplate[] templates )
   {
-    super( "demoProjectPage" );
+    super( "projectTemplatePage" );
 
     m_projectsTemplates = templates;
 
