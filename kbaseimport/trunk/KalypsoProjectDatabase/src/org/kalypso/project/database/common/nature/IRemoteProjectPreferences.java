@@ -52,4 +52,16 @@ public interface IRemoteProjectPreferences
   public void setEditTicket( String ticket );
 
   public String getEditTicket( );
+
+  /**
+   * newly created local project or is project already hosted on server
+   */
+  public boolean isOnServer( );
+
+  /** downloaded version of the local project */
+  public Integer getVersion( );
+
+  public void setIsOnServer( boolean onServer );
+
+  public void setVersion( Integer version );
 }
