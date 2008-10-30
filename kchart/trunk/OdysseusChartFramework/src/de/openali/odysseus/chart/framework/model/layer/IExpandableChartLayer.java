@@ -42,20 +42,13 @@ package de.openali.odysseus.chart.framework.model.layer;
 
 /**
  * @author kimwerner
- * 
  */
 public interface IExpandableChartLayer extends IChartLayer
 {
-//  public IChartLayer[] getLayers( );
-//
-//  public void addLayer( final IChartLayer layer );
-//
-//  public IChartLayer removeLayer( final IChartLayer layer );
-//
-//  public boolean moveLayerToPosition( final String source, final IChartLayer target );
+
   /**
    * @return the layermanager for all childLayers
    */
-  public ILayerManager getLayerManager();
+  public ILayerManager getLayerManager( );
 
 }

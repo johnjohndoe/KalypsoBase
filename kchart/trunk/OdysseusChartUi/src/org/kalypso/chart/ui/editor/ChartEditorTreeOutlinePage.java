@@ -210,11 +210,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.setSelection( selection );
   }
 
-  public void updateControl( )
+  private final void setChecked( final ILayerManager mngr )
   {
-    IChartModel model = m_chartPart.getChartComposite().getChartModel();
-    m_treeViewer.setInput( model );
-    for( IChartLayer layer : model.getLayerManager().getLayers() )
+    for( IChartLayer layer : mngr.getLayers() )
     {
       boolean checked = layer.isVisible();
       m_treeViewer.setChecked( layer, checked );
@@ -222,11 +220,22 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       for( Object object : children )
       {
         if( object instanceof IChartLayer )
+        {
           m_treeViewer.setChecked( object, ((IChartLayer) object).isVisible() );
+          if( object instanceof IExpandableChartLayer )
+            setChecked( ((IExpandableChartLayer) layer).getLayerManager() );
+        }
         else
           m_treeViewer.setChecked( object, checked );
       }
     }
+  }
+
+  public void updateControl( )
+  {
+    IChartModel model = m_chartPart.getChartComposite().getChartModel();
+    m_treeViewer.setInput( model );
+    setChecked( model.getLayerManager() );
 
   }
 
@@ -262,13 +271,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected void handleSelectionChanged( final IChartLayer layer )
   {
-    IChartModel model = m_chartPart.getChartComposite().getChartModel();
-    if( model == null )
-      return;
-    final Object effectedLayer = model.getLayerManager().getLayerPosition( layer ) < 0 ? m_contentProvider.getParent( layer ) : layer;
-    final IChartLayer[] layers = model.getLayerManager().getLayers();
-    for( IChartLayer l : layers )
-      l.setActive( l.equals( effectedLayer ) );
+    layer.setActive( true );
+
   }
 
   public void dispose( )
