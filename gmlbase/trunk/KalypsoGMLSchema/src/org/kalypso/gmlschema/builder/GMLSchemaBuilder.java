@@ -48,10 +48,10 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationContentType;
 
 /**
- * This gml schema-builder generates the GML-Schema information ( {@link IFeatureType}s / {@link IPropertyType}s )
- * from a xmlbeans-parsed schema.
+ * This gml schema-builder generates the GML-Schema information ( {@link IFeatureType}s / {@link IPropertyType}s ) from
+ * a xmlbeans-parsed schema.
  * <p>
- * Both gml-version (2.1.x and 3.1.1) are supported via a generel builder-factory.
+ * Both gml-version (2.1.x and 3.1.1) are supported via a general builder-factory.
  * 
  * @author Andreas von Dömming
  */
@@ -115,7 +115,15 @@ public class GMLSchemaBuilder
 
   private void rBuild( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
   {
+// if( object instanceof ElementWithOccurs )
+// {
+// final ElementWithOccurs elt = (ElementWithOccurs) object;
+// if( "bereich".equals( elt.getElement().getName() ) )
+// System.out.println( "stop" );
+// }
+
     final IBuilder builder = getBuilderFor( gmlSchema, object );
+
     if( builder != null && !gmlSchema.hasBuildedObjectFor( object ) )
     {
       final Object[] buildedObjects = builder.build( gmlSchema, object );

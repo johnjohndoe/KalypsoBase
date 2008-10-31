@@ -44,7 +44,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import ogc31.www.opengis.net.gml.RangeSetType;
+import ogc31.www.opengis.net.gml.FileType;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
@@ -80,7 +80,7 @@ public class CoverageManagementHelper
   }
 
   /**
-   * Deletes an existing grid file.<br>
+   * Deletes the referenced file of a coverage, if it exists.
    */
   public static IStatus deleteGridFile( final ICoverage coverageToDelete )
   {
@@ -88,8 +88,11 @@ public class CoverageManagementHelper
     final Feature feature = coverage.getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
 
-    final RangeSetType rangeSet = coverage.getRangeSet();
-    final String fileName = rangeSet.getFile().getFileName();
+    final Object rangeSet = coverage.getRangeSet();
+    if( !(rangeSet instanceof FileType) )
+      return Status.OK_STATUS;
+
+    final String fileName = ((FileType) rangeSet).getFileName();
 
     try
     {

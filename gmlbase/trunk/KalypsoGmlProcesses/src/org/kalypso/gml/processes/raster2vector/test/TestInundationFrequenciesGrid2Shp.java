@@ -12,7 +12,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -38,7 +38,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 
 import java.io.File;
@@ -50,7 +50,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -134,7 +133,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 // final IFolder importDataFolder = project.getFolder( "flattentestgrids" );
     final IFolder importDataFolder = project.getFolder( "inundationDepthRaster" );
 
-    // 
+    //
     ICoverageCollection[] collections = getTestGrid( importDataFolder );
 
     /* create some categories with some values ====================================================================== */
@@ -253,7 +252,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
-  private void writeEnvelopeShape( final GM_Envelope env, String shapeBase ) throws Exception, GmlSerializeException
+  private void writeEnvelopeShape( final GM_Envelope env, final String shapeBase ) throws Exception, GmlSerializeException
   {
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -371,11 +370,9 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
       rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
       rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
-      final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-      rangeSet.setFile( rangeSetFile );
 
       covColl.add( coverage );
-      coverage.setRangeSet( rangeSet );
+      coverage.setRangeSet( rangeSetFile );
       coverage.setGridDomain( gridDomain );
       coverage.setName( binFileName );
       coverage.setDescription( "ASCII-Import" );

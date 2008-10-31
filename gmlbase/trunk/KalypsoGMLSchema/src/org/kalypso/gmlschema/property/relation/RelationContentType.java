@@ -136,7 +136,12 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           }
         }
         if( result.size() != 1 )
-          throw new UnsupportedOperationException( "An object relation must reference exactly one element" );
+        {
+          // This happens for gml:ReferenceType which is sometimes used (for example by xplan)
+          return;
+          // throw new UnsupportedOperationException( "An object relation must reference exactly one element" );
+        }
+
         m_ftRelationTarget = result.get( 0 );
 
         /* Determine if linked objects are allowed */
@@ -168,7 +173,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         }
 
       }
-        break;
+      break;
     }
   }
 

@@ -71,7 +71,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
 
   private IRestriction[] m_restrictions = new IRestriction[0];
 
-  private QName m_featureQName;
+  private final QName m_featureQName;
 
   public PropertyType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
@@ -137,11 +137,11 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         else
         {
           final Object typeObject = m_propertyContentType.getTypeObject();
-          final GMLSchema restrictionSchema;
           if( typeObject instanceof SimpleType && ((SimpleType) typeObject).isSetRestriction() )
           {
             final SimpleType contentSimpleType = (SimpleType) typeObject;
 
+            final GMLSchema restrictionSchema;
             final QName[] qnames;
             if( typeObject instanceof TopLevelSimpleType )
             {

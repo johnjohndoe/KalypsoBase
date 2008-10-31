@@ -6,6 +6,12 @@ import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 
+/**
+ * TODO: this is a bad representation of the property! We should instead have an own class for each KIND and return
+ * these one for the property-value
+ * 
+ * @author belger
+ */
 public class RepresentationType
 {
   private final KIND m_kind;

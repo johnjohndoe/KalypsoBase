@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.value;
 
@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.gmlschema.annotation.DefaultAnnotation;
@@ -273,7 +272,7 @@ public class CustomValuePropertyType implements IValuePropertyType
 
     return super.equals( obj );
   }
-  
+
   /**
    * @see java.lang.Object#hashCode()
    */

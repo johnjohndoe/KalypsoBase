@@ -89,7 +89,7 @@ public class GMLSchemaFactory
 
       // complex type ...
       gmlSchemaBuilder.registerBuilder( new ComplexType2FeatureContentTypeBuilder( version ) );// OK
-      // for local elelments
+      // for local elements
       gmlSchemaBuilder.registerBuilder( new FeatureContentType2ElementBuilder() ); // OK
 
       // element ...
@@ -101,7 +101,6 @@ public class GMLSchemaFactory
       gmlSchemaBuilder.registerBuilder( new PropertyType2SimpleTypeBuilder() );// ok
 
       // relations
-
       gmlSchemaBuilder.registerBuilder( new FeaturePropertyType2RelationTypeBuilder( version ) ); // ok
       gmlSchemaBuilder.registerBuilder( new ElementDirektReference2RelationTypeBuilder( version ) ); // test
 
@@ -109,11 +108,7 @@ public class GMLSchemaFactory
 
       gmlSchemaBuilder.registerBuilder( new RelationType2ComplexTypeBuilder() ); // ok
       gmlSchemaBuilder.registerBuilder( new ComplexType2RelationContentTypeBuilder( version ) ); // ok
-      // special
-      // builder.registerBuilder( new Element2RelationTypeBuilder() ); //ok
-      // replaces: element2RelationTypebuilder
-      // builder31.registerBuilder( new AdvElement2RelationTypeBuilder() ); // ok
-      // builder31.registerBuilder( new GML3_ComplexType2RelationContentTypeBuilder( version ) );
+
       m_gmlSchemaBuilderRegister.put( version, gmlSchemaBuilder );
     }
     return m_gmlSchemaBuilderRegister.get( version );
@@ -192,7 +187,7 @@ public class GMLSchemaFactory
       // we must decide for the first schema, which gml version it is
       // if we have no appinfo, default to gml2?
 
-      version = parsedGmlVersion == null ? "2.1" : parsedGmlVersion;
+      version = parsedGmlVersion == null ? "2.1.2" : parsedGmlVersion;
     }
     else
       version = gmlVersion;
@@ -207,6 +202,7 @@ public class GMLSchemaFactory
    * @deprecated TODO: PLEASE SEPCIFY WHAT TO USE INSTEAD!
    * @see CustomFeatureType#CustomFeatureType(IGMLSchema, QName, IPropertyType[])
    */
+  @Deprecated
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
   {
     return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );

@@ -102,7 +102,7 @@ public class GMLSchemaCache
 
     if( gmlVersion != null && !"3.1.1".equals( gmlVersion ) && !"2.1.2".equals( gmlVersion ) )
     {
-      // TODO: put this into a tracing optio ord log to plug-in log.
+      // TODO: put this into a tracing option or log to plug-in log.
       System.out.println( "Unknown gml version: " + gmlVersion + " for namespace: " + namespace );
       System.out.println( "Use appinfo and use one of the known (3.1.1 or 2.1.2) in order to avoid multiple schema parsing." );
     }

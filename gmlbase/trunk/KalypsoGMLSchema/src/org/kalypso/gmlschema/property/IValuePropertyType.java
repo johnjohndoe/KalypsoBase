@@ -35,9 +35,11 @@ import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
- * TODO: insert type comment here
+ * Represents a value property type, whatever this is....<br>
+ * TODO: it is not really clear, what a value property type IS, so this interface is quite problematic...<br>
+ * TODO: we should probably refaktor at least in order to distinguish simple and complex content types.
  * 
- * @author doemming
+ * @author Andreas von Dömming
  */
 public interface IValuePropertyType extends IPropertyType
 {

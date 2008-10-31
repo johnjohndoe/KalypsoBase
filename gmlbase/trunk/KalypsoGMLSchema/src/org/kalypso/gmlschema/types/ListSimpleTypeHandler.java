@@ -41,15 +41,12 @@
 package org.kalypso.gmlschema.types;
 
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -57,7 +54,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Gernot Belger
  */
-public class ListSimpleTypeHandler implements IMarshallingTypeHandler
+public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List< ? >>
 {
   private final ISimpleMarshallingTypeHandler<Object> m_baseTypeHandler;
 
@@ -68,6 +65,48 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
       throw new IllegalArgumentException( "List may be used only on simple types. Not on complex types: " + baseTypeHandler );
 
     m_baseTypeHandler = (ISimpleMarshallingTypeHandler<Object>) baseTypeHandler;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler#convertToJavaValue(java.lang.String)
+   */
+  @Override
+  public List< ? > convertToJavaValue( final String xmlString )
+  {
+    if( xmlString == null )
+      return null;
+
+    final List<Object> list = new ArrayList<Object>();
+
+    final String[] strings = xmlString.split( " +" );
+    for( final String string : strings )
+    {
+      final Object object = m_baseTypeHandler.convertToJavaValue( string );
+      list.add( object );
+    }
+
+    return list;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler#convertToXMLString(java.lang.Object)
+   */
+  @Override
+  public String convertToXMLString( final List< ? > value )
+  {
+    final StringBuffer result = new StringBuffer();
+    for( final Iterator< ? > iter = value.iterator(); iter.hasNext(); )
+    {
+      final Object element = iter.next();
+
+      final String xmlString = m_baseTypeHandler.convertToXMLString( element );
+      result.append( xmlString );
+
+      if( iter.hasNext() )
+        result.append( ' ' );
+    }
+
+    return result.toString();
   }
 
   /**
@@ -96,70 +135,29 @@ public class ListSimpleTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
-   *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
+   *      java.net.URL, java.lang.String)
    */
-  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion )
   {
-    final char[] spaceChar = new char[] { ' ' };
-
-    final ContentHandler contentHandler = xmlReader.getContentHandler();
-
-    final String namespaceURI = propQName.getNamespaceURI();
-    final String localPart = propQName.getLocalPart();
-    final String qNameString = propQName.getPrefix() + ":" + localPart;
-    contentHandler.startElement( namespaceURI, localPart, qNameString, null );
-
-    final List<Object> list = (List<Object>) value;
-    for( final Iterator<Object> iter = list.iterator(); iter.hasNext(); )
-    {
-      final Object element = iter.next();
-
-      final String xmlString = m_baseTypeHandler.convertToXMLString( element );
-      contentHandler.characters( xmlString.toCharArray(), 0, xmlString.length() );
-
-      if( iter.hasNext() )
-        contentHandler.characters( spaceChar, 0, 1 );
-    }
-
-    contentHandler.endElement( namespaceURI, localPart, qNameString );
+    throw new UnsupportedOperationException();
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
    *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
-    try
-    {
-      final XsdBaseContentHandler contentHandler = new XsdBaseContentHandler( this, marshalResultEater );
-      xmlReader.setContentHandler( contentHandler );
-    }
-    catch( final Exception e )
-    {
-      throw new TypeRegistryException( e );
-    }
+    throw new UnsupportedOperationException();
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
-  public Object parseType( final String text ) throws ParseException
+  public Object parseType( final String text )
   {
-    if( text == null )
-      return null;
-
-    final List<Object> list = new ArrayList<Object>();
-
-    final String[] strings = text.split( " +" );
-    for( final String string : strings )
-    {
-      final Object object = m_baseTypeHandler.parseType( string );
-      list.add( object );
-    }
-
-    return list;
+    return convertToJavaValue( text );
   }
 
   /**

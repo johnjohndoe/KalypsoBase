@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -52,11 +52,9 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * a generic typehandler based on binding<br>
@@ -75,27 +73,13 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   private final QName m_xmlTagQName;
 
-  private final boolean m_considerSurroundingElement;
-
-  private final boolean m_forceElementTagOnMarshall;
-
-  private Attributes m_atts = null;
-
-  /**
-   * @see #GenericBindingTypeHandler(JAXBContext, QName, QName, Class, boolean, false)
-   */
-  public GenericBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class< ? > valueClass, final boolean isGeometry )
-  {
-    this( jaxbContextProvider, xmlTypeQName, xmlTagQName, valueClass, isGeometry, false, false );
-  }
-
   /**
    * example: ( NS.GML3, "LocationPropertyType" ), new QName( NS.GML3, "location" ), LocationPropertyType.class) <br>
    * type is GML3:LocationPropertyType<br>
    * xmlTagName is GML3:location<br>
    * representation in gml is:<br>
    * <em>
-   * <feature> 
+   * <feature>
    *    <prop> // also serialized by binding if considerSurroundingElement is true
    *      <location/>   // serialized by binding for LocationPropertyType
    *    </prop> // binding unmarshaller always stops here
@@ -104,52 +88,39 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
    * 
    * @param isGeometry
    * @param xmlTypeQName
-   *            name of xmltype
+   *          name of xmltype
    * @param xmlTagQName
-   *            name of entity that will occure in xml instance document
+   *          name of entity that will occure in xml instance document
    * @param considerSurroundingElement
-   *            if true, the surrounding element defined by xmlTagQName is taken into account when unmarshalling by
-   *            explicitely calling startElement on the binding unmarshaller. It allows to parse complex types which are
-   *            not subtypes of PropertyType.
+   *          if true, the surrounding element defined by xmlTagQName is taken into account when unmarshalling by
+   *          explicitly calling startElement on the binding unmarshaller. It allows to parse complex types which are
+   *          not subtypes of PropertyType.
    */
-  public GenericBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class< ? > valueClass, final boolean isGeometry, final boolean considerSurroundingElement, final boolean forceElementTagOnMarshall )
+  public GenericBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class< ? > valueClass, final boolean isGeometry )
   {
     m_jaxbContextProvider = jaxbContextProvider;
     m_xmlTagQName = xmlTagQName;
     m_valueClass = valueClass;
     m_isGeometry = isGeometry;
     m_xmlTypeQName = xmlTypeQName;
-    m_considerSurroundingElement = considerSurroundingElement;
-    m_forceElementTagOnMarshall = forceElementTagOnMarshall;
   }
 
-  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException
   {
     final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( m_xmlTagQName, value );
-    marshal( propQName, jaxElement, xmlReader, gmlVersion );
+    marshal( jaxElement, xmlReader, gmlVersion );
   }
 
-  public <T> void marshal( final QName propQName, final JAXBElement<T> element, final XMLReader xmlReader, final String gmlVersion ) throws SAXException
+  protected <T> void marshal( final JAXBElement<T> element, final XMLReader xmlReader, final String gmlVersion ) throws SAXException
   {
     try
     {
       // memory to xml
       final ContentHandler contentHandler = xmlReader.getContentHandler();
-
-      final String namespaceURI = propQName.getNamespaceURI();
-      final String localPart = propQName.getLocalPart();
-      final String qNameString = propQName.getPrefix() + ":" + localPart;
-
-      if( m_forceElementTagOnMarshall )
-        contentHandler.startElement( namespaceURI, localPart, qNameString, new AttributesImpl() );
-
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
 
       marshaller.marshal( element, contentHandler );
-
-      if( m_forceElementTagOnMarshall )
-        contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
     catch( final JAXBException e )
     {
@@ -159,9 +130,6 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
 
   public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
-    // TODO: instead of the passing considerSurrounding to the UnmarshalContentprovider
-    // just call startElement/endElement in that case
-
     // xml to memory
     try
     {
@@ -183,13 +151,9 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
           }
         }
       };
-      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater, m_considerSurroundingElement, gmlVersion );
+      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, marshalResultEater, gmlVersion );
       tmpContentHandler.startDocument();
       xmlReader.setContentHandler( tmpContentHandler );
-
-      // simulate start of element since SAX Parser is already one element too deep
-      if( m_considerSurroundingElement )
-        tmpContentHandler.startElement( m_xmlTagQName.getNamespaceURI(), m_xmlTagQName.getLocalPart(), m_xmlTagQName.toString(), m_atts );
     }
     catch( final Exception e )
     {
@@ -255,10 +219,5 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
-  }
-
-  public void setAttributes( final Attributes atts )
-  {
-    m_atts = atts;
   }
 }

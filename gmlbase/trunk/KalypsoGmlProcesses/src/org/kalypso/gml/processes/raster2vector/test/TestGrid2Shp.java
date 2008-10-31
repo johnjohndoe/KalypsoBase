@@ -12,7 +12,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -38,7 +38,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 
 import java.io.File;
@@ -50,7 +50,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -252,11 +251,9 @@ public class TestGrid2Shp extends TestCase
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
     rangeSetFile.setFileName( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
-    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-    rangeSet.setFile( rangeSetFile );
 
     covColl.add( coverage );
-    coverage.setRangeSet( rangeSet );
+    coverage.setRangeSet( rangeSetFile );
     coverage.setGridDomain( gridDomain );
     coverage.setName( binFileName );
     coverage.setDescription( "ASCII-Import" );

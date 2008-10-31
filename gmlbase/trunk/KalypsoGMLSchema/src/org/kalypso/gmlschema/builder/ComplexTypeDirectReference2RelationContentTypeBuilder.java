@@ -100,9 +100,7 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
     final ComplexType complexType = (ComplexType) object;
     // check if base is a RelationType
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
-    if( baseType != null//
-        && NS.GML2.equals( baseType.getNamespaceURI() )//
-        && GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( baseType.getLocalPart() ) )
+    if( baseType != null && GMLSchemaUtilities.isRelationType( m_version, baseType ) )
       return true;
 
     // find referenced element (target)

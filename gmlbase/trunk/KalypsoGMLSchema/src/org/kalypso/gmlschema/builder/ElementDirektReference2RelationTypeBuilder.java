@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
- * a builder for adv references <br>
  * <em>
  *  <complexType name="PhenomenonPropertyType">
  *      <sequence minOccurs="0">
@@ -173,6 +172,7 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
     }
     if( complexType == null )
       return null;
+
     // find referenced element (target)
     final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
     if( collector.size() != 1 )
@@ -190,7 +190,7 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
   @Override
   public boolean replaces( final IBuilder other )
   {
-    if( other instanceof Element2PropertyTypeBuilder // 
+    if( other instanceof Element2PropertyTypeBuilder //
         || other instanceof FeaturePropertyType2RelationTypeBuilder )
       return true;
     return false;

@@ -3,8 +3,6 @@ package org.kalypso.gmlschema.types;
 import java.net.URL;
 import java.text.ParseException;
 
-import javax.xml.namespace.QName;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -25,7 +23,7 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    * @param xmlReader
    *            The xmlReader to serialize to. Write into its {@link ContentHandler} to do so.
    */
-  public void marshal( final QName propQName, final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException;
+  public void marshal( final Object value, final XMLReader xmlReader, final URL context, final String gmlVersion ) throws SAXException;
 
   /**
    * creates an object of type {@link #getClassName()}from node.

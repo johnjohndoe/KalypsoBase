@@ -45,20 +45,19 @@ import org.kalypso.commons.xml.NSUtilities;
  */
 public class ADVUtilities
 {
-
   final static String advPrefix;
 
   final static String xsPrefix;
   static
   {
-    NSPrefixProvider provider = NSUtilities.getNSProvider();
-    advPrefix = provider.getPreferredPrefix( NS.ADV, "adv" );
+    final NSPrefixProvider provider = NSUtilities.getNSProvider();
+    advPrefix = provider.getPreferredPrefix( NS.ADV_NAS, "adv" );
     xsPrefix = provider.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" );
   }
 
-  // public static final String NS_ADV =
-  // NS.NS_ADV;
-  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.ADV + "' ";
+  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.ADV_NAS + "' ";
+
+  private static final String ADV_XPATH = ADV_XPATH_NS + xsPrefix + ":annotation/" + xsPrefix + ":appinfo/" + "adv" + ":referenziertesElement";
 
   /**
    * @param element
@@ -70,9 +69,9 @@ public class ADVUtilities
    * </xs:annotation>
    * </code>
    */
-  public static QName getReferenziertesElement( Element element )
+  public static QName getReferenziertesElement( final Element element )
   {
-    return selectXPathAsQName( element, "xs:annotation/xs:appinfo/adv:referenziertesElement" );
+    return selectXPathAsQName( element, ADV_XPATH );
   }
 
   /**
@@ -105,9 +104,9 @@ public class ADVUtilities
    * @param xpath
    * @return result of query
    */
-  private static XmlObject[] selectXPath( final Element element, String xpath )
+  private static XmlObject[] selectXPath( final Element element, final String xpath )
   {
-    final String fullXpath = ADV_XPATH_NS + xpath;
+    final String fullXpath = xpath;
     return element.selectPath( fullXpath );
   }
 

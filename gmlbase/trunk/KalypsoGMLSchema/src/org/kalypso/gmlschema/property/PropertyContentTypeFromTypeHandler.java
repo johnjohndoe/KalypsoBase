@@ -33,7 +33,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -54,9 +53,9 @@ public class PropertyContentTypeFromTypeHandler implements IPropertyContentType
 
   private final IMarshallingTypeHandler m_typeHandler;
 
-  private Object m_typeObject;
+  private final Object m_typeObject;
 
-  public PropertyContentTypeFromTypeHandler( final GMLSchema gmlSchema, final Object typeObject, final QName valueQName )
+  public PropertyContentTypeFromTypeHandler( final IGMLSchema gmlSchema, final Object typeObject, final QName valueQName )
   {
     m_gmlSchema = gmlSchema;
     m_valueQName = valueQName;

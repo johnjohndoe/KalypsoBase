@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.virtual;
 
@@ -45,10 +45,9 @@ import java.util.Map;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * Property type interface to be use for virtual property based on a funtion property. Such a function property has
+ * Property type interface to be use for virtual property based on a function property. Such a function property has
  * <ul>
- * <li> kapp:valueType = "a supported kalypso value</li>
- * type"
+ * <li>kapp:valueType = "a supported kalypso value</li> type"
  * </ul>
  * 
  * @author Patrice Congo

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.virtual;
 
@@ -47,14 +47,13 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.gmlschema.property.IPropertyContentType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 /**
  * Default implementation of {@link IVirtualFunctionValuePropertyType} bases on the {@link ITypeHandler} associated with
  * the property q-name
@@ -327,5 +326,4 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   {
     return new VirtualFunctionValuePropertyType( featureType, m_handler, m_qName, m_functionId, m_properties );
   }
-
 }

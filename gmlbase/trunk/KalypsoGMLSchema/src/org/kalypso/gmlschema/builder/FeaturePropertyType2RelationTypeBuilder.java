@@ -32,7 +32,6 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -82,7 +81,7 @@ public class FeaturePropertyType2RelationTypeBuilder extends AbstractBuilder
     {
       final AdvRelationType advRelation = new AdvRelationType( gmlSchema, element, occurs, advReferenziertesElement, null );
       gmlSchema.register( element, advRelation );
-      return new Object[0];
+      return new Object[0]; // why not return it?
     }
 
     final IRelationType result = new RelationType( gmlSchema, element, occurs, null );
@@ -102,12 +101,20 @@ public class FeaturePropertyType2RelationTypeBuilder extends AbstractBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_gmlVersion );
     if( baseType == null )
       return false;
-    final String namespaceURI = baseType.getNamespaceURI();
-    final String localPart = baseType.getLocalPart();
-    // GML
-    if( !NS.GML2.equals( namespaceURI ) )
-      return false;
-    return GMLSchemaUtilities.getBaseOfRelationType( m_gmlVersion ).equals( localPart );
+
+    final boolean result = GMLSchemaUtilities.isRelationType( m_gmlVersion, baseType );
+    if( result == true )
+    {
+      // Special case adv annotation stuff: should be handled separately
+      // Only build it, if we really have a typed reference; else we will later
+      // have not feature type for this element
+      if( GMLSchemaUtilities.GML3_ReferenceType.equals( baseType ) )
+        return ADVUtilities.getReferenziertesElement( element ) != null;
+
+      return true;
+    }
+
+    return result;
   }
 
   /**

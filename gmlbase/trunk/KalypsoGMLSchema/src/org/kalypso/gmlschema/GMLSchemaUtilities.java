@@ -108,9 +108,11 @@ public class GMLSchemaUtilities
 
   public static final String GML3_FeatureTypeBaseType = "AbstractGMLType";
 
-  public static final String GML2_RelationBaseType = "FeatureAssociationType";
+  public static final QName GML2_RelationBaseType = new QName( NS.GML2, "FeatureAssociationType" );
 
-  public static final String GML3_RelationBaseType = "FeaturePropertyType";
+  public static final QName GML3_FeaturePropertyType = new QName( NS.GML2, "FeaturePropertyType" );
+
+  public static final QName GML3_ReferenceType = new QName( NS.GML2, "ReferenceType" );
 
   public static final String BASE_SCHEMA_IN_JAR = "base.xsd";
 
@@ -525,16 +527,16 @@ public class GMLSchemaUtilities
     if( NS.GML2.equals( namespaceURI ) )
     {
       if( GMLSchemaUtilities.getBaseOfFeatureType( gmlVersion ).equals( localPart ) )
-        return result;
+        return qName;
 
       /* Special case: the base of everything, only valid in gml3 */
       if( gmlVersion.startsWith( "3" ) && "_Object".equals( localPart ) )
-        return result;
+        return qName;
 
 // if( GMLSchemaUtilities.getBaseOfGeometriesType().equals( localPart ) )
 // return result;
 
-      if( GMLSchemaUtilities.getBaseOfRelationType( gmlVersion ).equals( localPart ) )
+      if( isRelationType( gmlVersion, qName ) )
         return result;
     }
     return null;
@@ -686,7 +688,7 @@ public class GMLSchemaUtilities
 
         final IUrlResolver2 newResolver = new IUrlResolver2()
         {
-          public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+          public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
           {
             return resolver.resolveURL( originalIncludeURL, relativeOrAbsolute );
           }
@@ -860,12 +862,13 @@ public class GMLSchemaUtilities
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 
-  public static String getBaseOfRelationType( final String gmlVersion )
+  public static boolean isRelationType( final String gmlVersion, final QName qname )
   {
     if( gmlVersion.startsWith( "2" ) )
-      return GML2_RelationBaseType;
+      return GML2_RelationBaseType.equals( qname );
     if( gmlVersion.startsWith( "3" ) )
-      return GML3_RelationBaseType;
+      return GML3_FeaturePropertyType.equals( qname ) || GML3_ReferenceType.equals( qname );
+
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 

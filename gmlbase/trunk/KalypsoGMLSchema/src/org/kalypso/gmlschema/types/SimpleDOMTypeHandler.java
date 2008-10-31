@@ -54,7 +54,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -82,24 +81,21 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
-   *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
+   *      java.net.URL, java.lang.String)
    */
-  public void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
     {
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
       final Document document = builder.newDocument();
-      final Element element = document.createElementNS( propQName.getNamespaceURI(), propQName.getLocalPart() );
-      document.appendChild( element );
-
-      internalMarshall( value, element, context );
+      final Node node = internalMarshall( value, document, context );
 
       // value is encoded in xml in document object
       final StringWriter writer = new StringWriter();
-      XMLHelper.writeDOM( document, "UTF-8", writer );
+      XMLHelper.writeDOM( node, "UTF-8", writer );
       IOUtils.closeQuietly( writer );
 
       // value is encoded in string
@@ -123,14 +119,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
     }
   }
 
-  /**
-   * Subclasses may extend
-   */
-  @SuppressWarnings("unused")
-  protected void internalMarshall( final Object value, final Element element, final URL context ) throws TypeRegistryException
-  {
-    // empty
-  }
+  protected abstract Node internalMarshall( final Object value, final Document document, final URL context ) throws TypeRegistryException;
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
@@ -170,7 +159,6 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
       final DOMConstructor domBuilderContentHandler = new DOMConstructor( document, eater );
 
       // simulate property-tag for dombuilder
-      domBuilderContentHandler.startElement( "propns", "prop", "p:prop", null );
       xmlReader.setContentHandler( domBuilderContentHandler );
     }
     catch( final Exception e )

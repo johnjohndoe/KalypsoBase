@@ -37,7 +37,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -101,13 +100,7 @@ public class ComplexType2RelationContentTypeBuilder extends AbstractBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
     if( baseType == null )
       return false;
-    final String namespaceURI = baseType.getNamespaceURI();
-    final String localPart = baseType.getLocalPart();
-
-    // GML
-    if( !NS.GML2.equals( namespaceURI ) )
-      return false;
-    return GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( localPart );
+    return GMLSchemaUtilities.isRelationType( m_version, baseType );
   }
 
   /**
