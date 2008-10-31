@@ -350,7 +350,13 @@ public class AnnotationUtilities
       final boolean namespaceIsNull = namespace == null || namespace.length() == 0;
       final String localPart = qname == null ? null : qname.getLocalPart();
       final String shortnameFromProperties = namespaceIsNull ? null : properties.getProperty( namespace, null );
-      final String shortnameFromCatalog = namespaceIsNull ? null : nsMapper.getPreferredPrefix( namespace, null );
+      final String shortnameFromCatalog;
+      // Allow for known prefix, but avoid creation of generated prefix
+      if( namespaceIsNull || !nsMapper.hasPrefix( namespace ) )
+        shortnameFromCatalog = null;
+      else
+        shortnameFromCatalog = nsMapper.getPreferredPrefix( namespace, null );
+
       final String ns = namespaceIsNull ? null : URNUtilities.convertURN( namespace );
 
       switch( type )
