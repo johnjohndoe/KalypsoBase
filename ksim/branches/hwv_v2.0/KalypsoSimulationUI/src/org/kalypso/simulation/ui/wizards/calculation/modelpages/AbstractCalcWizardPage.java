@@ -169,6 +169,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -1010,15 +1011,19 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       for( final TimeserieFeatureProps tsprop : m_tsProps )
       {
         final String nameColumn = tsprop.getNameColumn();
+        final IPropertyType nameProp = nameColumn == null ? null : kf.getFeatureType().getProperty( nameColumn );
         String name = tsprop.getNameString();
         if( nameColumn != null )
         {
-          final Object fname = kf.getProperty( tsprop.getNameColumn() );
+          final Object fname;
+          if( NamedFeatureHelper.GML_NAME.equals( nameProp.getQName() ) )
+            fname = NamedFeatureHelper.getName( kf );
+          else
+            fname = kf.getProperty( nameColumn );
+          
           if( fname != null )
             name = name.replaceAll( "%featureprop%", fname.toString() );
         }
-        else
-          name = tsprop.getNameString();
 
         final String linkColumn = tsprop.getLinkColumn();
         final TimeseriesLinkType obsLink = getTimeseriesLink( kf, linkColumn );
