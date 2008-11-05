@@ -32,6 +32,16 @@ public final class RectangleUtils
     return new Rectangle( x, y, w, h );
   }
 
+  public static final Point getCenterPoint( final Rectangle r )
+  {
+    final int x = Math.min( r.x, r.x + r.width );
+    final int y = Math.min( r.y, r.y + r.height );
+    final int w = Math.abs( r.width );
+    final int h = Math.abs( r.height );
+
+    return new Point( x + w / 2, y + h / 2 );
+  }
+
   public final static Rectangle buffer( final Point p )
   {
     return new Rectangle( p.x - 5, p.y - 5, 10, 10 );
