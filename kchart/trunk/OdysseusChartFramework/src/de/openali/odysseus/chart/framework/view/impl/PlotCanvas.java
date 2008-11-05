@@ -402,7 +402,10 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
 
   public void setTooltipInfo( final EditInfo hoverInfo )
   {
+    if( hoverInfo == null )
+      m_editInfo = hoverInfo;
     m_editInfo = hoverInfo;
+
   }
 
   public EditInfo getTooltipInfo( )

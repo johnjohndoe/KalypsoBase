@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
@@ -16,7 +15,6 @@ import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
 /**
  * Registers itself upon creation and deregisters at disposal.
  * 
- * @author alibu
  * @author kimwerner
  */
 public class DragEditHandler implements IChartDragHandler
@@ -29,15 +27,25 @@ public class DragEditHandler implements IChartDragHandler
 
   private EditInfo m_clickInfo = null;
 
+  private int m_deltaSnapX = 0;
+
+  private int m_deltaSnapY = 0;
+
+  private int m_startX = 0;
+
+  private int m_startY = 0;
+
+  IEditableChartLayer m_layer = null;
+
   public DragEditHandler( final ChartComposite chart )
   {
-    this( chart, 0 );
+    this( chart, 5 );
   }
 
-  public DragEditHandler( final ChartComposite chart, final int trashHold )
+  public DragEditHandler( final ChartComposite chart, final int trashhold )
   {
     m_chart = chart;
-    m_trashHold = trashHold;
+    m_trashHold = trashhold;
   }
 
   /**
@@ -53,6 +61,24 @@ public class DragEditHandler implements IChartDragHandler
   public void mouseDown( final MouseEvent e )
   {
     m_clickInfo = m_chart.getPlot().getTooltipInfo();
+    if( m_clickInfo != null )
+    {
+      m_deltaSnapX = e.x - m_clickInfo.m_pos.x;
+      m_deltaSnapY = e.y - m_clickInfo.m_pos.y;
+      m_startX = e.x;
+      m_startY = e.y;
+      if( m_clickInfo.m_layer instanceof IEditableChartLayer )
+      {
+        m_layer = (IEditableChartLayer) m_clickInfo.m_layer;
+        if( !m_layer.isLocked() && m_layer.isVisible() )
+          return;
+      }
+      /**
+       * only use editable,visible,unlocked chartlayer
+       */
+      m_clickInfo = null;
+      m_layer = null;
+    }
   }
 
   /**
@@ -60,24 +86,16 @@ public class DragEditHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
-    if( (m_editInfo != null) && (m_editInfo.m_layer instanceof IEditableChartLayer) )
+    if( m_editInfo != null )
+      m_layer.commitDrag( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ), m_editInfo );
+    else if( m_clickInfo != null )
+      m_layer.commitDrag( m_clickInfo.m_pos, m_clickInfo );
 
-    {
-      IEditableChartLayer layer = (IEditableChartLayer) m_editInfo.m_layer;
-      final Point editPoint = new Point( e.x, e.y );
-      layer.commitDrag( editPoint, m_editInfo );
-      m_clickInfo = null;
-
-      m_editInfo = null;
-      final PlotCanvas plot = m_chart.getPlot();
-      plot.setIsEditing( false );
-      plot.setTooltipInfo( null );
-    }
-    else if( (m_clickInfo != null) && (m_clickInfo.m_layer instanceof IEditableChartLayer) )
-    {
-      ((IEditableChartLayer) (m_clickInfo.m_layer)).commitDrag( m_clickInfo.m_pos, m_clickInfo );
-      m_clickInfo = null;
-    }
+    m_clickInfo = null;
+    m_layer = null;
+    m_editInfo = null;
+    m_chart.getPlot().setIsEditing( false );
+    m_chart.getPlot().setTooltipInfo( null );
   }
 
   private final boolean canSnap( final Point point )
@@ -86,7 +104,9 @@ public class DragEditHandler implements IChartDragHandler
     for( final IEditableChartLayer layer : eLayers )
     {
       if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
+      {
         return true;
+      }
     }
     return false;
   }
@@ -107,24 +127,15 @@ public class DragEditHandler implements IChartDragHandler
         plot.setCursor( Display.getDefault().getSystemCursor( SWT.CURSOR_ARROW ) );
     }
 
-    if( m_clickInfo == null || m_clickInfo.m_layer == null )
+    if( m_layer == null )
       return;
-    final boolean isLocked = m_clickInfo.m_layer instanceof IEditableChartLayer ? ((IEditableChartLayer) m_clickInfo.m_layer).isLocked() : true;
-    final boolean allowEditing = !isLocked && ((Math.abs( e.x - m_clickInfo.m_pos.x ) > m_trashHold) || (Math.abs( e.y - m_clickInfo.m_pos.y ) > m_trashHold));
-    if( (m_editInfo == null) && allowEditing )
+    if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashHold) || (Math.abs( e.y - m_startY ) > m_trashHold)) )
       m_editInfo = new EditInfo( m_clickInfo );
 
     if( m_editInfo != null )
     {
-      final ITooltipChartLayer layer = m_editInfo.m_layer;
-      if( layer instanceof IEditableChartLayer )
-      {
-        IEditableChartLayer eLayer = (IEditableChartLayer) layer;
-        final Point editPoint = new Point( e.x, e.y );
-        final EditInfo editMoveInfo = eLayer.drag( editPoint, m_editInfo );
-        plot.setIsEditing( true );
-        plot.setTooltipInfo( editMoveInfo );
-      }
+      plot.setIsEditing( true );
+      plot.setTooltipInfo( m_layer.drag( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ), m_editInfo ) );
     }
   }
 

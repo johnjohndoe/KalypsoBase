@@ -58,17 +58,13 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 public abstract class AbstractExpandableLayer extends AbstractChartLayer implements IExpandableChartLayer
 {
 
-  // protected final LinkedList<IChartLayer> m_chartLayers = new LinkedList<IChartLayer>();
 
   private final ILayerManager m_layerManager = new LayerManager();
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-// public void addLayer( IChartLayer layer )
-// {
-// m_chartLayers.add( layer );
-// }
+
   protected final void drawClippingRect( final GC gc )
   {
     final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
@@ -91,23 +87,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     return m_layerManager;
   }
 
-// /**
-// * @see
-  // de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#fireLayerChanged(de.openali.odysseus.chart
-  // .framework.model.layer.IChartLayer)
-// */
-// public void fireLayerContentChanged( )
-// {
-// getEventHandler().fireLayerContentChanged( this );
-// }
-//
-// /**
-// * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#fireLayerVisibilityChanged()
-// */
-// public void fireLayerVisibilityChanged( )
-// {
-// fireLayerContentChanged();
-// }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
@@ -137,13 +116,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     return new DataRange<Number>( min, max );
   }
 
-// /**
-// * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#getLayer()
-// */
-// public IChartLayer[] getLayers( )
-// {
-// return m_chartLayers.toArray( new IChartLayer[m_chartLayers.size()] );
-// }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
@@ -172,18 +144,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     return new DataRange<Number>( min, max );
   }
 
-// /**
-// * TODO: Testen, ob ein Baum mit mehr als zwei Verzweigungsebenen aufgebaut werden kann TODO: Vor dem Testen
-// * vielleicht noch implementieren.
-// *
-// * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#moveLayerToPosition(java.lang.String,
-// * de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-// */
-// public final boolean moveLayerToPosition( final String id, final IChartLayer selectedObject )
-// {
-//
-// return false;
-// }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
@@ -195,13 +155,4 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
         layer.paint( gc );
   }
 
-// /**
-// * @see
-  // de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#removeLayer(de.openali.odysseus.chart.framework
-  // .model.layer.IChartLayer)
-// */
-// public IChartLayer removeLayer( IChartLayer layer )
-// {
-// throw new IllegalStateException( "no removable layer" );
-// }
 }
