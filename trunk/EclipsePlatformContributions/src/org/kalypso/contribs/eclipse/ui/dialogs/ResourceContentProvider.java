@@ -2,7 +2,7 @@
  * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/cpl-v10.html
- * 
+ *
  * Contributors: IBM Corporation - initial API and implementation
  **********************************************************************************************************************/
 package org.kalypso.contribs.eclipse.ui.dialogs;
@@ -17,20 +17,22 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 
-public class ResourceContentProvider implements ITreeContentProvider
+public class ResourceContentProvider extends BaseResourceContentProvider implements ITreeContentProvider
 {
-  private boolean m_showClosedProjects = true;
+  private final boolean m_showClosedProjects = true;
 
-  private String[] m_allowedResourceExtensions;
+  private final String[] m_allowedResourceExtensions;
 
   /**
-   * abgeleitet von ContainerContentProvider 
+   * Abgeleitet von ContainerContentProvider
+   * 
+   * @param allowedResourceExtensions
+   *          tip: set a ViewerFilter and use {@link BaseResourceContentProvider}
    * @author N. Peiler
    * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
    */
-  public ResourceContentProvider( String[] allowedResourceExtensions )
+  public ResourceContentProvider( final String[] allowedResourceExtensions )
   {
     super();
     m_allowedResourceExtensions = allowedResourceExtensions;
@@ -39,12 +41,13 @@ public class ResourceContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object element )
+  @Override
+  public Object[] getChildren( final Object element )
   {
     if( element instanceof IWorkspace )
     {
       // check if closed projects should be shown
-      IProject[] allProjects = ((IWorkspace) element).getRoot().getProjects();
+      final IProject[] allProjects = ((IWorkspace) element).getRoot().getProjects();
       if( m_showClosedProjects )
         return allProjects;
 
@@ -58,7 +61,7 @@ public class ResourceContentProvider implements ITreeContentProvider
     }
     else if( element instanceof IContainer )
     {
-      IContainer container = (IContainer) element;
+      final IContainer container = (IContainer) element;
       if( container.isAccessible() )
       {
         try
@@ -79,7 +82,7 @@ public class ResourceContentProvider implements ITreeContentProvider
           }
           return children.toArray();
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
           // this should never happen because we call #isAccessible before
           // invoking #members
@@ -89,7 +92,7 @@ public class ResourceContentProvider implements ITreeContentProvider
     return new Object[0];
   }
 
-  private boolean checkExtension( String extension )
+  private boolean checkExtension( final String extension )
   {
     if( extension == null )
       return false;
@@ -104,54 +107,6 @@ public class ResourceContentProvider implements ITreeContentProvider
       }
     }
     return returnValue;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-   */
-  public Object getParent( Object element )
-  {
-    if( element instanceof IResource )
-      return ((IResource) element).getParent();
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
-  public boolean hasChildren( Object element )
-  {
-    return getChildren( element ).length > 0;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
-  public Object[] getElements( Object inputElement )
-  {
-    return getChildren( inputElement );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
-  public void dispose( )
-  {
-    // do nothing
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
-  {
-    // do nothing
-  }
-
-  public void showClosedProjects( boolean show )
-  {
-    m_showClosedProjects = show;
   }
 
 }

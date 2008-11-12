@@ -2,7 +2,7 @@
  * Copyright (c) 2000, 2003 IBM Corporation and others. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/cpl-v10.html
- * 
+ *
  * Contributors: IBM Corporation - initial API and implementation
  **********************************************************************************************************************/
 package org.kalypso.contribs.eclipse.ui.dialogs;
@@ -30,11 +30,11 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 @SuppressWarnings("restriction")
 public class KalypsoResourceSelectionDialog extends SelectionDialog
 {
-  private IResource m_initialSelection;
+  private final IResource m_initialSelection;
 
-  private String[] m_allowedResourceExtensions;
+  private final String[] m_allowedResourceExtensions;
 
-  private boolean m_allowNewResourceName = false;
+  private final boolean m_allowNewResourceName = false;
 
   protected Label statusMessage;
 
@@ -44,7 +44,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   ResourceSelectionGroup group;
 
-  private IContainer m_inputContainer;
+  private final IContainer m_inputContainer;
 
   /*
    * abgeleitet von ContainerSelectionDialog @author peiler
@@ -67,21 +67,21 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   }
 
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     // create composite
-    Composite area = (Composite) super.createDialogArea( parent );
+    final Composite area = (Composite) super.createDialogArea( parent );
 
-    Listener listener = new Listener()
+    final Listener listener = new Listener()
     {
-      public void handleEvent( Event event )
+      public void handleEvent( final Event event )
       {
         final IResource selectedResource = group.getSelectedResource();
         getOkButton().setEnabled( false );
 
         if( m_validator != null && selectedResource != null )
         {
-          String errorMsg = m_validator.isValid( selectedResource );
+          final String errorMsg = m_validator.isValid( selectedResource );
           if( errorMsg == null || errorMsg.equals( "" ) ) { //$NON-NLS-1$
             statusMessage.setText( "" ); //$NON-NLS-1$
             getOkButton().setEnabled( true );
@@ -117,11 +117,11 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   }
 
   @Override
-  protected Control createContents( Composite parent )
+  protected Control createContents( final Composite parent )
   {
     // create the top level composite for the dialog
-    Composite composite = new Composite( parent, 0 );
-    GridLayout layout = new GridLayout();
+    final Composite composite = new Composite( parent, 0 );
+    final GridLayout layout = new GridLayout();
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     layout.verticalSpacing = 0;
@@ -142,8 +142,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   }
 
   /**
-   * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of
-   * the selected resource containers for later retrieval by the client and closes this dialog.
+   * The <code>ContainerSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of the
+   * selected resource containers for later retrieval by the client and closes this dialog.
    */
   @Override
   protected void okPressed( )
@@ -162,7 +162,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    * @param val
    *          A selection validator
    */
-  public void setValidator( ISelectionValidator val )
+  public void setValidator( final ISelectionValidator val )
   {
     this.m_validator = val;
   }
@@ -173,7 +173,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    * @param show
    *          Whether or not to show closed projects.
    */
-  public void showClosedProjects( boolean show )
+  public void showClosedProjects( final boolean show )
   {
     m_showClosedProjects = show;
   }
