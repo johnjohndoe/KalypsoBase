@@ -95,7 +95,7 @@ public class ProjectTemplatePage extends WizardPage
     m_projectsTemplates = templates;
 
     /* Preselect the first entry, if any exists. */
-    if( m_projectsTemplates.length > 0 )
+    if( templates.length > 0 )
       m_selectedProject = m_projectsTemplates[0];
 
     setTitle( "Beispielprojekte" );
