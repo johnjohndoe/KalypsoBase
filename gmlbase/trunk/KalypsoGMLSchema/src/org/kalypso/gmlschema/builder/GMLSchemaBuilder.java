@@ -30,9 +30,9 @@
 package org.kalypso.gmlschema.builder;
 
 import java.net.URL;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -57,7 +57,7 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
  */
 public class GMLSchemaBuilder
 {
-  final private Set<IBuilder> m_registeredBuilders = new HashSet<IBuilder>();
+  private final List<IBuilder> m_registeredBuilders = new ArrayList<IBuilder>();
 
   private final String m_gmlVersion;
 
