@@ -113,18 +113,6 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
   }
 
   /**
-   * a builder for the property pattern <br>
-   * <em>
-   *  <complexType name="PhenomenonPropertyType">
-   *      <sequence minOccurs="0">
-   *          <element ref=" swe:Phenomenon "/>
-   *      </sequence>
-   *      <attributeGroup ref=" gml:AssociationAttributeGroup "/>
-   *  </complexType>
-   * <em>
-   * @author doemming
-   */
-  /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */

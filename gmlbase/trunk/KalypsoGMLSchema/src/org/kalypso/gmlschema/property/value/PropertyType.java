@@ -133,6 +133,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
         if( m_propertyContentType == null )
         {
           // may happen for virtual properties
+          System.out.println();
         }
         else
         {
