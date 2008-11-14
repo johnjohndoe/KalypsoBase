@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.builder.FeaturePropertyType2RelationTypeBuilder;
 import org.kalypso.gmlschema.builder.FeatureType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.builder.GMLSchema2SchemaBasicsBuilder;
 import org.kalypso.gmlschema.builder.GMLSchemaBuilder;
+import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.builder.PropertyType2SimpleTypeBuilder;
 import org.kalypso.gmlschema.builder.RelationType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.feature.CustomFeatureType;
@@ -86,6 +87,9 @@ public class GMLSchemaFactory
       // featuretype
       // test
       gmlSchemaBuilder.registerBuilder( new ComplexType2PropertyContentFromTypeHandlerTypeBuilder( version ) );// ok
+
+      // Geometry-Properties
+      gmlSchemaBuilder.registerBuilder( new GeometryPropertyBuilder( version ) );
 
       // complex type ...
       gmlSchemaBuilder.registerBuilder( new ComplexType2FeatureContentTypeBuilder( version ) );// OK
