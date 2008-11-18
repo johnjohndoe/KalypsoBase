@@ -678,7 +678,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    * 
    * @throws CoreException
    */
-  public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException
+  public IStatus saveAllPages( final IProgressMonitor monitor ) 
   {
     final IWizardPage[] pages = getPages();
     final int pageCount = pages.length;
@@ -709,12 +709,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         else
           monitor.worked( 1 );
       }
-
-      // TRICKY: in order to see the selection during calculation, we already call 'restoreState' here,
-      // so features get reselected.
-      final IWizardPage currentPage = getContainer().getCurrentPage();
-      if( currentPage instanceof IModelWizardPage )
-        ((IModelWizardPage) currentPage).restoreState( false );
     }
     finally
     {
