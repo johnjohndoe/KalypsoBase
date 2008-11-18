@@ -649,7 +649,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Diese Properties werden benutzt, um die Vorlagendateien zu parsen
-   * 
+   *
    * @return properties
    */
   protected Properties getReplaceProperties( )
@@ -1016,11 +1016,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         if( nameColumn != null )
         {
           final Object fname;
-          if( NamedFeatureHelper.GML_NAME.equals( nameProp.getQName() ) )
+          if( Feature.QN_NAME.equals( nameProp.getQName() ) )
             fname = NamedFeatureHelper.getName( kf );
           else
             fname = kf.getProperty( nameColumn );
-          
+
           if( fname != null )
             name = name.replaceAll( "%featureprop%", fname.toString() );
         }
@@ -1097,7 +1097,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * We override setControl to set the help context-id on the control. It is the best place since we know here which
    * context-id to use, and subclasses must call this method with their own controls.
-   * 
+   *
    * @see org.eclipse.jface.dialogs.DialogPage#setControl(org.eclipse.swt.widgets.Control)
    */
   @Override
@@ -1535,7 +1535,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Overriden in order to make it configurable by the calcWizard.xml.
-   * 
+   *
    * @see org.eclipse.jface.wizard.IWizardPage#getNextPage()
    */
   @Override
@@ -1550,7 +1550,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Overriden in order to make it configurable by the calcWizard.xml.
-   * 
+   *
    * @see org.eclipse.jface.wizard.IWizardPage#getPreviousPage()
    */
   @Override
@@ -1577,7 +1577,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   /**
    * Overriden in order to make it configurable by the calcWizard.xml.
-   * 
+   *
    * @see org.eclipse.jface.wizard.IWizardPage#getName()
    */
   @Override
@@ -1634,7 +1634,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * Will be called if this page is about to be closed (i.e another page is selected).<br>
    * Default behaviour is to unhook any registered context-activations.<br>
    * Client who want to override should call the super implementation, if they return <code>true</code>.
-   * 
+   *
    * @return <code>false</code>, if the page shall not be exited now.
    */
   protected boolean handlePageChanging( )
