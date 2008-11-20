@@ -55,7 +55,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
-final class SimulationThread extends Thread
+public class SimulationThread extends Thread
 {
   private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() );
 
