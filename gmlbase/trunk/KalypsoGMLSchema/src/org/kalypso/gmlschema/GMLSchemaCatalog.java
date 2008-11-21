@@ -15,7 +15,7 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
  * <p>
  * GML Schema Catalog, benutzt den {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}.
  * </p>
- * 
+ *
  * @author schlienger
  */
 public final class GMLSchemaCatalog
@@ -45,7 +45,7 @@ public final class GMLSchemaCatalog
 
   /**
    * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
-   * 
+   *
    * @return null, wenn schema nicht geladen werden konnte
    */
   public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
@@ -114,8 +114,14 @@ public final class GMLSchemaCatalog
     else
     {
       catalogUrl = m_urlCatalog.getURL( namespace );
-      version = gmlVersion;
+
+      // HACK: crude hack to enforce GML3 for WFS
+      if( NS.WFS.equals( namespace ) )
+        version = "3.1.1";
+      else
+        version = gmlVersion;
     }
+
 
     Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl );
 

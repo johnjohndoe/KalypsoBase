@@ -99,7 +99,7 @@ import org.w3c.dom.Text;
 
 /**
  * Utilities around GMLSchema-processing
- * 
+ *
  * @author doemming
  */
 public class GMLSchemaUtilities
@@ -175,7 +175,7 @@ public class GMLSchemaUtilities
 
   /**
    * Checks, if a feature type substitutes one of a given list of qnames.
-   * 
+   *
    * @param substitueeNames
    *          Names of the types which may or may not be substituted by type
    */
@@ -495,7 +495,7 @@ public class GMLSchemaUtilities
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   * 
+   *
    * @param qName
    * @return true is qName is a known type
    */
@@ -888,7 +888,7 @@ public class GMLSchemaUtilities
     return "AbstractGeometryType";
   }
 
-  /** Splitts a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
+  /** Splits a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
   public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context )
   {
     final int schemaCount = schemaLocation == null ? 0 : schemaLocation.length() / 2 + 1;
