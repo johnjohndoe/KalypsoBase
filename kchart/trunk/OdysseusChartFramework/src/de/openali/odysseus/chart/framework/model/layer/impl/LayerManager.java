@@ -26,6 +26,14 @@ public class LayerManager implements ILayerManager
   public void addLayer( final IChartLayer layer )
   {
     m_layers.add( layer );
+    registerLayer( layer );
+   
+
+    m_handler.fireLayerAdded( layer );
+  }
+  
+  private void registerLayer(IChartLayer layer)
+  {
     ILayerEventListener lel = new AbstractLayerEventListener()
     {
       /**
@@ -56,9 +64,8 @@ public class LayerManager implements ILayerManager
       }
     };
     layer.addListener( lel );
-
-    m_handler.fireLayerAdded( layer );
   }
+  
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
@@ -82,7 +89,7 @@ public class LayerManager implements ILayerManager
 
   public void clear( )
   {
-
+    
   }
 
   /**
@@ -122,6 +129,8 @@ public class LayerManager implements ILayerManager
   public void addLayer( IChartLayer layer, int position )
   {
     m_layers.add( position, layer );
+    registerLayer( layer );
+    m_handler.fireLayerAdded( layer );
   }
 
   /**

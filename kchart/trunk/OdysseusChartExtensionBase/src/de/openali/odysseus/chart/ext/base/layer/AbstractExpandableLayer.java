@@ -50,6 +50,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 
 /**
@@ -57,6 +58,9 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
  */
 public abstract class AbstractExpandableLayer extends AbstractChartLayer implements IExpandableChartLayer
 {
+
+
+  
 
 
   private final ILayerManager m_layerManager = new LayerManager();
@@ -116,7 +120,25 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
     return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+    
+  }
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */

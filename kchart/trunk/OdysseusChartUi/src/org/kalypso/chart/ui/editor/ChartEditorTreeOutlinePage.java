@@ -247,25 +247,35 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     return m_treeViewer.getControl();
   }
 
-  protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
+  final void setChildChecked( final Object[] children, final boolean checked )
   {
-    layer.setVisible( checked );
-
-    Object[] children = m_contentProvider.getChildren( layer );
     for( Object child : children )
     {
       if( child instanceof IChartLayer )
       {
         ((IChartLayer) child).setVisible( checked );
         m_treeViewer.setChecked( child, checked );
+        setChildChecked( m_contentProvider.getChildren( child ), checked );
       }
     }
+  }
+
+  protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
+  {
+    layer.setVisible( checked );
+
+    Object[] children = m_contentProvider.getChildren( layer );
+    setChildChecked( children, checked );
+
     if( checked )
     {
       Object parent = m_contentProvider.getParent( layer );
-      if( parent instanceof IChartLayer )
-        ((IChartLayer) parent).setVisible( true );
-      m_treeViewer.setChecked( parent, true );
+      if( parent != null )
+      {
+        if( parent instanceof IChartLayer )
+          ((IChartLayer) parent).setVisible( true );
+        m_treeViewer.setChecked( parent, true );
+      }
     }
   }
 
