@@ -51,7 +51,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
@@ -66,7 +68,7 @@ public class UrlUtilities implements IUrlResolver
    * <p>
    * Resolves a (potential) relative URL to a base URL.
    * </p>
-   * 
+   *
    * @param baseURL
    *          URL, to which the relative url will be resolved
    * @param relativeURL
@@ -129,7 +131,7 @@ public class UrlUtilities implements IUrlResolver
 
   /**
    * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
-   * 
+   *
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   public InputStreamReader createReader( final URL url ) throws IOException
@@ -162,5 +164,75 @@ public class UrlUtilities implements IUrlResolver
       connection = null;
     }
     return connection;
+  }
+
+  /**
+   * Parses the query part of an {@link URL} into a hash map (param name mapping to param value).<br>
+   * If the query part contains a parameter twice, the second parameter wins.
+   *
+   * @return Always returns a new {@link Map} object. The empty map, if the given {@link URL} has no query part.
+   * @throws IllegalArgumentException
+   *           If the query part of the url is not strictly ?param1=value&param2=value2&...
+   */
+  public static Map<String, String> parseQuery( final URL url )
+  {
+    final Map<String, String> result = new HashMap<String, String>();
+
+    final String query = url.getQuery();
+    if( query == null || query.isEmpty() )
+      return result;
+
+    final String[] split = query.split( "&" );
+    for( final String param : split )
+    {
+      final String[] paramParts = param.split( "=" );
+      if( paramParts.length != 2 )
+        throw new IllegalArgumentException( "URL contains incorect query part: " + param );
+
+      final String key = paramParts[0];
+      final String value = paramParts[1];
+      result.put( key, value );
+    }
+
+    return result;
+  }
+
+  /**
+   * Adds query-parameters to an {@link URL}, replacing existing parameters.
+   */
+  public static URL addQuery( final URL url, final Map<String, String> params ) throws MalformedURLException
+  {
+    final Map<String, String> existingParams = parseQuery( url );
+    existingParams.putAll( params );
+    return replaceQuery( url, existingParams );
+  }
+
+  /**
+   * Replaces the query part of a given {@link URL} by the contents of a paramater map.
+   */
+  public static URL replaceQuery( final URL url, final Map<String, String> params ) throws MalformedURLException
+  {
+    final StringBuffer queryBuffer = new StringBuffer();
+    for( final Entry<String, String> param : params.entrySet() )
+    {
+      queryBuffer.append( param.getKey() );
+      queryBuffer.append( '=' );
+      queryBuffer.append( param.getValue() );
+      queryBuffer.append( '&' );
+    }
+
+    /* Delete last '&' */
+    if( !params.isEmpty() )
+      queryBuffer.deleteCharAt( queryBuffer.length() - 1 );
+
+    final String urlString = url.toExternalForm();
+    final int queryIndex = urlString.indexOf( '?' );
+    final String newUrlString;
+    if( queryIndex == -1 )
+      newUrlString = urlString + "?" + queryBuffer.toString();
+    else
+      newUrlString = urlString.substring( 0, queryIndex + 1 ) + queryBuffer.toString();
+
+    return new URL( newUrlString );
   }
 }
