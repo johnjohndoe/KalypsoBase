@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -57,9 +58,9 @@ public class ProfilTheme extends AbstractProfilTheme
 
   
 
-  public ProfilTheme( final String name, final ICoordinateMapper cm )
+  public ProfilTheme(final IProfil profil, final String name, final ICoordinateMapper cm )
   {
-    super( IWspmConstants.NS_WSPM, name, null, cm );
+    super(profil, IWspmConstants.NS_WSPM, name, null, cm );
 
   }
 
