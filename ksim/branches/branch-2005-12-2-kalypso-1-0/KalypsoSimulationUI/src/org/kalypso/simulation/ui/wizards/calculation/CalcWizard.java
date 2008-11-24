@@ -604,7 +604,12 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public String getWindowTitle()
   {
-    return "Hochwasser Vorhersage für " + m_project.getName();
+    String msg = "Hochwasser Vorhersage für " + m_project.getName();
+    IFolder currentFolder = m_controlPage.getFolder();
+    if( currentFolder != null )
+      msg += " - " + currentFolder.getName();
+    
+    return msg;
   }
 
   /**
