@@ -50,8 +50,7 @@ import de.belger.swtchart.layer.IChartLayer;
  * @see de.belger.swtchart.layer.IChartLayer
  * @author gernot
  */
-public class ChartLegend extends LabelProvider implements DisposeListener,
-    IChartCanvasListener, ICheckStateListener, ISelectionChangedListener, IPersistableElement
+public class ChartLegend extends LabelProvider implements DisposeListener, IChartCanvasListener, ICheckStateListener, ISelectionChangedListener, IPersistableElement
 {
   private static final String MEM_SELCOUNT = "memento.chartLegend.selCount";
 
@@ -59,7 +58,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
 
   private final CheckboxTableViewer m_checklist;
 
-  private final Map<IChartLayer, Image> m_images = new HashMap<IChartLayer, Image>();
+  private final static Map<String, Image> m_images = new HashMap<String, Image>();
 
   private final boolean m_adaptgridsize;
 
@@ -69,8 +68,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
 
   private boolean m_lockselection = false;
 
-  public ChartLegend( final Composite parent, final int style, final ChartCanvas chart,
-      final boolean adaptgridsize )
+  public ChartLegend( final Composite parent, final int style, final ChartCanvas chart, final boolean adaptgridsize )
   {
     m_chart = chart;
     m_adaptgridsize = adaptgridsize;
@@ -136,10 +134,9 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
 
   /**
    * @exception SWTException
-   *              <ul>
-   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the
-   *              receiver</li>
-   *              </ul>
+   *                <ul>
+   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *                </ul>
    */
   protected void layersChangedInternal( final Control checkcontrol )
   {
@@ -170,8 +167,8 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
         if( layoutData instanceof GridData )
         {
           final Point size = control.computeSize( SWT.DEFAULT, SWT.DEFAULT, true );
-          ((GridData)layoutData).minimumWidth = size.x;
-          ((GridData)layoutData).minimumHeight = size.y;
+          ((GridData) layoutData).minimumWidth = size.x;
+          ((GridData) layoutData).minimumHeight = size.y;
         }
         control.getParent().layout( true, true );
       }
@@ -218,7 +215,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
    */
   public void checkStateChanged( final CheckStateChangedEvent event )
   {
-    final IChartLayer layer = (IChartLayer)event.getElement();
+    final IChartLayer layer = (IChartLayer) event.getElement();
     m_chart.setVisible( layer, event.getChecked() );
   }
 
@@ -228,9 +225,9 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
   @Override
   public Image getImage( final Object element )
   {
-    final IChartLayer layer = (IChartLayer)element;
+    final IChartLayer layer = (IChartLayer) element;
 
-    final Image oldimage = m_images.get( layer );
+    final Image oldimage = m_images.get( layer.getId() );
     if( oldimage != null )
       return oldimage;
 
@@ -248,7 +245,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
     gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
     gc.dispose();
 
-    m_images.put( layer, image );
+    m_images.put( layer.getId(), image );
 
     return image;
   }
@@ -262,7 +259,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
   {
     return m_checklist;
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
@@ -275,7 +272,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener,
         m_lastSelection = new String[0];
       else
       {
-        final IStructuredSelection struct = (IStructuredSelection)selection;
+        final IStructuredSelection struct = (IStructuredSelection) selection;
         m_lastSelection = new String[struct.size()];
         int count = 0;
         for( final Iterator sIt = struct.iterator(); sIt.hasNext(); )
