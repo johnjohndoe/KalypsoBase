@@ -191,7 +191,7 @@ public final class StatusUtilities
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
-  public static IStatus statusFromThrowable( final Throwable t, final String message, final Object... args )
+  public static IStatus statusFromThrowable( final Throwable t, String message, final Object... args )
   {
     if( message != null )
     {
@@ -201,7 +201,13 @@ public final class StatusUtilities
     }
 
     if( t instanceof InvocationTargetException )
+    {
+      if( message == null )
+        message = "";
+
       return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), String.format( message, args ) );
+    }
+
     if( t instanceof CoreException )
       return ((CoreException) t).getStatus();
 
