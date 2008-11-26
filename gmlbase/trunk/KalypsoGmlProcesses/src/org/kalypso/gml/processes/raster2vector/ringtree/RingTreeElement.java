@@ -38,14 +38,22 @@ public class RingTreeElement
 
   private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
 
-  public RingTreeElement( final LinearRing lr, final Polygon polygon, final double lineValue, final Coordinate innerCrd )
+  private final String m_id;
+
+  public RingTreeElement( final LinearRing lr, final Polygon polygon, final double lineValue, final Coordinate innerCrd, final String id )
   {
     linearRing = lr;
     this.polygon = polygon;
     this.lineValue = lineValue;
     this.innerCrd = innerCrd;
+    m_id = id;
 
     pir = (lr == null) ? null : new SIRtreePointInRing( lr );
+  }
+
+  public String getId( )
+  {
+    return m_id;
   }
 
   public void addChild( final RingTreeElement rte )
@@ -72,7 +80,7 @@ public class RingTreeElement
   public Integer initIntervals( final Interval[] intervals )
   {
     final SortedSet<Integer> intervalSet = new TreeSet<Integer>();
-    for( RingTreeElement child : m_children )
+    for( final RingTreeElement child : m_children )
     {
       final Integer childInterval = child.initIntervals( intervals );
       if( childInterval != null )
@@ -82,7 +90,12 @@ public class RingTreeElement
     if( Double.isNaN( lineValue ) )
       return null;
 
-    if( m_children.size() == 0 )
+    if( innerCrd == null )
+    {
+      System.out.println();
+    }
+
+    if( !isInnerCrdInChild() )
     {
       // get interval from value of the inner coordinate
       for( int i = 0; i < intervals.length; i++ )
@@ -96,88 +109,102 @@ public class RingTreeElement
 
       return null;
     }
-    else
+
+    /*
+     * If the inner crd is inside a child, we have a strange algorithm, that determines our own interval depending on
+     * the interval lof its children. TODO: explanation....
+     */
+
+    System.out.println( "No good inner coordinate for: " + m_id );
+    switch( intervalSet.size() )
     {
-      switch( intervalSet.size() )
-      {
-        case 0:
+      case 0:
 
-          double childValue = Double.NaN;
-          for( RingTreeElement child : m_children )
+        double childValue = Double.NaN;
+        for( final RingTreeElement child : m_children )
+        {
+          if( !Double.isNaN( child.lineValue ) )
           {
-            if( !Double.isNaN( child.lineValue ) )
-            {
-              childValue = child.lineValue;
-              break;
-            }
+            childValue = child.lineValue;
+            break;
           }
+        }
 
-          if( !Double.isNaN( childValue ) )
-          {
-            final double min = Math.min( lineValue, childValue );
-            final double max = Math.max( lineValue, childValue );
-            Interval guessedInterval = new Interval( min, max );
-            for( int i = 0; i < intervals.length; i++ )
-            {
-              if( Double.compare( intervals[i].getMin(), guessedInterval.getMin() ) == 0 && Double.compare( intervals[i].getMax(), guessedInterval.getMax() ) == 0 )
-              {
-                m_polygonIntervall = intervals[i];
-                return i;
-              }
-            }
-          }
-
-          // we have only Double.NaN holes... what to do?
-          // for now, we try to use the inner coordinate....
-
-          // get interval from value of the inner coordinate
+        if( !Double.isNaN( childValue ) )
+        {
+          final double min = Math.min( lineValue, childValue );
+          final double max = Math.max( lineValue, childValue );
+          final Interval guessedInterval = new Interval( min, max );
           for( int i = 0; i < intervals.length; i++ )
           {
-            if( intervals[i].contains( innerCrd.z ) )
+            if( Double.compare( intervals[i].getMin(), guessedInterval.getMin() ) == 0 && Double.compare( intervals[i].getMax(), guessedInterval.getMax() ) == 0 )
             {
               m_polygonIntervall = intervals[i];
               return i;
             }
           }
+        }
 
-          throw new IllegalStateException( "This may not happen...." );
+        // we have only Double.NaN holes... what to do?
+        // for now, we try to use the inner coordinate....
 
-        case 1:
-          final Integer interval = intervalSet.first();
-          Interval childInterval = intervals[interval];
-          final double distMin = Math.abs( childInterval.getMin() - lineValue );
-          final double distMax = Math.abs( childInterval.getMax() - lineValue );
-
-          if( distMin < distMax )
+        // get interval from value of the inner coordinate
+        for( int i = 0; i < intervals.length; i++ )
+        {
+          if( intervals[i].contains( innerCrd.z ) )
           {
-            m_polygonIntervall = intervals[interval - 1];
-            return interval - 1;
+            m_polygonIntervall = intervals[i];
+            return i;
           }
-          else
-          {
-            m_polygonIntervall = intervals[interval + 1];
-            return interval + 1;
-          }
+        }
 
-        case 2:
-          int first = intervalSet.first();
-          int last = intervalSet.last();
+        throw new IllegalStateException( "This may not happen...." );
+
+      case 1:
+        final Integer interval = intervalSet.first();
+        final Interval childInterval = intervals[interval];
+        final double distMin = Math.abs( childInterval.getMin() - lineValue );
+        final double distMax = Math.abs( childInterval.getMax() - lineValue );
+
+        if( distMin < distMax )
+        {
+          m_polygonIntervall = intervals[interval - 1];
+          return interval - 1;
+        }
+        else
+        {
+          m_polygonIntervall = intervals[interval + 1];
+          return interval + 1;
+        }
+
+      case 2:
+        final int first = intervalSet.first();
+        final int last = intervalSet.last();
 
 /* removed because of assertion failed - 100 classes */
 // Assert.isTrue( last - first == 2 );
+        m_polygonIntervall = intervals[first + 1];
+        return first + 1;
 
-          m_polygonIntervall = intervals[first + 1];
-          return first + 1;
-
-        default:
-          throw new IllegalStateException( "This may not happen...." );
-      }
+      default:
+        throw new IllegalStateException( "This may not happen...." );
     }
+  }
+
+  private boolean isInnerCrdInChild( )
+  {
+    for( final RingTreeElement child : m_children )
+    {
+      if( child.pir.isInside( innerCrd ) )
+        return true;
+    }
+
+    return false;
   }
 
   public Polygon[] getAsPolygon( )
   {
-    Geometry result = getPolygonInternal();
+    final Geometry result = getPolygonInternal();
 
     if( result.isEmpty() )
       return null;
@@ -187,7 +214,7 @@ public class RingTreeElement
 
     if( result instanceof MultiPolygon )
     {
-      MultiPolygon mp = (MultiPolygon) result;
+      final MultiPolygon mp = (MultiPolygon) result;
       final Polygon[] mpArray = new Polygon[mp.getNumGeometries()];
       for( int i = 0; i < mpArray.length; i++ )
         mpArray[i] = (Polygon) mp.getGeometryN( i );

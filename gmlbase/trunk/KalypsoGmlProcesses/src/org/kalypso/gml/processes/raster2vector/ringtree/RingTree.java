@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RingTree
 {
-  public final RingTreeElement root = new RingTreeElement( null, null, Double.NaN, null );
+  public final RingTreeElement root = new RingTreeElement( null, null, Double.NaN, null, "root" );
 
   public Object walk( final RingTreeWalker rtw )
   {
@@ -40,6 +40,17 @@ public class RingTree
     // für jedes Kind checken, ob element drin liegt, falls ja dort einfügen
     final Coordinate c = element.innerCrd;
 
+    if( c == null )
+    {
+      System.out.println();
+      final double area = element.polygon.getArea();
+      if( area == 0 )
+      {
+        System.out.println( "Fläche ist 0.0" );
+      }
+      return;
+    }
+
     for( final RingTreeElement child : target.children() )
     {
       if( child.pir.isInside( c ) && child.contains( element ) )
@@ -48,14 +59,14 @@ public class RingTree
         {
           // child and element have the same geometry
 
-          double elementValue = element.lineValue;
-          double childValue = child.lineValue;
+          final double elementValue = element.lineValue;
+          final double childValue = child.lineValue;
           // Keep the one with the bigger value: this makes sense, as segments are generated
           // for all borders with values smaller then the actual cell value for edges with Double.NaN
           if( elementValue > childValue )
           {
             // keep element: get children from child and replace child with element
-            for( RingTreeElement childChild : child.children() )
+            for( final RingTreeElement childChild : child.children() )
               element.addChild( childChild );
 
             target.addChild( element );

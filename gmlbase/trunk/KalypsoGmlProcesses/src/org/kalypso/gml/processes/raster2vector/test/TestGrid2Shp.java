@@ -102,7 +102,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
  */
 public class TestGrid2Shp extends TestCase
@@ -127,7 +127,7 @@ public class TestGrid2Shp extends TestCase
     final boolean bSimple = false;
     final boolean bIsolines = false;
 
-    final double[] grenzen = new double[] { 0.0, 0.5, 1, 1.5, 2, 2.5, 20 };
+    final double[] grenzen = new double[] { 0.0, 0.5, 1000 };
 
     final SegmentCollector collector = bIsolines ? (SegmentCollector) new LineStringCollector( GF, grenzen, bSimple ) : new PolygonCollector( GF, grenzen, bSimple );
     final Raster2Lines r2l = new Raster2Lines( collector, grenzen );
@@ -197,9 +197,10 @@ public class TestGrid2Shp extends TestCase
     final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
     final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
     final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType stringTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "internalId" ), stringTypeHandler, 1, 1, false );
     final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
 
-    final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange };
+    final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange, stringTypeId };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
 
     /* Create the shape root feature, we need it to create the children. */
@@ -216,7 +217,7 @@ public class TestGrid2Shp extends TestCase
       final Double to = borders[1];
       final String[] name = data[i].getName();
 
-      final Object[] shapeData = new Object[] { line, id, from, to, name[0] };
+      final Object[] shapeData = new Object[] { line, id, from, to, name[0], name[1] };
       final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData );
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
@@ -231,13 +232,13 @@ public class TestGrid2Shp extends TestCase
     final IFile covCollFile = importDataFolder.getFile( new Path( "covColl.gml" ) ); //$NON-NLS-1$
     final GMLWorkspace covCollWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( covCollFile ), null );
 
-    final IFile file = importDataFolder.getFile( "flatten.asc" );
+    final IFile file = importDataFolder.getFile( "floodZones.asc" );
 
     final String binFileName = file.getName() + ".bin";
     final String dstFileName = binFileName;
     final IFile dstRasterIFile = importDataFolder.getFile( dstFileName );
     final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
-    final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() );
+    final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:28992", new NullProgressMonitor() );
 
     final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();

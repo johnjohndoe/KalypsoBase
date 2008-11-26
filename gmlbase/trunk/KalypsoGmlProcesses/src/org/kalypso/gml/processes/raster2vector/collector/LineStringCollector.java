@@ -38,11 +38,11 @@ public class LineStringCollector implements SegmentCollector
   }
 
   /**
-   * @see com.bce.gis.operation.raster2vector.SegmentCollector#addSegment(int,
-   *      com.bce.gis.operation.raster2vector.LinkedCoordinate, com.bce.gis.operation.raster2vector.LinkedCoordinate,
-   *      com.vividsolutions.jts.geom.Coordinate, com.vividsolutions.jts.geom.Coordinate)
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#addSegment(int,
+   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate,
+   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate)
    */
-  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException
+  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException
   {
     try
     {

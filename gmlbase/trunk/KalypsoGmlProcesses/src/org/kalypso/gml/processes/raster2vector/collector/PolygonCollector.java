@@ -43,6 +43,8 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
   private final double[] m_grenzen;
 
+  private int m_internalId = 0;
+
   public PolygonCollector( final GeometryFactory gf, final double[] grenzen, final boolean bSimple )
   {
     m_gf = gf;
@@ -58,11 +60,11 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   }
 
   /**
-   * @see com.bce.gis.operation.raster2vector.SegmentCollector#addSegment(int,
-   *      com.bce.gis.operation.raster2vector.LinkedCoordinate, com.bce.gis.operation.raster2vector.LinkedCoordinate,
-   *      com.vividsolutions.jts.geom.Coordinate, com.vividsolutions.jts.geom.Coordinate)
+   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#addSegment(int,
+   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate,
+   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate)
    */
-  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException
+  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException
   {
     lc0.link( lc1 );
 
@@ -77,18 +79,25 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
       {
         final LinearRing lr = m_gf.createLinearRing( crds );
         final Polygon poly = m_gf.createPolygon( lr, new LinearRing[] {} );
-        appendFeature( m_intervals[index], poly );
+        appendFeature( m_intervals[index], poly, Integer.toString( m_internalId++ ) );
       }
       else
       {
         final PointInRing pir = new SIRtreePointInRing( m_gf.createLinearRing( crds ) );
-        Coordinate innerCrd = null;
-        if( pir.isInside( nearC0 ) )
-          innerCrd = nearC0;
-        else if( pir.isInside( nearC1 ) )
-          innerCrd = nearC1;
-        else
+
+        final Coordinate innerCrd = lc0.findInnerCrd( pir );
+//
+// if( pir.isInside( nearC0 ) )
+// innerCrd = nearC0;
+// else if( pir.isInside( nearC1 ) )
+// innerCrd = nearC1;
+// else
+
+        if( innerCrd == null )
+        {
           System.out.println( Messages.getString( "org.kalypso.gml.processes.raster2vector.collector.PolygonCollector.0" ) ); //$NON-NLS-1$
+          return;
+        }
 
         CoordOrientation.orient( crds, CoordOrientation.TYPE.NEGATIV );
 
@@ -105,7 +114,9 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 // if( innerCrd.z < m_intervals[index + 1].m_min || innerCrd.z > m_intervals[index + 1].m_max )
 // System.out.println( "Achtung: Klasse passt nicht zu Wert!" );
 
-        m_tree.insertElement( new RingTreeElement( lr, polygon, m_grenzen[index], innerCrd ) );
+        // Here we handle only well-formed polygons
+        if( polygon.getArea() > 0 )
+          m_tree.insertElement( new RingTreeElement( lr, polygon, m_grenzen[index], innerCrd, Integer.toString( m_internalId++ ) ) );
       }
     }
     catch( final CoordOrientationException coe )
@@ -123,13 +134,13 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    * @param poly
    * @throws GM_Exception
    */
-  private void appendFeature( final Interval interval, Polygon poly ) throws GM_Exception
+  private void appendFeature( final Interval interval, Polygon poly, final String internalId ) throws GM_Exception
   {
     // first and last intervals will not added
     if( ArrayUtils.indexOf( m_intervals, interval ) == 0 || ArrayUtils.indexOf( m_intervals, interval ) == m_intervals.length - 1 )
       return;
 
-    double area = poly.getArea();
+    final double area = poly.getArea();
     if( area < 0.1 )
       return;
 
@@ -144,7 +155,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     final Double bis = new Double( Math.min( 9999.99, interval.getMax() ) );
     final Double volumen = Double.NaN;
 
-    CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name } );
+    final CollectorDataProvider dataProvider = new CollectorDataProvider( gmGeo, new Double[] { von, bis, volumen }, id, new String[] { name, internalId } );
     m_dataList.add( dataProvider );
 
   }
@@ -155,6 +166,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
   public void operate( final RingTreeElement element )
   {
     final Polygon[] p = element.getAsPolygon();
+    final String internalId = element.getId();
 
     if( p != null )
     {
@@ -164,8 +176,8 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
         if( interval == null )
           return;
 
-        for( Polygon polygon : p )
-          appendFeature( interval, polygon );
+        for( final Polygon polygon : p )
+          appendFeature( interval, polygon, internalId );
       }
       catch( final GM_Exception gme )
       {
@@ -310,11 +322,11 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
    * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#interpolate(com.vividsolutions.jts.geom.Coordinate,
    *      com.vividsolutions.jts.geom.Coordinate, int)
    */
-  public LinkedCoordinate interpolate( Coordinate c1, Coordinate c2, int index )
+  public LinkedCoordinate interpolate( final Coordinate c1, final Coordinate c2, final int index )
   {
     double zFaktor = -1.0;
-    double z1 = c1.z;
-    double z2 = c2.z;
+    final double z1 = c1.z;
+    final double z2 = c2.z;
 
     final double value = m_grenzen[index];
 

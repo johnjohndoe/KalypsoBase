@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.kalypso.gml.processes.i18n.Messages;
 
+import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -18,6 +19,8 @@ public class LinkedCoordinate
 {
   public final Coordinate crd;
 
+  public Coordinate[] m_innerCrds = null;
+
   public final boolean border;
 
   private LinkedCoordinate m_head = null;
@@ -28,6 +31,12 @@ public class LinkedCoordinate
   {
     crd = c;
     border = bBorder;
+    m_innerCrds = null;
+  }
+
+  public void setInnerCrds( final Coordinate[] innerCrds )
+  {
+    m_innerCrds = innerCrds;
   }
 
   public void link( final LinkedCoordinate list ) throws LinkedCoordinateException
@@ -64,7 +73,7 @@ public class LinkedCoordinate
       return;
     }
 
-    throw new LinkedCoordinateException( Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.0") ); //$NON-NLS-1$
+    throw new LinkedCoordinateException( Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.0" ) ); //$NON-NLS-1$
   }
 
   public boolean isCircle( )
@@ -84,7 +93,7 @@ public class LinkedCoordinate
   private static void reverseHead( final LinkedCoordinate list ) throws LinkedCoordinateException
   {
     if( list.m_tail != null )
-      throw new LinkedCoordinateException( Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.1") ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.1" ) ); //$NON-NLS-1$
 
     LinkedCoordinate current = list;
     while( current != null )
@@ -105,7 +114,7 @@ public class LinkedCoordinate
   private static void reverseTail( final LinkedCoordinate list ) throws LinkedCoordinateException
   {
     if( list.m_head != null )
-      throw new LinkedCoordinateException( Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.2") ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.2" ) ); //$NON-NLS-1$
 
     LinkedCoordinate current = list;
     while( current != null )
@@ -126,7 +135,7 @@ public class LinkedCoordinate
   public Coordinate[] getAsRing( ) throws LinkedCoordinateException
   {
     if( !isCircle() )
-      throw new LinkedCoordinateException( Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.3") ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.3" ) ); //$NON-NLS-1$
 
     final Collection<Coordinate> currentString = new ArrayList<Coordinate>();
 
@@ -147,6 +156,32 @@ public class LinkedCoordinate
 
     // return gf.createLinearRing( s_orientFilter.filter( crds ) );
     return currentString.toArray( new Coordinate[currentString.size()] );
+  }
+
+  /**
+   * Returns the first non-<code>null</code> inner-coordinate of this linked list.
+   */
+  public Coordinate findInnerCrd( final PointInRing pir )
+  {
+    LinkedCoordinate current = this;
+    while( current != null )
+    {
+      if( current.m_innerCrds != null )
+      {
+        for( final Coordinate currentInner : current.m_innerCrds )
+        {
+          if( currentInner != null && pir.isInside( currentInner ) )
+            return currentInner;
+        }
+      }
+
+      current = current.m_head;
+
+      if( current == this )
+        break;
+    }
+
+    return null;
   }
 
   public Collection<LineString> getLineStrings( final GeometryFactory gf )
@@ -194,7 +229,7 @@ public class LinkedCoordinate
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.4") + crd + Messages.getString("org.kalypso.gml.processes.raster2vector.LinkedCoordinate.5") + border; //$NON-NLS-1$ //$NON-NLS-2$
+    return Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.4" ) + crd + Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.5" ) + border; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

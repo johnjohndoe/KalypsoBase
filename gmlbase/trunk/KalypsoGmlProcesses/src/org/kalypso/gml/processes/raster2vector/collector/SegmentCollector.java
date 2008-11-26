@@ -42,7 +42,7 @@ public interface SegmentCollector
 
   public static final IValuePropertyType BEZ_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "Name" ), STRING_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1, final Coordinate nearC0, final Coordinate nearC1 ) throws LinkedCoordinateException;
+  public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException;
 
   public CollectorDataProvider[] getData( );
 
