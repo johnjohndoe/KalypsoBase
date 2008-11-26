@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
@@ -61,6 +62,20 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     m_model = model;
   }
 
+  private final Object[] revertLayer( final ILayerManager mngr )
+  {
+    if( mngr == null )
+      return new Object[] {};
+    IChartLayer[] layers = mngr.getLayers();
+    IChartLayer[] reverted = new IChartLayer[layers.length];
+    for( int i = 0; i < layers.length; i++ )
+    {
+      reverted[i] = layers[layers.length - 1 - i];
+
+    }
+    return reverted;
+  }
+
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
@@ -68,20 +83,18 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   {
     if( element instanceof IChartModel )
     {
-      IChartModel model = (IChartModel) element;
-      IChartLayer[] layers = model.getLayerManager().getLayers();
+      /**
+       * so you see the topmost Layer as first item
+       */
+      return revertLayer( ((IChartModel) element).getLayerManager() );
 
-      IChartLayer[] reverted = new IChartLayer[layers.length];
-      for( int i = 0; i < layers.length; i++ )
-      {
-        reverted[i] = layers[layers.length - 1 - i];
-
-      }
-      return reverted;
     }
     if( element instanceof IExpandableChartLayer )
     {
-      return ((IExpandableChartLayer) element).getLayerManager().getLayers();
+      /**
+       * so you see the topmost Layer as first item
+       */
+      return revertLayer( ((IExpandableChartLayer) element).getLayerManager() );
     }
 
     if( element instanceof IChartLayer )
