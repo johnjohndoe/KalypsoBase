@@ -41,6 +41,8 @@
 
 package org.kalypso.simulation.ui.wizards.exporter;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,27 +50,31 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExporter;
+import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.ExportableTreePage;
 import org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.TreeSelectionPage;
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
+import org.kalypsodeegree_impl.filterencoding.FeatureId;
 
 /**
  * This explorer can handle the export of observations defined in the properties of features using templates. It uses
@@ -200,7 +206,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
 
-    final Collection excludeList = createExcludeList( item, features );
+    final Collection excludeList = createExcludeList( context, item, features );
 
     final ExportableTreeItem[] items = new ExportableTreeItem[features.size()];
     for( int i = 0; i < features.size(); i++ )
@@ -231,7 +237,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     return items;
   }
 
-  private Collection createExcludeList( final UrlArgument item, final FeatureList features )
+  private Collection createExcludeList( final URL context, final UrlArgument item, final FeatureList features )
   {
     final Collection result = new HashSet();
 
@@ -240,35 +246,61 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     if( excludeArguments == null )
       return result;
 
-    for( final Iterator it = excludeArguments.entrySet().iterator(); it.hasNext() ; )
+    try
     {
-      final Map.Entry entry = (Entry)it.next();
-      final String name = (String)entry.getKey();
-      final String value = (String)entry.getValue();
+      final Filter filter = findFilter( context, excludeArguments );
 
       // hm, heavy iterations... maybe performance problem for big lists....
       for( final Iterator iter = features.iterator(); iter.hasNext(); )
       {
         final Feature feature = (Feature)iter.next();
-        
-        final Object propValue; // the value to test
-        if( "#featureid".equals( name.toLowerCase() ) )
-          propValue = feature.getId();
-        else
-          propValue = feature.getProperty(name);
-        
-        if( value.equals(propValue))
+        if( filter.evaluate( feature ) )
           result.add( feature );
       }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
     }
 
     return result;
   }
 
+  private Filter findFilter( final URL context, Arguments excludeArguments ) throws Exception
+  {
+    final String fid = excludeArguments.getProperty( "#featureid" );
+    if( fid != null )
+    {
+      FeatureFilter filter = new FeatureFilter();
+      filter.addFeatureId( new FeatureId( fid ) );
+      return filter;
+    }
+
+    final String filterFile = excludeArguments.getProperty( "filter" );
+    if( filterFile != null )
+    {
+      InputStream is = null;
+      try
+      {
+        final URL filterLocation = new UrlResolver().resolveURL( context, filterFile );
+        is = new BufferedInputStream( filterLocation.openStream() );
+        Filter filter = FilterReader.readFilterFragment( is );
+        is.close();
+        return filter;
+      }
+      finally
+      {
+        IOUtils.closeQuietly( is );
+      }
+    }
+
+    throw new IllegalArgumentException( "Excludes muss entweder '#featureId' oder 'filter' Argument haben." );
+  }
+
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  public IExportableObject[] createExportableObjects( Configuration configuration ) throws CoreException
+  public IExportableObject[] createExportableObjects( Configuration configuration )
   {
     final List result = new ArrayList();
 
