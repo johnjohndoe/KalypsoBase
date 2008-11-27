@@ -122,6 +122,8 @@ import org.xml.sax.InputSource;
  */
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
+  public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED";
+
   private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
   public static final String MODELLTYP_FOLDER = ".model";
 
@@ -139,7 +141,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
-  private final Properties m_metadata = new Properties();
+  private Properties m_defaultMetadata = new Properties();
+
+  private final Properties m_metadata = new Properties( m_defaultMetadata );
 
   private IProject m_project;
 
@@ -180,6 +184,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * <pre>
    */
   public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
+
+  public ModelNature()
+  {
+    // Set some default value for the metadata
+    m_defaultMetadata.put( METADATA_KEY_CALCCASE_CONTINUE_ALLOWED, Boolean.FALSE.toString() );
+  }
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -769,6 +779,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Error loading Metadata", e ) );
     }
+  }
+
+  /**
+   * Returns a metadatum associated with this nature.
+   * 
+   * @param key
+   *          One of the METADATA_KEY_ conmstants.
+   * @return The value of the given key; or <code>null</code> if not set.
+   */
+  public String getMetadata( final String key )
+  {
+    return m_metadata.getProperty( key );
   }
 
   private IFolder getModelFolder()
