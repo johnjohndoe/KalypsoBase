@@ -119,4 +119,31 @@ public class SimulationUtilitites
 
     return modelData;
   }
+
+  public static Modeldata createModelData( final String typeID, final Map<String, String> inputs, final boolean inputsRelativeToCalcCase, final Map<String, String> outputs, final boolean outputsRelativeToCalcCase )
+  {
+    final Modeldata modelData = OF.createModeldata();
+    modelData.setTypeID( typeID );
+
+    final List<Input> inputList = modelData.getInput();
+    for( final Entry<String, String> entry : inputs.entrySet() )
+    {
+      final Input input = OF.createModeldataInput();
+      input.setId( entry.getKey() );
+      input.setPath( entry.getValue() );
+      input.setRelativeToCalcCase( inputsRelativeToCalcCase );
+      inputList.add( input );
+    }
+
+    final List<Output> outputList = modelData.getOutput();
+    for( final Entry<String, String> entry : outputs.entrySet() )
+    {
+      final Output output = OF.createModeldataOutput();
+      output.setId( entry.getKey() );
+      output.setPath( entry.getValue() );
+      output.setRelativeToCalcCase( outputsRelativeToCalcCase );
+      outputList.add( output );
+    }
+    return modelData;
+  }
 }
