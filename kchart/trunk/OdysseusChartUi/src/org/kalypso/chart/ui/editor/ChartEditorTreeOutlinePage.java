@@ -120,7 +120,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerContentChanged( IChartLayer layer )
       {
-        refreshItems( layer );
+       refreshItems( layer );
 
       }
 
@@ -381,7 +381,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   protected void refreshItems( final Object parent )
   {
     Object[] o = m_treeViewer.getCheckedElements();
-    m_treeViewer.refresh( parent );
+    m_treeViewer.refresh( parent);
     m_treeViewer.setCheckedElements( o );
   }
 
