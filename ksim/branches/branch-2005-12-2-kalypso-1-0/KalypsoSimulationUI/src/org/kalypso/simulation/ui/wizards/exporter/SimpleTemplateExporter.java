@@ -114,7 +114,9 @@ public class SimpleTemplateExporter extends AbstractExporter
     String category = item.getProperty( "category" );
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
-  
+    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null );
+    final Integer kennzifferIndex = kennzifferIndexProp == null ? null : new Integer( kennzifferIndexProp );
+
     try
     {
       final URL templateUrl = item.getUrl();
@@ -125,7 +127,7 @@ public class SimpleTemplateExporter extends AbstractExporter
       final String idPrefix = getClass().getName() + templateUrl.getFile();
 
       final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-          idPrefix, category );
+          idPrefix, category, kennzifferIndex );
 
       objects.add( exportable );
     }

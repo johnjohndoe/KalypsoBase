@@ -222,7 +222,7 @@ public final class ExporterHelper
    */
   public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+      final Configuration metadataExtensions, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
     DiagView tpl = null;
     ObservationChart chart = null;
@@ -248,7 +248,7 @@ public final class ExporterHelper
       final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
       final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category )
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category, kennzifferIndex )
           .exportObject( output, monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]
@@ -290,7 +290,7 @@ public final class ExporterHelper
    */
   public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
       final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
-      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+      final Configuration metadataExtensions, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
     if( arguments == null )
     {
@@ -315,7 +315,7 @@ public final class ExporterHelper
       // wrap as warning because even if an obs is missing we can still export diagram
       status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output,
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category, kennzifferIndex ).exportObject( output,
           monitor, metadataExtensions );
 
       return StatusUtilities.createStatus( new IStatus[]

@@ -137,15 +137,13 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
-      throws CoreException
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage ) throws CoreException
   {
     if( m_page == null )
     {
       final ExportableTreeItem[] treeItems = createTreeItems();
 
-      final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(),
-          "icons/wizban/bericht_wiz.gif" );
+      final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
 
       m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imgDesc );
       m_page.setViewerSorter( new ViewerSorter() );
@@ -187,8 +185,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
   /**
    * Creates the adequates exportable-objects based on the given template
    */
-  private ExportableTreeItem[] createExportableObjectsWith( final UrlArgument item, final ExportableTreeItem parentItem )
-      throws CoreException
+  private ExportableTreeItem[] createExportableObjectsWith( final UrlArgument item, final ExportableTreeItem parentItem ) throws CoreException
   {
     // from supplier
     final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
@@ -205,6 +202,8 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     String category = item.getProperty( "category" );
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
+    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null );
+    final Integer kennzifferIndex = kennzifferIndexProp == null ? null : new Integer( kennzifferIndexProp );
 
     final Collection excludeList = createExcludeList( context, item, features );
 
@@ -225,8 +224,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
 
       final String id = getClass().getName() + templateUrl.getFile();
 
-      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-          replacetokens, id, category );
+      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl, replacetokens, id, category, kennzifferIndex );
 
       final boolean checked = selectedFeatures.contains( feature );
       final boolean grayed = excludeList.contains( feature );

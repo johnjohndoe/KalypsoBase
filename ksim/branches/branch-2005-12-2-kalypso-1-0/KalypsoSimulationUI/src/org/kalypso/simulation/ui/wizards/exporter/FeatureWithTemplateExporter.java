@@ -158,6 +158,8 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
     String category = item.getProperty( "category" );
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
+    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null );
+    final Integer kennzifferIndex = kennzifferIndexProp == null ? null : new Integer( kennzifferIndexProp );
     
     final Feature[] features = getSelectedFeatures();
     for( int i = 0; i < features.length; i++ )
@@ -177,7 +179,7 @@ public class FeatureWithTemplateExporter extends AbstractFeatureExporter
         final String id = getClass().getName() + templateUrl.getFile();
 
         final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
-            replacetokens, id, category );
+            replacetokens, id, category, kennzifferIndex );
 
         objects.add( exportable );
       }

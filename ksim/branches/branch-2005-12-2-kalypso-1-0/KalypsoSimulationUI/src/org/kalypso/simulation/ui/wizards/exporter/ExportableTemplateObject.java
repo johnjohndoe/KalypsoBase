@@ -88,15 +88,16 @@ public class ExportableTemplateObject implements IExportableObject
   private final int m_exportType;
   private final String m_identifierPrefix;
   private final String m_category;
+  private final Integer m_kennzifferIndex;
 
   /**
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final String identifierPrefix, final String category,
+      final Integer kennzifferIndex )
   {
-    this( arguments, context, documentName, templateUrl, null, identifierPrefix, category );
+    this( arguments, context, documentName, templateUrl, null, identifierPrefix, category, kennzifferIndex );
   }
 
   /**
@@ -111,8 +112,8 @@ public class ExportableTemplateObject implements IExportableObject
    * @param category
    *          the category of the document resulting from the export of this object
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName,
-      final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix,
+      final String category, final Integer kennzifferIndex )
   {
     m_arguments = arguments;
     m_context = context;
@@ -121,6 +122,7 @@ public class ExportableTemplateObject implements IExportableObject
     m_replaceTokens = replaceTokens;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_kennzifferIndex = kennzifferIndex;
 
     final String strUrl = m_templateUrl.toExternalForm();
     if( strUrl.endsWith( "odt" ) )
@@ -128,8 +130,7 @@ public class ExportableTemplateObject implements IExportableObject
     else if( strUrl.endsWith( "ott" ) )
       m_exportType = EXPORT_TYPE_TABLE;
     else
-      throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl
-          + ". Nur .odt und .ott Vorlagen werden unterstützt." );
+      throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl + ". Nur .odt und .ott Vorlagen werden unterstützt." );
   }
 
   public String getPreferredDocumentName()
@@ -146,8 +147,7 @@ public class ExportableTemplateObject implements IExportableObject
     }
   }
 
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     Reader reader = null;
     try
@@ -161,12 +161,12 @@ public class ExportableTemplateObject implements IExportableObject
       switch( m_exportType )
       {
       case EXPORT_TYPE_DIAGRAM:
-        return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor(
-            monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+        return ExporterHelper.exportObsDiagram( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory(),
+            getKennzifferIndex() );
 
       case EXPORT_TYPE_TABLE:
-        return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor,
-            1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory() );
+        return ExporterHelper.exportObsTable( m_context, m_arguments, reader, output, new SubProgressMonitor( monitor, 1 ), m_templateUrl, metadataExtensions, getIdentifier(), getCategory(),
+            getKennzifferIndex() );
       }
 
       // should never come here
@@ -203,4 +203,10 @@ public class ExportableTemplateObject implements IExportableObject
   {
     return m_category;
   }
+
+  private Integer getKennzifferIndex()
+  {
+    return m_kennzifferIndex;
+  }
+
 }
