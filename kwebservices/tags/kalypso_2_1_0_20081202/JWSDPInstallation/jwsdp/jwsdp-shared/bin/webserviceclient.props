@@ -1,0 +1,7 @@
+jwsdp.home=../../
+build.dir=build
+dist.dir=dist
+configfile=client-config.xml
+proxy.host=
+proxy.port=
+jarname=<resulting jar file name>
