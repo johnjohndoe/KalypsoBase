@@ -24,22 +24,20 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * Some adaptions made by:
- * 
  * @author Gernot Belger
  */
 public class ImageConverter
 {
   public static BufferedImage convertToAWT( final ImageData data )
   {
+    ColorModel colorModel = null;
     final PaletteData palette = data.palette;
     if( palette.isDirect )
     {
-      if( data.getTransparencyType() != 0 )
-        System.out.println( "Autsch!" );
-
-      final ColorModel colorModel = new DirectColorModel( data.depth, palette.redMask, palette.greenMask, palette.blueMask );
+      colorModel = new DirectColorModel( data.depth, palette.redMask, palette.greenMask, palette.blueMask );
       final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+// final BufferedImage bufferedImage = new BufferedImage( data.width, data.height, BufferedImage.TYPE_INT_ARGB );
+      colorModel = bufferedImage.getColorModel();
 
       final WritableRaster raster = bufferedImage.getRaster();
       final int[] pixelArray = new int[3];
@@ -57,44 +55,43 @@ public class ImageConverter
       }
       return bufferedImage;
     }
-
-    /* Palette is not direct */
-    final RGB[] rgbs = palette.getRGBs();
-    final byte[] red = new byte[rgbs.length];
-    final byte[] green = new byte[rgbs.length];
-    final byte[] blue = new byte[rgbs.length];
-    for( int i = 0; i < rgbs.length; i++ )
-    {
-      final RGB rgb = rgbs[i];
-      red[i] = (byte) rgb.red;
-      green[i] = (byte) rgb.green;
-      blue[i] = (byte) rgb.blue;
-    }
-    ColorModel colorModel;
-    if( data.transparentPixel != -1 )
-      colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue, data.transparentPixel );
     else
-      colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
-    final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-    final WritableRaster raster = bufferedImage.getRaster();
-    final int[] pixelArray = new int[1];
-    for( int y = 0; y < data.height; y++ )
     {
-      for( int x = 0; x < data.width; x++ )
+      final RGB[] rgbs = palette.getRGBs();
+      final byte[] red = new byte[rgbs.length];
+      final byte[] green = new byte[rgbs.length];
+      final byte[] blue = new byte[rgbs.length];
+      for( int i = 0; i < rgbs.length; i++ )
       {
-        final int pixel = data.getPixel( x, y );
-        pixelArray[0] = pixel;
-        raster.setPixel( x, y, pixelArray );
+        final RGB rgb = rgbs[i];
+        red[i] = (byte) rgb.red;
+        green[i] = (byte) rgb.green;
+        blue[i] = (byte) rgb.blue;
       }
+      if( data.transparentPixel != -1 )
+      {
+        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue, data.transparentPixel );
+      }
+      else
+      {
+        colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
+      }
+      final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+      final WritableRaster raster = bufferedImage.getRaster();
+      final int[] pixelArray = new int[1];
+      for( int y = 0; y < data.height; y++ )
+      {
+        for( int x = 0; x < data.width; x++ )
+        {
+          final int pixel = data.getPixel( x, y );
+          pixelArray[0] = pixel;
+          raster.setPixel( x, y, pixelArray );
+        }
+      }
+      return bufferedImage;
     }
-    return bufferedImage;
   }
 
-  /**
-   * Converts a {@link BufferedImage} into an {@link ImageData} by interpreting the first three bands of the image as
-   * RGB, the 4 (optional) as alpha value.<br>
-   * TODO: check if this is always ok.
-   */
   public static ImageData convertToSWT( final BufferedImage bufferedImage )
   {
     if( bufferedImage.getColorModel() instanceof DirectColorModel )
@@ -103,11 +100,7 @@ public class ImageConverter
       final PaletteData palette = new PaletteData( colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask() );
       final ImageData data = new ImageData( bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette );
       final WritableRaster raster = bufferedImage.getRaster();
-      final int numBands = raster.getNumBands();
-      if( numBands < 3 )
-        throw new IllegalArgumentException( "Image must have at least 3 bands" );
-
-      final int[] pixelArray = new int[numBands];
+      final int[] pixelArray = new int[3];
       for( int y = 0; y < data.height; y++ )
       {
         for( int x = 0; x < data.width; x++ )
@@ -115,8 +108,6 @@ public class ImageConverter
           raster.getPixel( x, y, pixelArray );
           final int pixel = palette.getPixel( new RGB( pixelArray[0], pixelArray[1], pixelArray[2] ) );
           data.setPixel( x, y, pixel );
-          if( numBands > 3 )
-            data.setAlpha( x, y, pixelArray[3] );
         }
       }
       return data;

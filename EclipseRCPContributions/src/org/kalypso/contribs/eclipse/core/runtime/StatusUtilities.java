@@ -51,9 +51,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
@@ -65,8 +62,7 @@ public final class StatusUtilities
 {
   /**
    * A status mask representing the combination of all available stati. Usefull e.g. for
-   * {@link org.eclipse.jface.dialogs.ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus, int)}
-   * .
+   * {@link org.eclipse.jface.dialogs.ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus, int)}.
    */
   public static final int ALL_STATUS_MASK = IStatus.OK | IStatus.CANCEL | IStatus.INFO | IStatus.WARNING | IStatus.ERROR;
 
@@ -119,7 +115,7 @@ public final class StatusUtilities
    * all includes child-stati, separated by line-breaks
    * 
    * @param currentDepth
-   *          Amout of tabs with wich the message will be indentated
+   *            Amout of tabs with wich the message will be indentated
    */
   private static String createStringFromStatus( final IStatus status, final int currentDepth )
   {
@@ -170,7 +166,7 @@ public final class StatusUtilities
    * </p>
    * 
    * @throws NullPointerException
-   *           If <code>t</code> is null.
+   *             If <code>t</code> is null.
    */
   public static IStatus statusFromThrowable( final Throwable t )
   {
@@ -187,27 +183,21 @@ public final class StatusUtilities
    * </p>
    * 
    * @param message
-   *          [optional] used as message for newly created status if specified
+   *            [optional] used as message for newly created status if specified
    * @throws NullPointerException
-   *           If <code>t</code> is null.
+   *             If <code>t</code> is null.
    */
-  public static IStatus statusFromThrowable( final Throwable t, String message, final Object... args )
+  public static IStatus statusFromThrowable( final Throwable t, final String message )
   {
     if( message != null )
     {
-      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, String.format( message, args ), null );
+      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, message, null );
       status.add( statusFromThrowable( t ) );
       return status;
     }
 
     if( t instanceof InvocationTargetException )
-    {
-      if( message == null )
-        message = "";
-
-      return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), String.format( message, args ) );
-    }
-
+      return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), message );
     if( t instanceof CoreException )
       return ((CoreException) t).getStatus();
 
@@ -237,14 +227,14 @@ public final class StatusUtilities
   }
 
   /**
-   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
-   * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
-   * returned.
+   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>.
+   * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
+   * is returned.
    * 
    * @param message
-   *          only used when creating the MultiStatus
+   *            only used when creating the MultiStatus
    */
-  public static IStatus createStatus( final List<IStatus> stati, final String message, final Object... args )
+  public static IStatus createStatus( final List<IStatus> stati, final String message )
   {
     if( stati.size() == 0 )
       return Status.OK_STATUS;
@@ -252,20 +242,20 @@ public final class StatusUtilities
     if( stati.size() == 1 )
       return stati.get( 0 );
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), message, null );
   }
 
   /**
-   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
-   * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
-   * returned.
+   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>.
+   * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
+   * is returned.
    * 
    * @param message
-   *          only used when creating the MultiStatus
+   *            only used when creating the MultiStatus
    */
-  public static IStatus createStatus( final IStatus[] stati, final String message, final Object... args )
+  public static IStatus createStatus( final IStatus[] stati, final String message )
   {
-    return createStatus( Arrays.asList( stati ), String.format( message, args ) );
+    return createStatus( Arrays.asList( stati ), message );
   }
 
   /**
@@ -287,33 +277,33 @@ public final class StatusUtilities
   /**
    * Creates an error-status with given message and null throwable.
    */
-  public static IStatus createErrorStatus( final String errorMessage, final Object... args )
+  public static IStatus createErrorStatus( final String errorMessage )
   {
-    return createStatus( IStatus.ERROR, String.format( errorMessage, args ), null );
+    return createStatus( IStatus.ERROR, errorMessage, null );
   }
 
   /**
    * Creates an info-status with given message and null throwable.
    */
-  public static IStatus createInfoStatus( final String infoMessage, final Object... args )
+  public static IStatus createInfoStatus( final String infoMessage )
   {
-    return createStatus( IStatus.INFO, String.format( infoMessage, args ), null );
+    return createStatus( IStatus.INFO, infoMessage, null );
   }
 
   /**
    * Creates a warning-status with given message and null throwable.
    */
-  public static IStatus createWarningStatus( final String warningMessage, final Object... args )
+  public static IStatus createWarningStatus( final String warningMessage )
   {
-    return createStatus( IStatus.WARNING, String.format( warningMessage, args ), null );
+    return createStatus( IStatus.WARNING, warningMessage, null );
   }
 
   /**
    * Creates a ok-status with given message and null throwable.
    */
-  public static IStatus createOkStatus( final String message, final Object... args )
+  public static IStatus createOkStatus( final String message )
   {
-    return createStatus( IStatus.OK, String.format( message, args ), null );
+    return createStatus( IStatus.OK, message, null );
   }
 
   /**
@@ -321,12 +311,12 @@ public final class StatusUtilities
    * then it is simply returned.
    * 
    * @param status
-   *          the status to wrap
+   *            the status to wrap
    * @param severity
-   *          the desired severity
+   *            the desired severity
    * @param severityMask
-   *          the severity-mask for which the wrapping takes place. If the given status does not match this
-   *          severity-mask, no wrap takes place
+   *            the severity-mask for which the wrapping takes place. If the given status does not match this
+   *            severity-mask, no wrap takes place
    */
   public static IStatus wrapStatus( final IStatus status, final int severity, final int severityMask )
   {
@@ -371,115 +361,4 @@ public final class StatusUtilities
     for( final IStatus child : children )
       printStackTraces( child );
   }
-
-  /**
-   * Opens an error dialog on the given status.
-   * 
-   * @param showMultipleDialogs
-   *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
-   *          multi-status. Else, only one dialog pops-up.
-   * @return See
-   *         {@link ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus)}
-   */
-  public static int openErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs )
-  {
-    if( !status.isMultiStatus() || !showMultipleDialogs )
-      return ErrorDialog.openError( shell, title, message, status );
-
-    final IStatus[] children = ((MultiStatus) status).getChildren();
-    for( int i = 0; i < children.length; i++ )
-    {
-      final IStatus child = children[i];
-      final int result = ErrorDialog.openError( shell, title, message, child );
-      if( result == Window.CANCEL )
-        return result;
-    }
-
-    return Window.OK;
-  }
-
-  /**
-   * @see #openSpecialErrorDialog(Shell, String, String, IStatus, int, boolean)
-   */
-  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs )
-  {
-    return openSpecialErrorDialog( shell, title, message, status, IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR, showMultipleDialogs );
-  }
-
-  /**
-   * Opens an error dialog on the given status. Tweaks the error message.
-   * 
-   * @param showMultipleDialogs
-   *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
-   *          multi-status. Else, only one dialog pops-up.
-   * @return See
-   *         {@link ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String, org.eclipse.core.runtime.IStatus, int)}
-   */
-  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final int displayMask, final boolean showMultipleDialogs )
-  {
-    if( !status.isMultiStatus() || !showMultipleDialogs )
-    {
-      final StringBuffer msg = new StringBuffer();
-      switch( status.getSeverity() )
-      {
-        case IStatus.ERROR:
-          msg.append( "Fehler" );
-          break;
-        case IStatus.WARNING:
-          msg.append( "Warnung(en)" );
-          break;
-        case IStatus.INFO:
-          msg.append( "Information(en)" );
-          break;
-      }
-
-      msg.append( " bei der Bearbeitung von: \n" );
-      msg.append( message );
-
-      return ErrorDialog.openError( shell, title, msg.toString(), status, displayMask );
-    }
-
-    final IStatus[] children = ((MultiStatus) status).getChildren();
-    for( int i = 0; i < children.length; i++ )
-    {
-      final IStatus child = children[i];
-
-      final String msg;
-      if( child instanceof DialogMultiStatus )
-        msg = ((DialogMultiStatus) child).getDialogMessage();
-      else
-        msg = message;
-
-      final int result = openSpecialErrorDialog( shell, title, msg, child, false );
-      if( result == Window.CANCEL )
-        return result;
-    }
-
-    return Window.OK;
-  }
-
-  /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.
-   * <p>
-   * TODO: internationalize it
-   */
-  public static String getLocalizedSeverity( final IStatus status )
-  {
-    switch( status.getSeverity() )
-    {
-      case IStatus.OK:
-        return "OK";
-      case IStatus.INFO:
-        return "INFO";
-      case IStatus.WARNING:
-        return "WARNUNG";
-      case IStatus.ERROR:
-        return "FEHLER";
-      case IStatus.CANCEL:
-        return "ABBRUCH";
-      default:
-        return "UNBEKANNT";
-    }
-  }
-
 }

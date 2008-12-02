@@ -117,6 +117,7 @@ public class ExcelTableCursor extends TableCursor
       }
       /* On enter, stop editing and move either forwards or downwards */
       else if( e.keyCode == SWT.CR )
+      {
         switch( getAdvanceMode() )
         {
           case RIGHT:
@@ -130,6 +131,10 @@ public class ExcelTableCursor extends TableCursor
           default:
             break;
         }
+      }
+      /* On tab, stop editing, move forwards */
+      // TODO: this does not work, because we never get the tab
+      // The table immediately defocuses on tab
       else if( e.keyCode == SWT.TAB )
       {
         final Table table = getViewer().getTable();
@@ -163,7 +168,7 @@ public class ExcelTableCursor extends TableCursor
       /*
        * Special case: checkbox: always toggle? TODO: shouldn't handle this the CheckboxCellEditor??
        */
-      if( (e.keyCode != SWT.CR) && (e.getSource() instanceof CheckboxCellEditor) )
+      if( e.keyCode != SWT.CR && e.getSource() instanceof CheckboxCellEditor )
       {
         // toggle checkbox
         final CheckboxCellEditor ce = (CheckboxCellEditor) e.getSource();
@@ -185,21 +190,21 @@ public class ExcelTableCursor extends TableCursor
     @Override
     public void keyPressed( final KeyEvent e )
     {
-      if( (e.keyCode == SWT.CTRL) || ((e.stateMask & SWT.CONTROL) != 0) )
+      if( e.keyCode == SWT.CTRL || (e.stateMask & SWT.CONTROL) != 0 )
       {
         setVisible( false );
         return;
       }
 
-      if( (e.keyCode == SWT.SHIFT) || ((e.stateMask & SWT.SHIFT) != 0) )
+      if( e.keyCode == SWT.SHIFT || (e.stateMask & SWT.SHIFT) != 0 )
       {
         setVisible( false );
         return;
       }
 
       // handle F2 to start editing
-      if( (e.keyCode == SWT.F2)
-          || ((" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0) || ((e.character >= '0') && (e.character <= 'z')) || ((e.character >= 'A') && (e.character <= 'Z'))) )
+      if( e.keyCode == SWT.F2
+          || (" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( e.character ) >= 0 || (e.character >= '0' && e.character <= 'z') || (e.character >= 'A' && e.character <= 'Z')) )
       {
         startEditing( e );
         return;
@@ -257,13 +262,13 @@ public class ExcelTableCursor extends TableCursor
     @Override
     public void keyReleased( final KeyEvent e )
     {
-      if( (e.keyCode == SWT.CONTROL) && ((e.stateMask & SWT.SHIFT) != 0) )
+      if( e.keyCode == SWT.CONTROL && (e.stateMask & SWT.SHIFT) != 0 )
         return;
-      if( (e.keyCode == SWT.SHIFT) && ((e.stateMask & SWT.CONTROL) != 0) )
+      if( e.keyCode == SWT.SHIFT && (e.stateMask & SWT.CONTROL) != 0 )
         return;
-      if( (e.keyCode != SWT.CONTROL) && ((e.stateMask & SWT.CONTROL) != 0) )
+      if( e.keyCode != SWT.CONTROL && (e.stateMask & SWT.CONTROL) != 0 )
         return;
-      if( (e.keyCode != SWT.SHIFT) && ((e.stateMask & SWT.SHIFT) != 0) )
+      if( e.keyCode != SWT.SHIFT && (e.stateMask & SWT.SHIFT) != 0 )
         return;
       setVisible( true );
       setFocus();
@@ -274,7 +279,7 @@ public class ExcelTableCursor extends TableCursor
   {
     public void keyTraversed( final TraverseEvent e )
     {
-      if( (e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) )
+      if( e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS )
         e.doit = false;
     }
   };
@@ -395,13 +400,12 @@ public class ExcelTableCursor extends TableCursor
     // add the editorListener to the celleditor in order to refocus the
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
-
     cellEditor.addListener( new ValidateCellEditorListener( cellEditor, m_errorColor ) );
     cellEditor.addListener( new StopEditingCellEditorListener( cellEditor, this, m_viewer ) );
 
     // remove potential old listener
     final Control control = cellEditor.getControl();
-    if( (control != null) && !control.isDisposed() )
+    if( control != null && !control.isDisposed() )
     {
       control.removeKeyListener( m_keyListenerOnCell );
       control.addKeyListener( m_keyListenerOnCell );
@@ -423,7 +427,7 @@ public class ExcelTableCursor extends TableCursor
 
     // do not loose pressed character
     //
-    if( (keyEvent != null) && (control != null) && !control.isDisposed() && (control instanceof Button) )
+    if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
       final Button button = (Button) control;
       button.setSelection( !button.getSelection() );
@@ -432,7 +436,7 @@ public class ExcelTableCursor extends TableCursor
     if( control instanceof Text )
     {
       final Text text = (Text) control;
-      if( (keyEvent != null) && (keyEvent.keyCode != SWT.F2) )
+      if( keyEvent != null && keyEvent.keyCode != SWT.F2 )
         text.insert( "" + keyEvent.character );
     }
 
@@ -485,11 +489,11 @@ public class ExcelTableCursor extends TableCursor
    * Advances the cursor position by the given delta.
    * 
    * @param control
-   *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
+   *            If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
   protected void advanceCursor( final Control control, final int dx, final int dy )
   {
-    if( (dx != 0) || (dy != 0) )
+    if( dx != 0 || dy != 0 )
     {
       stopEditing( control );
 
@@ -504,7 +508,7 @@ public class ExcelTableCursor extends TableCursor
       final int rowCount = table.getItemCount();
       final int columnCount = table.getColumnCount();
 
-      if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
+      if( col >= 0 && col < columnCount && row >= 0 && row < rowCount )
         setSelection( row, col, true );
     }
   }

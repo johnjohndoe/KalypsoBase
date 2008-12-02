@@ -55,25 +55,25 @@ public class XMLHelper
 
   public static final String DEFAULT_ENCODING = "UTF-8";
 
-  public static boolean isGlobalElementDefinition( final Node node )
+  public static boolean isGlobalElementDefinition( Node node )
   {
-    final Node parentNode = node.getParentNode();
-    final String ns = parentNode.getNamespaceURI();
-    final String name = parentNode.getLocalName();
+    Node parentNode = node.getParentNode();
+    String ns = parentNode.getNamespaceURI();
+    String name = parentNode.getLocalName();
     return (XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ));
   }
 
-  public static Document getAsDOM( final File file, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( File file, boolean namespaceaware ) throws Exception
   {
     return getAsDOM( new FileInputStream( file ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputStream inStream, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final InputStream inStream, boolean namespaceaware ) throws Exception
   {
     return getAsDOM( new InputSource( inStream ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputSource inputSource, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final InputSource inputSource, boolean namespaceaware ) throws Exception
   {
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( namespaceaware );
@@ -83,7 +83,7 @@ public class XMLHelper
     return dom;
   }
 
-  public static Document getAsDOM( final URL url, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final URL url, boolean namespaceaware ) throws Exception
   {
     InputStream inputStream = null;
 
@@ -113,12 +113,12 @@ public class XMLHelper
     writeDOM( xmlDOM, charset, new StreamResult( os ), true  );
   }
 
-  public static void writeDOM( final Node xmlDOM, final String charset, final Writer writer ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer ) throws TransformerException
   {
     writeDOM( xmlDOM, charset, writer, true );
   }
 
-  public static void writeDOM( final Node xmlDOM, final String charset, final Writer writer, final boolean indent ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final Writer writer, final boolean indent ) throws TransformerException
   {
     // sollte nichte benutzt werden, wenn das charset nicht bekannt ist,
     // da sonst Mist rauskommt
@@ -128,7 +128,7 @@ public class XMLHelper
     writeDOM( xmlDOM, charset, new StreamResult( writer ), indent );
   }
 
-  public static void writeDOM( final Node xmlDOM, final String charset, final StreamResult streamResult, final boolean indent ) throws TransformerException
+  public static void writeDOM( final Document xmlDOM, final String charset, final StreamResult streamResult, final boolean indent ) throws TransformerException
   {
     final TransformerFactory tFactory = TransformerFactory.newInstance();
 
@@ -145,21 +145,21 @@ public class XMLHelper
     t.transform( new DOMSource( xmlDOM ), streamResult );
   }
 
-  public static Node getAttributeNode( final Node node, final String attributeName )
+  public static Node getAttributeNode( Node node, String attributeName )
   {
     try
     {
-      final NamedNodeMap nodeMap = node.getAttributes();
+      NamedNodeMap nodeMap = node.getAttributes();
 
       return nodeMap.getNamedItem( attributeName );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       return null;
     }
   }
 
-  public static String getAttributeValue( final Node node, final String attributeName )
+  public static String getAttributeValue( Node node, String attributeName )
   {
     final Node attributeNode = getAttributeNode( node, attributeName );
     if( attributeNode == null )
@@ -170,7 +170,7 @@ public class XMLHelper
     return attributeNode.getNodeValue();
   }
 
-  public static NodeList getXPath( final String xPathQuery, final Node domNode )
+  public static NodeList getXPath( String xPathQuery, Node domNode )
   {
     NodeList nl = null;
 
@@ -180,7 +180,7 @@ public class XMLHelper
       // schau mal obs noch geht...
       nl = XPathAPI.selectNodeList( domNode, xPathQuery );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       System.out.println( e.getMessage() );
       e.printStackTrace();
@@ -189,9 +189,9 @@ public class XMLHelper
     return nl;
   }
 
-  public static String getXPathContent( final String xPathQuery, final Node domNode )
+  public static String getXPathContent( String xPathQuery, Node domNode )
   {
-    final NodeList nl = getXPath( xPathQuery, domNode );
+    NodeList nl = getXPath( xPathQuery, domNode );
 
     if( nl == null )
       return null;
@@ -200,7 +200,7 @@ public class XMLHelper
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      final Node node = nl.item( i );
+      Node node = nl.item( i );
 
       result += node.getNodeValue();
     }
@@ -209,24 +209,24 @@ public class XMLHelper
 
   }
 
-  public static Document post( final String url, final String data, final boolean namespaceaware ) throws Exception
+  public static Document post( String url, String data, boolean namespaceaware ) throws Exception
   {
     return post( new URL( url ), data, namespaceaware );
   }
 
-  public static Document post( final URL url, final String data, final boolean namespaceaware ) throws Exception
+  public static Document post( URL url, String data, boolean namespaceaware ) throws Exception
   {
-    final URLConnection connect = url.openConnection();
+    URLConnection connect = url.openConnection();
 
     if( connect instanceof HttpURLConnection )
     {
-      final HttpURLConnection uc = (HttpURLConnection) connect;
+      HttpURLConnection uc = (HttpURLConnection) connect;
       uc.setRequestMethod( "POST" );
       uc.setDoInput( true );
       uc.setDoOutput( true );
       uc.setUseCaches( false );
 
-      final PrintWriter pw = new PrintWriter( uc.getOutputStream() );
+      PrintWriter pw = new PrintWriter( uc.getOutputStream() );
       pw.print( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + data );
       pw.flush();
       pw.close();
@@ -237,21 +237,21 @@ public class XMLHelper
     throw new Exception( "uups, no http connection" );
   }
 
-  public static NodeList reduceByAttribute( final NodeList nl, final String attributeName, final String attributeValue )
+  public static NodeList reduceByAttribute( NodeList nl, String attributeName, String attributeValue )
   {
-    final NodeList_Impl result = new NodeList_Impl();
+    NodeList_Impl result = new NodeList_Impl();
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
       try
       {
-        final NamedNodeMap nodeMap = nl.item( i ).getAttributes();
+        NamedNodeMap nodeMap = nl.item( i ).getAttributes();
 
         final Node namedItem = nodeMap.getNamedItem( attributeName );
         if( namedItem != null && attributeValue.equals( namedItem.getNodeValue() ) )
           result.add( nl.item( i ) );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         // nothing to do
       }
@@ -260,9 +260,9 @@ public class XMLHelper
     return result;
   }
 
-  public static String toString( final NodeList nl )
+  public static String toString( NodeList nl )
   {
-    final StringBuffer result = new StringBuffer();
+    StringBuffer result = new StringBuffer();
 
     for( int i = 0; i < nl.getLength(); i++ )
       result.append( toString( nl.item( i ) ) );
@@ -270,19 +270,19 @@ public class XMLHelper
     return result.toString();
   }
 
-  public static String toString( final Node node )
+  public static String toString( Node node )
   {
     try
     {
-      final Transformer t = TransformerFactory.newInstance().newTransformer();
-      final DOMSource src = new DOMSource( node );
-      final StringWriter sw = new StringWriter();
-      final StreamResult result = new StreamResult( sw );
+      Transformer t = TransformerFactory.newInstance().newTransformer();
+      DOMSource src = new DOMSource( node );
+      StringWriter sw = new StringWriter();
+      StreamResult result = new StreamResult( sw );
       t.transform( src, result );
 
       return sw.toString();
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
 
@@ -290,20 +290,20 @@ public class XMLHelper
     }
   }
 
-  public static String xslTransform( final Node domNode, final String outputMethod, final String xslTemplateString )
+  public static String xslTransform( Node domNode, String outputMethod, String xslTemplateString )
   {
     try
     {
-      final String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" " + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\""
-      + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
+      String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" " + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\""
+          + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
 
-      final DOMSource xmlSource = new DOMSource( domNode );
-      final StreamSource xslSource = new StreamSource( new StringReader( xslString ) );
+      DOMSource xmlSource = new DOMSource( domNode );
+      StreamSource xslSource = new StreamSource( new StringReader( xslString ) );
 
       return xslTransform( xmlSource, xslSource );
 
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
 
@@ -311,21 +311,21 @@ public class XMLHelper
     }
   }
 
-  public static String xslTransform( final Source xmlSource, final Source xslSource )
+  public static String xslTransform( Source xmlSource, Source xslSource )
   {
     try
     {
-      final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
       // transformerFactory.setAttribute("version",new String("1.0"));
-      final Transformer transformer = transformerFactory.newTransformer( xslSource );
-      final StringWriter resultSW = new StringWriter();
+      Transformer transformer = transformerFactory.newTransformer( xslSource );
+      StringWriter resultSW = new StringWriter();
       transformer.transform( xmlSource, new StreamResult( resultSW ) );
 
       return resultSW.toString();
 
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
 
@@ -333,15 +333,15 @@ public class XMLHelper
     }
   }
 
-  public static void xslTransform( final InputStream xmlInputStream, final InputStream xslInputStream, final Writer writer ) throws TransformerException, ParserConfigurationException, SAXException, IOException
+  public static void xslTransform( final InputStream xmlInputStream, InputStream xslInputStream, Writer writer ) throws TransformerException, ParserConfigurationException, SAXException, IOException
   {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
-    final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    final Document xmlDOM = docuBuilder.parse( xmlInputStream );
-    final Document xslDOM = docuBuilder.parse( xslInputStream );
-    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
+    DocumentBuilder docuBuilder = factory.newDocumentBuilder();
+    Document xmlDOM = docuBuilder.parse( xmlInputStream );
+    Document xslDOM = docuBuilder.parse( xslInputStream );
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
     transformer.transform( new DOMSource( xmlDOM ), new StreamResult( writer ) );
     writer.close();
   }
@@ -354,19 +354,19 @@ public class XMLHelper
   public static String xslTransform( final InputStream xmlFile, final InputStream xslFile ) throws Exception
   {
 
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( true );
 
-    final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    final Document xmlDOM = docuBuilder.parse( xmlFile );
-    final Document xslDOM = docuBuilder.parse( xslFile );
+    DocumentBuilder docuBuilder = factory.newDocumentBuilder();
+    Document xmlDOM = docuBuilder.parse( xmlFile );
+    Document xslDOM = docuBuilder.parse( xslFile );
 
     return xslTransform( new DOMSource( xmlDOM ), new DOMSource( xslDOM ) );
   }
 
-  public static boolean isAbstractElementDefinition( final Node node )
+  public static boolean isAbstractElementDefinition( Node node )
   {
-    final String abstractStatus = ((Element) node).getAttribute( "abstract" );
+    String abstractStatus = ((Element) node).getAttribute( "abstract" );
     if( abstractStatus == null )
       return false;
     if( "false".equals( abstractStatus ) || "0".equals( abstractStatus ) || "".equals( abstractStatus ) )
@@ -379,7 +379,7 @@ public class XMLHelper
    * 
    * @return position of object in objectArray TODO move to a general HelperClass
    */
-  public static int indexOf( final Object object, final Object[] objectArray )
+  public static int indexOf( Object object, Object[] objectArray )
   {
     for( int i = 0; i < objectArray.length; i++ )
       if( object.equals( objectArray[i] ) )
@@ -399,7 +399,7 @@ public class XMLHelper
     return null;
   }
 
-  public static Node getFirstChildElement( final Node parentNode, final String ns, final String name, final int maxDepth )
+  public static Node getFirstChildElement( final Node parentNode, final String ns, final String name, int maxDepth )
   {
     final NodeList childNodes = parentNode.getChildNodes();
     for( int i = 0; i < childNodes.getLength(); i++ )
@@ -414,7 +414,7 @@ public class XMLHelper
             return node;
           if( maxDepth > 0 )
           {
-            final Node subNode = getFirstChildElement( node, ns, name, maxDepth - 1 );
+            Node subNode = getFirstChildElement( node, ns, name, maxDepth - 1 );
             if( subNode != null )
               return subNode;
           }
@@ -435,10 +435,10 @@ public class XMLHelper
    *          current element
    * @return the textual contents of the element or null, if it is missing
    */
-  public static String getStringValue( final Node node )
+  public static String getStringValue( Node node )
   {
-    final NodeList children = node.getChildNodes();
-    final StringBuffer sb = new StringBuffer( children.getLength() * 500 );
+    NodeList children = node.getChildNodes();
+    StringBuffer sb = new StringBuffer( children.getLength() * 500 );
 
     for( int i = 0; i < children.getLength(); i++ )
     {

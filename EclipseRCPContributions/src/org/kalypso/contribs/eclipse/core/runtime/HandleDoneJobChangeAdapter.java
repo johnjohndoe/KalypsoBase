@@ -2,6 +2,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -21,17 +22,15 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
   private final String m_messageFirstline;
 
   private final int m_stateMask;
-  
-  private final boolean m_showMultipleDialogs;
 
   /**
    * Same as {@link HandleDoneJobChangeAdapter#HandleDoneJobChangeAdapter(Shell, String, String, boolean, int)},
    * stateMask defaulting to <code>IStatus.CANCEL | IStatus.INFO | IStatus.WARNING</code>.
    */
   public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener, final boolean showMultipleDialogs )
+      final boolean autoRemoveListener )
   {
-    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING, showMultipleDialogs );
+    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING );
   }
 
   /**
@@ -47,7 +46,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
    *      org.eclipse.core.runtime.IStatus, int)
    */
   public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener, final int stateMask, final boolean showMultipleDialogs )
+      final boolean autoRemoveListener, final int stateMask )
   {
     super( autoRemoveListener );
 
@@ -55,7 +54,6 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
     m_messageTitle = messageTitle;
     m_messageFirstline = messageFirstline;
     m_stateMask = stateMask;
-    m_showMultipleDialogs = showMultipleDialogs;
   }
 
   /**
@@ -68,15 +66,14 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
     final Shell shell = m_shell;
     final String messageTitle = m_messageTitle;
     final String messageFirstline = m_messageFirstline;
-    final boolean showMultipleDialogs = m_showMultipleDialogs;
 
     final Runnable runnable = new Runnable()
     {
       public void run()
       {
         final IStatus status = event.getResult();
-        StatusUtilities.openSpecialErrorDialog( shell, messageTitle, messageFirstline, status, stateMask,
-            showMultipleDialogs );
+        final ErrorDialog dialog = new ErrorDialog( shell, messageTitle, messageFirstline, status, stateMask );
+        dialog.open();
       }
     };
     m_shell.getDisplay().asyncExec( runnable );

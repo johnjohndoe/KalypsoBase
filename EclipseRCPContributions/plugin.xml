@@ -2,7 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="actionFilters" name="actionFilters" schema="schema/actionFilters.exsd"/>
-   <extension-point id="cronJobs" name="cronJobs" schema="schema/cronJobs.exsd"/>
 
     
 </plugin>

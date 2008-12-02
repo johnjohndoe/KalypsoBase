@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.lang.reflect;
 
@@ -57,7 +57,7 @@ public class ClassUtilities
    * 
    * @return the classname of the given class without package part.
    */
-  public static String getOnlyClassName( final Class< ? > someClass )
+  public static String getOnlyClassName( final Class<?> someClass )
   {
     final String className = someClass.getName().substring( someClass.getName().lastIndexOf( '.' ) + 1 );
 
@@ -67,7 +67,8 @@ public class ClassUtilities
   /**
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class< ? > target, final ClassLoader cl ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl )
+      throws ClassUtilityException
   {
     return newInstance( classname, target, cl, null, null );
   }
@@ -80,9 +81,10 @@ public class ClassUtilities
    * 
    * @see ClassUtilities#newInstance(String, Class, ClassLoader, Class[], Object[])
    */
-  public static Object newInstance( final String classname, final Class< ? > target, final ClassLoader cl, final Object[] arguments ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl,
+      final Object[] arguments ) throws ClassUtilityException
   {
-    Class< ? >[] argClasses = null;
+    Class<?>[] argClasses = null;
     if( arguments != null )
     {
       argClasses = new Class[arguments.length];
@@ -103,6 +105,7 @@ public class ClassUtilities
    *          [optional] classname must be assignable from target
    * @param cl
    *          the ClassLoader to use for instantiating the object
+   * 
    * @param argClasses
    *          [optional] can be null, the list of the class of the arguments to pass to
    *          Class.getConstructor(java.lang.Class[]). If <code>arguments</code> is not null, then
@@ -110,76 +113,61 @@ public class ClassUtilities
    * @param arguments
    *          [optional] can be null, the list of arguments to pass to the constructor. If this argument is specified,
    *          you should also specifiy the <code>argClasses</code> argument.
+   * 
    * @return new Object
+   * 
    * @throws ClassUtilityException
+   * 
    * @see Class#getConstructor(java.lang.Class[])
    */
-  public static Object newInstance( final String classname, final Class< ? > target, final ClassLoader cl, final Class< ? >[] argClasses, final Object[] arguments ) throws ClassUtilityException
+  public static Object newInstance( final String classname, final Class<?> target, final ClassLoader cl,
+      final Class<?>[] argClasses, final Object[] arguments ) throws ClassUtilityException
   {
     try
     {
-      final Class< ? > c = Class.forName( classname, true, cl );
+      final Class<?> c = Class.forName( classname, true, cl );
       // TODO: change parameter to Class<?>
-      final Class< ? > t = target;
+      final Class<?> t = target;
 
-      if( (t == null) || t.isAssignableFrom( c ) )
+      if( ( t == null ) || t.isAssignableFrom( c ) )
       {
         if( arguments == null )
           return c.newInstance();
 
-        final Constructor< ? > cons = c.getConstructor( argClasses );
+        Constructor<?> cons = c.getConstructor( argClasses );
 
         return cons.newInstance( arguments );
       }
 
       throw new ClassUtilityException( "Class " + classname + " not assignable from " + target.getName() );
     }
-    catch( final ClassNotFoundException e )
+    catch( ClassNotFoundException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final InstantiationException e )
+    catch( InstantiationException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final IllegalAccessException e )
+    catch( IllegalAccessException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final SecurityException e )
+    catch( SecurityException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final NoSuchMethodException e )
+    catch( NoSuchMethodException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final IllegalArgumentException e )
+    catch( IllegalArgumentException e )
     {
       throw new ClassUtilityException( e );
     }
-    catch( final InvocationTargetException e )
+    catch( InvocationTargetException e )
     {
       throw new ClassUtilityException( e );
     }
-  }
-
-  /**
-   * Creates a new instance of a given class, optionally using some given parameters.<br>
-   * 
-   * @param parameters
-   *          Parameters given to the class'es constructor. At the moment, all parameters MUST be non-<code>null</code>.
-   * @throws NullPointerException
-   *           If any of the <code>parameters</code> is <code>null</code>.
-   */
-  public static <T> T newInstance( final Class< ? extends T> cls, final Object... parameters ) throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
-  {
-    final Class< ? >[] parameterTypes = new Class[parameters.length];
-
-    for( int i = 0; i < parameters.length; i++ )
-      parameterTypes[i] = parameterTypes[i].getClass();
-
-    final Constructor< ? extends T> constructor = cls.getConstructor( parameterTypes );
-    return constructor.newInstance( parameters );
   }
 }

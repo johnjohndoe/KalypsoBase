@@ -248,42 +248,4 @@ public class MementoWithUrlResolver implements IMemento
 
   }
 
-  /**
-   * @return
-   * @see org.eclipse.ui.IMemento#getAttributeKeys()
-   */
-  public String[] getAttributeKeys( )
-  {
-    return m_memento.getAttributeKeys();
-  }
-
-  /**
-   * @param key
-   * @return
-   * @see org.eclipse.ui.IMemento#getBoolean(java.lang.String)
-   */
-  public Boolean getBoolean( String key )
-  {
-    return m_memento.getBoolean( key );
-  }
-
-  /**
-   * @return
-   * @see org.eclipse.ui.IMemento#getType()
-   */
-  public String getType( )
-  {
-    return m_memento.getType();
-  }
-
-  /**
-   * @param key
-   * @param value
-   * @see org.eclipse.ui.IMemento#putBoolean(java.lang.String, boolean)
-   */
-  public void putBoolean( String key, boolean value )
-  {
-    m_memento.putBoolean( key, value );
-  }
-
 }

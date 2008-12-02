@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.runtime;
 
@@ -133,9 +133,8 @@ public class Debug
     {
       /* PERFORMANCE: Only format the message if really necessary. Do not change this. */
       final String msg = String.format( format, args );
-      final IStatus status = new Status( severity, m_pluginid, msg );
-      if( m_plugin != null )
-        m_plugin.getLog().log( status );
+      final IStatus status = new Status( severity, PluginUtilities.id( m_plugin ), msg );
+      m_plugin.getLog().log( status );
     }
   }
 

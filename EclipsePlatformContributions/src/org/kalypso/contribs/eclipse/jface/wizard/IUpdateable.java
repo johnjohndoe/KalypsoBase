@@ -45,5 +45,5 @@ package org.kalypso.contribs.eclipse.jface.wizard;
  */
 public interface IUpdateable
 {
-  public void update( );
+  public void update();
 }

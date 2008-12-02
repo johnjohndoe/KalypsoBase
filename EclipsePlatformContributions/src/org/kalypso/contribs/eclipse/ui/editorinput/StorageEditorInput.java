@@ -111,7 +111,7 @@ public class StorageEditorInput implements IStorageEditorInput
   public String getToolTipText( )
   {
     // null not allowed, so return name of storage
-    return m_storage.getFullPath().toOSString();    
+    return m_storage.getName();
   }
 
   /**

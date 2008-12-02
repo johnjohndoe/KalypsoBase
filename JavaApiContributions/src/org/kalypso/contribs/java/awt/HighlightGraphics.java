@@ -52,13 +52,23 @@ import java.util.Map;
  */
 public class HighlightGraphics extends Graphics2D
 {
+  private final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 255 );
+
+  private final Color COLOR_TEXT = ColorUtilities.createTransparent( Color.RED, 255 );
+
+  private final Color COLOR_LINE = ColorUtilities.createTransparent( Color.YELLOW, 255 );
+
+  private final Color COLOR_BORDER = ColorUtilities.createTransparent( Color.RED, 255 );
+
+  private static final Color COLOR_BACKGROUND = ColorUtilities.createTransparent( Color.lightGray, 5 );
+
   private final Graphics2D m_graphics;
 
-  private final DefaultHighlightColors m_colors = new DefaultHighlightColors();
-
-  public HighlightGraphics( final Graphics2D graphics )
+  public HighlightGraphics( Graphics2D graphics )
   {
     m_graphics = graphics;
+    m_graphics.setColor( Color.YELLOW );
+    m_graphics.setBackground( COLOR_BACKGROUND );
   }
 
   @Override
@@ -83,13 +93,11 @@ public class HighlightGraphics extends Graphics2D
   public void drawLine( int x1, int y1, int x2, int y2 )
   {
     // m_graphics.setStroke( STROKE_NORMAL );
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.drawLine( x1, y1, x2, y2 );
-
     // m_graphics.setStroke( STROKE_DASHED );
-    m_graphics.setColor( m_colors.getLineColor() );
+    m_graphics.setColor( COLOR_LINE );
     m_graphics.drawLine( x1, y1, x2, y2 );
-
   }
 
   @Override
@@ -108,7 +116,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void addRenderingHints( Map< ? , ? > hints )
+  public void addRenderingHints( Map<?, ?> hints )
   {
     m_graphics.addRenderingHints( hints );
   }
@@ -147,7 +155,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   /**
-   * @see java.awt.Graphics#create(int, int, int, int)
+   * @see java.awt.Graphics#create(int, int, int, in@Override t)
    */
   @Override
   public Graphics create( int x, int y, int width, int height )
@@ -164,7 +172,7 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void draw( Shape s )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.draw( s );
   }
 
@@ -174,14 +182,14 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void draw3DRect( int x, int y, int width, int height, boolean raised )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.draw3DRect( x, y, width, height, raised );
   }
 
   @Override
   public void drawArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.drawArc( x, y, width, height, startAngle, arcAngle );
   }
 
@@ -191,7 +199,7 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void drawBytes( byte[] data, int offset, int length, int x, int y )
   {
-    // m_graphics.setColor(m_colors.getBorderColor());
+    // m_graphics.setColor(COLOR_BORDER);
     m_graphics.drawBytes( data, offset, length, x, y );
   }
 
@@ -201,15 +209,15 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void drawChars( char[] data, int offset, int length, int x, int y )
   {
-    m_graphics.setColor( m_colors.getTextColor() );
+    m_graphics.setColor( COLOR_TEXT );
     m_graphics.drawChars( data, offset, length, x, y );
   }
 
   @Override
   public void drawGlyphVector( GlyphVector g, float x, float y )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawGlyphVector( g, x, y );
   }
 
@@ -258,16 +266,16 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void drawOval( int x, int y, int width, int height )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawOval( x, y, width, height );
   }
 
   @Override
   public void drawPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolygon( xPoints, yPoints, nPoints );
   }
 
@@ -277,16 +285,16 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void drawPolygon( Polygon p )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolygon( p );
   }
 
   @Override
   public void drawPolyline( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawPolyline( xPoints, yPoints, nPoints );
   }
 
@@ -296,58 +304,58 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void drawRect( int x, int y, int width, int height )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawRect( x, y, width, height );
   }
 
   @Override
   public void drawRenderableImage( RenderableImage img, AffineTransform xform )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.drawRenderableImage( img, xform );
   }
 
   @Override
   public void drawRenderedImage( RenderedImage img, AffineTransform xform )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
+    m_graphics.setColor( COLOR_BORDER );
     m_graphics.drawRenderedImage( img, xform );
   }
 
   @Override
   public void drawRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
-    m_graphics.setColor( m_colors.getBorderColor() );
-    m_graphics.setBackground( m_colors.getBackgroundColor() );
+    m_graphics.setColor( COLOR_BORDER );
+    m_graphics.setBackground( COLOR_BACKGROUND );
     m_graphics.drawRoundRect( x, y, width, height, arcWidth, arcHeight );
   }
 
   @Override
   public void drawString( String s, float x, float y )
   {
-    m_graphics.setColor( m_colors.getTextColor() );
+    m_graphics.setColor( COLOR_TEXT );
     m_graphics.drawString( s, x, y );
   }
 
   @Override
   public void drawString( String str, int x, int y )
   {
-    m_graphics.setColor( m_colors.getTextColor() );
+    m_graphics.setColor( COLOR_TEXT );
     m_graphics.drawString( str, x, y );
   }
 
   @Override
   public void drawString( AttributedCharacterIterator iterator, float x, float y )
   {
-    m_graphics.setColor( m_colors.getTextColor() );
+    m_graphics.setColor( COLOR_TEXT );
     m_graphics.drawString( iterator, x, y );
   }
 
   @Override
   public void drawString( AttributedCharacterIterator iterator, int x, int y )
   {
-    m_graphics.setColor( m_colors.getTextColor() );
+    m_graphics.setColor( COLOR_TEXT );
     m_graphics.drawString( iterator, x, y );
   }
 
@@ -363,7 +371,7 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void fill( Shape s )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fill( s );
   }
 
@@ -373,28 +381,28 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void fill3DRect( int x, int y, int width, int height, boolean raised )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fill3DRect( x, y, width, height, raised );
   }
 
   @Override
   public void fillArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillArc( x, y, width, height, startAngle, arcAngle );
   }
 
   @Override
   public void fillOval( int x, int y, int width, int height )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillOval( x, y, width, height );
   }
 
   @Override
   public void fillPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillPolygon( xPoints, yPoints, nPoints );
   }
 
@@ -404,21 +412,21 @@ public class HighlightGraphics extends Graphics2D
   @Override
   public void fillPolygon( Polygon p )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillPolygon( p );
   }
 
   @Override
   public void fillRect( int x, int y, int width, int height )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillRect( x, y, width, height );
   }
 
   @Override
   public void fillRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
-    m_graphics.setColor( m_colors.getFillColor() );
+    m_graphics.setColor( COLOR_FILL );
     m_graphics.fillRoundRect( x, y, width, height, arcWidth, arcHeight );
   }
 
@@ -448,15 +456,6 @@ public class HighlightGraphics extends Graphics2D
   {
     return m_graphics.getClipBounds( r );
   }
-
-  // /**
-  // *
-  // * @see java.awt.Graphics#getClipRect()
-  // */
-  // public Rectangle getClipRect()
-  // {
-  // return m_graphics.getClipRect();
-  // }
 
   @Override
   public Composite getComposite( )
@@ -612,7 +611,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void setRenderingHints( Map< ? , ? > hints )
+  public void setRenderingHints( Map<?, ?> hints )
   {
     m_graphics.setRenderingHints( hints );
   }

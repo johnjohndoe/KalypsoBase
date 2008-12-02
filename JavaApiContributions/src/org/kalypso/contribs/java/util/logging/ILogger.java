@@ -29,8 +29,6 @@
  */
 package org.kalypso.contribs.java.util.logging;
 
-import java.util.logging.Level;
-
 /**
  * simple logger as interface
  * 
@@ -38,5 +36,5 @@ import java.util.logging.Level;
  */
 public interface ILogger
 {
-  public void log( final Level level, final int code, final String message );
+  public void log( String message );
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
@@ -50,22 +50,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.IPageChangeProvider;
-import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.IPageChangingListener;
-import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -74,7 +64,6 @@ import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -109,8 +98,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -125,10 +112,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  * 
  * @author belger
  */
-public class WizardView extends ViewPart implements IWizardContainer2, IWizardChangeProvider, IPageChangeProvider
+public class WizardView extends ViewPart implements IWizardContainer3
 {
-  public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
-
   private RGB m_defaultTitleBackground;
 
   private RGB m_defaultTitleForeground;
@@ -167,14 +152,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private boolean m_backJumpsToLastVisited = true;
 
-  private final Map<Integer, String> m_buttonLabels = new HashMap<Integer, String>();
+  private Map<Integer, String> m_buttonLabels = new HashMap<Integer, String>();
 
   /** Lock for preventing call to changeLocation when url is set internally */
   private boolean m_ignoreNextCangeLocation = false;
-
-  private final ListenerList pageChangedListeners = new ListenerList();
-
-  private final ListenerList pageChangingListeners = new ListenerList();
 
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
@@ -221,7 +202,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       // by m_wizard.dispose();
       setWizardTitleImage( null );
 
-      // todo: maybe ask for unsaved data?
+      //  todo: maybe ask for unsaved data?
       m_wizard.setContainer( null );
       m_wizard.dispose();
       m_wizard = null;
@@ -231,8 +212,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_pageAndButtonArea != null && !m_pageAndButtonArea.isDisposed() )
     {
       final Control[] children = m_pageAndButtonArea.getChildren();
-      for( final Control element : children )
-        element.dispose();
+      for( int i = 0; i < children.length; i++ )
+        children[i].dispose();
     }
 
     // first time set this wizard
@@ -247,12 +228,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_wizard = wizard;
 
     if( m_wizard == null )
-    {
-      // HACK: only set the message, if at least one message was set. Else we may destroy the background color
-      // of the message label
-      if( normalMsgAreaBackground != null )
-        setErrorMessage( "Kein Wizard gesetzt" );
-    }
+      setErrorMessage( "Kein Wizard gesetzt" );
     else
     {
       createRightPanel( m_pageAndButtonArea );
@@ -260,11 +236,14 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       int initialBrowserSize = 25;
       if( m_wizard instanceof IWizard2 )
       {
-        final int wizardInitialBrowserSize = ((IWizard2) m_wizard).getInitialBrowserSize();
+        final int wizardInitialBrowserSize = ( (IWizard2)m_wizard ).getInitialBrowserSize();
         // force into [5, 95]
         initialBrowserSize = Math.min( 95, Math.max( 5, wizardInitialBrowserSize ) );
       }
-      m_mainSash.setWeights( new int[] { initialBrowserSize, 100 - initialBrowserSize } );
+      m_mainSash.setWeights( new int[]
+      {
+          initialBrowserSize,
+          100 - initialBrowserSize } );
     }
 
     fireWizardChanged( wizard, reason );
@@ -287,13 +266,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
     setWizard( null );
 
     m_listeners.clear();
-    pageChangedListeners.clear();
-    pageChangingListeners.clear();
 
     m_disposeHelper.dispose();
   }
@@ -314,7 +291,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     data.bottom = new FormAttachment( 100, 0 );
     parent.setLayoutData( data );
 
-    // Now create a work area for the rest of the dialog
+    //Now create a work area for the rest of the dialog
     m_workArea = new Composite( parent, SWT.NULL );
     final GridLayout workLayout = new GridLayout();
     workLayout.marginHeight = 0;
@@ -336,13 +313,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     // Browser: to the left
     // Register a context menu on it, so we suppress the ugly explorer menu
-    final Composite browserPanel = new Composite( m_mainSash, SWT.BORDER );
-    browserPanel.setLayout( new GridLayout() );
-    m_browser = new Browser( browserPanel, SWT.BORDER );
-    m_browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_browser = new Browser( m_mainSash, SWT.NONE );
     final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     menuManager.setRemoveAllWhenShown( true );
-    // menuManager.addMenuListener( this );
+    //    menuManager.addMenuListener( this );
     final Menu contextMenu = menuManager.createContextMenu( m_browser );
     m_browser.setMenu( contextMenu );
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
@@ -359,12 +333,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     } );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
-    final GridLayout pageAndButtonLayout = new GridLayout();
-    pageAndButtonLayout.marginHeight = 0;
-    pageAndButtonLayout.marginWidth = 0;
-    pageAndButtonLayout.horizontalSpacing = 0;
-    pageAndButtonLayout.verticalSpacing = 0;
-    m_pageAndButtonArea.setLayout( pageAndButtonLayout );
+    m_pageAndButtonArea.setLayout( new GridLayout() );
     m_pageAndButtonArea.setFont( m_mainSash.getFont() );
 
     setWizard( m_wizard );
@@ -380,8 +349,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_pageContainer.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     m_pageContainer.setFont( parent.getFont() );
 
-    // // Allow the wizard pages to precreate their page controls
-    // createPageControls();
+    //    // Allow the wizard pages to precreate their page controls
+    //    createPageControls();
 
     final Label label = new Label( parent, SWT.HORIZONTAL | SWT.SEPARATOR );
     label.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -432,9 +401,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).isSaveAvailable() )
-      createButton( parent, SAVE_ID, "Speichern", "doSave", false );
-
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false );
 
@@ -443,33 +409,33 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true );
 
-    if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
+    if( !( m_wizard instanceof IWizard2 ) || ( (IWizard2)m_wizard ).hasCancelButton() )
       createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false );
   }
 
   /**
-   * Creates the Previous and Next buttons for this wizard dialog. Creates standard (<code>SWT.PUSH</code>) buttons and
-   * registers for their selection events. Note that the number of columns in the button bar composite is incremented.
-   * These buttons are created specially to prevent any space between them.
+   * Creates the Previous and Next buttons for this wizard dialog. Creates standard (<code>SWT.PUSH</code>) buttons
+   * and registers for their selection events. Note that the number of columns in the button bar composite is
+   * incremented. These buttons are created specially to prevent any space between them.
    * 
    * @param parent
    *          the parent button bar
    * @return a composite containing the new buttons
    */
-  private Composite createPreviousAndNextButtons( final Composite parent )
+  private Composite createPreviousAndNextButtons( Composite parent )
   {
     // increment the number of columns in the button bar
-    ((GridLayout) parent.getLayout()).numColumns++;
-    final Composite composite = new Composite( parent, SWT.NONE );
+    ( (GridLayout)parent.getLayout() ).numColumns++;
+    Composite composite = new Composite( parent, SWT.NONE );
     // create a layout with spacing and margins appropriate for the font size.
-    final GridLayout layout = new GridLayout();
+    GridLayout layout = new GridLayout();
     layout.numColumns = 0; // will be incremented by createButton
     layout.marginWidth = 0;
     layout.marginHeight = 0;
     layout.horizontalSpacing = 0;
     layout.verticalSpacing = 0;
     composite.setLayout( layout );
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_CENTER );
+    GridData data = new GridData( GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_CENTER );
     composite.setLayoutData( data );
     composite.setFont( parent.getFont() );
     createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false );
@@ -483,8 +449,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for
    * selection events including button presses, and registers default buttons with its shell. The button id is stored as
    * the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be
-   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the new
-   * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
+   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the
+   * new button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
    * 
@@ -498,15 +464,17 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @param handlerMethod
    *          (java) name of the method which handles this button. Must be of kind 'public void xxx()'
+   * 
    * @return the new button
    */
-  protected Button createButton( final Composite parent, final int id, final String defaultLabel, final String handlerMethod, final boolean defaultButton )
+  protected Button createButton( final Composite parent, final int id, final String defaultLabel,
+      final String handlerMethod, final boolean defaultButton )
   {
     final Integer buttonID = new Integer( id );
-    final String label = m_buttonLabels.containsKey( buttonID ) ? (String) m_buttonLabels.get( buttonID ) : defaultLabel;
+    final String label = m_buttonLabels.containsKey( buttonID ) ? (String)m_buttonLabels.get( buttonID ) : defaultLabel;
 
     // increment the number of columns in the button bar
-    ((GridLayout) parent.getLayout()).numColumns++;
+    ( (GridLayout)parent.getLayout() ).numColumns++;
     final Button button = new Button( parent, SWT.PUSH );
     button.setText( label );
     button.setFont( JFaceResources.getDialogFont() );
@@ -535,8 +503,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   {
     try
     {
-      final Method method = getClass().getMethod( handlerMethod, (Class< ? >[]) null );
-      method.invoke( this, (Object[]) null );
+      final Method method = getClass().getMethod( handlerMethod );
+      method.invoke( this );
     }
     catch( final Exception e )
     {
@@ -551,11 +519,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   protected void setButtonLayoutData( final Button button )
   {
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-    final int widthHint = convertHorizontalDLUsToPixels( IDialogConstants.BUTTON_WIDTH );
-    final Point minSize = button.computeSize( SWT.DEFAULT, SWT.DEFAULT, true );
-    data.widthHint = Math.max( widthHint, minSize.x );
-    button.setLayoutData( data );
+    final GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+    int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+    final Point minSize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+    data.widthHint = Math.max(widthHint, minSize.x);
+    button.setLayoutData(data);
   }
 
   /**
@@ -567,10 +535,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param control
    *          a control from which to obtain the current font
    */
-  protected void initializeDialogUnits( final Control control )
+  protected void initializeDialogUnits( Control control )
   {
     // Compute and store a font metric
-    final GC gc = new GC( control );
+    GC gc = new GC( control );
     gc.setFont( JFaceResources.getDialogFont() );
     m_fontMetrics = gc.getFontMetrics();
     gc.dispose();
@@ -589,7 +557,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    *          the number of vertical dialog units
    * @return the number of pixels
    */
-  protected int convertVerticalDLUsToPixels( final int dlus )
+  protected int convertVerticalDLUsToPixels( int dlus )
   {
     // test for failure to initialize for backward compatibility
     if( m_fontMetrics == null )
@@ -610,7 +578,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    *          the number of horizontal dialog units
    * @return the number of pixels
    */
-  protected int convertHorizontalDLUsToPixels( final int dlus )
+  protected int convertHorizontalDLUsToPixels( int dlus )
   {
     // test for failure to initialize for backward compatibility
     if( m_fontMetrics == null )
@@ -622,7 +590,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   @Override
-  public void setFocus( )
+  public void setFocus()
   {
     if( m_pageContainer == null && !m_workArea.isDisposed() )
       m_workArea.setFocus();
@@ -635,15 +603,15 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * 
    * @see org.eclipse.jface.wizard.IWizardContainer2#updateSize()
    */
-  public void updateSize( )
+  public void updateSize()
   {
-    //
+  //   
   }
 
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getCurrentPage()
    */
-  public IWizardPage getCurrentPage( )
+  public IWizardPage getCurrentPage()
   {
     return m_currentPage;
   }
@@ -651,7 +619,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#getShell()
    */
-  public Shell getShell( )
+  public Shell getShell()
   {
     return getViewSite().getShell();
   }
@@ -670,23 +638,19 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       return false;
 
     if( !m_isMovingToPreviousPage )
-      // remember my previous page.
+    //    remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
     }
     else
       m_isMovingToPreviousPage = false;
-    // Update for the new page in a busy cursor if possible
-
-    // If page changing evaluation unsuccessful, do not change the page
-    if( !doPageChanging( page ) )
-      return false;
+    //Update for the new page ina busy cursor if possible
 
     final CatchRunnable runnable = new CatchRunnable()
     {
       @Override
-      protected void runIntern( ) throws Throwable
+      protected void runIntern() throws Throwable
       {
         updateForPage( page );
       }
@@ -694,20 +658,20 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     BusyIndicator.showWhile( m_pageContainer.getDisplay(), runnable );
 
-    // only if no exception was thrown, it is marked as successful
+    // only if no exception was thrown, it is marked as succesful
     return runnable.getThrown() == null;
   }
 
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateButtons()
    */
-  public void updateButtons( )
+  public void updateButtons()
   {
     if( m_wizard == null || m_currentPage == null )
       return;
 
     boolean canFlipToNextPage = false;
-    final boolean canFinish = m_wizard.canFinish();
+    boolean canFinish = m_wizard.canFinish();
 
     final Button backButton = getButton( IDialogConstants.BACK_ID );
     final Button nextButton = getButton( IDialogConstants.NEXT_ID );
@@ -725,7 +689,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       finishButton.setEnabled( canFinish );
 
     // finish is default unless it is diabled and next is enabled
-    // if( canFlipToNextPage && !canFinish )
+    //    if( canFlipToNextPage && !canFinish )
     // cancel is default unless it is disabled or non-existent
     if( canFlipToNextPage && nextButton != null )
       getShell().setDefaultButton( nextButton );
@@ -740,11 +704,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * 
    * @param id
    *          the id of the button to look for
+   * 
    * @return the button for the ID or <code>null</code>
+   * 
    * @see #createButton(Composite, int, String, String, boolean)
    * @since 2.0
    */
-  protected Button getButton( final int id )
+  protected Button getButton( int id )
   {
     return m_buttons.get( new Integer( id ) );
   }
@@ -782,7 +748,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     if( !pageChanged )
     {
-      // we do not need to layout, because the page has not changed
+      // we dont need to layout, because the page has not changed
       showUrl( getCurrentPage() );
     }
   }
@@ -791,7 +757,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
-  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable ) throws InvocationTargetException, InterruptedException
+  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
+      throws InvocationTargetException, InterruptedException
   {
     final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     progressService.run( fork, cancelable, runnable );
@@ -800,7 +767,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Shows the starting page of the wizard.
    */
-  private void showStartingPage( )
+  private void showStartingPage()
   {
     final IWizardPage startingPage = m_wizard.getStartingPage();
     if( startingPage == null )
@@ -815,7 +782,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Updates this dialog's controls to reflect the current page.
    */
-  protected void update( )
+  protected void update()
   {
     // Update the window title
     updateWindowTitle();
@@ -823,9 +790,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     updateTitleBar();
     // Update the buttons
     updateButtons();
-
-    // Fires the page change event
-    firePageChanged( new PageChangedEvent( this, getCurrentPage() ) );
   }
 
   /**
@@ -850,11 +814,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       Assert.isNotNull( control );
 
       // ensure the dialog is large enough for this page
-      // updateSize( page );
+      //      updateSize( page );
     }
 
     // make the new page visible
-    // final IWizardPage oldPage = m_currentPage;
+    //    final IWizardPage oldPage = m_currentPage;
     m_currentPage = page;
     m_stackLayout.topControl = m_currentPage.getControl();
 
@@ -867,6 +831,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     // update the dialog controls
     m_pageContainer.layout();
     update();
+
+    firePageChanged( page );
   }
 
   private String showUrl( final IWizardPage page )
@@ -883,7 +849,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   {
     if( page instanceof IHtmlWizardPage )
     {
-      final URL htmlURL = ((IHtmlWizardPage) page).getHtmlURL();
+      final URL htmlURL = ( (IHtmlWizardPage)page ).getHtmlURL();
       if( htmlURL != null )
         return htmlURL.toString();
     }
@@ -909,12 +875,14 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   protected final void fireWizardChanged( final IWizard newwizard, final int reason )
   {
-    final IWizardContainerListener[] listeners = m_listeners.toArray( new IWizardContainerListener[m_listeners.size()] );
-    for( final IWizardContainerListener listener : listeners )
+    final IWizardContainerListener[] listeners = m_listeners
+        .toArray( new IWizardContainerListener[m_listeners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
     {
+      final IWizardContainerListener listener = listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
-        public void run( ) throws Exception
+        public void run() throws Exception
         {
           listener.onWizardChanged( newwizard, reason );
         }
@@ -922,12 +890,29 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     }
   }
 
-  public IWizard getWizard( )
+  protected final void firePageChanged( final IWizardPage newpage )
+  {
+    final IWizardContainerListener[] listeners = m_listeners
+        .toArray( new IWizardContainerListener[m_listeners.size()] );
+    for( int i = 0; i < listeners.length; i++ )
+    {
+      final IWizardContainerListener listener = listeners[i];
+      SafeRunnable.run( new SafeRunnable()
+      {
+        public void run() throws Exception
+        {
+          listener.onPageChanged( newpage );
+        }
+      } );
+    }
+  }
+
+  public IWizard getWizard()
   {
     return m_wizard;
   }
 
-  public boolean doNext( )
+  public boolean doNext()
   {
     final IWizardPage currentPage = getCurrentPage();
     final IWizard wizard = getWizard();
@@ -937,7 +922,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     if( wizard instanceof IWizard2 )
     {
-      if( !((IWizard2) wizard).finishPage( currentPage ) )
+      if( !( (IWizard2)wizard ).finishPage( currentPage ) )
         return false;
     }
 
@@ -948,7 +933,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return showPageInternal( nextPage );
   }
 
-  public boolean doPrev( )
+  public boolean doPrev()
   {
     final IWizardPage currentPage = getCurrentPage();
     if( currentPage == null )
@@ -964,7 +949,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return showPageInternal( previousPage );
   }
 
-  public boolean doFinish( )
+  public boolean doFinish()
   {
     final IWizard wizard = getWizard();
 
@@ -985,7 +970,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return false;
   }
 
-  public boolean doCancel( )
+  public boolean doCancel()
   {
     final IWizard wizard = getWizard();
 
@@ -1001,29 +986,29 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return false;
   }
 
-  public boolean doHelp( )
+  public boolean doHelp()
   {
     final IWizard wizard = getWizard();
     final String helpId;
     if( wizard instanceof IWizard2 )
-      helpId = ((IWizard2) wizard).getHelpId();
+      helpId = ((IWizard2)wizard).getHelpId();
     else
       helpId = null;
-
+    
     BusyIndicator.showWhile( null, new Runnable()
     {
-      public void run( )
+      public void run()
       {
-        final IContext context = HelpSystem.getContext( helpId );
-
+        final IContext context = HelpSystem.getContext(helpId);
+        
         // take the first topic found and directly display it
-        if( context != null && context.getRelatedTopics().length > 0 )
+		if (context != null && context.getRelatedTopics().length > 0 )
         {
           final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-          helpSystem.displayHelpResource( context.getRelatedTopics()[0].getHref() );
+		  helpSystem.displayHelpResource( context.getRelatedTopics()[0].getHref() );
         }
-        else
-          Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
+		else
+		  Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
       }
     } );
 
@@ -1031,31 +1016,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return false;
   }
 
-  public boolean doSave( )
-  {
-    final IWizard wizard = getWizard();
-
-    if( wizard instanceof IWizard2 )
-    {
-      final IWizard2 wizard2 = (IWizard2) wizard;
-
-      final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
-      {
-        public IStatus execute( final IProgressMonitor monitor ) throws CoreException
-        {
-          return wizard2.saveAllPages( monitor );
-        }
-      };
-      final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
-      ErrorDialog.openError( getShell(), "Speichern", "Fehler beim Speichern", status );
-    }
-
-    return true;
-  }
-
-  // /////////////////////
+  ///////////////////////
   // TITLE AREA DIALOG //
-  // /////////////////////
+  ///////////////////////
 
   // Space between an image and a label
   private static final int H_GAP_IMAGE = 5;
@@ -1068,7 +1031,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private Label leftFillerLabel;
 
-  // private RGB titleAreaRGB;
+  //  private RGB titleAreaRGB;
   private String message = ""; //$NON-NLS-1$
 
   private String errorMessage;
@@ -1108,13 +1071,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_defaultTitleBackground = JFaceColors.getBannerBackground( display ).getRGB();
     m_defaultTitleForeground = JFaceColors.getBannerForeground( display ).getRGB();
 
-    final int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
-    final int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
+    int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
 
     // Dialog image @ right
     titleImage = new Label( parent, SWT.CENTER );
     titleImage.setImage( JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_BANNER ) );
-    final FormData imageData = new FormData();
+    FormData imageData = new FormData();
     imageData.top = new FormAttachment( 0, verticalSpacing );
     // Note: do not use horizontalSpacing on the right as that would be a
     // regression from
@@ -1127,7 +1090,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     titleLabel = new Label( parent, SWT.LEFT );
     titleLabel.setFont( JFaceResources.getBannerFont() );
     titleLabel.setText( " " );//$NON-NLS-1$
-    final FormData titleData = new FormData();
+    FormData titleData = new FormData();
     titleData.top = new FormAttachment( 0, verticalSpacing );
     titleData.right = new FormAttachment( titleImage );
     titleData.left = new FormAttachment( 0, horizontalSpacing );
@@ -1138,7 +1101,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     messageLabel = new Text( parent, SWT.WRAP | SWT.READ_ONLY );
     messageLabel.setText( " \n " ); // two lines//$NON-NLS-1$
     messageLabel.setFont( JFaceResources.getDialogFont() );
-
     // Filler labels
     leftFillerLabel = new Label( parent, SWT.CENTER );
     bottomFillerLabel = new Label( parent, SWT.CENTER );
@@ -1152,12 +1114,12 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Determine if the title image is larger than the title message and message area. This is used for layout decisions.
    */
-  private void determineTitleImageLargest( )
+  private void determineTitleImageLargest()
   {
-    final int titleY = titleImage.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    int titleY = titleImage.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
     int labelY = titleLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
     labelY += messageLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
-    final FontData[] data = messageLabel.getFont().getFontData();
+    FontData[] data = messageLabel.getFont().getFontData();
     labelY += data[0].getHeight();
     titleImageLargest = titleY > labelY;
   }
@@ -1171,25 +1133,25 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param horizontalSpacing
    *          int The spacing between widgets on the horizontal axis.
    */
-  private void setLayoutsForNormalMessage( final int verticalSpacing, final int horizontalSpacing )
+  private void setLayoutsForNormalMessage( int verticalSpacing, int horizontalSpacing )
   {
-    final FormData messageImageData = new FormData();
+    FormData messageImageData = new FormData();
     messageImageData.top = new FormAttachment( titleLabel, verticalSpacing );
     messageImageData.left = new FormAttachment( 0, H_GAP_IMAGE );
     messageImageLabel.setLayoutData( messageImageData );
-    final FormData messageLabelData = new FormData();
+    FormData messageLabelData = new FormData();
     messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
     messageLabelData.right = new FormAttachment( titleImage );
     messageLabelData.left = new FormAttachment( messageImageLabel, horizontalSpacing );
     if( titleImageLargest )
       messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
     messageLabel.setLayoutData( messageLabelData );
-    final FormData fillerData = new FormData();
+    FormData fillerData = new FormData();
     fillerData.left = new FormAttachment( 0, horizontalSpacing );
     fillerData.top = new FormAttachment( messageImageLabel, 0 );
     fillerData.bottom = new FormAttachment( messageLabel, 0, SWT.BOTTOM );
     bottomFillerLabel.setLayoutData( fillerData );
-    final FormData data = new FormData();
+    FormData data = new FormData();
     data.top = new FormAttachment( messageImageLabel, 0, SWT.TOP );
     data.left = new FormAttachment( 0, 0 );
     data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
@@ -1197,29 +1159,30 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     leftFillerLabel.setLayoutData( data );
   }
 
-  // /**
-  // * The <code>TitleAreaDialog</code> implementation of this
-  // * <code>Window</code> methods returns an initial size which is at least
-  // * some reasonable minimum.
-  // *
-  // * @return the initial size of the dialog
-  // */
-  // protected Point getInitialSize() {
-  // Point shellSize = super.getInitialSize();
-  // return new Point(Math.max(
-  // convertHorizontalDLUsToPixels(MIN_DIALOG_WIDTH), shellSize.x),
-  // Math.max(convertVerticalDLUsToPixels(MIN_DIALOG_HEIGHT),
-  // shellSize.y));
-  // }
+  //	/**
+  //	 * The <code>TitleAreaDialog</code> implementation of this
+  //	 * <code>Window</code> methods returns an initial size which is at least
+  //	 * some reasonable minimum.
+  //	 *
+  //	 * @return the initial size of the dialog
+  //	 */
+  //	protected Point getInitialSize() {
+  //		Point shellSize = super.getInitialSize();
+  //		return new Point(Math.max(
+  //				convertHorizontalDLUsToPixels(MIN_DIALOG_WIDTH), shellSize.x),
+  //				Math.max(convertVerticalDLUsToPixels(MIN_DIALOG_HEIGHT),
+  //						shellSize.y));
+  //	}
   /**
-   * Retained for backward compatibility. Returns the title area composite. There is no composite in this implementation
-   * so the shell is returned.
+   * Retained for backward compatibility.
+   * 
+   * Returns the title area composite. There is no composite in this implementation so the shell is returned.
    * 
    * @return Composite
    * @deprecated
    */
   @Deprecated
-  protected Composite getTitleArea( )
+  protected Composite getTitleArea()
   {
     return getShell();
   }
@@ -1229,7 +1192,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * 
    * @return the title image label
    */
-  protected Label getTitleImageLabel( )
+  protected Label getTitleImageLabel()
   {
     return titleImage;
   }
@@ -1263,7 +1226,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       // avoid calling setMessage in case it is overridden to call
       // setErrorMessage,
       // which would result in a recursive infinite loop
-      if( message == null ) // this should probably never happen since
+      if( message == null ) //this should probably never happen since
         // setMessage does this conversion....
         message = ""; //$NON-NLS-1$
 
@@ -1274,9 +1237,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     }
     else
     {
-      // Add in a space for layout purposes but do not
-      // change the instance variable
-      final String displayedErrorMessage = " " + errorMessage; //$NON-NLS-1$
+      //Add in a space for layout purposes but do not
+      //change the instance variable
+      String displayedErrorMessage = " " + errorMessage; //$NON-NLS-1$
       updateMessage( displayedErrorMessage );
       messageLabel.setToolTipText( errorMessage );
       if( !showingError )
@@ -1304,11 +1267,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Re-layout the labels for the new message.
    */
-  private void layoutForNewMessage( )
+  private void layoutForNewMessage()
   {
-    final int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
-    final int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
-    // If there are no images then layout as normal
+    int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
+    int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    //If there are no images then layout as normal
     if( errorMessage == null && messageImage == null )
     {
       setImageLabelVisible( false );
@@ -1340,7 +1303,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
       data.right = new FormAttachment( messageImageLabel, 0 );
       leftFillerLabel.setLayoutData( data );
-      final FormData messageLabelData = new FormData();
+      FormData messageLabelData = new FormData();
       messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
       messageLabelData.right = new FormAttachment( titleImage );
       messageLabelData.left = new FormAttachment( messageImageLabel, 0 );
@@ -1348,8 +1311,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
       messageLabel.setLayoutData( messageLabelData );
     }
-    // Do not layout before the dialog area has been created
-    // to avoid incomplete calculations.
+    //Do not layout before the dialog area has been created
+    //to avoid incomplete calculations.
     if( m_pageContainer != null && !m_pageContainer.isDisposed() )
       getShell().layout( true );
   }
@@ -1365,7 +1328,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param newMessage
    *          the message, or <code>null</code> to clear the message
    */
-  public void setMessage( final String newMessage )
+  public void setMessage( String newMessage )
   {
     setMessage( newMessage, IMessageProvider.NONE );
   }
@@ -1377,9 +1340,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * <code>ERROR</code>.
    * </p>
    * <p>
-   * Note that for backward compatibility, a message of type <code>ERROR</code> is different than an error message (set
-   * using <code>setErrorMessage</code>). An error message overrides the current message until the error message is
-   * cleared. This method replaces the current message and does not affect the error message.
+   * Note that for backward compatibility, a message of type <code>ERROR</code> is different than an error message
+   * (set using <code>setErrorMessage</code>). An error message overrides the current message until the error message
+   * is cleared. This method replaces the current message and does not affect the error message.
    * </p>
    * 
    * @param newMessage
@@ -1388,24 +1351,24 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    *          the message type
    * @since 2.0
    */
-  public void setMessage( final String newMessage, final int newType )
+  public void setMessage( String newMessage, int newType )
   {
     Image newImage = null;
     if( newMessage != null )
     {
       switch( newType )
       {
-        case IMessageProvider.NONE:
-          break;
-        case IMessageProvider.INFORMATION:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
-          break;
-        case IMessageProvider.WARNING:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
-          break;
-        case IMessageProvider.ERROR:
-          newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
-          break;
+      case IMessageProvider.NONE:
+        break;
+      case IMessageProvider.INFORMATION:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_INFO );
+        break;
+      case IMessageProvider.WARNING:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING );
+        break;
+      case IMessageProvider.ERROR:
+        newImage = JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_ERROR );
+        break;
       }
     }
     showMessage( newMessage, newImage );
@@ -1417,7 +1380,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param newMessage
    * @param newImage
    */
-  private void showMessage( final String newMessage, final Image newImage )
+  private void showMessage( String newMessage, Image newImage )
   {
     // Any change?
     if( message.equals( newMessage ) && messageImage == newImage )
@@ -1427,7 +1390,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       message = "";//$NON-NLS-1$
     // Message string to be shown - if there is an image then add in
     // a space to the message for layout purposes
-    final String shownMessage = (newImage == null) ? message : " " + message; //$NON-NLS-1$
+    String shownMessage = ( newImage == null ) ? message : " " + message; //$NON-NLS-1$  
     messageImage = newImage;
     if( !showingError )
     {
@@ -1448,7 +1411,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   private void updateMessage( String newMessage )
   {
-    // Be sure there are always 2 lines for layout purposes
+    //Be sure there are always 2 lines for layout purposes
     if( newMessage != null && newMessage.indexOf( '\n' ) == -1 )
       newMessage = newMessage + "\n "; //$NON-NLS-1$
 
@@ -1462,14 +1425,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param newTitle
    *          the title show
    */
-  public void setWizardTitle( final String newTitle )
+  public void setWizardTitle( String newTitle )
   {
     if( titleLabel == null )
       return;
     String title = newTitle;
     if( title == null )
       title = "";//$NON-NLS-1$
-// if( titleLabel.isDisposed() )
     titleLabel.setText( title );
   }
 
@@ -1501,10 +1463,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Make the label used for displaying error images visible depending on boolean.
    * 
-   * @param visible
-   *          . If <code>true</code> make the image visible, if not then make it not visible.
+   * @param visible.
+   *          If <code>true</code> make the image visible, if not then make it not visible.
    */
-  private void setImageLabelVisible( final boolean visible )
+  private void setImageLabelVisible( boolean visible )
   {
     messageImageLabel.setVisible( visible );
     bottomFillerLabel.setVisible( visible );
@@ -1517,7 +1479,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param showingErr
    *          If <code>true</code> use a different Color to indicate the error.
    */
-  private void setMessageBackgrounds( final boolean showingErr )
+  private void setMessageBackgrounds( boolean showingErr )
   {
     Color color;
     if( showingErr )
@@ -1535,7 +1497,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * 
    * @param top
    */
-  private void resetWorkAreaAttachments( final Control top )
+  private void resetWorkAreaAttachments( Control top )
   {
     final FormData childData = new FormData();
     childData.top = new FormAttachment( top );
@@ -1545,9 +1507,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     m_workArea.setLayoutData( childData );
   }
 
-  // ////////////////
+  //////////////////
   // WizardDialog //
-  // ////////////////
+  //////////////////
 
   // The current page message and description
   private String pageMessage;
@@ -1556,19 +1518,19 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private String pageDescription;
 
-  private final DisposeHelper m_disposeHelper = new DisposeHelper();
+  private DisposeHelper m_disposeHelper = new DisposeHelper();
 
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateMessage()
    */
-  public void updateMessage( )
+  public void updateMessage()
   {
     if( m_currentPage == null )
       return;
 
     pageMessage = m_currentPage.getMessage();
     if( pageMessage != null && m_currentPage instanceof IMessageProvider )
-      pageMessageType = ((IMessageProvider) m_currentPage).getMessageType();
+      pageMessageType = ( (IMessageProvider)m_currentPage ).getMessageType();
     else
       pageMessageType = IMessageProvider.NONE;
     if( pageMessage == null )
@@ -1581,7 +1543,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateTitleBar()
    */
-  public void updateTitleBar( )
+  public void updateTitleBar()
   {
     // update title-bar colors
     final RGB backgroundRGB;
@@ -1629,7 +1591,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * @see org.eclipse.jface.wizard.IWizardContainer#updateWindowTitle()
    */
-  public void updateWindowTitle( )
+  public void updateWindowTitle()
   {
     if( m_wizard == null )
       return;
@@ -1646,11 +1608,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * A discription is shown only if there is no message or error message.
    * </p>
    */
-  private void updateDescriptionMessage( )
+  private void updateDescriptionMessage()
   {
-    if( m_currentPage == null )
-      return;
-
     pageDescription = m_currentPage.getDescription();
     if( pageMessage == null )
       setMessage( m_currentPage.getDescription() );
@@ -1666,121 +1625,4 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     setTitleImage( image );
   }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.jface.dialogs.IPageChangeProvider#getSelectedPage()
-   */
-  public Object getSelectedPage( )
-  {
-    return getCurrentPage();
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.jface.dialog.IPageChangeProvider#addPageChangedListener()
-   */
-  public void addPageChangedListener( final IPageChangedListener listener )
-  {
-    pageChangedListeners.add( listener );
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.jface.dialog.IPageChangeProvider#removePageChangedListener()
-   */
-  public void removePageChangedListener( final IPageChangedListener listener )
-  {
-    pageChangedListeners.remove( listener );
-  }
-
-  /**
-   * Notifies any selection changed listeners that the selected page has changed. Only listeners registered at the time
-   * this method is called are notified.
-   * 
-   * @param event
-   *          a selection changed event
-   * @see IPageChangedListener#pageChanged
-   * @since 3.1
-   */
-  protected void firePageChanged( final PageChangedEvent event )
-  {
-    final Object[] listeners = pageChangedListeners.getListeners();
-    for( int i = 0; i < listeners.length; ++i )
-    {
-      final IPageChangedListener l = (IPageChangedListener) listeners[i];
-      SafeRunnable.run( new SafeRunnable()
-      {
-        public void run( )
-        {
-          l.pageChanged( event );
-        }
-      } );
-    }
-  }
-
-  /**
-   * Adds a listener for page changes to the list of page changing listeners registered for this dialog. Has no effect
-   * if an identical listener is already registered.
-   * 
-   * @param listener
-   *          a page changing listener
-   * @since 3.3
-   */
-  public void addPageChangingListener( final IPageChangingListener listener )
-  {
-    pageChangingListeners.add( listener );
-  }
-
-  /**
-   * Removes the provided page changing listener from the list of page changing listeners registered for the dialog.
-   * 
-   * @param listener
-   *          a page changing listener
-   * @since 3.3
-   */
-  public void removePageChangingListener( final IPageChangingListener listener )
-  {
-    pageChangingListeners.remove( listener );
-  }
-
-  /**
-   * Notifies page changing listeners and returns result of page changing processing to the sender.
-   * 
-   * @param eventType
-   * @return <code>true</code> if page changing listener completes successfully, <code>false</code> otherwise
-   */
-  private boolean doPageChanging( final IWizardPage targetPage )
-  {
-    final PageChangingEvent e = new PageChangingEvent( this, getCurrentPage(), targetPage );
-    firePageChanging( e );
-    // Prevent navigation if necessary
-    return e.doit;
-  }
-
-  /**
-   * Notifies any page changing listeners that the currently selected dialog page is changing. Only listeners registered
-   * at the time this method is called are notified.
-   * 
-   * @param event
-   *          a selection changing event
-   * @see IPageChangingListener#handlePageChanging(PageChangingEvent)
-   * @since 3.3
-   */
-  protected void firePageChanging( final PageChangingEvent event )
-  {
-    final Object[] listeners = pageChangingListeners.getListeners();
-    for( int i = 0; i < listeners.length; ++i )
-    {
-      final IPageChangingListener l = (IPageChangingListener) listeners[i];
-      SafeRunnable.run( new SafeRunnable()
-      {
-        public void run( )
-        {
-          l.handlePageChanging( event );
-        }
-      } );
-    }
-  }
-
 }

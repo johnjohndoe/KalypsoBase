@@ -24,5 +24,5 @@ Export-Package: org.kalypso.contribs.java,
  org.kalypso.contribs.javax.xml.namespace,
  org.kalypso.contribs.org.xml.sax
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.junit4;bundle-version="4.3.1";resolution:=optional
+ org.junit;resolution:=optional
 Eclipse-LazyStart: true

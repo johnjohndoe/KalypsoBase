@@ -46,7 +46,7 @@ import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class ExecutionAdapter implements IExecutionListener
 {

@@ -78,23 +78,6 @@ public class SWT_AWT_Utilities
     return result[0];
   }
 
-  public static boolean showSwtMessageBoxQuestion( final String title, final String message )
-  {
-    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
-    // Force it into SWT-thread
-    final boolean[] result = new boolean[1];
-    shell.getDisplay().syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        result[0] = MessageDialog.openQuestion( shell, title, message );
-      }
-    } );
-
-    return result[0];
-  }
-
   /**
    * Calls {@link MessageDialog#openInformation(Shell, String, String)} on the currently active shell.<br>
    * This code can be called even outside a SWT thread.

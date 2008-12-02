@@ -15,7 +15,6 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui,
  org.kalypso.contribs.eclipse.ui.dialogs,
  org.kalypso.contribs.eclipse.ui.editorinput,
- org.kalypso.contribs.eclipse.ui.forms,
  org.kalypso.contribs.eclipse.ui.ide.application,
  org.kalypso.contribs.eclipse.ui.internal.decorators,
  org.kalypso.contribs.eclipse.ui.intro.config,
@@ -34,5 +33,5 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.kalypso.contribs.java,
  org.eclipse.ui.browser;visibility:=reexport,
  org.eclipse.ui.intro,
- org.eclipse.ui.forms;bundle-version="3.3.100";visibility:=reexport
+ org.eclipse.core.runtime.compatibility.auth
 Eclipse-LazyStart: true
