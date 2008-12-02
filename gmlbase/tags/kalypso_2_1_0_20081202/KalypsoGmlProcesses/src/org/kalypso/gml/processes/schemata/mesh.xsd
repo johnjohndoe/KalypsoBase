@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.gml.processes.mesh" xmlns:mesh="org.kalypso.gml.processes.mesh"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:common="org.kalypso.gml.common" elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om"
+		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="org.kalypso.gml.common"
+		schemaLocation="../../../../../../../KalypsoDeegree/deegree/org/kalypsodeegree_impl/gml/schema/schemata/commons/commons.xsd"/>
+	<!-- schema for result of constraint delaunay process -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<!-- 
+	-->
+	<element name="TriangleCollection" type="mesh:TriangleCollectionType"
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>TriangleCollection</label>
+				<tooltip>TriangleCollection</tooltip>
+				<description>TriangleCollection</description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="triangleMember" type="mesh:TrianglePropertyType"
+		substitutionGroup="gml:featureMember">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>triangleMember</label>
+				<tooltip>triangleMember</tooltip>
+				<description>triangleMember</description>
+			</documentation>
+		</annotation>
+	</element>
+	
+	<element name="Triangle" type="mesh:TriangleType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Triangle</label>
+				<tooltip>Triangle</tooltip>
+				<description>Triangle</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<complexType name="TriangleCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!-- TODO: Element Abflussintervall machen -->
+					<element ref="mesh:triangleMember" minOccurs="0" maxOccurs="unbounded"
+					> </element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TrianglePropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="mesh:Triangle"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="TriangleType">
+		<complexContent>
+			<extension base="common:EmptyFeatureBaseType">
+				<sequence>
+					<element name="triangle" type="gml:PolygonPropertyType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
