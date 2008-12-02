@@ -170,7 +170,6 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
   @Override
   public void dispose( )
   {
-    removePaintListener( this );
     if( m_bufferImg != null )
     {
       m_bufferImg.dispose();
