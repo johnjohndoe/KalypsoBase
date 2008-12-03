@@ -167,8 +167,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -181,20 +180,15 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public void addPages()
   {
-    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage starten",
-        ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_createCalcCasePage = new CreateCalcCasePage( "addCalcCasePage", "Vorhersage starten", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
     m_createCalcCasePage.addChoiceListener( this );
 
     m_controlPage = new SteuerparameterWizardPage( this, ImageProvider.IMAGE_KALYPSO_ICON_BIG, true );
 
-    m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante öffnen", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project,
-        m_createCalcCasePage ) );
-    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren",
-        m_project, m_createCalcCasePage, m_synchronizer ) );
+    m_createCalcCasePage.addChoice( new AddNewCalcCaseChoice( "neue Rechenvariante erzeugen", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new ContinueOldCalcCaseChoice( "vorhandene Rechenvariante öffnen", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyCalcCaseChoice( "vorhandene Rechenvariante kopieren", m_project, m_createCalcCasePage ) );
+    m_createCalcCasePage.addChoice( new CopyServerCalcCaseChoice( "auf dem Server archivierte Rechenvariante kopieren", m_project, m_createCalcCasePage, m_synchronizer ) );
     addPage( m_createCalcCasePage );
     addPage( m_controlPage );
   }
@@ -223,8 +217,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         final String imageLocation = page.getImageLocation();
         final ImageDescriptor imageDesc = imageLocation == null ? null : ImageProvider.id( imageLocation );
 
-        final IModelWizardPage wizardPage = (IModelWizardPage)ClassUtilities.newInstance( className,
-            IModelWizardPage.class, ModelNature.class.getClassLoader(), null, null );
+        final IModelWizardPage wizardPage = (IModelWizardPage)ClassUtilities.newInstance( className, IModelWizardPage.class, ModelNature.class.getClassLoader(), null, null );
         wizardPage.init( m_project, pageTitle, imageDesc, arguments, calcCaseFolder );
 
         addPage( wizardPage );
@@ -234,8 +227,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e,
-          "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Erzeugen der Seiten zur Modellbearbeitung" ) );
     }
     finally
     {
@@ -274,8 +266,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     if( askForSave )
     {
-      final MessageDialog msgDialog = new MessageDialog( shell, "Vorhersageassistent beenden", null,
-          "Vorhersageassistent wird beendet, zuletzt geänderte Daten speichern?", MessageDialog.QUESTION, new String[]
+      final MessageDialog msgDialog = new MessageDialog( shell, "Vorhersageassistent beenden", null, "Vorhersageassistent wird beendet, zuletzt geänderte Daten speichern?", MessageDialog.QUESTION,
+          new String[]
           {
               IDialogConstants.YES_LABEL,
               IDialogConstants.NO_LABEL,
@@ -294,8 +286,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
-      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-          InterruptedException
+      protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
       {
         monitor.beginTask( "Geänderte Daten werden gespeichert", 1000 );
 
@@ -384,7 +375,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
           // REMARK: do not move the declaration away, as the currentCalcCase is initialized inside 'doNext'
           final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
-          
+
           m_controlPage.setUpdate( m_createCalcCasePage.shouldUpdate() );
           m_controlPage.setFolder( currentCalcCase );
         }
@@ -393,7 +384,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           monitor.beginTask( "aktualisiere Zeitreihen", 3000 );
 
           final IFolder currentCalcCase = m_createCalcCasePage.getCurrentCalcCase();
-          
+
           try
           {
             m_controlPage.saveChanges( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
@@ -416,7 +407,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
               monitor.worked( 1000 );
               result = Status.OK_STATUS;
             }
-            
+
             // nur beim ersten mal jetzt die Model-Pages hinzufügen
             if( getPageCount() == 2 )
               addModelPages( currentCalcCase, new SubProgressMonitor( monitor, 1000 ) );
@@ -463,14 +454,16 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
           title = "Warnung";
         }
 
-        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, true );
+        // TODO: für Sachsen-Anhalt wollen wir nur einen Dialog für Fehler sehen
+        // Sollte vermutlich konfigurierbar sein (achen wir im head)
+        final int displayMask = /*IStatus.OK | IStatus.INFO | IStatus.WARNING | */IStatus.ERROR;
+        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, displayMask, true );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
-        MessageDialog.openError( shell, title, "Fehler beim Aufruf der nächsten Wizard-Seite: "
-            + te.getLocalizedMessage() );
+        MessageDialog.openError( shell, title, "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
 
       return ret;
@@ -608,7 +601,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     IFolder currentFolder = m_controlPage.getFolder();
     if( currentFolder != null )
       msg += " - " + currentFolder.getName();
-    
+
     return msg;
   }
 
@@ -689,9 +682,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
     return showSave;
   }
-  
+
   /**
    * Calls {@link IModelWizardPage#saveState(IProgressMonitor)}for all pages
+   * 
    * @throws CoreException
    */
   public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException
@@ -725,10 +719,10 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
         else
           monitor.worked( 1 );
       }
-      
+
       final IWizardPage currentPage = getContainer().getCurrentPage();
       if( currentPage instanceof IModelWizardPage )
-        ((IModelWizardPage)currentPage).restoreState();
+        ( (IModelWizardPage)currentPage ).restoreState();
     }
     finally
     {
