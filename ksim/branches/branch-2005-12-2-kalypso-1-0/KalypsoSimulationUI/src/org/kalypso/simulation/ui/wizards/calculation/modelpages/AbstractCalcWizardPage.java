@@ -1059,7 +1059,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * Saves the dirty observations that were edited in the table.
    */
-  protected void saveDirtyObservations( final IProgressMonitor monitor )
+  private void saveDirtyObservations( final IProgressMonitor monitor )
   {
     if( m_table == null )
       return;
