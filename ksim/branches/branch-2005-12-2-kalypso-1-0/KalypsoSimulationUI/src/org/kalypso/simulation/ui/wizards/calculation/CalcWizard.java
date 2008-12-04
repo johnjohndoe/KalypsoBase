@@ -70,6 +70,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.commons.arguments.Arguments;
@@ -77,6 +78,8 @@ import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StoreExceptionSafeRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.IResetablePage;
+import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -103,14 +106,17 @@ import org.xml.sax.InputSource;
  * <p>
  * Supported arguments in the CalcWizard xml-definition:
  * <ul>
- * <li>askForSaveOnFinish: [Boolean] If <code>true</code>, the user is asked if the wizard shall be saved when the
- * wizard is finished. Defaults to <code>false</code>.</li>
- * <li></li>
+ * <li>showCancelButton: [Boolean] do show the cancel button, defaults to <code>false</code></li>
+ * <li>showSaveButton: [Boolean] do show the save button, defaults to <code>false</code></li>
+ * <li>askForSave: [Boolean] If <code>true</code>, the user is asked if the wizard shall be saved when the wizard is
+ * finished. Defaults to <code>false</code>.</li>
+ * <li>saveOnPageChange: [Boolean] If <code>true</code>, the state of every (model-)page is saved when leaving it.
+ * </li>
  * </ul>
  * 
  * @author Gernot Belger
  */
-public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
+public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, IResetableWizard
 {
   private static final RGB DEFAULT_TITLE_RGB = new RGB( 255, 255, 255 );
 
@@ -261,10 +267,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
     final IWizardContainer container = getContainer();
     final Shell shell = container.getShell();
 
-    final String askForSaveStr = m_arguments.getProperty( "askForSaveOnFinish", "false" );
-    final boolean askForSave = Boolean.valueOf( askForSaveStr ).booleanValue();
-
-    if( askForSave )
+    if( doAskForSave() )
     {
       final MessageDialog msgDialog = new MessageDialog( shell, "Vorhersageassistent beenden", null, "Vorhersageassistent wird beendet, zuletzt geänderte Daten speichern?", MessageDialog.QUESTION,
           new String[]
@@ -313,6 +316,9 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean performCancel()
   {
+    if( doAskForSave() )
+      return MessageDialog.openConfirm( getContainer().getShell(), "Abbruch", "Zuletzt geänderte Daten gehen verloren, möchten Sie wirklich Abbrechen?" );
+
     return true;
   }
 
@@ -420,6 +426,16 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
             monitor.done();
           }
         }
+        else if( page instanceof IModelWizardPage )
+        {
+          IModelWizardPage modelPage = (IModelWizardPage)page;
+          if( isSaveOnPageChange() )
+          {
+            IStatus status = modelPage.saveData( monitor );
+            if( !status.isOK() )
+              throw new CoreException( status );
+          }
+        }
       }
     };
 
@@ -456,7 +472,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
 
         // TODO: für Sachsen-Anhalt wollen wir nur einen Dialog für Fehler sehen
         // Sollte vermutlich konfigurierbar sein (achen wir im head)
-        final int displayMask = /*IStatus.OK | IStatus.INFO | IStatus.WARNING | */IStatus.ERROR;
+        final int displayMask = /* IStatus.OK | IStatus.INFO | IStatus.WARNING | */IStatus.ERROR;
         StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, displayMask, true );
       }
       else
@@ -661,7 +677,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
    */
   public boolean hasCancelButton()
   {
-    return false;
+    final String showCancelStr = m_arguments.getProperty( "showCancelButton", "false" );
+    return Boolean.valueOf( showCancelStr ).booleanValue();
   }
 
   /**
@@ -673,14 +690,27 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#isSaveAvailable()
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#hasSaveButton()
    */
-  public boolean isSaveAvailable()
+  public boolean hasSaveButton()
   {
     final String showSaveStr = m_arguments.getProperty( "showSaveButton", "false" );
-    final boolean showSave = Boolean.valueOf( showSaveStr ).booleanValue();
+    return Boolean.valueOf( showSaveStr ).booleanValue();
+  }
 
-    return showSave;
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizard2#doAskForSave()
+   */
+  public boolean doAskForSave()
+  {
+    final String askForSaveStr = m_arguments.getProperty( "askForSave", "false" );
+    return Boolean.valueOf( askForSaveStr ).booleanValue();
+  }
+
+  protected boolean isSaveOnPageChange()
+  {
+    final String saveOnPageChangeStr = m_arguments.getProperty( "saveOnPageChange", "false" );
+    return Boolean.valueOf( saveOnPageChangeStr ).booleanValue();
   }
 
   /**
@@ -802,4 +832,49 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener
   {
     return m_arguments;
   }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard#showResetButton()
+   */
+  public boolean showResetButton()
+  {
+    return getContainer().getCurrentPage() instanceof IResetablePage;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard#canReset()
+   */
+  public boolean canReset()
+  {
+    final IWizardPage currentPage = getContainer().getCurrentPage();
+
+    return currentPage instanceof IResetablePage && ( (IResetablePage)currentPage ).canReset();
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard#performReset()
+   */
+  public void performReset()
+  {
+    final IResetablePage currentPage = (IResetablePage)getContainer().getCurrentPage();
+
+    final UIJob job = new UIJob( "Seite zurücksetzen" )
+    {
+      public IStatus runInUIThread( IProgressMonitor monitor )
+      {
+        try
+        {
+          return currentPage.performReset( monitor );
+        }
+        catch( CoreException e )
+        {
+          return e.getStatus();
+        }
+      }
+    };
+    job.setUser( false );
+    job.setSystem( true );
+    job.schedule();
+  }
+
 }

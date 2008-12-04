@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -213,15 +214,13 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveState(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void saveState( final IProgressMonitor monitor ) throws CoreException
+  public IStatus saveData( final IProgressMonitor monitor )
   {
     monitor.beginTask( "Daten speichern", 2 );
 
-    super.saveState( new SubProgressMonitor( monitor, 1 ) );
-
+    final IStatus superStatus = super.saveData( new SubProgressMonitor( monitor, 1 ) );
     final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
-    if( !status.isOK() )
-      throw new CoreException( status );
+    return new MultiStatus(  status.getPlugin(), -1, new IStatus[] { superStatus, status }, "Fehler beim Speichern", null );
   }
 
   /**
@@ -361,9 +360,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     return list;
   }
 
-  /**
-   * @return
-   */
   private boolean getSelectionFromFeatureview()
   {
     final String selectionFromFeatureviewString = getArguments().getProperty( PROP_SELECTION_FROM_FEATUREVIEW, "true" );
