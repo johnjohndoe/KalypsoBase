@@ -50,7 +50,9 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
@@ -1154,15 +1157,11 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     if( m_table == null )
       return Status.OK_STATUS;
 
-    final IObservation[] dirtyObservations = getDirtyObservations();
-    final IStatus status = TableViewUtils.saveDirtyObservations( dirtyObservations, new SubProgressMonitor( monitor, 1000 ) );
+    final TableViewColumn[] dirtyTableColumns = getDirtyTableColumns();
+    final IStatus status = TableViewUtils.saveDirtyColumns( dirtyTableColumns, new SubProgressMonitor( monitor, 1000 ) );
 
-    // Reset dirty state of everything we have
-    for( final Iterator iter = m_dirtyColumns.iterator(); iter.hasNext(); )
-      ( (TableViewColumn)iter.next() ).setDirty( false, null );
-    final ObsViewItem[] items = m_tableView.getItems();
-    for( int i = 0; i < items.length; i++ )
-      ( (TableViewColumn)items[i] ).setDirty( false, null );
+    for( int i = 0; i < dirtyTableColumns.length; i++ )
+      dirtyTableColumns[i].setDirty( false, null );
 
     // We may release any observation
     m_dirtyColumns.clear();
@@ -1183,22 +1182,35 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     return status;
   }
 
-  private IObservation[] getDirtyObservations()
+  /**
+   * Returns all columns potentially dirty in this page. <br>
+   * All columns in {@link #m_dirtyColumns}+ all current column of {@link #m_tableView}.
+   */
+  private TableViewColumn[] getDirtyTableColumns()
   {
     final Set columnSet = new HashSet();
 
     // All currently shown columns
-    final ObsViewItem[] items = m_tableView.getItems();
-    for( int i = 0; i < items.length; i++ )
-      columnSet.add( items[i] );
+    if( m_tableView != null )
+    {
+      final ObsViewItem[] items = m_tableView.getItems();
+      for( int i = 0; i < items.length; i++ )
+      {
+        final TableViewColumn column = (TableViewColumn)items[i];
+        if( column.isDirty() )
+          columnSet.add( column );
+      }
+    }
 
-    // All previously shown item
+    // All previously shown items
     for( final Iterator iter = m_dirtyColumns.iterator(); iter.hasNext(); )
-      columnSet.add( iter.next() );
+    {
+      final TableViewColumn column = (TableViewColumn)iter.next();
+      if( column.isDirty() )
+        columnSet.add( column );
+    }
 
-    // find dirty observations
-    final TableViewColumn[] suspiciousItems = (TableViewColumn[])columnSet.toArray( new TableViewColumn[columnSet.size()] );
-    return TableViewUtils.findDirtyObservations( suspiciousItems );
+    return (TableViewColumn[])columnSet.toArray( new TableViewColumn[columnSet.size()] );
   }
 
   /**
@@ -1700,8 +1712,8 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public boolean canReset()
   {
-    final IObservation[] dirtyObservations = getDirtyObservations();
-    return dirtyObservations != null && dirtyObservations.length > 0;
+    final TableViewColumn[] dirtyTableColumns = getDirtyTableColumns();
+    return dirtyTableColumns != null && dirtyTableColumns.length > 0;
   }
 
   /**
@@ -1709,9 +1721,44 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public IStatus performReset( final IProgressMonitor monitor )
   {
-    // Show list selection
-    final IObservation[] dirtyObses = getDirtyObservations();
-    final ListSelectionDialog dlg = new ListSelectionDialog( getShell(), dirtyObses, new ArrayContentProvider(), new LabelProvider(),
+    // Find dirty columns, filter out columns with same observation
+    final TableViewColumn[] dirtyTableColumnsUnfiltered = getDirtyTableColumns();
+
+    final Comparator comp = new Comparator()
+    {
+      public int compare( Object o1, Object o2 )
+      {
+        final TableViewColumn c1 = (TableViewColumn)o1;
+        final TableViewColumn c2 = (TableViewColumn)o2;
+
+        if( c1.getObservation() == c2.getObservation() )
+          return 0;
+
+        return c1.getName().compareTo( c2.getName() );
+      }
+    };
+
+    final Set dirtyColumns = new TreeSet( comp );
+    dirtyColumns.addAll( Arrays.asList( dirtyTableColumnsUnfiltered ) );
+
+    final TableViewColumn[] dirtyTableColumns = (TableViewColumn[])dirtyColumns.toArray( new TableViewColumn[dirtyColumns.size()] );
+
+    // Show in List-Dialog
+    final LabelProvider labelProvider = new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      public String getText( Object element )
+      {
+        final TableViewColumn column = (TableViewColumn)element;
+        final String label = column.getName();
+        
+        return label.replaceAll( "\\[.*\\]", "" );
+      }
+    };
+
+    final ListSelectionDialog dlg = new ListSelectionDialog( getShell(), dirtyTableColumns, new ArrayContentProvider(), labelProvider,
         "Bitte wählen Sie die Zeitreihen aus, die Sie zurücksetzen möchten: " );
     if( dlg.open() == Window.CANCEL )
       return Status.CANCEL_STATUS;
@@ -1719,25 +1766,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // reset all selected objects
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final Object[] result = dlg.getResult();
-    final Set reloadedObses = new HashSet();
     for( int i = 0; i < result.length; i++ )
     {
-      final IObservation obs = (IObservation)result[i];
+      final TableViewColumn column = (TableViewColumn)result[i];
+      final IObservation obs = column.getObservation();
       final KeyInfo info = pool.getInfo( obs );
-      info.reload();
-      reloadedObses.add( obs );
-    }
+      if( info != null )
+        info.reload();
 
-    // REMARK: we could now clear the kept stuff, but its a bit tricky to find out,
-    // which columns to clear etc. So we just keep it, it just consumes a bit of memory, thats all.
-
-    // But we still must reset the dirty state, else the reset button is still enabled
-    for( final Iterator iter = m_dirtyColumns.iterator(); iter.hasNext(); )
-    {
-      TableViewColumn column = (TableViewColumn )iter.next();
-      final IObservation columnObs = column.getObservation();
-      if( reloadedObses.contains( columnObs ) )
-        column.setDirty( false, null );
+      column.setDirty( false, null );
+      m_dirtyColumns.remove( column );
     }
 
     getContainer().updateButtons();
