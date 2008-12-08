@@ -44,6 +44,8 @@ public final class RectangleUtils
 
   public final static Rectangle buffer( final Point p )
   {
+    if (p==null)
+      return null;
     return new Rectangle( p.x - 5, p.y - 5, 10, 10 );
   }
 }
