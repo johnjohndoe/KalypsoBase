@@ -47,6 +47,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -60,6 +63,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * A canvas for drawing transparent images and text and the possibility to handle images as hyperlink
@@ -68,6 +72,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class HyperCanvas extends Canvas
 {
+  protected List<Image> m_imagesUnderCursor = new ArrayList<Image>();
+
   protected final Map<Rectangle, Image> m_imageRectangle = new HashMap<Rectangle, Image>();
 
   protected final Map<Image, List<MouseListener>> m_mouseListeners = new HashMap<Image, List<MouseListener>>();
@@ -75,6 +81,8 @@ public class HyperCanvas extends Canvas
   protected final Map<Image, String> m_tooltips = new HashMap<Image, String>();
 
   protected final Map<Image, IHyperCanvasSizeHandler> m_imageMap = new HashMap<Image, IHyperCanvasSizeHandler>();
+
+  protected final Map<Image, Image> m_hoverImages = new HashMap<Image, Image>();
 
   protected final List<HyperCanvasTextHandler> m_text = new ArrayList<HyperCanvasTextHandler>();
 
@@ -117,7 +125,20 @@ public class HyperCanvas extends Canvas
         {
           final IHyperCanvasSizeHandler handler = entry.getValue();
           final Image img = entry.getKey();
-          e.gc.drawImage( img, handler.getX(), handler.getY() );
+
+          if( m_imagesUnderCursor.contains( img ) )
+          {
+
+            final Image hoverImage = m_hoverImages.get( img );
+            if( hoverImage != null )
+            {
+              e.gc.drawImage( hoverImage, handler.getX(), handler.getY() );
+            }
+            else
+              e.gc.drawImage( img, handler.getX(), handler.getY() );
+          }
+          else
+            e.gc.drawImage( img, handler.getX(), handler.getY() );
 
           final Rectangle imgBounds = img.getBounds();
           final Rectangle rectangle = new Rectangle( handler.getX(), handler.getY(), imgBounds.width, imgBounds.height );
@@ -131,6 +152,7 @@ public class HyperCanvas extends Canvas
           e.gc.setForeground( handler.m_color );
           e.gc.drawText( handler.m_label, handler.m_handler.getX(), handler.m_handler.getY(), true );
         }
+
       }
     } );
 
@@ -139,7 +161,7 @@ public class HyperCanvas extends Canvas
       @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
-        final List<Image> hits = determineHits( e );
+        final List<Image> hits = determineImagesUnderCursor( e );
         for( final Image image : hits )
         {
           final List<MouseListener> list = m_mouseListeners.get( image );
@@ -156,7 +178,7 @@ public class HyperCanvas extends Canvas
       @Override
       public void mouseDown( final MouseEvent e )
       {
-        final List<Image> hits = determineHits( e );
+        final List<Image> hits = determineImagesUnderCursor( e );
         for( final Image image : hits )
         {
           final List<MouseListener> list = m_mouseListeners.get( image );
@@ -173,7 +195,7 @@ public class HyperCanvas extends Canvas
       @Override
       public void mouseUp( final MouseEvent e )
       {
-        final List<Image> hits = determineHits( e );
+        final List<Image> hits = determineImagesUnderCursor( e );
         for( final Image image : hits )
         {
           final List<MouseListener> list = m_mouseListeners.get( image );
@@ -193,26 +215,45 @@ public class HyperCanvas extends Canvas
     final Cursor cursorHand = new Cursor( this.getDisplay(), SWT.CURSOR_HAND );
     final Cursor cursorDefault = new Cursor( this.getDisplay(), SWT.CURSOR_ARROW );
 
+    final Canvas myCanvas = this;
+
     m_moveListener = new MouseMoveListener()
     {
 
       @Override
       public void mouseMove( final MouseEvent e )
       {
-        final List<Image> hits = determineHits( e );
-        if( hits.size() > 0 )
-        {
-          for( final Image image : hits )
-          {
+        m_imagesUnderCursor = determineImagesUnderCursor( e );
 
+        if( m_imagesUnderCursor.size() > 0 )
+        {
+          for( final Image image : m_imagesUnderCursor )
+          {
             final List<MouseListener> list = m_mouseListeners.get( image );
             if( list != null && list.size() > 0 )
             {
               setCursor( cursorHand );
-
               final String tooltip = m_tooltips.get( image );
+
               if( tooltip != null )
-                setToolTipText( tooltip );
+              {
+                if( !tooltip.equals( getToolTipText() ) )
+                {
+                  myCanvas.redraw();
+
+                  new UIJob( "" )
+                  {
+
+                    @Override
+                    public IStatus runInUIThread( final IProgressMonitor monitor )
+                    {
+                      setToolTipText( tooltip );
+                      return Status.OK_STATUS;
+                    }
+                  }.schedule();
+
+                }
+              }
 
               return;
             }
@@ -226,12 +267,13 @@ public class HyperCanvas extends Canvas
           setToolTipText( null );
         }
       }
+
     };
 
     this.addMouseMoveListener( m_moveListener );
   }
 
-  protected List<Image> determineHits( final MouseEvent e )
+  protected List<Image> determineImagesUnderCursor( final MouseEvent e )
   {
     final List<Image> hits = new ArrayList<Image>();
 
@@ -268,6 +310,12 @@ public class HyperCanvas extends Canvas
   public void addImage( final Image image, final IHyperCanvasSizeHandler handler )
   {
     m_imageMap.put( image, handler );
+  }
+
+  public void addImage( final Image image, final Image hoverImage, final IHyperCanvasSizeHandler handler )
+  {
+    m_imageMap.put( image, handler );
+    m_hoverImages.put( image, hoverImage );
   }
 
   public void addText( final String label, final Font font, final Color color, final IHyperCanvasSizeHandler handler )
