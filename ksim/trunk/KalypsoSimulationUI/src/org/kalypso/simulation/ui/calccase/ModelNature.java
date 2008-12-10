@@ -60,6 +60,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import net.opengeospatial.wps.ProcessDescriptionType;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.ReplaceTokens;
 import org.apache.tools.ant.filters.ReplaceTokens.Token;
@@ -131,8 +133,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   // TODO Move this to KalypsoSimulationCore plugin
   public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
-  public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
+  public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
   private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
 
@@ -180,7 +182,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * This is the id to use in your own launch files.
    * <p>
    * Example of an launch-file:
-   *
+   * 
    * <pre>
    *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
    *    &lt;launchConfiguration type=&quot;org.eclipse.ant.AntLaunchConfigurationType&quot;&gt;
@@ -194,8 +196,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    *    &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.CLASSPATH_PROVIDER&quot; value=&quot;org.eclipse.ant.ui.AntClasspathProvider&quot;/&gt;
    *    &lt;stringAttribute key=&quot;org.eclipse.ui.externaltools.ATTR_ANT_TARGETS&quot; value=&quot;afterCalc,&quot;/&gt;
    *    &lt;/launchConfiguration&gt;
-   *  &lt;pre&gt;
-   *
+   * &lt;pre&gt;
    */
   public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
 
@@ -208,27 +209,27 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // Normally, this file already should exist in any empty project template
     // If removal of this cde causes problems, move it into the create project wizard of the corresponding project
     // If not, remove this dead code
-//    // create the .metadata file
-//    try
-//    {
-//      final IFile file = getMetadataFile();
+// // create the .metadata file
+// try
+// {
+// final IFile file = getMetadataFile();
 //
-//      if( !file.exists() )
-//      {
-//        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        m_metadata.store( bos, "Modell-Projekt Metadata Information" );
-//        bos.close();
+// if( !file.exists() )
+// {
+// final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+// m_metadata.store( bos, "Modell-Projekt Metadata Information" );
+// bos.close();
 //
-//        final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-//        file.create( bis, false, new NullProgressMonitor() );
+// final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+// file.create( bis, false, new NullProgressMonitor() );
 //
-//        bis.close();
-//      }
-//    }
-//    catch( final IOException e )
-//    {
-//      e.printStackTrace();
-//    }
+// bis.close();
+// }
+// }
+// catch( final IOException e )
+// {
+// e.printStackTrace();
+// }
   }
 
   public final IFolder getPrognoseFolder( )
@@ -326,7 +327,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IResource calcFile = folder.findMember( CONTROL_NAME );
 
-    if((calcFile != null && calcFile.exists() && calcFile instanceof IFile) )
+    if( (calcFile != null && calcFile.exists() && calcFile instanceof IFile) )
     {
       return true;
     }
@@ -428,11 +429,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
             {
               final String logfile = arguments[j + 1];
               final File logFileFile = new File( logfile );
-              final IStatus[] logStati = LogAnalyzer
-              .logfileToStatus( logFileFile, Charset.defaultCharset().name() );
+              final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFileFile, Charset.defaultCharset().name() );
               final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
-              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: "
-                  + logfile, null );
+              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logfile, null );
             }
           }
           return Status.OK_STATUS;
@@ -465,7 +464,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // alle resourcen des CalcCase refreshen
       // intern the parent of folder will used as rule
 
-      /* In order to have a good error message we need to check if the monitor is canceled (this is the case if an exception was thrown before).*/
+      /*
+       * In order to have a good error message we need to check if the monitor is canceled (this is the case if an
+       * exception was thrown before).
+       */
       final IProgressMonitor subMon = monitor.isCanceled() ? new NullProgressMonitor() : new SubProgressMonitor( monitor, 1000 );
 
       folder.refreshLocal( IResource.DEPTH_INFINITE, subMon );
@@ -493,8 +495,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         if( existingVariable == null )
         {
           // add each variable separatedly, because it may have allready been registered
-          svm.addVariables( new IValueVariable[]
-                                               { valueVariable } );
+          svm.addVariables( new IValueVariable[] { valueVariable } );
         }
         else
         {
@@ -603,16 +604,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * Erzeugt eine neue Rechenvariante im angegebenen Ordner
    */
-  public IStatus createCalculationCaseInFolder( final IFolder folder, final Map antProperties,
-      final IProgressMonitor monitor ) throws CoreException
-      {
+  public IStatus createCalculationCaseInFolder( final IFolder folder, final Map antProperties, final IProgressMonitor monitor ) throws CoreException
+  {
     final String message = "Rechenvariante wird erzeugt";
 
     if( getTransformerConfigFile().exists() )
       return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
 
     return launchAnt( message, "createCalcCase", antProperties, folder, monitor );
-      }
+  }
 
   /**
    * Aktualisiert eine vorhandene Rechenvariante
@@ -626,6 +626,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     return launchAnt( message, "updateCalcCase", null, folder, monitor );
   }
+
   /**
    * Übernimmt das Modell aus der Rechenvariante in das Basismodell
    */
@@ -638,7 +639,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Führt eine Transformation auf einer Rechenvariante durch
-   *
+   * 
    * @deprecated use ant launch framework instead. Leave here until all models have been ported to the new system.
    */
   @Deprecated
@@ -666,7 +667,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
         default:
           transList = null;
-        break;
+          break;
       }
 
       if( transList == null )
@@ -872,14 +873,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0,
-          "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
   }
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   *
+   * 
    * @param cal
    * @return true when time is valid
    */
@@ -942,13 +942,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
 
       final WPSRequest simulationJob = new WPSRequest( typeID, serviceEndpoint, 1000 * 60 * 60 );
-      final IStatus requestInitStatus = simulationJob.init( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-      if( !requestInitStatus.isOK() )
-        return requestInitStatus;
-
       final SimulationDelegate delegate = new SimulationDelegate( typeID, calcCaseFolder, modelspec );
       delegate.init();
-      final Map<String, Object> inputs = delegate.createInputs( simulationJob.getProcessDescription(), progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final ProcessDescriptionType processDescription = simulationJob.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
+      final Map<String, Object> inputs = delegate.createInputs( processDescription, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final List<String> outputs = delegate.createOutputs();
 
       final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
@@ -984,7 +981,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   *
+   * 
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for
