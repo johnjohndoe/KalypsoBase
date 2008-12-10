@@ -41,9 +41,13 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.Serializable;
+import java.util.List;
+
+import net.opengeospatial.wps.IOValueType;
 
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * Contains the the actual data of a simulation.
@@ -83,9 +87,9 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   private String m_message = "Warte auf Ausführung...";
 
   /**
-   * IDs of the current results.
+   * The result eater that knows about the current results
    */
-  private String[] m_currentResults = new String[0];
+  private final WPSSimulationResultEater m_resultEeater;
 
   /**
    * Is displayed from the client after calculation. It is usefull, to give the user the hint to log files, if an error
@@ -104,19 +108,20 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   public WPSSimulationInfo( )
   {
     // nur für wscompile
+    m_resultEeater = null;
   }
 
   /**
    * The constructor.
    */
-  public WPSSimulationInfo( final String id, final String description, final String type, final ISimulationConstants.STATE state, final int progress, final String finishText )
+  public WPSSimulationInfo( final String id, final String description, final String type, final ISimulationConstants.STATE state, final int progress, final WPSSimulationResultEater eater )
   {
     m_id = id;
     m_description = description;
     m_state = state;
     m_progress = progress;
     m_type = type;
-    m_finishText = finishText;
+    m_resultEeater = eater;
   }
 
   public String getDescription( )
@@ -172,14 +177,9 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
     m_message = message;
   }
 
-  public final String[] getCurrentResults( )
+  public final List<IOValueType> getCurrentResults( ) throws SimulationException
   {
-    return m_currentResults;
-  }
-
-  public final void setCurrentResults( String[] currentResults )
-  {
-    m_currentResults = currentResults;
+    return m_resultEeater.getCurrentResults();
   }
 
   public final String getType( )

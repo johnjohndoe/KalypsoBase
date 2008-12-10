@@ -45,7 +45,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,7 +54,6 @@ import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 
 import net.opengeospatial.wps.Execute;
-import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
@@ -145,15 +143,15 @@ public class WPSQueuedSimulationService
    * The constructor.
    * 
    * @param factory
-   *            Retrieves the simulation.
+   *          Retrieves the simulation.
    * @param catalog
-   *            The URL catalog.
+   *          The URL catalog.
    * @param maxThreads
-   *            Maximal count of parallel running jobs.
+   *          Maximal count of parallel running jobs.
    * @param schedulingPeriod
-   *            Time (in ms) where the queue is searched for waiting jobs.
+   *          Time (in ms) where the queue is searched for waiting jobs.
    * @param tmpDir
-   *            The temporary directory will be used by the jobs to copy their running data.
+   *          The temporary directory will be used by the jobs to copy their running data.
    */
   public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
   {
@@ -285,7 +283,7 @@ public class WPSQueuedSimulationService
       }
 
       final ISimulation job = m_calcJobFactory.createJob( typeID );
-      // TODO: should this temp dir not be inside the general wps tmp-dir? 
+      // TODO: should this temp dir not be inside the general wps tmp-dir?
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
       tmpdir.deleteOnExit();
 
@@ -386,18 +384,6 @@ public class WPSQueuedSimulationService
     }
 
     super.finalize();
-  }
-
-  public List<IOValueType> transferCurrentResults( final String jobID ) throws SimulationException
-  {
-    final WPSSimulationThread thread = findJobThread( jobID );
-    return thread.copyCurrentResults();
-  }
-
-  public String[] getCurrentResults( final String jobID ) throws SimulationException
-  {
-    final WPSSimulationThread thread = findJobThread( jobID );
-    return thread.getCurrentResults();
   }
 
   private ProcessDescriptionType getProcessDescription( final String typeID )

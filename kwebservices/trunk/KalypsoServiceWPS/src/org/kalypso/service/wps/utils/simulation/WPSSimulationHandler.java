@@ -61,6 +61,7 @@ import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.VFSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.ISimulationConstants.STATE;
 
 /**
@@ -117,21 +118,27 @@ public class WPSSimulationHandler extends Thread
       {
         STATE state = jobInfo.getState();
 
+        // get current results
+        final List<IOValueType> ioValues = jobInfo.getCurrentResults();
+
         /* Do something, according to the results. */
         switch( state )
         {
           case FINISHED:
-            /* Copy all files. */
-            List<IOValueType> ioValues = m_service.transferCurrentResults( m_jobID );
-
             /* Send user a message. */
             if( jobInfo.getFinishStatus() != IStatus.ERROR )
-              createExecuteResponse( OGCUtilities.buildStatusType( "Process ended successfull.", false ), ioValues );
+              // false means process succeeded
+              createExecuteResponse( OGCUtilities.buildStatusType( "Process ended successfully.", false ), ioValues );
             else
               createProcessFailedExecuteResponse( jobInfo.getFinishText() );
 
             /* End loop. */
             bEnd = true;
+            break;
+          case RUNNING:
+            ProcessStartedType processStarted = OGCUtilities.buildProcessStartedType( jobInfo.getMessage(), jobInfo.getProgress() );
+            // false is ignored
+            createExecuteResponse( OGCUtilities.buildStatusType( processStarted, false ), ioValues );
             break;
           case CANCELED:
             /* Delete all files in result directory. */
@@ -140,32 +147,42 @@ public class WPSSimulationHandler extends Thread
             /* End loop. */
             bEnd = true;
             break;
+          case WAITING:
+            // do nothing?
+            // true means process accepted
+            createExecuteResponse( OGCUtilities.buildStatusType( "Process waiting.", true ), ioValues );
+            break;
+          case UNKNOWN:
           case ERROR:
             /* Send user a message. */
             createProcessFailedExecuteResponse( jobInfo.getFinishText() );
-
             /* End loop. */
             bEnd = true;
-            break;
-          default:
-            ProcessStartedType processStarted = OGCUtilities.buildProcessStartedType( jobInfo.getMessage(), jobInfo.getProgress() );
-            createExecuteResponse( OGCUtilities.buildStatusType( processStarted, false ), null );
-
             break;
         }
 
         sleep( 2000 );
       }
-
-      /* Job has finished somehow. */
-
-      /* Delete all files of this job in the temp-directory. */
-      m_service.disposeJob( m_jobID );
     }
     catch( Exception e )
     {
       // TODO ProcessFailed...!!!
       e.printStackTrace();
+    }
+    finally
+    {
+      /* Job has finished somehow. */
+
+      /* Delete all files of this job in the temp-directory. */
+      try
+      {
+        m_service.disposeJob( m_jobID );
+      }
+      catch( final SimulationException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 

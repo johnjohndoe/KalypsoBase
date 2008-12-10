@@ -55,7 +55,6 @@ import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.UserAuthenticator;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
@@ -145,6 +144,12 @@ public class VFSUtilities
    */
   public static void copyFileTo( FileObject source, FileObject destination ) throws IOException
   {
+    if( source.equals( destination ) )
+    {
+      Debug.println( "Files '" + source.getName() + "' and '" + destination.getName() + "' are the same files. Ignoring!" );
+      return;
+    }
+
     /* Some variables for handling the errors. */
     boolean success = false;
     int cnt = 0;
@@ -162,8 +167,7 @@ public class VFSUtilities
           destinationFile = destination.resolveFile( source.getName().getBaseName() );
 
         /* Copy file. */
-        Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
-        FileUtil.copyContent( source, destinationFile );
+        org.kalypso.commons.io.VFSUtilities.copyFileTo( source, destinationFile, false );
 
         /* End copying of this file, because it was a success. */
         success = true;
@@ -236,7 +240,7 @@ public class VFSUtilities
         FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        copyFileTo( child, destinationFile );
+        org.kalypso.commons.io.VFSUtilities.copyFileTo( child, destinationFile, false );
       }
       else if( FileType.FOLDER.equals( child.getType() ) )
       {
@@ -320,74 +324,81 @@ public class VFSUtilities
    *          relative files.
    * @return The file object.
    */
-  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException, MalformedURLException
+  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException
   {
     FileSystemManager fsManager = getManager();
 
     Proxy proxy = ProxyUtilities.getProxy();
     Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
-    if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
+    try
     {
-      String proxyHost = proxy.getProxyHost();
-      int proxyPort = proxy.getProxyPort();
-      Debug.println( "Proxy host: " + proxyHost );
-      Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
-
-      /* Get the credentials. */
-      String user = proxy.getUser();
-      String password = proxy.getPassword();
-
-      Pattern p = Pattern.compile( "(.+)://.+" );
-      Matcher m = p.matcher( absoluteFile );
-      if( m.find() == true )
+      if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
       {
-        Debug.println( "File: " + absoluteFile );
-        Debug.println( "Protocol: " + m.group( 1 ) );
+        String proxyHost = proxy.getProxyHost();
+        int proxyPort = proxy.getProxyPort();
+        Debug.println( "Proxy host: " + proxyHost );
+        Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
 
-        if( m.group( 1 ).equals( "webdav" ) )
+        /* Get the credentials. */
+        String user = proxy.getUser();
+        String password = proxy.getPassword();
+
+        Pattern p = Pattern.compile( "(.+)://.+" );
+        Matcher m = p.matcher( absoluteFile );
+        if( m.find() == true )
         {
-          WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
-          WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, proxyPort );
+          Debug.println( "File: " + absoluteFile );
+          Debug.println( "Protocol: " + m.group( 1 ) );
 
-          /* If there are credentials given, set them. */
-          if( user != null && password != null )
+          if( m.group( 1 ).equals( "webdav" ) )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
-            WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
+            WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
+            WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, proxyPort );
+
+            /* If there are credentials given, set them. */
+            if( user != null && password != null )
+            {
+              UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+              WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
+            }
+
+            return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
           }
-
-          return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
-        }
-        else if( m.group( 1 ).equals( "http" ) )
-        {
-          HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, proxyHost );
-          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, proxyPort );
-
-          /* If there are credentials given, set them. */
-          if( user != null && password != null )
+          else if( m.group( 1 ).equals( "http" ) )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
-            HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTP_OPTIONS, authenticator );
+            HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, proxyHost );
+            HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, proxyPort );
+
+            /* If there are credentials given, set them. */
+            if( user != null && password != null )
+            {
+              UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+              HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTP_OPTIONS, authenticator );
+            }
+
+            return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
           }
-
-          return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
-        }
-        else if( m.group( 1 ).equals( "https" ) )
-        {
-          HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTPS_OPTIONS, proxyHost );
-          HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTPS_OPTIONS, proxyPort );
-
-          /* If there are credentials given, set them. */
-          if( user != null && password != null )
+          else if( m.group( 1 ).equals( "https" ) )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
-            HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
-          }
+            HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTPS_OPTIONS, proxyHost );
+            HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTPS_OPTIONS, proxyPort );
 
-          return fsManager.resolveFile( absoluteFile, THE_HTTPS_OPTIONS );
+            /* If there are credentials given, set them. */
+            if( user != null && password != null )
+            {
+              UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+              HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
+            }
+
+            return fsManager.resolveFile( absoluteFile, THE_HTTPS_OPTIONS );
+          }
         }
       }
+    }
+    catch( final MalformedURLException e )
+    {
+      throw new FileSystemException(e);
     }
 
     return fsManager.resolveFile( absoluteFile );

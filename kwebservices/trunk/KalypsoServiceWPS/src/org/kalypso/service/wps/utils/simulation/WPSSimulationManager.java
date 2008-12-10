@@ -47,8 +47,6 @@ import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.server.operations.DescribeProcess;
-import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
 import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
@@ -101,21 +99,18 @@ public class WPSSimulationManager
    * @param execute
    *          The execute request of the WPS.
    */
-  public WPSSimulationInfo startSimulation( String typeID, String description, Execute execute ) throws OWSException
+  public WPSSimulationInfo startSimulation( final String typeID, final String description, final Execute execute ) throws OWSException
   {
-    /* Get the Simulation.. */
-    ISimulation simulation = WPSUtilities.getSimulation( typeID );
-
     try
     {
       /* Get the process description. */
-      ProcessDescriptionType processDescription = DescribeProcess.buildProcessDescriptionType( simulation, typeID );
+      final ProcessDescriptionType processDescription = DescribeProcess.buildProcessDescriptionType( typeID );
 
       /* Start the job. */
-      WPSSimulationInfo info = m_service.startJob( typeID, description, execute, processDescription );
+      final WPSSimulationInfo info = m_service.startJob( typeID, description, execute, processDescription );
 
       /* This thread will check for the status of the other one. */
-      WPSSimulationHandler handler = new WPSSimulationHandler( m_service, info.getId(), execute );
+      final WPSSimulationHandler handler = new WPSSimulationHandler( m_service, info.getId(), execute );
       handler.start();
 
       return info;

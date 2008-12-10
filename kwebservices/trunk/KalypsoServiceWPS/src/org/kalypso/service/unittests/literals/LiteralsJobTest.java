@@ -85,6 +85,7 @@ public class LiteralsJobTest
     /* Create the outputs. */
     List<String> outputs = new ArrayList<String>();
     outputs.add( OUTPUT_LITERAL );
+    outputs.add( "SimulationLog" );
 
     /* The name of the simulation. */
     String simulationName = "LiteralsV1.0";
@@ -94,7 +95,6 @@ public class LiteralsJobTest
 
     /* Start the simulation with a timeout of 300000 ms. */
     WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
-    simulationJob.init( new NullProgressMonitor() );
     IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */

@@ -98,27 +98,16 @@ public class DescribeProcess implements IOperation
       /* Start the operation. */
       Debug.println( "Operation \"DescribeProcess\" started." );
 
-      /* Get the simulation. */
-      final List<ISimulation> simulations = new LinkedList<ISimulation>();
-
       /* Get the identifiers out of the request. */
       final List<String> identifier = getIdentifier( request );
-
-      /* Collect all simulations asked for. */
-      Debug.println( "Collect the simulations ..." );
-      for( int i = 0; i < identifier.size(); i++ )
-        simulations.add( WPSUtilities.getSimulation( identifier.get( i ) ) );
 
       /* Build the process description for all simulations. */
       /* It is vital, that the two lists have the same order and length. */
       final List<ProcessDescriptionType> processDescriptions = new LinkedList<ProcessDescriptionType>();
-      for( int i = 0; i < simulations.size(); i++ )
+      for( final String typeID : identifier)
       {
-        /* This is the simulation. */
-        final ISimulation simulation = simulations.get( i );
-
         /* Build the process description. */
-        final ProcessDescriptionType processDescription = buildProcessDescriptionType( simulation, identifier.get( i ) );
+        final ProcessDescriptionType processDescription = buildProcessDescriptionType( typeID );
 
         /* Save the process description. */
         processDescriptions.add( processDescription );
@@ -208,20 +197,24 @@ public class DescribeProcess implements IOperation
    *            The identifier of the simulation.
    * @return The process description.
    */
-  public static ProcessDescriptionType buildProcessDescriptionType( final ISimulation simulation, final String identifier ) throws JAXBException
+  public static ProcessDescriptionType buildProcessDescriptionType( final String typeID ) throws JAXBException, OWSException
   {
+    /* Get the Simulation.. */
+    final ISimulation simulation = WPSUtilities.getSimulation( typeID );
+    
     // TODO At the moment only literals and references are supported from our model spec.
     // The spec must be changed, in order to enable bounding boxes and complex values.
     // If this is done, the two new cases must be covered here as well.
-
-    /* Build all content for the process description. */
-    final CodeType code = OGCUtilities.buildCodeType( "", identifier );
-    final String title = identifier;
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
     final Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
 
+    /* Build all content for the process description. */
+    final String identifier = modelData.getTypeID();
+    final CodeType code = OGCUtilities.buildCodeType( "", identifier );
+    final String title = identifier;
+    
     /* Get the input from the model spec. */
     final List<DataType> input = modelData.getInput();
 

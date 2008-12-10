@@ -41,10 +41,12 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +68,7 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -91,7 +94,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * The execute request.
    */
-  private Execute m_execute = null;
+  private final Execute m_execute;
 
   /**
    * The temporary directory.
@@ -101,22 +104,28 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * The directory, where the results should be copied. The client is told that URL + [path to files].
    */
-  private FileObject m_resultDir = null;
+  private final FileObject m_resultDir;
+
+  /**
+   * The references that need to be copied when results are requested
+   */
+  private final Map<File, FileObject> m_references;
 
   /**
    * All current results. This could be files, literals and so on. Should be synchronized
    */
-  private Map<String, Object> m_results = null;
+  private final Map<String, IOValueType> m_results;
 
   /**
-   * Contains the id of the outputs as key and the output itself as value.
+   * Contains the id of the outputs as key and the description of the output the server can provide.
    */
-  private Map<String, OutputDescriptionType> m_outputList = null;
+  private final Map<String, OutputDescriptionType> m_outputList;
 
   /**
-   * Contains the id of the output as key and the output that is expected from the client as value.
+   * Contains the id of the output as key and the definition of the output that the client expects. TODO: This list is
+   * currently mostly ignored.
    */
-  private Map<String, OutputDefinitionType> m_outputListClient = null;
+  private final Map<String, OutputDefinitionType> m_outputListClient;
 
   /**
    * The constructor.
@@ -136,7 +145,8 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     m_execute = execute;
     m_tmpDir = tmpDir;
     m_resultDir = resultDir;
-    m_results = new LinkedHashMap<String, Object>();
+    m_results = new LinkedHashMap<String, IOValueType>();
+    m_references = new LinkedHashMap<File, FileObject>();
 
     m_outputList = index( m_processDescription );
     m_outputListClient = indexClient( m_execute );
@@ -155,139 +165,116 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     if( !m_outputListClient.containsKey( id ) )
       throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
 
-    final OutputDefinitionType outputDefinition = m_outputListClient.get( id );
-    if( outputDefinition != null )
-      m_results.put( id, result );
-  }
+    /* What type is that output? Get the description from the server, to check it. */
+    final OutputDescriptionType outputDescription = m_outputList.get( id );
 
-  public String[] getCurrentResults( )
-  {
-    return m_results.keySet().toArray( new String[] {} );
-  }
+    final SupportedComplexDataType complexOutput = outputDescription.getComplexOutput();
+    final LiteralOutputType literalOutput = outputDescription.getLiteralOutput();
+    final SupportedCRSsType boundingBoxOutput = outputDescription.getBoundingBoxOutput();
 
-  /**
-   * This function copys the contained files in the results to the result dir and returns them as ComplexValueReferences
-   * with the other types in a IOValueType list.
-   * 
-   * @return The descriptions of the outputs with the URLs.
-   */
-  public List<IOValueType> copyCurrentResults( ) throws SimulationException
-  {
-    try
+    /* Build the output value. */
+    final Object valueFormChoice;
+    if( complexOutput != null )
     {
-      /* Debug-Information. */
-      Debug.println( "Copying the results ..." );
-
-      /* Stores the output descriptions. */
-      final List<IOValueType> ioValues = new LinkedList<IOValueType>();
-
-      /* Get the expected output from the client. */
-      final Iterator<String> clientKeys = m_outputListClient.keySet().iterator();
-
-      /* Check each expected output with the one, the server can provide. */
-      while( clientKeys.hasNext() )
+      if( result instanceof URL )
       {
-        /* The identifier for output to check. */
-        final String clientKey = clientKeys.next();
-
-        /* First, is the output already available? */
-        if( !m_results.containsKey( clientKey ) )
-        {
-          /* It is not available at the moment, continue. */
-          continue;
-        }
-
-        /* Getting the result. */
-        final Object result = m_results.get( clientKey );
-
-        /* Second, is the result added with a null value? */
-        if( result == null )
-        {
-          /* Ignore it at the moment. */
-          continue;
-        }
-
-        /* What type is that output? Get the description from the server, to check it. */
-        final OutputDescriptionType outputDescription = m_outputList.get( clientKey );
-
-        final SupportedComplexDataType complexOutput = outputDescription.getComplexOutput();
-        final LiteralOutputType literalOutput = outputDescription.getLiteralOutput();
-        final SupportedCRSsType boundingBoxOutput = outputDescription.getBoundingBoxOutput();
-
-        /* Build the output value. */
-        Object valueFormChoice = null;
-        if( complexOutput != null )
-        {
-          if( result instanceof URL )
-            valueFormChoice = OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( ((URL) result).toExternalForm() ), null, null, null );
-          else if( result instanceof File )
-            valueFormChoice = addComplexValueReference( (File) result );
-          else if( result instanceof ComplexValueType )
-            valueFormChoice = result;// TODO The client can send now complex data, so it should be done here simalarly
-          else
-            throw new SimulationException( "The type of the output with the identifier '" + clientKey
-                + "' must be an URL (ComplexValueReference), a File (ComplexValueReference) or a ComplexValueType ...", null );
-        }
-        else if( literalOutput != null )
-        {
-          final String value = literalOutput.getDataType().getValue();
-          if( value.endsWith( "string" ) )
-          {
-            if( result instanceof String )
-              valueFormChoice = addLiteralValueType( result );
-            else
-              throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a String (Literal) ...: " + result, null );
-          }
-          else if( value.endsWith( "int" ) )
-          {
-            if( result instanceof Integer )
-              valueFormChoice = addLiteralValueType( result );
-            else
-              throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be an Integer (Literal) ...", null );
-
-          }
-          else if( value.endsWith( "double" ) )
-          {
-            if( result instanceof Double )
-              valueFormChoice = addLiteralValueType( result );
-            else
-              throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a Double (Literal) ...", null );
-          }
-          else if( value.endsWith( "boolean" ) )
-          {
-            if( result instanceof String )
-              valueFormChoice = addLiteralValueType( result );
-            else
-              throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a Boolean (Literal) ...", null );
-          }
-          else
-            throw new SimulationException( "The type of the output (which is: " + value + ") with the identifier '" + clientKey + "' is not supported (Literal) ...", null );
-        }
-        else if( boundingBoxOutput != null )
-        {
-          if( result instanceof BoundingBoxType )
-            valueFormChoice = result;
-          else
-            throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' must be a BoundingBoxType ...", null );
-        }
+        final URL urlResult = (URL) result;
+        final String clientUrlResult = WPSUtilities.convertInternalToClient( urlResult.toExternalForm() );
+        valueFormChoice = OGCUtilities.buildComplexValueReference( clientUrlResult, null, null, null );
+      }
+      else if( result instanceof File )
+      {
+        final File fileResult = (File) result;
+        valueFormChoice = addComplexValueReference( fileResult );
+      }
+      else if( result instanceof ComplexValueType )
+        valueFormChoice = result;// TODO The client can send now complex data, so it should be done here simalarly
+      else
+        throw new SimulationException( "The type of the output with the identifier '" + id + "' must be an URL (ComplexValueReference), a File (ComplexValueReference) or a ComplexValueType.", null );
+    }
+    else if( literalOutput != null )
+    {
+      final String value = literalOutput.getDataType().getValue();
+      if( value.endsWith( "string" ) )
+      {
+        if( result instanceof String )
+          valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( "The type of the output with the identifier '" + clientKey + "' is not correctly defined by the simulation ...", null );
+          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a String (Literal): " + result, null );
+      }
+      else if( value.endsWith( "int" ) )
+      {
+        if( result instanceof Integer )
+          valueFormChoice = addLiteralValueType( result );
+        else
+          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be an Integer (Literal): " + result, null );
 
-        /* Add it to an io value, if not null. */
-        if( valueFormChoice != null )
+      }
+      else if( value.endsWith( "double" ) )
+      {
+        if( result instanceof Double )
+          valueFormChoice = addLiteralValueType( result );
+        else
+          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a Double (Literal) ...", null );
+      }
+      else if( value.endsWith( "boolean" ) )
+      {
+        if( result instanceof String )
+          valueFormChoice = addLiteralValueType( result );
+        else
+          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a Boolean (Literal) ...", null );
+      }
+      else
+        throw new SimulationException( "The type of the output (which is: " + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null );
+    }
+    else if( boundingBoxOutput != null )
+    {
+      if( result instanceof BoundingBoxType )
+        valueFormChoice = result;
+      else
+        throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a BoundingBoxType ...", null );
+    }
+    else
+      throw new SimulationException( "The type of the output with the identifier '" + id + "' is not correctly defined by the simulation ...", null );
+
+    /* Build io value. */
+    final IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
+    m_results.put( id, ioValue );
+  }
+
+  public List<IOValueType> getCurrentResults( ) throws SimulationException
+  {
+    FileSystemManager manager = getFileSystemManager();
+
+    // copy all source files (references) to their destination
+    for( final File sourceFile : m_references.keySet() )
+    {
+      final FileObject destination = m_references.get( sourceFile );
+      try
+      {
+        /* Converting the source file to a file object from VFS. */
+        final FileObject source = manager.toFileObject( sourceFile );
+        if( FileType.FOLDER.equals( source.getType() ) )
         {
-          /* Build io value. */
-          final IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
-          ioValues.add( ioValue );
+          /* Directory copy. */
+          Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." );
+          VFSUtilities.copyDirectoryToDirectory( source, destination );
+        }
+        else if( FileType.FILE.equals( source.getType() ) )
+        {
+          /* File copy. */
+          Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
+          VFSUtilities.copyFileTo( source, destination );
         }
       }
+      catch( final IOException e )
+      {
+        throw new SimulationException( "Could not update reference to " + sourceFile, e );
+      }
+    }
 
-      return ioValues;
-    }
-    catch( final Exception e )
-    {
-      throw new SimulationException( e.getLocalizedMessage(), e );
-    }
+    final Collection<IOValueType> values = m_results.values();
+    return new ArrayList<IOValueType>( values );
   }
 
   /**
@@ -297,45 +284,45 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          The file to reference in the ComplexValueReference.
    * @return A ComplexValueReference with the given file.
    */
-  private ComplexValueReference addComplexValueReference( final File sourceFile ) throws Exception
+  private ComplexValueReference addComplexValueReference( final File sourceFile ) throws SimulationException
+  {
+    final FileSystemManager manager = getFileSystemManager();
+
+    try
+    {
+      /* Resolving the result file object. */
+      if( m_resultDir == null )
+        throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
+
+      /* Getting the relative path to the source file. */
+      final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
+      if( relativePathToSource == null )
+        throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
+      final FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
+      
+      // keep track of file references
+      m_references.put( sourceFile, destination );
+      
+      /* Build complex value reference. */
+      return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
+    }
+    catch( final FileSystemException e )
+    {
+      throw new SimulationException( "Could not add ComplexValueReference for file " + sourceFile, e );
+    }
+  }
+
+  private FileSystemManager getFileSystemManager( ) throws SimulationException
   {
     /* Get a file system manager. */
-    final FileSystemManager manager = VFSUtilities.getManager();
-
-    /* Getting the relative path to the source file. */
-    final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
-    if( relativePathToSource == null )
-      throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
-
-    /* Converting the source file to a file object from VFS. */
-    final FileObject source = manager.toFileObject( sourceFile );
-
-    /* Resolving the result file object. */
-    if( m_resultDir == null )
-      throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
-
-    final FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
-
-    if( FileType.FOLDER.equals( source.getType() ) )
+    try
     {
-      /* Directory copy. */
-      Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." );
-      VFSUtilities.copyDirectoryToDirectory( source, destination );
-
-      /* Build complex value reference. */
-      return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
+      return VFSUtilities.getManager();
     }
-    else if( FileType.FILE.equals( source.getType() ) )
+    catch( final FileSystemException e )
     {
-      /* File copy. */
-      Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
-      VFSUtilities.copyFileTo( source, destination );
-
-      /* Build complex value reference. */
-      return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
+      throw new SimulationException( "Could not get FileSystemManager", e );
     }
-
-    return null;
   }
 
   /**
@@ -442,6 +429,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    */
   public void dispose( )
   {
+    m_references.clear();
     /* The result data will not be deleted, because the client must get the chance to copy them. */
   }
 

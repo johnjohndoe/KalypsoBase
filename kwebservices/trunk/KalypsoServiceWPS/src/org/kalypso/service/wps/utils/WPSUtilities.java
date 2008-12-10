@@ -43,20 +43,36 @@ package org.kalypso.service.wps.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
+
+import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.ows.ExceptionReport;
+import net.opengeospatial.ows.ExceptionType;
+import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.DescribeProcess;
+import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.ExecuteResponseType;
+import net.opengeospatial.wps.OutputDefinitionsType;
+import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptions;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 
@@ -126,6 +142,115 @@ public class WPSUtilities
       return null;
 
     return MarshallUtilities.fromInputStream( is );
+  }
+
+  public static List<ProcessDescriptionType> callDescribeProcess( final String serviceEndpoint, final String... processIds ) throws CoreException
+  {
+    /* Build the describe process request. */
+    final List<CodeType> identifiers = new LinkedList<CodeType>();
+    for( String processId : processIds )
+    {
+      identifiers.add( OGCUtilities.buildCodeType( "", processId ) );
+    }
+
+    final DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifiers );
+
+    /* Send the request. */
+    Object describeProcessObject = null;
+    try
+    {
+      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), serviceEndpoint );
+
+      /* Try to unmarshall. */
+      describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
+    }
+    catch( final IOException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    catch( final JAXBException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    // TODO: error handling: our WPS service throws other types of exceptions
+    // (http://www.opengis.net/ows}ExceptionReport) than expected
+    // here {http://www.opengeospatial.net/ows}ExceptionReport. We need to fix that... find out what is correct in
+    // respect to WPS specification
+    if( describeProcessObject instanceof ExceptionReport )
+    {
+      final ExceptionReport report = (ExceptionReport) describeProcessObject;
+      throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( report ) ) );
+    }
+
+    /* Use the process description for building the DataInputs and the OutputDefinitions. */
+    final ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
+
+    /* The descriptions of all processes from the process descriptions response. */
+    final List<ProcessDescriptionType> processDescriptionList = processDescriptions.getProcessDescription();
+
+    /* Check describe process. */
+    if( processDescriptionList == null || processDescriptionList.size() == 0 )
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned no process description.", null ) );
+    
+    return processDescriptionList;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static ExecuteResponseType callExecute( final String serviceEndpoint, final String typeID, final DataInputsType dataInputs, final OutputDefinitionsType outputDefinitions ) throws CoreException
+  {
+    try
+    {
+      /* Build the execute request. */
+      final Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
+      final String executeRequestString = MarshallUtilities.marshall( execute );
+      final String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
+      /* Handle the execute response. */
+      Debug.println( "Response:\n" + executeResponseString );
+
+      if( executeResponseString == null || executeResponseString.length() == 0 )
+      {
+        // error
+        throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
+      }
+
+      final Object response = MarshallUtilities.unmarshall( executeResponseString );
+
+      if( response instanceof ExceptionReport )
+      {
+        // an exception was reported, so we return
+        throw new CoreException( StatusUtilities.createErrorStatus( WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
+      }
+
+      final JAXBElement<ExecuteResponseType> elmt = (JAXBElement<ExecuteResponseType>) response;
+      final ExecuteResponseType executeResponse = elmt.getValue();
+      return executeResponse;
+    }
+    catch( final JAXBException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    catch( final IOException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
+
+  /**
+   * This function will create an error string, containing all error messages.
+   * 
+   * @param exceptionReport
+   *          The exception report.
+   * @return The error messages as one string.
+   */
+  public static String createErrorString( final ExceptionReport exceptionReport )
+  {
+    final List<ExceptionType> exceptions = exceptionReport.getException();
+    String messages = "";
+    for( final ExceptionType exception : exceptions )
+      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exception.getExceptionText() + "\nLocator: " + exception.getLocator();
+
+    return messages;
   }
 
   /**

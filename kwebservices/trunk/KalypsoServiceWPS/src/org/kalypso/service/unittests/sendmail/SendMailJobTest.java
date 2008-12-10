@@ -107,7 +107,6 @@ public class SendMailJobTest
 
     /* Start the simulation with a timeout of 300000 ms. */
     WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
-    simulationJob.init( new NullProgressMonitor() );
     IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */

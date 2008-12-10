@@ -88,6 +88,8 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  */
 public class SimulationDelegate
 {
+  private static final String SERVER_INPUT_LOCAL = "local";
+
   /**
    * The id identifying the simulation.
    */
@@ -248,15 +250,24 @@ public class SimulationDelegate
           Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
           throw new WPSException( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
         }
-
-        /* Get the directory for server access. */
-        final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
-        m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
-
-        if( !m_serverTmpDirectory.exists() )
+        else if( SERVER_INPUT_LOCAL.equals( m_input ) )
         {
-          Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." );
-          m_serverTmpDirectory.createFolder();
+          // do not use server directory, but calculate in calcCaseFolder
+          Debug.println( "Local calculation! Using calcCaseFolder as input directory." );
+          final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
+          m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation);
+        }
+        else
+        {
+          /* Get the directory for server access. */
+          final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
+          m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
+
+          if( !m_serverTmpDirectory.exists() )
+          {
+            Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." );
+            m_serverTmpDirectory.createFolder();
+          }
         }
       }
     }
@@ -500,7 +511,7 @@ public class SimulationDelegate
             wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
           }
           else
-            // maybe check the protocols?
+          // maybe check the protocols?
           {
             // Remote resource, will be passed to the service as reference
             final URL clientUrl = new URL( inputPath );
