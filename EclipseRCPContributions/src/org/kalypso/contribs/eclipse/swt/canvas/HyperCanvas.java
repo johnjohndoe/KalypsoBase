@@ -116,7 +116,7 @@ public class HyperCanvas extends Canvas
     this.addPaintListener( new PaintListener()
     {
       @Override
-      public void paintControl( final PaintEvent e )
+      public synchronized void paintControl( final PaintEvent e )
       {
         m_imageRectangle.clear();
 
