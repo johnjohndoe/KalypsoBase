@@ -471,7 +471,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, 
         }
 
         // TODO: für Sachsen-Anhalt wollen wir nur einen Dialog für Fehler sehen
-        // Sollte vermutlich konfigurierbar sein (achen wir im head)
+        // Sollte vermutlich konfigurierbar sein (machen wir im head)
         final int displayMask = /* IStatus.OK | IStatus.INFO | IStatus.WARNING | */IStatus.ERROR;
         StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, displayMask, true );
       }
