@@ -41,6 +41,7 @@
 package org.kalypso.simulation.ui.actions;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

@@ -89,6 +89,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -448,7 +449,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     public void run()
     {
-      getContainer().updateButtons();
+      final IWizardContainer container = getContainer();
+      if( container != null )
+        container.updateButtons();
     }
   };
 
@@ -1319,7 +1322,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 
-    StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, true );
+    StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, IStatus.WARNING | IStatus.ERROR, true );
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
