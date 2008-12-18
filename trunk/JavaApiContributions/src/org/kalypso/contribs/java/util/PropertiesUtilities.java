@@ -106,7 +106,9 @@ public class PropertiesUtilities
       }
       catch( final IOException e )
       {
-        e.printStackTrace();
+        // TODO: this can happen for some strange url's (containing '(')
+        // Introduce tracing option
+        // e.printStackTrace();
       }
       finally
       {
@@ -206,7 +208,7 @@ public class PropertiesUtilities
 
   /**
    * Loads the contents from the given {@link URL} into a {@link Properties} object.
-   *
+   * 
    * @see Properties#load(InputStream)
    */
   public static void load( final URL location, final Properties properties ) throws IOException
@@ -240,7 +242,7 @@ public class PropertiesUtilities
    * returned.<br>
    * If the given string starts with '%', but the properties do not contain a corresponding entry, the original string
    * is returned.
-   *
+   * 
    * @param translatableString
    *          If <code>null</code>, <code>null</code> is returned.
    * @param i10nProperties
