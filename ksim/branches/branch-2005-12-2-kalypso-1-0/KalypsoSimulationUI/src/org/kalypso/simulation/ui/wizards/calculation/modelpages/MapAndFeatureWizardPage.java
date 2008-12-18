@@ -49,7 +49,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -123,8 +122,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    */
   public final static String PROP_TIMEPROPNAME = "timeserie";
 
-  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget(
-      null, null ), 0, 0 );
+  protected final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( new JobExclusiveCommandTarget( null, null ), 0, 0 );
 
   public MapAndFeatureWizardPage()
   {
@@ -175,8 +173,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     createFeaturePanel( rightSash );
     initDiagram( rightSash );
 
-    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) )
-        .booleanValue();
+    final boolean hideCalcButton = Boolean.valueOf( getArguments().getProperty( PROP_HIDE_CALC_BUTTON, "false" ) ).booleanValue();
     if( hideCalcButton )
       initButtons( rightPanel, null, null, null );
     else
@@ -219,8 +216,18 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     monitor.beginTask( "Daten speichern", 2 );
 
     final IStatus superStatus = super.saveData( new SubProgressMonitor( monitor, 1 ) );
-    final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
-    return new MultiStatus(  status.getPlugin(), -1, new IStatus[] { superStatus, status }, "Fehler beim Speichern", null );
+    if( !superStatus.isOK() )
+      return superStatus;
+
+    // TODO: In this odl version, saving gml leads to reload; so we will loose the selection.
+    // Directly restoring the selection does not work, as the gml might not yet be reloaded....
+    // Uncomment this in when updating to head.
+//    final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
+//    return new MultiStatus( status.getPlugin(), -1, new IStatus[]
+//    {
+//        superStatus,
+//        status }, "Fehler beim Speichern", null );
+    return Status.OK_STATUS;
   }
 
   /**
@@ -252,8 +259,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
           {
             final IFile templateFile = (IFile)getProject().findMember( templateFileName );
             if( templateFile == null )
-              return StatusUtilities.createErrorStatus( "FeatureTemplateFile does not exist: "
-                  + templateFile.getFullPath() );
+              return StatusUtilities.createErrorStatus( "FeatureTemplateFile does not exist: " + templateFile.getFullPath() );
 
             final Reader reader = new InputStreamReader( templateFile.getContents(), templateFile.getCharset() );
             m_templateviewer.loadInput( reader, getContext(), monitor, featureTemplateProps );
@@ -278,8 +284,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
     {
-      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName,
-          status );
+      ErrorDialog.openError( getShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" + templateFileName, status );
 
       m_templateviewer.dispose();
 
@@ -303,7 +308,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     final String[] fid = getFeaturesToSelect();
     final boolean forceSelectionInMap = !m_templateviewer.hasAdditionalDataObject();
     final boolean getDefaultSelection = !getSelectionFromFeatureview(); // if we dont get the selection from the
-                                                                        // featureview, we should try to default-select
+    // featureview, we should try to default-select
     selectFeaturesInMap( fid, !getDefaultSelection, forceSelectionInMap );
 
     // else we show the feature defined in the feature-template
