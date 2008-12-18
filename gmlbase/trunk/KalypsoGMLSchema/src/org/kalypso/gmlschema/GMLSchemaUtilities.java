@@ -99,7 +99,7 @@ import org.w3c.dom.Text;
 
 /**
  * Utilities around GMLSchema-processing
- *
+ * 
  * @author doemming
  */
 public class GMLSchemaUtilities
@@ -175,7 +175,7 @@ public class GMLSchemaUtilities
 
   /**
    * Checks, if a feature type substitutes one of a given list of qnames.
-   *
+   * 
    * @param substitueeNames
    *          Names of the types which may or may not be substituted by type
    */
@@ -495,7 +495,7 @@ public class GMLSchemaUtilities
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   *
+   * 
    * @param qName
    * @return true is qName is a known type
    */
@@ -913,7 +913,7 @@ public class GMLSchemaUtilities
         }
         catch( final MalformedURLException ignores )
         {
-          // do not check for parse errors, ust ignore them for backwards compability
+          // do not check for parse errors, just ignore them for backwards compability
           // throw new GMLSchemaException( "Error in schemaLocation. This is no URL: " + location, e );
         }
       }
