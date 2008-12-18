@@ -1254,6 +1254,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_selectionRestorer.restoreSelection();
       m_selectionRestorer = null;
     }
+
+    if( m_mapPanel != null )
+      selectionChanged( new SelectionChangedEvent( m_mapPanel, m_mapPanel.getSelection() ) );
   }
 
   /**
