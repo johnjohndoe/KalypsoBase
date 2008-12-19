@@ -83,6 +83,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -107,6 +108,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
@@ -1153,7 +1155,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    * 
    * @return Status contains errors, when something goes wrong while saving the observations.
    */
-  public IStatus saveData( final IProgressMonitor monitor )
+  public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Daten speichern", 2000 );
 
@@ -1235,7 +1237,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         }
       }
 
-      saveData( monitor );
+      saveData( true, monitor );
     }
     finally
     {
@@ -1249,14 +1251,35 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
    */
   public void restoreState() throws CoreException
   {
-    if( m_selectionRestorer != null )
+//    final MapPanel mapPanel = m_mapPanel;
+//    final ISelection selection = mapPanel == null ? null : mapPanel.getSelection();
+//    if( selection != null && !selection.isEmpty() )
     {
-      m_selectionRestorer.restoreSelection();
-      m_selectionRestorer = null;
+      final Job job = new Job( "Change selection" )
+      {
+        protected IStatus run( IProgressMonitor monitor )
+        {
+          try
+          {
+            if( m_selectionRestorer != null )
+            {
+              m_selectionRestorer.restoreSelection();
+              m_selectionRestorer = null;
+            }
+          }
+          catch( CoreException e )
+          {
+            return e.getStatus();
+          }
+          
+//          selectionChanged( new SelectionChangedEvent( mapPanel, selection ) );
+          return Status.OK_STATUS;
+        }
+      };
+      job.setUser( false );
+      job.setRule(getCalcFolder());
+      job.schedule( 1000 );
     }
-
-    if( m_mapPanel != null )
-      selectionChanged( new SelectionChangedEvent( m_mapPanel, m_mapPanel.getSelection() ) );
   }
 
   /**
@@ -1614,8 +1637,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       refreshZMLTable();
     }
 
-    final Display display = getShell().getDisplay();
-    if( !display.isDisposed() )
+    final Shell shell = getShell();
+    if( shell == null )
+      return;
+    
+    final Display display = shell.getDisplay();
+    if( display != null && !display.isDisposed() )
       display.asyncExec( m_updateButtonsRunnable );
   }
 
@@ -1759,7 +1786,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       {
         final TableViewColumn column = (TableViewColumn)element;
         final String label = column.getName();
-        
+
         return label.replaceAll( "\\[.*\\]", "" );
       }
     };

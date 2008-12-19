@@ -211,22 +211,22 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveState(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus saveData( final IProgressMonitor monitor )
+  public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Daten speichern", 2 );
 
-    final IStatus superStatus = super.saveData( new SubProgressMonitor( monitor, 1 ) );
+    final IStatus superStatus = super.saveData( doSaveGml, new SubProgressMonitor( monitor, 1 ) );
     if( !superStatus.isOK() )
       return superStatus;
 
     // TODO: In this odl version, saving gml leads to reload; so we will loose the selection.
     // Directly restoring the selection does not work, as the gml might not yet be reloaded....
     // Uncomment this in when updating to head.
-//    final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
-//    return new MultiStatus( status.getPlugin(), -1, new IStatus[]
-//    {
-//        superStatus,
-//        status }, "Fehler beim Speichern", null );
+    if( doSaveGml )
+    {
+      final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
+      return status;
+    }
     return Status.OK_STATUS;
   }
 

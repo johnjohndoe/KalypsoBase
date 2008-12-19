@@ -431,7 +431,7 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, 
           IModelWizardPage modelPage = (IModelWizardPage)page;
           if( isSaveOnPageChange() )
           {
-            IStatus status = modelPage.saveData( monitor );
+            final IStatus status = modelPage.saveData( false, monitor );
             if( !status.isOK() )
               throw new CoreException( status );
           }
@@ -453,7 +453,6 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, 
       e.printStackTrace();
 
       boolean ret = false;
-      String title = "Fehler";
 
       final Throwable te = e.getTargetException();
       final Shell shell = getContainer().getShell();
@@ -461,25 +460,20 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, 
       {
         final IStatus status = ( (CoreException)te ).getStatus();
 
-        // in that case we still allow to go to the next page
-        // since the status has a severity of WARNING
-        // inform the user and let him go to the next page
-        if( status.getSeverity() == IStatus.WARNING )
-        {
+        // Got to next page if not a real error
+        if( !status.matches( IStatus.ERROR ) )
           ret = true;
-          title = "Warnung";
-        }
 
         // TODO: für Sachsen-Anhalt wollen wir nur einen Dialog für Fehler sehen
         // Sollte vermutlich konfigurierbar sein (machen wir im head)
-        final int displayMask = /* IStatus.OK | IStatus.INFO | */ IStatus.WARNING | IStatus.ERROR;
-        StatusUtilities.openSpecialErrorDialog( shell, title, "Aktualisierung des Berechnungsfalls", status, displayMask, true );
+        final int displayMask = /* IStatus.OK | IStatus.INFO | */IStatus.WARNING | IStatus.ERROR;
+        StatusUtilities.openSpecialErrorDialog( shell, "Fehler", "Aktualisierung des Berechnungsfalls", status, displayMask, true );
       }
       else
       {
         // CoreExceptions are handled above, but unexpected runtime exceptions
         // and errors may still occur.
-        MessageDialog.openError( shell, title, "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
+        MessageDialog.openError( shell, "Fehler", "Fehler beim Aufruf der nächsten Wizard-Seite: " + te.getLocalizedMessage() );
       }
 
       return ret;

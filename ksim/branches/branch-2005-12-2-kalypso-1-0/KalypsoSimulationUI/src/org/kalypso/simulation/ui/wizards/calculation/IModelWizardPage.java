@@ -50,19 +50,25 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.jface.wizard.IResetablePage;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage;
 
-/**Wizard page for the Calc-Wizard, for 'real' model editing.
+/**
+ * Wizard page for the Calc-Wizard, for 'real' model editing.
+ * 
  * @author Gernot Belger
  */
 public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage, IResetablePage
 {
-  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc,
-      final Arguments arguments, final IFolder calcFolder );
+  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder );
 
   /** Save all data of the pages and remember the state for the next call to restoreState */
   public void saveState( final IProgressMonitor monitor ) throws CoreException;
 
-  /** Save all data of the page */
-  public IStatus saveData( final IProgressMonitor monitor );
+  /**
+   * Save all data of the page
+   * 
+   * @param doSaveGml
+   *          Obscure and dangerous: flag, if gml should be saved; solves problem of deselction when pressing next
+   */
+  public IStatus saveData( boolean doSaveGml, final IProgressMonitor monitor );
 
   /**
    * Restore state to the last call of saveState

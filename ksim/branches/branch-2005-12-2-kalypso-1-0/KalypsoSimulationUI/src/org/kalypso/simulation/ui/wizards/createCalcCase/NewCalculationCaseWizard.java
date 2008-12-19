@@ -211,7 +211,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         final IStatus status = ( (CoreException)e.getTargetException() ).getStatus();
         StatusUtilities.openSpecialErrorDialog( getContainer().getShell(), IDEWorkbenchMessages
             .getString( "WizardNewFolderCreationPage.errorTitle" ), //$NON-NLS-1$
-            null, status, true );
+            null, status, IStatus.ERROR, true );
 
         // TODO: even ignore error, else we get a problem if no raster data is available
 //        if( status.matches( IStatus.ERROR ) )

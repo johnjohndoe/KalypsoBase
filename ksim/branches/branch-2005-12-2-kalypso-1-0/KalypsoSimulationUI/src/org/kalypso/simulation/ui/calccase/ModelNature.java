@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.rpc.ServiceException;
@@ -489,6 +490,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
     cal.setTime( now );
+    
+    attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) );
+    
     // erstmal auf die letzte Stunde runden
     cal.set( Calendar.MINUTE, 0 );
     cal.set( Calendar.SECOND, 0 );
@@ -507,12 +511,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
     }
 
-    final Date forecastTime = cal.getTime();
+    attributes.setProperty( "kalypso.startforecast",DatatypeConverter.printDateTime( cal ) );
 
     // standardzeit abziehen
     final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
-    final Date simTime = cal.getTime();
+    
+    attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) );
 
     attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() );
     attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() );
@@ -520,8 +525,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() );
 
     attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() );
-
-    attributes.setProperty( "kalypso.currentTime", Mapper.mapJavaValueToXml( now ) );
 
     attributes.setProperty( "simulation_project_loc", project.getLocation().toOSString() );
 
@@ -541,10 +544,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // should never happen
       e.printStackTrace();
     }
-
-    attributes.setProperty( "kalypso.startforecast", Mapper.mapJavaValueToXml( forecastTime ) );
-    attributes.setProperty( "kalypso.startsim", Mapper.mapJavaValueToXml( simTime ) );
-
+    
     return attributes;
   }
 
