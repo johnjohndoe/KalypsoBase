@@ -2,7 +2,7 @@ package org.kalypso.gml.processes.raster2vector.collector;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinate;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinateException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -34,11 +34,11 @@ public interface SegmentCollector
 
   public static final IValuePropertyType SHAPE_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "Shape" ), GM_OBJECT_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IMarshallingTypeHandler DOUBLE_HANDLER = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ); //$NON-NLS-1$
+  public static final IMarshallingTypeHandler DOUBLE_HANDLER = registry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE ); //$NON-NLS-1$
 
   public static final IValuePropertyType ID_PROP = GMLSchemaFactory.createValuePropertyType( new QName( "ID" ), DOUBLE_HANDLER, 0, 1, false ); //$NON-NLS-1$
 
-  public static final IMarshallingTypeHandler STRING_HANDLER = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
+  public static final IMarshallingTypeHandler STRING_HANDLER = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
 
   public static final IValuePropertyType BEZ_PROP = GMLSchemaFactory.createValuePropertyType( new QName( FEATURE_BASE_ID, "Name" ), STRING_HANDLER, 0, 1, false ); //$NON-NLS-1$
 

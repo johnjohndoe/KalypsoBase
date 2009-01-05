@@ -60,7 +60,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gml.processes.raster2vector.Raster2Lines;
@@ -149,8 +149,8 @@ public class TestGrid2Shp extends TestCase
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
+    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
@@ -187,8 +187,8 @@ public class TestGrid2Shp extends TestCase
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
+    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
