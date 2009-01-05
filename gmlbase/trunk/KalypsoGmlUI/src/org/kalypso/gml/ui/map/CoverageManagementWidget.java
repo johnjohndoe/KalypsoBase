@@ -157,7 +157,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove raster data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- * 
+ *
  * @author Thomas Jung
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -261,7 +261,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final IAction[] m_customActions;
 
-  private String m_partName;
+  private final String m_partName;
 
   /**
    * The constructor.
@@ -273,7 +273,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -286,7 +286,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -299,7 +299,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -666,7 +666,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * returns the first {@link RasterSymbolizer} from the given user styles
-   * 
+   *
    * @param styles
    *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
@@ -768,7 +768,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
 
       }
-      getMapPanel().getMapModell().invalidate( null );
+      getMapPanel().invalidateMap();
     }
   }
 
@@ -1254,7 +1254,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   * 
+   *
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )
