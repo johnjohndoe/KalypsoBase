@@ -82,6 +82,8 @@ public interface IKalypsoModuleEnteringPageHandler
    */
   INewProjectWizard getDemoProjectWizard( );
 
+  public boolean hasDemoProjectWizard( );
+
   /**
    * @return project data base commit type
    */
@@ -91,6 +93,8 @@ public interface IKalypsoModuleEnteringPageHandler
    * @return special plugin import wizard
    */
   IWizard getImportWizard( );
+
+  public boolean hasImportWizard( );
 
   String getImportWizardLabel( );
 }
