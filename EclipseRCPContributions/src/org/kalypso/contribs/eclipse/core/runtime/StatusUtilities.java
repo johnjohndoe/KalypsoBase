@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.core.runtime.IStatus}.
- * 
+ *
  * @author thuel
  */
 public final class StatusUtilities
@@ -117,7 +117,7 @@ public final class StatusUtilities
   /**
    * Returns the message form the given status. If the status is a multi-status, it recursively creates a string with
    * all includes child-stati, separated by line-breaks
-   * 
+   *
    * @param currentDepth
    *          Amout of tabs with wich the message will be indentated
    */
@@ -168,7 +168,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   * 
+   *
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
@@ -185,13 +185,13 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   * 
+   *
    * @param message
    *          [optional] used as message for newly created status if specified
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
-  public static IStatus statusFromThrowable( final Throwable t, String message, final Object... args )
+  public static IStatus statusFromThrowable( final Throwable t, final String message, final Object... args )
   {
     if( message != null )
     {
@@ -203,7 +203,7 @@ public final class StatusUtilities
     if( t instanceof InvocationTargetException )
     {
       if( message == null )
-        message = "";
+        return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), null );
 
       return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), String.format( message, args ) );
     }
@@ -240,7 +240,7 @@ public final class StatusUtilities
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
    * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
    * returned.
-   * 
+   *
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -259,7 +259,7 @@ public final class StatusUtilities
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
    * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
    * returned.
-   * 
+   *
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -319,7 +319,7 @@ public final class StatusUtilities
   /**
    * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
    * then it is simply returned.
-   * 
+   *
    * @param status
    *          the status to wrap
    * @param severity
@@ -374,7 +374,7 @@ public final class StatusUtilities
 
   /**
    * Opens an error dialog on the given status.
-   * 
+   *
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -387,9 +387,8 @@ public final class StatusUtilities
       return ErrorDialog.openError( shell, title, message, status );
 
     final IStatus[] children = ((MultiStatus) status).getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final IStatus child : children )
     {
-      final IStatus child = children[i];
       final int result = ErrorDialog.openError( shell, title, message, child );
       if( result == Window.CANCEL )
         return result;
@@ -408,7 +407,7 @@ public final class StatusUtilities
 
   /**
    * Opens an error dialog on the given status. Tweaks the error message.
-   * 
+   *
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -440,10 +439,8 @@ public final class StatusUtilities
     }
 
     final IStatus[] children = ((MultiStatus) status).getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final IStatus child : children )
     {
-      final IStatus child = children[i];
-
       final String msg;
       if( child instanceof DialogMultiStatus )
         msg = ((DialogMultiStatus) child).getDialogMessage();
