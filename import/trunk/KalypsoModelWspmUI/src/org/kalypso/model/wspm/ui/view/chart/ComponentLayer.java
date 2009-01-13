@@ -41,9 +41,6 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
  * @author kimwerner
