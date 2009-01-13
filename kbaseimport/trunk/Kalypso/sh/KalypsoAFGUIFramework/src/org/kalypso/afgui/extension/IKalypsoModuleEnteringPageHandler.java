@@ -97,4 +97,6 @@ public interface IKalypsoModuleEnteringPageHandler
   public boolean hasImportWizard( );
 
   String getImportWizardLabel( );
+
+  IKalypsoProjectOpenAction getProjectOpenAction( );
 }
