@@ -113,6 +113,19 @@ public class UrlResolver implements IUrlResolver
       final String relPath = relativeURL.substring( "project:".length() + 1 );
       return new URL( projectURL + "/" + relPath );
     }
+    else if( relativeURL.startsWith( "REMOTE=" ) )
+    {
+      /* @hack szenario data manager - project database global gml fragment */
+      if( relativeURL.contains( "${PROJECT}" ) )
+      {
+        final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
+        String myUrl = relativeURL.replaceAll( "\\$\\{PROJECT\\}", project.getName() );
+
+        return new URL( myUrl.substring( 7 ) );
+      }
+
+      return new URL( relativeURL.substring( 7 ) );
+    }
 
     return new URL( baseURL, relativeURL );
   }
