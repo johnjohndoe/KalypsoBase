@@ -43,9 +43,6 @@ package org.kalypso.contribs.eclipse.swt.canvas;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -56,7 +53,6 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.progress.UIJob;
 
 /**
  * @author Dirk Kuch
@@ -102,6 +98,9 @@ public class ImageCanvas2 extends Canvas
       {
         boolean changed = false;
 
+        Cursor cursor = cursorDefault;
+        String tooltip = null;
+
         for( final IContentArea area : m_contents )
         {
           if( area.hasMouseListener() )
@@ -115,18 +114,8 @@ public class ImageCanvas2 extends Canvas
                 changed = true;
               }
 
-              myCanvas.setCursor( cursorHand );
-
-              new UIJob( "" )
-              {
-                @Override
-                public IStatus runInUIThread( final IProgressMonitor monitor )
-                {
-                  setToolTipText( area.getTooltip() );
-
-                  return Status.OK_STATUS;
-                }
-              }.schedule();
+              cursor = cursorHand;
+              tooltip = area.getTooltip();
             }
             else
             {
@@ -138,13 +127,14 @@ public class ImageCanvas2 extends Canvas
             }
           }
         }
-        setToolTipText( null );
-        myCanvas.setCursor( cursorDefault );
 
         if( changed )
         {
           redraw();
         }
+
+        myCanvas.setCursor( cursor );
+        myCanvas.setToolTipText( tooltip );
       }
     };
 
