@@ -82,13 +82,15 @@ public class ProjectTemplatePage extends WizardPage
 
     /* Preselect the first entry, if any exists. */
     if( m_projectsTemplates.length > 0 )
+    {
       m_selectedProject = m_projectsTemplates[0];
+    }
 
     setTitle( "Beispielprojekte" );
     setMessage( "Auf dieser Seite wählen Sie aus, welches Beispielprojekt Sie erzeugen möchten." );
   }
 
-  public ProjectTemplatePage( final ProjectTemplate[] templates )
+  public ProjectTemplatePage( final String header, final String description, final ProjectTemplate[] templates )
   {
     super( "projectTemplatePage" );
 
@@ -96,10 +98,12 @@ public class ProjectTemplatePage extends WizardPage
 
     /* Preselect the first entry, if any exists. */
     if( templates.length > 0 )
+    {
       m_selectedProject = m_projectsTemplates[0];
+    }
 
-    setTitle( "Beispielprojekte" );
-    setMessage( "Auf dieser Seite wählen Sie aus, welches Beispielprojekt Sie erzeugen möchten." );
+    setTitle( header );
+    setMessage( description );
   }
 
   /**
@@ -134,7 +138,9 @@ public class ProjectTemplatePage extends WizardPage
       {
         final String icon = ((ProjectTemplate) element).getIcon();
         if( icon == null || icon.length() == 0 )
+        {
           return null;
+        }
 
         // TODO: create icon and dispose after use
 
@@ -166,14 +172,20 @@ public class ProjectTemplatePage extends WizardPage
         setSelectedProject( selectedProject );
 
         if( selectedProject == null )
+        {
           descriptionLabel.setText( "" );
+        }
         else
+        {
           descriptionLabel.setText( selectedProject.getDescription() );
+        }
       }
     } );
 
     if( m_selectedProject != null )
+    {
       tableViewer.setSelection( new StructuredSelection( m_selectedProject ), true );
+    }
   }
 
   protected void setSelectedProject( final ProjectTemplate selectedProject )
