@@ -40,18 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.extension;
 
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author Dirk Kuch
  */
 public interface IProjectHandler
 {
-  IProject getProject( );
-
   boolean isLocal( );
 
   boolean isRemote( );
 
-  Object getBean( );
+  /**
+   * @return "label" name of project
+   */
+  String getName( );
+
+  /**
+   * @return unique (bean unix name, iproject.name) of project
+   */
+  String getUniqueName( );
+
+  IProjectRowBuilder getBuilder( IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker ) throws CoreException;
 }
