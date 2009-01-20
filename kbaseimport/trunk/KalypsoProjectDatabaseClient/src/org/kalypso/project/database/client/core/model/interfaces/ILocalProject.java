@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.core.model.interfaces;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
@@ -57,4 +58,6 @@ public interface ILocalProject extends IProjectHandler
   public boolean isModified( ) throws CoreException;
 
   void dispose( );
+
+  LocalWorkspaceModel getLocalWorkspaceModel( );
 }
