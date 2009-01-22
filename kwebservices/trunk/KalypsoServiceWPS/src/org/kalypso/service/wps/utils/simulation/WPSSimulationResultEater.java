@@ -187,10 +187,11 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         final File fileResult = (File) result;
         valueFormChoice = addComplexValueReference( fileResult );
       }
-      else if( result instanceof ComplexValueType )
-        valueFormChoice = result;// TODO The client can send now complex data, so it should be done here simalarly
       else
-        throw new SimulationException( "The type of the output with the identifier '" + id + "' must be an URL (ComplexValueReference), a File (ComplexValueReference) or a ComplexValueType.", null );
+      {
+        // REMARK: hack/convention: the result must now be the raw input for the anyType element
+        valueFormChoice = addComplexValueType( result );
+      }
     }
     else if( literalOutput != null )
     {
@@ -208,7 +209,6 @@ public class WPSSimulationResultEater implements ISimulationResultEater
           valueFormChoice = addLiteralValueType( result );
         else
           throw new SimulationException( "The type of the output with the identifier '" + id + "' must be an Integer (Literal): " + result, null );
-
       }
       else if( value.endsWith( "double" ) )
       {
@@ -299,10 +299,10 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       if( relativePathToSource == null )
         throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
       final FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
-      
+
       // keep track of file references
       m_references.put( sourceFile, destination );
-      
+
       /* Build complex value reference. */
       return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
     }
@@ -310,6 +310,23 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       throw new SimulationException( "Could not add ComplexValueReference for file " + sourceFile, e );
     }
+  }
+
+  /**
+   * This function will create ComplexValueType with the given object.
+   * 
+   * @param result
+   *          An object, which should be added.
+   * @return A ComplexValueType with the given file.
+   */
+  private ComplexValueType addComplexValueType( Object result )
+  {
+    // REMARK: hack/convention: the input must now be the raw input for the anyType element
+    List<Object> value = new ArrayList<Object>( 1 );
+    value.add( result );
+
+    /* Build the complex value. */
+    return OGCUtilities.buildComplexValueType( null, null, null, value );
   }
 
   private FileSystemManager getFileSystemManager( ) throws SimulationException
@@ -326,7 +343,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   }
 
   /**
-   * This function will add create with the given object (String, Integer, Double, Boolean) a LiteralValueType.
+   * This function will create a LiteralValueType with the given object (String, Integer, Double, Boolean).
    * 
    * @param result
    *          One of the types String, Integer, Double and Boolean.

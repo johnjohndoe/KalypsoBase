@@ -87,7 +87,7 @@ public class WPSUtilities
   /**
    * AnyURI QName.
    */
-  public static QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+  public static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
 
   /**
    * The constructor.
@@ -105,16 +105,16 @@ public class WPSUtilities
    *          The address of the server.
    * @return The response as String.
    */
-  public static String send( final String xml, final String url ) throws CoreException, HttpException, IOException
+  public static String send( String xml, String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
+    HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
 
     /* Build the method. */
-    final PostMethod post = new PostMethod( url );
+    PostMethod post = new PostMethod( url );
     // TODO: this is maybe a bit heavy, if the request is big (got an OutOfMemory once at marshalling the xml string)
 
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
@@ -123,52 +123,52 @@ public class WPSUtilities
     post.setDoAuthentication( true );
 
     /* Execute the method. */
-    final int status = client.executeMethod( post );
+    int status = client.executeMethod( post );
 
     /* Handle the response. */
     Debug.println( "Status code: " + String.valueOf( status ) );
 
     if( status != 200 )
     {
-      // TODO: we should also add the body into a sub-status; so we could show it to the user if he examines it more
-      // closely
-// final String body = post.getResponseBodyAsString();
-      final String msg = String.format( "Request failed! Server response code %d.", status );
+      // TODO: we should also add the body into a sub-status;
+      // so we could show it to the user if he examines it more closely
+      // String body = post.getResponseBodyAsString();
+      String msg = String.format( "Request failed! Server response code %d.", status );
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 
-    final InputStream is = post.getResponseBodyAsStream();
+    InputStream is = post.getResponseBodyAsStream();
     if( is == null )
       return null;
 
     return MarshallUtilities.fromInputStream( is );
   }
 
-  public static List<ProcessDescriptionType> callDescribeProcess( final String serviceEndpoint, final String... processIds ) throws CoreException
+  public static List<ProcessDescriptionType> callDescribeProcess( String serviceEndpoint, String... processIds ) throws CoreException
   {
     /* Build the describe process request. */
-    final List<CodeType> identifiers = new LinkedList<CodeType>();
+    List<CodeType> identifiers = new LinkedList<CodeType>();
     for( String processId : processIds )
     {
       identifiers.add( OGCUtilities.buildCodeType( "", processId ) );
     }
 
-    final DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifiers );
+    DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifiers );
 
     /* Send the request. */
     Object describeProcessObject = null;
     try
     {
-      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), serviceEndpoint );
+      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), serviceEndpoint );
 
       /* Try to unmarshall. */
       describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
-    catch( final JAXBException e )
+    catch( JAXBException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -179,32 +179,32 @@ public class WPSUtilities
     // respect to WPS specification
     if( describeProcessObject instanceof ExceptionReport )
     {
-      final ExceptionReport report = (ExceptionReport) describeProcessObject;
+      ExceptionReport report = (ExceptionReport) describeProcessObject;
       throw new CoreException( StatusUtilities.createErrorStatus( createErrorString( report ) ) );
     }
 
     /* Use the process description for building the DataInputs and the OutputDefinitions. */
-    final ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
+    ProcessDescriptions processDescriptions = (ProcessDescriptions) describeProcessObject;
 
     /* The descriptions of all processes from the process descriptions response. */
-    final List<ProcessDescriptionType> processDescriptionList = processDescriptions.getProcessDescription();
+    List<ProcessDescriptionType> processDescriptionList = processDescriptions.getProcessDescription();
 
     /* Check describe process. */
     if( processDescriptionList == null || processDescriptionList.size() == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned no process description.", null ) );
-    
+
     return processDescriptionList;
   }
-  
+
   @SuppressWarnings("unchecked")
-  public static ExecuteResponseType callExecute( final String serviceEndpoint, final String typeID, final DataInputsType dataInputs, final OutputDefinitionsType outputDefinitions ) throws CoreException
+  public static ExecuteResponseType callExecute( String serviceEndpoint, String typeID, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions ) throws CoreException
   {
     try
     {
       /* Build the execute request. */
-      final Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
-      final String executeRequestString = MarshallUtilities.marshall( execute );
-      final String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
+      Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
+      String executeRequestString = MarshallUtilities.marshall( execute );
+      String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponseString );
 
@@ -214,7 +214,7 @@ public class WPSUtilities
         throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
       }
 
-      final Object response = MarshallUtilities.unmarshall( executeResponseString );
+      Object response = MarshallUtilities.unmarshall( executeResponseString );
 
       if( response instanceof ExceptionReport )
       {
@@ -222,15 +222,15 @@ public class WPSUtilities
         throw new CoreException( StatusUtilities.createErrorStatus( WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
       }
 
-      final JAXBElement<ExecuteResponseType> elmt = (JAXBElement<ExecuteResponseType>) response;
-      final ExecuteResponseType executeResponse = elmt.getValue();
+      JAXBElement<ExecuteResponseType> elmt = (JAXBElement<ExecuteResponseType>) response;
+      ExecuteResponseType executeResponse = elmt.getValue();
       return executeResponse;
     }
-    catch( final JAXBException e )
+    catch( JAXBException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -243,11 +243,11 @@ public class WPSUtilities
    *          The exception report.
    * @return The error messages as one string.
    */
-  public static String createErrorString( final ExceptionReport exceptionReport )
+  public static String createErrorString( ExceptionReport exceptionReport )
   {
-    final List<ExceptionType> exceptions = exceptionReport.getException();
+    List<ExceptionType> exceptions = exceptionReport.getException();
     String messages = "";
-    for( final ExceptionType exception : exceptions )
+    for( ExceptionType exception : exceptions )
       messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exception.getExceptionText() + "\nLocator: " + exception.getLocator();
 
     return messages;
@@ -260,7 +260,7 @@ public class WPSUtilities
    *          The simulations type id.
    * @return The simulation.
    */
-  public static ISimulation getSimulation( final String simulationType ) throws OWSException
+  public static ISimulation getSimulation( String simulationType ) throws OWSException
   {
     ISimulation simulation = null;
     try
@@ -275,7 +275,7 @@ public class WPSUtilities
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "The simulation \"" + simulationType + "\" is not available.", "" );
       }
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
@@ -296,7 +296,7 @@ public class WPSUtilities
     {
       return KalypsoSimulationCoreExtensions.createSimulations();
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       Debug.println( "Error retrieving the simulations!" );
       throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
@@ -316,15 +316,15 @@ public class WPSUtilities
    *          ----------------------------------------------------------------------------------<br>
    *          Result: http://informdss.bafg.de/webdav/results/xxx
    */
-  public static String convertInternalToClient( final String serverUrl )
+  public static String convertInternalToClient( String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
-    final String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
+    String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
     if( clientProperty == null )
       return serverUrl;
 
-    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
-    final String clientUrl = serverUrl.replace( serverProperty, clientProperty );
+    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    String clientUrl = serverUrl.replace( serverProperty, clientProperty );
     Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
 
     return clientUrl;
@@ -346,14 +346,14 @@ public class WPSUtilities
    * @param clientProperty
    *          The client URL.
    */
-  public static String convertInternalToServer( final String clientUrl, final String clientProperty )
+  public static String convertInternalToServer( String clientUrl, String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */
-    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
+    String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
     if( serverProperty == null )
       return clientUrl;
 
-    final String serverUrl = clientUrl.replace( clientProperty, serverProperty );
+    String serverUrl = clientUrl.replace( clientProperty, serverProperty );
     Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
 
     return serverUrl;

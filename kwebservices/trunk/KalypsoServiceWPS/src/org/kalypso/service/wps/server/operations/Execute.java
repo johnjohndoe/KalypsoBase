@@ -97,9 +97,9 @@ public class Execute implements IOperation
       getIdentifier( request );
 
       /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-      final WPSSimulationManager manager = WPSSimulationManager.getInstance();
-      final String simulationIdentifier = m_executeRequest.getIdentifier().getValue();
-      final WPSSimulationInfo info = manager.startSimulation( simulationIdentifier, simulationIdentifier, m_executeRequest );
+      WPSSimulationManager manager = WPSSimulationManager.getInstance();
+      String simulationIdentifier = m_executeRequest.getIdentifier().getValue();
+      WPSSimulationInfo info = manager.startSimulation( simulationIdentifier, simulationIdentifier, m_executeRequest );
 
       /* Prepare the execute response. */
       FileObject resultDir = manager.getResultDir( info.getId() );
