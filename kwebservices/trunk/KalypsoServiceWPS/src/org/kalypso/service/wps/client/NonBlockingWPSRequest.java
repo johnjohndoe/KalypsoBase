@@ -247,18 +247,18 @@ public class NonBlockingWPSRequest
     ExecuteResponseType executeResponse;
     CodeType simulationIdentifier = OGCUtilities.buildCodeType( "", m_identifier );
 
-    /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-    Execute execute = OGCUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
-
     try
     {
       // decide between local and remote invocation
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
-        WPSSimulationManager manager = WPSSimulationManager.getInstance();
         try
         {
+          /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
+          Execute execute = OGCUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
+          WPSSimulationManager manager = WPSSimulationManager.getInstance();
           WPSSimulationInfo info = manager.startSimulation( m_identifier, m_identifier, execute );
+
           /* Prepare the execute response. */
           FileObject resultDir = manager.getResultDir( info.getId() );
           FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
@@ -307,6 +307,7 @@ public class NonBlockingWPSRequest
 
     /* Finish. */
     monitor.worked( 100 );
+
     return Status.OK_STATUS;
   }
 

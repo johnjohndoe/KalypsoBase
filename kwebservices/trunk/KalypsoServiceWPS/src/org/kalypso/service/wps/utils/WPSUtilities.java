@@ -205,22 +205,17 @@ public class WPSUtilities
       Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
       String executeRequestString = MarshallUtilities.marshall( execute );
       String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
+
       /* Handle the execute response. */
       Debug.println( "Response:\n" + executeResponseString );
 
       if( executeResponseString == null || executeResponseString.length() == 0 )
-      {
-        // error
         throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
-      }
 
       Object response = MarshallUtilities.unmarshall( executeResponseString );
 
       if( response instanceof ExceptionReport )
-      {
-        // an exception was reported, so we return
         throw new CoreException( StatusUtilities.createErrorStatus( WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
-      }
 
       JAXBElement<ExecuteResponseType> elmt = (JAXBElement<ExecuteResponseType>) response;
       ExecuteResponseType executeResponse = elmt.getValue();
