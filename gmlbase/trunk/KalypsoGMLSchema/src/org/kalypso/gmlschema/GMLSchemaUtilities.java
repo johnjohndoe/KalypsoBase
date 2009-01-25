@@ -99,7 +99,7 @@ import org.w3c.dom.Text;
 
 /**
  * Utilities around GMLSchema-processing
- * 
+ *
  * @author doemming
  */
 public class GMLSchemaUtilities
@@ -109,6 +109,8 @@ public class GMLSchemaUtilities
   public static final String GML3_FeatureTypeBaseType = "AbstractGMLType";
 
   public static final QName GML2_RelationBaseType = new QName( NS.GML2, "FeatureAssociationType" );
+
+  public static final QName GML2_GeometryAssociationType = new QName( NS.GML2, "GeometryAssociationType" );
 
   public static final QName GML3_FeaturePropertyType = new QName( NS.GML2, "FeaturePropertyType" );
 
@@ -175,7 +177,7 @@ public class GMLSchemaUtilities
 
   /**
    * Checks, if a feature type substitutes one of a given list of qnames.
-   * 
+   *
    * @param substitueeNames
    *          Names of the types which may or may not be substituted by type
    */
@@ -495,7 +497,7 @@ public class GMLSchemaUtilities
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   * 
+   *
    * @param qName
    * @return true is qName is a known type
    */
@@ -752,7 +754,16 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
+  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexType complexType, final List<ElementWithOccurs> collector, final Occurs occurs ) throws GMLSchemaException
+  {
+    return collectElements( schema, complexType, collector, occurs, false );
+  }
+
+  /**
+   * @param followExtensions
+   *          If <code>true</code>, also collects elements from extensions/restrictions.
+   */
+  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs, final boolean followExtensions ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -768,6 +779,20 @@ public class GMLSchemaUtilities
     collectElements( schema, choice, collector, occurs );
     final All all = complexType.getAll();
     collectElements( schema, all, collector, occurs );
+
+    if( followExtensions )
+    {
+      final ComplexContent complexContent = complexType.getComplexContent();
+      if( complexContent != null )
+      {
+        final ExtensionType extension = complexContent.getExtension();
+        collectElements( schema, extension, collector, occurs );
+
+        final ComplexRestrictionType restriction = complexContent.getRestriction();
+        collectElements( schema, restriction, collector, occurs );
+      }
+    }
+
     return collector;
   }
 

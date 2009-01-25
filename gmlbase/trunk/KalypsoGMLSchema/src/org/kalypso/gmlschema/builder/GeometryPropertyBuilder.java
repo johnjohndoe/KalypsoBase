@@ -45,8 +45,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexRestrictionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -138,8 +140,19 @@ public class GeometryPropertyBuilder extends AbstractBuilder
 
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
+    // Special case for gml2.0: follow restrictions, if type is restriction
+    // of gml:GeometryAssociationType
+    boolean followExtensions = false;
+    final ComplexContent complexContent = complexType.getComplexContent();
+    if( complexContent != null )
+    {
+      final ComplexRestrictionType restriction = complexContent.getRestriction();
+      if( restriction != null && GMLSchemaUtilities.GML2_GeometryAssociationType.equals( restriction.getBase() ) )
+        followExtensions = true;
+    }
+
     // find referenced element (target)
-    final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
+    final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null, followExtensions );
     final List<QName> results = new ArrayList<QName>( collector.size() );
     for( final ElementWithOccurs elementWithOccurs : collector )
     {
