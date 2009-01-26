@@ -71,12 +71,19 @@ public class ImageCanvas2 extends Canvas
   {
     super( parent, style );
 
+    final Canvas myCanvas = this;
+
     /** paint listener */
     m_paintListener = new PaintListener()
     {
       @Override
       public void paintControl( final PaintEvent e )
       {
+        if( myCanvas.isDisposed() )
+        {
+          return;
+        }
+
         for( final IContentArea area : m_contents )
         {
           area.draw( e );
@@ -89,13 +96,16 @@ public class ImageCanvas2 extends Canvas
     final Cursor cursorHand = new Cursor( this.getDisplay(), SWT.CURSOR_HAND );
     final Cursor cursorDefault = new Cursor( this.getDisplay(), SWT.CURSOR_ARROW );
 
-    final Canvas myCanvas = this;
-
     m_mouseMoveListener = new MouseMoveListener()
     {
       @Override
       public void mouseMove( final MouseEvent e )
       {
+        if( myCanvas.isDisposed() )
+        {
+          return;
+        }
+
         boolean changed = false;
 
         Cursor cursor = cursorDefault;
@@ -153,6 +163,11 @@ public class ImageCanvas2 extends Canvas
         {
           if( area.hasMouseListener() )
           {
+            if( myCanvas.isDisposed() )
+            {
+              return;
+            }
+
             final Rectangle boundingBox = area.getBoundingBox();
             if( boundingBox.contains( e.x, e.y ) )
             {
