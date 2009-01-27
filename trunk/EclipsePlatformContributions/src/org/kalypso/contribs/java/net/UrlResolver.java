@@ -100,7 +100,9 @@ public class UrlResolver implements IUrlResolver
     if( relativeURL.startsWith( "project:" ) )
     {
       if( baseURL == null )
+      {
         throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" );
+      }
 
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
       {
@@ -115,11 +117,11 @@ public class UrlResolver implements IUrlResolver
     }
     else if( relativeURL.startsWith( "REMOTE=" ) )
     {
-      /* @hack szenario data manager - project database global gml fragment */
+      /* @hack scenario data manager - project database global gml fragment */
       if( relativeURL.contains( "${PROJECT}" ) )
       {
         final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-        String myUrl = relativeURL.replaceAll( "\\$\\{PROJECT\\}", project.getName() );
+        final String myUrl = relativeURL.replaceAll( "\\$\\{PROJECT\\}", project.getName() );
 
         return new URL( myUrl.substring( 7 ) );
       }
@@ -183,7 +185,9 @@ public class UrlResolver implements IUrlResolver
         };
 
         if( !realFile.exists() )
+        {
           realFile.createNewFile();
+        }
         final OutputStream os = new RunAfterCloseOutputStream( new FileOutputStream( realFile ), runnable );
 
         String charset;
