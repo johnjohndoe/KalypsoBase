@@ -62,10 +62,31 @@ public class ScenarioListHandler implements IScenarioList
   @Override
   public List<IScenario> getScenarios( )
   {
-    final List<IScenario> myScenarios = new ArrayList<IScenario>();
-
     final Scenario scenario = m_scenarioHandler.getScenario();
     final ScenarioList derived = scenario.getDerivedScenarios();
+    if( derived == null )
+    {
+      return new ArrayList<IScenario>();
+    }
+
+    final List<IScenario> myScenarios = new ArrayList<IScenario>()
+    {
+      /**
+       * @see java.util.ArrayList#remove(java.lang.Object)
+       */
+      @Override
+      public boolean remove( final Object o )
+      {
+        if( o instanceof ScenarioHandler )
+        {
+          final ScenarioHandler handler = (ScenarioHandler) o;
+          derived.getScenarios().remove( handler.getScenario() );
+        }
+
+        return super.remove( o );
+      }
+    };
+
     final List<Scenario> scenarios = derived.getScenarios();
     for( final Scenario scen : scenarios )
     {
