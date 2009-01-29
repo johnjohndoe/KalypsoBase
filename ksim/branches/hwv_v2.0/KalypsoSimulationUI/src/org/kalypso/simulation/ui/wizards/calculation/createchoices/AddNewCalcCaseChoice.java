@@ -98,7 +98,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   private Text m_edit;
 
-  protected IFolder m_folder = null;
+  protected IFolder m_continueFolder = null;
 
   public AddNewCalcCaseChoice( final String label, final IProject project, final CreateCalcCasePage page )
   {
@@ -149,6 +149,24 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       return;
     }
 
+    final boolean isContinueAllowed = isContinueAllowed();
+    if( isContinueAllowed )
+      createContinueControl( panel, prognoseFolder );
+
+    m_control = panel;
+
+    try
+    {
+      refresh( new NullProgressMonitor() );
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
+  }
+
+  private void createContinueControl( final Composite panel, final IFolder prognoseFolder )
+  {
     final Button continueCheckbox = new Button( panel, SWT.CHECK );
     continueCheckbox.setText( "bestehende Rechenvariante fortsetzen" );
     continueCheckbox
@@ -156,10 +174,10 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
     continueCheckbox.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, true, false, 2, 1 ) );
 
     // Table of existing prognoses
-
     final Label continueLabel = new Label( panel, SWT.NONE );
     continueLabel.setText( "Bitte wählen Sie die Rechenvariante:" );
-    continueLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 2, 1 ) );
+    final GridData continueLabelData = new GridData( SWT.LEFT, SWT.CENTER, false, false, 2, 1 );
+    continueLabel.setLayoutData( continueLabelData );
 
     final CalcCaseTableTreeViewer viewer = new CalcCaseTableTreeViewer( null, panel, SWT.BORDER | SWT.SINGLE
         | SWT.FULL_SELECTION );
@@ -185,15 +203,15 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
 
-    /* If odl calc cases are available, alsways select the youngest. If none available, hide table. */
+    /* If old calc cases are available, alsways select the youngest. If none available, hide table. */
     final TableTreeItem[] items = viewer.getTableTree().getItems();
-    final boolean showMerge = items.length > 0;
-    
-    continueLabel.setVisible( showMerge );
-    viewer.getControl().setVisible( showMerge );
-    continueCheckbox.setSelection( showMerge );
+    final boolean showContinue = items.length > 0;
 
-    if( showMerge )
+    continueLabel.setVisible( showContinue );
+    viewer.getControl().setVisible( showContinue );
+    continueCheckbox.setSelection( showContinue );
+
+    if( showContinue )
     {
       // Select topmost element ()
       viewer.setSelection( new StructuredSelection( items[0].getData() ) );
@@ -205,7 +223,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final boolean checked = continueCheckbox.getSelection();
         continueLabel.setVisible( checked );
@@ -218,22 +236,34 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
             viewer.setSelection( new StructuredSelection( items[0].getData() ) );
         }
         else if( !checked )
-          m_folder = null;
+          m_continueFolder = null;
       }
-    } );
+    } );    
+  }
 
-    m_control = panel;
-
+  /**
+   * Check, if continouing calc cases is possible for this project type.
+   */
+  private boolean isContinueAllowed( )
+  {
     try
     {
-      refresh( new NullProgressMonitor() );
+      final ModelNature nature = (ModelNature) m_project.getNature( ModelNature.ID );
+      final String prop = nature.getMetadata( ModelNature.METADATA_KEY_CALCCASE_CONTINUE_ALLOWED );
+      if( prop == null )
+        return false;
+
+      final Boolean isContinueAllowed = Boolean.valueOf( prop );
+      return isContinueAllowed == null ? false : isContinueAllowed.booleanValue();
     }
-    catch( final CoreException e1 )
+    catch( final CoreException e )
     {
-      e1.printStackTrace();
+      e.printStackTrace();
+      return false;
     }
   }
 
+  
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#setFocus()
    */
@@ -244,7 +274,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
   protected void setContinueFolder( final IFolder folder )
   {
-    m_folder = folder;
+    m_continueFolder = folder;
 
     validateChoice();
   }
@@ -291,7 +321,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     FolderUtilities.mkdirs( calcCaseFolder );
 
-    final Map antProperties = configureAntProperties( m_folder );
+    final Map<String, String> antProperties = configureAntProperties( m_continueFolder );
     nature.createCalculationCaseInFolder( calcCaseFolder, antProperties, monitor );
 
     return calcCaseFolder;
@@ -366,9 +396,9 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       final String newName = count == 0 ? dateString : ( dateString + "_NR" + count );
 
       boolean bFound = false;
-      for( int i = 0; i < resources.length; i++ )
+      for( final IResource resource : resources )
       {
-        if( resources[i].getName().equals( newName ) )
+        if( resource.getName().equals( newName ) )
         {
           bFound = true;
           break;

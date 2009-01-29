@@ -58,6 +58,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 
@@ -92,8 +93,11 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
     try
     {
       final File serverRoot = ModelActionHelper.getServerRoot();
+      if( !serverRoot.exists() )
+        throw new CoreException( StatusUtilities.createErrorStatus( "Serverseitiges Modell-Repository nicht vorhanden: " + serverRoot.getAbsolutePath() ) );
 
       final File[] files = serverRoot.listFiles();
+
       final ListSelectionDialog lsd = new ListSelectionDialog(
           m_window.getShell(),
           files,
@@ -114,12 +118,12 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
         {
           monitor.beginTask( "Modelle vom Server laden", files.length * 1000 );
 
-          for( int i = 0; i < projects.length; i++ )
+          for( final Object project2 : projects )
           {
             if( monitor.isCanceled() )
               return Status.CANCEL_STATUS;
 
-            final File serverProject = (File)projects[i];
+            final File serverProject = (File)project2;
             final String name = serverProject.getName();
 
             final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( name );
@@ -155,7 +159,7 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
   // auch wurscht
   }
