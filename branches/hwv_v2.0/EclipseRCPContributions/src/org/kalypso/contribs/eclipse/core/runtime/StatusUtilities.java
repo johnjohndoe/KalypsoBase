@@ -382,9 +382,8 @@ public final class StatusUtilities
       return ErrorDialog.openError( shell, title, message, status );
 
     final IStatus[] children = ( (MultiStatus)status ).getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final IStatus child : children )
     {
-      final IStatus child = children[i];
       final int result = ErrorDialog.openError( shell, title, message, child );
       if( result == Window.CANCEL )
         return result;
@@ -399,8 +398,8 @@ public final class StatusUtilities
   public static int openSpecialErrorDialog( final Shell shell, final String title, final String message,
       final IStatus status, final boolean showMultipleDialogs )
   {
-    return openSpecialErrorDialog( shell, title, message, status, IStatus.OK | IStatus.INFO | IStatus.WARNING
-        | IStatus.ERROR, showMultipleDialogs );
+    final int displayMask = IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR;
+    return openSpecialErrorDialog( shell, title, message, status, displayMask, showMultipleDialogs );
   }
 
   /**
@@ -438,17 +437,15 @@ public final class StatusUtilities
     }
 
     final IStatus[] children = ( (MultiStatus)status ).getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final IStatus child : children )
     {
-      final IStatus child = children[i];
-
       final String msg;
       if( child instanceof DialogMultiStatus )
         msg = ( (DialogMultiStatus)child ).getDialogMessage();
       else
         msg = message;
 
-      final int result = openSpecialErrorDialog( shell, title, msg, child, false );
+      final int result = openSpecialErrorDialog( shell, title, msg, child, displayMask, false );
       if( result == Window.CANCEL )
         return result;
     }
