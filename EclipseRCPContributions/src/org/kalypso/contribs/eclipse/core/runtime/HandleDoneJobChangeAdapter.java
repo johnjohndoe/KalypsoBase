@@ -5,11 +5,9 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Waits for {@link org.eclipse.core.runtime.jobs.Job}to finish and then shows
- * a message box if the job was succesful.
+ * Waits for {@link org.eclipse.core.runtime.jobs.Job}to finish and then shows a message box if the job was succesful.
  * 
  * @see IStatus#isOK()
- * 
  * @author belger
  */
 public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
@@ -21,17 +19,16 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
   private final String m_messageFirstline;
 
   private final int m_stateMask;
-  
+
   private final boolean m_showMultipleDialogs;
 
   /**
    * Same as {@link HandleDoneJobChangeAdapter#HandleDoneJobChangeAdapter(Shell, String, String, boolean, int)},
    * stateMask defaulting to <code>IStatus.CANCEL | IStatus.INFO | IStatus.WARNING</code>.
    */
-  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener, final boolean showMultipleDialogs )
+  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline, final boolean autoRemoveListener, final boolean showMultipleDialogs )
   {
-    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING, showMultipleDialogs );
+    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING | IStatus.ERROR, showMultipleDialogs );
   }
 
   /**
@@ -46,8 +43,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
    * @see ErrorDialog#openError(org.eclipse.swt.widgets.Shell, java.lang.String, java.lang.String,
    *      org.eclipse.core.runtime.IStatus, int)
    */
-  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
-      final boolean autoRemoveListener, final int stateMask, final boolean showMultipleDialogs )
+  public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline, final boolean autoRemoveListener, final int stateMask, final boolean showMultipleDialogs )
   {
     super( autoRemoveListener );
 
@@ -72,11 +68,10 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
 
     final Runnable runnable = new Runnable()
     {
-      public void run()
+      public void run( )
       {
         final IStatus status = event.getResult();
-        StatusUtilities.openSpecialErrorDialog( shell, messageTitle, messageFirstline, status, stateMask,
-            showMultipleDialogs );
+        StatusUtilities.openSpecialErrorDialog( shell, messageTitle, messageFirstline, status, stateMask, showMultipleDialogs );
       }
     };
     m_shell.getDisplay().asyncExec( runnable );

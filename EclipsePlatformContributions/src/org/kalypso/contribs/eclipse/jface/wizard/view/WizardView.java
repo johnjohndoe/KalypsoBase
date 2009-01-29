@@ -64,6 +64,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -111,6 +112,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -128,6 +130,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
 public class WizardView extends ViewPart implements IWizardContainer2, IWizardChangeProvider, IPageChangeProvider
 {
   public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
+
+  public static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
 
   private RGB m_defaultTitleBackground;
 
@@ -432,7 +436,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).isSaveAvailable() )
+    // Reset button; will be invisible if current page is not resetable (see IResetableWizard).
+    createButton( parent, RESET_ID, "Zurücksetzen", "doReset", false );
+
+    if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).hasSaveButton() )
       createButton( parent, SAVE_ID, "Speichern", "doSave", false );
 
     if( m_wizard.isHelpAvailable() )
@@ -709,9 +716,14 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     boolean canFlipToNextPage = false;
     final boolean canFinish = m_wizard.canFinish();
 
+    final boolean canReset = m_wizard instanceof IResetableWizard ? ((IResetableWizard) m_wizard).canReset() : false;
+    final boolean showReset = m_wizard instanceof IResetableWizard ? ((IResetableWizard) m_wizard).showResetButton() : false;
+
     final Button backButton = getButton( IDialogConstants.BACK_ID );
     final Button nextButton = getButton( IDialogConstants.NEXT_ID );
     final Button finishButton = getButton( IDialogConstants.FINISH_ID );
+    final Button resetButton = getButton( RESET_ID );
+
     if( backButton != null )
       backButton.setEnabled( m_currentPage.getPreviousPage() != null );
 
@@ -723,6 +735,12 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     if( finishButton != null )
       finishButton.setEnabled( canFinish );
+
+    if( resetButton != null )
+    {
+      resetButton.setVisible( showReset );
+      resetButton.setEnabled( canReset );
+    }
 
     // finish is default unless it is diabled and next is enabled
     // if( canFlipToNextPage && !canFinish )
@@ -1031,6 +1049,19 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     return false;
   }
 
+  public boolean doReset( )
+  {
+    Assert.isTrue( m_wizard instanceof IResetableWizard );
+
+    final IResetableWizard resetableWizard = (IResetableWizard) m_wizard;
+
+    Assert.isTrue( resetableWizard.canReset() );
+
+    resetableWizard.performReset();
+
+    return true;
+  }
+
   public boolean doSave( )
   {
     final IWizard wizard = getWizard();
@@ -1038,6 +1069,12 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( wizard instanceof IWizard2 )
     {
       final IWizard2 wizard2 = (IWizard2) wizard;
+
+      if( wizard2.doAskForSave() )
+      {
+        if( !MessageDialog.openQuestion( getShell(), "Speichern", "Daten jetzt speichern?" ) )
+          return false;
+      }
 
       final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
       {
