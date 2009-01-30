@@ -54,11 +54,11 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 
 import org.apache.commons.vfs.FileObject;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.VFSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
@@ -86,7 +86,7 @@ public class Execute implements IOperation
   /**
    * @see org.kalypso.service.wps.operations.IOperation#executeOperation(org.kalypso.service.ogc.RequestBean)
    */
-  public StringBuffer executeOperation( RequestBean request ) throws OWSException
+  public StringBuffer executeOperation( final RequestBean request ) throws OWSException
   {
     try
     {
@@ -97,49 +97,49 @@ public class Execute implements IOperation
       getIdentifier( request );
 
       /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-      WPSSimulationManager manager = WPSSimulationManager.getInstance();
-      String simulationIdentifier = m_executeRequest.getIdentifier().getValue();
-      WPSSimulationInfo info = manager.startSimulation( simulationIdentifier, simulationIdentifier, m_executeRequest );
+      final WPSSimulationManager manager = WPSSimulationManager.getInstance();
+      final String simulationIdentifier = m_executeRequest.getIdentifier().getValue();
+      final WPSSimulationInfo info = manager.startSimulation( simulationIdentifier, simulationIdentifier, m_executeRequest );
 
       /* Prepare the execute response. */
-      FileObject resultDir = manager.getResultDir( info.getId() );
-      FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
-      String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
-      StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
-      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, statusLocation, OGCUtilities.VERSION );
-      JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+      final FileObject resultDir = manager.getResultDir( info.getId() );
+      final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+      final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
+      final StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
+      final ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, statusLocation, OGCUtilities.VERSION );
+      final JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
 
       /* Marshall it into one XML string. */
-      String xml = MarshallUtilities.marshall( executeResponse );
+      final String xml = MarshallUtilities.marshall( executeResponse );
 
       /* Copy the execute response to this url. */
       VFSUtilities.copyStringToFileObject( xml, resultFile );
 
       /* Build the response. */
-      StringBuffer response = new StringBuffer();
+      final StringBuffer response = new StringBuffer();
       response.append( xml );
 
       return response;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       if( m_executeRequest == null )
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
 
-      List<String> list = new ArrayList<String>();
+      final List<String> list = new ArrayList<String>();
       list.add( e.getLocalizedMessage() );
 
-      ExceptionType exception = OGCUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
-      List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
+      final ExceptionType exception = OGCUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
+      final List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
       exceptions.add( exception );
 
-      ExceptionReport exceptionReport = OGCUtilities.buildExceptionReport( exceptions, OGCUtilities.VERSION, null );
-      ProcessFailedType processFailed = OGCUtilities.buildProcessFailedType( exceptionReport );
+      final ExceptionReport exceptionReport = OGCUtilities.buildExceptionReport( exceptions, OGCUtilities.VERSION, null );
+      final ProcessFailedType processFailed = OGCUtilities.buildProcessFailedType( exceptionReport );
 
-      StatusType status = OGCUtilities.buildStatusType( processFailed, false );
+      final StatusType status = OGCUtilities.buildStatusType( processFailed, false );
 
-      ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, null, OGCUtilities.VERSION );
-      JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+      final ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_executeRequest.getIdentifier(), status, m_executeRequest.getDataInputs(), m_executeRequest.getOutputDefinitions(), null, null, OGCUtilities.VERSION );
+      final JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
 
       String xml = "";
       try
@@ -147,13 +147,13 @@ public class Execute implements IOperation
         /* Marshall it into one XML string. */
         xml = MarshallUtilities.marshall( executeResponse );
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage() + " and " + ex.getLocalizedMessage(), "" );
       }
 
       /* Build the response. */
-      StringBuffer response = new StringBuffer();
+      final StringBuffer response = new StringBuffer();
       response.append( xml );
 
       return response;
@@ -167,7 +167,7 @@ public class Execute implements IOperation
    *          The request.
    * @return The Identifier parameter or null if not present.
    */
-  private String getIdentifier( RequestBean request ) throws OWSException
+  private String getIdentifier( final RequestBean request ) throws OWSException
   {
     String simulationType = null;
     if( request.isPost() )
@@ -175,17 +175,19 @@ public class Execute implements IOperation
       try
       {
         /* POST with XML. */
-        String xml = request.getBody();
+        final String xml = request.getBody();
 
         /* Check if ALL parameter are available. */
         m_executeRequest = (net.opengeospatial.wps.Execute) MarshallUtilities.unmarshall( xml );
 
         /* Need the XML attribute service. */
-        CodeType identifier = m_executeRequest.getIdentifier();
+        final CodeType identifier = m_executeRequest.getIdentifier();
         if( identifier != null )
+        {
           simulationType = identifier.getValue();
+        }
       }
-      catch( JAXBException e )
+      catch( final JAXBException e )
       {
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
       }

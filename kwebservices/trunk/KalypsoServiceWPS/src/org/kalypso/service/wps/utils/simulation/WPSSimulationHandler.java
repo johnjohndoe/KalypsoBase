@@ -57,8 +57,8 @@ import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.VFSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.SimulationException;

@@ -48,10 +48,10 @@ import junit.framework.Assert;
 
 import org.apache.commons.vfs.FileObject;
 import org.junit.Test;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
-import org.kalypso.service.wps.utils.VFSUtilities;
 
 /**
  * This unittest should test a http connection, accepting every certificate.<br>
