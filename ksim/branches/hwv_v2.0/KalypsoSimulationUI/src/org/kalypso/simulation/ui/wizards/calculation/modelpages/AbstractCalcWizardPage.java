@@ -1307,6 +1307,18 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     monitor.beginTask( "Daten speichern", 2000 );
 
+    try
+    {
+      if( m_gisTableViewer != null )
+        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+      else
+        monitor.worked( 1000 );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+
     if( m_table == null )
       return Status.OK_STATUS;
 
@@ -1319,18 +1331,6 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     // We may release any observation
     m_dirtyColumns.clear();
     KalypsoCorePlugin.getDefault().getPool().removePoolListener( m_poolListener );
-
-    try
-    {
-      if( m_gisTableViewer != null )
-        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-      else
-        monitor.worked( 1000 );
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
 
     return status;
   }
