@@ -43,7 +43,7 @@ package org.kalypso.service.wps.utils.ogc;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
- * A Prefix mapper for the namespaces.
+ * A prefix mapper for the namespaces.
  * 
  * @author Holger Albert
  */
