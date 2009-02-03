@@ -825,7 +825,8 @@ public class CalcWizard implements IWizard2, IProjectProvider, IChoiceListener, 
    */
   public boolean showResetButton( )
   {
-    return getContainer().getCurrentPage() instanceof IResetablePage;
+    final IWizardPage page = getContainer().getCurrentPage();
+    return page instanceof IResetablePage;
   }
 
   /**

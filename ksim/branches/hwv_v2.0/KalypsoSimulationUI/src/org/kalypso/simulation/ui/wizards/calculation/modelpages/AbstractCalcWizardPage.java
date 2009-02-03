@@ -1396,7 +1396,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState(boolean)
    */
-  public void restoreState( final boolean clearState ) 
+  public void restoreState( final boolean clearState )
   {
     final Job job = new Job( "Change selection" )
     {
@@ -1422,7 +1422,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     job.setUser( false );
     job.setRule( getCalcFolder() );
     job.schedule( 1000 );
-    
+
   }
 
   /**
@@ -1921,7 +1921,10 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final IObservation obs = column.getObservation();
       final KeyInfo info = pool.getInfo( obs );
       if( info != null )
-        info.reload();
+      {
+        // Reload forced, as the pool is never dirty here.
+        info.reload( true );
+      }
 
       column.setDirty( false, null );
       m_dirtyColumns.remove( column );
