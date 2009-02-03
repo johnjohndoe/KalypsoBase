@@ -62,4 +62,5 @@ public interface IResetablePage
    * Reload the data of this page. Should only be called if {@link #canReset()}return <code>true</code>.
    */
   IStatus performReset( IProgressMonitor monitor ) throws CoreException;
+
 }
