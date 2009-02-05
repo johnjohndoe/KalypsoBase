@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
+import java.io.File;
+
 import javax.activation.DataHandler;
 
 /**
@@ -55,6 +57,7 @@ import javax.activation.DataHandler;
  */
 public interface ISimulationService
 {
+  // TODO: remove unused methods
   public long getSchemaValidity( final String namespace ) throws SimulationException;
 
   public String[] getSupportedSchemata( ) throws SimulationException;
@@ -131,7 +134,7 @@ public interface ISimulationService
    * @return Die Ergebnisse als ZIP Archiv, sollte in die Rechenvariante als Hauptverzeichnis entpackt werden.
    * @throws SimulationServiceException
    */
-  public DataHandler transferCurrentResults( final String jobID ) throws SimulationException;
+  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException;
 
   /**
    * Gibt zurück, welche Ergebniss (IDs) zur Zeit vorliegen.

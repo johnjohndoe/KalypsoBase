@@ -168,26 +168,13 @@ public class CalcJobHandler
       switch( jobBean.getState() )
       {
         case FINISHED:
+          final IProject project = calcCaseFolder.getProject();
+          
           // Ergebniss abholen
-          final DataHandler handler = m_calcService.transferCurrentResults( m_jobID );
+          m_calcService.transferCurrentResults(project.getLocation().toFile(),  m_jobID );
 
           // clear results as defined in modelspec
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
-
-          final IProject project = calcCaseFolder.getProject();
-
-          // just unzip files
-          InputStream inputStream = null;
-          try
-          {
-            inputStream = new BufferedInputStream( handler.getInputStream() );
-            ZipUtilities.unzip( inputStream, project.getLocation().toFile() );
-            monitor.worked( 1000 );
-          }
-          finally
-          {
-            IOUtils.closeQuietly( inputStream );
-          }
 
           project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
           final String finishText = jobBean.getFinishText();

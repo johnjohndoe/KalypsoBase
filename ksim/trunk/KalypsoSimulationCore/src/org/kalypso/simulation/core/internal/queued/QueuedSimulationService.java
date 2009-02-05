@@ -364,10 +364,10 @@ public class QueuedSimulationService implements ISimulationService
    * @throws CalcJobServiceException
    * @see org.kalypso.services.calculation.service.ICalculationService#transferCurrentResults(java.lang.String)
    */
-  public DataHandler transferCurrentResults( final String jobID ) throws SimulationException
+  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
-    return thread.packCurrentResults();
+    thread.transferCurrentResults(targetFolder);
   }
 
   /**

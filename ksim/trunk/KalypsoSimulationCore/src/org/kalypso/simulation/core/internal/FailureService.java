@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.internal;
 
+import java.io.File;
+
 import javax.activation.DataHandler;
 
 import org.kalypso.simulation.core.ISimulationService;
@@ -151,7 +153,7 @@ public class FailureService implements ISimulationService
   /**
    * @see org.kalypso.simulation.core.ISimulationService#transferCurrentResults(java.lang.String)
    */
-  public DataHandler transferCurrentResults( String jobID ) throws SimulationException
+  public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     throw m_se;
   }

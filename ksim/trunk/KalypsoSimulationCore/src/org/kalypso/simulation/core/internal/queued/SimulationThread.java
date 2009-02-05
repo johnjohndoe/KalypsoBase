@@ -73,7 +73,7 @@ public class SimulationThread extends Thread
 
   private final ISimulationDataProvider m_inputData;
 
-  private final ISimulationResultPacker m_resultPacker;
+  private final DefaultResultEater m_resultPacker;
 
   private final File m_tmpDir;
 
@@ -86,7 +86,7 @@ public class SimulationThread extends Thread
 
     m_inputData = new UnzippedJarSimulationDataProvider( zipHandler, modelspec, input );
 
-    m_resultPacker = new DefaultCalcResultEater( modelspec, output );
+    m_resultPacker = new DefaultResultEater( modelspec, output );
 
     modelspec.checkInput( m_inputData );
   }
@@ -147,9 +147,9 @@ public class SimulationThread extends Thread
     }
   }
 
-  public DataHandler packCurrentResults( ) throws SimulationException
+  public void transferCurrentResults(final File targetFolder ) throws SimulationException
   {
-    return m_resultPacker.packCurrentResults();
+    m_resultPacker.transferCurrentResults(targetFolder);
   }
 
   public String[] getCurrentResults( )

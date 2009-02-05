@@ -40,29 +40,23 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.internal.queued;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
-import java.util.zip.ZipOutputStream;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.util.zip.ZipFileVisitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
- * @author belger
+ * Transfers results locally by moving the files to the target directory
+ * 
+ * @author belger, kurzbach
  */
-public class DefaultCalcResultEater implements ISimulationResultPacker
+public class DefaultResultEater implements ISimulationResultEater
 {
   private final Vector<File> m_files = new Vector<File>();
 
@@ -73,7 +67,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
 
   private final Map<String, SimulationDataPath> m_clientOutputMap;
 
-  public DefaultCalcResultEater( final ModelspecData modelspec, final SimulationDataPath[] clientOutput )
+  public DefaultResultEater( final ModelspecData modelspec, final SimulationDataPath[] clientOutput )
   {
     m_modelspec = modelspec;
 
@@ -84,10 +78,10 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
 
   /**
    * @param id
-   *            Die ID für die Bean
+   *          the bean id
    * @param result
-   *            Diese Datei oder dieses Verzeichnis werden zurück an den Server gegeben.
-   * @throws CalcJobServiceException
+   *          this file or directory is added as a result
+   * @throws SimulationException
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
   public void addResult( final String id, final Object result ) throws SimulationException
@@ -106,7 +100,7 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcResultPacker#getCurrentResults()
+   * Lists the available results
    */
   public String[] getCurrentResults( )
   {
@@ -121,66 +115,45 @@ public class DefaultCalcResultEater implements ISimulationResultPacker
   }
 
   /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcResultPacker#packCurrentResults()
+   * Transfers the current results
    */
-  public DataHandler packCurrentResults( ) throws SimulationException
+  public void transferCurrentResults( final File targetFolder ) throws SimulationException
   {
-
-    ZipOutputStream zos = null;
     try
     {
-      if( m_results.isEmpty() )
-        return new DataHandler( "Keine Ergebnisse vorhanden", "text/plain" );
-
-      final File zipFile = File.createTempFile( "CalcJobResult_", ".zip" );
-      zipFile.deleteOnExit();
-      addFile( zipFile );
-
-      zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipFile ) ) );
-      final ZipFileVisitor zipper = new ZipFileVisitor( zos );
-
-      for( final Iterator iter = m_results.iterator(); iter.hasNext(); )
+      for( final SimulationResult result : m_results )
       {
-        final SimulationResult result = (SimulationResult) iter.next();
-
         final File file = result.getFile();
         final String path = result.getPath();
 
-        zipper.setBasePattern( file.getAbsolutePath() );
+        // destination file is the file relative to the target folder
+        final File targetRelativeFile = new File( targetFolder, path );
 
-        zipper.setBaseReplace( path );
-
-        FileUtilities.accept( file, zipper, true );
+        // try to move file/directory to destination
+        FileUtilities.moveContents( file, targetRelativeFile );
       }
-
-      zos.close();
-
-      return new DataHandler( new FileDataSource( zipFile ) );
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Ergebnisse konnten nicht übertragen werden: " + e.getLocalizedMessage(), e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( zos );
+      throw new SimulationException( "Results could not be transfered.", e );
     }
   }
 
+  /**
+   * Remember a file/directory that must be deleted later
+   */
   public void addFile( final File file )
   {
     m_files.add( file );
   }
 
   /**
-   * Löscht alle bisher hinzugefügten Dateien. Wenns Verzeichnisse sind, wird auch der Inhalt rekursiv gelöscht.
+   * Deletes all remembered files/directories
    */
   public void disposeFiles( )
   {
-    for( final Iterator iter = m_files.iterator(); iter.hasNext(); )
+    for( final File file : m_files )
     {
-      final File file = (File) iter.next();
       FileUtilities.deleteRecursive( file );
     }
   }
