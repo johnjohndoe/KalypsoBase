@@ -19,9 +19,6 @@
             simulationClass="org.kalypso.service.calcjobs.literals.LiteralsJob"
             typeID="LiteralsV1.0">
       </simulation>
-   </extension>
-   <extension
-         point="org.kalypso.simulation.core.simulation">
       <simulation
             simulationClass="org.kalypso.service.calcjobs.sendmail.SendMailJob"
             typeID="SendMailV1.0">
