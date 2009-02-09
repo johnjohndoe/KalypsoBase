@@ -56,10 +56,10 @@
          <attribute name="simulationClass" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The implementing class of the registered simulation. Must implement org.kalypso.simulation.core.ISimulation.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.services.calculation.job.ICalcJob"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.simulation.core.ISimulation"/>
                </appinfo>
             </annotation>
          </attribute>
