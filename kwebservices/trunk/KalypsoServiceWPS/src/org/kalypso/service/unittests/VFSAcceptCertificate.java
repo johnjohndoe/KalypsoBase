@@ -80,7 +80,7 @@ public class VFSAcceptCertificate
     System.setProperty( "javax.net.ssl.trustStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
     System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
-    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1196856981382/simulation.log" );
+    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1210650775870/simulation.log" );
 
     Debug.println( "Sending request ..." );
 
