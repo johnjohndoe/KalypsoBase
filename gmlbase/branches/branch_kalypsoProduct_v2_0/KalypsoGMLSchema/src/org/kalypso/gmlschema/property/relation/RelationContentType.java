@@ -144,9 +144,13 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         for( final AttributeGroupRef ag : attributeGroups )
         {
           final QName ref = ag.getRef();
-          // TODO: what about gml2, probably it is different there? Maybe just look for xlink:href
-          if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) )
-            m_linkable = true;
+          if( ref != null )
+          {
+            // GML 3 uses 'AssociationAttributeGroup'; GML 2 uses 'simpleLink'; probably there
+            // is a more elegant way to check for links... maybe we should just check for the 'href' attribute?
+            if( QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) || QNameUtilities.equals( ref, NS.XLINK, "simpleLink" ) )
+              m_linkable = true;
+          }
         }
 
         /* Collect document references */
