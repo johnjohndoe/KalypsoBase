@@ -38,12 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gaja3d.service.internal.strategy;
+package org.kalypso.gaja3d.service.client;
 
 import java.net.URL;
 import java.rmi.RemoteException;
 
-import org.kalypso.gaja3d.service.client.Client;
+import org.kalypso.gaja3d.service.internal.strategy.CreateTinStrategy;
 
 /**
  * This strategy calls a (possibly local) WPS to start the simulation
