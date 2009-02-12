@@ -33,7 +33,7 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
 
   /**
    * @param viewer
-   *            the viewer
+   *          the viewer
    */
   public FocusCellOwnerDrawHighlighter( final ColumnViewer viewer )
   {
@@ -84,15 +84,14 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
     viewer.getControl().addListener( SWT.EraseItem, listener );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.viewers.FocusCellHighlighter#focusCellChanged(org.eclipse.jface.viewers.ViewerCell)
+  /**
+   * @see org.eclipse.jface.viewers.FocusCellHighlighter#focusCellChanged(org.eclipse.jface.viewers.ViewerCell,
+   *      org.eclipse.jface.viewers.ViewerCell)
    */
   @Override
-  protected void focusCellChanged( final ViewerCell cell )
+  protected void focusCellChanged( final ViewerCell cell, final ViewerCell oldCell2 )
   {
-    super.focusCellChanged( cell );
+    super.focusCellChanged( cell, oldCell );
 
     // Redraw new area
     if( cell != null )
