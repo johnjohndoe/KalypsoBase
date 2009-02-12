@@ -62,8 +62,6 @@ import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * A group to choose a file from the file system.
  * 
@@ -97,7 +95,7 @@ public class FileChooserGroup
           return SWT.BORDER | SWT.READ_ONLY;
 
         default:
-          throw (new NotImplementedException());
+          throw new UnsupportedOperationException();
       }
     }
 
@@ -112,7 +110,7 @@ public class FileChooserGroup
           return "Datei speichern unter";
 
         default:
-          throw (new NotImplementedException());
+          throw new UnsupportedOperationException();
       }
     }
 
@@ -127,7 +125,7 @@ public class FileChooserGroup
           return SWT.SAVE;
 
         default:
-          throw (new NotImplementedException());
+          throw new UnsupportedOperationException();
       }
     }
 
@@ -159,7 +157,7 @@ public class FileChooserGroup
           return newFilename + "." + extensions[0];
 
         default:
-          throw (new NotImplementedException());
+          throw new UnsupportedOperationException();
       }
     }
   }

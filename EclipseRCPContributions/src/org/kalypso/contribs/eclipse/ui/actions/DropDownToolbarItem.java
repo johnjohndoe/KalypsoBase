@@ -96,8 +96,6 @@ import org.kalypso.contribs.eclipse.core.commands.ExecutionAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.resource.DisabledImageDescriptor;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * @author kuch, kurzbach
  */
@@ -444,7 +442,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
       itm.setToolTipText( tooltip );
     }
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
   }
 
