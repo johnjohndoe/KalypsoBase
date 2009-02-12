@@ -66,7 +66,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.ide.model.WorkbenchAdapterBuilder;
 import org.eclipse.ui.internal.ide.undo.WorkspaceUndoMonitor;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.AbstractStatusHandler;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
@@ -80,6 +79,7 @@ import org.osgi.framework.Version;
  * 
  * @since 3.0
  */
+@SuppressWarnings("restriction")
 public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 {
 
@@ -99,8 +99,8 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
   private String workspaceLocation = null;
 
   /**
-   * Ordered map of versioned feature ids -> info that are new for this session; <code>null</code> if uninitialized.
-   * Key type: <code>String</code>, Value type: <code>AboutInfo</code>.
+   * Ordered map of versioned feature ids -> info that are new for this session; <code>null</code> if uninitialized. Key
+   * type: <code>String</code>, Value type: <code>AboutInfo</code>.
    */
   private Map newlyAddedBundleGroups;
 
@@ -146,9 +146,9 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#initialize
    */
+  @Override
   public void initialize( IWorkbenchConfigurer configurer )
   {
 
@@ -198,33 +198,34 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
     TrayDialog.setDialogHelpAvailable( true );
 
     // use this image for the help button in dialogs
-//    ImageRegistry reg = JFaceResources.getImageRegistry();
-//    reg.put( Dialog.DLG_IMG_HELP, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP ) );
+// ImageRegistry reg = JFaceResources.getImageRegistry();
+// reg.put( Dialog.DLG_IMG_HELP, IDEInternalWorkbenchImages.getImageDescriptor(
+    // IDEInternalWorkbenchImages.IMG_LCL_LINKTO_HELP ) );
 
     Policy.setComparator( Collator.getInstance() );
   }
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#preStartup()
    */
+  @Override
   public void preStartup( )
   {
 
     // Suspend background jobs while we startup
-    Platform.getJobManager().suspend();
+    Job.getJobManager().suspend();
 
     // Register the build actions
-//    IProgressService service = PlatformUI.getWorkbench().getProgressService();
-//    ImageDescriptor newImage = IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC );
-//    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_MANUAL_BUILD );
-//    service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_AUTO_BUILD );
+// IProgressService service = PlatformUI.getWorkbench().getProgressService();
+// ImageDescriptor newImage = IDEInternalWorkbenchImages.getImageDescriptor(
+    // IDEInternalWorkbenchImages.IMG_ETOOL_BUILD_EXEC );
+// service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_MANUAL_BUILD );
+// service.registerIconForFamily( newImage, ResourcesPlugin.FAMILY_AUTO_BUILD );
   }
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#postStartup()
    */
   public void postStartup( )
@@ -241,7 +242,7 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
     }
     finally
     {// Resume background jobs after we startup
-      Platform.getJobManager().resume();
+      Job.getJobManager().resume();
     }
   }
 
@@ -294,7 +295,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#postShutdown
    */
   public void postShutdown( )
@@ -322,7 +322,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#preShutdown()
    */
   public boolean preShutdown( )
@@ -333,8 +332,8 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.application.WorkbenchAdvisor#createWorkbenchWindowAdvisor(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
+   * @seeorg.eclipse.ui.application.WorkbenchAdvisor#createWorkbenchWindowAdvisor(org.eclipse.ui.application.
+   * IWorkbenchWindowConfigurer)
    */
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( IWorkbenchWindowConfigurer configurer )
   {
@@ -452,7 +451,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getDefaultPageInput
    */
   public IAdaptable getDefaultPageInput( )
@@ -462,7 +460,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor
    */
   public String getInitialWindowPerspectiveId( )
@@ -673,11 +670,11 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
    * Declares an IDE-specific workbench image.
    * 
    * @param symbolicName
-   *            the symbolic name of the image
+   *          the symbolic name of the image
    * @param path
-   *            the path of the image file; this path is relative to the base of the IDE plug-in
+   *          the path of the image file; this path is relative to the base of the IDE plug-in
    * @param shared
-   *            <code>true</code> if this is a shared image, and <code>false</code> if this is not a shared image
+   *          <code>true</code> if this is a shared image, and <code>false</code> if this is not a shared image
    * @see IWorkbenchConfigurer#declareImage
    */
   private void declareWorkbenchImage( Bundle ideBundle, String symbolicName, String path, boolean shared )
@@ -689,7 +686,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getMainPreferencePageId
    */
   public String getMainPreferencePageId( )
@@ -736,7 +732,6 @@ public class IDEWorkbenchAdvisor extends WorkbenchAdvisor
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.eclipse.ui.application.WorkbenchAdvisor#getWorkbenchErrorHandler()
    */
   public AbstractStatusHandler getWorkbenchErrorHandler( )

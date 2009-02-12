@@ -12,7 +12,6 @@ package org.kalypso.contribs.eclipse.ui.ide.application;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
@@ -150,7 +149,7 @@ class IDEIdleHelper
           int nextInterval;
           final long start = System.currentTimeMillis();
           // don't garbage collect if background jobs are running
-          if( !Platform.getJobManager().isIdle() )
+          if( !Job.getJobManager().isIdle() )
           {
             nextInterval = IDLE_INTERVAL;
           }
@@ -186,6 +185,7 @@ class IDEIdleHelper
   {
     gcJob = new Job( IDEWorkbenchMessages.IDEIdleHelper_backgroundGC )
     {
+      @Override
       protected IStatus run( IProgressMonitor monitor )
       {
         final Display display = configurer.getWorkbench().getDisplay();

@@ -41,13 +41,12 @@
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * Default implementation if {@link org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener}which does
  * nothing.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class WizardContainerAdapter implements IWizardContainerListener
 {
@@ -58,13 +57,5 @@ public class WizardContainerAdapter implements IWizardContainerListener
    *      int)
    */
   public void onWizardChanged( final IWizard newwizard, final int reason )
-  {}
-
-  /**
-   * Empty implementation
-   * 
-   * @see org.kalypso.contribs.eclipse.jface.wizard.view.IWizardContainerListener#onPageChanged(org.eclipse.jface.wizard.IWizardPage)
-   */
-  public void onPageChanged( final IWizardPage newpage )
   {}
 }
