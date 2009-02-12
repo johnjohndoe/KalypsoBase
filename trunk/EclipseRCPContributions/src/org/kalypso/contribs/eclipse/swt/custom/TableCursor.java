@@ -228,7 +228,7 @@ public class TableCursor extends Canvas
             paint( event );
             break;
           case SWT.Traverse:
-            traverse( event );
+            localTraverse( event );
             break;
         }
       }
@@ -626,7 +626,7 @@ public class TableCursor extends Canvas
 // }
 // }
 
-  void traverse( final Event event )
+  void localTraverse( final Event event )
   {
     switch( event.detail )
     {

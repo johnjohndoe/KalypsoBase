@@ -25,6 +25,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,8 +35,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xpath.internal.XPathAPI;
 
 /**
  * @author doemming
@@ -168,45 +168,6 @@ public class XMLHelper
       System.out.println( XMLHelper.toString( attributeNode ) );
     }
     return attributeNode.getNodeValue();
-  }
-
-  public static NodeList getXPath( final String xPathQuery, final Node domNode )
-  {
-    NodeList nl = null;
-
-    try
-    {
-      // TODO: Andreas: hab die xalan-j.jar zu deegree hinzugefügt,
-      // schau mal obs noch geht...
-      nl = XPathAPI.selectNodeList( domNode, xPathQuery );
-    }
-    catch( final Exception e )
-    {
-      System.out.println( e.getMessage() );
-      e.printStackTrace();
-    }
-
-    return nl;
-  }
-
-  public static String getXPathContent( final String xPathQuery, final Node domNode )
-  {
-    final NodeList nl = getXPath( xPathQuery, domNode );
-
-    if( nl == null )
-      return null;
-
-    String result = "test...";
-
-    for( int i = 0; i < nl.getLength(); i++ )
-    {
-      final Node node = nl.item( i );
-
-      result += node.getNodeValue();
-    }
-
-    return result;
-
   }
 
   public static Document post( final String url, final String data, final boolean namespaceaware ) throws Exception

@@ -93,8 +93,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceScopes;
 
-import com.sun.corba.se.impl.orbutil.ObjectUtility;
-
 /**
  * @author Gernot Belger
  */
@@ -143,7 +141,7 @@ public class CommandUtilities
     for( final Command command : commands )
     {
       final Category cmdCat = command.getCategory();
-      if( ObjectUtility.equals( category, cmdCat ) )
+      if( cmdCat.equals( category ))
         result.add( command );
     }
 

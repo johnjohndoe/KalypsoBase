@@ -68,6 +68,7 @@ public class RegexFileFilter extends FileFilter
   /**
    * @see java.io.FileFilter#accept(java.io.File)
    */
+  @Override
   public boolean accept( final File pathname )
   {
     final String name = pathname.getName();
@@ -77,6 +78,7 @@ public class RegexFileFilter extends FileFilter
   /**
    * @see javax.swing.filechooser.FileFilter#getDescription()
    */
+  @Override
   public String getDescription()
   {
     return m_description;

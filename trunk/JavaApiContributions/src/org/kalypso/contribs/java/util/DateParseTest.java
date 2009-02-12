@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -49,8 +49,7 @@ import java.util.TimeZone;
 import org.junit.Test;
 
 /**
- * @author belger
- *
+ * @author Gernot Belger
  */
 public class DateParseTest
 {
@@ -71,8 +70,8 @@ public class DateParseTest
     utc1Cal.setTime( utc1Date );
     utc1Cal.setTimeZone( TimeZone.getTimeZone( "UTC+1" ) );
 
-    final long utcMillis = utcCal.getTimeInMillis();
-    final long utc1Millis = utc1Cal.getTimeInMillis();
+//    final long utcMillis = utcCal.getTimeInMillis();
+//    final long utc1Millis = utc1Cal.getTimeInMillis();
 
     // / ?????????
 
