@@ -40,11 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.calccase;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,7 +54,6 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -68,7 +65,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
