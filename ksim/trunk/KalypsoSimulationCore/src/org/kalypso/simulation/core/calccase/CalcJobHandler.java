@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
+import org.kalypso.commons.java.util.zip.ZipResourceVisitor.PATH_TYPE;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
@@ -165,9 +166,9 @@ public class CalcJobHandler
       {
         case FINISHED:
           final IProject project = calcCaseFolder.getProject();
-          
+
           // Ergebniss abholen
-          m_calcService.transferCurrentResults(project.getLocation().toFile(),  m_jobID );
+          m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
 
           // clear results as defined in modelspec
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
@@ -309,6 +310,7 @@ public class CalcJobHandler
   {
     // hash input description
     final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+    final String PLATFORM_URL = "platform:";
     final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
     for( final SimulationDescription desc : inputDescription )
       inputdescriptionMap.put( desc.getId(), desc );
@@ -333,8 +335,18 @@ public class CalcJobHandler
           // if the type is a uri, put the content as file into the zip
 
           // alles relativ zum Projekt auflösen!
-          final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
-          final IResource inputResource = baseresource.findMember( inputPath );
+          final IContainer baseresource;
+          final IResource inputResource;
+          if( inputPath.startsWith( PLATFORM_URL ) )
+          {
+            baseresource = project.getWorkspace().getRoot();
+            inputResource = baseresource.findMember( inputPath.substring( PLATFORM_URL.length() ) );
+          }
+          else
+          {
+            baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+            inputResource = baseresource.findMember( inputPath );
+          }
           if( inputResource == null )
           {
             if( input.isOptional() )
@@ -343,14 +355,16 @@ public class CalcJobHandler
             throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
           }
 
-          final IPath projectRelativePath = inputResource.getProjectRelativePath();
+// final IPath projectRelativePath = inputResource.getProjectRelativePath();
+          final IPath platformRelativePath = inputResource.getFullPath().makeRelative();
 
           /* Create zipper very lazy, in order to prevent exception because zip stream is empty */
           if( zipper == null )
-            zipper = new ZipResourceVisitor( zipFile );
+            zipper = new ZipResourceVisitor( zipFile, PATH_TYPE.PLATFORM_RELATIVE );
 
           inputResource.accept( zipper );
-          beanValue = projectRelativePath.toString();
+// beanValue = projectRelativePath.toString();
+          beanValue = platformRelativePath.toString();
         }
         else
           // just put the value into the bean
