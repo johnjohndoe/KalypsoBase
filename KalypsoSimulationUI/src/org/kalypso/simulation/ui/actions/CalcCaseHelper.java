@@ -91,7 +91,7 @@ public class CalcCaseHelper
     try
     {
       final IStructuredSelection structsel = (IStructuredSelection)selection;
-      for( final Iterator<?> sIt = structsel.iterator(); sIt.hasNext(); )
+      for( final Iterator sIt = structsel.iterator(); sIt.hasNext(); )
       {
         final Object sel = sIt.next();
         if( sel instanceof IContainer )
@@ -119,6 +119,6 @@ public class CalcCaseHelper
       return null;
 
     final Object[] calcCasesToCalc = dlg.getResult();
-    return Arrays.castArray( calcCasesToCalc, new IFolder[calcCasesToCalc.length] );
+    return (IFolder[])Arrays.castArray( calcCasesToCalc, new IFolder[calcCasesToCalc.length] );
   }
 }

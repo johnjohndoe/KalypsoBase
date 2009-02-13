@@ -45,18 +45,20 @@ import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.IObservation;
@@ -74,41 +76,34 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 public final class ExportableSumUpTable implements IExportableObject
 {
   private final Arguments m_args;
-
   private final URL m_context;
-
   private final String m_identifierPrefix;
 
-  private final String m_documentName;
-
-  private final String m_documentTitle;
-
-  public ExportableSumUpTable( final Arguments args, final URL context, final String identifierPrefix, final String documentName, final String documentTitle )
+  public ExportableSumUpTable( final Arguments args, final URL context, final String identifierPrefix )
   {
     m_args = args;
     m_context = context;
     m_identifierPrefix = identifierPrefix;
-    m_documentName = documentName;
-    m_documentTitle = documentTitle;
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName( )
+  public String getPreferredDocumentName()
   {
-    return m_documentName + ".csv";
+    return m_args.getProperty( "documentName", "übersicht.csv" );
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     // fetch basic arguments
     final String sep = m_args.getProperty( "separator", ";" );
-    final String charset = m_args.getProperty( "charset", Charset.defaultCharset().name() );
+    final String charset = m_args.getProperty( "charset", CharsetUtilities.getDefaultCharset() );
     final String axisType = m_args.getProperty( "axisType" );
     final String timeUnit = m_args.getProperty( "timeUnit" );
     final String timeStep = m_args.getProperty( "timeStep" );
@@ -123,9 +118,11 @@ public final class ExportableSumUpTable implements IExportableObject
     try
     {
       // create model
-      final SumUpForecastTable table = new SumUpForecastTable( axisType, CalendarUtilities.getCalendarField( timeUnit ), Integer.valueOf( timeStep ).intValue(), Double.valueOf( delta ).doubleValue() );
+      final SumUpForecastTable table = new SumUpForecastTable( axisType,
+          CalendarUtilities.getCalendarField( timeUnit ), Integer.valueOf( timeStep ).intValue(), Double
+              .valueOf( delta ).doubleValue() );
 
-      final List<IStatus> stati = new ArrayList<IStatus>();
+      final List stati = new ArrayList();
 
       // for each observation
       final UrlArgument[] items = ExporterHelper.createUrlItems( "obs", m_args, m_context );
@@ -141,7 +138,8 @@ public final class ExportableSumUpTable implements IExportableObject
         }
         catch( final SensorException e )
         {
-          stati.add( StatusUtilities.createStatus( IStatus.WARNING, "Zeitreihe existiert nicht oder ist fehlerhaft: " + items[i].getUrl(), e ) );
+          stati.add( StatusUtilities.createStatus( IStatus.WARNING, "Zeitreihe existiert nicht oder ist fehlerhaft: "
+              + items[i].getUrl(), e ) );
         }
       }
 
@@ -150,22 +148,15 @@ public final class ExportableSumUpTable implements IExportableObject
 
       writer = new BufferedWriter( new OutputStreamWriter( output, charset ) );
 
-      // output document Title
-      if( m_documentTitle != null )
-      {
-        writer.write( m_documentTitle );
-        writer.newLine();
-      }
-
       // output header (flexible columns)
-      for( final ColumnSpec element : cols )
+      for( int i = 0; i < cols.length; i++ )
       {
-        writer.write( element.toString() );
+        writer.write( cols[i].toString() );
         writer.write( sep );
       }
 
       // output header (fix columns)
-      table.writeHeader( writer, sep, df );
+      final Date[] dates = table.writeHeader( writer, sep, df );
 
       writer.newLine();
 
@@ -184,14 +175,15 @@ public final class ExportableSumUpTable implements IExportableObject
         }
 
         // for model
-        table.writeRow( items[i], writer, sep, df, nf );
+        table.writeRow( items[i], writer, sep, df, nf, dates );
 
         writer.newLine();
       }
 
       table.dispose();
 
-      final IStatus status = StatusUtilities.createStatus( stati, "Fehler beim erzeugen des Übersichtsdokument: eine oder mehrere Zeitreihe konnte nicht hinzugefügt werden" );
+      IStatus status = StatusUtilities.createStatus( stati,
+          "Fehler beim erzeugen des Übersichtsdokument: eine oder mehrere Zeitreihe konnte nicht hinzugefügt werden" );
 
       // wrap as warning because even if some obs is missing, export is still possible
       return StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
@@ -211,7 +203,7 @@ public final class ExportableSumUpTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
   }
@@ -222,20 +214,12 @@ public final class ExportableSumUpTable implements IExportableObject
    * 
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory( )
+  public String getCategory()
   {
     String category = m_args.getProperty( "category" );
     if( category == null )
       category = m_args.getProperty( "name", "unbekannt" );
 
     return category;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return "";
   }
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -53,18 +53,16 @@ import org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage;
  */
 public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage
 {
-  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder );
+  public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc,
+      final Arguments arguments, final IFolder calcFolder );
 
   /** Save all data of the pages and remember the state for the next call to refreshData */
   public void saveState( final IProgressMonitor monitor ) throws CoreException;
 
   /**
-   * Restore state to the last call of saveData<br>
+   * Restore state to the last call of saveData
    * 
-   * @param clearState
-   *          If <code>true</code>, any saved data can now savely be discarded. If <code>false</code>, pages should keep
-   *          the data, as this method may be called several times.
    * @throws CoreException
    */
-  public void restoreState( boolean clearState ) throws CoreException;
+  public void restoreState() throws CoreException;
 }
