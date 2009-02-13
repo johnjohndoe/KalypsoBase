@@ -112,15 +112,15 @@ public class ModelSynchronizer
   private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor ) throws IOException
   {
     monitor.beginTask( "Projekt synchronizieren", 1000 );
-
+    
     final long start = new java.util.Date().getTime();
     System.out.println("Modelsync Starting at: " + start);
     
     try
     {
       final FileCopyVisitor copyVisitor = new FileCopyVisitor( from, to, true, ModelNature.CONTROL_NAME );
-      org.kalypso.commons.java.io.FileUtilities.accept( from, copyVisitor, true );
-
+      FileUtilities.accept( from, copyVisitor, true );
+      
       final DeleteObsoleteFilesVisitor deleteVisitor = new DeleteObsoleteFilesVisitor( to, from,
           ModelNature.CONTROL_NAME );
       FileUtilities.accept( to, deleteVisitor, true );
@@ -131,7 +131,7 @@ public class ModelSynchronizer
       System.out.println("Modelsync Stoping at: " + stop );
       final long diff = stop - start;
       System.out.println("Modelsync Diff: " + diff + " ms --> " + diff/1000 + " s");
-    
+      
       monitor.done();
     }
   }
@@ -216,7 +216,6 @@ public class ModelSynchronizer
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Daten" ) );
     }
-
   }
 
   public void commitProject() throws CoreException
@@ -271,6 +270,5 @@ public class ModelSynchronizer
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Datenvom Server " ) );
     }
-
   }
 }

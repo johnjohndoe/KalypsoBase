@@ -111,7 +111,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       final String serverPath = serverProject.getAbsolutePath();
       final int serverPathLength = serverPath.length();
       final String[] remotePathes = new String[remoteCalcCases.length];
-      final Map<String, File> pathHash = new HashMap<String, File>();
+      final Map pathHash = new HashMap();
       for( int i = 0; i < remoteCalcCases.length; i++ )
       {
         final File calcDir = remoteCalcCases[i];
@@ -140,17 +140,16 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       final Job job = new Job( "Rechenvarianten vom Server laden" )
       {
-        @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           monitor.beginTask( "Rechenvarianten vom Server laden", 1000 * result.length );
 
-          final Collection<IStatus> errorStati = new LinkedList<IStatus>();
+          final Collection errorStati = new LinkedList();
 
           for( int i = 0; i < result.length; i++ )
           {
             final String relPath = result[i].toString();
-            final File calcDir = pathHash.get( relPath );
+            final File calcDir = (File)pathHash.get( relPath );
 
             try
             {
@@ -166,7 +165,7 @@ public class GetCalcCaseDelegate implements IWorkbenchWindowActionDelegate
           if( errorStati.isEmpty() )
             return Status.OK_STATUS;
 
-          final IStatus[] stati = errorStati.toArray( new IStatus[errorStati.size()] );
+          final IStatus[] stati = (IStatus[])errorStati.toArray( new IStatus[errorStati.size()] );
           return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
               "Nicht alle Rechenvarianten konnten geladen werden.", null );
         }

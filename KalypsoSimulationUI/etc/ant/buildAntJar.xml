@@ -3,7 +3,7 @@
 
 	<property name="bootclasspath" value="" />
 
-	<target name="main" depends="clean, lib/anttasks.jar">
+	<target name="main" depends="clean, lib/simulationUIAnt.jar">
 	</target>
 
 	<target name="init" depends="properties">
@@ -20,43 +20,48 @@
 		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
 	</target>
 
-	<target name="lib/anttasks.jar" depends="init" unless="lib/anttasks.jar">
-		<property name="destdir" value="${build.temp.dir}/lib/anttasks.jar.bin" />
-		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
-		<mkdir dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+	<target name="lib/simulationUIAnt.jar" depends="init" unless="lib/simulationUIAnt.jar">
+		<property name="destdir" value="${build.temp.dir}/lib/simulationUIAnt.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/simulationUIAnt.jar.bin" />
+		<mkdir dir="${build.temp.dir}/lib/simulationUIAnt.jar.bin" />
 		<!-- compile the source code -->
 
 		<echo message="If JAVA_HOME does not point to a SDK, change your environment variables or ensure that eclipse is started with a sdk" />
 		<echo message="JAVA_HOME: ${java.home}" />
 
-		<javac compiler="modern" destdir="${build.temp.dir}/lib/anttasks.jar.bin" failonerror="true" verbose="true" debug="on" srcdir="${src.dir}">
+		<echo message="eclipse.home: ${eclipse.home}" />
+
+		<javac compiler="modern" destdir="${build.temp.dir}/lib/simulationUIAnt.jar.bin" failonerror="true" verbose="true" debug="on" srcdir="${src.dir}">
 			<bootclasspath path="${bootclasspath}" />
 			<classpath>
 				<dirset dir="${workspace}">
 					<include name="EclipseRCPContributions/build/bin" />
-					<include name="KalypsoServiceWPS/bin" />
 					<include name="KalypsoSimulationCore/build/bin" />
 					<include name="KalypsoSimulationUI/build/bin" />
+					<include name="JWSDPInstallation/build/bin" />
 				</dirset>
+				<fileset dir="${workspace}">
+					<include name="JWSDPInstallation/jwsdp/**/*.jar" />
+					<include name="KalypsoCore/lib/**/*.jar" />
+				</fileset>
 				<fileset dir="${eclipse.home}">
-					<include name="plugins/org.eclipse.equinox.common*.jar" />
-					<include name="plugins/org.eclipse.core.runtime*.jar" />
-					<include name="plugins/org.eclipse.core.jobs*.jar" />
+					<include name="plugins/org.eclipse.core.runtime*/**/*.jar" />
 					<include name="plugins/org.eclipse.ant.core*.jar" />
-					<include name="plugins/org.eclipse.core.resources*.jar" />
-					<include name="plugins/org.eclipse.swt*.jar" />
-					<include name="plugins/org.eclipse.jface*.jar" />
-					<include name="plugins/org.eclipse.ui.workbench*.jar" />
+					<include name="plugins/org.eclipse.core.resources*/**/*.jar" />
+					<include name="plugins/org.eclipse.swt*/**/*.jar" />
+					<include name="plugins/org.eclipse.jface*/**/*.jar" />
+					<include name="plugins/org.eclipse.ui.workbench*/**/*.jar" />
+					<include name="plugins/org.eclipse.ant.core*/**/*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
 		<!-- copy necessary resources -->
-		<copy todir="${build.temp.dir}/lib/anttasks.jar.bin">
+		<copy todir="${build.temp.dir}/lib/simulationUIAnt.jar.bin">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
 		<mkdir dir="${build.result.folder}" />
-		<jar jarfile="${build.result.folder}/anttasks.jar" basedir="${build.temp.dir}/lib/anttasks.jar.bin" />
-		<delete dir="${build.temp.dir}/lib/anttasks.jar.bin" />
+		<jar jarfile="${build.result.folder}/simulationUIAnt.jar" basedir="${build.temp.dir}/lib/simulationUIAnt.jar.bin" />
+		<delete dir="${build.temp.dir}/lib/simulationUIAnt.jar.bin" />
 		<delete dir="${build.temp.dir}" />
 	</target>
 

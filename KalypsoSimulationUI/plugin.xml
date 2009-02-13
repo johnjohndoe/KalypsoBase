@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin>
+<plugin
+   id="org.kalypso.simulation.ui"
+   name="KalypsoSimulationUI Plug-in"
+   version="0.0.1"
+   provider-name="kalypso.org"
+   class="org.kalypso.simulation.ui.KalypsoSimulationUIPlugin">
 
-     <extension
+   <runtime>
+      <library name="KalypsoSimulationUI.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/simulationUIBinding.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.kalypso.contribs.eclipseplatform"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.kalypso.ui"/>
+      <import plugin="org.kalypso.auth"/>
+      <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.kalypso.metadoc"/>
+      <import plugin="org.eclipse.ant.ui"/>
+   </requires>
+
+      <extension
          id="actionSets"
          name="actionSets"
          point="org.eclipse.ui.actionSets">
@@ -105,14 +136,6 @@
                id="org.kalypso.action.model.getCalcCase">
          </action>
          <action
-               label="%org.kalypso.action.model.setBasicModel.label"
-               icon="icons/elcl16/export-simple-template.gif"
-               tooltip="%org.kalypso.action.model.setBasicModel.tooltip"
-               class="org.kalypso.simulation.ui.actions.SetBasicModelDelegate"
-               menubarPath="org.kalypso.simulation.ui.menu.calcCase/calcCaseStart"
-               id="org.kalypso.action.model.setBasicModel">
-         </action>
-         <action
                label="%org.kalypso.action.model.updateCalcCaseTimeseries.label"
                icon="icons/elcl16/refreshCalcCase.gif"
                tooltip="%org.kalypso.action.model.updateCalcCaseTimeseries.tooltip"
@@ -138,10 +161,10 @@
          </action>
       </actionSet>
       <actionSet
-            label="%org.kalypso.simulation.ui.debug.actionSet.label"
-            description="%org.kalypso.simulation.ui.debug.actionSet.description"
+            label="%org.kalypso.simulation.ui.actionSet.label"
+            description="%org.kalypso.simulation.ui.actionSet.description"
             visible="false"
-            id="org.kalypso.simulation.ui.debug.actionSet">
+            id="org.kalypso.simulation.ui.actionSet">
          <menu
                label="%org.kalypso.simulation.ui.menu.debug.label"
                path="additions"
@@ -187,7 +210,7 @@
       <antTask
             eclipseRuntime="true"
             class="org.kalypso.simulation.ui.ant.RunCalculationTask"
-            library="lib/anttasks.jar"
+            library="lib/simulationUIAnt.jar"
             headless="false"
             name="kalypso.runCalculation"/>
    </extension>
@@ -208,12 +231,6 @@
             name="%featureWithTemplateExporter.name"
             id="featureWithTemplateExporter"/>
       <exporter
-            icon="icons/elcl16/export-gis-feature.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporterTree"
-            description="%featureWithTemplateExporter.description"
-            name="%featureWithTemplateExporter.name"
-            id="featureWithTemplateExporterTree"/>            
-      <exporter
             icon="icons/elcl16/export-simple-template.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.SimpleTemplateExporter"
             description="%simpleTemplateExporter.description"
@@ -225,51 +242,5 @@
             description="%sumUpTableExporter.description"
             name="%sumUpTableExporter.name"
             id="sumUpTableExporter"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-         <includes>
-            <contentExtension
-                  pattern="org.kalypso.simulation.ui.modelContent"/>
-         </includes>
-      </viewerContentBinding>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <navigatorContent
-            activeByDefault="true"
-            contentProvider="org.kalypso.simulation.ui.navigator.ModellContentProvider"
-            id="org.kalypso.simulation.ui.modelContent"
-            labelProvider="org.kalypso.simulation.ui.navigator.ModellLabelProvider"
-            name="Kalypso Modell"
-            priority="highest">
-         <triggerPoints>
-            <or>
-               <adapt type="org.eclipse.core.resources.IProject">
-                  <test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.simulation.ui.ModelNature"/>
-               </adapt>
-               <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
-               <instanceof value="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
-            </or>
-         </triggerPoints>
-         <possibleChildren>
-            <or>
-               <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
-               <instanceof value="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
-            </or>
-         </possibleChildren>
-         </navigatorContent>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            category="org.kalypso.ui.kalypso"
-            class="org.kalypso.simulation.ui.logview.views.LogViewer"
-            icon="icons/logview/problems_view.gif"
-            id="org.kalypso.simulation.ui.logview.views.LogViewer"
-            name="Log Ansicht"/>
    </extension>
 </plugin>
