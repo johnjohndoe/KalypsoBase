@@ -219,7 +219,7 @@ public class SimulationDelegate
     {
       /* Get the relative path of the file. */
       File file = ifile.getLocation().toFile();
-      String relativePathTo = ifile.getProjectRelativePath().toString();
+      String relativePathTo = ifile.getFullPath().makeRelative().toString();
 
       /* Create the file objects. */
       FileObject source = m_fsManager.toFileObject( file );
@@ -484,14 +484,22 @@ public class SimulationDelegate
 
           /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
           /* which is not allowed to be copied or it is a complex value type (file-protocol). */
-          if( protocol == null || protocol.equals( "project" ) )
+          if( protocol == null || protocol.equals( "project" ) || protocol.equals( "platform" ) )
           {
-            /* It is a local file resource. */
+            /* If protocol is null or protocol is "project", it is a local file resource. */
+            /*
+             * If protocol is "platform", it is a resource from another project, but the same platform (i.e. same
+             * eclipse workspace).
+             */
             if( m_calcCaseFolder == null )
               throw new WPSException( "Complex data specified, but no base folder given." );
 
-            IContainer baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
-            IResource inputResource = baseresource.findMember( inputPath );
+            final IContainer baseresource;
+            if( protocol != null && protocol.equals( "platform" ) )
+              baseresource = m_calcCaseFolder.getProject().getWorkspace().getRoot();
+            else
+              baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
+            final IResource inputResource = baseresource.findMember( inputPath );
 
             if( inputResource == null )
             {
@@ -509,9 +517,9 @@ public class SimulationDelegate
 
             /* Build the URL for this input. */
             /* Resource will be copied to server later (for example see SimulationDelegate.copyInputFiles). */
-            String relativePathTo = inputResource.getProjectRelativePath().toString();
-            FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
-            String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
+            final String relativePathTo = inputResource.getFullPath().makeRelative().toString();
+            final FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
+            final String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
             wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
           }
           else
