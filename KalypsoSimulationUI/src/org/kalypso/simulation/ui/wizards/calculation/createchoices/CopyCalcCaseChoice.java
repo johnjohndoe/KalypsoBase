@@ -47,13 +47,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -63,6 +60,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer;
 import org.kalypso.simulation.ui.wizards.calculation.CreateCalcCasePage;
@@ -153,16 +151,19 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
       }
     } );
 
-    // Select topmost element
-    final TableTreeItem[] items = viewer.getTableTree().getItems();
-    if( items.length > 0 )
-      viewer.setSelection( new StructuredSelection( items[0].getData() ) );
-
+    ViewerUtilities.selectFirstElement( viewer );
     m_viewer = viewer;
 
     m_control = panel;
 
-    refresh( new NullProgressMonitor() );
+    try
+    {
+      refresh( new NullProgressMonitor() );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -190,7 +191,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
     validateChoice();
   }
 
-  public void refresh( final IProgressMonitor monitor ) 
+  public void refresh( final IProgressMonitor monitor ) throws CoreException
   {
     m_viewer.refresh();
   }
@@ -233,7 +234,6 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.createchoices.IAddCalcCaseChoice#toString()
    */
-  @Override
   public String toString()
   {
     return m_label;
@@ -244,7 +244,7 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
    */
   public boolean shouldUpdate()
   {
-    return false;
+    return true;
   }
 
   /**
@@ -252,21 +252,11 @@ public class CopyCalcCaseChoice implements IAddCalcCaseChoice
    */
   public void validateChoice()
   {
-    if( m_viewer != null && m_viewer.isEmpty() )
-    {
-      m_page.setErrorMessage( null );
-      m_page.setMessage( "Keine Rechenvarianten vorhanden", IMessageProvider.WARNING );
-      m_page.setPageComplete( false );
-      return;
-    }
-
     if( m_folder == null )
     {
       m_page.setErrorMessage( "Es muss eine vorhandene Rechenvariante ausgewählt werden." );
       m_page.setMessage( null );
       m_page.setPageComplete( false );
-
-      return;
     }
 
     final IStatus status = m_project.getWorkspace().validateName( m_name, IResource.FOLDER );

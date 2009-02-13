@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<project name="KalypsoDebug-binding" default="generate">
+<project name="KalypsoDebug-binding" default="deploy">
 	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
 	<property name="project" value="${workspace}/KalypsoSimulationUI" />
+	<property name="project-name" value="simulationUIBinding" />
 
 	  <patternset id="binding.schemata">
 	    <include name="etc/schemas/*.xsd"/>

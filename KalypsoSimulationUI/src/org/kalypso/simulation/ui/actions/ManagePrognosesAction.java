@@ -53,7 +53,7 @@ import org.kalypso.simulation.ui.dialogs.OrganisePrognosesDialog;
 
 /**
  *
- * Actions, um den Editor zum Verwalten der Vorhersagevarianten zu Öffnen.
+ * Actions, um den Editor zum Organisieren der Vorhersagevarianten zu Öffnen.
  *
  * @author belger
  */
@@ -87,7 +87,7 @@ public class ManagePrognosesAction implements IWorkbenchWindowActionDelegate
 
     if( projects == null || projects.length != 1 )
     {
-      MessageDialog.openInformation( m_window.getShell(), "Vorhersagevarianten verwalten",
+      MessageDialog.openInformation( m_window.getShell(), "Vorhersagevarianten organisieren",
           "Bitte wählen Sie genau ein Projekt im Navigator aus" );
       return;
     }

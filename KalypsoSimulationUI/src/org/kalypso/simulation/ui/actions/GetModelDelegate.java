@@ -109,7 +109,6 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
 
       final Job job = new Job( "Modelle aktualisieren" )
       {
-        @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           monitor.beginTask( "Modelle vom Server laden", files.length * 1000 );

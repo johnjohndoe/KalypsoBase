@@ -86,7 +86,6 @@ public class ObservationMapTableDiagWizardPage extends AbstractCalcWizardPage
     try
     {
       m_sashForm = new SashForm( parent, SWT.HORIZONTAL );
-      
       createMapPanel( m_sashForm );
       createRightPanel( m_sashForm );
 

@@ -58,7 +58,7 @@ public class SimulationImageProvider
     return id( KalypsoSimulationUIPlugin.getID(), location );
   }
 
-  public static final ImageDescriptor IMAGE_CALCCASE_COPY2SERVER = id( "icons/elcl16/commitCalcCase.gif" );
+  public static final ImageDescriptor IMAGE_CALCCASE_COPY2SERVER = id( "icons/commitCalcCase.gif" );
 
   public static final ImageDescriptor ID_REMOVE = id( "icons/elcl16/removeCalcCase.gif" );
 }

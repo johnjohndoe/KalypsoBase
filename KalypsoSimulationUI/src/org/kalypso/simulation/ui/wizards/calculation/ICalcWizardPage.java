@@ -47,10 +47,5 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public interface ICalcWizardPage extends IWizardPage
 {
-  /**
-   * Gets the help context-id to show, whenn the help button is pressed. <br>
-   * Must be of form plugin-id.context-id <br>
-   * If null, the default helpId of the wizard will be taken.
-   */
-  public String getHelpId();
+  // only a makrer interface
 }

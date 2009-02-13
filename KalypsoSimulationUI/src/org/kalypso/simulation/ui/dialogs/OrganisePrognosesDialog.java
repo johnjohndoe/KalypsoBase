@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.dialogs;
 
@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -62,7 +61,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
-import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.simulation.ui.SimulationImageProvider;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate;
 import org.kalypso.simulation.ui.actions.CommitCalcCaseDelegate.CommitCalcCaseJob;
@@ -77,33 +75,31 @@ import org.kalypso.ui.ImageProvider;
  */
 public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelectionChangedListener
 {
-  private static final String VORHERSAGEN_ORGANISIEREN = "Vorhersagen verwalten";
+  private static final String VORHERSAGEN_ORGANISIEREN = "Vorhersagen organisieren";
 
 
-  private final Image m_titleImage;
+  private Image m_titleImage;
 
   private CalcCaseTableTreeViewer m_viewer;
 
-  private final IFolder m_prognoseFolder;
+  private IFolder m_prognoseFolder;
 
-  private final Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
+  private Action m_removeAction = new Action( "Löschen", SimulationImageProvider.ID_REMOVE )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
      */
-    @Override
     public void runWithEvent( final Event event )
     {
       deleteCalcCases( event );
     }
   };
 
-  private final Action m_archiveAction = new Action( "Archivieren", SimulationImageProvider.IMAGE_CALCCASE_COPY2SERVER )
+  private Action m_archiveAction = new Action( "Archivieren", SimulationImageProvider.IMAGE_CALCCASE_COPY2SERVER )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
      */
-    @Override
     public void runWithEvent( final Event event )
     {
       archiveCalcCases();
@@ -116,8 +112,6 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
 
     m_prognoseFolder = modelProject.getFolder( ModelNature.PROGNOSE_FOLDER );
     m_titleImage = ImageProvider.IMAGE_KALYPSO_ICON_BIG.createImage();
-    m_archiveAction.setToolTipText("Archivieren");
-    m_removeAction.setToolTipText("Löschen");
 
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
@@ -125,7 +119,6 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   /**
    * @see org.eclipse.jface.dialogs.Dialog#close()
    */
-  @Override
   public boolean close()
   {
     m_titleImage.dispose();
@@ -139,14 +132,13 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
-  @Override
-  protected Control createDialogArea( final Composite parent )
+  protected Control createDialogArea( Composite parent )
   {
     setTitleImage( m_titleImage );
 
     getShell().setText( VORHERSAGEN_ORGANISIEREN );
     setTitle( VORHERSAGEN_ORGANISIEREN );
-    setMessage( "Wählen Sie eine Vorhersage aus und löschen oder archivieren Sie diese." );
+    setMessage( "Wählen Sie eine Vorhersage aus und löschen oder archivieren diese." );
 
     // toolbar
     final ToolBarManager manager = new ToolBarManager( SWT.FLAT );
@@ -166,7 +158,7 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     m_viewer.setAutoExpandLevel( 2 );
 
     m_viewer.setInput( m_prognoseFolder );
-
+    
     return super.createDialogArea( parent );
   }
 
@@ -179,8 +171,9 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
     final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final Object[] objects = selection.toArray();
     boolean enable = !selection.isEmpty();
-    for( final Object element : objects )
+    for( int i = 0; i < objects.length; i++ )
     {
+      final Object element = objects[i];
       if( !(element instanceof IFolder) || !ModelNature.isCalcCalseFolder( (IFolder)element ) )
       {
         enable = false;
@@ -195,23 +188,11 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   protected void deleteCalcCases( final Event event )
   {
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
-    final List<?> list = selection.toList();
+    final List list = selection.toList();
 
-    // TODO: does now work any more, as the workbench
-    // now relies on the fact that the resources MUST be selected ni the
-    final DeleteResourceAction action = new DeleteResourceAction( new SameShellProvider( getContents() ) )
+    final DeleteResourceAction action = new DeleteResourceAction( getParentShell() )
     {
-      /**
-       * @see org.eclipse.ui.actions.BaseSelectionListenerAction#getStructuredSelection()
-       */
-      @Override
-      public IStructuredSelection getStructuredSelection( )
-      {
-        return selection;
-      }
-
-      @Override
-      protected List<?> getSelectedResources()
+      protected List getSelectedResources()
       {
         return list;
       }
@@ -224,18 +205,13 @@ public class OrganisePrognosesDialog extends TitleAreaDialog implements ISelecti
   protected void archiveCalcCases()
   {
     final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
-    if( selection.isEmpty() )
-      return;
-
-    final Object[] calcCaseObjs = selection.toArray();
-    final IFolder[] calcCases = Arrays.castArray( calcCaseObjs, new IFolder[calcCaseObjs.length] );
-
+    final IFolder[] calcCases = (IFolder[])selection.toList().toArray( new IFolder[selection.size()] );
     final CommitCalcCaseJob job = new CommitCalcCaseDelegate.CommitCalcCaseJob( m_prognoseFolder.getProject(),
         calcCases );
-
+    
     // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
     job.addJobChangeListener( new HandleDoneJobChangeAdapter( getParentShell(), VORHERSAGEN_ORGANISIEREN,
-        CommitCalcCaseDelegate.RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false, false ) );
+        CommitCalcCaseDelegate.RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false ) );
     job.setUser( true );
     job.schedule();
   }

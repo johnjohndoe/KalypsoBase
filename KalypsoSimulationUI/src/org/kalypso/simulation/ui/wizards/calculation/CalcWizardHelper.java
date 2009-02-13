@@ -42,6 +42,7 @@ package org.kalypso.simulation.ui.wizards.calculation;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.java.util.PropertiesHelper;
@@ -52,13 +53,13 @@ import org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTa
 /**
  * Provides some convenience methods for dealing with the stuff in Kalypso Wizards.
  * 
- * @author Schlienger
+ * @author schlienger
  */
 public class CalcWizardHelper
 {
-  private CalcWizardHelper( )
+  private CalcWizardHelper()
   {
-    // not to be instantiated
+  // not to be instanciated
   }
 
   /**
@@ -74,27 +75,32 @@ public class CalcWizardHelper
    */
   public static TimeserieFeatureProps[] parseTimeserieFeatureProps( final Arguments props )
   {
-    final ArrayList<TimeserieFeatureProps> l = new ArrayList<TimeserieFeatureProps>();
+    final ArrayList l = new ArrayList();
 
-    for( final String pName : props.keySet() )
+    for( final Iterator names = props.keySet().iterator(); names.hasNext(); )
     {
+      final String pName = (String)names.next();
+
       if( pName.startsWith( ObservationMapTableDiagWizardPage.PROP_TIMEPROPNAME ) )
-        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString( (String) props.get( pName ), '#' ) ) );
+        l.add( new TimeserieFeatureProps( PropertiesHelper.parseFromString( (String)props.get( pName ), '#' ) ) );
     }
 
-    return l.toArray( new TimeserieFeatureProps[0] );
+    return (TimeserieFeatureProps[])l.toArray( new TimeserieFeatureProps[0] );
   }
 
   /**
    * Updates the diagram template for the given TimeserieFeatureProps and features
    */
-  public static void updateZMLView( final ObsView view, final TSLinkWithName[] links, final URL context, final boolean ignoreExceptions, final String[] ignoreTypes )
+  public static void updateZMLView( final ObsView view, final TSLinkWithName[] links, final URL context,
+      final boolean ignoreExceptions, final String ignoreType )
   {
     view.removeAllItems();
 
-    view.setIgnoreTypes( ignoreTypes );
-
-    for( final TSLinkWithName link : links )
-      view.loadObservation( context, link.href, ignoreExceptions, link.name, new ObsView.ItemData( true, link.color, link.stroke ) );
+    for( int i = 0; i < links.length; i++ )
+    {
+      final TSLinkWithName link = links[i];
+      view.loadObservation( context, link.href, ignoreExceptions, ignoreType, link.name, new ObsView.ItemData( true,
+          link.color ) );
+    }
   }
 }

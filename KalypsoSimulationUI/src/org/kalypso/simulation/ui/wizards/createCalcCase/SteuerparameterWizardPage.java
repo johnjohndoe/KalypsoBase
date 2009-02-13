@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.createCalcCase;
 
@@ -63,16 +63,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.contribs.java.lang.CatchRunnable;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -88,11 +85,9 @@ public class SteuerparameterWizardPage extends WizardPage
 {
   private final IProjectProvider m_projectProvider;
 
-  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
-
-  private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
+  private final FeatureComposite m_featureComposite = new FeatureComposite( null, null, new FeatureSelectionManager2(), new URL[] {} );
+  
+  private final Collection m_changes = new ArrayList();
 
   private boolean m_update;
 
@@ -111,33 +106,22 @@ public class SteuerparameterWizardPage extends WizardPage
     super( "EditCalcCaseControlPage", "Steuerparameter", image );
     m_canGoBack = canGoBack;
 
-    final Collection<ICommand> changes = m_changes;
-    m_featureComposite.addChangeListener( new IFeatureChangeListener()
-    {
-      public void featureChanged( final ICommand changeCommand )
+    final Collection changes = m_changes;
+    m_featureComposite.addChangeListener(new IFeatureChangeListener() {
+
+      public void featureChanged( final FeatureChange change )
       {
-        changes.add( changeCommand );
+        changes.add( change );
       }
 
-      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+      public void openFeatureRequested( Feature feature )
       {
         // TODO:
-      }
-    } );
-
+      }});
+    
     m_projectProvider = pp;
   }
 
- /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  @Override
-  public void dispose()
-  {
-    if( m_featureComposite != null )
-      m_featureComposite.dispose();
-  }
-  
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -145,9 +129,9 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     m_panel = new Composite( parent, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
+    m_panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     createFeatureControl( m_panel );
-    m_panel.layout();
 
     setControl( m_panel );
   }
@@ -157,20 +141,18 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.beginTask( "Steuerparameter speichern", 2000 );
 
     // COMMITTEN
-    final Collection<ICommand> changes = m_changes;
-    final ICommand[] commands = changes.toArray( new ICommand[changes.size()] );
+    final Collection changes = m_changes;
+    final FeatureChange[] featureChanges = (FeatureChange[])changes.toArray( new FeatureChange[changes.size()] );
     changes.clear();
 
     getControl().getDisplay().syncExec( new CatchRunnable()
     {
-      @Override
-      public void runIntern( ) throws Exception
+      public void runIntern() throws Exception
       {
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        final CompositeCommand compositeCommand = new CompositeCommand( "" );
-        compositeCommand.addCommands( commands );
-        compositeCommand.process();
+        new ChangeFeaturesCommand( m_workspace, featureChanges )
+            .process();
       }
     } );
 
@@ -182,7 +164,6 @@ public class SteuerparameterWizardPage extends WizardPage
     final GMLWorkspace workspace = m_workspace;
     final SetContentHelper thread = new SetContentHelper()
     {
-      @Override
       public void write( final OutputStreamWriter w ) throws Throwable
       {
         GmlSerializer.serializeWorkspace( w, workspace );
@@ -199,7 +180,7 @@ public class SteuerparameterWizardPage extends WizardPage
     }
   }
 
-  public boolean isUpdate( )
+  public boolean isUpdate()
   {
     return m_update;
   }
@@ -214,7 +195,7 @@ public class SteuerparameterWizardPage extends WizardPage
       if( checkUpdate != null && !checkUpdate.isDisposed() )
         checkUpdate.getDisplay().asyncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             checkUpdate.setSelection( update );
           }
@@ -237,7 +218,7 @@ public class SteuerparameterWizardPage extends WizardPage
     {
       m_panel.getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           createFeatureControl( panel );
           panel.layout();
@@ -262,7 +243,7 @@ public class SteuerparameterWizardPage extends WizardPage
     // gleich mal den Workspace auf das default setzen
     try
     {
-      final ModelNature nature = (ModelNature) project.getNature( ModelNature.ID );
+      final ModelNature nature = (ModelNature)project.getNature( ModelNature.ID );
       m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
     }
     catch( final CoreException e )
@@ -276,13 +257,13 @@ public class SteuerparameterWizardPage extends WizardPage
     if( m_workspace != null )
     {
       final Feature f = m_workspace.getRootFeature();
-      m_featureComposite.setFeature( f );
+      m_featureComposite.setFeature( m_workspace, f );
     }
 
     try
     {
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH );
-      m_fvFactory.addView( viewURL );
+      m_featureComposite.addView( viewURL );
     }
     catch( final MalformedURLException e )
     {
@@ -298,10 +279,10 @@ public class SteuerparameterWizardPage extends WizardPage
     }
 
     final Control featureControl = m_featureComposite.createControl( panel, SWT.NONE );
-    featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    featureControl.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Button checkUpdate = new Button( m_panel, SWT.CHECK );
-    checkUpdate.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
+    checkUpdate.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     checkUpdate.setText( "Zeitreihen aktualisieren" );
     checkUpdate.setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
     checkUpdate.setSelection( m_update );
@@ -312,7 +293,6 @@ public class SteuerparameterWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         setUpdate( checkUpdate.getSelection() );
@@ -322,17 +302,15 @@ public class SteuerparameterWizardPage extends WizardPage
     final FeatureComposite featureComposite = m_featureComposite;
     if( featureComposite != null )
     {
-      featureComposite.setFeature( m_workspace.getRootFeature() );
+      featureComposite.setFeature( m_workspace, m_workspace.getRootFeature() );
       featureComposite.updateControl();
-      featureControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     }
   }
-
+  
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
    */
-  @Override
-  public IWizardPage getPreviousPage( )
+  public IWizardPage getPreviousPage()
   {
     return m_canGoBack ? super.getPreviousPage() : null;
   }

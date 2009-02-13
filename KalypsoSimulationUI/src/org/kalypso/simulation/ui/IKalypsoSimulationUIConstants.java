@@ -41,25 +41,11 @@
 package org.kalypso.simulation.ui;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public interface IKalypsoSimulationUIConstants
 {
   public static final String PROGNOSE_PERSPECTIVE = "org.kalypso.simulation.ui.startscreen.PrognosePerspective";
 
   public static final String ID_PROGNOSE_VIEW = "org.kalypso.view.prognose";
-
-  public static final String ID_SIMULATION_ACTIONSET = "org.kalypso.simulation.ui.actionSet";
-
-  /**
-   * Config.ini key to configure, if models should be synchronized on start of prognoses.
-   * <p>
-   * Allowed values are 'true' and 'false'.
-   * </p>
-   * <p>
-   * Default value is: 'true'
-   * </p>
-   */
-  public static final String CONFIG_DO_SYNCHRONIZE_MODELS = "kalypso.prognose.synchronize-models";
-  
 }

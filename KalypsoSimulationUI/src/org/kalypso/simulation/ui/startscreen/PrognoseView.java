@@ -40,11 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.startscreen;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -55,23 +52,25 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author belger
  */
 public class PrognoseView extends ViewPart
 {
-  private PrognosePanel m_panel = null;
+  private final PrognosePanel m_panel;
 
   private final FontUtilities m_fontUtils = new FontUtilities();
 
-  private static final String CONFIG_MODELLIST = "kalypso.hwv.modellist.url";
+  public PrognoseView()
+  {
+    final URL location = KalypsoGisPlugin.getDefault().getModellistLocation();
+    m_panel = location == null ? null : new PrognosePanel( location );
+  }
 
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     if( m_panel != null )
       m_panel.dispose();
@@ -81,42 +80,18 @@ public class PrognoseView extends ViewPart
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
-    final String modellistProp = System.getProperty( CONFIG_MODELLIST, null );
-    if( modellistProp == null )
-    {
-      // TODO: show in a status-component
-      final IStatus status = StatusUtilities.createWarningStatus( "URL der Modellliste nicht konfiguriert. Setzen Sie die Eigenschaft '" + CONFIG_MODELLIST
-          + "' in der config.ini, um die Modellliste zu konfigurieren." );
-      KalypsoSimulationUIPlugin.getDefault().getLog().log( status );
-    }
-    else
-    {
-      try
-      {
-        final URL configUrl = Platform.getConfigurationLocation().getURL();
-        final URL modellistUrl = new URL( configUrl, modellistProp );
-        m_panel = new PrognosePanel( modellistUrl );
-      }
-      catch( final MalformedURLException e )
-      {
-        final IStatus errorStatus = StatusUtilities.statusFromThrowable( e );
-        KalypsoSimulationUIPlugin.getDefault().getLog().log( errorStatus );
-      }
-    }
-
     final Display display = parent.getDisplay();
     final FormToolkit toolkit = new FormToolkit( display );
     final Form form = toolkit.createForm( parent );
     form.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
     final GridLayout gridLayout = new GridLayout( 1, false );
-    // gridLayout.horizontalSpacing = 20;
-    // gridLayout.verticalSpacing = 20;
-    // gridLayout.marginHeight = 20;
-    // gridLayout.marginWidth = 20;
+    //    gridLayout.horizontalSpacing = 20;
+    //    gridLayout.verticalSpacing = 20;
+    //    gridLayout.marginHeight = 20;
+    //    gridLayout.marginWidth = 20;
     form.getBody().setLayout( gridLayout );
     form.getBody().setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
@@ -126,8 +101,8 @@ public class PrognoseView extends ViewPart
 
     if( m_panel == null )
     {
-      // TODO: show in status-component
-      final Label label = toolkit.createLabel( form.getBody(), "Es konnte kein Kontakt zum Server hergestellt werden.\n" + "Hochwasser-Vorhersage nicht möglich.\n" );
+      final Label label = toolkit.createLabel( form.getBody(),
+          "Es konnte kein Kontakt zum Server hergestellt werden.\n" + "Hochwasser-Vorhersage nicht möglich.\n" );
 
       label.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
@@ -135,27 +110,27 @@ public class PrognoseView extends ViewPart
       labelData.horizontalAlignment = GridData.CENTER;
       label.setLayoutData( labelData );
 
-      final Font headingFont = m_fontUtils.createChangedFontData( label.getFont().getFontData(), 8, SWT.NONE, label.getDisplay() );
+      final Font headingFont = m_fontUtils.createChangedFontData( label.getFont().getFontData(), 8, SWT.NONE, label
+          .getDisplay() );
       label.setFont( headingFont );
     }
     else
     {
       final Composite panelControl = m_panel.createControl( form.getBody(), getSite().getWorkbenchWindow() );
-      final GridData gridData = new GridData( GridData.FILL_BOTH );
+      final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
       panelControl.setLayoutData( gridData );
 
       panelControl.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
     }
-
+    
     form.layout();
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
-    // mir doch egal
+  // mir doch egal
   }
 }
