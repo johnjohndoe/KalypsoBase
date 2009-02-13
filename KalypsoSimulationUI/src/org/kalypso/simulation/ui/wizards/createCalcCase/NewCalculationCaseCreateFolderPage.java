@@ -87,7 +87,6 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  * </ul>
  * </p>
  */
-@SuppressWarnings("restriction")
 public class NewCalculationCaseCreateFolderPage extends WizardPage implements Listener, IProjectProvider
 {
   protected static final Logger LOGGER = Logger.getLogger( NewCalculationCaseCreateFolderPage.class.getName() );
@@ -112,7 +111,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   {
     super( "newFolderPage1" );//$NON-NLS-1$
     setTitle( pageName );
-    setDescription( IDEWorkbenchMessages.WizardNewFolderMainPage_description ); //$NON-NLS-1$
+    setDescription( IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.description" ) ); //$NON-NLS-1$
     this.currentSelection = selection;
   }
 
@@ -135,7 +134,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     resourceGroup = new ResourceAndContainerGroup(
         composite,
         this,
-        IDEWorkbenchMessages.WizardNewFolderMainPage_folderName, IDEWorkbenchMessages.WizardNewFolderMainPage_folderLabel, false, SIZING_CONTAINER_GROUP_HEIGHT ); //$NON-NLS-2$ //$NON-NLS-1$
+        IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.folderName" ), IDEWorkbenchMessages.getString( "WizardNewFolderMainPage.folderLabel" ), false, SIZING_CONTAINER_GROUP_HEIGHT ); //$NON-NLS-2$ //$NON-NLS-1$
     resourceGroup.setAllowExistingResources( false );
     initializePage();
     validatePage();
@@ -161,10 +160,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    */
   protected void initializePage()
   {
-    final Iterator currSel = currentSelection.iterator();
-    if( currSel.hasNext() )
+    Iterator enum = currentSelection.iterator();
+    if( enum.hasNext() )
     {
-      final Object next = currSel.next();
+      Object next = enum.next();
       IResource selectedResource = null;
       if( next instanceof IResource )
       {
@@ -190,7 +189,6 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    * 
    * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
    */
-  @Override
   public void setVisible( boolean visible )
   {
     super.setVisible( visible );

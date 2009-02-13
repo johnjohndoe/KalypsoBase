@@ -53,7 +53,7 @@ import org.kalypso.contribs.java.io.FileVisitor;
  */
 public class CalcDirCollector implements FileVisitor
 {
-  private Collection<File> m_calcDirs = new LinkedList<File>();
+  private Collection m_calcDirs = new LinkedList();
 
   /**
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
@@ -75,6 +75,6 @@ public class CalcDirCollector implements FileVisitor
 
   public File[] getCalcDirs()
   {
-    return m_calcDirs.toArray( new File[m_calcDirs.size()] );
+    return (File[])m_calcDirs.toArray( new File[m_calcDirs.size()] );
   }
 }

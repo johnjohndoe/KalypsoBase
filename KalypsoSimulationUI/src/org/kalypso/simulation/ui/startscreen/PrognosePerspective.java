@@ -46,9 +46,8 @@ import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
-@SuppressWarnings("restriction")
 public class PrognosePerspective implements IPerspectiveFactory
 {
   /**
@@ -63,7 +62,7 @@ public class PrognosePerspective implements IPerspectiveFactory
 
     // a bit dirty, but this perspective should be minimalistic
     if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
+      ( (PageLayout)layout ).getActionSets().clear();
   }
 
 }

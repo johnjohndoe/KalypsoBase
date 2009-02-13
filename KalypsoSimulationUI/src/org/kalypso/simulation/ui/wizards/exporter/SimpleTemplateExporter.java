@@ -42,13 +42,19 @@
 package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExporter;
-import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 
 /**
@@ -59,18 +65,19 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  * The typical arguments would look like the following:
  * 
  * <pre>
- *   &lt;arg name=&quot;exporterObservation&quot;&gt;
- *   &lt;arg name=&quot;id&quot; value=&quot;simpleTemplateExporter&quot;/&gt;
- *   &lt;arg name=&quot;width&quot; value=&quot;1024&quot;/&gt;
- *   &lt;arg name=&quot;height&quot; value=&quot;768&quot;/&gt;
- *   &lt;arg name=&quot;imageFormat&quot; value=&quot;png&quot;/&gt;
- *   &lt;arg name=&quot;documentName&quot; value=&quot;&quot;/&gt;
- *   &lt;arg name=&quot;templateDiag&quot;&gt;
- *   &lt;arg name=&quot;label&quot; value=&quot;Abfluﬂdiagramm, Gebiet obere Spree&quot;/&gt;
- *   &lt;arg name=&quot;templateFile&quot; value=&quot;project:/.templates/calcCase/berichtDiagObereSpree.odt&quot;/&gt;
- *   &lt;/arg&gt;
- *   &lt;/arg&gt;
+ &lt;arg name="exporterObservation"&gt;
+ &lt;arg name="id" value="simpleTemplateExporter"/&gt;
+ &lt;arg name="width" value="1024"/&gt;
+ &lt;arg name="height" value="768"/&gt;
+ &lt;arg name="imageFormat" value="png"/&gt;
+ &lt;arg name="documentName" value=""/&gt;
+ &lt;arg name="templateDiag"&gt;
+ &lt;arg name="label" value="Abfluﬂdiagramm, Gebiet obere Spree"/&gt;
+ &lt;arg name="templateFile" value="project:/.templates/calcCase/berichtDiagObereSpree.odt"/&gt;
+ &lt;/arg&gt;
+ &lt;/arg&gt;
  * </pre>
+ * 
  * <p>
  * This wizard has one wizard page: the selection of a template.
  * 
@@ -78,62 +85,79 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  */
 public class SimpleTemplateExporter extends AbstractExporter
 {
+  private ArrayChooserPage m_page;
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
+  {
+    final List objects = new ArrayList();
+
+    final Object[] templates = m_page.getChoosen();
+    for( int i = 0; i < templates.length; i++ )
+      createExportableObjectsWith( (UrlArgument)templates[i], objects );
+
+    return (IExportableObject[])objects.toArray( new IExportableObject[objects.size()] );
+  }
+
   /**
    * Loads the corresponding template and makes an exportable object out of it.
    */
-  private IExportableObject createExportableObjectsWith( final UrlArgument item ) throws CoreException
+  private void createExportableObjectsWith( final UrlArgument item, final List objects ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final URL context = (URL)getFromSupplier( "context" );
 
     // category is specified in the sub-arguments of the exporter, actually the ones in item
     String category = item.getProperty( "category" );
     if( category == null )
       category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
-
+  
     try
     {
       final URL templateUrl = item.getUrl();
 
-      final String documentFormatString = item.getProperty( "documentName" );
-      final String documentName = validateDocumentName( documentFormatString );
-      final String documentTitle = item.getProperty( "documentTitle" );
+      // the name of the document to create is specified in the arguments
+      final String name = item.getProperty( "documentName" );
 
       final String idPrefix = getClass().getName() + templateUrl.getFile();
 
-      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, documentName, documentTitle, templateUrl, idPrefix, category );
+      final IExportableObject exportable = new ExportableTemplateObject( arguments, context, name, templateUrl,
+          idPrefix, category );
 
-      return exportable;
+      objects.add( exportable );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
       if( e instanceof CoreException )
-        throw (CoreException) e;
+        throw (CoreException)e;
 
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
-  @Override
-  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+      throws CoreException
   {
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final URL context = (URL)getFromSupplier( "context" );
 
     // create the possible template items
     final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
-    final ExportableTreeItem[] items = new ExportableTreeItem[templateItems.length];
-    for( int i = 0; i < templateItems.length; i++ )
-    {
-      final UrlArgument templateItem = templateItems[i];
-      final IExportableObject expObj = createExportableObjectsWith( templateItem );
-      items[i] = new ExportableTreeItem( templateItem.getLabel(), null, parent, expObj, true, false );
-    }
 
-    return items;
+    // create wizard page for selecting the templates
+    m_page = new ArrayChooserPage( templateItems, templateItems, templateItems, "templateSelection",
+        "W‰hlen Sie die Exportarten", defaultImage );
+
+    return new IWizardPage[]
+    { m_page };
   }
-
 }

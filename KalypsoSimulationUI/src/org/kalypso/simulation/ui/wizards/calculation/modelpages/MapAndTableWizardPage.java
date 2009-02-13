@@ -119,7 +119,6 @@ public class MapAndTableWizardPage extends AbstractCalcWizardPage
     else
       initButtons( rightPanel, "Berechnung durchführen", null, new SelectionAdapter()
       {
-        @Override
         public void widgetSelected( final SelectionEvent e )
         {
           runCalculation();

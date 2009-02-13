@@ -54,7 +54,7 @@ import org.eclipse.core.resources.IResourceVisitor;
  */
 public class CalcCaseCollector implements IResourceVisitor
 {
-  private Collection<IResource> m_calcCases = new ArrayList<IResource>();
+  private Collection m_calcCases = new ArrayList();
 
   /**
    * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
@@ -79,6 +79,6 @@ public class CalcCaseCollector implements IResourceVisitor
   /** Returns the visited calc cases since the last {@link #clear()}. */
   public IFolder[] getCalcCases()
   {
-    return m_calcCases.toArray( new IFolder[m_calcCases.size()] );
+    return (IFolder[])m_calcCases.toArray( new IFolder[m_calcCases.size()] );
   }
 }

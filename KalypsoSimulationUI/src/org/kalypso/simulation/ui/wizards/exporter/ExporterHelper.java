@@ -40,22 +40,40 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.exporter;
 
+import java.awt.Color;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.commons.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.DisposeHelper;
+import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
+import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -69,9 +87,9 @@ public final class ExporterHelper
 {
   public static final String MSG_TOKEN_NOT_FOUND = "Token not found";
 
-  private ExporterHelper( )
+  private ExporterHelper()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
@@ -85,16 +103,16 @@ public final class ExporterHelper
   public static Properties createReplaceTokens( final Feature feature, final Arguments tokens )
   {
     final Properties replacetokens = new Properties();
-    for( final Entry<String, Object> entry : tokens.entrySet() )
+    for( final Iterator tokIt = tokens.entrySet().iterator(); tokIt.hasNext(); )
     {
-      final String tokenname = entry.getKey();
-      final String featureProperty = (String) entry.getValue();
+      final Map.Entry entry = (Entry)tokIt.next();
+      final String tokenname = (String)entry.getKey();
+      final String featureProperty = (String)entry.getValue();
 
-      final IPropertyType pt = feature.getFeatureType().getProperty( featureProperty );
-      final Object property = pt == null ? null : feature.getProperty( pt );
+      final Object property = feature.getProperty( featureProperty );
       String replace = null;
       if( property instanceof TimeseriesLinkType )
-        replace = ((TimeseriesLinkType) property).getHref();
+        replace = ( (TimeseriesLinkType)property ).getHref();
       else if( property != null )
         replace = property.toString();
       else if( property == null )
@@ -112,20 +130,21 @@ public final class ExporterHelper
    */
   public static String[] getArgumentValues( final String prefix, final Arguments args )
   {
-    final List<String> values = new ArrayList<String>();
+    final List values = new ArrayList();
 
-    for( final Entry<String, Object> entry : args.entrySet() )
+    for( final Iterator it = args.entrySet().iterator(); it.hasNext(); )
     {
-      final String argName = entry.getKey();
+      final Map.Entry entry = (Map.Entry)it.next();
+      final String argName = (String)entry.getKey();
 
       if( argName.startsWith( prefix ) )
       {
-        final String argValue = (String) entry.getValue();
+        final String argValue = (String)entry.getValue();
         values.add( argValue );
       }
     }
 
-    return values.toArray( new String[values.size()] );
+    return (String[])values.toArray( new String[values.size()] );
   }
 
   /**
@@ -141,21 +160,24 @@ public final class ExporterHelper
    * 
    * @return list of Url items found in the arguments that we got from the supplier (ex: ExportResultsWizardPage)
    */
-  public static UrlArgument[] createUrlItems( final String argumentPrefix, final Arguments arguments, final URL context ) throws CoreException
+  public static UrlArgument[] createUrlItems( final String argumentPrefix, final Arguments arguments, final URL context )
+      throws CoreException
   {
-    final Collection<UrlArgument> items = new ArrayList<UrlArgument>();
-    final Collection<IStatus> stati = new ArrayList<IStatus>();
+    final Collection items = new ArrayList();
+    final Collection stati = new ArrayList();
 
-    for( final Entry<String, Object> entry : arguments.entrySet() )
+    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
-      final String key = entry.getKey();
+      final Map.Entry entry = (Entry)aIt.next();
+      final String key = (String)entry.getKey();
       if( key.startsWith( argumentPrefix ) )
       {
-        final Arguments args = (Arguments) entry.getValue();
+        final Arguments args = (Arguments)entry.getValue();
         final String label = args.getProperty( "label", "<unbekannt>" );
         final String strFile = args.getProperty( "href" );
         if( strFile == null )
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: " + key, null ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: "
+              + key, null ) );
 
         try
         {
@@ -163,15 +185,142 @@ public final class ExporterHelper
         }
         catch( final MalformedURLException e )
         {
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile, e ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile,
+              e ) );
         }
       }
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
+      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, (IStatus[])stati
+          .toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
 
-    return items.toArray( new UrlArgument[items.size()] );
+    return (UrlArgument[])items.toArray( new UrlArgument[items.size()] );
+  }
+
+  /**
+   * Exports a diagram based on the diagram-template (odt).
+   * 
+   * @param context
+   *          context into which the template file is loaded
+   * @param arguments
+   *          export-arguments, used to retrieve: width, height and imageFormat
+   * @param reader
+   *          delivers the contents of the template file
+   * @param output
+   *          export will be written into it
+   * @param monitor
+   *          handles user feedback
+   * @param templateUrl
+   *          url of the template being used
+   * @param metadataExtensions
+   *          can be update from this export with information from observations
+   * @param identifierPrefix
+   *          prefix of the identifier of the exportable object
+   * @param category
+   *          the category of the exportable object
+   */
+  public static IStatus exportObsDiagram( final URL context, final Arguments arguments, final Reader reader,
+      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
+      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  {
+    DiagView tpl = null;
+    ObservationChart chart = null;
+    try
+    {
+      tpl = new DiagView();
+      chart = new ObservationChart( tpl, true );
+      chart.setBackgroundPaint( Color.WHITE );
+
+      final ObsdiagviewType xml = DiagViewUtils.loadDiagramTemplateXML( reader );
+
+      IStatus status = DiagViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+
+      // wrap as warning because even if an obs is missing we can still export diagram
+      status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
+
+      final int width = Integer.parseInt( arguments.getProperty( "width", "800" ) );
+      final int height = Integer.parseInt( arguments.getProperty( "height", "600" ) );
+      final String format = arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
+
+      final IStatus status2 = new ExportableChart( chart, format, width, height, identifierPrefix, category )
+          .exportObject( output, monitor, metadataExtensions );
+
+      return StatusUtilities.createStatus( new IStatus[]
+      { status, status2 }, "Fehler während der Export der Diagrammvorlage: " + templateUrl.getFile() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      return StatusUtilities.statusFromThrowable( e );
+    }
+    finally
+    {
+      new DisposeHelper().addDisposeCandidate( tpl ).addDisposeCandidate( chart ).dispose();
+    }
+  }
+
+  /**
+   * Exports an observation table based on the table-template (ott).
+   * 
+   * @param context
+   *          context into which the template file is loaded
+   * @param arguments
+   *          export-arguments [currently not used]
+   * @param reader
+   *          delivers the contents of the template file
+   * @param output
+   *          export will be written into it
+   * @param monitor
+   *          handles user feedback
+   * @param templateUrl
+   *          url of the template being used
+   * @param metadataExtensions
+   *          can be update from this export with information from observations
+   * @param identifierPrefix
+   *          prefix of the identifier of the exportable object
+   * @param category
+   *          the category of the exportable object
+   */
+  public static IStatus exportObsTable( final URL context, final Arguments arguments, final Reader reader,
+      final OutputStream output, final IProgressMonitor monitor, final URL templateUrl,
+      final Configuration metadataExtensions, final String identifierPrefix, final String category )
+  {
+    if( arguments == null )
+    {
+      // avoid yellow thingies!
+    }
+
+    TableView tpl = null;
+    ObservationTable table = null;
+    try
+    {
+      tpl = new TableView();
+      table = new ObservationTable( tpl, true, false );
+      final ObstableviewType xml = TableViewUtils.loadTableTemplateXML( reader );
+
+      IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
+
+      // wrap as warning because even if an obs is missing we can still export diagram
+      status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
+
+      final IStatus status2 = new ExportableObservationTable( table, identifierPrefix, category ).exportObject( output,
+          monitor, metadataExtensions );
+
+      return StatusUtilities.createStatus( new IStatus[]
+      { status, status2 }, "Fehler während der Export von der Tabellenvorlage: " + templateUrl.getFile() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      return StatusUtilities.statusFromThrowable( e );
+    }
+    finally
+    {
+      new DisposeHelper().addDisposeCandidate( tpl ).addDisposeCandidate( table ).dispose();
+    }
   }
 
   /**
@@ -182,9 +331,7 @@ public final class ExporterHelper
   public static class UrlArgument
   {
     private String m_label;
-
     private final URL m_templateUrl;
-
     private final Arguments m_args;
 
     public UrlArgument( final String label, final URL templateUrl, final Arguments args )
@@ -194,12 +341,12 @@ public final class ExporterHelper
       m_args = args;
     }
 
-    public String getLabel( )
+    public String getLabel()
     {
       return m_label;
     }
 
-    public URL getUrl( )
+    public URL getUrl()
     {
       return m_templateUrl;
     }
@@ -214,13 +361,12 @@ public final class ExporterHelper
       return m_args.getProperty( key, defaultValue );
     }
 
-    @Override
-    public String toString( )
+    public String toString()
     {
       return m_label;
     }
 
-    public Arguments getArguments( )
+    public Arguments getArguments()
     {
       return m_args;
     }
