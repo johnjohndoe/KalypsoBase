@@ -68,7 +68,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 {
-  public static final String RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_ = "Rechenvarianten können nicht archiviert werden.";
+  public static final String RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_ = "Rechenvarianten können nicht archiviert werden.";
 
   private static final String RECHENVARIANTEN_ARCHIVIEREN = "Rechenvarianten archivieren";
 
@@ -90,7 +90,6 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       m_calcCases = calcCases;
     }
 
-    @Override
     protected IStatus run( final IProgressMonitor monitor )
     {
       monitor.beginTask( RECHENVARIANTEN_ARCHIVIEREN, m_calcCases.length * 1000 );
@@ -107,7 +106,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         return ce.getStatus();
       }
 
-      final Collection<IStatus> errorStati = new LinkedList<IStatus>();
+      final Collection errorStati = new LinkedList();
       for( int i = 0; i < m_calcCases.length; i++ )
       {
         final IFolder folder = m_calcCases[i];
@@ -116,7 +115,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
         {
           synchronizer.commitFolder( folder, new SubProgressMonitor( monitor, 1000 ) );
         }
-        catch( final CoreException e )
+        catch( CoreException e )
         {
           errorStati.add( e.getStatus() );
           e.printStackTrace();
@@ -126,7 +125,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
       if( errorStati.isEmpty() )
         return Status.OK_STATUS;
 
-      final IStatus[] stati = errorStati.toArray( new IStatus[errorStati.size()] );
+      final IStatus[] stati = (IStatus[])errorStati.toArray( new IStatus[errorStati.size()] );
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati,
           "Nicht alle Rechenvarianten konnten archiviert werden.", null );
     }
@@ -168,7 +167,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
 
       //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
       job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
-          RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, false, true ) );
+          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, false, true ) );
 
       job.setUser( true );
       job.schedule();
@@ -176,7 +175,7 @@ public class CommitCalcCaseDelegate implements IWorkbenchWindowActionDelegate
     catch( final CoreException ce )
     {
       ErrorDialog.openError( m_window.getShell(), RECHENVARIANTEN_ARCHIVIEREN,
-          RECHENVARIANTEN_KOENNEN_NICHT_ARCHIVIERT_WERDEN_, ce.getStatus() );
+          RECHENVARIANTEN_KÖNNEN_NICHT_ARCHIVIERT_WERDEN_, ce.getStatus() );
     }
   }
 

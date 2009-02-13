@@ -149,7 +149,6 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
      * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      *      java.lang.Object)
      */
-    @Override
     public int compare( Viewer viewer, Object e1, Object e2 )
     {
       if( e1 instanceof IFolder && e2 instanceof IFolder )
@@ -181,7 +180,6 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   /**
    * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
    */
-  @Override
   protected void inputChanged( Object input, Object oldInput )
   {
     super.inputChanged( input, oldInput );
@@ -224,7 +222,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   public Object[] getCheckedElements()
   {
     final TableTreeItem[] children = getTableTree().getItems();
-    final ArrayList<Object> v = new ArrayList<Object>( children.length );
+    ArrayList v = new ArrayList( children.length );
     for( int i = 0; i < children.length; i++ )
     {
       final TableTreeItem item = children[i];
@@ -261,13 +259,14 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
    *          the list of checked elements (element type: <code>Object</code>)
    * @see #getCheckedElements
    */
-  public void setCheckedElements( final Object[] elements )
+  public void setCheckedElements( Object[] elements )
   {
     assertElementsNotNull( elements );
-    final Hashtable<Object, Object> set = new Hashtable<Object, Object>( elements.length * 2 + 1 );
+    final Hashtable set = new Hashtable( elements.length * 2 + 1 );
     for( int i = 0; i < elements.length; ++i )
+    {
       set.put( elements[i], elements[i] );
-
+    }
     final TableTreeItem[] items = getTableTree().getItems();
     for( int i = 0; i < items.length; ++i )
     {
@@ -294,7 +293,6 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   /**
    * @see org.eclipse.jface.viewers.StructuredViewer#handleSelect(org.eclipse.swt.events.SelectionEvent)
    */
-  @Override
   public void handleSelect( SelectionEvent event )
   {
     if( event.detail == SWT.CHECK )
@@ -338,7 +336,6 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   /*
    * (non-Javadoc) Method declared on Viewer.
    */
-  @Override
   protected void preservingSelection( Runnable updateCode )
   {
     final TableTreeItem[] children = getTableTree().getItems();

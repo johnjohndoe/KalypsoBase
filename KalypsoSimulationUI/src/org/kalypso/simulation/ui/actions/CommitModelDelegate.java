@@ -117,8 +117,8 @@ public class CommitModelDelegate implements IWorkbenchWindowActionDelegate
 
       final Job job = new Job( "Modell zurückspeichern" )
       {
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
+
+        protected IStatus run( IProgressMonitor monitor )
         {
           try
           {

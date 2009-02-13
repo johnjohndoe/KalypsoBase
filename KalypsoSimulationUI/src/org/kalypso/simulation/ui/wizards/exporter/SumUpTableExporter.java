@@ -43,11 +43,14 @@ package org.kalypso.simulation.ui.wizards.exporter;
 
 import java.net.URL;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExporter;
-import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTable;
 
 /**
@@ -56,6 +59,7 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
  * <pre>
  * User-defined Columns (*) | Max-Value (**) | Time(Max-Value) | Alarmlevel | Value(Alarmlevel) | Time i + 0.p (***) | Time i + 1.p | ... | Time i + n.p
  * </pre>
+ * 
  * <ul>
  * <li>(*) the list of user-defined columns to display is defined in the arguments of the exporter
  * <li>(**) the max-value is taken for one axis which is defined in the arguments of the exporter
@@ -88,48 +92,49 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
  * <li>content (sub-argument of column) defines what will come in each cell in this column. See
  * {@link org.kalypso.simulation.ui.wizards.exporter.sumuptable.ColumnSpec}for more information on the syntax.
  * </ul>
+ * 
  * <p>
  * Example:
  * 
  * <pre>
- * &lt;arg name=&quot;exporter3&quot;&gt;
- *  &lt;arg name=&quot;id&quot; value=&quot;sumUpTableExporter&quot; /&gt;
- * 
- *  &lt;arg name=&quot;documentName&quot; value=&quot;übersicht.csv&quot; /&gt;
- *  &lt;arg name=&quot;separator&quot; value=&quot;;&quot;/&gt;
- *  &lt;!--arg name=&quot;charset&quot; value=&quot;cp1252&quot;/--&gt;
- *  &lt;arg name=&quot;delta&quot; value=&quot;0.0001&quot;/&gt;
- *  &lt;arg name=&quot;dateFormat&quot; value=&quot;dd.MM.yyyy HH:mm:ss&quot;/&gt;
- * 
- *  &lt;arg name=&quot;obs3&quot;&gt;
- *  &lt;arg name=&quot;label&quot; value=&quot;Gröditz&quot; /&gt;
- *  &lt;arg name=&quot;href&quot; value=&quot;./Ergebnisse/Zeitreihen/QV_GROEDI.zml&quot; /&gt;
- *  &lt;/arg&gt;
- *  &lt;arg name=&quot;obs2&quot;&gt;
- *  &lt;arg name=&quot;label&quot; value=&quot;Boxberg&quot; /&gt;
- *  &lt;arg name=&quot;href&quot; value=&quot;./Ergebnisse/Zeitreihen/QV_BOXBRG.zml&quot; /&gt;
- *  &lt;/arg&gt;
- *  &lt;arg name=&quot;obs1&quot;&gt;
- *  &lt;arg name=&quot;label&quot; value=&quot;Bautzen&quot; /&gt;
- *  &lt;arg name=&quot;href&quot; value=&quot;./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml&quot; /&gt;
- *  &lt;/arg&gt;
- * 
- *  &lt;arg name=&quot;column1&quot;&gt;
- *  &lt;arg name=&quot;position&quot; value=&quot;1&quot;/&gt;
- *  &lt;arg name=&quot;label&quot; value=&quot;Pegel&quot;/&gt;
- *  &lt;arg name=&quot;content&quot; value=&quot;arg:label&quot; /&gt;
- *  &lt;/arg&gt;
- *  
- *  &lt;arg name=&quot;column2&quot;&gt;
- *  &lt;arg name=&quot;position&quot; value=&quot;2&quot;/&gt;
- *  &lt;arg name=&quot;label&quot; value=&quot;Gewässer&quot;/&gt;
- *  &lt;arg name=&quot;content&quot; value=&quot;metadata:Gewässer&quot; /&gt;
- *  &lt;/arg&gt;
- * 
- *  &lt;arg name=&quot;axisType&quot; value=&quot;W&quot;/&gt;
- *  &lt;arg name=&quot;timeUnit&quot; value=&quot;HOUR&quot; /&gt;
- *  &lt;arg name=&quot;timeStep&quot; value=&quot;6&quot; /&gt;
- *  &lt;/arg&gt;
+ * &lt;arg name="exporter3"&gt;
+ &lt;arg name="id" value="sumUpTableExporter" /&gt;
+
+ &lt;arg name="documentName" value="übersicht.csv" /&gt;
+ &lt;arg name="separator" value=";"/&gt;
+ &lt;!--arg name="charset" value="cp1252"/--&gt;
+ &lt;arg name="delta" value="0.0001"/&gt;
+ &lt;arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/&gt;
+
+ &lt;arg name="obs3"&gt;
+ &lt;arg name="label" value="Gröditz" /&gt;
+ &lt;arg name="href" value="./Ergebnisse/Zeitreihen/QV_GROEDI.zml" /&gt;
+ &lt;/arg&gt;
+ &lt;arg name="obs2"&gt;
+ &lt;arg name="label" value="Boxberg" /&gt;
+ &lt;arg name="href" value="./Ergebnisse/Zeitreihen/QV_BOXBRG.zml" /&gt;
+ &lt;/arg&gt;
+ &lt;arg name="obs1"&gt;
+ &lt;arg name="label" value="Bautzen" /&gt;
+ &lt;arg name="href" value="./Ergebnisse/Zeitreihen/QV_BAUTZWB.zml" /&gt;
+ &lt;/arg&gt;
+
+ &lt;arg name="column1"&gt;
+ &lt;arg name="position" value="1"/&gt;
+ &lt;arg name="label" value="Pegel"/&gt;
+ &lt;arg name="content" value="arg:label" /&gt;
+ &lt;/arg&gt;
+ 
+ &lt;arg name="column2"&gt;
+ &lt;arg name="position" value="2"/&gt;
+ &lt;arg name="label" value="Gewässer"/&gt;
+ &lt;arg name="content" value="metadata:Gewässer" /&gt;
+ &lt;/arg&gt;
+
+ &lt;arg name="axisType" value="W"/&gt;
+ &lt;arg name="timeUnit" value="HOUR" /&gt;
+ &lt;arg name="timeStep" value="6" /&gt;
+ &lt;/arg&gt;
  * </pre>
  * 
  * @author schlienger
@@ -137,21 +142,25 @@ import org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTabl
 public class SumUpTableExporter extends AbstractExporter
 {
   /**
-   * @see org.kalypso.metadoc.impl.AbstractExporter#createTreeItem()
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  @Override
-  public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final URL context = (URL)getFromSupplier( "context" );
 
-    final String documentFormatString = arguments.getProperty( "documentName", "übersicht.csv" );
-    final String documentName = validateDocumentName( documentFormatString );
-    final String documentTitle = arguments.getProperty( "documentTitle" );
-    
-    final IExportableObject expObj = new ExportableSumUpTable( arguments, context, getClass().getName(), documentName, documentTitle );
+    return new IExportableObject[]
+    { new ExportableSumUpTable( arguments, context, getClass().getName() ) };
+  }
 
-    return new ExportableTreeItem( getName(), getImageDescriptor(), parent, expObj, true, false );
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      org.eclipse.jface.resource.ImageDescriptor)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration,
+      final ImageDescriptor defaultImage ) throws CoreException
+  {
+    return new IWizardPage[0];
   }
 }

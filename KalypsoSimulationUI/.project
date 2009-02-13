@@ -34,7 +34,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Ant-Jar Builder.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/Ant_jar_Builder.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

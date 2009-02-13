@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
@@ -44,28 +44,30 @@ import java.io.File;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * @author Gernot Belger
+ * @author tgu
  */
 public class ModelActionHelper
 {
-  private ModelActionHelper( )
+  private ModelActionHelper()
   {
-    // wird nicht instatiiert
+  // wir nicht instatiiert
   }
 
-  public static File getServerRoot( ) throws CoreException
+  public static File getServerRoot() throws CoreException
   {
-    final File serverRoot = KalypsoSimulationUIPlugin.getServerModelRoot();
+    final File serverRoot = KalypsoGisPlugin.getDefault().getServerModelRoot();
     if( serverRoot == null )
-      throw new CoreException( StatusUtilities.createWarningStatus( "Die Liste der auf dem Server gespeicherten Modelle ist nicht verfügbar." ) );
+      throw new CoreException( new StatusInfo( IStatus.WARNING,
+          "Die Liste der auf dem Server gespeicherten Modelle ist nicht verfügbar." ) );
 
     return serverRoot;
   }
@@ -84,10 +86,10 @@ public class ModelActionHelper
     final IProject[] projects = ProjectUtilities.findProjectsFromSelection( selection );
 
     if( projects == null || projects.length == 0 )
-      throw new CoreException( StatusUtilities.createWarningStatus( "Kein Projekt im Navigator selektiert." ) );
+      throw new CoreException( new StatusInfo( IStatus.WARNING, "Kein Projekt im Navigator selektiert." ) );
 
     if( projects.length > 1 )
-      throw new CoreException( StatusUtilities.createWarningStatus( "Mehr als ein Projekt im Navigator selektiert." ) );
+      throw new CoreException( new StatusInfo( IStatus.WARNING, "Mehr als ein Projekt im Navigator selektiert." ) );
 
     return projects[0];
   }
@@ -96,7 +98,9 @@ public class ModelActionHelper
   {
     final File serverProject = new File( serverRoot, project.getName() );
     if( !serverProject.exists() )
-      throw new CoreException( StatusUtilities.createWarningStatus( "Sie haben kein Server-gespeichertes Projekt gewählt.\nNur Server-gespeicherte Projekt können aktualisiert werden." ) );
+      throw new CoreException(
+          new StatusInfo( IStatus.WARNING,
+              "Sie haben kein Server-gespeichertes Projekt gewählt.\nNur Server-gespeicherte Projekt können aktualisiert werden." ) );
 
     return serverProject;
   }

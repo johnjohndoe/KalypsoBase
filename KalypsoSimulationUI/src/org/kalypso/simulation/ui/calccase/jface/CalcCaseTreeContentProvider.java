@@ -108,14 +108,14 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
       try
       {
         final IContainer container = (IContainer)element;
-        if( container instanceof IFolder && ModelNature.isCalcCalseFolder( container ) )
+        if( container instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)container ) )
           return new Object[0];
         
         if( !container.exists() )
           return new Object[0];
         
         final IResource[] members = container.members( 0 );
-        final List<IFolder> children = new ArrayList<IFolder>( members.length );
+        final List children = new ArrayList( members.length );
         for( int i = 0; i < members.length; i++ )
         {
           final IResource resource = members[i];

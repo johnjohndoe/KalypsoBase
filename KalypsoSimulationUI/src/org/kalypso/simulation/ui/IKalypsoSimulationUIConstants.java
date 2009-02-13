@@ -41,7 +41,7 @@
 package org.kalypso.simulation.ui;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public interface IKalypsoSimulationUIConstants
 {
@@ -61,5 +61,4 @@ public interface IKalypsoSimulationUIConstants
    * </p>
    */
   public static final String CONFIG_DO_SYNCHRONIZE_MODELS = "kalypso.prognose.synchronize-models";
-  
 }

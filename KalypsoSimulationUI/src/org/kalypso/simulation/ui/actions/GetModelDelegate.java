@@ -58,6 +58,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FileLabelProvider;
 import org.kalypso.simulation.ui.calccase.ModelSynchronizer;
 
@@ -92,8 +93,11 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
     try
     {
       final File serverRoot = ModelActionHelper.getServerRoot();
+      if( !serverRoot.exists() )
+        throw new CoreException(StatusUtilities.createErrorStatus("Serverseitiges Modell-Repository nicht vorhanden: " + serverRoot.getAbsolutePath() ));
 
       final File[] files = serverRoot.listFiles();
+      
       final ListSelectionDialog lsd = new ListSelectionDialog(
           m_window.getShell(),
           files,
@@ -109,7 +113,6 @@ public class GetModelDelegate implements IWorkbenchWindowActionDelegate
 
       final Job job = new Job( "Modelle aktualisieren" )
       {
-        @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           monitor.beginTask( "Modelle vom Server laden", files.length * 1000 );

@@ -51,6 +51,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexSchedulingRule;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
@@ -63,9 +64,9 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
   /**
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nix tun
+  // nix tun
   }
 
   /**
@@ -84,17 +85,15 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     // Rechenfälle raussuchen
-    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
+        "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
 
     if( calcCases == null )
       return;
 
     // die Rechenfälle sollen nacheinander aktualisiert werden
     // parallelität macht hier keinen Sinn
-    // final MutexRule mutexRule = new MutexRule();
-
-    // changed by doemming: jobrule is now calcCase folder, otherwise the job conflicts with the project rule.
-    // jobs can now run parallel
+    final MutexSchedulingRule mutexRule = new MutexSchedulingRule();
 
     // alle Rechenfälle aktualisieren
     for( int i = 0; i < calcCases.length; i++ )
@@ -106,12 +105,11 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
         /**
          * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
          */
-        @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
           {
-            final ModelNature nature = (ModelNature) calcCase.getProject().getNature( ModelNature.ID );
+            final ModelNature nature = (ModelNature)calcCase.getProject().getNature( ModelNature.ID );
 
             final IStatus status = nature.updateCalcCase( calcCase, monitor );
 
@@ -126,10 +124,11 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
         }
       };
 
-      // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false, true ) );
+      //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren",
+          "Siehe Details:", false, IStatus.ERROR, true ) );
       job.setUser( true );
-      job.setRule( calcCase.getProject() );
+      job.setRule( mutexRule );
       job.schedule();
     }
   }
@@ -140,6 +139,6 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    // mir wurscht
+  // mir wurscht
   }
 }
