@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoSimulationCore Plug-in
+Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.contribs.java,
+ org.kalypso.jwsdp,
+ org.kalypso.commons
+Eclipse-AutoStart: true
+Export-Package: org.kalypso.simulation.core,
+ org.kalypso.simulation.core.util
+Bundle-ClassPath: kalypsoSimulationCore.jar
