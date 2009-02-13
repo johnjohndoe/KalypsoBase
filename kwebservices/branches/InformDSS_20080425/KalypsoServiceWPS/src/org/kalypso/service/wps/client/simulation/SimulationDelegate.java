@@ -404,6 +404,10 @@ public class SimulationDelegate implements IWPSDelegate
           /* Building the destination object. */
           final Output output = SimulationUtilities.findOutput( key, outputs );
 
+          // TODO Is that wanted (that all from the client not expected output is ignored)?
+          if( output == null )
+            continue;
+
           /* Everything should be relative to the project! */
           final String outputPath = output.getPath();
           final IContainer baseresource = output.isRelativeToCalcCase() ? m_calcCaseFolder : project;
