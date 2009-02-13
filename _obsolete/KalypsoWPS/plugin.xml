@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="webProcessingService" name="webProcessingService" schema="schema/webProcessingService.exsd"/>
+   <extension-point id="ogcWebService" name="ogcWebService" schema="schema/ogcWebService.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.kalypso.services.ui.ServicesView"
+            id="org.kalypso.services.ui.ServicesView"
+            name="Services"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.kalypso.services.IServiceEntry.objectclass"
+            objectClass="org.kalypso.services.IServiceEntry">
+         <action
+               class="org.kalypso.services.ui.WebServiceRefreshAction"
+               enablesFor="+"
+               icon="icons/refresh.gif"
+               id="org.kalypso.services.processing.IOGCWebService.refresh"
+               label="%org.kalypso.services.processing.IOGCWebService.refresh.label"
+               style="push"
+               tooltip="%org.kalypso.services.processing.IOGCWebService.refresh.tooltip"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.kalypso.wps.webProcessingService">
+      <simulation
+            class="org.kalypso.convert.namodel.NaModelCalcJob"
+            id="namodel"
+            title="NA-Modell"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.services.processing.WebProcessingServiceEntry"
+            class="org.kalypso.services.processing.WPSAdapterFactory">
+         <adapter type="org.eclipse.jface.viewers.ITreeContentProvider"/>
+         <adapter type="org.eclipse.jface.viewers.ILabelProvider"/>
+      </factory>
+   </extension>
+   <extension
+         point="org.kalypso.wps.ogcWebService">
+      <service
+            id="wps"
+            serviceCapabilities="net.opengeospatial.wps.Capabilities"
+            serviceClass="org.kalypso.services.processing.IWebProcessingService"
+            serviceEntryAdapterFactory="org.kalypso.services.processing.WPSAdapterFactory"
+            serviceObjectFactory="net.opengeospatial.wps.ObjectFactory"/>
+   </extension>
+
+</plugin>

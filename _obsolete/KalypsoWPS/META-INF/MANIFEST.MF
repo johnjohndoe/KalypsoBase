@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoWPS
+Bundle-SymbolicName: org.kalypso.wps;singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Localization: plugin
+Bundle-ClassPath: bin
+Require-Bundle: org.kalypso.jwsdp,
+ org.junit;resolution:=optional,
+ org.kalypso.simulation.core,
+ org.kalypso.services.core,
+ org.kalypso.ui
+Eclipse-LazyStart: true
+Bundle-Activator: org.kalypso.services.processing.KalypsoWPSPlugin
+Bundle-Vendor: kalypso.sourceforge.net
