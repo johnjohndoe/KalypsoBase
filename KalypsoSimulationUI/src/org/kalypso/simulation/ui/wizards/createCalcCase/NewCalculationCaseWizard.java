@@ -165,7 +165,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     final IFolder newFolderHandle = m_createFolderPage.getFolder();
 
-    final Map<String, String> antProperties = AddNewCalcCaseChoice.configureAntProperties( null );
+    final Map<String, Object> antProperties = AddNewCalcCaseChoice.configureAntProperties( null );
 
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation( null )
     {

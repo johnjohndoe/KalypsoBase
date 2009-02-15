@@ -43,12 +43,9 @@ package org.kalypso.simulation.ui.calccase;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,8 +60,6 @@ import javax.xml.bind.Unmarshaller;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.filters.ReplaceTokens;
-import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.internal.variables.ValueVariable;
 import org.eclipse.core.resources.IContainer;
@@ -105,8 +100,6 @@ import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.xml.Mapper;
-import org.kalypso.model.xml.CalcCaseConfig;
-import org.kalypso.model.xml.TransformationList;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
@@ -116,12 +109,10 @@ import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.transformation.TransformationHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
-import org.xml.sax.InputSource;
 
 /**
  * @author belger
@@ -168,10 +159,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /** Standardddifferenz des Simulationsstarts vor dem Vorhersagezeitpunkt */
   private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS";
-
-  private static final int TRANS_TYPE_UPDTAE = 0;
-
-  private static final int TRANS_TYPE_CREATE = 1;
 
   /**
    * 2005-09-01 - Schlienger - added this constant in order to get a static dependency to the org.eclipse.ant.ui plugin
@@ -335,38 +322,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       return false;
     }
-  }
-
-  public CalcCaseConfig readCalcCaseConfig( final IFolder folder ) throws CoreException
-  {
-    final IFile tranformerConfigFile = getTransformerConfigFile();
-    try
-    {
-      // Protokolle ersetzen
-      final ReplaceTokens replaceReader = new ReplaceTokens( new InputStreamReader( tranformerConfigFile.getContents(), tranformerConfigFile.getCharset() ) );
-
-      configureReplaceTokensForCalcCase( folder, replaceReader );
-
-      return (CalcCaseConfig) JC_TRANSFORM.createUnmarshaller().unmarshal( new InputSource( replaceReader ) );
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Lesen der Konfiguration: " + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Lesen der Konfiguration: " + tranformerConfigFile.getProjectRelativePath().toString(), e ) );
-    }
-  }
-
-  private IFile getTransformerConfigFile( )
-  {
-    final IProject project = getProject();
-    final IFile tranformerConfigFile = project.getFile( ModelNature.MODELLTYP_CALCCASECONFIG_XML );
-    return tranformerConfigFile;
   }
 
   public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IContainer folder, final IProgressMonitor monitor ) throws CoreException
@@ -604,13 +559,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   /**
    * Erzeugt eine neue Rechenvariante im angegebenen Ordner
    */
-  public IStatus createCalculationCaseInFolder( final IFolder folder, final Map antProperties, final IProgressMonitor monitor ) throws CoreException
+  public IStatus createCalculationCaseInFolder( final IFolder folder, final Map<String, Object> antProperties, final IProgressMonitor monitor ) throws CoreException
   {
     final String message = "Rechenvariante wird erzeugt";
-
-    if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( message, TRANS_TYPE_CREATE, folder, monitor );
-
     return launchAnt( message, "createCalcCase", antProperties, folder, monitor );
   }
 
@@ -620,10 +571,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
     final String message = "Rechenvariante wird aktualisiert";
-
-    if( getTransformerConfigFile().exists() )
-      return doCalcTransformation( message, TRANS_TYPE_UPDTAE, folder, monitor );
-
     return launchAnt( message, "updateCalcCase", null, folder, monitor );
   }
 
@@ -635,135 +582,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final String message = "Übernehme Rechanvariante in Basismodell";
 
     return launchAnt( message, "setBasicModel", null, folder, monitor );
-  }
-
-  /**
-   * Führt eine Transformation auf einer Rechenvariante durch
-   * 
-   * @deprecated use ant launch framework instead. Leave here until all models have been ported to the new system.
-   */
-  @Deprecated
-  private IStatus doCalcTransformation( final String taskName, final int type, final IFolder folder, final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( taskName, 2000 );
-
-    try
-    {
-      final CalcCaseConfig trans = readCalcCaseConfig( folder );
-
-      monitor.worked( 1000 );
-
-      // Daten transformieren
-      TransformationList transList = null;
-      switch( type )
-      {
-        case TRANS_TYPE_UPDTAE:
-          transList = trans.getUpdateTransformations();
-          break;
-
-        case TRANS_TYPE_CREATE:
-          transList = trans.getCreateTransformations();
-          break;
-
-        default:
-          transList = null;
-          break;
-      }
-
-      if( transList == null )
-        return Status.OK_STATUS;
-
-      return TransformationHelper.doTranformations( folder, transList, new SubProgressMonitor( monitor, 1000 ) );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, taskName + ": " + e.getLocalizedMessage(), e ) );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  /**
-   * fügt eine Reihe von Tokens zum ReplaceToken hinzu. Unter anderem für :project: etc Ausserdem werden die Start,
-   * Mittel und Endzeit der Simulation aus der Rechenvariante ausgelesen (.calculation) und als Token hinzugefgügt.
-   */
-  private void configureReplaceTokensForCalcCase( final IFolder calcFolder, final ReplaceTokens replaceTokens ) throws CoreException
-  {
-    replaceTokens.setBeginToken( ':' );
-    replaceTokens.setEndToken( ':' );
-
-    final Token timeToken = new ReplaceTokens.Token();
-    timeToken.setKey( "SYSTEM_TIME" );
-    timeToken.setValue( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ).format( new Date( System.currentTimeMillis() ) ) );
-    replaceTokens.addConfiguredToken( timeToken );
-
-    final Token calcdirToken = new ReplaceTokens.Token();
-    calcdirToken.setKey( "calcdir" );
-    calcdirToken.setValue( calcFolder.getFullPath().toString() + "/" );
-    replaceTokens.addConfiguredToken( calcdirToken );
-
-    final Token projectToken = new ReplaceTokens.Token();
-    projectToken.setKey( "project" );
-    projectToken.setValue( calcFolder.getProject().getFullPath().toString() + "/" );
-    replaceTokens.addConfiguredToken( projectToken );
-
-    // jetzt werte aus der .calculation des aktuellen Rechenfalls lesen und
-    // bestimmte Werte
-    // zum Ersetzen auslesen
-
-    final GMLWorkspace workspace = loadOrCreateControl( calcFolder );
-    if( workspace != null )
-    {
-      final Feature rootFeature = workspace.getRootFeature();
-
-      final FindPropertyByNameVisitor startsimFinder = new FindPropertyByNameVisitor( "startsimulation" );
-      workspace.accept( startsimFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
-
-      final Object startSim = startsimFinder.getResult();
-      if( startSim instanceof Date )
-      {
-        final String startSimString = Mapper.mapJavaValueToXml( startSim );
-        final Token startSimToken = new ReplaceTokens.Token();
-        startSimToken.setKey( "startsim" );
-        startSimToken.setValue( startSimString );
-        replaceTokens.addConfiguredToken( startSimToken );
-      }
-
-      final FindPropertyByNameVisitor startforecastFinder = new FindPropertyByNameVisitor( "startforecast" );
-      workspace.accept( startforecastFinder, rootFeature, FeatureVisitor.DEPTH_INFINITE );
-      final Object startForecast = startforecastFinder.getResult();
-      if( startForecast instanceof Date )
-      {
-        final String startForecastString = Mapper.mapJavaValueToXml( startForecast );
-        final Token startForecastToken = new ReplaceTokens.Token();
-        startForecastToken.setKey( "startforecast" );
-        startForecastToken.setValue( startForecastString );
-        replaceTokens.addConfiguredToken( startForecastToken );
-
-        // TODO: ziemlicher hack für den Endzeitpunkt: er ist immer fix
-        // 48 Stunden nach dem startzeitpunkt
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( (Date) startForecast );
-        cal.add( Calendar.HOUR_OF_DAY, 48 );
-
-        final Date endSim = cal.getTime();
-        final String endSimString = Mapper.mapJavaValueToXml( endSim );
-        final Token endSimToken = new ReplaceTokens.Token();
-        endSimToken.setKey( "endsim" );
-        endSimToken.setValue( endSimString );
-        replaceTokens.addConfiguredToken( endSimToken );
-      }
-    }
   }
 
   public String getCalcType( ) throws CoreException
