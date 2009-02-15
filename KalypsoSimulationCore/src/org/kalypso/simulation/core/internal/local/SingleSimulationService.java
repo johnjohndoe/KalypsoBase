@@ -78,7 +78,7 @@ public class SingleSimulationService implements ISimulationService
       LOGGER.setUseParentHandlers( false );
   }
 
-  private ISimulationFactory m_calcJobFactory = new LocalSimulationFactory();
+  private final ISimulationFactory m_calcJobFactory = new LocalSimulationFactory();
 
   private SimulationInfo m_simulationInfo;
 
@@ -113,7 +113,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getJob(java.lang.String)
    */
-  public SimulationInfo getJob( final String jobID ) throws SimulationException
+  public SimulationInfo getJob( final String jobID )
   {
     return m_simulationInfo;
   }
@@ -122,7 +122,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#cancelJob(java.lang.String )
    */
-  public void cancelJob( final String jobID ) throws SimulationException
+  public void cancelJob( final String jobID )
   {
     m_simulationInfo.cancel();
   }
@@ -131,7 +131,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#disposeJob(java.lang.String )
    */
-  public void disposeJob( final String jobID ) throws SimulationException
+  public void disposeJob( final String jobID )
   {
     m_simulationThread.dispose();
   }
@@ -181,7 +181,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getCurrentResults(java .lang.String)
    */
-  public String[] getCurrentResults( final String jobID ) throws SimulationException
+  public String[] getCurrentResults( final String jobID )
   {
     return m_simulationThread.getCurrentResults();
   }
@@ -242,7 +242,7 @@ public class SingleSimulationService implements ISimulationService
    * (non-Javadoc)
    * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java .lang.String)
    */
-  public long getSchemaValidity( final String namespace ) throws SimulationException
+  public long getSchemaValidity( final String namespace )
   {
     return 0;
   }

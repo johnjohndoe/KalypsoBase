@@ -60,43 +60,43 @@ import org.kalypso.simulation.ui.logview.views.LogViewer;
  */
 public class LogTableViewer extends ViewPart
 {
-  private TableViewer viewer;
+  private TableViewer m_viewer;
 
-  private LogViewer parentViewer;
+  private final LogViewer m_parentViewer;
 
-  private TableContentProvider tableContentProvider;
+  private final TableContentProvider m_tableContentProvider;
 
-  private TableViewLabelProvider tableViewLabelProvider;
+  private final TableViewLabelProvider m_tableViewLabelProvider;
 
-  public LogTableViewer( LogViewer parentViewer )
+  public LogTableViewer( final LogViewer parentViewer )
   {
-    this.parentViewer = parentViewer;
-    this.tableContentProvider = new TableContentProvider();
-    this.tableViewLabelProvider = new TableViewLabelProvider();
+    m_parentViewer = parentViewer;
+    m_tableContentProvider = new TableContentProvider();
+    m_tableViewLabelProvider = new TableViewLabelProvider();
   }
 
   public TableViewer getViewer( )
   {
-    return viewer;
+    return m_viewer;
   }
 
   @Override
   public void setFocus( )
   {
-    viewer.getControl().setFocus();
+    m_viewer.getControl().setFocus();
   }
 
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
-    viewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
-    viewer.setContentProvider( tableContentProvider );
-    viewer.setLabelProvider( tableViewLabelProvider );
+    m_viewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_viewer.setContentProvider( m_tableContentProvider );
+    m_viewer.setLabelProvider( m_tableViewLabelProvider );
 
-    viewer.setInput( parentViewer.getViewSite() );
+    m_viewer.setInput( m_parentViewer.getViewSite() );
 
     // Setup the CF5 Format table
-    Table table = viewer.getTable();
+    final Table table = m_viewer.getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
     TableColumn column = new TableColumn( table, SWT.LEFT, 0 );
@@ -116,12 +116,12 @@ public class LogTableViewer extends ViewPart
     column.setWidth( 200 );
   }
 
-  public void fileSelectionChange( IFile file )
+  public void fileSelectionChange( final IFile file )
   {
-    TableContentProvider cp = new TableContentProvider( viewer, file );
-    viewer.getTable().clearAll();
-    viewer.setContentProvider( cp );
-    viewer.getTable().setTopIndex( cp.getRowCount() );
+    final TableContentProvider cp = new TableContentProvider( m_viewer, file );
+    m_viewer.getTable().clearAll();
+    m_viewer.setContentProvider( cp );
+    m_viewer.getTable().setTopIndex( cp.getRowCount() );
   }
 
   @Override
