@@ -205,7 +205,7 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final boolean checked = continueCheckbox.getSelection();
         continueLabel.setVisible( checked );
@@ -291,15 +291,15 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
 
     FolderUtilities.mkdirs( calcCaseFolder );
 
-    final Map antProperties = configureAntProperties( m_folder );
+    final Map<String, Object> antProperties = configureAntProperties( m_folder );
     nature.createCalculationCaseInFolder( calcCaseFolder, antProperties, monitor );
 
     return calcCaseFolder;
   }
 
-  public static Map<String, String> configureAntProperties( final IFolder mergeCaseFolder )
+  public static Map<String, Object> configureAntProperties( final IFolder mergeCaseFolder )
   {
-    final Map<String, String> map = new HashMap<String, String>();
+    final Map<String, Object> map = new HashMap<String, Object>();
 
     final String mergeRelPath;
     if( mergeCaseFolder == null )
@@ -366,9 +366,9 @@ public class AddNewCalcCaseChoice implements IAddCalcCaseChoice
       final String newName = count == 0 ? dateString : ( dateString + "_NR" + count );
 
       boolean bFound = false;
-      for( int i = 0; i < resources.length; i++ )
+      for( final IResource resource : resources )
       {
-        if( resources[i].getName().equals( newName ) )
+        if( resource.getName().equals( newName ) )
         {
           bFound = true;
           break;
