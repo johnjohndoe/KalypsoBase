@@ -66,6 +66,7 @@ public class TempFileUtilities
    * 
    * @deprecated Do not use this. Temp file will be saved in plugin state location, this is rubbish.
    */
+  @Deprecated
   public static File createTempFile( final Plugin plugin, final String subDirName, String prefix, final String suffix ) throws IOException
   {
     if( prefix.length() < 3 )
@@ -99,12 +100,12 @@ public class TempFileUtilities
   private static void cleanDirectory( final File dir )
   {
     final File[] files = dir.listFiles();
-    for( int i = 0; i < files.length; i++ )
+    for( final File file : files )
     {
-      if( files[i].isDirectory() )
-        cleanDirectory( files[i] );
+      if( file.isDirectory() )
+        cleanDirectory( file );
       else
-        files[i].delete();
+        file.delete();
     }
     
     dir.delete();
