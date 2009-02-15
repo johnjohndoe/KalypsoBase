@@ -5,9 +5,8 @@ Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons;bundle-version="0.0.1";visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.calccase,
  org.kalypso.simulation.core.internal,
@@ -15,3 +14,4 @@ Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.internal.queued,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

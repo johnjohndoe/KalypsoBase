@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.ui.externaltools,
  org.eclipse.ant.ui,
  org.eclipse.ant.core;bundle-version="3.2.0",
  org.kalypso.service.wps;bundle-version="1.0.0"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.compare,
  org.kalypso.simulation.modellist,
  org.kalypso.simulation.ui,
@@ -33,3 +33,5 @@ Export-Package: org.kalypso.compare,
  org.kalypso.simulation.ui.wizards.createCalcCase,
  org.kalypso.simulation.ui.wizards.exporter,
  org.kalypso.simulation.ui.wizards.exporter.sumuptable
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.debug.internal.ui.stringsubstitution

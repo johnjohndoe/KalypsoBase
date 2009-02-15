@@ -56,13 +56,13 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class TableContentProvider implements IStructuredContentProvider
 {
-  private File logFile = null;
+  private File m_logFile;
 
-  private IFile logIFile = null;
+  private IFile m_logIFile;
 
-  private TableViewer viewer = null;
+  private TableViewer m_viewer;
 
-  private LogFileReader logFileReader = null;
+  private LogFileReader m_logFileReader;
 
   public TableContentProvider( )
   {
@@ -71,10 +71,10 @@ public class TableContentProvider implements IStructuredContentProvider
 
   public TableContentProvider( final TableViewer viewer, final IFile file )
   {
-    this.viewer = viewer;
+    m_viewer = viewer;
     if( file != null )
     {
-      this.logIFile = file;
+      m_logIFile = file;
     }
   }
 
@@ -85,7 +85,7 @@ public class TableContentProvider implements IStructuredContentProvider
 
   public void setLogFile( final File file )
   {
-    this.logFile = file;
+    this.m_logFile = file;
   }
 
   public void dispose( )
@@ -94,43 +94,43 @@ public class TableContentProvider implements IStructuredContentProvider
 
   public File getLogFile( )
   {
-    return this.logFile;
+    return this.m_logFile;
   }
 
   public IFile getLogIFile( )
   {
-    return logIFile;
+    return m_logIFile;
   }
 
   public void refresh( )
   {
-    if( viewer != null )
+    if( m_viewer != null )
     {
-      viewer.getTable().clearAll();
+      m_viewer.getTable().clearAll();
     }
-    logFileReader = new LogFileReader( getLogIFile() );
+    m_logFileReader = new LogFileReader( getLogIFile() );
   }
 
   public LogFileReader getLogFileReader( )
   {
-    return logFileReader;
+    return m_logFileReader;
   }
 
   public int getRowCount( )
   {
-    if( logFileReader == null )
+    if( m_logFileReader == null )
     {
       return 0;
     }
-    return logFileReader.getRowCount();
+    return m_logFileReader.getRowCount();
   }
 
   public Object[] getElements( final Object parent )
   {
-    if( logFileReader == null && logIFile != null )
+    if( m_logFileReader == null && m_logIFile != null )
     {
       refresh();
-      return logFileReader.getRows();
+      return m_logFileReader.getRows();
     }
     return new Object[0];
   }

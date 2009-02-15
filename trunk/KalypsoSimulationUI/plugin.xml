@@ -203,12 +203,6 @@
          point="org.kalypso.metadoc.exporter">
       <exporter
             icon="icons/elcl16/export-gis-feature.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporter"
-            description="%featureWithTemplateExporter.description"
-            name="%featureWithTemplateExporter.name"
-            id="featureWithTemplateExporter"/>
-      <exporter
-            icon="icons/elcl16/export-gis-feature.gif"
             class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporterTree"
             description="%featureWithTemplateExporter.description"
             name="%featureWithTemplateExporter.name"
