@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
+import org.kalypso.commons.java.util.zip.ZipResourceVisitor.PATH_TYPE;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
