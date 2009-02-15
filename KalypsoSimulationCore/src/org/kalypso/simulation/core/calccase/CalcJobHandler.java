@@ -65,7 +65,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
-import org.kalypso.commons.java.util.zip.ZipResourceVisitor.PATH_TYPE;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
@@ -77,6 +76,7 @@ import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
+import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
@@ -289,13 +289,11 @@ public class CalcJobHandler
 
   private SimulationDataPath[] createOutputBeans( final IContainer calcCaseFolder )
   {
-    final List list = m_modelspec.getOutput();
+    final List<Output> list = m_modelspec.getOutput();
     final SimulationDataPath[] output = new SimulationDataPath[list.size()];
     int count = 0;
-    for( final Iterator iter = list.iterator(); iter.hasNext(); )
+    for( final Output ot : list )
     {
-      final Modeldata.Output ot = (Modeldata.Output) iter.next();
-
       final String outpath = ot.getPath();
       final boolean relCalcCase = ot.isRelativeToCalcCase();
       final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath;
@@ -310,6 +308,7 @@ public class CalcJobHandler
   {
     // hash input description
     final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+    // TODO: this is not a correct platform resource URL; please refer to PlatformURLResourceConnection#RESOURCE_URL_STRING
     final String PLATFORM_URL = "platform:";
     final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
     for( final SimulationDescription desc : inputDescription )
