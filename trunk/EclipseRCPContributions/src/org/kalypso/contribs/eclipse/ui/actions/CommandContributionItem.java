@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.kalypso.contribs.eclipse.ui.actions;
 
 import java.util.ArrayList;
@@ -43,6 +53,7 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
+ * TODO: check what has changed from {@link org.eclipse.ui.menus.CommandContributionItem} and doucment it.<br>
  * A contribution item which delegates to a command. It can be used in
  * {@link AbstractContributionFactory#createContributionItems(IServiceLocator, IContributionRoot)}.
  * <p>
@@ -54,6 +65,8 @@ import org.eclipse.ui.services.IServiceLocator;
  * 
  * @since 3.3
  */
+// We suppress everything at class level as this is a copied class and we do not want to change too much
+@SuppressWarnings( { "unchecked", "restriction", "hiding", "synthetic-access" })
 public final class CommandContributionItem extends ContributionItem
 {
   /**
@@ -82,13 +95,13 @@ public final class CommandContributionItem extends ContributionItem
 
   private Widget widget;
 
-  private IMenuService menuService;
+  private final IMenuService menuService;
 
   private ICommandService commandService;
 
-  private IHandlerService handlerService;
+  private final IHandlerService handlerService;
 
-  private IBindingService bindingService;
+  private final IBindingService bindingService;
 
   private ParameterizedCommand command;
 
@@ -102,13 +115,13 @@ public final class CommandContributionItem extends ContributionItem
 
   private ImageDescriptor hoverIcon;
 
-  private String mnemonic;
+  private final String mnemonic;
 
   private IElementReference elementRef;
 
   private boolean checkedState;
 
-  private int style;
+  private final int style;
 
   private ICommandListener commandListener;
 
@@ -143,7 +156,7 @@ public final class CommandContributionItem extends ContributionItem
    * @param style
    *          The style of this menu contribution. See the STYLE_* contants.
    */
-  public CommandContributionItem( IServiceLocator serviceLocator, String id, String commandId, Map parameters, ImageDescriptor icon, ImageDescriptor disabledIcon, ImageDescriptor hoverIcon, String label, String mnemonic, String tooltip, int style )
+  public CommandContributionItem( final IServiceLocator serviceLocator, final String id, final String commandId, final Map parameters, final ImageDescriptor icon, final ImageDescriptor disabledIcon, final ImageDescriptor hoverIcon, final String label, final String mnemonic, final String tooltip, final int style )
   {
     super( id );
     this.icon = icon;
@@ -163,40 +176,46 @@ public final class CommandContributionItem extends ContributionItem
     {
       try
       {
-        UIElement callback = new UIElement( serviceLocator )
+        final UIElement callback = new UIElement( serviceLocator )
         {
           @Override
-          public void setChecked( boolean checked )
+          public void setChecked( final boolean checked )
           {
             CommandContributionItem.this.setChecked( checked );
           }
 
-          public void setDisabledIcon( ImageDescriptor desc )
+          @Override
+          public void setDisabledIcon( final ImageDescriptor desc )
           {
             CommandContributionItem.this.setDisabledIcon( desc );
           }
 
-          public void setHoverIcon( ImageDescriptor desc )
+          @Override
+          public void setHoverIcon( final ImageDescriptor desc )
           {
             CommandContributionItem.this.setHoverIcon( desc );
           }
 
-          public void setIcon( ImageDescriptor desc )
+          @Override
+          public void setIcon( final ImageDescriptor desc )
           {
             CommandContributionItem.this.setIcon( desc );
           }
 
-          public void setText( String text )
+          @Override
+          public void setText( final String text )
           {
             CommandContributionItem.this.setText( text );
           }
 
-          public void setTooltip( String text )
+          @Override
+          public void setTooltip( final String text )
           {
             CommandContributionItem.this.setTooltip( text );
           }
 
-          public void setDropDownId( String id )
+          @Override
+          public void setDropDownId( final String id )
           {
             dropDownMenuOverride = id;
           }
@@ -205,7 +224,7 @@ public final class CommandContributionItem extends ContributionItem
         command.getCommand().addCommandListener( getCommandListener() );
         setImages( serviceLocator );
       }
-      catch( NotDefinedException e )
+      catch( final NotDefinedException e )
       {
         WorkbenchPlugin.log( "Unable to register menu item \"" + getId() //$NON-NLS-1$
             + "\", command \"" + commandId + "\" not defined" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -213,11 +232,11 @@ public final class CommandContributionItem extends ContributionItem
     }
   }
 
-  private void setImages( IServiceLocator locator )
+  private void setImages( final IServiceLocator locator )
   {
     if( icon == null )
     {
-      ICommandImageService service = (ICommandImageService) locator.getService( ICommandImageService.class );
+      final ICommandImageService service = (ICommandImageService) locator.getService( ICommandImageService.class );
       icon = service.getImageDescriptor( command.getId(), ICommandImageService.TYPE_DEFAULT );
       disabledIcon = service.getImageDescriptor( command.getId(), ICommandImageService.TYPE_DISABLED );
       hoverIcon = service.getImageDescriptor( command.getId(), ICommandImageService.TYPE_HOVER );
@@ -233,7 +252,7 @@ public final class CommandContributionItem extends ContributionItem
     {
       commandListener = new ICommandListener()
       {
-        public void commandChanged( CommandEvent commandEvent )
+        public void commandChanged( final CommandEvent commandEvent )
         {
           if( commandEvent.isHandledChanged() || commandEvent.isEnabledChanged() || commandEvent.isDefinedChanged() )
           {
@@ -257,7 +276,7 @@ public final class CommandContributionItem extends ContributionItem
     return command;
   }
 
-  void createCommand( String commandId, Map parameters )
+  void createCommand( final String commandId, final Map parameters )
   {
     if( commandId == null )
     {
@@ -265,7 +284,7 @@ public final class CommandContributionItem extends ContributionItem
           + "\", no command id" ); //$NON-NLS-1$
       return;
     }
-    Command cmd = commandService.getCommand( commandId );
+    final Command cmd = commandService.getCommand( commandId );
     if( !cmd.isDefined() )
     {
       WorkbenchPlugin.log( "Unable to create menu item \"" + getId() //$NON-NLS-1$
@@ -281,12 +300,12 @@ public final class CommandContributionItem extends ContributionItem
 
     try
     {
-      ArrayList parmList = new ArrayList();
-      Iterator i = parameters.entrySet().iterator();
+      final ArrayList parmList = new ArrayList();
+      final Iterator i = parameters.entrySet().iterator();
       while( i.hasNext() )
       {
-        Map.Entry entry = (Map.Entry) i.next();
-        String parmName = (String) entry.getKey();
+        final Map.Entry entry = (Map.Entry) i.next();
+        final String parmName = (String) entry.getKey();
         IParameter parm;
         parm = cmd.getParameter( parmName );
         if( parm == null )
@@ -300,7 +319,7 @@ public final class CommandContributionItem extends ContributionItem
       }
       command = new ParameterizedCommand( cmd, (Parameterization[]) parmList.toArray( new Parameterization[parmList.size()] ) );
     }
-    catch( NotDefinedException e )
+    catch( final NotDefinedException e )
     {
       // this shouldn't happen as we checked for !defined, but we
       // won't take the chance
@@ -313,7 +332,8 @@ public final class CommandContributionItem extends ContributionItem
    * (non-Javadoc)
    * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
    */
-  public void fill( Menu parent, int index )
+  @Override
+  public void fill( final Menu parent, final int index )
   {
     if( command == null )
     {
@@ -352,7 +372,7 @@ public final class CommandContributionItem extends ContributionItem
    * @see org.eclipse.jface.action.ContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
    */
   @Override
-  public void fill( ToolBar parent, int index )
+  public void fill( final ToolBar parent, final int index )
   {
     if( command == null )
     {
@@ -397,13 +417,13 @@ public final class CommandContributionItem extends ContributionItem
    * @see org.eclipse.jface.action.ContributionItem#update(java.lang.String)
    */
   @Override
-  public void update( String id )
+  public void update( final String id )
   {
     if( widget != null )
     {
       if( widget instanceof MenuItem )
       {
-        MenuItem item = (MenuItem) widget;
+        final MenuItem item = (MenuItem) widget;
 
         String text = label;
         if( text == null )
@@ -414,7 +434,7 @@ public final class CommandContributionItem extends ContributionItem
             {
               text = command.getCommand().getName();
             }
-            catch( NotDefinedException e )
+            catch( final NotDefinedException e )
             {
               WorkbenchPlugin.log( "Update item failed " //$NON-NLS-1$
                   + getId(), e );
@@ -426,7 +446,7 @@ public final class CommandContributionItem extends ContributionItem
         String keyBindingText = null;
         if( command != null )
         {
-          TriggerSequence[] bindings = bindingService.getActiveBindingsFor( command );
+          final TriggerSequence[] bindings = bindingService.getActiveBindingsFor( command );
           if( bindings.length > 0 )
           {
             keyBindingText = bindings[0].format();
@@ -450,7 +470,7 @@ public final class CommandContributionItem extends ContributionItem
           item.setSelection( checkedState );
         }
 
-        boolean shouldBeEnabled = isEnabled();
+        final boolean shouldBeEnabled = isEnabled();
         if( item.getEnabled() != shouldBeEnabled )
         {
           item.setEnabled( shouldBeEnabled );
@@ -458,7 +478,7 @@ public final class CommandContributionItem extends ContributionItem
       }
       else if( widget instanceof ToolItem )
       {
-        ToolItem item = (ToolItem) widget;
+        final ToolItem item = (ToolItem) widget;
 
         if( icon != null )
         {
@@ -482,7 +502,7 @@ public final class CommandContributionItem extends ContributionItem
               {
                 text = command.getCommand().getName();
               }
-              catch( NotDefinedException e )
+              catch( final NotDefinedException e )
               {
                 WorkbenchPlugin.log( "Update item failed " //$NON-NLS-1$
                     + getId(), e );
@@ -500,7 +520,7 @@ public final class CommandContributionItem extends ContributionItem
           item.setSelection( checkedState );
         }
 
-        boolean shouldBeEnabled = isEnabled();
+        final boolean shouldBeEnabled = isEnabled();
         if( item.getEnabled() != shouldBeEnabled )
         {
           item.setEnabled( shouldBeEnabled );
@@ -509,13 +529,13 @@ public final class CommandContributionItem extends ContributionItem
     }
   }
 
-  private String updateMnemonic( String s )
+  private String updateMnemonic( final String s )
   {
     if( mnemonic == null || s == null )
     {
       return s;
     }
-    int idx = s.indexOf( mnemonic );
+    final int idx = s.indexOf( mnemonic );
     if( idx == -1 )
     {
       return s;
@@ -524,7 +544,7 @@ public final class CommandContributionItem extends ContributionItem
     return s.substring( 0, idx ) + '&' + s.substring( idx );
   }
 
-  private void handleWidgetDispose( Event event )
+  private void handleWidgetDispose( final Event event )
   {
     if( event.widget == widget )
     {
@@ -573,7 +593,7 @@ public final class CommandContributionItem extends ContributionItem
     {
       menuItemListener = new Listener()
       {
-        public void handleEvent( Event event )
+        public void handleEvent( final Event event )
         {
           switch( event.type )
           {
@@ -593,7 +613,7 @@ public final class CommandContributionItem extends ContributionItem
     return menuItemListener;
   }
 
-  private void handleWidgetSelection( Event event )
+  private void handleWidgetSelection( final Event event )
   {
     // Special check for ToolBar dropdowns...
     if( openDropDownMenu( event ) )
@@ -615,22 +635,22 @@ public final class CommandContributionItem extends ContributionItem
     {
       handlerService.executeCommand( command, event );
     }
-    catch( ExecutionException e )
+    catch( final ExecutionException e )
     {
       WorkbenchPlugin.log( "Failed to execute item " //$NON-NLS-1$
           + getId(), e );
     }
-    catch( NotDefinedException e )
+    catch( final NotDefinedException e )
     {
       WorkbenchPlugin.log( "Failed to execute item " //$NON-NLS-1$
           + getId(), e );
     }
-    catch( NotEnabledException e )
+    catch( final NotEnabledException e )
     {
       WorkbenchPlugin.log( "Failed to execute item " //$NON-NLS-1$
           + getId(), e );
     }
-    catch( NotHandledException e )
+    catch( final NotHandledException e )
     {
       WorkbenchPlugin.log( "Failed to execute item " //$NON-NLS-1$
           + getId(), e );
@@ -645,23 +665,23 @@ public final class CommandContributionItem extends ContributionItem
    *          The <code>SWT.Selection</code> event to be tested
    * @return <code>true</code> iff a drop down menu was opened
    */
-  private boolean openDropDownMenu( Event event )
+  private boolean openDropDownMenu( final Event event )
   {
-    Widget item = event.widget;
+    final Widget item = event.widget;
     if( item != null )
     {
-      int style = item.getStyle();
+      final int style = item.getStyle();
       if( (style & SWT.DROP_DOWN) != 0 )
       {
         if( event.detail == 4 )
         { // on drop-down button
-          ToolItem ti = (ToolItem) item;
+          final ToolItem ti = (ToolItem) item;
 
           final MenuManager menuManager = new MenuManager();
-          Menu menu = menuManager.createContextMenu( ti.getParent() );
+          final Menu menu = menuManager.createContextMenu( ti.getParent() );
           menuManager.addMenuListener( new IMenuListener()
           {
-            public void menuAboutToShow( IMenuManager manager )
+            public void menuAboutToShow( final IMenuManager manager )
             {
               String id = getId();
               if( dropDownMenuOverride != null )
@@ -673,8 +693,8 @@ public final class CommandContributionItem extends ContributionItem
           } );
 
           // position the menu below the drop down item
-          Rectangle b = ti.getBounds();
-          Point p = ti.getParent().toDisplay( new Point( b.x, b.y + b.height ) );
+          final Rectangle b = ti.getBounds();
+          final Point p = ti.getParent().toDisplay( new Point( b.x, b.y + b.height ) );
           menu.setLocation( p.x, p.y ); // waiting for SWT
           // 0.42
           menu.setVisible( true );
@@ -686,7 +706,7 @@ public final class CommandContributionItem extends ContributionItem
     return false;
   }
 
-  private void setIcon( ImageDescriptor desc )
+  private void setIcon( final ImageDescriptor desc )
   {
     icon = desc;
     updateIcons();
@@ -696,16 +716,16 @@ public final class CommandContributionItem extends ContributionItem
   {
     if( widget instanceof MenuItem )
     {
-      MenuItem item = (MenuItem) widget;
-      LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
+      final MenuItem item = (MenuItem) widget;
+      final LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
       item.setImage( icon == null ? null : m.createImage( icon ) );
       disposeOldImages();
       localResourceManager = m;
     }
     else if( widget instanceof ToolItem )
     {
-      ToolItem item = (ToolItem) widget;
-      LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
+      final ToolItem item = (ToolItem) widget;
+      final LocalResourceManager m = new LocalResourceManager( JFaceResources.getResources() );
       item.setDisabledImage( disabledIcon == null ? null : m.createImage( disabledIcon ) );
       item.setHotImage( hoverIcon == null ? null : m.createImage( hoverIcon ) );
       item.setImage( icon == null ? null : m.createImage( icon ) );
@@ -714,13 +734,13 @@ public final class CommandContributionItem extends ContributionItem
     }
   }
 
-  private void setText( String text )
+  private void setText( final String text )
   {
     label = text;
     update( null );
   }
 
-  private void setChecked( boolean checked )
+  private void setChecked( final boolean checked )
   {
     if( checkedState == checked )
     {
@@ -737,7 +757,7 @@ public final class CommandContributionItem extends ContributionItem
     }
   }
 
-  private void setTooltip( String text )
+  private void setTooltip( final String text )
   {
     tooltip = text;
     if( widget instanceof ToolItem )
@@ -746,13 +766,13 @@ public final class CommandContributionItem extends ContributionItem
     }
   }
 
-  private void setDisabledIcon( ImageDescriptor desc )
+  private void setDisabledIcon( final ImageDescriptor desc )
   {
     disabledIcon = desc;
     updateIcons();
   }
 
-  private void setHoverIcon( ImageDescriptor desc )
+  private void setHoverIcon( final ImageDescriptor desc )
   {
     hoverIcon = desc;
     updateIcons();
@@ -762,6 +782,7 @@ public final class CommandContributionItem extends ContributionItem
    * (non-Javadoc)
    * @see org.eclipse.jface.action.ContributionItem#isEnabled()
    */
+  @Override
   public boolean isEnabled( )
   {
     if( command != null )
