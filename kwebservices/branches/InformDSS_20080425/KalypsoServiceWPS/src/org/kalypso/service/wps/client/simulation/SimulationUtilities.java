@@ -235,7 +235,7 @@ public class SimulationUtilities
    *            The modeldata.
    * @return The output of the model spec in wps format.
    */
-  public static OutputDefinitionsType getOutputDefinitions( final Modeldata data, final ProcessDescriptionType description ) throws CoreException
+  public static OutputDefinitionsType getOutputDefinitions( final Modeldata data, final ProcessDescriptionType description )
   {
     /* Get the list with the output. */
     final List<Output> outputList = data.getOutput();
@@ -258,7 +258,8 @@ public class SimulationUtilities
       if( output == null )
       {
         /* Ooops, it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+        // throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+        continue;
       }
 
       final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
