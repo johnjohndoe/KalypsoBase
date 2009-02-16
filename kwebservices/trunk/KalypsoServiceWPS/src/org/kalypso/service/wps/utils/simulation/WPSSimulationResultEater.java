@@ -162,8 +162,8 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     if( !m_outputList.containsKey( id ) )
       throw new SimulationException( "Server doesn't expect the output with the ID: " + id, null );
 
-    if( !m_outputListClient.containsKey( id ) )
-      throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
+    // if( !m_outputListClient.containsKey( id ) )
+    // throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
 
     /* What type is that output? Get the description from the server, to check it. */
     final OutputDescriptionType outputDescription = m_outputList.get( id );

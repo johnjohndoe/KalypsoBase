@@ -420,7 +420,7 @@ public class NonBlockingWPSRequest
    *          The modeldata.
    * @return The output of the model spec in wps format.
    */
-  private OutputDefinitionsType createOutputDefinitions( ProcessDescriptionType description, List<String> outputs ) throws CoreException
+  private OutputDefinitionsType createOutputDefinitions( ProcessDescriptionType description, List<String> outputs )
   {
     /* The storage for the output values. */
     List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
@@ -438,7 +438,8 @@ public class NonBlockingWPSRequest
       if( !outputs.contains( identifier.getValue() ) )
       {
         /* Ooops, it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+        // throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
+        continue;
       }
 
       // TODO: maybe only ask for outputs that are in the list m_outputs?
