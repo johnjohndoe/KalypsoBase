@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
+   <extension-point id="virtualProperty" name="virtualProperty" schema="schema/virtualProperty.exsd"/>
+</plugin>
