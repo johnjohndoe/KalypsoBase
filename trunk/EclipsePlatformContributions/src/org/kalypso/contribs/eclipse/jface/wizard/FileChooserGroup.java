@@ -46,6 +46,8 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,7 +66,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDel
 
 /**
  * A group to choose a file from the file system.
- * 
+ *
  * @author Gernot Belger
  */
 public class FileChooserGroup
@@ -189,11 +191,16 @@ public class FileChooserGroup
     m_delegate = delegate;
   }
 
+  protected void dispose( )
+  {
+    m_listeners.clear();
+  }
+
   /**
-   * Sets the dialog settings used to remeber the last entered filename.
+   * Sets the dialog settings used to remember the last entered filename.
    * 
    * @param settings
-   *            If <code>null</code>, the filename will not be stored.
+   *          If <code>null</code>, the filename will not be stored.
    */
   public void setDialogSettings( final IDialogSettings settings )
   {
@@ -205,7 +212,7 @@ public class FileChooserGroup
       if( filename != null )
       {
         final Text text = m_text;
-        text.getDisplay().asyncExec( new Runnable()
+        text.getDisplay().syncExec( new Runnable()
         {
           public void run( )
           {
@@ -219,6 +226,19 @@ public class FileChooserGroup
   public Group createControl( final Composite parent, final int style )
   {
     final Group group = new Group( parent, style );
+    // Remove all listeners when disposed; no events can happen anymore, and the client will most certainly do not
+    // unregister its listener
+    group.addDisposeListener( new DisposeListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+       */
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        FileChooserGroup.this.dispose();
+      }
+    } );
 
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
