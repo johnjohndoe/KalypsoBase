@@ -41,6 +41,7 @@
 package org.kalypso.service.wps.client.simulation;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -93,28 +94,28 @@ public class SimulationDelegate
   /**
    * The id identifying the simulation.
    */
-  private String m_identifier;
+  private final String m_identifier;
 
   /**
    * The calc case folder.
    */
-  private IContainer m_calcCaseFolder;
+  private final IContainer m_calcCaseFolder;
 
   /**
    * The model data for this simulation.
    */
-  private Modeldata m_data;
+  private final Modeldata m_data;
 
   /**
    * The URL to the wps service.
    */
-  private String m_service;
+  private final String m_service;
 
   /**
    * The path to the place on the server, where the client can put his files, as configured in the config.ini from
    * Kalypso.
    */
-  private String m_input;
+  private final String m_input;
 
   /**
    * The filesystem manager.
@@ -137,7 +138,7 @@ public class SimulationDelegate
    *          The model data.
    */
   // TODO: remove argument identifier: use data.getTypeID() instead
-  public SimulationDelegate( String identifier, IContainer calcCaseFolder, Modeldata data )
+  public SimulationDelegate( final String identifier, final IContainer calcCaseFolder, final Modeldata data )
   {
     /* Initializing the other variables. */
     m_identifier = identifier;
@@ -182,7 +183,7 @@ public class SimulationDelegate
         m_fsManager = VFSUtilities.getManager();
       }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Initializing the the VFS manager has failed ...", ex ) );
     }
@@ -194,7 +195,7 @@ public class SimulationDelegate
    * @param files
    *          The files to copy.
    */
-  private void copyInputFiles( IFile[] files ) throws WPSException
+  private void copyInputFiles( final IFile[] files ) throws WPSException
   {
     if( files.length > 0 )
     {
@@ -202,8 +203,10 @@ public class SimulationDelegate
       initServerTmpDirectory();
 
       /* Copy the files. */
-      for( IFile element : files )
+      for( final IFile element : files )
+      {
         copyInputFile( element );
+      }
     }
   }
 
@@ -213,22 +216,22 @@ public class SimulationDelegate
    * @param ifile
    *          The file to copy.
    */
-  private void copyInputFile( IFile ifile ) throws WPSException
+  private void copyInputFile( final IFile ifile ) throws WPSException
   {
     try
     {
       /* Get the relative path of the file. */
-      File file = ifile.getLocation().toFile();
-      String relativePathTo = ifile.getFullPath().makeRelative().toString();
+      final File file = ifile.getLocation().toFile();
+      final String relativePathTo = ifile.getFullPath().makeRelative().toString();
 
       /* Create the file objects. */
-      FileObject source = m_fsManager.toFileObject( file );
-      FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
+      final FileObject source = m_fsManager.toFileObject( file );
+      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
 
       /* Copy file. */
       VFSUtilities.copyFileTo( source, destination );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not copy file '" + ifile.getName() + "' to the server ...", ex );
     }
@@ -254,13 +257,13 @@ public class SimulationDelegate
         {
           // do not use server directory, but calculate in calcCaseFolder
           Debug.println( "Local calculation! Using calcCaseFolder as input directory." );
-          String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
+          final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
           m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation );
         }
         else
         {
           /* Get the directory for server access. */
-          FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
+          final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
           m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
 
           if( !m_serverTmpDirectory.exists() )
@@ -271,12 +274,12 @@ public class SimulationDelegate
         }
       }
     }
-    catch( WPSException e )
+    catch( final WPSException e )
     {
       // Do not hide original WPSException
       throw e;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not init the temp directory on the server, where the client can put his input files ...", ex );
     }
@@ -285,68 +288,74 @@ public class SimulationDelegate
   /**
    * @see org.kalypso.service.wps.client.IWPSDelegate#copyResults(java.util.Map)
    */
-  public void copyResults( Map<String, ComplexValueReference> references ) throws CoreException
+  public void copyResults( final Map<String, ComplexValueReference> references ) throws CoreException
   {
     /* If there are no references, do nothing. */
     if( references == null )
+    {
       return;
+    }
 
     try
     {
       /* The project is needed. */
-      IProject project = m_calcCaseFolder.getProject();
+      final IProject project = m_calcCaseFolder.getProject();
 
       /* Get the model data outputs. */
-      List<Output> outputs = m_data.getOutput();
+      final List<Output> outputs = m_data.getOutput();
 
       /* All results, which are references. */
-      Iterator<String> keys = references.keySet().iterator();
+      final Iterator<String> keys = references.keySet().iterator();
       while( keys.hasNext() )
       {
         /* Get the next key. */
-        String key = keys.next();
+        final String key = keys.next();
 
         /* Get the complex value reference. */
-        ComplexValueReference complexValueReference = references.get( key );
+        final ComplexValueReference complexValueReference = references.get( key );
         if( complexValueReference != null )
         {
           /* Building the source object. */
-          String reference = complexValueReference.getReference();
-          FileObject source = VFSUtilities.checkProxyFor( reference );
+          final String reference = complexValueReference.getReference();
+          final FileObject source = VFSUtilities.checkProxyFor( reference );
 
           /* Building the destination object. */
-          Output output = SimulationUtilities.findOutput( key, outputs );
+          final Output output = SimulationUtilities.findOutput( key, outputs );
 
           // TODO Is that wanted (that all from the client not expected output is ignored)?
           if( output == null )
+          {
             continue;
+          }
 
           /* Everything should be relative to the project! */
-          String outputPath = output.getPath();
-          IContainer baseresource = output.isRelativeToCalcCase() ? m_calcCaseFolder : project;
-          File baseFile = baseresource.getLocation().toFile();
-          File outputFile = new File( baseFile, outputPath );
-          FileObject destination = m_fsManager.toFileObject( outputFile );
+          final String outputPath = output.getPath();
+          final IContainer baseresource = output.isRelativeToCalcCase() ? m_calcCaseFolder : project;
+          final File baseFile = baseresource.getLocation().toFile();
+          final File outputFile = new File( baseFile, outputPath );
+          final FileObject destination = m_fsManager.toFileObject( outputFile );
 
           /* Copy ... */
           VFSUtilities.copy( source, destination );
 
-          IResource destResource = baseresource.findMember( new Path( outputPath ) );
+          final IResource destResource = baseresource.findMember( new Path( outputPath ) );
           if( destResource != null )
           {
             destResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
             // TODO: NO!!!! We do not know that!
             if( destResource.getType() == IResource.FILE )
+            {
               ((IFile) destResource).setCharset( "UTF-8", new NullProgressMonitor() );
+            }
           }
         }
       }
     }
-    catch( CoreException ex )
+    catch( final CoreException ex )
     {
       throw ex;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not copy the result data to the client ...", ex ) );
     }
@@ -362,7 +371,7 @@ public class SimulationDelegate
       /* Delete the input files. */
       deleteInputFiles();
     }
-    catch( WPSException e )
+    catch( final WPSException e )
     {
       /* If an error has occurred while deleting the files, finish the job without error. A warning should be ok. */
       // TODO Perhaps show a warning.
@@ -375,14 +384,18 @@ public class SimulationDelegate
   private void deleteInputFiles( ) throws WPSException
   {
     if( m_serverTmpDirectory == null )
+    {
       return;
+    }
 
     try
     {
       if( m_serverTmpDirectory.exists() )
+      {
         VFSUtilities.deleteFiles( m_serverTmpDirectory );
+      }
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new WPSException( "Could not finish the deinit operation ...", ex );
     }
@@ -414,11 +427,13 @@ public class SimulationDelegate
    *          A progress monitor.
    * @return The inputs.
    */
-  public Map<String, Object> createInputs( ProcessDescriptionType description, IProgressMonitor monitor ) throws CoreException
+  public Map<String, Object> createInputs( final ProcessDescriptionType description, IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
+    {
       monitor = new NullProgressMonitor();
+    }
 
     try
     {
@@ -427,35 +442,35 @@ public class SimulationDelegate
       Debug.println( "Collecting data ..." );
 
       /* Need the filesystem manager. */
-      FileSystemManager fsManager = VFSUtilities.getManager();
+      final FileSystemManager fsManager = VFSUtilities.getManager();
 
       /* Get the list with the input. */
-      Map<String, Object> wpsInputs = new HashMap<String, Object>();
+      final Map<String, Object> wpsInputs = new HashMap<String, Object>();
 
       /* Get the input list. */
-      DataInputs dataInputs = description.getDataInputs();
-      List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+      final DataInputs dataInputs = description.getDataInputs();
+      final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
 
       /* Create a resource visitor. */
-      CollectFilesVisitor visitor = new CollectFilesVisitor();
+      final CollectFilesVisitor visitor = new CollectFilesVisitor();
 
       /* Get the inputs. */
-      List<Input> inputList = m_data.getInput();
+      final List<Input> inputList = m_data.getInput();
 
       /* Iterate over all inputs and build the data inputs for the execute request. */
-      for( InputDescriptionType inputDescription : inputDescriptions )
+      for( final InputDescriptionType inputDescription : inputDescriptions )
       {
-        CodeType identifier = inputDescription.getIdentifier();
+        final CodeType identifier = inputDescription.getIdentifier();
 
         /* Check if the input is in our model data, too. */
-        Input input = SimulationUtilities.findInput( identifier.getValue(), inputList );
+        final Input input = SimulationUtilities.findInput( identifier.getValue(), inputList );
         if( input == null )
         {
           /* Check, if it is an optional one. */
           if( inputDescription.getMinimumOccurs().intValue() == 1 )
           {
             /* Ooops, it is a mandatory one, but it is missing in our model data. */
-            IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "The data input " + identifier.getValue() + " is mandatory. Check your model data.", null );
+            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "The data input " + identifier.getValue() + " is mandatory. Check your model data.", null );
             throw new CoreException( status );
           }
 
@@ -463,20 +478,20 @@ public class SimulationDelegate
         }
 
         /* Input is here. */
-        String inputPath = input.getPath();
+        final String inputPath = input.getPath();
 
         /* Supported complex data type. */
-        SupportedComplexDataType complexData = inputDescription.getComplexData();
+        final SupportedComplexDataType complexData = inputDescription.getComplexData();
         if( complexData != null )
         {
           /* Get the protocol if it is one. */
-          String protocol = SimulationUtilities.getProtocol( inputPath );
+          final String protocol = SimulationUtilities.getProtocol( inputPath );
 
           if( "file".equals( protocol ) )
           {
-            URL localFileUrl = new URL( inputPath );
-            byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
-            String hexString = DatatypeConverter.printHexBinary( bytes );
+            final URL localFileUrl = new URL( inputPath );
+            final byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
+            final String hexString = DatatypeConverter.printHexBinary( bytes );
             wpsInputs.put( identifier.getValue(), hexString );
 
             continue;
@@ -484,7 +499,7 @@ public class SimulationDelegate
 
           /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
           /* which is not allowed to be copied or it is a complex value type (file-protocol). */
-          if( protocol == null || protocol.equals( "project" ) || protocol.equals( "platform" ) )
+          if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) )
           {
             /* If protocol is null or protocol is "project", it is a local file resource. */
             /*
@@ -492,19 +507,27 @@ public class SimulationDelegate
              * eclipse workspace).
              */
             if( m_calcCaseFolder == null )
+            {
               throw new WPSException( "Complex data specified, but no base folder given." );
+            }
 
             final IContainer baseresource;
-            if( protocol != null && protocol.equals( "platform" ) )
+            if( (protocol != null) && protocol.equals( "platform" ) )
+            {
               baseresource = m_calcCaseFolder.getProject().getWorkspace().getRoot();
+            }
             else
+            {
               baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
+            }
             final IResource inputResource = baseresource.findMember( inputPath );
 
             if( inputResource == null )
             {
               if( inputDescription.getMinimumOccurs().intValue() == 0 )
+              {
                 continue;
+              }
 
               throw new CoreException( StatusUtilities.createErrorStatus( "Could not find input resource: " + inputPath + "\nPlease check your model data." ) );
             }
@@ -520,20 +543,20 @@ public class SimulationDelegate
             final String relativePathTo = inputResource.getFullPath().makeRelative().toString();
             final FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
             final String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
-            wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
+            wpsInputs.put( identifier.getValue(), new URI( serverUrl ) );
           }
           else
-          // maybe check the protocols?
+            // maybe check the protocols?
           {
             // Remote resource, will be passed to the service as reference
-            URL clientUrl = new URL( inputPath );
-            String serverUrl = WPSUtilities.convertInternalToServer( clientUrl.toExternalForm(), m_input );
-            wpsInputs.put( identifier.getValue(), new URL( serverUrl ) );
+            final URL clientUrl = new URL( inputPath );
+            final String serverUrl = WPSUtilities.convertInternalToServer( clientUrl.toExternalForm(), m_input );
+            wpsInputs.put( identifier.getValue(), new URI( serverUrl ) );
           }
         }
 
         /* Literal input type */
-        LiteralInputType literalInput = inputDescription.getLiteralData();
+        final LiteralInputType literalInput = inputDescription.getLiteralData();
         if( literalInput != null )
         {
           /* Add the input. */
@@ -546,7 +569,7 @@ public class SimulationDelegate
         }
 
         /* Supported CRSs type. */
-        SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
+        final SupportedCRSsType supportedCRSsType = inputDescription.getBoundingBoxData();
         if( supportedCRSsType != null )
         {
           // TODO Add supported CRSs type (bounding boxes).
@@ -560,20 +583,22 @@ public class SimulationDelegate
       Debug.println( "Copy to the server ..." );
 
       /* Copy all collected files. */
-      IFile[] files = visitor.getFiles();
+      final IFile[] files = visitor.getFiles();
       if( files.length > 0 )
+      {
         copyInputFiles( files );
+      }
 
       /* Monitor. */
       monitor.worked( 300 );
 
       return wpsInputs;
     }
-    catch( CoreException ex )
+    catch( final CoreException ex )
     {
       throw ex;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not create the date inputs ...", ex ) );
     }
@@ -592,13 +617,15 @@ public class SimulationDelegate
   public List<String> createOutputs( )
   {
     /* Get the list with the output. */
-    List<Output> outputList = m_data.getOutput();
+    final List<Output> outputList = m_data.getOutput();
 
     /* The storage for the output values. */
-    List<String> outputs = new LinkedList<String>();
+    final List<String> outputs = new LinkedList<String>();
 
-    for( Output output : outputList )
+    for( final Output output : outputList )
+    {
       outputs.add( output.getId() );
+    }
 
     return outputs;
   }
