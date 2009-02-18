@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name="JWSDPInstallationBuild" default="deploy">
+
+	<property name="project-name" value="KalypsoGMLSchema" />
+	<property name="project" value="${workspace}/${project-name}" />
+	
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
+    <!--path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		<fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
+	</path-->
+
+</project>
