@@ -102,7 +102,7 @@ public class WPSRequest
   /**
    * The result for the requested references.
    */
-  private Map<String, ComplexValueReference> m_references;
+  private final Map<String, ComplexValueReference> m_references = new LinkedHashMap<String, ComplexValueReference>();
 
   /**
    * The result for the requested literals.
@@ -122,14 +122,14 @@ public class WPSRequest
   /**
    * A non blocking request. This class will use it to send a request and waits for its results afterwards.
    */
-  private NonBlockingWPSRequest wpsRequest;
+  private final NonBlockingWPSRequest wpsRequest;
 
   /**
    * After this period of time, the job gives up, waiting for a result of the service.
    */
-  private long m_timeout;
+  private final long m_timeout;
 
-  public WPSRequest( String identifier, String serviceEndpoint, long timeout )
+  public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {
     wpsRequest = new NonBlockingWPSRequest( identifier, serviceEndpoint );
     m_timeout = timeout;
@@ -141,7 +141,7 @@ public class WPSRequest
    */
   @SuppressWarnings("unused")
   @Deprecated
-  public void init( IProgressMonitor monitor )
+  public void init( final IProgressMonitor monitor )
   {
     // nothing to do
   }
@@ -149,7 +149,7 @@ public class WPSRequest
   /**
    * Initializes the WPS process by getting the description.
    */
-  public ProcessDescriptionType getProcessDescription( IProgressMonitor monitor ) throws CoreException
+  public ProcessDescriptionType getProcessDescription( final IProgressMonitor monitor ) throws CoreException
   {
     return wpsRequest.getProcessDescription( monitor );
   }
@@ -163,7 +163,7 @@ public class WPSRequest
     return wpsRequest.getProcessDescription( null );
   }
 
-  public IStatus run( Map<String, Object> inputs, List<String> outputs, IProgressMonitor monitor )
+  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
   {
     monitor = SubMonitor.convert( monitor );
 
@@ -171,19 +171,25 @@ public class WPSRequest
 
     // on error return immediately
     if( !status.isOK() )
+    {
       return status;
+    }
 
     // start request, returns immediately
     status = wpsRequest.run( monitor );
 
     // on error return immediately
     if( !status.isOK() )
+    {
       return status;
+    }
 
     // after success, the status location will be set
-    String statusLocation = wpsRequest.getStatusLocation();
+    final String statusLocation = wpsRequest.getStatusLocation();
     if( statusLocation.length() == 0 )
+    {
       return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
+    }
 
     try
     {
@@ -195,22 +201,22 @@ public class WPSRequest
       long executed = 0;
 
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
-      ProcessDescriptionType processDescription = getProcessDescription( monitor );
-      String title = processDescription.getTitle();
+      final ProcessDescriptionType processDescription = getProcessDescription( monitor );
+      final String title = processDescription.getTitle();
       monitor.setTaskName( "Warte auf Prozess " + title );
       while( run )
       {
-        FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
+        final FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
 
         // TODO: at least put parsing of status file in a separate method to reduce the size of this one;
         // maybe use same method to handle first status?
         if( statusFile.exists() )
         {
-          JAXBElement<ExecuteResponseType> executeState = waitForExecuteResponse( statusFile );
+          final JAXBElement<ExecuteResponseType> executeState = waitForExecuteResponse( statusFile );
 
           /* Status was read successfull. */
           exState = executeState.getValue();
-          StatusType state = exState.getStatus();
+          final StatusType state = exState.getStatus();
 
           if( state.getProcessAccepted() != null )
           {
@@ -219,18 +225,20 @@ public class WPSRequest
           }
           else if( state.getProcessFailed() != null )
           {
-            String messages = WPSUtilities.createErrorString( state.getProcessFailed().getExceptionReport() );
+            final String messages = WPSUtilities.createErrorString( state.getProcessFailed().getExceptionReport() );
             status = StatusUtilities.createErrorStatus( messages );
             run = false;
           }
           else if( state.getProcessStarted() != null )
           {
-            ProcessStartedType processStarted = state.getProcessStarted();
-            String descriptionValue = processStarted.getValue();
-            Integer percent = processStarted.getPercentCompleted();
+            final ProcessStartedType processStarted = state.getProcessStarted();
+            final String descriptionValue = processStarted.getValue();
+            final Integer percent = processStarted.getPercentCompleted();
             int percentCompleted = 0;
             if( percent != null )
+            {
               percentCompleted = percent.intValue();
+            }
 
             /* Update the monitor values. */
             updateMonitor( percentCompleted, descriptionValue, monitor );
@@ -248,14 +256,16 @@ public class WPSRequest
 
           /* If the user aborted the job. */
           if( monitor.isCanceled() )
+          {
             return Status.CANCEL_STATUS;
+          }
 
           try
           {
             Thread.sleep( 1000 );
             executed += 1000;
           }
-          catch( InterruptedException e )
+          catch( final InterruptedException e )
           {
             return StatusUtilities.statusFromThrowable( e );
           }
@@ -268,11 +278,13 @@ public class WPSRequest
           }
 
           /* Get the process outputs every time. */
-          net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+          final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
 
           /* Collect all process output. */
           if( processOutputs != null )
+          {
             collectOutput( processOutputs );
+          }
         }
         else
         {
@@ -288,13 +300,20 @@ public class WPSRequest
         Debug.println( "Check the results ..." );
 
         /* Get the process outputs. */
-        net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+        final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
 
-        /* Collect all process output. */
-        collectOutput( processOutputs );
+        if( processOutputs == null )
+        {
+          status = StatusUtilities.createErrorStatus( "The process did not return any results." );
+        }
+        else
+        {
+          /* Collect all process output. */
+          collectOutput( processOutputs );
+        }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       status = StatusUtilities.statusFromThrowable( e );
     }
@@ -303,7 +322,7 @@ public class WPSRequest
   }
 
   @SuppressWarnings("unchecked")
-  private JAXBElement<ExecuteResponseType> waitForExecuteResponse( FileObject statusFile ) throws Exception, InterruptedException
+  private JAXBElement<ExecuteResponseType> waitForExecuteResponse( final FileObject statusFile ) throws Exception, InterruptedException
   {
     /* Some variables for handling the errors. */
     boolean success = false;
@@ -315,13 +334,13 @@ public class WPSRequest
     {
       try
       {
-        String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
-        Object object = MarshallUtilities.unmarshall( xml );
+        final String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
+        final Object object = MarshallUtilities.unmarshall( xml );
         executeState = (JAXBElement<ExecuteResponseType>) object;
 
         success = true;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         /* An error has occured while copying the file. */
         Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
@@ -356,16 +375,16 @@ public class WPSRequest
    * @param monitor
    *          The progress monitor to be updated.
    */
-  private void updateMonitor( int percentCompleted, String description, IProgressMonitor monitor )
+  private void updateMonitor( final int percentCompleted, final String description, final IProgressMonitor monitor )
   {
     /* If the already updated value is not equal to the new value. Update the monitor values. */
     if( percentCompleted != m_alreadyWorked )
     {
       /* Check, what is already updated here, and update the rest. */
-      int percentWorked = percentCompleted - m_alreadyWorked;
+      final int percentWorked = percentCompleted - m_alreadyWorked;
 
       /* Project percentWorked to the left monitor value. */
-      double realValue = MONITOR_SERVER_VALUE * (double) percentWorked / 100.0;
+      final double realValue = MONITOR_SERVER_VALUE * (double) percentWorked / 100.0;
       monitor.worked( (int) realValue );
 
       m_alreadyWorked = percentCompleted;
@@ -389,48 +408,53 @@ public class WPSRequest
    * @param processOutputs
    *          The process outputs contains the info of the results, which are to be collected.
    */
-  private void collectOutput( ExecuteResponseType.ProcessOutputs processOutputs )
+  private void collectOutput( final ExecuteResponseType.ProcessOutputs processOutputs )
   {
     // TODO: maybe check, if all desired outputs have been created??
 
     /* Collect all data for the client. */
-    List<IOValueType> ioValues = processOutputs.getOutput();
-    for( IOValueType ioValue : ioValues )
+    final List<IOValueType> ioValues = processOutputs.getOutput();
+    for( final IOValueType ioValue : ioValues )
     {
       /* Complex value reference. */
-      // TODO: dubios The hashmap should always be non-null!
-      ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
+      final ComplexValueReference complexValueReference = ioValue.getComplexValueReference();
       if( complexValueReference != null )
       {
-        if( m_references == null )
-          m_references = new LinkedHashMap<String, ComplexValueReference>();
-
         m_references.put( ioValue.getIdentifier().getValue(), complexValueReference );
-
         continue;
       }
 
       /* Literal value type. */
-      LiteralValueType literalValue = ioValue.getLiteralValue();
+      final LiteralValueType literalValue = ioValue.getLiteralValue();
       if( literalValue != null )
       {
-        String value = literalValue.getValue();
-        String dataType = literalValue.getDataType();
+        final String value = literalValue.getValue();
+        final String dataType = literalValue.getDataType();
 
         Object result = null;
         if( "string".equals( dataType ) )
+        {
           result = DatatypeConverter.parseString( value );
+        }
         else if( "int".equals( dataType ) )
+        {
           result = DatatypeConverter.parseInt( value );
+        }
         else if( "double".equals( dataType ) )
+        {
           result = DatatypeConverter.parseDouble( value );
+        }
         else if( "boolean".equals( dataType ) )
+        {
           result = DatatypeConverter.parseBoolean( value );
+        }
 
         if( result != null )
         {
           if( m_literals == null )
+          {
             m_literals = new LinkedHashMap<String, Object>();
+          }
 
           m_literals.put( ioValue.getIdentifier().getValue(), result );
         }
@@ -439,11 +463,13 @@ public class WPSRequest
       }
 
       /* Bounding box type. */
-      BoundingBoxType boundingBox = ioValue.getBoundingBoxValue();
+      final BoundingBoxType boundingBox = ioValue.getBoundingBoxValue();
       if( boundingBox != null )
       {
         if( m_boundingBoxes == null )
+        {
           m_boundingBoxes = new LinkedHashMap<String, BoundingBoxType>();
+        }
 
         m_boundingBoxes.put( ioValue.getIdentifier().getValue(), boundingBox );
 
@@ -451,11 +477,13 @@ public class WPSRequest
       }
 
       /* Complex value type. */
-      ComplexValueType complexValue = ioValue.getComplexValue();
+      final ComplexValueType complexValue = ioValue.getComplexValue();
       if( complexValue != null )
       {
         if( m_complexValues == null )
+        {
           m_complexValues = new LinkedHashMap<String, ComplexValueType>();
+        }
 
         m_complexValues.put( ioValue.getIdentifier().getValue(), complexValue );
 

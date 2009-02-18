@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,7 +84,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   /**
    * The temporary directory.
    */
-  private File m_tmpDir;
+  private final File m_tmpDir;
 
   /**
    * The constructor.
@@ -89,7 +92,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * @param execute
    *          The execute request.
    */
-  public WPSSimulationDataProvider( Execute execute, File tmpDir ) throws SimulationException
+  public WPSSimulationDataProvider( final Execute execute, final File tmpDir ) throws SimulationException
   {
     m_execute = execute;
     m_tmpDir = tmpDir;
@@ -110,75 +113,102 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   /**
    * @see org.kalypso.simulation.core.ISimulationDataProvider#getInputForID(java.lang.String)
    */
-  public Object getInputForID( String id ) throws SimulationException
+  public Object getInputForID( final String id ) throws SimulationException
   {
-    Object input = m_inputList.get( id );
+    final Object input = m_inputList.get( id );
     if( input == null )
-      throw new SimulationException( "Input not available with the ID: " + id, null );
-
-    try
     {
-      if( input instanceof ComplexValueType )
+      throw new SimulationException( "Input not available with the ID: " + id, null );
+    }
+
+    if( input instanceof ComplexValueType )
+    {
+      final ComplexValueType complexValue = (ComplexValueType) input;
+
+      final List<Object> content = complexValue.getContent();
+      if( content.size() == 0 )
       {
-        ComplexValueType complexValue = (ComplexValueType) input;
-
-        List<Object> content = complexValue.getContent();
-        if( content.size() == 0 )
-          return null;
-
-        String hexString = (String) content.get( 0 );
-        byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
-
-        File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
-        FileUtils.writeByteArrayToFile( file, bytes );
-
-        return file.toURI().toURL();
-      }
-      else if( input instanceof LiteralValueType )
-      {
-        LiteralValueType literalValue = (LiteralValueType) input;
-        String dataType = literalValue.getDataType();
-        String value = literalValue.getValue();
-
-        // TODO Inspect further. Perhaps use QName(XS, "string") and so on. Don't forget the WPSSimulationResultEater
-        // and the SimulationJob, if you change this.
-        // maybe dataType is xs:...
-        if( dataType.endsWith( "string" ) )
-          return DatatypeConverter.parseString( value );
-        else if( dataType.endsWith( "int" ) )
-          return DatatypeConverter.parseInt( value );
-        else if( dataType.endsWith( "double" ) )
-          return DatatypeConverter.parseDouble( value );
-        else if( dataType.endsWith( "boolean" ) )
-          return DatatypeConverter.parseBoolean( value );
-
         return null;
       }
-      else if( input instanceof ComplexValueReference )
-      {
-        ComplexValueReference complexValueReference = (ComplexValueReference) input;
-        String reference = complexValueReference.getReference();
 
-        URL url = new URL( reference );
-        return url;
-      }
-      else
+      final String hexString = (String) content.get( 0 );
+
+      try
       {
-        /* BoundingBoxType. */
-        BoundingBoxType boundingBox = (BoundingBoxType) input;
-        return boundingBox;
+        final byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
+        final File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
+        FileUtils.writeByteArrayToFile( file, bytes );
+        return file.toURI();
+      }
+      catch( final Exception e )
+      {
+        throw new SimulationException( "Problem converting complex-valued input from hexadecimal binary to file.", e );
       }
     }
-    catch( Exception e )
+    else if( input instanceof LiteralValueType )
     {
-      throw new SimulationException( e.getLocalizedMessage(), null );
+      final LiteralValueType literalValue = (LiteralValueType) input;
+      final String dataType = literalValue.getDataType();
+      final String value = literalValue.getValue();
+
+      // TODO Inspect further. Perhaps use QName(XS, "string") and so on. Don't forget the WPSSimulationResultEater
+      // and the SimulationJob, if you change this.
+      // maybe dataType is xs:...
+      // TODO: consider unit of measure (uom)
+      if( dataType.endsWith( "string" ) )
+      {
+        return DatatypeConverter.parseString( value );
+      }
+      else if( dataType.endsWith( "int" ) )
+      {
+        return DatatypeConverter.parseInt( value );
+      }
+      else if( dataType.endsWith( "double" ) )
+      {
+        return DatatypeConverter.parseDouble( value );
+      }
+      else if( dataType.endsWith( "boolean" ) )
+      {
+        return DatatypeConverter.parseBoolean( value );
+      }
+
+      throw new SimulationException( "Invalid type for literal value: " + dataType );
+    }
+    else if( input instanceof ComplexValueReference )
+    {
+      final ComplexValueReference complexValueReference = (ComplexValueReference) input;
+      final String reference = complexValueReference.getReference();
+
+      try
+      {
+        final URL url = new URL( reference );
+        return url;
+      }
+      catch( final MalformedURLException e )
+      {
+        try
+        {
+          final URI uri = new URI( reference );
+          return uri;
+        }
+        catch( final URISyntaxException e2 )
+        {
+          throw new SimulationException( "Value reference is not a valid URI.", e2 );
+        }
+      }
+    }
+    else
+    {
+      /* BoundingBoxType. */
+      final BoundingBoxType boundingBox = (BoundingBoxType) input;
+      return boundingBox;
     }
   }
 
   /**
    * @see org.kalypso.simulation.core.ISimulationDataProvider#hasID(java.lang.String)
    */
-  public boolean hasID( String id )
+  public boolean hasID( final String id )
   {
     return m_inputList.containsKey( id );
   }
@@ -190,25 +220,35 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    *          The execute request, containing the input data.
    * @return The indexed map.
    */
-  private Map<String, Object> index( Execute execute ) throws SimulationException
+  private Map<String, Object> index( final Execute execute ) throws SimulationException
   {
-    Map<String, Object> inputList = new LinkedHashMap<String, Object>();
+    final Map<String, Object> inputList = new LinkedHashMap<String, Object>();
 
-    DataInputsType dataInputs = execute.getDataInputs();
-    List<IOValueType> inputs = dataInputs.getInput();
-    for( IOValueType input : inputs )
+    final DataInputsType dataInputs = execute.getDataInputs();
+    final List<IOValueType> inputs = dataInputs.getInput();
+    for( final IOValueType input : inputs )
     {
       Object value = null;
       if( input.getComplexValue() != null )
+      {
         value = input.getComplexValue();
+      }
       else if( input.getLiteralValue() != null )
+      {
         value = input.getLiteralValue();
+      }
       else if( input.getComplexValueReference() != null )
+      {
         value = input.getComplexValueReference();
+      }
       else if( input.getBoundingBoxValue() != null )
+      {
         value = input.getBoundingBoxValue();
+      }
       else
+      {
         throw new SimulationException( "Input has no valid value!", null );
+      }
 
       inputList.put( input.getIdentifier().getValue(), value );
     }

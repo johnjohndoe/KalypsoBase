@@ -41,6 +41,7 @@
 package org.kalypso.service.wps.client;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -97,12 +98,12 @@ public class NonBlockingWPSRequest
   /**
    * The identifier of the service to be called.
    */
-  private String m_identifier;
+  private final String m_identifier;
 
   /**
    * The address of the service.
    */
-  private String m_serviceEndpoint;
+  private final String m_serviceEndpoint;
 
   private DataInputsType m_dataInputs;
 
@@ -122,7 +123,7 @@ public class NonBlockingWPSRequest
    * @param timeout
    *          After this period of time, the job gives up, waiting for a result of the service.
    */
-  public NonBlockingWPSRequest( String identifier, String serviceEndpoint )
+  public NonBlockingWPSRequest( final String identifier, final String serviceEndpoint )
   {
     /* Initializing of the given variables. */
     m_identifier = identifier;
@@ -132,10 +133,12 @@ public class NonBlockingWPSRequest
   /**
    * Initializes the WPS by getting the process description
    */
-  public ProcessDescriptionType getProcessDescription( IProgressMonitor monitor ) throws CoreException
+  public ProcessDescriptionType getProcessDescription( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_processDescription == null )
+    {
       initProcessDescription( monitor );
+    }
 
     return m_processDescription;
   }
@@ -147,7 +150,9 @@ public class NonBlockingWPSRequest
   public ProcessDescriptionType getProcessDescription( ) throws CoreException
   {
     if( m_processDescription == null )
+    {
       initProcessDescription( null );
+    }
 
     return m_processDescription;
   }
@@ -160,12 +165,12 @@ public class NonBlockingWPSRequest
    *          A progress monitor.
    * @return A status, indicating the success of the function.
    */
-  public IStatus init( Map<String, Object> inputs, List<String> outputs, IProgressMonitor monitor )
+  public IStatus init( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor monitor )
   {
     try
     {
       /* Get the process description. */
-      ProcessDescriptionType processDescription = getProcessDescription( monitor );
+      final ProcessDescriptionType processDescription = getProcessDescription( monitor );
 
       /* Get the input data. */
       m_dataInputs = createDataInputs( processDescription, inputs );
@@ -175,9 +180,9 @@ public class NonBlockingWPSRequest
 
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      IStatus status = StatusUtilities.statusFromThrowable( e );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
       Activator.getDefault().getLog().log( status );
       return status;
     }
@@ -195,12 +200,16 @@ public class NonBlockingWPSRequest
     {
       // decide between local and remote invocation
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
+      {
         m_processDescription = DescribeProcess.buildProcessDescriptionType( m_identifier );
+      }
       else
       {
-        List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
+        final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
         if( processDescriptionList.size() != 1 )
+        {
           throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned more than one process description.", null ) );
+        }
 
         /* Monitor. */
         monitor.worked( 300 );
@@ -209,11 +218,11 @@ public class NonBlockingWPSRequest
         m_processDescription = processDescriptionList.get( 0 );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       throw e;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -245,7 +254,7 @@ public class NonBlockingWPSRequest
     Debug.println( "Start the simulation ..." );
 
     ExecuteResponseType executeResponse;
-    CodeType simulationIdentifier = OGCUtilities.buildCodeType( "", m_identifier );
+    final CodeType simulationIdentifier = OGCUtilities.buildCodeType( "", m_identifier );
 
     try
     {
@@ -255,26 +264,26 @@ public class NonBlockingWPSRequest
         try
         {
           /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-          Execute execute = OGCUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
-          WPSSimulationManager manager = WPSSimulationManager.getInstance();
-          WPSSimulationInfo info = manager.startSimulation( m_identifier, m_identifier, execute );
+          final Execute execute = OGCUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
+          final WPSSimulationManager manager = WPSSimulationManager.getInstance();
+          final WPSSimulationInfo info = manager.startSimulation( m_identifier, m_identifier, execute );
 
           /* Prepare the execute response. */
-          FileObject resultDir = manager.getResultDir( info.getId() );
-          FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
-          String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
-          StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
+          final FileObject resultDir = manager.getResultDir( info.getId() );
+          final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+          final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
+          final StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
           executeResponse = OGCUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs, m_outputDefinitions, null, statusLocation, OGCUtilities.VERSION );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
         }
-        catch( SimulationException e )
+        catch( final SimulationException e )
         {
           throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
         }
-        catch( OWSException e )
+        catch( final OWSException e )
         {
           throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
         }
@@ -284,23 +293,25 @@ public class NonBlockingWPSRequest
         executeResponse = WPSUtilities.callExecute( m_serviceEndpoint, m_identifier, m_dataInputs, m_outputDefinitions );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       return e.getStatus();
     }
 
-    StatusType status = executeResponse.getStatus();
-    ProcessFailedType processFailed = status.getProcessFailed();
+    final StatusType status = executeResponse.getStatus();
+    final ProcessFailedType processFailed = status.getProcessFailed();
     if( processFailed != null )
     {
-      String errorString = WPSUtilities.createErrorString( processFailed.getExceptionReport() );
+      final String errorString = WPSUtilities.createErrorString( processFailed.getExceptionReport() );
       return StatusUtilities.createErrorStatus( errorString );
     }
 
     /* If the user aborted the job. */
     monitor.worked( 100 );
     if( monitor.isCanceled() )
+    {
       return Status.CANCEL_STATUS;
+    }
 
     /* Retrieve the path to the status file of the process. */
     m_statusLocation = executeResponse.getStatusLocation();
@@ -311,26 +322,26 @@ public class NonBlockingWPSRequest
     return Status.OK_STATUS;
   }
 
-  private DataInputsType createDataInputs( ProcessDescriptionType description, Map<String, Object> inputs ) throws WPSException
+  private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws WPSException
   {
     /* The storage for the input values. */
-    List<IOValueType> inputValues = new LinkedList<IOValueType>();
+    final List<IOValueType> inputValues = new LinkedList<IOValueType>();
 
     /* Get the input list. */
-    DataInputs dataInputs = description.getDataInputs();
-    List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
+    final DataInputs dataInputs = description.getDataInputs();
+    final List<InputDescriptionType> inputDescriptions = dataInputs.getInput();
 
     /* Iterate over all inputs and build the data inputs for the execute request. */
-    for( InputDescriptionType inputDescription : inputDescriptions )
+    for( final InputDescriptionType inputDescription : inputDescriptions )
     {
-      CodeType identifier = inputDescription.getIdentifier();
+      final CodeType identifier = inputDescription.getIdentifier();
 
       /* Check if the input is in our model data, too. */
-      String inputId = identifier.getValue();
+      final String inputId = identifier.getValue();
       if( inputs.containsKey( inputId ) )
       {
         /* Input is here. */
-        Object inputValue = inputs.get( inputId );
+        final Object inputValue = inputs.get( inputId );
         inputValues.add( createDataInput( inputDescription, inputValue ) );
         continue;
       }
@@ -346,52 +357,52 @@ public class NonBlockingWPSRequest
     return OGCUtilities.buildDataInputsType( inputValues );
   }
 
-  private IOValueType createDataInput( InputDescriptionType inputDescription, Object inputValue )
+  private IOValueType createDataInput( final InputDescriptionType inputDescription, final Object inputValue )
   {
-    CodeType identifier = inputDescription.getIdentifier();
-    String inputId = identifier.getValue();
+    final CodeType identifier = inputDescription.getIdentifier();
+    final String inputId = identifier.getValue();
 
     /* Supported complex data type. */
-    SupportedComplexDataType complexData = inputDescription.getComplexData();
+    final SupportedComplexDataType complexData = inputDescription.getComplexData();
     if( complexData != null )
     {
-      if( inputValue instanceof URL )
+      if( inputValue instanceof URI )
       {
         /* Build the complex value reference. */
-        URL url = (URL) inputValue;
-        CodeType code = OGCUtilities.buildCodeType( null, inputId );
-        ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( url.toExternalForm(), null, null, null );
-        IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
+        final URI uri = (URI) inputValue;
+        final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+        final ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( uri.toASCIIString(), null, null, null );
+        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
         /* Add the input. */
         return ioValue;
       }
 
       // REMARK: hack/convention: the input must now be the raw input for the anyType element
-      List<Object> value = new ArrayList<Object>( 1 );
+      final List<Object> value = new ArrayList<Object>( 1 );
       value.add( inputValue );
 
       /* Build the complex value. */
-      CodeType code = OGCUtilities.buildCodeType( null, inputId );
-      ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
-      IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+      final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
 
       /* Add the input. */
       return ioValue;
     }
 
     /* Literal input type */
-    LiteralInputType literalInput = inputDescription.getLiteralData();
+    final LiteralInputType literalInput = inputDescription.getLiteralData();
     if( literalInput != null )
     {
       /* Build the literal value type. */
-      CodeType code = OGCUtilities.buildCodeType( null, inputId );
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
 
-      String inputType = literalInput.getDataType().getValue();
-      String value = marshalLiteral( inputValue, inputType );
+      final String inputType = literalInput.getDataType().getValue();
+      final String value = marshalLiteral( inputValue, inputType );
 
-      LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( value, inputType, null );
-      IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
+      final LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( value, inputType, null );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
 
       /* Add the input. */
       return ioValue;
@@ -402,11 +413,13 @@ public class NonBlockingWPSRequest
     throw new UnsupportedOperationException();
   }
 
-  private String marshalLiteral( Object literalValue, @SuppressWarnings("unused") String inputType )
+  private String marshalLiteral( final Object literalValue, @SuppressWarnings("unused") final String inputType )
   {
     // REMARK: (crude) Hack: if it is already a String, we always return this value.
     if( literalValue instanceof String )
+    {
       return (String) literalValue;
+    }
 
     throw new UnsupportedOperationException();
   }
@@ -420,19 +433,19 @@ public class NonBlockingWPSRequest
    *          The modeldata.
    * @return The output of the model spec in wps format.
    */
-  private OutputDefinitionsType createOutputDefinitions( ProcessDescriptionType description, List<String> outputs )
+  private OutputDefinitionsType createOutputDefinitions( final ProcessDescriptionType description, final List<String> outputs )
   {
     /* The storage for the output values. */
-    List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
+    final List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
 
     /* Get the output list. */
-    ProcessOutputs processOutputs = description.getProcessOutputs();
-    List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
+    final ProcessOutputs processOutputs = description.getProcessOutputs();
+    final List<OutputDescriptionType> outputDescriptions = processOutputs.getOutput();
 
     /* Iterate over all outputs and build the data inputs for the execute request. */
-    for( OutputDescriptionType outputDescription : outputDescriptions )
+    for( final OutputDescriptionType outputDescription : outputDescriptions )
     {
-      CodeType identifier = outputDescription.getIdentifier();
+      final CodeType identifier = outputDescription.getIdentifier();
 
       /* Check if the output is in our model data, too. */
       if( !outputs.contains( identifier.getValue() ) )
@@ -444,8 +457,8 @@ public class NonBlockingWPSRequest
 
       // TODO: maybe only ask for outputs that are in the list m_outputs?
 
-      CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
-      OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
+      final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
+      final OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
 
       /* Add the output. */
       outputValues.add( outputDefinition );
