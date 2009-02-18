@@ -27,7 +27,7 @@ public interface ITypeRegistry<H extends ITypeHandler>
    * @deprecated see {@link #getTypeHandlerForClassName(Class)}
    */
   @Deprecated
-  public boolean hasClassName( final Class< ? > className );
+  public boolean hasClassName( final Class className );
 
   public H getTypeHandlerForTypeName( final QName typeQName );
 
@@ -36,7 +36,7 @@ public interface ITypeRegistry<H extends ITypeHandler>
    *             than one typehandler for a class
    */
   @Deprecated
-  public H getTypeHandlerForClassName( final Class< ? > clazz );
+  public H getTypeHandlerForClassName( final Class clazz );
 
   public H getTypeHandlerFor( final IPropertyType ftp );
 
@@ -45,6 +45,6 @@ public interface ITypeRegistry<H extends ITypeHandler>
    * @see java.util.Collection#toArray(T[])
    */
   public H[] getRegisteredTypeHandler( final H[] a );
-
-  public int getRegisteredTypeHandlerSize( );
+  
+  public int getRegisteredTypeHandlerSize();
 }

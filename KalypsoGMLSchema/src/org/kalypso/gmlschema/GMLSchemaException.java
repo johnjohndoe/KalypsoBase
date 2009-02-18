@@ -30,9 +30,10 @@
 package org.kalypso.gmlschema;
 
 /**
- * Generel exception class for GMLSchema stuff
  * 
- * @author Andreas von Dömming
+ * TODO: insert type comment here
+ * 
+ * @author doemming
  */
 public class GMLSchemaException extends Exception
 {

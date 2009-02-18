@@ -32,17 +32,17 @@ package org.kalypso.gmlschema.property;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeHandler;
 
 /**
- * Represents a value property type, whatever this is....<br>
- * TODO: it is not really clear, what a value property type IS, so this interface is quite problematic...<br>
- * TODO: we should probably refaktor at least in order to distinguish simple and complex content types.
+ * TODO: insert type comment here
  * 
- * @author Andreas von Dömming
+ * @author doemming
  */
 public interface IValuePropertyType extends IPropertyType
 {
+  public IPropertyContentType getPropertyContentType( );
+
   public boolean hasRestriction( );
 
   public IRestriction[] getRestriction( );
@@ -72,11 +72,11 @@ public interface IValuePropertyType extends IPropertyType
   /**
    * @return java class that instanciates the value
    */
-  public Class< ? > getValueClass( );
+  public Class getValueClass( );
 
   // TODO: which one is it? the gui or marshalling type handler??
   // is this really necessary? we still have ITypeRegistry.getTypeHandlerFor( IPropertyType )
-  public IMarshallingTypeHandler getTypeHandler( );
+  public ITypeHandler getTypeHandler( );
 
   /**
    * @return qname of XML type

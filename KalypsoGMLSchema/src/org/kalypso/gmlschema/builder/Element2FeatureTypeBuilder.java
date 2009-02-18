@@ -33,23 +33,24 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class Element2FeatureTypeBuilder extends AbstractBuilder
+public class Element2FeatureTypeBuilder implements IBuilder
 {
+
   private final String m_version;
 
-  public Element2FeatureTypeBuilder( final String version )
+  public Element2FeatureTypeBuilder( String version )
   {
     m_version = version;
   }
@@ -57,12 +58,12 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
+  public Object[] build( GMLSchema gmlSchema, Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
     final Element theElement = element.getElement();
     final QName ref = theElement.getRef();
-
+    
     final Element ftElement;
     if( ref == null )
       ftElement = theElement;
@@ -76,7 +77,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       ftElement = reference.getElement();
     }
-
+    
     final FeatureType result = new FeatureType( gmlSchema, ftElement );
     gmlSchema.register( ftElement, result );
     return new Object[] { result };
@@ -105,8 +106,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
     return false;
   }

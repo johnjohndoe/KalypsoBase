@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
+import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * The content handler for the {@link org.kalypsodeegree.model.XsdBaseTypeHandler}.
@@ -58,10 +59,7 @@ import org.xml.sax.SAXParseException;
  * The classes where combined for performance reasons and to avoid the creation of a content handler for each call to
  * {@link org.kalypsodeegree.model.XsdBaseTypeHandler#unmarshal(XMLReader, URL, UnMarshallResultEater, String)}.
  * </p>
- * <p>
- * See also remark in
- * {@link org.kalypsodeegree.model.XsdBaseTypeHandler#unmarshal(XMLReader, URL, UnMarshallResultEater, String)}.
- * </p>
+ * <p>See also remark in {@link org.kalypsodeegree.model.XsdBaseTypeHandler#unmarshal(XMLReader, URL, UnMarshallResultEater, String)}.</p>
  * 
  * @author Gernot Belger
  */
@@ -69,19 +67,19 @@ public class XsdBaseContentHandler implements ContentHandler
 {
   private final StringBuffer m_buffer = new StringBuffer();
 
-  private UnmarshallResultEater m_marshalResultEater;
+  private UnMarshallResultEater m_marshalResultEater;
 
   private final IMarshallingTypeHandler m_typeHandler;
 
   /**
    * @param marshalResultEater
-   *            will be feeded with the result of unmarshalling process
+   *          will be feeded with the result of unmarshalling process
    * @param unmarshallResultProvider
-   *            should provide the parsed values
+   *          should provide the parsed values
    * @param unmarshallerHandler
-   *            contenthandler that will be wrapped for unmarshalling
+   *          contenthandler that will be wrapped for unmarshalling
    */
-  public XsdBaseContentHandler( final IMarshallingTypeHandler typeHandler, final UnmarshallResultEater marshalResultEater )
+  public XsdBaseContentHandler( final IMarshallingTypeHandler typeHandler, final UnMarshallResultEater marshalResultEater )
   {
     m_typeHandler = typeHandler;
     m_marshalResultEater = marshalResultEater;
@@ -89,32 +87,54 @@ public class XsdBaseContentHandler implements ContentHandler
 
   /**
    * @param resetBuffer
-   *            Clears the intenal string buffer
+   *          Clears the intenal string buffer
    */
-  public void setMarshalResultEater( final UnmarshallResultEater marshalResultEater, final boolean resetBuffer )
+  public void setMarshalResultEater( final UnMarshallResultEater marshalResultEater, final boolean resetBuffer )
   {
     m_marshalResultEater = marshalResultEater;
     if( resetBuffer == true )
       m_buffer.delete( 0, m_buffer.length() );
   }
 
-  public void startElement( final String uri, final String local, final String qname, final Attributes atts ) throws SAXException
+  public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
-    end();
+    try
+    {
+      end();
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new SAXException( e );
+    }
   }
 
-  public void endElement( final String uri, final String local, final String qname ) throws SAXException
+  public void endElement( String uri, String local, String qname ) throws SAXException
   {
-    end();
+    try
+    {
+      end();
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new SAXException( e );
+    }
   }
 
-  private void end( ) throws SAXParseException
+  private void end( ) throws GMLSchemaException
   {
     Object value = null;
     try
     {
       final String stringResult = m_buffer.toString();
-      value = m_typeHandler.parseType( stringResult );
+
+      // HACK: remove CDATA section markers
+      // TODO shouldn't the saxparser handle this? Check if this is ok what is done here...
+      final String withoutCDATA = stringResult.replace( XMLUtilities.CDATA_BEGIN, "" ).replace( XMLUtilities.CDATA_END, "" );
+
+      // if( !withoutCDATA.equals( stringResult ) )
+      // System.out.println();
+
+      value = m_typeHandler.parseType( withoutCDATA );
     }
     catch( final Exception e )
     {
@@ -124,21 +144,21 @@ public class XsdBaseContentHandler implements ContentHandler
     finally
     {
       if( m_marshalResultEater != null )
-        m_marshalResultEater.unmarshallSuccesful( value );
+        m_marshalResultEater.eat( value );
     }
   }
 
-  public void characters( final char[] ch, final int start, final int length )
+  public void characters( char[] ch, int start, int length )
   {
     m_buffer.append( ch, start, length );
   }
 
-  public void ignorableWhitespace( final char[] ch, final int start, final int len )
+  public void ignorableWhitespace( char[] ch, int start, int len )
   {
     m_buffer.append( ch, start, len );
   }
 
-  public void processingInstruction( final String target, final String data )
+  public void processingInstruction( String target, String data )
   {
     m_buffer.append( "processingInstruction: " + target + " / " + data + "\n" );
   }
@@ -151,19 +171,19 @@ public class XsdBaseContentHandler implements ContentHandler
   {
   }
 
-  public void startPrefixMapping( final String prefix, final String uri )
+  public void startPrefixMapping( String prefix, String uri )
   {
   }
 
-  public void endPrefixMapping( final String prefix )
+  public void endPrefixMapping( String prefix )
   {
   }
 
-  public void setDocumentLocator( final Locator locator )
+  public void setDocumentLocator( Locator locator )
   {
   }
 
-  public void skippedEntity( final String name )
+  public void skippedEntity( String name )
   {
     m_buffer.append( "skippedEntity: " + name + "\n" );
   }

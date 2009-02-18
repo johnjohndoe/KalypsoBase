@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -45,31 +46,30 @@ import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromExtension;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromRestriction;
 import org.kalypso.gmlschema.feature.FeatureContentTypeFromSequence;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * a builder
  * 
  * @author doemming
  */
-public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
+public class ComplexType2FeatureContentTypeBuilder implements IBuilder
 {
 
   private final String m_version;
 
-  public ComplexType2FeatureContentTypeBuilder( final String version )
+  public ComplexType2FeatureContentTypeBuilder( String version )
   {
     m_version = version;
   }
 
   /**
-   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   * @param gmlSchema
+   * @param complexTypeObject
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
+  public Object[] build( GMLSchema gmlSchema, Object complexTypeObject ) throws GMLSchemaException
   {
     FeatureContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
-
     final ComplexContent complexContent = complexType.getComplexContent();
     if( complexContent != null )
     {
@@ -99,7 +99,7 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass ) throws GMLSchemaException
   {
     if( !(object instanceof ComplexType) )
       return false;
@@ -122,8 +122,7 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
     return false;
   }

@@ -76,9 +76,7 @@ public class PropertyUtils
     // comboValue -> comboLabel
     final Map<Object, String> comboEntries = new LinkedHashMap<Object, String>();
 
-    final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
-
-    // TODO: ab hier noch mal ne eigene heper methode machen
+    final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
 
     // if we have an enumeration, create a combo
     final IRestriction[] restrictions = vpt.getRestriction();
@@ -88,13 +86,13 @@ public class PropertyUtils
     {
       if( restriction instanceof EnumerationRestriction )
       {
-        final Object[] keys = ((EnumerationRestriction) restriction).getEnumeration();
+        final String[] values = ((EnumerationRestriction) restriction).getEnumeration();
         final String[] labels = ((EnumerationRestriction) restriction).getLabels();
 
         for( int i = 0; i < labels.length; i++ )
         {
           final String label = labels[i];
-          final String valueString = keys[i].toString();
+          final String valueString = values[i];
           Object value = null;
           try
           {

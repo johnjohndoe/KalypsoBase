@@ -41,13 +41,14 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.KalypsoGmlSchemaTracing;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * TODO: insert type comment here
@@ -130,18 +131,12 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           }
           else
           {
-            // TODO
-// if( Debug.traceSchemaParsing() )
-// System.out.println( "schema error: links not to a feature:" + element );
+            if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+              System.out.println( "schema error: links not to a feature:" + element );
           }
         }
         if( result.size() != 1 )
-        {
-          // This happens for gml:ReferenceType which is sometimes used (for example by xplan)
-          return;
-          // throw new UnsupportedOperationException( "An object relation must reference exactly one element" );
-        }
-
+          throw new UnsupportedOperationException( "An object relation must reference exactly one element" );
         m_ftRelationTarget = result.get( 0 );
 
         /* Determine if linked objects are allowed */
@@ -173,7 +168,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         }
 
       }
-      break;
+        break;
     }
   }
 

@@ -40,42 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.restriction;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.kalypso.gmlschema.annotation.IAnnotation;
-
 /**
- * @author doemming refactored kuch
+ * @author doemming
  */
 public class EnumerationRestriction implements IRestriction
 {
-  private final Map<Object, IAnnotation> m_map;
+  private final String[] m_values;
 
-  public EnumerationRestriction( final Map<Object, IAnnotation> map )
+  private final String[] m_labels;
+
+  /**
+   * @throws IllegalArgumentException
+   *           if 'values' and 'labels' does not have same length
+   */
+  public EnumerationRestriction( final String[] values, final String[] labels )
   {
-    m_map = map;
+    if( values.length != labels.length )
+      throw new IllegalArgumentException( "'values' and 'labels' must have same length." );
+
+    m_values = values;
+    m_labels = labels;
   }
 
-  public Object[] getEnumeration( )
+  public String[] getEnumeration( )
   {
-    return m_map.keySet().toArray();
+    return m_values;
   }
 
   public String[] getLabels( )
   {
-    final List<String> list = new LinkedList<String>();
-    for( final Entry<Object, IAnnotation> map : m_map.entrySet() )
-      list.add( map.getValue().getLabel() );
-
-    return list.toArray( new String[] {} );
+    return m_labels;
   }
-
-  public Map<Object, IAnnotation> getMapping( )
-  {
-    return m_map;
-  }
-
 }

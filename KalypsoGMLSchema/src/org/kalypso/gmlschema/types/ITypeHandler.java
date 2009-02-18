@@ -44,17 +44,17 @@ import javax.xml.namespace.QName;
 
 /**
  * A common type handler.
- * 
+ *
  * @author bce
  */
 public interface ITypeHandler
 {
   /** Der Java-Name, auf den dieser Typ gemapt wird */
-  public Class< ? > getValueClass( );
+  public Class getValueClass();
 
   /** Der XML-Typname */
-  public QName getTypeName( );
-
+  public QName getTypeName();
+  
   /** TODO describe what that really means */
-  public boolean isGeometry( );
+  public boolean isGeometry();
 }

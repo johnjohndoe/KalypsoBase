@@ -36,12 +36,13 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * representation of a feature content definition from xml schema that is defined by extension.
@@ -72,34 +73,46 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
+  public void init( int initializeRun ) throws GMLSchemaException
+  {
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+        final QName base = m_extension.getBase();
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
+        final GMLSchema schema = reference.getGMLSchema();
+        final ComplexType complexType = reference.getComplexType();
+        m_extensionBase = schema.getFeatureContentTypeFor( complexType );
+        break;
+    }
+    super.init( initializeRun );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   */
   public IPropertyType[] getProperties( )
   {
     if( m_fullProps == null )
     {
-      final IPropertyType[] propsFromExtension = getBase().getProperties();
+      final IPropertyType[] propsFromExtension = m_extensionBase.getProperties();
+      final IPropertyType[] props = new IPropertyType[m_pt.length + propsFromExtension.length];
+      int n = 0;
 
-      final IPropertyType[] directProperties = getDirectProperties();
-
-      m_fullProps = new IPropertyType[directProperties.length + propsFromExtension.length];
-
-      System.arraycopy( propsFromExtension, 0, m_fullProps, 0, propsFromExtension.length );
-      System.arraycopy( directProperties, 0, m_fullProps, propsFromExtension.length, directProperties.length );
-
-// int n = 0;
-// for( final IPropertyType element : propsFromExtension )
-// {
-// props[n] = element;
-// n++;
-// }
-//
-// for( final IPropertyType element : m_pt )
-// {
-// props[n] = element;
-// n++;
-// }
+      for( int i = 0; i < propsFromExtension.length; i++ )
+      {
+        props[n] = propsFromExtension[i];
+        n++;
+      }
+      for( int i = 0; i < m_pt.length; i++ )
+      {
+        props[n] = m_pt[i];
+        n++;
+      }
+      m_fullProps = props;
     }
     return m_fullProps;
   }
@@ -109,22 +122,6 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    */
   public IFeatureContentType getBase( )
   {
-    if( m_extensionBase == null )
-    {
-      try
-      {
-        final QName base = m_extension.getBase();
-        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
-        final ComplexType complexType = reference.getComplexType();
-        m_extensionBase = schema.getFeatureContentTypeFor( complexType );
-      }
-      catch( final GMLSchemaException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
     return m_extensionBase;
   }
 
@@ -141,7 +138,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
    */
   public IPropertyType[] getDirectProperties( )
   {
-    return super.getProperties();
+    return m_pt;
   }
 
   /**
@@ -151,16 +148,16 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
   public XmlObject[] collectFunctionProperties( )
   {
     final XmlObject[] myObjects = super.collectFunctionProperties();
-    final XmlObject[] baseObjects = getBase().collectFunctionProperties();
-
+    final XmlObject[] baseObjects = m_extensionBase.collectFunctionProperties();
+    
     final XmlObject[] allObjects = new XmlObject[myObjects.length + baseObjects.length];
-
+    
     System.arraycopy( myObjects, 0, allObjects, 0, myObjects.length );
     System.arraycopy( baseObjects, 0, allObjects, myObjects.length, baseObjects.length );
-
+    
     // TODO: consider the case when function-properties get overridden.
-    // At the moment we have 'myObject' before 'allObjects', so new definitions get found first.
-
+    // At the moment we have 'myObject' before 'allObjects', so newdefinitions get found first. 
+    
     return allObjects;
   }
 }

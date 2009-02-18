@@ -33,7 +33,7 @@ import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 
 /**
- * Building block to parse the gml schema.
+ * TODO: insert type comment here
  * 
  * @author doemming
  */
@@ -44,20 +44,20 @@ public interface IBuilder
    * 
    * @param gmlSchema
    * @param typeObject
-   * @return array of objects that will be build in next turn if necessary
+   * @return array of objects that will be build in next turn if neccessary
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException;
+  public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException;;
 
   /**
    * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in
    * this build run named <code>namedPass</code>
    * 
    * @param gmlSchema
-   *            current schema
+   *          current schema
    * @param object
-   *            object to build something for
+   *          object to build something for
    * @param namedPass
-   *            name of the current build run
+   *          name of the current build run
    * @return true if builder can build something for this object
    */
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException;

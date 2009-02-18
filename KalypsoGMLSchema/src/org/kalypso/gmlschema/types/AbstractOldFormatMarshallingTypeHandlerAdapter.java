@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -44,6 +44,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -53,13 +54,14 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * abstract typehandler to support old deprecated kalypso marshalling methodes, let them extend from this
@@ -72,41 +74,41 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( QName propQName, Object value, ContentHandler contentHandler, LexicalHandler lexicalHandler, URL context, final String gmlVersion ) throws TypeRegistryException
   {
+    // memory to xml
     try
     {
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
       final Document document = builder.newDocument();
-      final Node node = marshall( value, document, context );
+      final Element element = document.createElementNS( propQName.getNamespaceURI(), propQName.getLocalPart() );
+      document.appendChild( element );
+      marshall( value, element, context );
       // value is encoded in xml in document object
       final StringWriter writer = new StringWriter();
       // REMARK: we do not write the dom formatted here (argument false), because later the
       // content handler will probably do the formatting (IndentContentHandler). If we format here, we will get empty
       // lines later.
-      XMLHelper.writeDOM( node, "UTF-8", writer, false );
+      XMLHelper.writeDOM( document, "UTF-8", writer, false );
       IOUtils.closeQuietly( writer );
       // value is encoded in string
       final String xmlString = writer.toString();
-      final String xmlStringNoHeader = XMLUtilities.removeXMLHeader( xmlString );
-      final InputSource input = new InputSource( new StringReader( xmlStringNoHeader ) );
+
+      final InputSource input = new InputSource( new StringReader( xmlString ) );
+      // input.setEncoding( "UTF-8" );
 
       final SAXParserFactory saxFac = SAXParserFactory.newInstance();
       saxFac.setNamespaceAware( true );
       final SAXParser saxParser = saxFac.newSAXParser();
       final XMLReader xmlReader = saxParser.getXMLReader();
 
-      xmlReader.setContentHandler( reader.getContentHandler() );
+      xmlReader.setContentHandler( contentHandler );
       xmlReader.parse( input );
     }
-    catch( final SAXException e )
+    catch( Exception e )
     {
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      throw new SAXException( e );
+      throw new TypeRegistryException( e );
     }
   }
 
@@ -114,18 +116,18 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, final URL context, final UnMarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
     // xml to memory
     try
     {
-      final UnmarshallResultEater eater = new UnmarshallResultEater()
+      final UnMarshallResultEater eater = new UnMarshallResultEater()
       {
-        public void unmarshallSuccesful( final Object value ) throws SAXParseException
+        public void eat( Object value ) throws GMLSchemaException
         {
           final Node node = (Node) value;
           if( node == null )
-            marshalResultEater.unmarshallSuccesful( null );
+            marshalResultEater.eat( null );
           else
           {
             Object object = null;
@@ -133,11 +135,11 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
             {
               object = unmarshall( node, context, UrlResolverSingleton.getDefault() );
             }
-            catch( final TypeRegistryException e )
+            catch( TypeRegistryException e )
             {
               e.printStackTrace();
             }
-            marshalResultEater.unmarshallSuccesful( object );
+            marshalResultEater.eat( object );
           }
         }
       };
@@ -148,6 +150,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       final Document document = builder.newDocument();
       final DOMConstructor domBuilderContentHandler = new DOMConstructor( document, eater );
       // simulate property-tag for dombuilder
+      domBuilderContentHandler.startElement( "propns", "prop", "p:prop", null );
       xmlReader.setContentHandler( domBuilderContentHandler );
     }
     catch( final Exception e )
@@ -168,9 +171,9 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
   /**
    * old kalypso marshall method
    * 
-   * @deprecated
+   * @deprecated use kjhds ds use
    * @see #marshal(QName, Object, ContentHandler, LexicalHandler, URL)
    */
   @Deprecated
-  public abstract Node marshall( Object object, Document document, URL context ) throws TypeRegistryException;
+  public abstract void marshall( Object object, Node node, URL context ) throws TypeRegistryException;
 }

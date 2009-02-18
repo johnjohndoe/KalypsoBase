@@ -1,41 +1,49 @@
 package org.kalypso.gmlschema;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
  * <p>
  * GML Schema Catalog, benutzt den {@link org.kalypsodeegree_impl.gml.schema.GMLSchemaCache}.
  * </p>
- *
+ * 
  * @author schlienger
  */
 public final class GMLSchemaCatalog
 {
-  private final IUrlCatalog m_urlCatalog;
+  private final static Logger LOGGER = Logger.getLogger( GMLSchemaCache.class.getName() );
 
-  private final GMLSchemaCache m_cache;
+  static
+  {
+    LOGGER.setUseParentHandlers( KalypsoGmlSchemaTracing.traceSchemaParsing() );
+  }
+
+  private IUrlCatalog m_urlCatalog;
+
+  private GMLSchemaCache m_cache;
 
   /**
    * @throws NullPointerException
-   *             If catalog or cacheDirectory is null.
+   *           If catalog or cacheDirectory is null.
    */
-  public GMLSchemaCatalog( final IUrlCatalog catalog )
+  public GMLSchemaCatalog( final IUrlCatalog catalog, final File cacheDirectory )
   {
     if( catalog == null )
       throw new NullPointerException();
 
     m_urlCatalog = catalog;
 
-    m_cache = new GMLSchemaCache();
+    m_cache = new GMLSchemaCache( cacheDirectory );
+
+    LOGGER.info( "Schema-Katalog initialisiert mit DIR=" + cacheDirectory );
   }
 
   public IUrlCatalog getDefaultCatalog( )
@@ -45,31 +53,23 @@ public final class GMLSchemaCatalog
 
   /**
    * Lädt ein Schema aus dieser URL (nicht aus dem Cache!) und fügt es dann dem cache hinzu (mit namespace als key).
-   *
+   * 
    * @return null, wenn schema nicht geladen werden konnte
    */
   public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
   {
-    Debug.CATALOG.printf( "Loading schema into cache for gmlVersion %s and schemaLocation %s%n", gmlVersion, schemaLocation );
-
     try
     {
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      m_cache.addSchema( schema.getTargetNamespace(), schema, validity );
-
-      Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity );
+      m_cache.addSchema( schema.getTargetNamespace(), new GMLSchemaCache.GMLSchemaWrapper( schema, validity ) );
 
       return schema;
     }
     catch( final Exception e )
     {
-      final String message = "Failed to load schema into cache via schemaLocation" + schemaLocation;
-      StatusUtilities.statusFromThrowable( e, message );
-
-      Debug.CATALOG.printf( message );
-      Debug.CATALOG.printf( "%n" );
+      LOGGER.log( Level.SEVERE, "Fehler beim laden eines Schema über die SchemaLocation: " + schemaLocation, e );
 
       return null;
     }
@@ -92,8 +92,6 @@ public final class GMLSchemaCatalog
    */
   public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
   {
-    Debug.CATALOG.printf( "Trying to retrieve schema from cache for:%n\tnamespace: %s%n\tgmlVersion: %s%n\tschemaLocation: %s%n", namespace, gmlVersion, schemaLocation );
-
     // HACK: if we are looking for the gml namespace
     // tweak it and add the version number
     final URL catalogUrl;
@@ -114,45 +112,26 @@ public final class GMLSchemaCatalog
     else
     {
       catalogUrl = m_urlCatalog.getURL( namespace );
-
-      // HACK: crude hack to enforce GML3 for WFS
-      if( NS.WFS.equals( namespace ) )
-        version = "3.1.1";
-      else
-        version = gmlVersion;
+      version = gmlVersion;
     }
-
-
-    Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl );
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
     if( schemaUrl == null )
-      Debug.CATALOG.printf( "No location for namespace: %s - trying to load from cache.%n", namespace );
+      LOGGER.log( Level.WARNING, "No location for namespace: " + namespace + " - trying to load from cache." );
 
-    try
-    {
-      // else, try to get it from the external cache
-      final URIResolver uriResolver = URIResolverPlugin.createResolver();
-      final String externalForm = schemaUrl == null ? null : schemaUrl.toExternalForm();
-      final String resolvedUri = uriResolver.resolve( externalForm, null, externalForm );
-      final URL resolvedUrl = resolvedUri == null ? null : new URL( resolvedUri );
-
-      // auch versuchen aus dem Cache zu laden, wenn die url null ist;
-      // vielleicht ist der namespace ja noch im file-cache
-      return m_cache.getSchema( namespace, version, resolvedUrl );
-    }
-    catch( final MalformedURLException e )
-    {
-      throw new InvocationTargetException( e );
-    }
+    // auch versuchen aus dem Cache zu laden, wenn die url null ist;
+    // vielleicht ist der namespace ja noch im file-cache
+    return m_cache.getSchema( namespace, version, schemaUrl );
   }
 
   /**
    * Clears the cache. Schematas are reloaded after this operation.
+   * 
+   * @param onlyMemoryCache
+   *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
-  public void clearCache( )
+  public void clearCache( final boolean onlyMemoryCache )
   {
-    m_cache.clearCache();
-    Debug.CATALOG.printf( "Cleared schema cache." );
+    m_cache.clearCache( onlyMemoryCache );
   }
 }

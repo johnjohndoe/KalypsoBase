@@ -39,9 +39,10 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * representation of a feature content definition from xml schema that is defined by restriction.
@@ -54,7 +55,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
 
   private FeatureContentType m_restrictionBase = null;
 
-  public FeatureContentTypeFromRestriction( final GMLSchema schema, final ComplexType complexType, final ComplexRestrictionType restriction )
+  public FeatureContentTypeFromRestriction( GMLSchema schema, ComplexType complexType, ComplexRestrictionType restriction )
   {
     super( schema, complexType );
     m_restriction = restriction;
@@ -70,12 +71,31 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
   @Override
+  public void init( int initializeRun ) throws GMLSchemaException
+  {
+    switch( initializeRun )
+    {
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final QName base = m_restriction.getBase();
+        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
+        final GMLSchema schema = reference.getGMLSchema();
+        final ComplexType complexType = reference.getComplexType();
+        m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
+        break;
+    }
+    super.init( initializeRun );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
+   */
   public IPropertyType[] getProperties( )
   {
-    return super.getProperties();
+    return m_pt;
   }
 
   /**
@@ -83,22 +103,6 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
    */
   public IFeatureContentType getBase( )
   {
-    if( m_restrictionBase == null )
-    {
-      try
-      {
-        final QName base = m_restriction.getBase();
-        final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
-        final ComplexType complexType = reference.getComplexType();
-        m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
-      }
-      catch( final GMLSchemaException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
     return m_restrictionBase;
   }
 
@@ -115,7 +119,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
    */
   public IPropertyType[] getDirectProperties( )
   {
-    return super.getProperties();
+    return m_pt;
   }
 
   /**
@@ -125,7 +129,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
   public XmlObject[] collectFunctionProperties( )
   {
     final XmlObject[] myObjects = super.collectFunctionProperties();
-    final XmlObject[] baseObjects = getBase().collectFunctionProperties();
+    final XmlObject[] baseObjects = m_restrictionBase.collectFunctionProperties();
 
     final XmlObject[] allObjects = new XmlObject[myObjects.length + baseObjects.length];
 
@@ -133,7 +137,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
     System.arraycopy( baseObjects, 0, allObjects, myObjects.length, baseObjects.length );
 
     // TODO: consider the case when function-properties get overridden.
-    // At the moment we have 'myObject' before 'allObjects', so new definitions get found first.
+    // At the moment we have 'myObject' before 'allObjects', so newdefinitions get found first.
 
     return allObjects;
   }

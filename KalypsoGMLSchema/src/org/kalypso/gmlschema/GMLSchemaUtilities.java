@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- *
+ * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- *
+ * 
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- *
+ * 
  * and
- *
+ * 
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- *
+ * 
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- *
+ * 
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
+ * 
  * Contact:
- *
+ * 
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- *
+ * 
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.gmlschema;
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,7 +74,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.SimpleContentDocument.SimpleContent
 import org.apache.xmlbeans.impl.xb.xsdschema.UnionDocument.Union;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
@@ -88,9 +88,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.visitor.FindSubstitutesGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 import org.kalypso.gmlschema.xml.GroupReference;
-import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 import org.kalypso.gmlschema.xml.TypeReference;
 import org.w3c.dom.Document;
@@ -99,23 +97,11 @@ import org.w3c.dom.Text;
 
 /**
  * Utilities around GMLSchema-processing
- *
+ * 
  * @author doemming
  */
 public class GMLSchemaUtilities
 {
-  public static final String GML2_FeatureTypeBaseType = "AbstractFeatureType";
-
-  public static final String GML3_FeatureTypeBaseType = "AbstractGMLType";
-
-  public static final QName GML2_RelationBaseType = new QName( NS.GML2, "FeatureAssociationType" );
-
-  public static final QName GML2_GeometryAssociationType = new QName( NS.GML2, "GeometryAssociationType" );
-
-  public static final QName GML3_FeaturePropertyType = new QName( NS.GML2, "FeaturePropertyType" );
-
-  public static final QName GML3_ReferenceType = new QName( NS.GML2, "ReferenceType" );
-
   public static final String BASE_SCHEMA_IN_JAR = "base.xsd";
 
   private static final int CONSTRUCTION_REFERENCED_TYPE = 1;
@@ -130,73 +116,34 @@ public class GMLSchemaUtilities
 
   private static final int CONSTRUCTION_ANYTYPE = 6;
 
-  private static final IUrlResolver m_urlUtitilies = new UrlUtilities();
+  public static final boolean OCCURS_MIN = false;
 
-  private static final Map<QName, Map<String, FindSubstitutesGMLSchemaVisitor>> m_substitutesResultMap = new HashMap<QName, Map<String, FindSubstitutesGMLSchemaVisitor>>();
+  public static final boolean OCCURS_MAX = true;
 
-  private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
+  private static UrlUtilities m_urlUtitilies = new UrlUtilities();
 
   /**
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
    */
-  public static synchronized boolean substitutes( final IFeatureType type, final QName substitueeName )
+  public static boolean substitutes( final IFeatureType type, final QName substitueeName )
   {
     // everyone is substituting himself
     if( type.getQName().equals( substitueeName ) )
       return true;
 
     final IFeatureType substitutionGroupFT = type.getSubstitutionGroupFT();
-    final boolean substitutesResult;
     if( substitutionGroupFT == null )
-      substitutesResult = false;
-    else
-    {
-      final QName keyQName = substitutionGroupFT.getQName();
-      Map<QName, Boolean> substitutesList = m_substitutesCache.get( keyQName );
-      if( substitutesList == null )
-      {
-        substitutesList = new HashMap<QName, Boolean>();
-        m_substitutesCache.put( keyQName, substitutesList );
-      }
+      return false;
 
-      final Boolean cachedResult = substitutesList.get( substitueeName );
-      if( cachedResult != null )
-      {
-        substitutesResult = cachedResult;
-      }
-      else
-      {
-        substitutesResult = substitutes( substitutionGroupFT, substitueeName );
-        substitutesList.put( substitueeName, substitutesResult );
-      }
-    }
-
-    return substitutesResult;
-  }
-
-  /**
-   * Checks, if a feature type substitutes one of a given list of qnames.
-   *
-   * @param substitueeNames
-   *          Names of the types which may or may not be substituted by type
-   */
-  public static boolean substitutes( final IFeatureType type, final QName[] substitueeNames )
-  {
-    for( final QName substitueeName : substitueeNames )
-    {
-      if( substitutes( type, substitueeName ) )
-        return true;
-    }
-
-    return false;
+    return substitutes( substitutionGroupFT, substitueeName );
   }
 
   /**
    * @param gmlSchema
    * @param complexType
    */
-  public static QName findBaseType( final GMLSchema gmlSchema, final ComplexType complexType, final String gmlVersion ) throws GMLSchemaException
+  public static QName findBaseType( final GMLSchema gmlSchema, ComplexType complexType, String gmlVersion ) throws GMLSchemaException
   {
     final ExplicitGroup sequence = complexType.getSequence();
     final String name = complexType.getName();
@@ -245,9 +192,8 @@ public class GMLSchemaUtilities
     }
     else
     {
-      // TODO
-// if( Debug.traceSchemaParsing() )
-// System.out.println( "unknown type:" + complexType.getName() );
+      if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+        System.out.println( "unknown type:" + complexType.getName() );
       return null;
       // throw new UnsupportedOperationException( "unknown base type for " + complexType.toString() );
     }
@@ -260,16 +206,15 @@ public class GMLSchemaUtilities
     final TypeReference reference = gmlSchema.resolveTypeReference( base );
     if( reference == null )
     {
-      // TODO
-// if( Debug.traceSchemaParsing() )
-// System.out.println( "unknown name: " + base );
+      if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+        System.out.println( "unknown name: " + base );
       return null;
     }
 
     return findBaseType( reference, gmlVersion );
   }
 
-  private static boolean isXDSAnyType( final QName base )
+  private static boolean isXDSAnyType( QName base )
   {
     if( !base.getNamespaceURI().equals( NS.XSD_SCHEMA ) )
       return false;
@@ -280,7 +225,7 @@ public class GMLSchemaUtilities
    * @param schema
    * @param simpleType
    */
-  public static QName findBaseType( final GMLSchema schema, final SimpleType simpleType, final String gmlVersion ) throws GMLSchemaException
+  public static QName findBaseType( GMLSchema schema, SimpleType simpleType, String gmlVersion ) throws GMLSchemaException
   {
     // 1. check if it is a named type
     // propably a typehanlder exists for this
@@ -308,7 +253,7 @@ public class GMLSchemaUtilities
     throw new UnsupportedOperationException();
   }
 
-  private static QName findBaseType( final GMLSchema schema, final org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( GMLSchema schema, org.apache.xmlbeans.impl.xb.xsdschema.ListDocument.List list, String gmlVersion ) throws GMLSchemaException
   {
     final LocalSimpleType simpleType = list.getSimpleType();
     final QName itemType = list.getItemType();
@@ -331,26 +276,27 @@ public class GMLSchemaUtilities
     return new ListQName( base );
   }
 
-  private static QName findBaseType( final GMLSchema schema, final Union union, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( GMLSchema schema, Union union, String gmlVersion ) throws GMLSchemaException
   {
     final Set<QName> mixedSet = new HashSet<QName>();
     // embeddded simple types
     final LocalSimpleType[] simpleTypeArray = union.getSimpleTypeArray();
     if( simpleTypeArray.length > 0 )
     {
-      for( final LocalSimpleType element : simpleTypeArray )
+      for( int i = 0; i < simpleTypeArray.length; i++ )
       {
-        final QName base = findBaseType( schema, element, gmlVersion );
+        final QName base = findBaseType( schema, simpleTypeArray[i], gmlVersion );
         if( base != null )
           mixedSet.add( base );
       }
     }
     // attribute membertypes
-    final List<QName> memberTypes = memberTypesFromUnion( union );
+    final List<QName> memberTypes = union.getMemberTypes();
     if( memberTypes != null )
     {
-      for( final QName typeQName : memberTypes )
+      for( Iterator<QName> iter = memberTypes.iterator(); iter.hasNext(); )
       {
+        final QName typeQName = iter.next();
         if( isKnownType( typeQName, gmlVersion ) )
           mixedSet.add( getKnownTypeFor( typeQName, gmlVersion ) );
         else
@@ -369,18 +315,9 @@ public class GMLSchemaUtilities
       return new MixedQName( bases );
   }
 
-  @SuppressWarnings("unchecked")
-  private static List<QName> memberTypesFromUnion( final Union union )
-  {
-    return union.getMemberTypes();
-  }
-
-  private static QName findBaseType( final GMLSchema schema, final Restriction restriction, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( GMLSchema schema, Restriction restriction, String gmlVersion ) throws GMLSchemaException
   {
     final QName base = restriction.getBase();
-
-    if( base == null )
-      throw new GMLSchemaException( "Missing base name for restriction: " + restriction );
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 
@@ -391,7 +328,7 @@ public class GMLSchemaUtilities
 
   }
 
-  public static QName findBaseType( final GMLSchema schema, final Element element, final String gmlVersion ) throws GMLSchemaException
+  public static QName findBaseType( final GMLSchema schema, final Element element, String gmlVersion ) throws GMLSchemaException
   {
     final QName qName;
     final int constructionType = getConstructionType( element );
@@ -425,9 +362,8 @@ public class GMLSchemaUtilities
         final ElementReference elementReference = schema.resolveElementReference( qName );
         if( elementReference == null )
         {
-          // TODO
-// if( Debug.traceSchemaParsing() )
-// System.out.println( "could not resolve element reference to " + qName );
+          if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+            System.out.println( "could not resolve element reference to " + qName );
           return null;
         }
         return findBaseType( elementReference, gmlVersion );
@@ -445,7 +381,7 @@ public class GMLSchemaUtilities
    * @param element
    * @return constructiontyped integer
    */
-  private static int getConstructionType( final Element element )
+  private static int getConstructionType( Element element )
   {
     final QName ref = element.getRef();
     if( ref != null )
@@ -470,7 +406,7 @@ public class GMLSchemaUtilities
   /**
    * @param reference
    */
-  private static QName findBaseType( final SimpleTypeReference reference, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( SimpleTypeReference reference, String gmlVersion ) throws GMLSchemaException
   {
     return findBaseType( reference.getGMLSchema(), reference.getSimpleType(), gmlVersion );
   }
@@ -490,23 +426,23 @@ public class GMLSchemaUtilities
   /**
    * @param reference
    */
-  private static QName findBaseType( final ComplexTypeReference reference, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( ComplexTypeReference reference, String gmlVersion ) throws GMLSchemaException
   {
     return findBaseType( reference.getGMLSchema(), reference.getComplexType(), gmlVersion );
   }
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   *
+   * 
    * @param qName
    * @return true is qName is a known type
    */
-  public static boolean isKnownType( final QName qName, final String gmlVersion )
+  public static boolean isKnownType( final QName qName, String gmlVersion )
   {
     return getKnownTypeFor( qName, gmlVersion ) != null;
   }
 
-  private static QName findBaseType( final ElementReference reference, final String gmlVersion ) throws GMLSchemaException
+  private static QName findBaseType( final ElementReference reference, String gmlVersion ) throws GMLSchemaException
   {
     final Element element = reference.getElement();
     final GMLSchema schema = reference.getGMLSchema();
@@ -516,7 +452,7 @@ public class GMLSchemaUtilities
   /**
    * @param qName
    */
-  private static QName getKnownTypeFor( final QName qName, final String gmlVersion )
+  private static QName getKnownTypeFor( final QName qName, String gmlVersion )
   {
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( qName );
@@ -529,16 +465,12 @@ public class GMLSchemaUtilities
     if( NS.GML2.equals( namespaceURI ) )
     {
       if( GMLSchemaUtilities.getBaseOfFeatureType( gmlVersion ).equals( localPart ) )
-        return qName;
+        return result;
 
-      /* Special case: the base of everything, only valid in gml3 */
-      if( gmlVersion.startsWith( "3" ) && "_Object".equals( localPart ) )
-        return qName;
+      if( GMLSchemaUtilities.getBaseOfGeometriesType().equals( localPart ) )
+        return result;
 
-// if( GMLSchemaUtilities.getBaseOfGeometriesType().equals( localPart ) )
-// return result;
-
-      if( isRelationType( gmlVersion, qName ) )
+      if( GMLSchemaUtilities.getBaseOfRelationType( gmlVersion ).equals( localPart ) )
         return result;
     }
     return null;
@@ -558,14 +490,15 @@ public class GMLSchemaUtilities
     return new ComplexTypeReference( gmlSchema, complexType );
   }
 
-  public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, final IFeatureType featureType )
+  public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, IFeatureType featureType )
   {
     final List<String> result = new ArrayList<String>();
     if( featureType.getAllGeomteryProperties().length > 0 )
       result.add( pathToHere );
     final IPropertyType[] props = featureType.getProperties();
-    for( final IPropertyType pt : props )
+    for( int i = 0; i < props.length; i++ )
     {
+      final IPropertyType pt = props[i];
       if( pt instanceof IRelationType )
       {
         final IRelationType rt = (IRelationType) pt;
@@ -574,12 +507,12 @@ public class GMLSchemaUtilities
         final IFeatureType targetFeatureType = rt.getTargetFeatureType();
         final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, gmlSchma, true, true );
 
-        for( final IFeatureType type : targetFeatureTypes )
+        for( int j = 0; j < targetFeatureTypes.length; j++ )
         {
+          final IFeatureType type = targetFeatureTypes[j];
           if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
             result.add( newPath + "[" + type.getQName().getLocalPart() + "]" );
-          // final String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() +
-          // "]", type );
+          String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() + "]", type );
           // for( String string : strings )
           // {
           // // TODO complete
@@ -604,7 +537,7 @@ public class GMLSchemaUtilities
 
       createSchemaDir( schemaURL, schemaDocument, tmpBase );
 
-      final JarHelper helper = new JarHelper();
+      JarHelper helper = new JarHelper();
       helper.jarDir( tmpBase, archiveFile );
     }
     finally
@@ -614,8 +547,8 @@ public class GMLSchemaUtilities
   }
 
   /**
-   * Similiar to {@link #createSchemaArchive(URL, File)}, but the schema is already loaded and the files are not zipped
-   * but put simply into the given directory. }
+   * Similiar to
+   * {@link #createSchemaArchive(URL, File), but the schema is already loaded and the files are not zipped but put simply into the given directory.  }
    */
   public static void createSchemaDir( final URL schemaURL, final SchemaDocument schemaDocument, final File archiveDir ) throws XmlException, IOException
   {
@@ -639,8 +572,9 @@ public class GMLSchemaUtilities
     final UrlResolver resolver = new UrlResolver();
     // imports
     final Import[] importArray = schemaDocument.getSchema().getImportArray();
-    for( final Import import_ : importArray )
+    for( int i = 0; i < importArray.length; i++ )
     {
+      final Import import_ = importArray[i];
       final String oldSchemaLocation = import_.getSchemaLocation();
       if( oldSchemaLocation != null )
       {
@@ -650,8 +584,9 @@ public class GMLSchemaUtilities
     }
     // includes
     final Include[] includeArray = schemaDocument.getSchema().getIncludeArray();
-    for( final Include include : includeArray )
+    for( int i = 0; i < includeArray.length; i++ )
     {
+      final Include include = includeArray[i];
       final String oldSchemaLocation = include.getSchemaLocation();
       final URL originalIncludeURL = urlResolver.resolveURL( oldSchemaLocation );
 
@@ -690,7 +625,7 @@ public class GMLSchemaUtilities
 
         final IUrlResolver2 newResolver = new IUrlResolver2()
         {
-          public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+          public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
           {
             return resolver.resolveURL( originalIncludeURL, relativeOrAbsolute );
           }
@@ -718,7 +653,7 @@ public class GMLSchemaUtilities
     if( newSchemaLocation.length() > 4 && !knownlocations.containsValue( newSchemaLocation ) )
       return newSchemaLocation;
     // generate generic result
-    final String location = "include";
+    String location = "include";
     int i = 1;
     String result;
     do
@@ -735,7 +670,7 @@ public class GMLSchemaUtilities
     return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
   }
 
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -754,16 +689,7 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexType complexType, final List<ElementWithOccurs> collector, final Occurs occurs ) throws GMLSchemaException
-  {
-    return collectElements( schema, complexType, collector, occurs, false );
-  }
-
-  /**
-   * @param followExtensions
-   *          If <code>true</code>, also collects elements from extensions/restrictions.
-   */
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs, final boolean followExtensions ) throws GMLSchemaException
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -779,24 +705,10 @@ public class GMLSchemaUtilities
     collectElements( schema, choice, collector, occurs );
     final All all = complexType.getAll();
     collectElements( schema, all, collector, occurs );
-
-    if( followExtensions )
-    {
-      final ComplexContent complexContent = complexType.getComplexContent();
-      if( complexContent != null )
-      {
-        final ExtensionType extension = complexContent.getExtension();
-        collectElements( schema, extension, collector, occurs );
-
-        final ComplexRestrictionType restriction = complexContent.getRestriction();
-        collectElements( schema, restriction, collector, occurs );
-      }
-    }
-
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -816,7 +728,7 @@ public class GMLSchemaUtilities
     return collector;
   }
 
-  public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final Group group, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
+  public static List<ElementWithOccurs> collectElements( GMLSchema schema, Group group, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
       collector = new ArrayList<ElementWithOccurs>();
@@ -830,29 +742,29 @@ public class GMLSchemaUtilities
     final LocalElement[] elementArray = group.getElementArray();
     if( elementArray != null )
     {
-      for( final LocalElement element : elementArray )
-        collector.add( new ElementWithOccurs( element, occurs ) );
+      for( int i = 0; i < elementArray.length; i++ )
+        collector.add( new ElementWithOccurs( elementArray[i], occurs ) );
     }
     // sequence
     final ExplicitGroup[] sequenceArray = group.getSequenceArray();
     if( sequenceArray != null )
     {
-      for( final ExplicitGroup element : sequenceArray )
-        collectElements( schema, element, collector, occurs );
+      for( int i = 0; i < sequenceArray.length; i++ )
+        collectElements( schema, sequenceArray[i], collector, occurs );
     }
     // all
     final All[] allArray = group.getAllArray();
     if( allArray != null )
     {
-      for( final All element : allArray )
-        collectElements( schema, element, collector, occurs );
+      for( int i = 0; i < allArray.length; i++ )
+        collectElements( schema, allArray[i], collector, occurs );
     }
     // groups
     final GroupRef[] groupArray = group.getGroupArray();
     if( groupArray != null )
     {
-      for( final GroupRef element : groupArray )
-        collectElements( schema, element, collector, occurs );
+      for( int i = 0; i < groupArray.length; i++ )
+        collectElements( schema, groupArray[i], collector, occurs );
     }
     // group reference
     final QName ref = group.getRef();
@@ -869,8 +781,8 @@ public class GMLSchemaUtilities
     final ExplicitGroup[] choiceArray = group.getChoiceArray();
     if( choiceArray != null )
     {
-      for( final ExplicitGroup element : choiceArray )
-        collectElements( schema, element, collector, occurs );
+      for( int i = 0; i < choiceArray.length; i++ )
+        collectElements( schema, choiceArray[i], collector, occurs );
     }
     return collector;
   }
@@ -881,19 +793,18 @@ public class GMLSchemaUtilities
   public static String getBaseOfFeatureType( final String gmlVersion )
   {
     if( gmlVersion.startsWith( "2" ) )
-      return GML2_FeatureTypeBaseType;
+      return GMLSchemaConstants.GML2_FeatureTypeBaseType;
     if( gmlVersion.startsWith( "3" ) )
-      return GML3_FeatureTypeBaseType;
+      return GMLSchemaConstants.GML3_FeatureTypeBaseType;
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 
-  public static boolean isRelationType( final String gmlVersion, final QName qname )
+  public static String getBaseOfRelationType( String gmlVersion )
   {
     if( gmlVersion.startsWith( "2" ) )
-      return GML2_RelationBaseType.equals( qname );
+      return GMLSchemaConstants.GML2_RelationBaseType;
     if( gmlVersion.startsWith( "3" ) )
-      return GML3_FeaturePropertyType.equals( qname ) || GML3_ReferenceType.equals( qname );
-
+      return GMLSchemaConstants.GML3_RelationBaseType;
     throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
   }
 
@@ -913,7 +824,7 @@ public class GMLSchemaUtilities
     return "AbstractGeometryType";
   }
 
-  /** Splits a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
+  /** Splitts a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
   public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context )
   {
     final int schemaCount = schemaLocation == null ? 0 : schemaLocation.length() / 2 + 1;
@@ -938,7 +849,7 @@ public class GMLSchemaUtilities
         }
         catch( final MalformedURLException ignores )
         {
-          // do not check for parse errors, just ignore them for backwards compability
+          // do not check for parse errors, ust ignore them for backwards compability
           // throw new GMLSchemaException( "Error in schemaLocation. This is no URL: " + location, e );
         }
       }
@@ -1033,25 +944,10 @@ public class GMLSchemaUtilities
     if( contextSchema == null )
       contextSchema = ft.getGMLSchema();
 
-    final QName cacheFTKey = ft.getQName();
-    Map<String, FindSubstitutesGMLSchemaVisitor> map = m_substitutesResultMap.get( cacheFTKey );
-    if( map == null )
-    {
-      map = new HashMap<String, FindSubstitutesGMLSchemaVisitor>();
-      m_substitutesResultMap.put( cacheFTKey, map );
-    }
-
-    final String cacheSchemaKey = contextSchema.getTargetNamespace() + "#" + contextSchema.getGMLVersion();
-
-    FindSubstitutesGMLSchemaVisitor visitor = map.get( cacheSchemaKey );
-    if( visitor == null )
-    {
-      // query for it
-      visitor = new FindSubstitutesGMLSchemaVisitor( ft );
-      contextSchema.accept( visitor );
-      map.put( cacheSchemaKey, visitor );
-    }
-    return visitor.getSubstitutes( includeAbstract, inclusiveThis );
+    // query for it
+    final FindSubstitutesGMLSchemaVisitor visitor = new FindSubstitutesGMLSchemaVisitor( ft, includeAbstract, inclusiveThis );
+    contextSchema.accept( visitor );
+    return visitor.getSubstitutes();
   }
 
 }

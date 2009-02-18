@@ -29,6 +29,7 @@
  */
 package org.kalypso.gmlschema.property.relation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +43,9 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * representation of a feature content definition from xml schema that is defined by restriction.
@@ -108,15 +109,15 @@ public class RelationContentTypeFromRestriction extends RelationContentType
   @Override
   public String[] collectReferences( )
   {
-    final XmlObject[] xmlObjects = getComplexType().selectPath( RelationContentType.DOCREF_XPATH );
-    final XmlObject[] xmlObjectsFromRestriction = m_restriction.selectPath( RelationContentType.DOCREF_XPATH );
+    final XmlObject[] xmlObjects = getComplexType().selectPath( DOCREF_XPATH );
+    final XmlObject[] xmlObjectsFromRestriction = m_restriction.selectPath( DOCREF_XPATH );
 
     /* Derived refs overwrite ths from the restriction. */
     final Set<String> refs = new HashSet<String>( xmlObjects.length );
     for( final XmlObject object : xmlObjectsFromRestriction )
-      refs.add( object.newCursor().getTextValue().trim() );
+      refs.add( object.newCursor().getTextValue() );
     for( final XmlObject object : xmlObjects )
-      refs.add( object.newCursor().getTextValue().trim() );
+      refs.add( object.newCursor().getTextValue() );
 
     return refs.toArray( new String[refs.size()] );
   }

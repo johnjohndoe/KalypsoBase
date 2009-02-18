@@ -32,16 +32,14 @@ package org.kalypso.gmlschema.property.relation;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.Occurs;
 
 /**
  * @author doemming
@@ -54,18 +52,16 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
 
   private IFeatureType m_ftRelationTarget = null;
 
-  private IAnnotation m_annotation;
-
-  public AdvRelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final QName advReferenziertesElement, final IFeatureType featureType )
+  public AdvRelationType( final GMLSchema gmlSchema, final ElementWithOccurs element, final QName advReferenziertesElement )
   {
-    super( gmlSchema, featureType, element, occurs, null );
+    super( gmlSchema, element );
     m_advReferenziertesElement = advReferenziertesElement;
   }
 
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( final int initializeRun ) throws GMLSchemaException
+  public void init( int initializeRun ) throws GMLSchemaException
   {
     switch( initializeRun )
     {
@@ -115,22 +111,5 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
   public IDocumentReference[] getDocumentReferences( )
   {
     return DOCUMENT_REFERENCES;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
-   */
-  @Override
-  public IAnnotation getAnnotation( )
-  {
-    return m_annotation;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#cloneForFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
-   */
-  public IPropertyType cloneForFeatureType( final IFeatureType featureType )
-  {
-    return new AdvRelationType( getGMLSchema(), getElement(), getOccurs(), m_advReferenziertesElement, featureType );
   }
 }

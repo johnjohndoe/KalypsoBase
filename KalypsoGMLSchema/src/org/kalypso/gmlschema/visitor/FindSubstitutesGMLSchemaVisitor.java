@@ -30,14 +30,13 @@
 package org.kalypso.gmlschema.visitor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
@@ -47,15 +46,21 @@ import org.kalypso.gmlschema.feature.IFeatureType;
  */
 public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
 {
-  private final Set<IFeatureType> m_result = new HashSet<IFeatureType>();
+  private final boolean m_includeAbstract;
+
+  private final boolean m_includeThis;
+
+  private final List<IFeatureType> m_result = new ArrayList<IFeatureType>();
 
   private final QName m_subsHeadQName;
 
   private final IFeatureType m_substitutionHeadFT;
 
-  public FindSubstitutesGMLSchemaVisitor( final IFeatureType substitutionHeadFT )
+  public FindSubstitutesGMLSchemaVisitor( final IFeatureType substitutionHeadFT, boolean includeAbstract, boolean includeThis )
   {
     m_substitutionHeadFT = substitutionHeadFT;
+    m_includeAbstract = includeAbstract;
+    m_includeThis = includeThis;
     m_subsHeadQName = substitutionHeadFT.getQName();
   }
 
@@ -68,24 +73,36 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     for( final IFeatureType ft : allFeatureTypes )
     {
       if( GMLSchemaUtilities.substitutes( ft, m_subsHeadQName ) )
+      {
         m_result.add( ft );
+      }
     }
     return true;
   }
 
-  public IFeatureType[] getSubstitutes( final boolean includeAbstract, final boolean includeThis )
+  public IFeatureType[] getSubstitutes( )
   {
     final List<IFeatureType> result = new ArrayList<IFeatureType>();
-
+    if( !result.contains( m_substitutionHeadFT ) && isRequested( m_substitutionHeadFT ) )
+      result.add( m_substitutionHeadFT );
     final IFeatureType[] fT = m_result.toArray( new IFeatureType[m_result.size()] );
-    for( final IFeatureType ft : fT )
+    for( int i = 0; i < fT.length; i++ )
     {
-      if( !ft.isAbstract() || includeAbstract )
-      {
-        if( !ft.equals( m_substitutionHeadFT ) || includeThis)
-          result.add( ft );
-      }
+      final IFeatureType ft = fT[i];
+      if( !result.contains( ft ) && isRequested( ft ) )
+        result.add( ft );
     }
     return result.toArray( new IFeatureType[result.size()] );
+  }
+
+  private boolean isRequested( final IFeatureType ft )
+  {
+    // abstract behaviour
+    if( !m_includeAbstract && ft.isAbstract() )
+      return false;
+    // self-include behaviour
+    if( !m_includeThis && ft == m_substitutionHeadFT )
+      return false;
+    return true;
   }
 }

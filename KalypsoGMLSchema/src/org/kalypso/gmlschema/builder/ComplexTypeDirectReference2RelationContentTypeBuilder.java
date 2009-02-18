@@ -38,6 +38,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ExtensionType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexContentDocument.ComplexContent;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -45,26 +46,27 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromExtension;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromRestriction;
 import org.kalypso.gmlschema.property.relation.RelationContentTypeFromSequence;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class ComplexTypeDirectReference2RelationContentTypeBuilder extends AbstractBuilder
+public class ComplexTypeDirectReference2RelationContentTypeBuilder implements IBuilder
 {
+
   private final String m_version;
 
-  public ComplexTypeDirectReference2RelationContentTypeBuilder( final String version )
+  public ComplexTypeDirectReference2RelationContentTypeBuilder( String version )
   {
     m_version = version;
   }
 
   /**
-   * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
+   * @param gmlSchema
+   * @param complexTypeObject
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object complexTypeObject ) throws GMLSchemaException
+  public Object[] build( GMLSchema gmlSchema, Object complexTypeObject ) throws GMLSchemaException
   {
     RelationContentType result = null;
     final ComplexType complexType = (ComplexType) complexTypeObject;
@@ -100,12 +102,12 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
     final ComplexType complexType = (ComplexType) object;
     // check if base is a RelationType
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, (ComplexType) object, m_version );
-    if( baseType != null && GMLSchemaUtilities.isRelationType( m_version, baseType ) )
+    if( baseType != null//
+        && NS.GML2.equals( baseType.getNamespaceURI() )//
+        && GMLSchemaUtilities.getBaseOfRelationType( m_version ).equals( baseType.getLocalPart() ) )
       return true;
-
     // find referenced element (target)
     final List<ElementWithOccurs> elements = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
-    // Release this to allow array property types?
     if( elements.size() != 1 )
       return false;
     final ElementWithOccurs targetElement = elements.get( 0 );
@@ -113,27 +115,33 @@ public class ComplexTypeDirectReference2RelationContentTypeBuilder extends Abstr
     final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement.getElement(), m_version );
     if( baseQName == null )
       return false;
-
-    if( isFeature( baseQName ) )
-      return true;
-
-    return false;
-  }
-
-  private boolean isFeature( final QName baseQName )
-  {
     if( !NS.GML2.equals( baseQName.getNamespaceURI() ) )
       return false;
     return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( baseQName.getLocalPart() );
   }
 
+  // private List<LocalElement> findReferencedElements( GMLSchema gmlSchema, ComplexType complexType )
+  // {
+  // final ExplicitGroup sequence = complexType.getSequence();
+  // final List<LocalElement> collector = GMLSchemaUtilities.collectElements( gmlSchema, sequence, null );
+  // final All all = complexType.getAll();
+  // GMLSchemaUtilities.collectElements( gmlSchema, all, collector );
+  // final GroupRef group = complexType.getGroup();
+  // GMLSchemaUtilities.collectElements( gmlSchema, group, collector );
+  // final ExplicitGroup choice = complexType.getChoice();
+  // GMLSchemaUtilities.collectElements( gmlSchema, choice, collector );
+  // return collector;
+  // }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
-    if( other instanceof ComplexType2RelationContentTypeBuilder )
+    if(
+    // other instanceof GML3_ComplexType2RelationContentTypeBuilder//
+    // ||
+    other instanceof ComplexType2RelationContentTypeBuilder )
       return true;
     return false;
   }

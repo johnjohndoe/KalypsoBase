@@ -46,25 +46,13 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.annotation.DefaultAnnotation;
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.xml.ElementReference;
 
 /**
- * This is a FeatureType created programatically.
- * 
- * @author doemming, kurzbach
+ * @author doemming
  */
 public class CustomFeatureType implements IFeatureType
 {
@@ -84,55 +72,10 @@ public class CustomFeatureType implements IFeatureType
 
   private final IGMLSchema m_schema;
 
-  private final DefaultAnnotation m_annotation;
-
-  private IFeatureType m_substitutionGroupFT = null;
-
-  /**
-   * The {@link CustomFeatureType} may be backed by a real schema if that is needed. However in some cases it is ok to
-   * provide an {@link org.kalypso.gmlschema.EmptyGMLSchema} in the constructor. Note/TODO: for substitution types it is
-   * necessary at the time to use GMLSchema instead of the IGMLSchema interface.
-   */
-  public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts, final QName substitutionGroup )
-  {
-    this( schema, qName, pts );
-    if( substitutionGroup != null )
-    {
-      try
-      {
-        if( !(schema instanceof GMLSchema) )
-          return;
-        
-        final ElementReference substitutesReference = ((GMLSchema)schema).resolveElementReference( substitutionGroup );
-        if( substitutesReference == null )
-          return;
-        final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
-        final Element substitutesElement = substitutesReference.getElement();
-        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
-          return;
-        final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
-        m_substitutionGroupFT = ft;
-      }
-      catch( final GMLSchemaException e )
-      {
-        KalypsoGMLSchemaPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        throw new IllegalStateException( e );
-      }
-
-    }
-  }
-
-  /**
-   * Use this constructor if no substitution type is given. This might result in some serious errors so it is suggested
-   * to use the other constructor.
-   * 
-   * @deprecated
-   */
   public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
     m_schema = schema;
     m_qName = qName;
-    m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     int geoPos = -1;
     final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
     for( int i = 0; i < pts.length; i++ )
@@ -148,9 +91,7 @@ public class CustomFeatureType implements IFeatureType
         {
           col.add( vpt );
           if( geoPos < 0 )
-          {
             geoPos = i;
-          }
         }
       }
     }
@@ -162,8 +103,6 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
    */
-  @SuppressWarnings("deprecation")
-  @Deprecated
   public String getName( )
   {
     return m_qName.getLocalPart();
@@ -180,7 +119,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties(int)
    */
-  public IPropertyType getProperties( final int position )
+  public IPropertyType getProperties( int position )
   {
     return m_properties[position];
   }
@@ -196,7 +135,7 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(javax.xml.namespace.QName)
    */
-  public IPropertyType getProperty( final QName qname )
+  public IPropertyType getProperty( QName qname )
   {
     return m_qNameMap.get( qname );
   }
@@ -204,8 +143,6 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperty(java.lang.String)
    */
-  @SuppressWarnings("deprecation")
-  @Deprecated
   public IPropertyType getProperty( final String propNameLocalPart )
   {
     return m_locatPartMap.get( propNameLocalPart );
@@ -224,7 +161,17 @@ public class CustomFeatureType implements IFeatureType
    */
   public IFeatureType getSubstitutionGroupFT( )
   {
-    return m_substitutionGroupFT;
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getSubstituts(org.kalypso.gmlschema.GMLSchema, boolean, boolean)
+   */
+  public IFeatureType[] getSubstituts( IGMLSchema contextSchema, boolean includeAbstract, boolean inclusiveThis )
+  {
+    if( inclusiveThis )
+      return new IFeatureType[] { this };
+    return new IFeatureType[0];
   }
 
   /**
@@ -238,8 +185,6 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
    */
-  @SuppressWarnings("deprecation")
-  @Deprecated
   public String getNamespace( )
   {
     return m_qName.getNamespaceURI();
@@ -258,12 +203,7 @@ public class CustomFeatureType implements IFeatureType
    */
   public int getPropertyPosition( final IPropertyType pt )
   {
-    final Integer pos = m_positionMap.get( pt );
-
-    if( pos == null )
-      return -1;
-
-    return pos;
+    return m_positionMap.get( pt );
   }
 
   /**
@@ -285,9 +225,17 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( final int initializeRun )
+  public void init( int initializeRun )
   {
-    // nothing to init
+    // TODO nothing to init
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    return Platform.getAdapterManager().getAdapter( this, adapter );
   }
 
   /**
@@ -296,43 +244,5 @@ public class CustomFeatureType implements IFeatureType
   public IGMLSchema getGMLSchema( )
   {
     return m_schema;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return m_qName.toString();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getAnnotation()
-   */
-  public IAnnotation getAnnotation( )
-  {
-    return m_annotation;
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof IFeatureType )
-      return ObjectUtils.equals( m_qName, ((IFeatureType) obj).getQName() );
-
-    return false;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    return ObjectUtils.hashCode( m_qName );
   }
 }

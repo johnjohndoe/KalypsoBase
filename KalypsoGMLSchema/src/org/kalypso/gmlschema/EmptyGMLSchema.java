@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
-import java.net.URL;
 import java.util.Collection;
 
 import javax.xml.namespace.QName;
@@ -72,19 +71,10 @@ public class EmptyGMLSchema implements IGMLSchema
   }
 
   /**
-   * @see org.kalypso.gmlschema.IGMLSchema#getContext()
-   */
-  public URL getContext( )
-  {
-    return null;
-  }
-
-  /**
    * @see org.kalypso.gmlschema.IGMLSchema#accept(org.kalypso.gmlschema.visitor.IGMLSchemaVisitor)
    */
   public void accept( final IGMLSchemaVisitor visitor )
   {
-    visitor.visit( this );
   }
 
   /**
@@ -106,18 +96,10 @@ public class EmptyGMLSchema implements IGMLSchema
   /**
    * @see org.kalypso.gmlschema.IGMLSchema#collectSchemas(java.util.Collection)
    */
-  public void collectSchemas( final Collection<IGMLSchema> allSchemas )
+  public void collectSchemas( Collection<IGMLSchema> allSchemas )
   {
     // i do know only myself
     allSchemas.add( this );
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.IGMLSchema#getAdditionalSchemas()
-   */
-  public IGMLSchema[] getAdditionalSchemas( )
-  {
-    return new IGMLSchema[0];
   }
 
 }

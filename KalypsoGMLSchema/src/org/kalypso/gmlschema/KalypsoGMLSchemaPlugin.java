@@ -1,5 +1,8 @@
 package org.kalypso.gmlschema;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -45,7 +48,10 @@ public class KalypsoGMLSchemaPlugin extends Plugin
     if( m_schemaCatalog == null )
     {
       final IUrlCatalog theCatalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
-      m_schemaCatalog = new GMLSchemaCatalog( theCatalog );
+      final IPath stateLocation = getStateLocation();
+      final File cacheDir = new File( stateLocation.toFile(), "schemaCache" );
+      cacheDir.mkdir();
+      m_schemaCatalog = new GMLSchemaCatalog( theCatalog, cacheDir );
     }
 
     return m_schemaCatalog;
@@ -58,5 +64,4 @@ public class KalypsoGMLSchemaPlugin extends Plugin
   {
     return INSTANCE;
   }
-
 }

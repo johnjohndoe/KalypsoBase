@@ -35,15 +35,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
+import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.NamedGroup;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SimpleType;
@@ -54,7 +54,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
@@ -67,10 +66,11 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 import org.kalypso.gmlschema.xml.GroupReference;
 import org.kalypso.gmlschema.xml.SimpleTypeReference;
 import org.kalypso.gmlschema.xml.TypeReference;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * represents a gml schema
@@ -95,8 +95,7 @@ public class GMLSchema implements IGMLSchema
 
   private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<String, GMLSchema>();
 
-  // TODO comment
-  private final Map<Object, Object> m_buildedObjectHash = new IdentityHashMap<Object, Object>();
+  private final Hashtable<Object, Object> m_buildedObjectHash = new Hashtable<Object, Object>();
 
   private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
 
@@ -118,7 +117,7 @@ public class GMLSchema implements IGMLSchema
    * TODO implement support of circular schema imports: suggesting of concept: move time of import processing to after
    * parsing but befoe initilazing ask doemming.
    */
-  private final List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
+  private List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
 
   /**
    * Additional schemas, which are not known as imported schemas. They are loaded implicitly while searching for certain
@@ -127,26 +126,23 @@ public class GMLSchema implements IGMLSchema
    * We need to remember these schemas, to resolve substituting feature types.
    * </p>
    */
-  private final Map<String, GMLSchema> m_additionalSchemas = new HashMap<String, GMLSchema>();
+  private Map<String, GMLSchema> m_additionalSchemas = new HashMap<String, GMLSchema>();
 
   /** Ignored namespaces: these two schemas import each other, we don't know how to handle this. */
-  private final List<String> m_ignoreNameSpaces = new ArrayList<String>();
+  private List<String> m_ignoreNameSpaces = new ArrayList<String>();
   {
     m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" );
     m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/Language" );
   }
 
   /* list of schemas that are referenced by include and have allready been processed */
-  private final List<URL> m_processedIncludeUrls = new ArrayList<URL>();
+  private List<URL> m_processedIncludeUrls = new ArrayList<URL>();
 
-  private final Properties m_i18nProperties;
-
-  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion, final Properties i18nProperties ) throws GMLSchemaException
+  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
     m_schemaDocument = schemaDocument;
     m_context = context;
-    m_i18nProperties = i18nProperties;
     m_urlResolver = new UrlResolver();
     init( schemaDocument );
   }
@@ -162,7 +158,7 @@ public class GMLSchema implements IGMLSchema
   }
 
   /**
-   * initializes this schema, loads all included and imported schemas
+   * initialize gmlschema, create all featuretypes, featurepropertytypes, parse all included and imported schemas
    * 
    * @throws GMLSchemaException
    */
@@ -173,24 +169,29 @@ public class GMLSchema implements IGMLSchema
       final Schema schema = schemaDocument.getSchema();
       // complex types
       final TopLevelComplexType[] complexTypeArray = schema.getComplexTypeArray();
-      for( final TopLevelComplexType complexType : complexTypeArray )
+      for( int i = 0; i < complexTypeArray.length; i++ )
       {
+        final TopLevelComplexType complexType = complexTypeArray[i];
+
         final QName key = new QName( getTargetNamespace(), complexType.getName() );
         final ComplexTypeReference ref = new ComplexTypeReference( this, complexType );
         m_refComplexTypeHash.put( key, ref );
       }
       // groups
       final NamedGroup[] groupArray = schema.getGroupArray();
-      for( final NamedGroup group : groupArray )
+      for( int i = 0; i < groupArray.length; i++ )
       {
+        final NamedGroup group = groupArray[i];
         final QName key = new QName( getTargetNamespace(), group.getName() );
         final GroupReference reference = new GroupReference( this, group );
         m_refGroupHash.put( key, reference );
       }
       // simple types
       final TopLevelSimpleType[] simpleTypeArray = schema.getSimpleTypeArray();
-      for( final TopLevelSimpleType simpleType : simpleTypeArray )
+      for( int i = 0; i < simpleTypeArray.length; i++ )
       {
+        final TopLevelSimpleType simpleType = simpleTypeArray[i];
+
         final QName key = new QName( getTargetNamespace(), simpleType.getName() );
         final SimpleTypeReference reference = new SimpleTypeReference( this, simpleType );
         m_refSimpleTypeHash.put( key, reference );
@@ -198,16 +199,18 @@ public class GMLSchema implements IGMLSchema
 
       // elements
       final TopLevelElement[] elementArray = schema.getElementArray();
-      for( final TopLevelElement element : elementArray )
+      for( int i = 0; i < elementArray.length; i++ )
       {
+        final TopLevelElement element = elementArray[i];
         final QName key = new QName( getTargetNamespace(), element.getName() );
         final ElementReference reference = new ElementReference( this, element );
         m_refElementHash.put( key, reference );
       }
       // import
       final Import[] importArray = schema.getImportArray();
-      for( final Import import_ : importArray )
+      for( int i = 0; i < importArray.length; i++ )
       {
+        final ImportDocument.Import import_ = importArray[i];
         final String schemaLocation = import_.getSchemaLocation();
         final String namespaceToImport = import_.getNamespace();
         if( !m_ignoreNameSpaces.contains( namespaceToImport ) )
@@ -236,8 +239,9 @@ public class GMLSchema implements IGMLSchema
       // include
       final Include[] includeArray = schema.getIncludeArray();
 
-      for( final Include include : includeArray )
+      for( int i = 0; i < includeArray.length; i++ )
       {
+        final IncludeDocument.Include include = includeArray[i];
         final URL includeURL = m_urlResolver.resolveURL( m_context, include.getSchemaLocation() );
         if( !m_processedIncludeUrls.contains( includeURL ) )
         {
@@ -248,16 +252,12 @@ public class GMLSchema implements IGMLSchema
         }
       }
     }
-    catch( Throwable e )
+    catch( Exception e )
     {
-      /* unpack exception if inside InvocationTargetException */
-      if( e instanceof InvocationTargetException )
-        e = ((InvocationTargetException) e).getTargetException();
-
       if( e instanceof GMLSchemaException )
         throw (GMLSchemaException) e;
-
-      throw new GMLSchemaException( e );
+      else
+        throw new GMLSchemaException( e );
     }
   }
 
@@ -270,13 +270,12 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      // TODO: move to caller
-// if( Debug.traceSchemaParsing() )
-// {
-// final IStatus status = StatusUtilities.createErrorStatus( "Could not resolve element reference to " + qName );
-// System.out.println( status.getMessage() );
-// KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
-// }
+      if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+      {
+        final IStatus status = StatusUtilities.createErrorStatus( "Could not resolve element reference to " + qName );
+        System.out.println( status.getMessage() );
+        KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
+      }
       return null;
     }
     return gmlschema.resolveElementReference( qName );
@@ -316,10 +315,7 @@ public class GMLSchema implements IGMLSchema
     if( getTargetNamespace().equals( namespaceURI ) )
       return m_refComplexTypeHash.get( qName );
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
-    if( gmlschema != null )
-      return gmlschema.resolveComplexTypeReference( qName );
-
-    return null;
+    return gmlschema.resolveComplexTypeReference( qName );
   }
 
   /**
@@ -336,10 +332,6 @@ public class GMLSchema implements IGMLSchema
   /** public in order to allow force dependency from outside. */
   public GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
-    /* The XML-Schema will never be loaded. */
-    if( NS.XSD_SCHEMA.equals( namespaceURI ) )
-      return null;
-
     if( m_ignoreNameSpaces.contains( namespaceURI ) )
       return null;
 
@@ -396,9 +388,6 @@ public class GMLSchema implements IGMLSchema
     return m_schemaDocument;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.IGMLSchema#getContext()
-   */
   public URL getContext( )
   {
     return m_context;
@@ -447,12 +436,18 @@ public class GMLSchema implements IGMLSchema
       final ComplexType complexType = rct.getComplexType();
       m_relationContentTypes.put( complexType, rct );
     }
+    // else if( buildedObject instanceof IPropertyContentType )
+    // {
+    // final IPropertyContentType pct = (IPropertyContentType) buildedObject;
+    // final SimpleType simpleType = pct.getSimpleType();
+    // m_propertyContentTypes.put( simpleType, pct );
+    // }
   }
 
   /**
    * @param element
    */
-  public boolean hasBuildedObjectFor( final Object element )
+  public boolean hasBuildedObjectFor( Object element )
   {
     return m_buildedObjectHash.containsKey( element );
   }
@@ -460,7 +455,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param element
    */
-  public Object getBuildedObjectFor( final Element element )
+  public Object getBuildedObjectFor( Element element )
   {
     return m_buildedObjectHash.get( element );
   }
@@ -468,7 +463,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param simpleType
    */
-  public Object getBuildedObjectFor( final SimpleType simpleType )
+  public Object getBuildedObjectFor( SimpleType simpleType )
   {
     return m_buildedObjectHash.get( simpleType );
   }
@@ -476,7 +471,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param complexType
    */
-  public Object getBuildedObjectFor( final ComplexType complexType )
+  public Object getBuildedObjectFor( ComplexType complexType )
   {
     return m_buildedObjectHash.get( complexType );
   }
@@ -489,7 +484,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param complexType
    */
-  public RelationContentType getRelationContentTypeFor( final ComplexType complexType )
+  public RelationContentType getRelationContentTypeFor( ComplexType complexType )
   {
     return m_relationContentTypes.get( complexType );
   }
@@ -497,7 +492,7 @@ public class GMLSchema implements IGMLSchema
   /**
    * @param simpleType
    */
-  public IPropertyContentType getFeaturePropertyContentTypeFor( final SimpleType simpleType )
+  public IPropertyContentType getFeaturePropertyContentTypeFor( SimpleType simpleType )
   {
     return m_propertyContentTypes.get( simpleType );
   }
@@ -546,7 +541,7 @@ public class GMLSchema implements IGMLSchema
 
   /**
    * @param schemasToIgnore
-   *            list of schemas not to visit
+   *          list of schemas not to visit
    * @param visitor
    */
   private void innerAccept( final IGMLSchemaVisitor visitor, final List<GMLSchema> schemasToIgnore )
@@ -570,6 +565,18 @@ public class GMLSchema implements IGMLSchema
   {
     final Collection<GMLSchema> collection = m_importedSchemasHash.values();
     return collection.toArray( new GMLSchema[collection.size()] );
+  }
+
+  public Map getNamespaceMap( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  public Document getXMLDocument( )
+  {
+    final Node domNode = m_schemaDocument.getDomNode();
+    return domNode.getOwnerDocument();
+    // return (Document) domNode;
   }
 
   public IFeatureType getFeatureType( final QName qName )
@@ -643,15 +650,7 @@ public class GMLSchema implements IGMLSchema
   public void addAdditionalSchema( final GMLSchema schema )
   {
     m_additionalSchemas.put( schema.getTargetNamespace(), schema );
-  }
+    // TODO Auto-generated method stub
 
-  /**
-   * Returns the properties that serve to provide language specific labels/tooltips for this schema.<br>
-   * Not in interface, as this is only used during the creation of feature/property-types.<br>
-   * Not intended to be used outside this framework.
-   */
-  public Properties getI18nProperties( )
-  {
-    return m_i18nProperties;
   }
 }

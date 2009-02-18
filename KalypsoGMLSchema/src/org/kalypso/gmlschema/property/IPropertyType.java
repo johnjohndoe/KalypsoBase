@@ -31,20 +31,17 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.builder.IInitialize;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.gmlschema.basics.IInitialize;
 
 /**
  * Instances of this interface represent the properties of a {@link org.kalypso.gmlschema.feature.IFeatureType}.
  * 
- * @author Andreas von Dömming
+ * @author doemming
  */
-public interface IPropertyType extends IInitialize
+public interface IPropertyType extends IInitialize, IAdaptable
 {
   public final static int UNBOUND_OCCURENCY = -1;
-
-  QName getQName( );
 
   public int getMinOccurs( );
 
@@ -52,15 +49,7 @@ public interface IPropertyType extends IInitialize
 
   public boolean isList( );
 
-  /**
-   * A property type is virtual, if it is not defined as regular element inside a feature type of a gml
-   * application-schema.<br>
-   * Virtual properties are either defined inside an appinfo-element of the schema or registered via an eclipse
-   * extension.<br>
-   * Virtual properties are always backed-up by function-properties and are never serialized into the gml (else the
-   * resulting gml would not validate against its application-schema).
-   */
-  public boolean isVirtual( );
+  public QName getQName( );
 
   public boolean isNillable( );
 
@@ -71,11 +60,4 @@ public interface IPropertyType extends IInitialize
   @Deprecated
   public String getName( );
 
-  /**
-   * Returns the annotation (i.e. human readable strings) for this property type.<br>
-   */
-  IAnnotation getAnnotation( );
-
-  /** Not intended to be used outside the gml schema parser. */
-  IPropertyType cloneForFeatureType( IFeatureType featureType );
 }

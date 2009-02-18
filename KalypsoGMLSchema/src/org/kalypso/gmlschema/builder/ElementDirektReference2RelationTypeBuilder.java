@@ -39,17 +39,15 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.property.relation.ReferencedRelationType;
+import org.kalypso.gmlschema.ElementWithOccurs;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.relation.RelationType;
-import org.kalypso.gmlschema.property.value.PropertyType;
-import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
-import org.kalypso.gmlschema.xml.Occurs;
 import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
+ * a builder for adv references <br>
  * <em>
  *  <complexType name="PhenomenonPropertyType">
  *      <sequence minOccurs="0">
@@ -60,11 +58,11 @@ import org.kalypso.gmlschema.xml.TypeReference;
  * <em>
  * @author doemming
  */
-public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
+public class ElementDirektReference2RelationTypeBuilder implements IBuilder
 {
   private final String m_version;
 
-  public ElementDirektReference2RelationTypeBuilder( final String version )
+  public ElementDirektReference2RelationTypeBuilder( String version )
   {
     m_version = version;
   }
@@ -72,60 +70,49 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
+  public Object[] build( GMLSchema gmlSchema, Object elementObject ) throws GMLSchemaException
   {
     final ElementWithOccurs element = (ElementWithOccurs) elementObject;
-
-    final Object result = innerBuild( gmlSchema, element );
-
-    gmlSchema.register( element.getElement(), result );
-
-    return new Object[] { result };
+    return innerBuild( gmlSchema, element );
   }
 
-  private Object innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs elementWithOccurs ) throws GMLSchemaException
+  public Object[] innerBuild( final GMLSchema gmlSchema, final ElementWithOccurs element ) throws GMLSchemaException
   {
-    final Element element = elementWithOccurs.getElement();
-    final Occurs occurs = elementWithOccurs.getOccurs();
-    final QName ref = element.getRef();
+    final QName ref = element.getElement().getRef();
+
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final QName referencedQName = referencedQName( gmlSchema, elementWithOccurs );
-
-      if( isFeature( referencedQName ) )
-        return new ReferencedRelationType( gmlSchema, element, occurs, reference, null );
-      return new ReferencedPropertyType( gmlSchema, element, occurs, reference, null );
+      final ReferencedRelationType result = new ReferencedRelationType( gmlSchema, element, reference );
+      gmlSchema.register( element.getElement(), result );
+      return new Object[] { result };
     }
 
-    final QName referencedQName = referencedQName( gmlSchema, elementWithOccurs );
-    if( isFeature( referencedQName ) )
-      return new RelationType( gmlSchema, element, occurs, null );
-
-    return new PropertyType( gmlSchema, element, occurs, null );
+    final IRelationType result = new RelationType( gmlSchema, element );
+    gmlSchema.register( element.getElement(), result );
+    return new Object[] { result };
   }
 
-  private boolean isFeature( final QName referencedQName )
-  {
-    if( !NS.GML2.equals( referencedQName.getNamespaceURI() ) )
-      return false;
-    return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( referencedQName.getLocalPart() );
-  }
-
+  /**
+   * a builder for adv references <br>
+   * <em>
+   *  <complexType name="PhenomenonPropertyType">
+   *      <sequence minOccurs="0">
+   *          <element ref=" swe:Phenomenon "/>
+   *      </sequence>
+   *      <attributeGroup ref=" gml:AssociationAttributeGroup "/>
+   *  </complexType>
+   * <em>
+   * @author doemming
+   */
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException
   {
-    final QName baseQName = referencedQName( gmlSchema, object );
-    return baseQName != null && (isFeature( baseQName ) || GMLSchemaUtilities.isKnownType( baseQName, gmlSchema.getGMLVersion() ));
-  }
-
-  private QName referencedQName( final GMLSchema gmlSchema, final Object object ) throws GMLSchemaException
-  {
     if( !(object instanceof ElementWithOccurs) )
-      return null;
+      return false;
     final Element element1 = ((ElementWithOccurs) object).getElement();
     final Element relationElement;
 
@@ -135,7 +122,7 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
     {
       final ElementReference elementReference = gmlSchema.resolveElementReference( elementQNameRef );
       if( elementReference == null )
-        return null;
+        return false;
       relationElement = elementReference.getElement();
     }
     else
@@ -147,38 +134,41 @@ public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder
     if( typeReference != null )
     {
       if( GMLSchemaUtilities.isKnownType( typeReference, m_version ) )
-        return null;
+        return false;
       final TypeReference reference = gmlSchema.resolveTypeReference( typeReference );
       if( reference != null && reference instanceof ComplexTypeReference )
         complexType = ((ComplexTypeReference) reference).getComplexType();
       else
-        return null;
+        return false;
     }
     else
     {
       complexType = relationElement.getComplexType();
     }
     if( complexType == null )
-      return null;
-
+      return false;
     // find referenced element (target)
     final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null );
+
     if( collector.size() != 1 )
-      return null;
+      return false;
     final ElementWithOccurs targetElement = collector.get( 0 );
 
-    // Check if target is known
+    // check if target is a feature
     final QName baseQName = GMLSchemaUtilities.findBaseType( gmlSchema, targetElement.getElement(), m_version );
-    return baseQName;
+    if( baseQName == null )
+      return false;
+    if( !NS.GML2.equals( baseQName.getNamespaceURI() ) )
+      return false;
+    return GMLSchemaUtilities.getBaseOfFeatureType( m_version ).equals( baseQName.getLocalPart() );
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
-    if( other instanceof Element2PropertyTypeBuilder //
+    if( other instanceof Element2PropertyTypeBuilder // 
         || other instanceof FeaturePropertyType2RelationTypeBuilder )
       return true;
     return false;

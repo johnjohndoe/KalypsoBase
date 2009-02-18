@@ -32,11 +32,11 @@ package org.kalypso.gmlschema.feature;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlObject;
-import org.kalypso.gmlschema.builder.IInitialize;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 
 /**
- * Representation of a feature content definition from xml schema
+ * Representation of a feature content definition from xml schema 
  * 
  * @author doemming
  */
@@ -51,16 +51,21 @@ public interface IFeatureContentType extends IInitialize
   /**
    * @return all properties
    */
-  public IPropertyType[] getProperties( );
+  public IPropertyType[] getProperties();
 
-  public IFeatureContentType getBase( );
+  public IFeatureContentType getBase();
 
-  public int getDerivationType( );
+  public int getDerivationType();
 
-  /** The properties directly defined within this type, not inherited from the base type. */
-  public IPropertyType[] getDirectProperties( );
+  /**
+   * @param name
+   * @return property by name
+   */
+  public IPropertyType getProperty( final QName name );
 
-  public QName getQName( );
+  public IPropertyType[] getDirectProperties();
 
-  public XmlObject[] collectFunctionProperties( );
+  public QName getQName();
+  
+  public XmlObject[] collectFunctionProperties();
 }

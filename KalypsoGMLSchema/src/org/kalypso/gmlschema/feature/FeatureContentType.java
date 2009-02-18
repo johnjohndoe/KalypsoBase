@@ -29,9 +29,9 @@
  */
 package org.kalypso.gmlschema.feature;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -39,11 +39,13 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.KalypsoGmlSchemaTracing;
+import org.kalypso.gmlschema.basics.IInitialize;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * Representation of a feature content definition from xml schema
@@ -56,11 +58,11 @@ public abstract class FeatureContentType implements IFeatureContentType
 
   private final ComplexType m_complexType;
 
-  private IPropertyType[] m_pt = null;
+  protected IPropertyType[] m_pt = null;
 
   private final QName m_qName;
 
-  public FeatureContentType( final GMLSchema gmlSchema, final ComplexType complexType )
+  public FeatureContentType( final GMLSchema gmlSchema, ComplexType complexType )
   {
     m_gmlSchema = gmlSchema;
     m_complexType = complexType;
@@ -85,67 +87,79 @@ public abstract class FeatureContentType implements IFeatureContentType
   public abstract List<ElementWithOccurs> getSequence( ) throws GMLSchemaException;
 
   /**
-   * @see org.kalypso.gmlschema.builder.IInitialize#init(int)
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
    */
-  public void init( final int initializeRun )
+  public void init( int initializeRun ) throws GMLSchemaException
   {
-// nothing to do
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperties()
-   */
-  public IPropertyType[] getProperties( )
-  {
-    if( m_pt == null )
+    switch( initializeRun )
     {
-      try
-      {
-        final Map<QName, IPropertyType> propertyTypes = new LinkedHashMap<QName, IPropertyType>();
+      case IInitialize.INITIALIZE_RUN_FIRST:
+
+        final List<IPropertyType> propertyTypes = new ArrayList<IPropertyType>();
 
         final List<ElementWithOccurs> sequence = getSequence();
-        for( final ElementWithOccurs elementWithOccurs : sequence )
+        for( Iterator<ElementWithOccurs> iter = sequence.iterator(); iter.hasNext(); )
         {
-          final Element elementItem = elementWithOccurs.getElement();
-          Object buildedObject = getGMLSchema().getBuildedObjectFor( elementItem );
+          GMLSchema schema = getGMLSchema();
+          final Element elementItem = iter.next().getElement();
+          Object buildedObject = schema.getBuildedObjectFor( elementItem );
 
+          final Element element;
           if( buildedObject == null )
           {
             // everything should be registered for the local element, nothing for the referenced element
             final QName ref = elementItem.getRef();
-            if( ref != null )
+            if( ref == null )
+            {
+              // final String message = "no typeHandler for " + elementItem.getType();
+              // System.out.println( message );
+              // System.out.println();
+            }
+            else
             {
               final ElementReference reference = m_gmlSchema.resolveElementReference( ref );
               if( reference != null )
               {
-                final Element element = reference.getElement();
-                final GMLSchema schema = reference.getGMLSchema();
+                element = reference.getElement();
+                schema = reference.getGMLSchema();
                 buildedObject = schema.getBuildedObjectFor( element );
+              }
+              else
+              {
+                if( KalypsoGmlSchemaTracing.traceSchemaParsing() )
+                  System.out.println( "debug" );
               }
             }
           }
-
-          if( buildedObject instanceof IPropertyType )
-          {
-            final IPropertyType pt = (IPropertyType) buildedObject;
-            propertyTypes.put( pt.getQName(), pt );
-          }
+          // why are alle buildedObjects of type IPropertyType ?
+          if( buildedObject != null && buildedObject instanceof IPropertyType )
+            propertyTypes.add( (IPropertyType) buildedObject );
+          // else
+          // System.out.println( "no valid property found for " + elementItem );
         }
-
-        m_pt = propertyTypes.values().toArray( new IPropertyType[propertyTypes.size()] );
-      }
-      catch( final GMLSchemaException e )
-      {
-        e.printStackTrace();
-      }
+        m_pt = propertyTypes.toArray( new IPropertyType[propertyTypes.size()] );
+        break;
     }
-
-    return m_pt;
   }
 
   public ComplexType getComplexType( )
   {
     return m_complexType;
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.feature.IFeatureContentType#getProperty(javax.xml.namespace.QName)
+   */
+  public IPropertyType getProperty( QName qName )
+  {
+    final IPropertyType[] properties = getProperties();
+    for( int i = 0; i < properties.length; i++ )
+    {
+      final IPropertyType pt = properties[i];
+      if( pt.getQName().equals( qName ) )
+        return pt;
+    }
+    return null;
   }
 
   /**
@@ -159,15 +173,6 @@ public abstract class FeatureContentType implements IFeatureContentType
     final String fullXpath = namespaceDecl + xpath;
 
     return getComplexType().selectPath( fullXpath );
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return m_qName + "\n" + m_complexType;
   }
 
 }

@@ -41,146 +41,57 @@
 package org.kalypso.gmlschema;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
+import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
-import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.gmlschema.adapter.IAnnotationProvider;
 
 /**
  * @author Gernot Belger
  */
 public class KalypsoGmlSchemaExtensions
 {
-  private static final String EXT_VIRTUALPROPERTY = "org.kalypso.gmlschema.virtualProperty";
+  private static IAnnotationProvider[] THE_ANNOTATION_PROVIDERS = null;
 
-  private static final String ATTR_VIRTUALPROPERTY_ALLOWSUBST = "allowSubstitution";
-
-  private static final String ATTR_VIRTUALPROPERTY_FEATURE = "feature";
-
-  private static final String ATTR_VIRTUALPROPERTY_QNAME = "qname";
-
-  private static final String ATTR_VIRTUALPROPERTY_VALUE = "value";
-
-  private static final String ATTR_VIRTUALPROPERTY_ISLIST = "isList";
-
-  private static final String ATTR_VIRTUALPROPERTY_FUNCTION = "function";
-
-  private static final String ATTR_VIRTUALPROPERTY_PROPERTY = "property";
-
-  private static final String ATTR_VIRTUALPROPERTY_NAME = "name";
-
-  private static Map<QName, Collection<IConfigurationElement>> REGISTERED_VIRTUAL_PROPERTIES = null;
-
-  public static IFunctionPropertyType[] createVirtualPropertyTypes( final IFeatureType featureType )
+  public static IAnnotationProvider[] getAnnotationProviders( )
   {
-    final Map<QName, Collection<IConfigurationElement>> vptMap = getRegisteredVirtualProperties();
+    if( THE_ANNOTATION_PROVIDERS != null )
+      return THE_ANNOTATION_PROVIDERS;
 
-    final Collection<IFunctionPropertyType> foundTypes = new ArrayList<IFunctionPropertyType>();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    IFeatureType ft = featureType;
-    while( ft != null )
-    {
-      final QName qname = ft.getQName();
-      final Collection<IConfigurationElement> elements = vptMap.get( qname );
-      if( elements != null )
-      {
-        for( final IConfigurationElement element : elements )
-        {
-          final boolean allowSubst = Boolean.valueOf( element.getAttribute( ATTR_VIRTUALPROPERTY_ALLOWSUBST ) ).booleanValue();
-
-          if( ft == featureType || allowSubst )
-          {
-            final IFunctionPropertyType vpt = createVirtualPropertType( featureType, element );
-            foundTypes.add( vpt );
-          }
-        }
-      }
-
-      ft = ft.getSubstitutionGroupFT();
-    }
-
-    return foundTypes.toArray( new IFunctionPropertyType[foundTypes.size()] );
-  }
-
-  private static IFunctionPropertyType createVirtualPropertType( final IFeatureType featureType, final IConfigurationElement element )
-  {
-    final String qnameString = element.getAttribute( ATTR_VIRTUALPROPERTY_QNAME );
-    final String valueQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
-    final String isListString = element.getAttribute( ATTR_VIRTUALPROPERTY_ISLIST );
-    final String functionId = element.getAttribute( ATTR_VIRTUALPROPERTY_FUNCTION );
-
-    final QName valueQName = QName.valueOf( valueQNameString );
-    final QName propertyQName = QName.valueOf( qnameString );
-    final IMarshallingTypeHandler handler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
-    final boolean isList = Boolean.valueOf( isListString );
-    if( isList == true )
-      throw new UnsupportedOperationException( "isList == true not yet supported in virtualProperty extension-point" );
-
-    // Read properties from child elements
-    final Map<String, String> properties = new HashMap<String, String>();
-
-    final IConfigurationElement[] children = element.getChildren( ATTR_VIRTUALPROPERTY_PROPERTY );
-    for( final IConfigurationElement child : children )
-    {
-      final String propName = child.getAttribute( ATTR_VIRTUALPROPERTY_NAME );
-      final String propValue = child.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
-      properties.put( propName, propValue );
-    }
-
-    return new VirtualFunctionValuePropertyType( featureType, handler, propertyQName, functionId, properties );
-  }
-
-  private synchronized static Map<QName, Collection<IConfigurationElement>> getRegisteredVirtualProperties( )
-  {
-    if( REGISTERED_VIRTUAL_PROPERTIES == null )
-      return REGISTERED_VIRTUAL_PROPERTIES = createRegisteredVirtualProperties();
-
-    return REGISTERED_VIRTUAL_PROPERTIES;
-  }
-
-  private static Map<QName, Collection<IConfigurationElement>> createRegisteredVirtualProperties( )
-  {
-    final Map<QName, Collection<IConfigurationElement>> result = new HashMap<QName, Collection<IConfigurationElement>>();
-
-    final IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint( EXT_VIRTUALPROPERTY );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.gmlschema.annotationProvider" );
 
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    for( final IConfigurationElement element : configurationElements )
+    final List<IAnnotationProvider> providers = new ArrayList<IAnnotationProvider>( configurationElements.length );
+
+    for( int i = 0; i < configurationElements.length; i++ )
     {
       try
       {
-        final String featureQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_FEATURE );
-        final QName featureQName = QName.valueOf( featureQNameString );
-
-        if( !result.containsKey( featureQName ) )
-          result.put( featureQName, new ArrayList<IConfigurationElement>() );
-
-        final Collection<IConfigurationElement> elements = result.get( featureQName );
-        elements.add( element );
+        final IConfigurationElement element = configurationElements[i];
+//        final String name = element.getName();
+        final Object createExecutableExtension = element.createExecutableExtension( "class" );
+        final IAnnotationProvider provider = (IAnnotationProvider) createExecutableExtension;
+        providers.add( provider );
       }
       catch( final Throwable t )
       {
-        // In order to prevent bad code from other plug-ins (see Eclipse-PDE-Rules)
+        // In order to prevent bad code from other plugins (see Eclipse-PDE-Rules)
         // catch exception here and just log it
         final IStatus status = StatusUtilities.statusFromThrowable( t );
         KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       }
     }
-
+    
+    final IAnnotationProvider[] result = providers.toArray( new IAnnotationProvider[providers.size()] );
+    THE_ANNOTATION_PROVIDERS = result;
     return result;
   }
-
 }

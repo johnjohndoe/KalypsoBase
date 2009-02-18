@@ -31,15 +31,10 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.Occurs;
-import org.kalypso.gmlschema.xml.QualifiedElement;
+import org.kalypso.gmlschema.Occurs;
+import org.kalypso.gmlschema.basics.QualifiedElement;
 
 /**
  * Property feature type that is build from a xml-element
@@ -50,25 +45,16 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
 {
   private final Occurs m_occurs;
 
-  private final IAnnotation m_annotation;
-
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final QName qName, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element, QName qName )
   {
-    super( gmlSchema, element, qName );
-    m_occurs = occurs;
-    m_annotation = AnnotationUtilities.createAnnotation( qName, featureType, element, reference );
+    super( gmlSchema, element.getElement(), qName );
+    m_occurs = element.getOccurs();
   }
 
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
+  public AbstractPropertyTypeFromElement( GMLSchema gmlSchema, ElementWithOccurs element )
   {
-    super( gmlSchema, element, createQName( gmlSchema, element ) );
-    m_occurs = occurs;
-    m_annotation = AnnotationUtilities.createAnnotation( getQName(), featureType, element, reference );
-  }
-
-  public Occurs getOccurs( )
-  {
-    return m_occurs;
+    super( gmlSchema, element.getElement() );
+    m_occurs = element.getOccurs();
   }
 
   public int getMinOccurs( )
@@ -95,35 +81,5 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   public boolean isNillable( )
   {
     return getElement().getNillable();
-  }
-
-  /**
-   * <This property is created from a real xml-element and so is not virtual.
-   * 
-   * @see org.kalypso.gmlschema.property.IPropertyType#isVirtual()
-   */
-  public boolean isVirtual( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.property.IPropertyType#getAnnotation()
-   */
-  public IAnnotation getAnnotation( )
-  {
-    return m_annotation;
-  }
-  
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof IPropertyType )
-      return ObjectUtils.equals( getQName(), ((IPropertyType) obj).getQName() );
-
-    return false;
   }
 }

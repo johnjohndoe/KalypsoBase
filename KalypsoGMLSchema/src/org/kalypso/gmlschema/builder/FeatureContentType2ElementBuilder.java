@@ -32,21 +32,21 @@ package org.kalypso.gmlschema.builder;
 import java.util.List;
 
 import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.FeatureContentType;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class FeatureContentType2ElementBuilder extends AbstractBuilder
+public class FeatureContentType2ElementBuilder implements IBuilder
 {
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
-  public Object[] build( final GMLSchema gmlSchema, final Object featureContentTypeObject ) throws GMLSchemaException
+  public Object[] build( GMLSchema gmlSchema, Object featureContentTypeObject ) throws GMLSchemaException
   {
     final FeatureContentType fct = (FeatureContentType) featureContentTypeObject;
     final List<ElementWithOccurs> sequence = fct.getSequence();
@@ -57,7 +57,7 @@ public class FeatureContentType2ElementBuilder extends AbstractBuilder
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof FeatureContentType;
   }
@@ -65,8 +65,7 @@ public class FeatureContentType2ElementBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
     return false;
   }

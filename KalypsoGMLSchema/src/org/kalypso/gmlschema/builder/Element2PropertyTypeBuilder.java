@@ -32,29 +32,28 @@ package org.kalypso.gmlschema.builder;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.gmlschema.ElementWithOccurs;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.value.PropertyType;
-import org.kalypso.gmlschema.property.value.ReferencedPropertyType;
+import org.kalypso.gmlschema.property.PropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.gmlschema.xml.ElementReference;
-import org.kalypso.gmlschema.xml.ElementWithOccurs;
-import org.kalypso.gmlschema.xml.Occurs;
 
 /**
  * another builder
  * 
  * @author doemming
  */
-public class Element2PropertyTypeBuilder extends AbstractBuilder
+public class Element2PropertyTypeBuilder implements IBuilder
 {
+
   private final String m_version;
 
-  public Element2PropertyTypeBuilder( final String version )
+  public Element2PropertyTypeBuilder( String version )
   {
     m_version = version;
   }
@@ -64,20 +63,18 @@ public class Element2PropertyTypeBuilder extends AbstractBuilder
    */
   public Object[] build( final GMLSchema gmlSchema, final Object elementObject ) throws GMLSchemaException
   {
-    final ElementWithOccurs elementWithOccurs = (ElementWithOccurs) elementObject;
-    final Element element = elementWithOccurs.getElement();
-    final Occurs occurs = elementWithOccurs.getOccurs();
-    final QName ref = element.getRef();
+    final ElementWithOccurs element = (ElementWithOccurs) elementObject;
+    final QName ref = element.getElement().getRef();
     if( ref != null )
     {
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
-      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, occurs, reference, null );
-      gmlSchema.register( element, result );
+      final ReferencedPropertyType result = new ReferencedPropertyType( gmlSchema, element, reference );
+      gmlSchema.register( element.getElement(), result );
       return new Object[] { result };
     }
 
-    final IPropertyType pt = new PropertyType( gmlSchema, element, occurs, null );
-    gmlSchema.register( element, pt );
+    final IPropertyType pt = new PropertyType( gmlSchema, element );
+    gmlSchema.register( element.getElement(), pt );
     return new Object[] { pt };
   }
 
@@ -93,7 +90,7 @@ public class Element2PropertyTypeBuilder extends AbstractBuilder
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, element, m_version );
     if( baseType == null )
       return false;
-
+    
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( baseType );
     return typeHandler != null;
@@ -102,8 +99,7 @@ public class Element2PropertyTypeBuilder extends AbstractBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  @Override
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
     return false;
   }

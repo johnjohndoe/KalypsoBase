@@ -34,17 +34,25 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.basics.QualifiedElement;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.xml.ComplexTypeReference;
-import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
+ * 
  * another builder
  * 
  * @author doemming
  */
 public class RelationType2ComplexTypeBuilder implements IBuilder
 {
+  private final String m_version;
+
+  public RelationType2ComplexTypeBuilder( final String version )
+  {
+    m_version = version;
+  }
+
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#build(org.kalypso.gmlschema.GMLSchema, java.lang.Object)
    */
@@ -52,17 +60,19 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   {
     final QualifiedElement qe = (QualifiedElement) relationTypeObject;
     final Element element = qe.getElement();
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( gmlSchema, element );
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities
+        .getComplexTypeReferenceFor( gmlSchema, element );
     final ComplexType complexType = complexTypeReference.getComplexType();
     gmlSchema.register( qe, complexType );
-    return new Object[] { complexType };
+    return new Object[]
+    { complexType };
   }
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#isBuilderFor(org.kalypso.gmlschema.GMLSchema, java.lang.Object,
    *      java.lang.String)
    */
-  public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass )
+  public boolean isBuilderFor( GMLSchema gmlSchema, Object object, String namedPass )
   {
     return object instanceof IRelationType;
   }
@@ -70,7 +80,7 @@ public class RelationType2ComplexTypeBuilder implements IBuilder
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)
    */
-  public boolean replaces( final IBuilder other )
+  public boolean replaces( IBuilder other )
   {
     return false;
   }

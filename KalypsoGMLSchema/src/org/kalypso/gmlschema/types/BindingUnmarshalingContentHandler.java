@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -50,7 +50,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * A contentHandler used for unmarshalling processes based on binding framework
+ * A contentHandler used for unmarshalling oprocesses based on binding framework
  * 
  * @author doemming
  */
@@ -60,7 +60,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
 
   private final ContentHandler m_unmarshallerHandler;
 
-  private final UnmarshallResultEater m_unmarshalResultEater;
+  private final UnMarshallResultEater m_unmarshalResultEater;
 
   private final UnmarshalResultProvider m_unmarshallResultProvider;
 
@@ -74,19 +74,21 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
    * @param unmarshalResultEater
    *          will be feeded with the result of unmarshalling
    */
-  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnmarshallResultEater unmarshalResultEater, final String gmlVersion )
+  public BindingUnmarshalingContentHandler( final ContentHandler unmarshallerHandler, final UnmarshalResultProvider unmarshallResultProvider, final UnMarshallResultEater unmarshalResultEater, final boolean considerSurroundingElement, final String gmlVersion )
   {
     m_unmarshallerHandler = unmarshallerHandler;
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
     m_gmlVersion = gmlVersion;
+
+    m_level = considerSurroundingElement ? -1 : 0;
   }
 
   /**
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public void startElement( final String uri, String local, String qname, final Attributes atts ) throws SAXException
+  public void startElement( String uri, String local, String qname, Attributes atts ) throws SAXException
   {
     // hack:
     // deegree-bug gazetteer provides gml:box instead of gml:Box
@@ -129,7 +131,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   // return "?";
   // }
 
-  public void endElement( final String uri, String local, String qname ) throws SAXException
+  public void endElement( String uri, String local, String qname ) throws SAXException
   {
     // hack, see comment in startElement
     if( NS.GML2.equals( uri ) && "box".equals( local ) )
@@ -161,30 +163,30 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         final Object result = m_unmarshallResultProvider.getResult();
         final JAXBElement<Object> jaxBElement = (JAXBElement<Object>) result;
         if( jaxBElement != null )
-          m_unmarshalResultEater.unmarshallSuccesful( jaxBElement.getValue() );
+          m_unmarshalResultEater.eat( jaxBElement.getValue() );
         else
-          m_unmarshalResultEater.unmarshallSuccesful( null );
+          m_unmarshalResultEater.eat( null );
       }
-      catch( final GMLSchemaException e )
+      catch( GMLSchemaException e )
       {
         throw new SAXException( e );
       }
     }
   }
 
-  public void characters( final char[] ch, final int start, final int length ) throws SAXException
+  public void characters( char[] ch, int start, int length ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.characters( ch, start, length );
   }
 
-  public void ignorableWhitespace( final char[] ch, final int start, final int len ) throws SAXException
+  public void ignorableWhitespace( char[] ch, int start, int len ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.ignorableWhitespace( ch, start, len );
   }
 
-  public void processingInstruction( final String target, final String data ) throws SAXException
+  public void processingInstruction( String target, String data ) throws SAXException
   {
     if( m_level > 0 )
       m_unmarshallerHandler.processingInstruction( target, data );
@@ -200,22 +202,22 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     m_unmarshallerHandler.endDocument();
   }
 
-  public void startPrefixMapping( final String prefix, final String uri ) throws SAXException
+  public void startPrefixMapping( String prefix, String uri ) throws SAXException
   {
     m_unmarshallerHandler.startPrefixMapping( prefix, uri );
   }
 
-  public void endPrefixMapping( final String prefix ) throws SAXException
+  public void endPrefixMapping( String prefix ) throws SAXException
   {
     m_unmarshallerHandler.endPrefixMapping( prefix );
   }
 
-  public void setDocumentLocator( final Locator locator )
+  public void setDocumentLocator( Locator locator )
   {
     m_unmarshallerHandler.setDocumentLocator( locator );
   }
 
-  public void skippedEntity( final String name ) throws SAXException
+  public void skippedEntity( String name ) throws SAXException
   {
     m_unmarshallerHandler.skippedEntity( name );
   }
