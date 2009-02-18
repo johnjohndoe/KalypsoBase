@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.kalypso.ui.importwizards.kalypso"
+            class="org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard"
+            icon="icons/obj16/gridImport.gif"
+            id="org.kalypso.gml.ui.wizard.imports.RectifiedGridCoverageImportWizard"
+            name="Rasterdaten">
+         <selection
+               class="org.eclipse.core.resources.IContainer">
+         </selection>
+         <description>
+            Import Rasterdaten (.asc, .tif) in den Arbeitsbereich und erzeugt zusätzlich ein diese referenzierendes GML.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution"
+            name="GML Style Catalog"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+            <objectContribution
+                  adaptable="false"
+                  id="org.kalypso.gml.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.intersectWithDgm"
+                  objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+               <filter
+                     name="featureThemeQname"
+                     value="org.kalypso.gml.processes.mesh#Triangle"/>
+               <action
+                     class="org.kalypso.gml.ui.actions.FloodDepthThemeAction"
+                     id="org.kalypsogml.ui.floodDepthThemeAction"
+                     label="mit DGM verschneiden"
+                     style="push"
+                     tooltip="trägt das selektierte Thema gegen ein Geländemodell ab"/>
+            </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Importiert ein Raster als GML-Coverage"
+            id="org.kalypso.gml.ui.importGridCommand"
+            name="Raster importieren">
+      </command>
+      <command
+            description="Export das selektierte Coverage in eine externe Rasterdatei"
+            id="org.kalypso.gml.ui.exportGridCommand"
+            name="Raster exportieren">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.gml.ui.importGridCommand"
+            icon="icons/obj16/gridImport.gif">
+      </image>
+      <image
+            commandId="org.kalypso.gml.ui.exportGridCommand"
+            icon="icons/obj16/gridImport.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.kalypso.gml.ui.handler.ImportGridHandler"
+            commandId="org.kalypso.gml.ui.importGridCommand">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.core.qname"
+                        value="{org.kalypso.gml.common.coverage}CoverageCollection">
+                  </test>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.kalypso.gml.ui.handler.ExportGridHandler"
+            commandId="org.kalypso.gml.ui.exportGridCommand">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.core.qname"
+                        value="{http://www.opengis.net/gml}_Coverage">
+                  </test>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.kalypso.core.themeInfo">
+      <themeInfo
+            class="org.kalypso.gml.ui.map.CoverageThemeInfo"
+            id="org.kalypso.gml.ui.map.CoverageThemeInfo">
+      </themeInfo>
+   </extension>
+
+</plugin>
