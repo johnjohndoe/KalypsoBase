@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="annotationProvider" name="annotationProvider" schema="schema/annotationProvider.exsd"/>
+   <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
+   <extension
+         id="KalypsoGMLSchema.adapters"
+         name="KalypsoGMLSchemaadapters"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.gmlschema.xml.QualifiedElement"
+            class="org.kalypso.gmlschema.annotation.AnnotationAdapterFactory">
+         <adapter type="org.kalypso.gmlschema.annotation.IAnnotation"/>
+      </factory>
+      <factory
+            adaptableType="org.kalypso.gmlschema.property.value.CustomValueProperType"
+            class="org.kalypso.gmlschema.annotation.AnnotationAdapterFactory">
+         <adapter type="org.kalypso.gmlschema.annotation.IAnnotation"/>
+      </factory>
+   </extension>
+</plugin>
