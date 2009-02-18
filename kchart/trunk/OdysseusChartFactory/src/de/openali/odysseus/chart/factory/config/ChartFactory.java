@@ -101,9 +101,7 @@ public class ChartFactory
       }
     }
     if( dt == null )
-    {
       throw new ConfigChartNotFoundException( configChartName );
-    }
 
     doConfiguration( model, cl, dt, extLoader, context );
 
@@ -118,16 +116,10 @@ public class ChartFactory
     final Layers layers = chartType.getLayers();
     final LayerType[] layerRefArray = layers.getLayerArray();
     for( final LayerType layerType : layerRefArray )
-    {
       if( layerType != null )
-      {
         addLayer( model, rr, context, layerType, extLoader );
-      }
       else
-      {
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
-      }
-    }
 
   }
 
@@ -139,8 +131,7 @@ public class ChartFactory
     if( mapperType != null )
     {
       final String mpId = mapperType.getProvider().getEpid();
-      if( mpId != null && mpId.length() > 0 )
-      {
+      if( (mpId != null) && (mpId.length() > 0) )
         try
         {
           IMapperRegistry mr = model.getMapperRegistry();
@@ -160,16 +151,11 @@ public class ChartFactory
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-      }
       else
-      {
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" );
-      }
     }
     else
-    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
-    }
   }
 
   /**
@@ -184,13 +170,10 @@ public class ChartFactory
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
       // erzeugen
       if( mr.getAxis( axisType.getId() ) != null )
-      {
         return;
-      }
 
       final String apId = axisType.getProvider().getEpid();
-      if( apId != null && apId.length() > 0 )
-      {
+      if( (apId != null) && (apId.length() > 0) )
         try
         {
           final IAxisProvider ap = extLoader.getExtension( IAxisProvider.class, apId );
@@ -202,9 +185,7 @@ public class ChartFactory
             Class< ? > dataClass = getAxisDataClass( axisType );
             String[] valueList = null;
             if( axisType.isSetStringRange() )
-            {
               valueList = axisType.getStringRange().getValueSet().getValueArray();
-            }
             ap.init( model, id, pc, context, dataClass, axisPosition, valueList );
             final IAxis axis = ap.getAxis();
             axis.setRegistry( mr );
@@ -226,10 +207,7 @@ public class ChartFactory
               IAxisRenderer axisRenderer = mr.getRenderer( axisType.getRendererRef().getRef() );
               // schon vorhanden => einfach zuweisen
               if( axisRenderer != null )
-              {
                 mr.setRenderer( axis.getId(), axisRenderer );
-              }
-              // erzeugen, wenn noch nicht vorhanden
               else
               {
                 final ReferencingType rendererRef = axisType.getRendererRef();
@@ -260,24 +238,17 @@ public class ChartFactory
             }
           }
           else
-          {
             Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
-          }
         }
         catch( final ConfigurationException e )
         {
           e.printStackTrace();
         }
-      }
       else
-      {
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + apId + " not known" );
-      }
     }
     else
-    {
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
-    }
   }
 
   public static void addLayer( IChartModel model, IReferenceResolver rr, URL context, LayerType layerType, final IExtensionLoader extLoader )
@@ -295,13 +266,9 @@ public class ChartFactory
     {
       final MapperType mapperType = (MapperType) rr.resolveReference( mapperRef.getRef() );
       if( mapperType != null )
-      {
         // nur dann hinzufügen, wenn nicht schon vorhanden
         if( model.getMapperRegistry().getMapper( mapperType.getId() ) == null )
-        {
           addMapper( model, mapperType, extLoader, context );
-        }
-      }
     }
 
     // Layer erzeugen
@@ -312,9 +279,7 @@ public class ChartFactory
     {
       provider = extLoader.getExtension( ILayerProvider.class, providerId );
       if( provider != null )
-      {
         Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "LayerProvider loaded:" + provider.getClass().toString() );
-      }
       else
       {
         provider = new DummyLayerProvider();
@@ -380,9 +345,7 @@ public class ChartFactory
     Map<String, String> mapperMap = new HashMap<String, String>();
     RoleReferencingType[] mapperRefArray = lt.getMapperRefs().getMapperRefArray();
     for( RoleReferencingType rrt : mapperRefArray )
-    {
       mapperMap.put( rrt.getRole(), rrt.getRef() );
-    }
     return mapperMap;
   }
 
@@ -432,9 +395,7 @@ public class ChartFactory
   {
     ParametersType parameters = null;
     if( pt != null )
-    {
       parameters = pt.getParameters();
-    }
     final IParameterContainer pc = new XmlbeansParameterContainer( ownerId, pt.getEpid(), parameters );
     return pc;
   }
@@ -464,9 +425,7 @@ public class ChartFactory
       aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter() );
     }
     else
-    {
       aa = new AxisAdjustment( 0, 1, 0 );
-    }
     return aa;
   }
 
