@@ -48,7 +48,6 @@ public class GridLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
 
@@ -192,10 +191,11 @@ public class GridLayer extends AbstractChartLayer
     ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final PolylineFigure pf = getPolylineFigure();
     ILineStyle ls = pf.getStyle();
+    String title = ls.getTitle();
     if( ls.isVisible() )
     {
 
-      LegendEntry le = new LegendEntry( this, ls.getTitle() )
+      LegendEntry le = new LegendEntry( this, title )
       {
 
         @Override
@@ -225,7 +225,6 @@ public class GridLayer extends AbstractChartLayer
           points.add( new Point( (int) (width * 0.7), height ) );
           pf.setPoints( points.toArray( new Point[] {} ) );
           pf.paint( gc );
-
         }
 
       };

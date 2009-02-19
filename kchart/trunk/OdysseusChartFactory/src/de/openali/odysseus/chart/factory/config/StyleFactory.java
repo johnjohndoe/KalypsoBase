@@ -203,7 +203,9 @@ public class StyleFactory
   {
     ILineStyle style = StyleUtils.getDefaultLineStyle();
 
-    style.setTitle( lst.getTitle() );
+    String title = lst.getTitle();
+
+    style.setTitle( title );
 
     // visible
     if( lst.isSetIsVisible() )
