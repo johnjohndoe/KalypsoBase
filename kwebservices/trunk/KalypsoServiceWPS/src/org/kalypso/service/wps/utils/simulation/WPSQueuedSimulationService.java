@@ -295,7 +295,9 @@ public class WPSQueuedSimulationService
         if( m_resultSpace != null )
         {
           final FileSystemManager manager = VFSUtilities.getManager();
-          resultDir = manager.resolveFile( m_resultSpace + "/" + resultDirectoryName );
+          final FileObject resultRoot = manager.resolveFile( m_resultSpace );
+          resultRoot.createFolder();
+          resultDir = resultRoot.resolveFile( resultDirectoryName );
           resultDir.createFolder();
         }
       }
