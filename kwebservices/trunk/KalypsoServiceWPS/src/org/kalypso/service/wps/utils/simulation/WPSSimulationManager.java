@@ -117,7 +117,7 @@ public class WPSSimulationManager
     }
     catch( Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
     }
   }
 
