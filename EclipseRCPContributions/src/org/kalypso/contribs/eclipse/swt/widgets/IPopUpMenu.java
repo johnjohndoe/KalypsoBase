@@ -41,6 +41,7 @@
 package org.kalypso.contribs.eclipse.swt.widgets;
 
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 
 /**
@@ -51,5 +52,7 @@ import org.eclipse.swt.widgets.ToolBar;
 public interface IPopUpMenu
 {
   void display( ToolBar bar, Rectangle bounds );
+
+  Menu getMenu( );
 
 }

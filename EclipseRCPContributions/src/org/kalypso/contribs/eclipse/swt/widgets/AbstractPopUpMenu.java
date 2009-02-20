@@ -61,11 +61,7 @@ public abstract class AbstractPopUpMenu implements IPopUpMenu
   public AbstractPopUpMenu( final Shell shell )
   {
     m_shell = shell;
-
-    render();
   }
-
-  abstract protected void render( );
 
   protected Shell getShell( )
   {
@@ -77,7 +73,7 @@ public abstract class AbstractPopUpMenu implements IPopUpMenu
     m_menu = menu;
   }
 
-  protected Menu getMenu( )
+  public Menu getMenu( )
   {
     return m_menu;
   }
