@@ -61,14 +61,27 @@ public class QNameUtilities
   }
 
   /**
+   * Tests if two qnames are equal in respect to their local part.
+   */
+  public static boolean equalsLocal( final QName name1, final QName name2 )
+  {
+    final String local1 = name1 == null ? null : name1.getLocalPart();
+    final String local2 = name2 == null ? null : name2.getLocalPart();
+    if( local1 == null )
+      return local2 == null;
+
+    return local1.equals( local2 );
+  }
+
+  /**
    * syntax of fragmentedFullQName :
    * 
    * <pre>
    *         &lt;namespace&gt;#&lt;localpart&gt;
    * </pre>
    * 
-   * example: fragmentedFullQName = www.w3c.org#index.html<br/> If no '#' is given, a qname with only a localPart is
-   * created.
+   * example: fragmentedFullQName = www.w3c.org#index.html<br/>
+   * If no '#' is given, a qname with only a localPart is created.
    * 
    * @return qname from fragmentedFullQName
    */
