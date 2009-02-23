@@ -53,6 +53,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument.Import;
 import org.apache.xmlbeans.impl.xb.xsdschema.IncludeDocument.Include;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -642,6 +643,8 @@ public class GMLSchema implements IGMLSchema
 
   public void addAdditionalSchema( final GMLSchema schema )
   {
+    Assert.isNotNull( schema );
+    
     m_additionalSchemas.put( schema.getTargetNamespace(), schema );
   }
 
