@@ -103,7 +103,7 @@ public abstract class JobObserverJob extends Job
 
   /**
    * Called when the observed job has finished.<br>
-   * Default implementation call {@link #jobRunning()}. Intended to be overwritten.
+   * Default implementation calls {@link #jobRunning()}. Intended to be overwritten.
    */
   protected void jobDone( @SuppressWarnings("unused") final IStatus result )
   {
