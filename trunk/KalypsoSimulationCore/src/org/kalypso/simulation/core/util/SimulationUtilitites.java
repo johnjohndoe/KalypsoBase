@@ -146,4 +146,48 @@ public class SimulationUtilitites
     }
     return modelData;
   }
+
+  public static Modeldata createModelData( final String typeID, final List<Input> inputs, final List<Output> outputs )
+  {
+    final Modeldata modelData = OF.createModeldata();
+    modelData.setTypeID( typeID );
+
+    final List<Input> inputList = modelData.getInput();
+    final List<Output> outputList = modelData.getOutput();
+    inputList.addAll( inputs );
+    outputList.addAll( outputs );
+    return modelData;
+  }
+
+  public static Input createInput( final String id, final String path )
+  {
+    final Input input = OF.createModeldataInput();
+    input.setId( id );
+    input.setPath( path );
+    return input;
+  }
+
+  public static Input createInput( final String id, final String path, final boolean isRelativeToCalcCase, final boolean isOptional )
+  {
+    final Input input = createInput( id, path );
+    input.setRelativeToCalcCase( isRelativeToCalcCase );
+    input.setOptional( isOptional );
+    return input;
+  }
+
+  public static Output createOutput( final String id, final String path )
+  {
+    final Output output = OF.createModeldataOutput();
+    output.setId( id );
+    output.setPath( path );
+    return output;
+  }
+
+  public static Output createOutput( final String id, final String path, final boolean isRelativeToCalcCase )
+  {
+    final Output output = createOutput( id, path );
+    output.setRelativeToCalcCase( isRelativeToCalcCase );
+    return output;
+  }
+
 }
