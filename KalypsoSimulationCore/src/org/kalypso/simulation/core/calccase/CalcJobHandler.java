@@ -43,6 +43,7 @@ package org.kalypso.simulation.core.calccase;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,6 +55,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -67,6 +69,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor.PATH_TYPE;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
@@ -309,8 +312,6 @@ public class CalcJobHandler
   {
     // hash input description
     final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
-    // TODO: this is not a correct platform resource URL; please refer to PlatformURLResourceConnection#RESOURCE_URL_STRING
-    final String PLATFORM_URL = "platform:";
     final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
     for( final SimulationDescription desc : inputDescription )
       inputdescriptionMap.put( desc.getId(), desc );
@@ -322,7 +323,6 @@ public class CalcJobHandler
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Input input : inputList )
       {
-// System.out.println();
         final String inputPath = input.getPath();
         final String inputId = input.getId();
         final SimulationDescription description = inputdescriptionMap.get( inputId );
@@ -335,16 +335,16 @@ public class CalcJobHandler
           // if the type is a uri, put the content as file into the zip
 
           // alles relativ zum Projekt auflösen!
-          final IContainer baseresource;
           final IResource inputResource;
-          if( inputPath.startsWith( PLATFORM_URL ) )
+          if( inputPath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
           {
-            baseresource = project.getWorkspace().getRoot();
-            inputResource = baseresource.findMember( inputPath.substring( PLATFORM_URL.length() ) );
+            final IContainer baseresource = project.getWorkspace().getRoot();
+            final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
+            inputResource = baseresource.findMember( path );
           }
           else
           {
-            baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
+            final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
             inputResource = baseresource.findMember( inputPath );
           }
           if( inputResource == null )
@@ -355,7 +355,7 @@ public class CalcJobHandler
             throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
           }
 
-// final IPath projectRelativePath = inputResource.getProjectRelativePath();
+          // final IPath projectRelativePath = inputResource.getProjectRelativePath();
           final IPath platformRelativePath = inputResource.getFullPath().makeRelative();
 
           /* Create zipper very lazy, in order to prevent exception because zip stream is empty */
