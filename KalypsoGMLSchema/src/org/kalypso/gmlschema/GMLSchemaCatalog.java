@@ -57,7 +57,7 @@ public final class GMLSchemaCatalog
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      m_cache.addSchema( schema.getTargetNamespace(), schema, validity );
+      m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis() );
 
       Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity );
 
