@@ -54,12 +54,12 @@ public class ConfigPropertyUtilities
   /**
    * The property for the rights of the user.
    */
-  public static final String PROPERTY_EXPERT = "org.kalypso.model.product.expert";
+  public static final String PROPERTY_EXPERT = "org.kalypso.model.product.expert"; //$NON-NLS-1$
 
   /**
    * The default value of the property for the rights of the user.
    */
-  public static final String PROPERTY_DEFAULT_EXPERT = "false";
+  public static final String PROPERTY_DEFAULT_EXPERT = "false"; //$NON-NLS-1$
 
   private ConfigPropertyUtilities( )
   {
@@ -76,7 +76,7 @@ public class ConfigPropertyUtilities
     final String expert = FrameworkProperties.getProperty( PROPERTY_EXPERT, PROPERTY_DEFAULT_EXPERT );
 
     /* If it is not set or set to false, the user has no expert rights. */
-    if( expert == null || expert.equalsIgnoreCase( "false" ) )
+    if( expert == null || expert.equalsIgnoreCase( "false" ) ) //$NON-NLS-1$
       return false;
 
     return true;
