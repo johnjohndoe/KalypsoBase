@@ -62,6 +62,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
+import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -74,6 +75,7 @@ import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.utils.Debug;
@@ -511,16 +513,19 @@ public class SimulationDelegate
               throw new WPSException( "Complex data specified, but no base folder given." );
             }
 
-            final IContainer baseresource;
-            if( (protocol != null) && protocol.equals( "platform" ) )
+            final IProject project = m_calcCaseFolder.getProject();
+            final IResource inputResource;
+            if( (protocol != null) && protocol.equals( PlatformURLHandler.PROTOCOL ) )
             {
-              baseresource = m_calcCaseFolder.getProject().getWorkspace().getRoot();
+              final IContainer baseresource = project.getWorkspace().getRoot();
+              final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
+              inputResource = baseresource.findMember( path );
             }
             else
             {
-              baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : m_calcCaseFolder.getProject();
+              final IContainer baseresource = input.isRelativeToCalcCase() ? m_calcCaseFolder : project;
+              inputResource = baseresource.findMember( inputPath );
             }
-            final IResource inputResource = baseresource.findMember( inputPath );
 
             if( inputResource == null )
             {
@@ -546,7 +551,7 @@ public class SimulationDelegate
             wpsInputs.put( identifier.getValue(), new URI( serverUrl ) );
           }
           else
-            // maybe check the protocols?
+          // maybe check the protocols?
           {
             // Remote resource, will be passed to the service as reference
             final URL clientUrl = new URL( inputPath );
