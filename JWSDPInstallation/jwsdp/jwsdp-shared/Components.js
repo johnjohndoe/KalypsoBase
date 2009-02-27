@@ -1,0 +1,11 @@
+      var xmldsig = true;
+      var xws_sec = true;
+      var wsi = true;
+      var jaxb = true;
+      var jaxp = true;
+      var jaxr = true;
+      var jaxrpc = true;
+      var saaj = true;
+      var jstl = true;
+      var registry = true;
+      var tomcat = false;

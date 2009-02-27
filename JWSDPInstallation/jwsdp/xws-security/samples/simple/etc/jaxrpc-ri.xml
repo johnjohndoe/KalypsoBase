@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<webServices xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/dd"
+             version="1.0">
+
+   <endpoint name="SecureEndpoint"
+    displayName="Test Sample"
+    description="Secure Endpoint Sample Service"
+    port="{http://xmlsoap.org/Ping}Ping"
+    interface="simple.PingPort"
+    implementation="simple.TestImpl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpointMapping endpointName="SecureEndpoint"
+    urlPattern="/Ping"/>   
+     
+</webServices>

@@ -1,0 +1,176 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sean Mullan">
+   <meta name="GENERATOR" content="Mozilla/4.79C-CCK-MCD  [en] (X11; U; SunOS 5.7 sun4u) [Netscape]">
+</head>
+<body>
+
+<center>
+<h4>
+JSR 105 Proposed Final Draft API&nbsp;Changes since Public Review</h4>
+</center>
+
+<h4>General</h4>
+  <ol>
+    <li>
+      Added new package <code>javax.xml.crypto.dsig.dom</code> containing 
+      DOM-specific classes for the <code>javax.xml.crypto.dsig</code> package.
+      Moved <code>DOMSignContext</code> and <code>DOMValidateContext</code>
+      classes from the <code>javax.xml.crypto.dom</code> package to
+      the <code>javax.xml.crypto.dsig.dom</code> package.
+    </li>
+    <li>
+      Removed "_URI" from the Algorithm URI String constants (ex: 
+      <code>Transform.ENVELOPED_URI</code> is now 
+      <code>Transform.ENVELOPED</code>).
+    </li>
+    <li>
+      In the API Overview, added a DOM Mechanism requirement that 
+      implementations must support <code>DOMStructure</code>s as the mechanism 
+      for applications to specify any elements or mixed content.
+  </ol>
+
+<h4>javax.xml.crypto</h4>
+  <ol>
+    <li>
+      Added new <code>NoSuchMechanismException</code> class which is an 
+      unchecked exception thrown by <code>getInstance</code> methods when no 
+      support for the requested mechanism is available.
+    </li>
+    <li>
+      Added <code>put</code> and <code>get</code> methods to the 
+      <code>XMLCryptoContext</code> interface for storing arbitrary information.
+    </li>
+    <li>
+      Removed the <code>NodeSetData.contains</code> method.
+    <li>
+      Added a warning to the <code>XMLCryptoContext</code> class that contexts 
+      may contain state and are not meant to be reusable and that each context 
+      should only be used for signing/validating one <code>XMLSignature</code>.
+    </li>
+  </ol>
+
+<h4>javax.xml.crypto.dom</h4>
+  <ol>
+    <li>
+      Changed <code>DOMNodeSetData</code> from an interface to a concrete 
+      class, to make it easier for developers to use.
+    </li>
+  </ol>
+
+<h4>javax.xml.crypto.dsig</h4>
+  <ol>
+    <li>
+      Removed the <code>Reference.ValidateResult</code> and 
+      <code>Reference.DigestValue</code> classes and moved methods into the 
+      <code>Reference</code> class.
+    <li>
+      Changed the return type of the <code>Reference.getDigestValue</code> 
+      method from <code>Reference.DigestValue</code> to <code>byte[]</code>.
+    </li>
+    <li>
+      Added a <code>Reference.getCalculatedDigestValue</code> method.
+    </li>
+    <li>
+      Added new <code>XMLSignature.SignatureValue</code> nested class that 
+      represents the <code>SignatureValue</code> element and has methods for 
+      accessing the value and the Id attribute, as well as a 
+      <code>validate</code> method for validating the signature value
+    </li>
+    <li>
+      Changed the return type of the <code>XMLSignature.getSignatureValue</code>
+      method from <code>byte[]</code> to <code>SignatureValue</code>.
+    </li>
+    <li>
+      Removed the <code>XMLSignature.getSignatureValueId</code> method 
+      (replaced by new <code>SignatureValue.getId</code> method).
+    </li>
+    <li>
+      Added <code>XMLSignature.getKeySelectorResult</code> method.
+    </li>
+    <li>
+      Added <code>SignedInfo.getCanonicalizedData</code> method.
+    </li>
+    <li>
+      Removed the protected <code>XMLSignatureFactory(String, Provider)</code> 
+      constructor and replaced it with a no-args constructor, which is 
+      sufficient.
+    </li>
+    <li>
+      Removed the <code>Manifest.validate</code> method.
+    </li>
+    <li>
+      Renamed <code>CanonicalizationMethod</code> constants to avoid confusion.
+    </li>
+    <li>
+      Added a sentence to the <code>validate</code> methods to state that the 
+      method always returns a cached value after the first successful 
+      invocation.
+    </li>
+    <li>
+      Clarified that the <code>XMLSignature.validate</code> method only 
+      validates the signature and does not unmarshal and reinitialize the 
+      contents of the <code>XMLSignature</code> object.
+    </li>
+    <li>
+      In <code>XMLObject</code> class, noted that content should be returned 
+      as instances of public <code>XMLStructure</code> subclasses, if they 
+      exist.
+    </li>
+  </ol>
+
+<h4>javax.xml.crypto.dsig.dom</h4>
+  <ol>
+    <li>
+      Added a constructor to the <code>DOMValidateContext</code> class that 
+      takes a single <code>Node</code> parameter, which is useful when you want 
+      to unmarshal, but not cryptographically validate an 
+      <code>XMLSignature</code>. This is also useful for using an existing 
+      <code>XMLSignature</code> as a template for a subsequent signing 
+      operation.
+    </li>
+    <li>
+      Added overloaded constructors to the <code>DOMSignContext</code> class 
+      that take a <code>KeySelector</code> parameter instead of a 
+      <code>Key</code> parameter.
+    </li>
+  </ol>
+
+<h4>javax.xml.crypto.dsig.keyinfo</h4>
+  <ol>
+    <li>
+      Removed the protected <code>KeyInfoFactory(String, Provider)</code> 
+      constructor and replaced it with a no-args constructor, which is 
+      sufficient.
+    </li>
+    <li>
+      Changed the <code>KeyInfoFactory.newKeyValue</code> method to throw 
+      <code>KeyException</code> if the key algorithm is unrecognized or 
+      unsupported.
+    </li>
+    <li>
+      Changed the <code>RetrievalMethod.dereference</code> method to throw 
+      <code>NullPointerException</code> if the context parameter is null.
+    </li>
+    <li>
+      Clarified that the <code>KeyInfo.getContent</code> method returns 
+      instances of public <code>XMLStructure</code> subclasses.
+    </li>
+  </ol>
+
+<h4>javax.xml.crypto.dsig.spec</h4>
+  <ol>
+    <li>
+      Added an <code>XSLTTransformParameterSpec</code> class for holding input 
+      parameters to the XSLT Transform algorithm.
+    </li>
+    <li>
+      Renamed the <code>HMACParameterSpec.getHMACOutputLength</code> method to 
+      <code>getOutputLength</code>.
+    </li>
+    <li>
+      Renamed the <code>XPath</code> class to <code>XPathType</code>.
+    </li>
+  </ol>

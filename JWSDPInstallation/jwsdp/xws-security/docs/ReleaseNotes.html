@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <title>XML and Web Services Security Release Notes</title>
+</head>
+<body bgcolor="#ffffff">
+<p>
+<a href="index.html"><font size="-1">XWS-Security Home</font></a><br>
+<a href="samples.html"><font size="-1">XWS-Security Samples</font></a></p>
+<center>
+<h1><font color="#000099">XML and Web Services Security EA3<br>
+Release Notes</font><font color="#3333ff">&nbsp;</font></h1>
+</center>
+<p>For an updated, online version of these release notes, see <a
+ href="http://java.sun.com/webservices/docs/1.4/xws-security/ReleaseNotes.html">Release
+Notes</a>.</p>
+<p>Revised: 4/9/2004 </p>
+<h2>Contents</h2>
+<ul>
+  <li>
+    <a href="#first">Read This Section First</a>
+  </li>
+  <li>
+    <a href="#what">What This Release Includes</a>
+  </li>
+  <li>
+    <a href="#limitations">Current Limitations</a>
+  </li>
+  <li>
+    <a href="#bugs">Known Issues</a>
+  </li>
+</ul>
+<a name="first">
+<h2>Read This Section First</h2>
+</a>
+<p>Before you work with this release, make sure that
+you have installed the required software
+and are on a supported operating system.
+You can find this information in the
+<a href="../../docs/index.html">Java<sup><font size="-2">TM</font></sup>
+Web Services Developer Pack (Java WSDP) home page</a> and <a
+ href="../../docs/ReleaseNotes.html">Release Notes</a>.
+</p>
+<a name="what">
+<h2>What This Release Includes</h2>
+</a>
+<p>This release includes the following XML and Web Services Security
+(XWS-Security)
+features:
+</p>
+<ul>
+  <li>Support for securing JAX-RPC applications and applications that
+use SAAJ.
+  </li>
+  <li>A sample security framework within which a JAX-RPC
+or SAAJ application developer will be able to secure
+applications by signing/verifying parts of SOAP messages and/or
+encrypting/decrypting parts of a SOAP message. The message sender can 
+make claims about the security properties by associating security
+tokens with the message. An example of a security claim is the
+identity of the sender, identified using username and password.
+  </li>
+  <li>Web Services Security (WSS) interop scenarios. Developers will 
+be able to send and receive messages compliant with the WSS Soap 
+Message Security specification. Developers can use the framework to 
+implement applications which have security requirements similar to 
+those defined in the WSS interop scenarios. More information on the 
+scenarios can be found at <a
+ href="http://lists.oasis-open.org/archives/wss/200306/msg00002.html">
+Draft Spec for Interop1 (draft 5)</a> and <a
+ href="http://lists.oasis-open.org/archives/wss/200310/msg00003.html">
+Final Spec for Interop2 (draft 6)</a>. </li>
+<!-- <li>A  SAAJ sample  named <code>soapprocessor</code> that  has SOAP 
+        processing capabilities as defined in the SOAP 1.1 specification. Developers who are using plain SAAJ (and not JAX-RPC) can make use of this sample and its interfaces in conjunction with XWS-Security to secure their SOAP messages. 
+        See the <a href="./index.html">XML and Web 
+        Services Security</a> home page -->
+  <li>Command-line tools that provide specialized utilities for
+  keystore management: <code>pkcs12import</code>
+  and <code>keyexport</code>.  Also, the addition of the <code>-security</code>
+  option for the <code>wscompile</code> utility to allow specification of a
+  security configuration for a JAX-RPC application.
+  </li>
+  <li>Sample programs
+  </li>
+</ul>
+<p>
+The XWS-Security release contents are arranged in the following
+structure within
+the Java WSDP release:
+</p>
+<table border="1" cellpadding="3" cellspacing="3" width="75%">
+  <tbody>
+    <tr>
+      <th align="left">Directory Name</th>
+      <th align="left">Contents</th>
+    </tr>
+    <tr>
+      <td valign="top"><code>xws-security/etc</code></td>
+      <td valign="top">Keystore files used by the examples.</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>xws-security/docs</code></td>
+      <td valign="top">Release documentation for the XWS-Security
+framework. See also: <a
+ href="http://java.sun.com/webservices/docs/1.4/tutorial/doc/index.html">JWSDP
+Tutorial</a>.</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>xws-security/lib</code></td>
+      <td valign="top">JAR files used by the XWS-Security framework.</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>xws-security/samples</code></td>
+      <td valign="top">Example code. See <a href="samples.html">samples.html</a>
+for details.</td>
+    </tr>
+  <tr>
+      <td valign="top"><code>xws-security/bin</code></td>
+      <td valign="top">Command-line tools that provide specialized utilities for
+      keystore maintenance. For more information read <a href="index.html#commandtools">
+      Command-line Tools</a>.</td>
+    </tr>
+  </tbody>
+</table>
+<a name="limitations">
+<h2>Current Limitations</h2>
+</a>
+<p>This release of XWS-Security includes the following limitations:</p>
+<ul>
+  <li>Since the Java Standards for key Web Services Security
+technologies are still being defined under the Java Community Process,
+the current APIs in this release are <i>nonstandard</i> and are
+subject to change in future releases. </li>
+  <li>Examples written using an earlier release of XWS-Security APIs
+will not run on this release of the JWSDP.</li>
+  <li>XWS-Security cannot be used for securing message attachments.</li>
+  <li>JAX-RPC dynamic proxies are not yet supported, only static stubs
+work.</li>
+   <li>Support allowing the message recipient to enforce security 
+   requirements on the messages it receives is not supported.</li>
+</ul>
+<a name="bugs">
+<h2>Known Issues</h2>
+</a>
+<p>In this release, the XWS-Security implementation has the following
+known
+issues:
+</p>
+<ul>
+  
+  <li>Certificate validation does not check for certificate revocation.
+The security environment cannot set up a Certificate Revocation List
+(CRL) corresponding to a certificate authority. <!--Learn more about this
+issue at <a
+ href="http://developer.java.sun.com/developer/bugParade/bugs/5031514.html">
+http://developer.java.sun.com/developer/bugParade/bugs/5031514.html</a>.--></li>
+</ul>
+</body>
+</html>

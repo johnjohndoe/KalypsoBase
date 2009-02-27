@@ -1,0 +1,117 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sean Mullan">
+   <meta name="GENERATOR" content="Mozilla/4.79C-CCK-MCD  [en] (X11; U; SunOS 5.7 sun4u) [Netscape]">
+</head>
+<body>
+
+<center>
+<h4>
+JSR 105 v0.11 API&nbsp;Changes</h4>
+</center>
+
+<h4>
+General</h4>
+
+<ol>
+<li>
+Added new package <code>javax.xml.crypto.dsig.dom</code> and moved
+<code>DOMSignContext</code> and <code>DOMValidateContext</code> classes
+from <code>javax.xml.crypto.dom</code> package to here.
+</li>
+<li>
+Added DOM Mechanism requirement that implementations must support
+<code>DOMStructure</code>s as the mechanism for applications to specify
+any elements or mixed content.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto</h4>
+
+<ol>
+<li>
+Added new <code>NoSuchMechanismException</code> class which is an unchecked
+exception thrown by <code>getInstance</code> methods when no support for the
+requested mechanism is available.
+</li>
+<li>
+Added a warning to the <code>XMLCryptoContext</code> class that contexts may
+contain state and are not meant to be reusable and that each context should
+only be used for signing/validating one <code>XMLSignature</code>.
+</li>
+<li>
+Removed the <code>NodeSetData.contains()</code> method.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dom</h4>
+
+<ol>
+<li>
+Changed back the return type of <code>DOMURIReference.getHere()</code> from
+<code>Attr</code> to <code>Node</code>.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig</h4>
+
+<ol>
+<li>
+Rename <code>CanonicalizationMethod</code> constants.
+</li>
+<li>
+In <code>getInstance</code> methods, add hyperlink to list of standard
+mechanism types.
+</li>
+<li>
+Removed the supported keys from the <code>XMLValidateContext</code> and
+<code>XMLSignContext</code> classes.
+</li>
+<li>
+Removed <code>Validity</code> interface.
+</li>
+<li>
+Added a sentence to the <code>validate</code> methods to state that the
+method always returns a cached value after the first successful invocation.
+</li>
+<li>
+Removed the <code>Manifest.validate()</code> method.
+</li>
+<li>
+Added a <code>SignedInfo.getKeySelectorResult()</code> method that return
+the key selector result after signing/validating.
+</li>
+<li>
+Removed <code>Reference.Validity</code> and <code>Reference.CachedData</code> 
+classes and moved methods into the <code>Reference</code> class.
+</li>
+<li>
+Added <code>Reference.getCalculatedDigest()</code> and
+<code>SignedInfo.getCalculatedSignatureValue</code> methods.
+</li>
+<li>
+In <code>XMLObject</code> class, content should be returned as instances
+of public <code>XMLStructure</code> subclasses, if they exist.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.spec</h4>
+
+<ol>
+<li>
+Renamed <code>HMACParameterSpec.getHMACOutputLength()</code> method to
+<code>getOutputLength</code>.
+</li>
+<li>
+Renamed <code>XPath</code> class to <code>XPathType</code>.
+</li>
+</ol>
+
+</body>
+</html>
