@@ -1,0 +1,5 @@
+db.driver=com.pointbase.jdbc.jdbcUniversalDriver
+db.url=jdbc:pointbase:server://localhost/wsi
+db.username=PBPUBLIC
+db.password=PBPUBLIC
+db.table.exist=15011

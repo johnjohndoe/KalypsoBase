@@ -1,0 +1,683 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<!DOCTYPE project [ 
+      <!ENTITY tomcat SYSTEM "file:../buildconfig/tomcat-config.xml"> 
+      <!ENTITY sjsas SYSTEM "file:../buildconfig/sjsas-config.xml"> 
+      <!ENTITY sjsws SYSTEM  "file:../buildconfig/sjsws-config.xml"> 
+]> 
+
+<project name="interop" default="usage" basedir=".">
+
+  <!-- Values in build.properties (if any) override the values in this file -->
+  <property file="build.properties"/>
+  
+  <property name="context-path" value="pingservice"/>
+  <property name="url" value="http://${endpoint.host}:${endpoint.port}/manager/"/>
+  <property name="username" value="${username}"/>
+  <property name="password" value="${password}"/>
+
+  <property name="build.home" value="build"/>
+  <property name="dist.home" value="dist"/>
+
+  <property name="portable-war" value="${ant.project.name}-portable.war"/>
+  <property name="deployable-war" value="${context-path}.war"/>
+  <property name="war-path" value="${dist.home}/${deployable-war}"/>
+
+  <property name="config.rpcenc.file" value="${basedir}/etc/config.xml"/>
+  <property name="client.config.rpcenc.file" value="${basedir}/etc/client-config.xml"/>
+  <property name="model.rpcenc.file" value="model.xml.gz"/>
+  <property name="webapp.webxml" value="${basedir}/etc/web.xml"/>
+            
+  <property name="jaxrpc.tool.verbose" value="false"/>
+  
+  <target name="prepare">
+    <mkdir dir="${build.home}/client"/>
+    <mkdir dir="${build.home}/server/WEB-INF/classes"/>
+    <mkdir dir="${dist.home}"/>
+  <!-- replace this switch with &sjsws; or &tomcat; for running with
+       SJSWS and Tomcat Containers -->
+    &sjsas;
+  </target>
+
+  <target name="compile-server" depends="gen-server"
+          description="Compiles the server-side source code">
+    <echo message="Compiling the server-side source code...."/>
+    <javac debug="true"
+           srcdir="server/src"
+           destdir="${build.home}/server/WEB-INF/classes"
+           includes="**/*.java">
+    <classpath>
+        <path refid="app.classpath"/>
+     </classpath>
+    </javac>
+  </target>
+
+  <target name="gen-server" depends="prepare"
+          description="Runs wscompile to generate server artifacts">
+    <echo message="Running wscompile...."/>
+    <wscompile verbose="${jaxrpc.tool.verbose}" 
+               xPrintStackTrace="true"    
+               keep="true" fork="true" 
+               import="true"
+               model="${build.home}/server/WEB-INF/${model.rpcenc.file}"
+               base="${build.home}/server/WEB-INF/classes"
+               classpath="${app.classpath}"
+               config="${config.rpcenc.file}">
+      <classpath>
+        <pathelement location="${build.home}/server/WEB-INF/classes"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </wscompile>
+  </target>
+  
+    <target name="setup-web-inf" depends="prepare">
+    <echo message="Setting up ${build.home}/server/WEB-INF..."/>
+    <copy file="./etc/web.xml" todir="${build.home}/server/WEB-INF"/>
+    <copy file="./etc/jaxrpc-ri.xml" todir="${build.home}/server/WEB-INF"/>
+    <copy file="./etc/PingService.wsdl" todir="${build.home}/server/WEB-INF"/>
+    <copy file="./index.html" todir="${build.home}/server"/>
+    <!-- need the certificates too -->
+    <copy todir="${build.home}/server/WEB-INF">
+      <fileset dir="etc/keystores">
+        <include name="server-keystore.jks"/>
+        <include name="server-truststore.jks"/>
+        <include name="sessionkey"/>
+      </fileset>
+    </copy>
+    </target>
+
+  <target name="raw-war" depends="setup-web-inf"
+          description="Creates a 'raw' WAR file">
+    <echo message="Packaging to ${dist.home}/${portable-war}...."/>
+    <delete file="${dist.home}/${portable-war}" />
+    <jar jarfile="${dist.home}/${portable-war}">
+      <fileset dir="${build.home}/server">
+        <include name="WEB-INF/**"/>
+        <include name="index.html"/>
+      </fileset>
+    </jar>
+  </target>
+  
+  <target name="process-war" depends="raw-war"
+          description="Runs wsdeploy to create a deployable or 'cooked' WAR file">
+    <echo message="Running wsdeploy..."/>
+    <delete file="${dist.home}/${deployable-war}"/>
+
+    <wsdeploy fork="true" verbose="${jaxrpc-tool-verbose}" keep="true"
+              tmpdir="${build.home}/server"
+              outwarfile="${dist.home}/${deployable-war}"
+              inwarfile="${dist.home}/${portable-war}">
+      <classpath>
+        <path refid="app.classpath"/>
+      </classpath>
+    </wsdeploy>
+  </target>
+
+  <target name="build-server"
+          depends="compile-server, gen-server, raw-war, process-war">
+  </target>
+
+
+  <!-- Appserver -->
+  <target name="check-if-deployed-as" if="sjsas.home">
+    <echo message="Checking for deployed webapp at context path /${context-path}"/>
+    <condition property="as.webapp.deployed">
+      <http url="http://${endpoint.host}:${endpoint.port}/${context-path}/"/>
+    </condition>
+  </target>
+
+  <target name="deploy-sjsas"
+          depends="prepare, check-if-deployed-as, undeploy-sjsas"
+          if="sjsas.home">
+    <echo message="Deploying war for ${ant.project.name} to sjsas"/>
+    <appserv-deploy file="${war-path}" password="${password}" sunonehome="${sjsas.home}" />
+  </target>
+
+
+  <target name="undeploy-sjsas" if="as.webapp.deployed">
+    <echo message="Undeploying existing webapp at ${context-path}"/>
+    <echo message="appclasspath ${app.classpath}"/>
+    <appserv-undeploy name="${context-path}" password="${password}" sunonehome="${sjsas.home}" />
+  </target>
+  
+  <!-- end of Appserver -->
+
+  <!-- Webserver -->
+  <target name="check-if-deployed-ws" if="sjsws.home">
+    <echo message="Checking for deployed webapp at context path /${context-path}"/>
+    <condition property="ws.webapp.deployed">
+      <http url="http://${endpoint.host}:${endpoint.port}/${context-path}/"/>
+    </condition>
+  </target>
+
+  <target name="deploy-ws">
+      <echo message="deploying ${war-path} at ${context-path}" />
+      <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="-u" />
+      <arg value="/${context-path}" />
+      <arg value="-i" />
+      <arg value="${VS.DIR}" />
+      <arg value="-v" />
+      <arg value="${VS.DIR}" />
+      <arg value="${war-path}" />
+      </exec>
+  </target>
+
+  <target name="undeploy-ws" >
+    <echo message="undeploying ${context-path}" />
+    <exec executable="${SJSWS_DEPLOY}" vmlauncher="false">
+        <arg value="delete" />
+        <arg value="deploy" />
+        <arg value="-u" />
+        <arg value="/${context-path}" />
+        <arg value="-i" />
+        <arg value="${VS.DIR}" />
+        <arg value="-v" />
+        <arg value="${VS.DIR}" />
+        <arg value="hard" />
+     </exec>
+  </target>
+
+  <target name="deploy-sjsws"
+          depends="prepare, check-if-deployed-ws, undeploy-sjsws"
+          if="sjsws.home" >
+    <echo message="Deploying war for ${ant.project.name} to sjsws"/>
+    <antcall target="deploy-ws" />
+  </target>
+
+  <target name="undeploy-sjsws" if="ws.webapp.deployed">
+    <echo message="Undeploying existing webapp at ${context-path}"/>
+    <echo message="appclasspath ${app.classpath}"/>
+    <antcall target="undeploy-ws" />
+  </target>
+
+  <!--End of Webserver -->
+
+  <!--Tomcat -->
+  <target name="check-if-deployed-tom" if="tomcat.home">
+    <echo message="Checking for deployed webapp at context path /${context-path}"/>
+    <condition property="tom.webapp.deployed">
+      <http url="http://${endpoint.host}:${endpoint.port}/${context-path}/"/>
+    </condition>
+  </target>
+
+  <target name="deploy-tomcat"
+          depends="prepare, check-if-deployed-tom, undeploy-tomcat"
+          if="tomcat.home" >
+    <echo message="Deploying war for ${ant.project.name} to tomcat"/>
+    <deploy-catalina url="${url}" username="${username}" password="${password}"
+            path="/${context-path}" war="file:${war-path}"/>
+  </target>
+
+  <target name="undeploy-tomcat" if="tom.webapp.deployed">
+    <echo message="Undeploying existing webapp at ${context-path}"/>
+    <undeploy-catalina url="${url}" username="${username}" password="${password}" path="/${context-path}"/>
+ </target>
+  <!--End of Tomcat -->
+
+  <target name="deploy-forced" depends= "deploy-sjsas, deploy-sjsws, deploy-tomcat"/>
+  <target name="internal-undeploy" depends= "undeploy-sjsas, undeploy-sjsws, undeploy-tomcat"/>
+
+
+  <target name="gen-client" depends="prepare"
+          description="Runs wscompile to generate client side artifacts">
+    <echo message="Running wscompile...."/>
+    <wscompile fork="true" verbose="${jaxrpc.tool.verbose}" keep="true"
+               client="true"
+               base="${build.home}/client"
+               features=""
+               config="${client.config.rpcenc.file}">
+      <classpath>
+        <path refid="app.classpath"/>
+      </classpath>
+    </wscompile>
+  </target>
+  
+  <target name="compile-client" depends="prepare"
+          description="Compiles the client-side source code">
+    <echo message="Compiling the client source code...."/>
+    <javac srcdir="client/src"
+           debug="true"
+           destdir="${build.home}/client"
+           includes="**/*.java">
+      <classpath>
+        <path refid="app.classpath"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="build-client" depends="gen-client, compile-client"
+          description="Executes the targets needed to build a stub client.">
+  </target>
+
+  <target name="run-all"
+          depends="clean, build-server, deploy-forced, build-client, run-client1, run-client2, run-client3, run-client4, run-client5, run-client6, run-client7"/>
+  
+  <target name="run-client1" 
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario1Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario1Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario1.service.url" value="${scenario1.service.url}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="interop-client1" 
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario1Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario1Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario1.service.url" value="${scenario1.service.url}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="run-client2" 
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario2Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario2Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="scenario2.service.url" value="${scenario2.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="interop-client2" 
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario2Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario2Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario2.service.url" value="${scenario2.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+    <target name="run-client3"
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario3Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario3Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+            
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="scenario3.service.url" value="${scenario3.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="interop-client3"
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario3Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario3Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+            
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario3.service.url" value="${scenario3.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="run-client4" 
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario4Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario4Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="sessionkey.url" value="${sessionkey.url}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+
+      <sysproperty key="scenario4.service.url" value="${scenario4.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="interop-client4" 
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario4Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario4Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="sessionkey.url" value="${sessionkey.url}"/>
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario4.service.url" value="${scenario4.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+  
+  <target name="run-client5" 
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario5Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario5Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+
+      <sysproperty key="scenario5.service.url" value="${scenario5.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="interop-client5" 
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario5Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario5Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario5.service.url" value="${scenario5.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="run-client6"
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario6Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario6Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+
+      <sysproperty key="scenario6.service.url" value="${scenario6.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="interop-client6"
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario6Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario6Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+
+      <sysproperty key="scenario6.service.url" value="${scenario6.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="run-client7"
+          depends="clean, build-server, deploy-forced, build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario7Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario7Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="scenario7.service.url" value="${scenario7.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+  
+  <target name="interop-client7"
+          depends="build-client"
+          description="Runs the example client">
+    <echo message="Running the ${ant.project.name}.Scenario7Client program...."/>
+    <java fork="on" classname="${ant.project.name}.Scenario7Client">
+      <sysproperty key="java.endorsed.dirs" value="${java.endorsed.dirs}"/>
+      <sysproperty key="jwsdp.home" value="${jwsdp.home}"/>
+      <sysproperty key="endpoint.host" value="${endpoint.host}"/>
+      <sysproperty key="endpoint.port" value="${endpoint.port}"/>
+
+      <sysproperty key="keystore.url" value="${javax.net.ssl.keyStore}"/>
+      <sysproperty key="keystore.password" value="${javax.net.ssl.keyStorePassword}"/>
+      <sysproperty key="key.aliases" value="${key.aliases}"/>
+      <sysproperty key="key.passwords" value="${key.passwords}"/>
+      <sysproperty key="keystore.type" value="${javax.net.ssl.keyStoreType}"/>
+      <sysproperty key="truststore.type" value="${javax.net.ssl.trustStoreType}"/>
+      <sysproperty key="trust.aliases" value="${trust.aliases}"/>
+      <sysproperty key="truststore.url" value="${javax.net.ssl.trustStore}"/>
+      <sysproperty key="truststore.password" value="${javax.net.ssl.trustStorePassword}"/>
+      <sysproperty key="http.proxyHost" value="${http.proxyHost}"/>
+      <sysproperty key="http.proxyPort" value="${http.proxyPort}"/>
+      <sysproperty key="scenario7.service.url" value="${scenario7.service.url}"/>
+      <classpath>
+        <pathelement location="${build.home}/client"/>
+        <path refid="app.classpath"/>
+      </classpath>
+    </java>
+  </target>
+  
+  <target name="clean-server"
+          description="Removes server side build directories">
+    <delete dir="${build.home}/server"/>
+  </target>
+
+  <target name="clean-client"
+          description="Removes client side build directories">
+    <delete dir="${build.home}/client"/>
+  </target>
+
+  <target name="clean"
+          description="Removes all build and dist directories">
+    <delete dir="${build.home}"/>
+    <delete dir="${dist.home}"/>
+  </target>
+
+  <target name="usage" depends="prepare">
+    <echo message="Please see README.txt for more info."/>
+    <echo message="Useful targets:"/>
+    <echo message="  clean = remove both server and client objects"/>
+    <echo message="  clean-server = remove only server objects"/>
+    <echo message="  clean-client = remove only client objects"/>
+    <echo message="  build-server = build server side code"/>
+    <echo message="  deploy-forced = force deploy built server code to Container"/>
+    <echo message="  build-client = build client app code"/>
+    <echo message="  run-all = run all the 7 WSS interop Scenarios"/>
+    <echo message="  run-clientX = run scenario X client (deploy the war and run the client)"/>
+    <echo message="  interop-clientX = run interop scenario X client against a remote server"/>
+  </target>
+</project>
