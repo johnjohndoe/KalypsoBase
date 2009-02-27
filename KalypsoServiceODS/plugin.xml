@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="odsoperation" name="odsoperation" schema="schema/ODSOperation.exsd"/>
+   <extension
+         point="org.kalypso.service.ods.odsoperation">
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetCapabilites"
+            id="GetCapabilities"
+            />
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetChart"
+            id="GetChart">
+         <parameter
+               isMandatory="true"
+               name="NAME"/>
+         <parameter
+               isMandatory="false"
+               name="WIDTH"/>
+         <parameter
+               isMandatory="false"
+               name="HEIGHT"/>
+         <parameter
+               isMandatory="false"
+               name="TYPE">
+            <parameterValue value="PNG"/>
+            <parameterValue value="JPG"/>
+            <parameterValue value="GIF"/>
+         </parameter>
+         <parameter
+               isMandatory="false"
+               name="TRANSPARENT">
+            <parameterValue value="TRUE"/>
+            <parameterValue value="FALSE"/>
+         </parameter>
+         <parameter
+               description="comma-separated list of ids of all the layers to be display in the given order; "
+               isMandatory="false"
+               name="LAYERS"/>
+      </odsoperation>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetLegend"
+            id="GetLegend">
+         <parameter
+               isMandatory="true"
+               name="NAME"/>
+         <parameter
+               isMandatory="false"
+               name="TYPE">
+            <parameterValue value="PNG"/>
+            <parameterValue value="JPG"/>
+            <parameterValue value="GIF"/>
+         </parameter>
+      </odsoperation>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetPlot"
+            id="GetPlot"/>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetTable"
+            id="GetTable"/>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetAxesInfo"
+            id="GetAxesInfo">
+         <parameter
+               description="name of chart whose axes information should be shown"
+               isMandatory="true"
+               name="NAME"/>
+      </odsoperation>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.DoTest"
+            id="DoTest"/>
+      <odsoperation
+            class="org.kalypso.service.ods.operation.GetAxis"
+            id="GetAxis">
+         <parameter
+               description="identifier of axis to be displayed"
+               isMandatory="true"
+               name="AXISID"/>
+         <parameter
+               description="name of chart the axis belongs to"
+               isMandatory="true"
+               name="NAME"/>
+         <parameter
+               description="width of axis image (only applicable if the axis is oriented horizontally)"
+               isMandatory="true"
+               name="WIDTH"/>
+         <parameter
+               description="height of axis image (only applicable if axis is oriented vertically)"
+               isMandatory="true"
+               name="HEIGHT"/>
+      </odsoperation>
+   </extension>
+   <extension
+         point="org.kalypso.service.ogc.ogcService">
+      <service
+            class="org.kalypso.service.ods.ODSServlet"
+            serviceName="ODS"/>
+   </extension>
+</plugin> 
