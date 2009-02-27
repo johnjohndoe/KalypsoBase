@@ -1,12 +1,8 @@
 package de.openali.odysseus.chart.factory.provider;
 
-import java.net.URL;
-
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chartconfig.x010.AxisRendererType;
 
 /**
  * @author burtscher A LayerProvider is needed to create layers from configuration data. Theres no 1:1 mapping from data
@@ -21,11 +17,11 @@ public interface IAxisRendererProvider
    */
   public IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
 
-  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final IStyleSet styleSet );
+  public void init( final AxisRendererType at );
 
-// /**
-// * returns XML configuration element for the given chart element
-// */
-// public AxisRendererType getXMLType( IAxisRenderer axisRenderer );
+  /**
+   * returns XML configuration element for the given chart element
+   */
+  public AxisRendererType getXMLType( IAxisRenderer axisRenderer );
 
 }

@@ -9,7 +9,7 @@ public interface IMarker
   /**
    * assumes that the style is already set
    */
-  public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground );
+  public void paint( GC gc, Point p, int width, int height );
 
   public void dispose( );
 

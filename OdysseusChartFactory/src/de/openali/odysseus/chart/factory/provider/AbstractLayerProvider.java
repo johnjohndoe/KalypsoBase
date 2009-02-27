@@ -1,55 +1,80 @@
 package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
-import java.util.Map;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chartconfig.x010.LayerType;
 
-public abstract class AbstractLayerProvider extends AbstractChartComponentProvider implements ILayerProvider
+public abstract class AbstractLayerProvider implements ILayerProvider
 {
+  private LayerType m_lt;
 
-  private Map<String, String> m_mapperMap;
+  private IChartModel m_model;
 
-  private String m_domainAxisId;
+  private IParameterContainer m_pc;
 
-  private String m_targetAxisId;
-
-  private IStyleSet m_styleSet;
+  private URL m_context;
 
   /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#init(de.openali.odysseus.chart.framework.model.IChartModel,
-   *      java.lang.String, de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL,
-   *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet)
+   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#init(org.kalypso.swtchart.chart.ChartView,
+   *      org.ksp.chart.configuration.LayerType)
    */
-  public void init( IChartModel model, String id, IParameterContainer parameters, URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet )
+  public void init( final IChartModel model, final LayerType lt, final URL context )
   {
-    super.init( model, id, parameters, context );
-    m_domainAxisId = domainAxisId;
-    m_targetAxisId = targetAxisId;
-    m_mapperMap = mapperMap;
-    m_styleSet = styleSet;
+    m_lt = lt;
+    m_model = model;
+    m_pc = ChartFactoryUtilities.createXmlbeansParameterContainer( m_lt.getId(), m_lt.getProvider() );
+    m_context = context;
+  }
+
+  /**
+   * default behaviour: return original xml type; implement, if changes shall be saved
+   * 
+   * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayerType()
+   */
+  public LayerType getXMLType( IChartLayer layer )
+  {
+    LayerType lt = (LayerType) m_lt.copy();
+    lt.setVisible( layer.isVisible() );
+    return lt;
+  }
+
+  public IChartModel getChartModel( )
+  {
+    return m_model;
+  }
+
+  public IParameterContainer getParameterContainer( )
+  {
+    return m_pc;
+  }
+
+  private LayerType getLayerType( )
+  {
+    return m_lt;
+  }
+
+  protected URL getContext( )
+  {
+    return m_context;
+  }
+
+  protected String getId( )
+  {
+    return m_lt.getId();
   }
 
   protected String getDomainAxisId( )
   {
-    return m_domainAxisId;
+    return getLayerType().getMappers().getDomainAxisRef().getRef();
   }
 
   protected String getTargetAxisId( )
   {
-    return m_targetAxisId;
-  }
-
-  protected IStyleSet getStyleSet( )
-  {
-    return m_styleSet;
-  }
-
-  protected Map<String, String> getMapperMap( )
-  {
-    return m_mapperMap;
+    return getLayerType().getMappers().getTargetAxisRef().getRef();
   }
 
 }

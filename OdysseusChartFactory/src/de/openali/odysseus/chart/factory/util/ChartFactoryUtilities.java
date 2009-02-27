@@ -9,10 +9,25 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.config.parameters.impl.XmlbeansParameterContainer;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chartconfig.x010.ParametersType;
+import de.openali.odysseus.chartconfig.x010.ProviderType;
 
 public class ChartFactoryUtilities
 {
+
+  public static IParameterContainer createXmlbeansParameterContainer( String ownerId, ProviderType pt )
+  {
+    ParametersType parameters = null;
+    if( pt != null )
+    {
+      parameters = pt.getParameters();
+    }
+    final IParameterContainer pc = new XmlbeansParameterContainer( ownerId, pt.getEpid(), parameters );
+    return pc;
+  }
 
   /**
    * tries to create an reaturn an url; if the url can't be created, an error message is logged

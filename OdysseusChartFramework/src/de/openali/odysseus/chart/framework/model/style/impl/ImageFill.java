@@ -40,49 +40,64 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.style.impl;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Pattern;
+import org.eclipse.swt.widgets.Display;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 
 /**
  * @author alibu
+ * 
  */
 public class ImageFill implements IFill
 {
 
-  private final ImageDescriptor m_id;
+	private final Image m_img;
+	private final Pattern m_pattern;
+	private final ImageData m_id;
 
-  /**
-   * @param url
-   */
-  public ImageFill( ImageDescriptor id )
-  {
-    m_id = id;
-  }
+	/**
+	 * @param url
+	 */
+	public ImageFill(ImageData id)
+	{
+		m_id = id;
+		m_img = new Image(Display.getDefault(), id);
+		m_pattern = new Pattern(Display.getDefault(), m_img);
+	}
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
-   */
-  public void apply( GC gc )
-  {
-    Pattern p = OdysseusChartFrameworkPlugin.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
-    gc.setBackgroundPattern( p );
-  }
+	/**
+	 * @see de.openali.odysseus.chart.framework.model.style.IFill#apply(org.eclipse.swt.graphics.GC)
+	 */
+	public void apply(GC gc)
+	{
+		if (m_pattern != null && !m_pattern.isDisposed())
+		{
+			gc.setBackgroundPattern(m_pattern);
+		}
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.style.IFill#dispose()
-   */
-  public void dispose( )
-  {
+	}
 
-  }
+	/**
+	 * @see de.openali.odysseus.chart.framework.model.style.IFill#dispose()
+	 */
+	public void dispose()
+	{
+		if (m_img != null && !m_img.isDisposed())
+		{
+			m_img.dispose();
+		}
+		if (m_pattern != null && !m_pattern.isDisposed())
+		{
+			m_pattern.dispose();
+		}
+	}
 
-  public ImageFill copy( )
-  {
-    return new ImageFill( m_id );
-  }
-
+	public ImageFill copy()
+	{
+		return new ImageFill((ImageData) m_id.clone());
+	}
 }

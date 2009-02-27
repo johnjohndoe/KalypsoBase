@@ -7,15 +7,17 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
-import de.openali.odysseus.chartconfig.x020.ParameterListType;
-import de.openali.odysseus.chartconfig.x020.ParameterMapType;
-import de.openali.odysseus.chartconfig.x020.ParameterType;
-import de.openali.odysseus.chartconfig.x020.ParametersType;
-import de.openali.odysseus.chartconfig.x020.ParameterMapType.Element;
+import de.openali.odysseus.chartconfig.x010.ParameterListType;
+import de.openali.odysseus.chartconfig.x010.ParameterMapType;
+import de.openali.odysseus.chartconfig.x010.ParameterType;
+import de.openali.odysseus.chartconfig.x010.ParametersType;
+import de.openali.odysseus.chartconfig.x010.ParameterMapType.Element;
+
 
 /**
  * The class provides some help for extracting values from a set of configuration parameters

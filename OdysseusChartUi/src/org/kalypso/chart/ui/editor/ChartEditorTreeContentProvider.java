@@ -45,35 +45,20 @@ import org.eclipse.jface.viewers.Viewer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
 /**
  * @author alibu
+ * 
  */
 public class ChartEditorTreeContentProvider implements ITreeContentProvider
 {
 
-  private IChartModel m_model;
+  private final IChartModel m_model;
 
   public ChartEditorTreeContentProvider( IChartModel model )
   {
     m_model = model;
-  }
-
-  private final Object[] revertLayer( final ILayerManager mngr )
-  {
-    if( mngr == null )
-      return new Object[] {};
-    IChartLayer[] layers = mngr.getLayers();
-    IChartLayer[] reverted = new IChartLayer[layers.length];
-    for( int i = 0; i < layers.length; i++ )
-    {
-      reverted[i] = layers[layers.length - 1 - i];
-
-    }
-    return reverted;
   }
 
   /**
@@ -83,25 +68,22 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   {
     if( element instanceof IChartModel )
     {
-      /**
-       * so you see the topmost Layer as first item
-       */
-      return revertLayer( ((IChartModel) element).getLayerManager() );
+      IChartModel model = (IChartModel) element;
+      IChartLayer[] layers = model.getLayerManager().getLayers();
 
-    }
-    if( element instanceof IExpandableChartLayer )
-    {
-      /**
-       * so you see the topmost Layer as first item
-       */
-      return revertLayer( ((IExpandableChartLayer) element).getLayerManager() );
-    }
+      IChartLayer[] reverted = new IChartLayer[layers.length];
+      for( int i = 0; i < layers.length; i++ )
+      {
+        reverted[i] = layers[layers.length - 1 - i];
 
+      }
+      return reverted;
+    }
     if( element instanceof IChartLayer )
     {
       IChartLayer layer = (IChartLayer) element;
       ILegendEntry[] entries = layer.getLegendEntries();
-      if( entries != null && entries.length > 1 )
+      if( entries.length > 1 )
       {
         return entries;
       }
@@ -121,7 +103,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   {
     if( element instanceof IChartLayer )
     {
-      return findParent( m_model, m_model.getLayerManager().getLayers(), (IChartLayer) element );
+      return m_model;
     }
     if( element instanceof ILegendEntry )
     {
@@ -141,16 +123,10 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       IChartModel model = (IChartModel) element;
       return (model.getLayerManager().getLayers().length > 0);
     }
-    if( element instanceof IExpandableChartLayer )
-    {
-      IExpandableChartLayer layer = (IExpandableChartLayer) element;
-      return (layer.getLayerManager().getLayers().length > 0);
-    }
     if( element instanceof IChartLayer )
     {
       IChartLayer layer = (IChartLayer) element;
-      ILegendEntry[] entries = layer.getLegendEntries();
-      return entries == null ? false : entries.length > 1;
+      return (layer.getLegendEntries().length > 1);
     }
     return false;
   }
@@ -178,25 +154,8 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    if( oldInput == newInput )
-      return;
-    if( newInput instanceof IChartModel )
-      m_model = (IChartModel) newInput;
+    // TODO Auto-generated method stub
+
   }
 
-  private final Object findParent( final Object parent, final IChartLayer[] childs, final IChartLayer child )
-  {
-    for( final IChartLayer layer : childs )
-    {
-      if( layer == child )
-        return parent;
-      if( layer instanceof IExpandableChartLayer )
-      {
-        final Object o = findParent( layer, ((IExpandableChartLayer) layer).getLayerManager().getLayers(), child );
-        if( o != null )
-          return o;
-      }
-    }
-    return null;
-  }
 }

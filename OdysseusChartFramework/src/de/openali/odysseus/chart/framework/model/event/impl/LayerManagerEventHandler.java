@@ -16,13 +16,7 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
 			l.onLayerAdded(layer);
 		}
 	}
-	public void fireActiveLayerChanged(final IChartLayer layer)
-    {
-        for (final ILayerManagerEventListener l : getListeners())
-        {
-            l.onActivLayerChanged(layer);
-        }
-    }
+
 	public void fireLayerRemoved(final IChartLayer layer)
 	{
 		for (final ILayerManagerEventListener l : getListeners())

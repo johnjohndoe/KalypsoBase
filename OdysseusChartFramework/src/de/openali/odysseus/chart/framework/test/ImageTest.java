@@ -58,60 +58,64 @@ import org.eclipse.swt.widgets.Shell;
  * TODO: Auslagern in externes Test-Plugin
  * 
  * @author burtscher1
+ * 
  */
 public class ImageTest implements PaintListener
 {
-  public static void main( String[] args )
-  {
-    Display d = Display.getDefault();
+	public static void main(String[] args)
+	{
+		Display d = Display.getDefault();
 
-    Shell s = new Shell( d );
-    s.setLayout( new FillLayout() );
+		Shell s = new Shell(d);
+		s.setLayout(new FillLayout());
 
-    Canvas c = new Canvas( s, SWT.FILL );
+		Canvas c = new Canvas(s, SWT.FILL);
 
-    c.addPaintListener( new ImageTest() );
+		c.addPaintListener(new ImageTest());
 
-    s.setSize( new Point( 200, 200 ) );
+		s.setSize(new Point(200, 200));
 
-    s.open();
+		s.open();
 
-    while( !s.isDisposed() )
-      d.readAndDispatch();
+		while (!s.isDisposed())
+		{
+			d.readAndDispatch();
+		}
 
-    c.dispose();
-    s.dispose();
-    d.dispose();
-  }
+		c.dispose();
+		s.dispose();
+		d.dispose();
+	}
 
-  /**
-   * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-   */
-  public void paintControl( PaintEvent e )
-  {
-    GC gc = e.gc;
-    Color blue = Display.getDefault().getSystemColor( SWT.COLOR_BLUE );
+	/**
+	 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+	 */
+	public void paintControl(PaintEvent e)
+	{
+		GC gc = e.gc;
+		Color blue = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
 
-    ImageData id1 = new ImageData( 200, 200, 32, new PaletteData( 0, 0, 0 ) );
-    id1.transparentPixel = 0;
+		ImageData id1 = new ImageData(200, 200, 32, new PaletteData(0, 0, 0));
+		id1.transparentPixel = 0;
 
-    Image img1 = new Image( Display.getDefault(), id1 );
-    GC gc1 = new GC( img1 );
-    gc1.setForeground( blue );
-    gc1.drawLine( 0, 0, 200, 200 );
+		// Image img1 = new Image( Display.getDefault(), 200, 200 );
+		Image img1 = new Image(Display.getDefault(), id1);
+		GC gc1 = new GC(img1);
+		gc1.setForeground(blue);
+		gc1.drawLine(0, 0, 200, 200);
 
-    Image img2 = new Image( Display.getDefault(), 200, 200 );
-    GC gc2 = new GC( img2 );
-    gc2.setForeground( blue );
-    gc2.drawLine( 0, 200, 200, 0 );
+		Image img2 = new Image(Display.getDefault(), 200, 200);
+		GC gc2 = new GC(img2);
+		gc2.setForeground(blue);
+		gc2.drawLine(0, 200, 200, 0);
 
-    gc.drawImage( img2, 0, 0 );
-    gc.drawImage( img1, 0, 0 );
+		gc.drawImage(img2, 0, 0);
+		gc.drawImage(img1, 0, 0);
 
-    gc1.dispose();
-    img1.dispose();
-    gc2.dispose();
-    img2.dispose();
+		gc1.dispose();
+		img1.dispose();
+		gc2.dispose();
+		img2.dispose();
 
-  }
+	}
 }

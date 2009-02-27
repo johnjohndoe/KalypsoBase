@@ -67,7 +67,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
 
   public ChartOutlinePopupDialog( Shell parentShell, IChartPart chartPart )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, false, false, "", "" );
+    super( parentShell, SWT.RESIZE, true, false, false, false, "", "" );
     m_chartPart = chartPart;
   }
 

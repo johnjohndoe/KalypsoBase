@@ -34,9 +34,7 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.util,
  de.openali.odysseus.chart.framework.util.img,
  de.openali.odysseus.chart.framework.util.math,
- de.openali.odysseus.chart.framework.util.resource,
  de.openali.odysseus.chart.framework.view,
  de.openali.odysseus.chart.framework.view.impl
-Bundle-Activator: de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin
+Bundle-Activator: de.openali.odysseus.chart.framework.Activator
 Eclipse-LazyStart: true
-Bundle-Vendor: kalypso.sourceforge.net

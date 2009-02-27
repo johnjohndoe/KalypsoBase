@@ -26,6 +26,7 @@ public class PlotImageFactory
    * @param transparency
    *            RGB to which the transparency-color should be set; transparency will not be used if RGB is null
    */
+  @SuppressWarnings("unchecked")
   public static ImageData createPlotImage( ChartComposite chart, Device dev, int width, int height )
   {
     chart.setPlotSize( width, height );

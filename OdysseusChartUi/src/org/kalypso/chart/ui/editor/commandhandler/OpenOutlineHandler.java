@@ -17,6 +17,7 @@ import org.kalypso.chart.ui.view.ChartOutlinePopupDialog;
 
 public class OpenOutlineHandler extends AbstractHandler
 {
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

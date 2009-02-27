@@ -45,18 +45,11 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Alex Burtscher
  */
-public interface IEditableChartLayer extends ITooltipChartLayer
+public interface IEditableChartLayer extends IChartLayer
 {
+  public EditInfo getHover( Point pos );
 
   public EditInfo drag( Point newPos, EditInfo dragStartData );
 
   public EditInfo commitDrag( Point point, EditInfo dragStartData );
-
-  /**
-   * deny editing for this layer
-   */
-  public void lockLayer( final boolean isLocked );
-
-  public boolean isLocked( );
-
 }

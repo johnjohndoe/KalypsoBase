@@ -42,24 +42,17 @@ package de.openali.odysseus.chart.framework.model.style;
 
 import java.util.Map;
 
-
 /**
- * @author burtscher1
- *
+ * @author alibu
+ * 
  */
 public interface IStyleSet
 {
+  public void addStyle( String id, IStyle style );
 
-  public abstract void addStyle( String id, IStyle style );
+  public <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
-  /**
-   * if no style is found, a default style is created, saved for later use and
-   * returned
-   */
-  public abstract <T extends IStyle> T getStyle( String id, Class<T> styleClass );
+  public Map<String, IStyle> getStyles( );
 
-  public abstract void dispose( );
-
-  public abstract Map<String, IStyle> getStyles( );
-
+  public void dispose( );
 }

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -20,29 +19,19 @@ import org.w3c.dom.NodeList;
 
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
-import de.openali.odysseus.chartconfig.x020.AreaStyleDocument;
-import de.openali.odysseus.chartconfig.x020.AreaStyleType;
-import de.openali.odysseus.chartconfig.x020.AxisDocument;
-import de.openali.odysseus.chartconfig.x020.AxisRendererDocument;
-import de.openali.odysseus.chartconfig.x020.AxisRendererType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
-import de.openali.odysseus.chartconfig.x020.ChartDocument;
-import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.LayerDocument;
-import de.openali.odysseus.chartconfig.x020.LayerType;
-import de.openali.odysseus.chartconfig.x020.LineStyleDocument;
-import de.openali.odysseus.chartconfig.x020.LineStyleType;
-import de.openali.odysseus.chartconfig.x020.MapperDocument;
-import de.openali.odysseus.chartconfig.x020.MapperType;
-import de.openali.odysseus.chartconfig.x020.PointStyleDocument;
-import de.openali.odysseus.chartconfig.x020.PointStyleType;
-import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
-import de.openali.odysseus.chartconfig.x020.TextStyleDocument;
-import de.openali.odysseus.chartconfig.x020.TextStyleType;
-import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
+import de.openali.odysseus.chartconfig.x010.AreaStyleDocument;
+import de.openali.odysseus.chartconfig.x010.AxisDocument;
+import de.openali.odysseus.chartconfig.x010.AxisRendererDocument;
+import de.openali.odysseus.chartconfig.x010.AxisType;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
+import de.openali.odysseus.chartconfig.x010.ChartDocument;
+import de.openali.odysseus.chartconfig.x010.ChartType;
+import de.openali.odysseus.chartconfig.x010.LayerDocument;
+import de.openali.odysseus.chartconfig.x010.LineStyleDocument;
+import de.openali.odysseus.chartconfig.x010.MapperDocument;
+import de.openali.odysseus.chartconfig.x010.PointStyleDocument;
+import de.openali.odysseus.chartconfig.x010.TextStyleDocument;
 
 /**
  * @author alibu
@@ -55,7 +44,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   /**
    * @param path
-   *          file system path where the configuration file can be found
+   *            file system path where the configuration file can be found
    * @throws XmlException
    * @throws IOException
    */
@@ -68,7 +57,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
    * creates a ConfigurationLoader based on the given ChartConfigurationDocument
    * 
    * @param doc
-   *          ChartConfigurationDocument
+   *            ChartConfigurationDocument
    */
   public ChartConfigurationLoader( final ChartConfigurationDocument doc )
   {
@@ -112,14 +101,6 @@ public class ChartConfigurationLoader implements IReferenceResolver
     m_document = document;
   }
 
-  public ChartConfigurationLoader( final ChartType chartType )
-  {
-    final ChartConfigurationDocument document = ChartConfigurationDocument.Factory.newInstance();
-    ChartConfigurationType cct = document.addNewChartConfiguration();
-    cct.setChartArray( new ChartType[] { chartType } );
-    m_document = document;
-  }
-
   /**
    * @return marshalled configuration
    */
@@ -133,62 +114,16 @@ public class ChartConfigurationLoader implements IReferenceResolver
     return m_document.getChartConfiguration().getChartArray();
   }
 
-  public LayerType[] getLayers( ChartType chart )
-  {
-    return chart.getLayers().getLayerArray();
-  }
-
-  public AxisType getDomainAxis( LayerType layer )
-  {
-    return (AxisType) resolveReference( layer.getMapperRefs().getDomainAxisRef().getRef() );
-  }
-
-  public AxisType getTargetAxis( LayerType layer )
-  {
-    return (AxisType) resolveReference( layer.getMapperRefs().getTargetAxisRef().getRef() );
-  }
-
-  public Map<String, AbstractStyleType> getStyles( LayerType layer )
-  {
-    Styles styles = layer.getStyles();
-    AreaStyleType[] asa = styles.getAreaStyleArray();
-    PointStyleType[] psa = styles.getPointStyleArray();
-    LineStyleType[] lsa = styles.getLineStyleArray();
-    TextStyleType[] tsa = styles.getTextStyleArray();
-
-    Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
-    for( AreaStyleType element : asa )
-      styleMap.put( element.getRole(), element );
-    for( TextStyleType element : tsa )
-      styleMap.put( element.getRole(), element );
-    for( LineStyleType element : lsa )
-      styleMap.put( element.getRole(), element );
-    for( PointStyleType element : psa )
-      styleMap.put( element.getRole(), element );
-
-    return styleMap;
-  }
-
-  public Map<String, MapperType> getMappers( LayerType layer )
-  {
-    TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
-    RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
-    for( RoleReferencingType refType : mra )
-      map.put( refType.getRole(), (MapperType) resolveReference( refType.getRef() ) );
-    return map;
-  }
-
-  public AxisRendererType getAxisRenderer( AxisType axis )
-  {
-    return (AxisRendererType) resolveReference( axis.getRendererRef().getRef() );
-  }
-
   public ChartType getChartById( String id )
   {
     ChartType[] charts = getCharts();
-    for( ChartType chart : charts )
-      if( chart.getId().equals( id ) )
-        return chart;
+    for( int i = 0; i < charts.length; i++ )
+    {
+      if( charts[i].getId().equals( id ) )
+      {
+        return charts[i];
+      }
+    }
     return null;
   }
 
@@ -197,8 +132,15 @@ public class ChartConfigurationLoader implements IReferenceResolver
     ChartType[] charts = getCharts();
     String[] chartIds = new String[charts.length];
     for( int i = 0; i < chartIds.length; i++ )
+    {
       chartIds[i] = charts[i].getId();
+    }
     return chartIds;
+  }
+
+  public AxisType[] getAxes( )
+  {
+    return m_document.getChartConfiguration().getAxisArray();
   }
 
   /**
@@ -218,8 +160,10 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   private synchronized Map<String, XmlObject> getIdMap( )
   {
-    if( (m_idMap != null) && false )
+    if( m_idMap != null && false )
+    {
       return m_idMap;
+    }
     else
     {
       m_idMap = new HashMap<String, XmlObject>();
@@ -235,6 +179,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
     {
       final Node idAtt = atts.getNamedItem( "id" );
       if( idAtt != null )
+      {
         try
         {
           m_idMap.put( idAtt.getNodeValue(), createXmlObjectFromNode( node ) );
@@ -249,6 +194,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
+      }
     }
     if( node.hasChildNodes() )
     {
@@ -277,55 +223,55 @@ public class ChartConfigurationLoader implements IReferenceResolver
      */
 
     XmlObject obj = null;
-    String nodeName = node.getLocalName();
-
-    if( nodeName.equals( "Chart" ) )
+    if( node.getNodeName().equals( "Chart" ) )
     {
       final ChartDocument doc = ChartDocument.Factory.parse( node );
       obj = doc.getChart();
     }
-    else if( nodeName.equals( "Layer" ) )
+    else if( node.getNodeName().equals( "Layer" ) )
     {
       final LayerDocument doc = LayerDocument.Factory.parse( node );
       obj = doc.getLayer();
     }
-    else if( nodeName.equals( "Axis" ) )
+    else if( node.getNodeName().equals( "Axis" ) )
     {
       final AxisDocument doc = AxisDocument.Factory.parse( node );
       obj = doc.getAxis();
     }
-    else if( nodeName.equals( "Mapper" ) )
+    else if( node.getNodeName().equals( "Mapper" ) )
     {
       final MapperDocument doc = MapperDocument.Factory.parse( node );
       obj = doc.getMapper();
     }
-    else if( nodeName.equals( "LineStyle" ) )
+    else if( node.getNodeName().equals( "LineStyle" ) )
     {
       final LineStyleDocument doc = LineStyleDocument.Factory.parse( node );
       obj = doc.getLineStyle();
     }
-    else if( nodeName.equals( "PointStyle" ) )
+    else if( node.getNodeName().equals( "PointStyle" ) )
     {
       final PointStyleDocument doc = PointStyleDocument.Factory.parse( node );
       obj = doc.getPointStyle();
     }
-    else if( nodeName.equals( "AreaStyle" ) )
+    else if( node.getNodeName().equals( "AreaStyle" ) )
     {
       final AreaStyleDocument doc = AreaStyleDocument.Factory.parse( node );
       obj = doc.getAreaStyle();
     }
-    else if( nodeName.equals( "TextStyle" ) )
+    else if( node.getNodeName().equals( "TextStyle" ) )
     {
       final TextStyleDocument doc = TextStyleDocument.Factory.parse( node );
       obj = doc.getTextStyle();
     }
-    else if( nodeName.equals( "AxisRenderer" ) )
+    else if( node.getNodeName().equals( "AxisRenderer" ) )
     {
       final AxisRendererDocument doc = AxisRendererDocument.Factory.parse( node );
       obj = doc.getAxisRenderer();
     }
     else
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName );
+    {
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + node.getNodeName() );
+    }
     return obj;
   }
 
@@ -333,7 +279,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   {
     final XmlOptions options = new XmlOptions();
     final Map<String, String> prefixes = new HashMap<String, String>();
-    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.2.0/", "" );
+    prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.1.0/", "" );
     options.setSaveSuggestedPrefixes( prefixes );
     options.setSavePrettyPrint();
     options.setCharacterEncoding( charset );

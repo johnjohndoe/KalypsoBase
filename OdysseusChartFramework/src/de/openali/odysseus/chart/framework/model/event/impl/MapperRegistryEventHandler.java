@@ -9,19 +9,19 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 public class MapperRegistryEventHandler extends AbstractEventProvider<IMapperRegistryEventListener>
 {
 
-  public void fireMapperAdded( final IMapper mapper )
+  public void fireMapperAdded( final IMapper< ? , ? > mapper )
   {
     for( final IMapperRegistryEventListener l : getListeners() )
       l.onMapperAdded( mapper );
   }
 
-  public void fireMapperRemoved( final IMapper mapper )
+  public void fireMapperRemoved( final IMapper< ? , ? > mapper )
   {
     for( final IMapperRegistryEventListener l : getListeners() )
       l.onMapperRemoved( mapper );
   }
 
-  public void fireMapperRangeChanged( final IMapper mapper )
+  public void fireMapperRangeChanged( final IMapper< ? , ? > mapper )
   {
     for( final IMapperRegistryEventListener l : getListeners() )
       l.onMapperRangeChanged( mapper );

@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.Activator;
 
 /**
  * helper class for logging and tracing purposes
@@ -19,8 +19,6 @@ public class Logger
   public static final String TOPIC_LOG_GENERAL = getPluginID() + "/debug";
 
   public static final String TOPIC_LOG_AXIS = getPluginID() + "/debug/axis";
-
-  public static final String TOPIC_LOG_MAPPER = getPluginID() + "/debug/mapper";
 
   public static final String TOPIC_LOG_LAYER = getPluginID() + "/debug/layer";
 
@@ -118,7 +116,9 @@ public class Logger
   private static boolean topicAllowed( String topic )
   {
     if( "true".equals( Platform.getDebugOption( topic ) ) )
+    {
       return true;
+    }
     return true;
   }
 
@@ -135,26 +135,30 @@ public class Logger
     {
       int allowed = LEVEL.values().length;
       for( LEVEL l : LEVEL.values() )
+      {
         if( l.toString().toLowerCase().equals( configLevelStr.trim().toLowerCase() ) )
         {
           allowed = l.toInt();
           break;
         }
+      }
 
       if( allowed <= msgLevel.toInt() )
+      {
         return true;
+      }
     }
     return false;
   }
 
   protected static Bundle getBundle( )
   {
-    return OdysseusChartFrameworkPlugin.getDefault().getBundle();
+    return Activator.getDefault().getBundle();
   }
 
   private static String getPluginID( )
   {
-    return OdysseusChartFrameworkPlugin.PLUGIN_ID;
+    return Activator.PLUGIN_ID;
   }
 
 }

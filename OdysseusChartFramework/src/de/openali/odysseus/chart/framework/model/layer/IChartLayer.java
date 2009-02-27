@@ -1,17 +1,22 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
+import java.util.Map;
+
 import org.eclipse.swt.graphics.GC;
 
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.style.IStylable;
 
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer extends IEventProvider<ILayerEventListener>
+public interface IChartLayer extends IEventProvider<ILayerEventListener>, IStylable
 {
 
   /**
@@ -23,8 +28,7 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
    * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
    */
   public String getId( );
-  
-  
+
   /**
    * sets the layers title (which will be shown in the legend)
    */
@@ -79,17 +83,17 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
 
   public void setCoordinateMapper( ICoordinateMapper coordinateMapper );
 
-  /**
-   * Initialization method; will be called after setCoordinateMapper
-   */
+  @SuppressWarnings("unchecked")
+  public void setDataContainer( IDataContainer data );
+
+  // Initialization method; to be called after setAxes, setDataContainer
   public void init( );
 
   public void dispose( );
 
   public ILegendEntry[] getLegendEntries( );
 
-
-  // @SuppressWarnings("unchecked")
-  // public void setMappers( Map<String, IMapper> mapperMap );
+  @SuppressWarnings("unchecked")
+  public void setMappers( Map<String, IMapper> mapperMap );
 
 }

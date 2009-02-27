@@ -7,27 +7,15 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.chart.ext.base.layer.AbstractLineLayer;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-
-  private TupleResultDomainValueData m_data;
-
-  public TupleResultLineLayer( TupleResultDomainValueData data, ILineStyle lineStyle, IPointStyle pointStyle )
-  {
-    super( lineStyle, pointStyle );
-    m_data = data;
-  }
 
   @Override
   public void drawIcon( final Image img )
@@ -55,13 +43,14 @@ public class TupleResultLineLayer extends AbstractLineLayer
   public void paint( final GC gc )
   {
     final List<Point> path = new ArrayList<Point>();
+    final TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
 
-    m_data.open();
+    data.open();
 
-    final TupleResult result = m_data.getTupleResult();
+    final TupleResult result = data.getTupleResult();
 
-    Object[] domainValues = m_data.getDomainValues();
-    Object[] targetValues = m_data.getTargetValues();
+    Object[] domainValues = data.getDomainValues();
+    Object[] targetValues = data.getTargetValues();
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {
@@ -69,9 +58,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
       IAxis targetAxis = getTargetAxis();
       IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
       IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
-
-      if( dopDomain == null || dopTarget == null )
-        return;
 
       for( int i = 0; i < result.size(); i++ )
       {
@@ -90,32 +76,5 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     drawLine( gc, path );
     drawPoints( gc, path );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
-  public IDataRange<Number> getDomainRange( )
-  {
-    IDataRange dataRange = m_data.getDomainRange();
-    IDataOperator dop = getDomainAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
-    return numRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  public IDataRange<Number> getTargetRange( )
-  {
-    IDataRange dataRange = m_data.getTargetRange();
-    IDataOperator dop = getTargetAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
-    return numRange;
-  }
-
-  protected void setData( TupleResultDomainValueData data )
-  {
-    m_data = data;
   }
 }

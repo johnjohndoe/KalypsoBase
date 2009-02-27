@@ -69,7 +69,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
   protected final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
 
-  protected boolean m_applyOnAllAxes = false;
+  protected boolean m_applyOnAllAxes = true;
 
   public AbstractAxisDragHandler( final ChartComposite chartComposite )
   {
@@ -129,7 +129,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   {
     if( e.keyCode == SWT.ALT )
     {
-      m_applyOnAllAxes = true;
+      m_applyOnAllAxes = false;
     }
   }
 
@@ -137,7 +137,7 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   {
     if( e.keyCode == SWT.ALT )
     {
-      m_applyOnAllAxes = false;
+      m_applyOnAllAxes = true;
     }
   }
 }

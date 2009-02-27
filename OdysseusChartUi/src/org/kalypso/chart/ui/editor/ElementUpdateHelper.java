@@ -89,10 +89,6 @@ public class ElementUpdateHelper
           element.setChecked( false );
         }
       }
-      else
-      {
-        element.setChecked( false );
-      }
     }
 
   }

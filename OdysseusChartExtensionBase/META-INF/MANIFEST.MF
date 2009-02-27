@@ -1,19 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
-Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
+Bundle-SymbolicName: de.openali.chart.ext.base;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-ClassPath: bin/
 Bundle-Localization: plugin
-Export-Package: de.openali.odysseus.chart.ext.base.axis,
- de.openali.odysseus.chart.ext.base.axis.provider,
- de.openali.odysseus.chart.ext.base.axisrenderer,
- de.openali.odysseus.chart.ext.base.axisrenderer.provider,
- de.openali.odysseus.chart.ext.base.data,
- de.openali.odysseus.chart.ext.base.layer,
- de.openali.odysseus.chart.ext.base.layer.provider
+Export-Package: org.kalypso.chart.ext.base.axis,
+ org.kalypso.chart.ext.base.axis.provider,
+ org.kalypso.chart.ext.base.axisrenderer,
+ org.kalypso.chart.ext.base.axisrenderer.provider,
+ org.kalypso.chart.ext.base.data,
+ org.kalypso.chart.ext.base.layer,
+ org.kalypso.chart.ext.base.layer.provider
 Require-Bundle: org.kalypso.contribs.java,
  de.openali.odysseus.chart.factory;bundle-version="[0.2.0,0.2.0]";visibility:=reexport
-Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
+Bundle-Activator: org.kalypso.chart.ext.base.Activator
 Eclipse-LazyStart: true
-Bundle-Vendor: kalypso.sourceforge.net

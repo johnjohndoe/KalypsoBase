@@ -16,8 +16,6 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 
   public void removeLayer( IChartLayer layer );
 
-  public void dispose( );
-
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
    * erzeugten Resourcen geschlossen werden
@@ -42,6 +40,4 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    * returns only layers which are editable (
    */
   public IEditableChartLayer[] getEditableLayers( );
-
-  public ITooltipChartLayer[] getTooltipLayers( );
 }

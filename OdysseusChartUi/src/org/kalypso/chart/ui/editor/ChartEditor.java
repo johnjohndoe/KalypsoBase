@@ -54,13 +54,13 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x010.AxisDateRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisDurationRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisNumberRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisStringRangeType;
+import de.openali.odysseus.chartconfig.x010.AxisType;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x010.ChartType;
 
 /**
  * @author Gernot Belger
@@ -163,7 +163,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       m_axisDragHandler.dispose();
     }
 
-    if( m_chartComposite != null )
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
     {
       m_chartComposite.dispose();
     }
@@ -395,7 +395,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
-            final AxisType[] axisArray = m_chartType.getMappers().getAxisArray();
+            final AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
             final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
             final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
             for( final AxisType axisType : axisArray )

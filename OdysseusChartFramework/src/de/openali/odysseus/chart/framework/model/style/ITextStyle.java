@@ -20,18 +20,4 @@ public interface ITextStyle extends IStyle
 
   public void setHeight( int size );
 
-  public ITextStyle copy( );
-
-  public FONTWEIGHT getWeight( );
-
-  public FONTSTYLE getFontStyle( );
-
-  public RGB getFillColor( );
-
-  public RGB getTextColor( );
-
-  public String getFamily( );
-
-  public int getHeight( );
-
 }

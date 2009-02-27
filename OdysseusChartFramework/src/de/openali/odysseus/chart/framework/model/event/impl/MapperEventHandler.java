@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 public class MapperEventHandler extends AbstractEventProvider<IMapperEventListener>
 {
 
-  public void fireMapperRangeChanged( final IMapper mapper )
+  public void fireMapperRangeChanged( final IMapper< ? , ? > mapper )
   {
     for( final IMapperEventListener l : getListeners() )
       l.onMapperRangeChanged( mapper );

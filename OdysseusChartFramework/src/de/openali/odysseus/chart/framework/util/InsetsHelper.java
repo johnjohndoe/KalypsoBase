@@ -14,12 +14,12 @@ public class InsetsHelper extends Insets
 
   public InsetsHelper( final Insets insets )
   {
-    this( insets.top, insets.bottom, insets.left, insets.right );
+    this( insets.top, insets.left, insets.bottom, insets.right );
   }
 
-  public InsetsHelper( final int itop, final int ibottom, final int ileft, final int iright )
+  public InsetsHelper( final int itop, final int ileft, final int ibottom, final int iright )
   {
-    super( itop, ibottom, ileft, iright );
+    super( itop, ileft, ibottom, iright );
   }
 
   /** left <--> right */

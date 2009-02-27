@@ -8,13 +8,22 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 /**
  * @author burtscher
  */
-public interface IMapper extends IEventProvider<IMapperEventListener>
+public interface IMapper<T_logical, T_visual> extends IEventProvider<IMapperEventListener>
 {
-
   /**
    * @return the unique identifier
    */
-  public String getId( );
+  public String getIdentifier( );
+
+  /**
+   * @return DataClass which is understood by this axis
+   */
+  public Class< ? > getDataClass( );
+
+  /**
+   * 
+   */
+  public T_visual numericToScreen( T_logical value );
 
   public void setRegistry( IMapperRegistry mapperRegistry );
 
@@ -32,11 +41,5 @@ public interface IMapper extends IEventProvider<IMapperEventListener>
    * vice versa)
    */
   public <T> IDataOperator<T> getDataOperator( Class<T> clazz );
-
-  /**
-   * Setting a dataOperator overrides global data operators; that way, individual operators can be set for each mapper
-   * instance
-   */
-  public <T> void addDataOperator( Class<T> clazz, IDataOperator<T> dataOperator );
 
 }

@@ -31,10 +31,5 @@ public interface ILayerManagerEventListener
    * called when layer content has changed
    */
   public void onLayerContentChanged( IChartLayer layer );
-  
-  /**
-   * called when active layer changed
-   */
-  public void onActivLayerChanged( IChartLayer layer );
 
 }

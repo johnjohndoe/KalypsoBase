@@ -57,6 +57,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
@@ -64,6 +65,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 public class DummyLayer implements IChartLayer
 {
   private boolean m_isVisible = true;
+
+  private IStyleSet m_style = null;
 
   private String m_title = "";
 
@@ -119,6 +122,14 @@ public class DummyLayer implements IChartLayer
   public String getId( )
   {
     return m_id;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getStyle()
+   */
+  public IStyleSet getStyles( )
+  {
+    return m_style;
   }
 
   /**
@@ -181,6 +192,14 @@ public class DummyLayer implements IChartLayer
   }
 
   /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setStyle(org.kalypso.swtchart.chart.styles.ILayerStyle)
+   */
+  public void setStyles( final IStyleSet style )
+  {
+    m_style = style;
+  }
+
+  /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
    */
   public void setVisible( final boolean isVisible )
@@ -196,7 +215,7 @@ public class DummyLayer implements IChartLayer
   }
 
   @SuppressWarnings("unchecked")
-  public void setDataContainer( @SuppressWarnings("unused") final IDataContainer data )
+  public void setDataContainer( final IDataContainer data )
   {
     // nothing to do;
   }
@@ -235,6 +254,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image)
    */
+  @SuppressWarnings("deprecation")
   @Deprecated
   public void drawIcon( final Image img )
   {
@@ -318,7 +338,7 @@ public class DummyLayer implements IChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setMappers(java.util.Map)
    */
   @SuppressWarnings("unchecked")
-  public void setMappers( @SuppressWarnings("unused") Map<String, IMapper> mapperMap )
+  public void setMappers( Map<String, IMapper> mapperMap )
   {
     // nothing to do
 

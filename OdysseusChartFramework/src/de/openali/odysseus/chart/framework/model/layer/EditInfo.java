@@ -6,7 +6,6 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 
 /**
  * @author Gernot Belger
- * @author burtscher1
  */
 public class EditInfo
 {
@@ -14,7 +13,7 @@ public class EditInfo
 
   public final IPaintable m_editFigure;
 
-  public final ITooltipChartLayer m_layer;
+  public final IEditableChartLayer m_layer;
 
   public final Object m_data;
 
@@ -22,7 +21,7 @@ public class EditInfo
 
   public String m_text;
 
-  public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
+  public EditInfo( final IEditableChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
   {
     m_layer = editLayer;
     m_hoverFigure = hoverFigure;
@@ -30,15 +29,5 @@ public class EditInfo
     m_data = editData;
     m_text = editText;
     m_pos = mousePos;
-  }
-
-  public EditInfo( final EditInfo copyInfo )
-  {
-    m_layer = copyInfo.m_layer;
-    m_hoverFigure = copyInfo.m_hoverFigure;
-    m_editFigure = copyInfo.m_editFigure;
-    m_data = copyInfo.m_data;
-    m_text = copyInfo.m_text;
-    m_pos = copyInfo.m_pos;
   }
 }

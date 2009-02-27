@@ -7,9 +7,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
  */
 public interface IMapperRegistryEventListener
 {
-  public void onMapperAdded( IMapper mapper );
+  public void onMapperAdded( IMapper< ? , ? > mapper );
 
-  public void onMapperRemoved( IMapper mapper );
+  public void onMapperRemoved( IMapper< ? , ? > mapper );
 
-  public void onMapperRangeChanged( IMapper mapper );
+  public void onMapperRangeChanged( IMapper< ? , ? > mapper );
 }

@@ -39,7 +39,7 @@ public class ChartExtensionLoader implements IExtensionLoader
    */
   private static Map<String, IConfigurationElement> MP_MAP = null;
 
-  public final static String PLUGIN_ID = "de.openali.odysseus.chart.factory";
+  private final static String PLUGIN_ID = "de.openali.odysseus.chart.factory";
 
   private static ChartExtensionLoader m_instance = null;
 

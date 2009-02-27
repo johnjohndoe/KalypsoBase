@@ -40,32 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import de.openali.odysseus.chart.factory.provider.IAxisProvider;
+import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.factory.provider.IMapperProvider;
+import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisRendererType;
-import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
-import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.LayerType;
-import de.openali.odysseus.chartconfig.x020.MapperType;
-import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
-import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
-import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
+import de.openali.odysseus.chart.framework.model.style.IStylable;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chartconfig.x010.AreaStyleType;
+import de.openali.odysseus.chartconfig.x010.AxisRendererType;
+import de.openali.odysseus.chartconfig.x010.AxisType;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x010.ChartConfigurationType;
+import de.openali.odysseus.chartconfig.x010.ChartType;
+import de.openali.odysseus.chartconfig.x010.LayerType;
+import de.openali.odysseus.chartconfig.x010.LineStyleType;
+import de.openali.odysseus.chartconfig.x010.MapperType;
+import de.openali.odysseus.chartconfig.x010.PointStyleType;
+import de.openali.odysseus.chartconfig.x010.ReferencingType;
+import de.openali.odysseus.chartconfig.x010.TextStyleType;
+import de.openali.odysseus.chartconfig.x010.ChartType.Layers;
 
 /**
  * saves a chart to an XML document
@@ -78,6 +86,7 @@ public class ChartConfigurationSaver
   {
     final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();
     final ChartConfigurationType chartconf = ccd.addNewChartConfiguration();
+    final ILayerManager lm = model.getLayerManager();
 
     // Chart
     final ChartType chartType = chartconf.addNewChart();
@@ -85,68 +94,108 @@ public class ChartConfigurationSaver
     chartType.setDescription( model.getDescription() );
     chartType.setTitle( model.getTitle() );
 
-    Layers layers = chartType.addNewLayers();
-    layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
+    // LayerReferenzen
+    final Layers layerTypes = chartType.addNewLayers();
+    final IChartLayer[] layers = lm.getLayers();
+    for( final IChartLayer chartLayer : layers )
+    {
+      final ReferencingType layerRef = layerTypes.addNewLayerRef();
+      layerRef.setRef( chartLayer.getId() );
+    }
 
-    Mappers mappers = chartType.addNewMappers();
-    mappers.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
-    mappers.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
+    chartconf.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
+    chartconf.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
+    chartconf.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
+    chartconf.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
 
-    Renderers renderers = chartType.addNewRenderers();
-    renderers.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
+    // Styles der Layer und AxisRenderer speichern
+
+    Set<IStylable> stylableList = new HashSet<IStylable>();
+    for( IAxis axis : model.getMapperRegistry().getAxes() )
+    {
+      IAxisRenderer renderer = model.getMapperRegistry().getRenderer( axis );
+      stylableList.add( renderer );
+    }
+    for( IChartLayer layer : model.getLayerManager().getLayers() )
+    {
+      stylableList.add( layer );
+    }
+
+    addStyles( stylableList.toArray( new IStylable[] {} ), chartconf );
+
     return ccd;
   }
 
   /**
-   * saves axes with current range
+   * Adds style configuration to configufation document Warning: This method does not support styles which where changed
+   * from the chartfile; If a style is used by multiple layers, only the configuration of the styles' appearance in the
+   * last layer is saved.
    */
+  private static void addStyles( IStylable[] stylables, ChartConfigurationType chartconf )
+  {
+    Map<String, LineStyleType> lineStyleMap = new HashMap<String, LineStyleType>();
+    Map<String, PointStyleType> pointStyleMap = new HashMap<String, PointStyleType>();
+    Map<String, AreaStyleType> areaStyleMap = new HashMap<String, AreaStyleType>();
+    Map<String, TextStyleType> textStyleMap = new HashMap<String, TextStyleType>();
+
+    for( IStylable stylable : stylables )
+    {
+      IStyleSet styleSet = stylable.getStyles();
+      if( styleSet != null )
+      {
+        Map<String, IStyle> styleMap = styleSet.getStyles();
+        for( Entry<String, IStyle> mapEntry : styleMap.entrySet() )
+        {
+          Object styleType = mapEntry.getValue().getData( ChartFactory.STYLE_KEY );
+          if( styleType != null )
+          {
+            if( styleType instanceof LineStyleType )
+            {
+              LineStyleType lst = (LineStyleType) styleType;
+              lineStyleMap.put( lst.getId(), lst );
+            }
+            else if( styleType instanceof AreaStyleType )
+            {
+              AreaStyleType ast = (AreaStyleType) styleType;
+              areaStyleMap.put( ast.getId(), ast );
+            }
+            else if( styleType instanceof PointStyleType )
+            {
+              PointStyleType pst = (PointStyleType) styleType;
+              pointStyleMap.put( pst.getId(), pst );
+            }
+            else if( styleType instanceof TextStyleType )
+            {
+              TextStyleType tst = (TextStyleType) styleType;
+              textStyleMap.put( tst.getId(), tst );
+            }
+          }
+          else
+          {
+            Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Style with role'" + mapEntry.getKey() + "' for chart component '" + stylable.getId()
+                + "' was not initially set in the chartfile, so it won't be saved" );
+          }
+        }
+      }
+    }
+    chartconf.setLineStyleArray( lineStyleMap.values().toArray( new LineStyleType[] {} ) );
+    chartconf.setTextStyleArray( textStyleMap.values().toArray( new TextStyleType[] {} ) );
+    chartconf.setPointStyleArray( pointStyleMap.values().toArray( new PointStyleType[] {} ) );
+    chartconf.setAreaStyleArray( areaStyleMap.values().toArray( new AreaStyleType[] {} ) );
+  }
+
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
     final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      AxisType at = (AxisType) axis.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
-      if( at != null )
-      {
-
-        // only set new range
-        if( at.isSetDateRange() )
-        {
-          IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
-          AxisDateRangeType configRange = at.getDateRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
-          configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
-          configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
-        }
-        else if( at.isSetDurationRange() )
-        {
-          // TODO: what to do now? either change to date range or leave range as it was
-        }
-        else if( at.isSetNumberRange() )
-        {
-          AxisNumberRangeType configRange = at.getNumberRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
-          configRange.setMinValue( numericRange.getMin().doubleValue() );
-          configRange.setMaxValue( numericRange.getMax().doubleValue() );
-        }
-        else if( at.isSetStringRange() )
-        {
-          AxisStringRangeType configRange = at.getStringRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
-          configRange.setMinValue( numericRange.getMin().doubleValue() );
-          configRange.setMaxValue( numericRange.getMax().doubleValue() );
-        }
-
-        axisTypes.put( axis.getId(), at );
-      }
+      final IAxisProvider provider = (IAxisProvider) axis.getData( ChartFactory.AXIS_PROVIDER_KEY );
+      axisTypes.put( axis.getIdentifier(), provider.getXMLType( axis ) );
     }
     return axisTypes;
   }
 
-  /**
-   * saves renderers without applying any changes
-   */
   private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
   {
     final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
@@ -156,20 +205,13 @@ public class ChartConfigurationSaver
       final IAxisRenderer renderer = registry.getRenderer( axis );
       if( renderer != null )
       {
-        AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
-        if( art != null )
-        {
-          // everything stays as it was
-          axisRendererTypes.put( renderer.getId(), art );
-        }
+        final IAxisRendererProvider axisRendererProvider = (IAxisRendererProvider) renderer.getData( ChartFactory.AXISRENDERER_PROVIDER_KEY );
+        axisRendererTypes.put( renderer.getId(), axisRendererProvider.getXMLType( renderer ) );
       }
     }
     return axisRendererTypes;
   }
 
-  /**
-   * saves mappers without applying any changes
-   */
   @SuppressWarnings("unchecked")
   private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
@@ -177,34 +219,21 @@ public class ChartConfigurationSaver
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
-      MapperType mt = (MapperType) mapper.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
-      if( mt != null )
-      {
-        // everything stays as it was
-        mapperTypes.put( mapper.getId(), mt );
-      }
+      final IMapperProvider provider = (IMapperProvider) mapper.getData( ChartFactory.MAPPER_PROVIDER_KEY );
+      mapperTypes.put( mapper.getIdentifier(), provider.getXMLType( mapper ) );
     }
     return mapperTypes;
   }
 
-  /**
-   * saves layers according to current order and sets current visibilty
-   */
   private static Map<String, LayerType> extractLayers( final ILayerManager manager )
   {
     final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
     for( final IChartLayer layer : manager.getLayers() )
     {
-      LayerType lt = (LayerType) layer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
-      if( lt != null )
-      {
-        // set layer visibility
-        lt.setVisible( layer.isVisible() );
-        // everything else stays as it was
-        layerTypes.put( layer.getId(), lt );
-      }
-
+      final ILayerProvider provider = (ILayerProvider) layer.getData( ChartFactory.LAYER_PROVIDER_KEY );
+      layerTypes.put( layer.getId(), provider.getXMLType( layer ) );
     }
     return layerTypes;
   }
+
 }

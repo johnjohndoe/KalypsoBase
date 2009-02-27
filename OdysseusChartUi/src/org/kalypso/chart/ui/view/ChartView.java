@@ -76,7 +76,7 @@ import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x010.ChartType;
 
 /**
  * @author Thomas Jung
@@ -220,6 +220,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void setFocus( )
   {
+    // TODO Auto-generated method stub
 
   }
 
@@ -258,10 +259,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     {
       m_tooltipHandler.dispose();
     }
-    if( m_outlinePage != null )
-    {
-      m_outlinePage.dispose();
-    }
   }
 
   @SuppressWarnings("unchecked")
@@ -270,10 +267,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   {
     if( ChartComposite.class.equals( adapter ) )
     {
-      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-        return m_chartComposite;
-      else
-        return null;
+      return m_chartComposite;
     }
 
     if( IChartPart.class.equals( adapter ) )
