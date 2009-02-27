@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SWTChart Core Plugin
+Bundle-SymbolicName: de.belger.swtchart.core
+Bundle-Version: 1.0.0
+Bundle-Vendor: belger.de
+Bundle-Localization: plugin
+Export-Package: de.belger.swtchart,
+ de.belger.swtchart.action,
+ de.belger.swtchart.axis,
+ de.belger.swtchart.layer,
+ de.belger.swtchart.legend,
+ de.belger.swtchart.mouse,
+ de.belger.swtchart.util
+Require-Bundle: org.kalypso.commons
+Eclipse-LazyStart: false

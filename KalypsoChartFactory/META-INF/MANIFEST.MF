@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoChartFactory Plug-in
+Bundle-SymbolicName: org.kalypso.chart.factory;singleton:=true
+Bundle-Version: 0.1.0
+Bundle-ClassPath: .,
+ srcbind/
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;visibility:=reexport,
+ org.kalypso.chart.framework;bundle-version="[0.1.0,0.1.0]";visibility:=reexport
+Export-Package: org.kalypso.chart.factory,
+ org.kalypso.chart.factory.configuration,
+ org.kalypso.chart.factory.configuration.exception,
+ org.kalypso.chart.factory.configuration.parameters,
+ org.kalypso.chart.factory.configuration.parameters.impl,
+ org.kalypso.chart.factory.provider,
+ org.kalypso.chart.factory.util,
+ org.ksp.chart.factory,
+ org.ksp.chart.factory.impl
