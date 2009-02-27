@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ChartObservationExtensions Plug-in
+Bundle-SymbolicName: org.kalypso.chart.ext.observation;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.chart.factory,
+ org.kalypso.core,
+ org.kalypso.chart.ext.base
+Export-Package: org.kalypso.chart.ext.observation.data,
+ org.kalypso.chart.ext.observation.layer,
+ org.kalypso.chart.ext.observation.layer.provider
+Bundle-Vendor: kalypso.sourceforge.net
