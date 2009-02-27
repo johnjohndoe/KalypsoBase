@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.kalypso.chart.LayerProvider">
+      <provider
+            class="org.kalypso.layerprovider.NiederschlagLayerProvider"
+            id="org.kalypso.layerprovider.Niederschlag"/>
+         <provider
+            class="org.kalypso.layerprovider.DefaultTupleResultLayerProvider"
+            id="org.kalypso.layerprovider.DefaultTupleResult"/>
+         <provider
+            class="org.kalypso.layerprovider.WQTabelleLayerProvider"
+            id="org.kalypso.layerprovider.WQTabelle"/>
+         <provider
+            class="org.kalypso.layerprovider.TestLayerProvider"
+            id="org.kalypso.layerprovider.Test"/>
+         <provider
+               class="org.kalypso.layerprovider.WasserstandLayerProvider"
+               id="org.kalypso.layerprovider.Wasserstand"/>
+         <provider
+               class="org.kalypso.layerprovider.observation.WasserstandLayerProvider"
+               id="org.kalypso.layerprovider.observation.WasserstandLayerProvider"/>
+   </extension>
+
+</plugin>
