@@ -1,0 +1,76 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sean Mullan">
+   <meta name="GENERATOR" content="Mozilla/4.79C-CCK-MCD  [en] (X11; U; SunOS 5.7 sun4u) [Netscape]">
+</head>
+<body>
+
+<center>
+<h4>
+JSR 105 v0.12 API&nbsp;Changes</h4>
+</center>
+
+<h4>
+javax.xml.crypto.dsig</h4>
+
+<ol>
+<li>
+Added new <code>XMLSignature.SignatureValue</code> nested class that
+represents the SignatureValue element and has methods for accessing
+the value and the Id attribute, as well as a <code>validate</code> method
+for validating the signature value.
+</li>
+<li>
+Changed the return type of the <code>XMLSignature.getSignatureValue</code>
+method from <code>byte[]</code> to <code>SignatureValue</code>.
+</li>
+<li>
+Removed the <code>XMLSignature.getSignatureValueId</code> method (use new
+<code>SignatureValue.getId</code> method instead).
+</li>
+<li>
+Renamed the <code>getCalculatedSignatureValue</code> method of the
+<code>SignedInfo</code> class to <code>getCanonicalizedData</code> to
+reflect its true purpose.
+</li>
+<li>
+Moved the <code>getKeySelectorResult</code> method from the 
+<code>SignedInfo</code> class to the <code>XMLSignature</code> class.
+</li>
+<li>
+Moved the <code>validate</code> method from the <code>SignedInfo</code>
+class to the new <code>SignatureValue</code> class.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.dom</h4>
+
+<ol>
+<li>
+Added package description.
+</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.keyinfo</h4>
+
+<ol>
+<li>
+Changed the <code>KeyInfoFactory.newKeyValue</code> method to throw
+<code>KeyException</code> if the key algorithm is unrecognized or
+unsupported.
+</li>
+<li>
+Clarified that the <code>KeyInfo.getContent</code> method returns instances of
+public <code>XMLStructure</code> subclasses.
+</li>
+<li>Changed the <code>RetrievalMethod.dereference</code> method to throw
+<code>NullPointerException</code> if the context parameter is null.
+</li>
+</ol>
+
+</body>
+</html>

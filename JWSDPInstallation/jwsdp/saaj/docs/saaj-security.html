@@ -1,0 +1,167 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <title>SAAJ Security</title>
+   <link rel="stylesheet" type="text/css" href="style/default.css"/>
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h1>
+<font color="#000099">SAAJ Security</font>
+</h1></center>
+<p>This document explains how to set up authentication in the SAAJ reference
+implementation, and how to set up HTTPS for secure message exchange.</p>
+
+<h3>Authentication</h3>
+<p>For basic authentication, the SAAJ reference implementation uses the 
+<code>userInfo</code> part of the URL specification.</p>
+<ul>
+<li>
+Set up a user for the underlying container. 
+<ul>
+<li>Sun Java<sup><font size="-2">TM</font></sup> System Application Server 
+Platform Edition 8: Create a user with the following command:
+<pre>
+asadmin create-file-user --userpassword <i>user_password</i> --groups <i>user_group user_name</i>
+</pre>
+<p>For more information, see 
+<a href="http://docs.sun.com/source/817-6087/dgsecure.html#wp22266">Realm 
+Configuration</a> in the <i>Sun Java System Application Server Platform 
+Edition 8 Developer's Guide</i>.</p>
+</li>
+<li><p>Tomcat: Edit the file 
+<code>&lt;<i>TOMCAT_HOME</i>&gt;/conf/tomcat-users.xml</code> as follows:
+<ul>
+<li>Add a new group (or role) by adding a <code>&lt;role&gt;</code> element:
+<pre>
+&lt;role rolename="<i>user_group</i>"/&gt;
+</pre>
+</li>
+<li>Add a new user in this group by adding a <code>&lt;user&gt;</code> element:
+<pre>
+&lt;user username="<i>user_name</i>" password="<i>user_password</i>" roles="<i>user_group</i>"/&gt;
+</pre>
+</li>
+</ul>
+</p>
+</li>
+<li><p>Web Server: 
+<ul>
+<li>Start the Web Server.
+</li>
+<li>In a browser, open the administrative tool at 
+<code>http://localhost:8888</code>.
+</li>
+<li> Use the "Users and Groups" channel to add users.
+</li>
+</ul>
+</p>
+</li>
+</ul>
+
+<li>Add a security constraint in <code>web.xml</code>. For example:
+
+<pre>
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;saaj.authenticated&lt;/servlet-name&gt;
+    &lt;jsp-file&gt;/echo.jsp&lt;/jsp-file&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;saaj.authenticated&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/authecho.jsp&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+  &lt;security-constraint&gt;
+    &lt;auth-constraint&gt;
+      &lt;role-name&gt;saaj&lt;/role-name&gt;
+    &lt;/auth-constraint&gt;
+  &lt;/security-constraint&gt;
+
+  &lt;login-config&gt;
+    &lt;auth-method&gt;BASIC&lt;/auth-method&gt;
+  &lt;/login-config&gt;
+</pre>
+</li>
+<li>The client should use the the following syntax for URLs:</li>
+
+<pre>http://USER:PASSWORD@HOST:PORT/FILE</pre>
+</ul>
+
+<h3>Secure Transport</h3>
+
+<p><b>Note:</b> Secure transport applies only to request/response messages 
+(those sent using the <code>SOAPConnection.call</code> method).</p>
+
+<p>Setting up HTTPS is a bit more difficult. The critical part is setting
+up the server certificates, required by Java Secure Socket Extension (JSSE) in 
+order to communicate with the server. Use the following commands:</p>
+<pre>
+keytool -genkey -alias saaj-test -dname "cn=localhost" -keyalg RSA -storepass changeit
+keytool -export -alias saaj-test -storepass changeit -file server.cer
+keytool -import -v -trustcacerts -alias saaj-test -file server.cer
+&nbsp;&nbsp; -keystore $JAVA_HOME/jre/lib/security/cacerts
+&nbsp;&nbsp; -keypass changeit -storepass changeit
+</pre>
+<p>The first command will generate a server certificate in your 
+<code>$HOME/.keystore</code>.
+The <code>dname</code> should be localhost (if you use localhost in
+the URLs) or your hostname (where you run the server).</p>
+<p>The second command will export the certificate in a file, and the third
+will import the certificate into the list of certificates the client knows
+about.</p>
+<p>An alternative is to use the <code>server.cer</code> and get it signed
+by one of the certificate authorities; it will then work with any client,
+without your having to import the certificate into each client VM. </p>
+<p>The next step is to get the Web container to work with JSSE:
+<ul>
+<li><p>Application Server: Edit the file
+<code>&lt;<i>install_dir</i>&gt;/domains/domain1/config/domain.xml</code>:
+<ul>
+<li>In the <code>&lt;iiop-listener&gt;</code> element, give the 
+<code>cert-nickname</code> attributes of the <code>ssl</code> elements the 
+value <code>saaj-test</code>.
+</li>
+<li>
+In the <code>&lt;java-config&gt;</code> element, give the 
+<code>jvm-option</code> named <code>javax.net.ssl.keyStore</code> the value 
+<code>$HOME/.keystore</code>.
+</li>
+</ul>
+</p>
+</li>
+<li><p>
+Tomcat: See the Tomcat documentation. You may need to uncomment the "SSL 
+Connector" portion of the 
+<code>&lt;<i>TOMCAT_HOME</i>&gt;/conf/server.xml</code> file.
+</p>
+</li>
+<li><p>Web Server: 
+<ul>
+<li>Start the Web Server.
+</li>
+<li>In a browser, open the administrative tool at 
+<code>http://localhost:8888</code>.
+</li>
+<li> Use the "Security" channel to add users.
+</li>
+</ul>
+</p>
+</li>
+</ul>
+<p>Start the Web container and try a simple URL using HTTPS 
+(for example, <code>https://host:1043/index.html</code>). The browser should 
+ask you to accept a certificate and then display the page. If this works, the 
+server is running correctly. </p>
+<p>From the SAAJ side, all you need to do is use URLs with HTTPS
+as the protocol. This will work only if the certificate was successfully
+imported into <code>&lt;<i>JAVA_HOME</i>&gt;/jre/lib/security/cacerts</code>; otherwise
+JSSE will not allow the connection. </p>
+<hr>
+<p><A href="../../docs/Copyright.html"><FONT 
+  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  reserved.</I></FONT></A> </P>
+
+</body>
+</html>

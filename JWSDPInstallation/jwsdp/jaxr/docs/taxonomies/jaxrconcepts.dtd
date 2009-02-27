@@ -1,0 +1,30 @@
+<!--
+	JAXR Predefined Concepts dtd.  Version 0.681 October 26, 2001
+		-->
+<!ELEMENT PredefinedConcepts (JAXRClassificationScheme*)>
+<!ELEMENT JAXRClassificationScheme (JAXRConcept*)>
+<!ATTLIST JAXRClassificationScheme
+		id CDATA #REQUIRED
+		name CDATA #REQUIRED
+		description CDATA #IMPLIED
+>
+<!ELEMENT JAXRConcept (JAXRConcept*)>
+<!ATTLIST JAXRConcept
+		id CDATA #REQUIRED
+		name CDATA #REQUIRED
+		parent CDATA #REQUIRED
+		code CDATA #IMPLIED
+>
+<!ELEMENT Command (JAXRClassificationScheme*, JAXRConcept*, namepattern*)>
+<!ATTLIST Command
+		commandname CDATA #REQUIRED
+		path CDATA #IMPLIED
+>
+<!ELEMENT namepattern  (#PCDATA )>
+
+<!ELEMENT Result (JAXRClassificationScheme*, JAXRConcept*)>
+<!ATTLIST Result
+		commandname CDATA #REQUIRED
+		status CDATA #REQUIRED
+		error CDATA #IMPLIED
+>

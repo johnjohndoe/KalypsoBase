@@ -1,0 +1,62 @@
+# This file is referenced by the build.xml file.
+
+# java and jwsdp
+javahome=/test9thapr/j2sdk1.4.2_04
+
+#container homes (uncomment the appropriate container home property)
+#Note: only one of the 3 below should be uncommented at any point of time
+#tomcat.home=/test9thapr/tomcat
+sjsas.home=/test14thapr/appserver8
+#sjsws.home=/test9thapr/webserver
+
+# Replace username and password values with the admin user/password
+# for the appropriate container instance being used for this sample
+username=admin
+password=admin123
+
+# the host and port for the endpoint
+endpoint.host=localhost
+endpoint.port=8080
+
+#VS.DIR : virtual server name for SJSWS
+VS.DIR=https-user.india.Sun.COM
+
+#place where JWSDP is installed
+jwsdp.home=/test14thapr/jwsdp-1.4
+
+# Set to true or false to control jaxrpc tool output
+jaxrpc.tool.verbose=false
+
+# look in config directory for alterante security configurations
+# Client Security Config. file
+#client.security.config=config/dump-client.xml
+#client.security.config=config/sign-client.xml
+client.security.config=config/encrypt-client.xml
+#client.security.config=config/sign-encrypt-client.xml
+#client.security.config=config/encrypt-sign-client.xml
+
+
+#Use these clients with the dump-server.xml configured for
+# server.security.config
+#client.security.config=config/encrypted-user-pass-client.xml
+#client.security.config=config/encrypted-user-pass-also-client.xml
+#client.security.config=config/sign-ticket-also-client.xml
+#client.security.config=config/user-pass-authenticate-client.xml
+
+# Server Security Config. file
+#server.security.config=config/dump-server.xml
+#server.security.config=config/sign-server.xml
+server.security.config=config/encrypt-server.xml
+#server.security.config=config/sign-encrypt-server.xml
+#server.security.config=config/encrypt-sign-server.xml
+
+# proxy server settings in case of remote endpoints
+http.proxyHost=webcache.india.sun.com
+http.proxyPort=8080
+
+# do not edit below
+# Name of this particular example
+example=simple
+
+# Service URL
+service.url=/securesimple/Ping
