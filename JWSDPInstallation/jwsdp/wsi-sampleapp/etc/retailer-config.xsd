@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://java.sun.com/xml/ns/jax-rpc/wsi/order/config"
+	targetNamespace="http://java.sun.com/xml/ns/jax-rpc/wsi/order/config"
+	elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	version="1.0">
+
+	<xsd:annotation>
+		<xsd:documentation>
+			This is the schema for order config
+			for WS-I sample app interop testing
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:element name="orders">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="order" type="tns:order" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="order">
+		<xsd:sequence>
+			<xsd:element name="part" type="tns:part" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="description" type="xsd:string"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="part">
+		<xsd:sequence>
+			<xsd:element name="productNumber" type="xsd:string"/>
+			<xsd:element name="quantity" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
+

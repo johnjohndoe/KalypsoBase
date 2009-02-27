@@ -1,0 +1,1098 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<project name="JWSDP component integration with Sun Java System App Server 8.0" default="full-setup" basedir=".">
+
+    <!-- ========== Version numbers for JWSDP components ================= -->
+
+  <property name="ant.home" value="${basedir}/../../apache-ant"/>
+
+
+  <target name="check.sjsas.home" unless="SJSAS_HOME">
+    <echo>
+      The sjsas.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Sun Java System Application Server 8.0 is
+      installed and rerun ant with the following usage: 
+          ant -Djwsdp.home=xxx -Dsjsas.home=yyy target
+    </echo>
+    <fail message="sjsas.home property is not set correctly"/>
+  </target>
+
+  <target name="check.jwsdp.home" unless="JWSDP_HOME">
+    <echo>
+      The jwsdp.home property is not set correctly. Please
+      pass this property with the value set to the directory
+      where the Java(TM) Web Services Developer Pack 1.4 is
+      installed and rerun ant with the following usage:
+           ant -Djwsdp.home=xxx -Dsjsas.home=yyy target
+    </echo>
+    <fail message="jwsdp.home property is not set correctly"/>
+  </target>
+
+  <target name="init">
+    <tstamp/>
+    <available property="JWSDP_HOME" value="${jwsdp.home}"
+      file="${jwsdp.home}/jwsdp-shared/bin/commons-launcher.jar" />
+
+    <antcall target="check.jwsdp.home"/>
+
+    <available property="SJSAS_HOME" value="${sjsas.home}"
+      file="${sjsas.home}/lib/appserv-cmp.jar" />
+
+    <antcall target="check.sjsas.home"/>
+
+    <available property="jdbc-rowset.integrated" value="true"
+      file="${jwsdp.home}/jdbc-rowset/lib/rowset.jar" />
+
+    <condition property="isNotWindows">
+      <not>
+        <os family="windows" />
+      </not>
+    </condition>
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <echo message="Os is ${os.name}" />
+
+    <!-- Loading Sun Java System App Server properties -->
+    <property file="${basedir}/sjsas.props" />
+
+    <property name="SJSAS_DEPLOY" value="${SJSAS_HOME}/bin/asadmin"/>
+    <property name="MYTEMPDIR" value="${JWSDP_HOME}/work/forappserver"/>
+
+
+    <property name="USERNAME" value="${USERNAME}" />
+    <property name="PASSWORD" value="${PASSWORD}" />
+    <property name="SJSAS_HOST" value="${SJSAS_HOST}" />
+    <property name="SJSAS_PORT" value="${SJSAS_PORT}" />
+    <property name="ADMIN_PORT" value="${ADMIN_PORT}" />
+    <property name="http.proxyHost" value="${http.proxyHost}" />
+    <property name="http.proxyPort" value="${http.proxyPort}" />
+    <echo message="Creating temporary directory under JWSDP_HOME/work for storing war files and others" />
+    <mkdir dir="${MYTEMPDIR}" />
+
+    <property name="JWSDP_BACKUPDIR" value="${SJSAS_HOME}/.jwsdp.backup" />
+  </target>
+
+  <target name="startadmin" depends="init"
+    description="Start Admin server">
+
+    <antcall target="startadmin.sh" />
+    <antcall target="startadmin.bat" />
+  </target>
+
+
+  <target name="startadmin.sh" depends="init"  if="isNotWindows" >
+       <exec executable="${SJSAS_HOME}/domains/domain1/bin/startserv"  />
+ </target>
+
+  <target name="startadmin.bat" depends="init"  if="isWindows" >
+       <exec executable="${SJSAS_HOME}/domains/domain1/bin/startserv.bat"  />
+ </target>
+ 
+  <target name="stopadmin" depends="init"
+    description="Stop Admin server">
+
+    <antcall target="stopadmin.sh" />
+    <antcall target="stopadmin.bat" />
+  </target>
+
+  <target name="stopadmin.sh" depends="init" if="isNotWindows"  >
+        <exec executable="${SJSAS_HOME}/domains/domain1/bin/stopserv"  />
+  </target>
+
+  <target name="stopadmin.bat" depends="init"  if="isWindows">
+        <exec executable="${SJSAS_HOME}/domains/domain1/bin/stopserv.bat"  />
+  </target>
+
+  
+  <target name="start-sjsas" depends="init"
+    description="Start server">
+
+    <antcall target="start-sjsas.sh" />
+    <antcall target="start-sjsas.bat" />
+  </target>
+
+  <target name="start-sjsas.sh" depends="init" if="isNotWindows"  >
+<!--    <exec executable="${SJSAS_HOME}/domains/domain1/bin/startserv" /> -->
+    <exec executable="${SJSAS_HOME}/bin/asadmin">
+      <arg line="start-domain domain1" />
+    </exec>
+  </target>
+
+  <target name="start-sjsas.bat" depends="init"  if="isWindows" >
+<!--    <exec executable="${SJSAS_HOME}/domains/domain1/bin/startserv.bat" /> -->
+
+    <exec executable="${SJSAS_HOME}/bin/asadmin">
+      <arg line="start-domain domain1" />
+    </exec>
+  </target>
+
+  <target name="stop-sjsas" depends="init"
+    description="Stop server">
+
+    <antcall target="stop-sjsas.sh" />
+    <antcall target="stop-sjsas.bat" />
+ </target>
+
+  <target name="stop-sjsas.sh" depends="init"  if="isNotWindows" >
+<!--    <exec executable="${SJSAS_HOME}/domains/domain1/bin/stopserv" /> -->
+    <exec executable="${SJSAS_HOME}/bin/asadmin">
+      <arg line="stop-domain" />
+    </exec>
+ </target>
+
+  <target name="stop-sjsas.bat" depends="init" if="isWindows" >
+<!--    <exec executable="${SJSAS_HOME}/domains/domain1/bin/stopserv.bat" /> -->
+    <exec executable="${SJSAS_HOME}/bin/asadmin">
+      <arg line="stop-domain" />
+    </exec>
+ </target>
+ 
+  <target name="integrate.init" depends="init"
+    description="Initialize integration for Sun Java System Application Server 8.0">
+    <echo message="Creating Backup directory for the integration" />
+    <mkdir dir="${JWSDP_BACKUPDIR}" />
+
+    <copy file="${SJSAS_HOME}/domains/domain1/config/domain.xml" 
+	tofile="${JWSDP_BACKUPDIR}/domain.xml" overwrite="false" />
+
+    <echo message="Copying JWSDP Splash page" />
+    <copy file="${JWSDP_HOME}/jwsdp-shared/index_sjs.html" 
+	tofile="${SJSAS_HOME}/domains/domain1/docroot/JWSDP.html" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/javaxml.gif"
+        todir="${SJSAS_HOME}/domains/domain1/docroot" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/Components.js"
+        todir="${SJSAS_HOME}/domains/domain1/docroot" />
+
+    <echo message="Updating domain.xml to set proxy information" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='&lt;jvm-options>-Dhttp.proxyHost=${http.proxyHost}&lt;/jvm-options> &lt;jvm-options>-Dhttp.proxyPort=${http.proxyPort}&lt;/jvm-options> &lt;jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy&lt;/jvm-options>'>
+      <replacetoken><![CDATA[<jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>]]></replacetoken>
+    </replace>
+
+
+  </target>
+
+
+  <target name="setup" depends="init"
+    description="Setup environment needed  for integrating JWSDP into Sun Java System Application Server 8.0">
+
+    
+    <echo message="Initializing integration" />
+    <antcall target="integrate.init" />
+
+    <echo message="Integrating JAXP" />
+    <antcall target="integrate.jaxp" />
+
+    <echo message="Integrating SAAJ" />
+    <antcall target="integrate.saaj" />
+
+    <echo message="Integrating JAXB" />
+    <antcall target="integrate.jaxb" />
+
+    <echo message="Integrating JAXR" />
+    <antcall target="integrate.jaxr" />
+
+    <echo message="Integrating JSTL" />
+    <antcall target="integrate.jstl" />
+
+    <echo message="Integrating JAX-RPC" />
+    <antcall target="integrate.jaxrpc" />
+
+    <echo message="Integrating Registry Server" />
+    <antcall target="integrate.registry-server" />
+
+    <echo message="Integrating WS-I Sample Application" />
+    <antcall target="integrate.wsi-sampleapp" />
+
+    <echo message="Integrating XML and Web Services Security" />
+    <antcall target="integrate.xws-security" />
+
+    <echo message="Integrating XML Digital Signatures" />
+    <antcall target="integrate.xmldsig" />
+
+  </target>
+
+
+    <target name="integrate.jstl"
+      description="Integrate JSTL into Sun Java System Application Server 8.0">
+      <!-- Do nothing -->
+    </target>
+
+    <target name="integrate.jsf"
+      description="Integrate JSF into Sun Java System Application Server 8.0">
+      <!-- Do nothing -->
+    </target>
+
+  <target name="integrate.jaxp" depends="init"
+    description="Integrate JAXP into Sun Java System Application Server 8.0">
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/xercesImpl.jar"
+	todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxp/lib/endorsed/xalan.jar"
+	todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+ </target>
+
+
+  <target name="integrate.saaj" depends="init"
+    description="Integrate SAAJ into Sun Java System Application Server 8.0">
+
+    <echo message="Copying SAAJ jar files to ${SJSAS_HOME}/lib" />
+
+    <!-- Don't need to replace activation and mail as they are the same
+    version in SJSAS.
+
+    <copy file="${SJSAS_HOME}/lib/activation.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/activation.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${SJSAS_HOME}/lib/mail.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/mail.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="true"/>
+
+	 -->
+
+    <copy file="${SJSAS_HOME}/lib/saaj-api.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/saaj/lib/saaj-api.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <echo message="Copying saaj-impl.jar to ${SJSAS_HOME}/lib" />
+
+    <copy file="${SJSAS_HOME}/lib/saaj-impl.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/saaj/lib/saaj-impl.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" />
+
+    <!-- Integrate saaj webapps -->
+    <antcall target="deploy.saaj.webapps" />
+
+  </target>
+
+  <target name="deploy.saaj.webapps" depends="init"
+    description="Deploy SAAJ into Sun Java System Application Server 8.0">
+    <echo message="Integrating SAAJ samples" />
+    <copy file="${JWSDP_HOME}/saaj/webapps/simple.war"
+        tofile="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-simple.war" 
+        failonerror="false" overwrite="yes" />
+
+    <copy file="${JWSDP_HOME}/saaj/webapps/book.war"
+        tofile="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-book.war" 
+        failonerror="false" overwrite="yes" />
+
+    <copy file="${JWSDP_HOME}/saaj/webapps/translator.war"
+        tofile="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-translator.war" 
+        failonerror="false" overwrite="yes" />
+
+  </target>
+
+  <target name="integrate.xmldsig" depends="init"
+    description="Integrate JSR 105 into Sun Java System Application Server 8.0">
+
+    <echo message="Copying JSR 105 jar files to ${SJSAS_HOME}/lib" />
+
+    <copy todir="${SJSAS_HOME}/lib" overwrite="yes" >
+	<fileset dir="${JWSDP_HOME}/xmldsig/lib">  
+          <include name="*.jar"/>
+        </fileset>
+    </copy>
+
+  </target>
+
+  <target name="integrate.common-jars" depends="init">
+    <echo message="Copying jwsdp-shared jar files to ${SJSAS_HOME}/lib" />
+
+    <!-- Copying namespace.jar and jax-qname.jar into new dir to avoid
+      "signer information does not match" error because of duplication
+       of the classes as signed and non signed -->
+    <mkdir dir="${SJSAS_HOME}/lib/jwsdp-tools-lib" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/namespace.jar"
+	 todir="${SJSAS_HOME}/lib/jwsdp-tools-lib" overwrite="false"/>
+<!--
+    <copy file="${SJSAS_HOME}/lib/jax-qname.jar"
+	tofile="${JWSDP_BACKUPDIR}/jax-qname.jar" overwrite="false" />
+-->
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/jax-qname.jar"
+	 todir="${SJSAS_HOME}/lib/jwsdp-tools-lib" overwrite="yes"/>
+
+    <copy file="${SJSAS_HOME}/lib/relaxngDatatype.jar"
+	tofile="${JWSDP_BACKUPDIR}/relaxngDatatype.jar" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/relaxngDatatype.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${SJSAS_HOME}/lib/xsdlib.jar"
+	tofile="${JWSDP_BACKUPDIR}/xsdlib.jar" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jwsdp-shared/lib/xsdlib.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+  </target>
+
+  <target name="integrate.jaxb" depends="init" 
+    description="Integrate JAXB into Sun Java System Application Server 8.0">
+    <echo message="Copying JAXB jar files to ${SJSAS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-api.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-impl.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-libs.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxb/lib/jaxb-xjc.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <antcall target="integrate.common-jars" />
+
+    <!-- Now add jaxb jar files to CLASSPATH of App Server -->
+    <echo message="Adding jaxb jar files to CLASSPATH of App Server" />
+
+    <antcall target="change-classpath-for-jaxb.sh" />
+    <antcall target="change-classpath-for-jaxb.bat" />
+
+    <antcall target="integrate.jaxb-scripts.sh" />
+    <antcall target="integrate.jaxb-scripts.bat" />
+
+  </target>
+
+
+
+  <target name="integrate.jaxrpc" depends="init"
+    description="Integrate JAX-RPC into Sun Java System Application Server 8.0">
+
+    <echo message="Copying JAXRPC jar files to ${SJSAS_HOME}/lib" />
+
+ <!-- jaxrpc-impl.jar in App Server installation is the combination
+        jax-qname.jar and jaxrpc-ri.jar files ( Originally only jaxrpc-ri.jar) -->
+
+    <copy file="${SJSAS_HOME}/lib/jaxrpc-impl.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-impl.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${JWSDP_HOME}/jaxrpc/lib/jaxrpc-spi.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <antcall target="integrate.common-jars" />
+
+    <antcall target="update-jaxrpc-scripts.sh" />
+    <antcall target="update-jaxrpc-scripts.bat" />
+
+  </target>
+
+  <target name="integrate.jaxr" depends="init"
+    description="Integrate JAXR into Sun Java System Application Server 8.0">
+<!--
+	Note even though it is the same version of JAXR, the JAXR that is in 
+	SJSAS bundles the JAXB classes in the same jar file. Hence we need to
+	overwrite these files if we want the newer jaxb to work.
+
+    <echo message="Copying JAXR jar files to ${SJSAS_HOME}/lib" />
+
+    <copy file="${SJSAS_HOME}/lib/jaxr-api.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jaxr/lib/jaxr-api.jar"
+	 todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+    <copy file="${SJSAS_HOME}/lib/jaxr-impl.jar"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <copy file="${JWSDP_HOME}/jaxr/lib/jaxr-impl.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" />
+-->
+  </target>
+
+
+
+  <target name="integrate.xws-security" depends="init"
+    description="Integrate XML and Web Services Security into Sun Java System Application Server 8.0">
+
+    <echo message="Copying xws-security jar files to ${SJSAS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/jaxrpc-sec.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" />
+
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/xmlsec.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" />
+
+    <!-- PENDING: The following jar files copied for now. 
+         Track the final dependency -->
+    <copy file="${JWSDP_HOME}/xws-security/lib/soapprocessor.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" failonerror="false"/>
+
+    <copy file="${JWSDP_HOME}/xws-security/lib/security-plugin.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes" failonerror="false"/>
+
+    <!-- Copying keystore files of xws-security -->
+    <mkdir dir="${SJSAS_HOME}/xws-security/etc" />
+    <copy todir="${SJSAS_HOME}/xws-security/etc" overwrite="yes" failonerror="false">
+        <fileset dir="${JWSDP_HOME}/xws-security/etc" />
+    </copy>
+
+    <echo message="Updating domain.xml to set jwsdp.container.type  for xws-security" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='&lt;jvm-options>-Djwsdp.container.type=appserver&lt;/jvm-options> &lt;jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy&lt;/jvm-options>'>
+      <replacetoken><![CDATA[<jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>]]></replacetoken>
+    </replace>
+
+
+    <!-- Changing CLASSPATH and env property to support xws-security component 
+     As we are copying XWS-Security jar file into lib directory of AS 8.0 
+     we don't need to add them to CLASSPATH  explicitly
+
+    <antcall target="change-env-for-xws-security.sh" />
+    <antcall target="change-env-for-xws-security.bat" />
+
+    -->
+
+
+  </target>
+
+  <target name="integrate.wsi-sampleapp" depends="init"
+    description="Integrate WS-I Sample Application into Sun Java System Application Server 8.0">
+
+    <!-- This is a web-app that can be auto-deployed -->
+    <antcall target="deploy.wsi-sampleapp.webapps" />
+  </target>
+
+  <target name="deploy.wsi-sampleapp.webapps" depends="init">
+    <echo message="Auto-deploying WSI Sample Application server part (wsi-server) by copying wsi-sampleapp jar files to ${SJSAS_HOME}/lib" />
+
+    <copy file="${JWSDP_HOME}/wsi-sampleapp/wsi-server.war" 
+	    	todir="${SJSAS_HOME}/domains/domain1/autodeploy"/>
+  </target>
+
+
+
+  <target name="integrate.registry-server" depends="init"
+    description="Integrate Registry Server into Sun Java System Application Server 8.0">
+
+    <!-- This is a web-app that can be auto-deployed -->
+    <antcall target="deploy.registry-server.webapps" />
+  </target>
+
+  <target name="deploy.registry-server.webapps" depends="init">
+    <echo message="registry-server preparation ...." />
+    <mkdir dir="${MYTEMPDIR}/registry-server" />
+    <unjar src="${JWSDP_HOME}/registry-server/webapps/RegistryServer.war"
+      dest="${MYTEMPDIR}/registry-server" overwrite="yes"/>
+    <replace file="${MYTEMPDIR}/registry-server/WEB-INF/web.xml"
+           value="${SJSAS_PORT}" >
+      <replacetoken><![CDATA[8080]]></replacetoken>
+    </replace>
+    <jar destfile="${MYTEMPDIR}/RegistryServer.war" basedir="${MYTEMPDIR}/registry-server" />
+
+    <!-- Use RegistryServer.war with updated SJSAS_PORT value -->
+    <copy file="${MYTEMPDIR}/RegistryServer.war" 
+        todir="${SJSAS_HOME}/domains/domain1/autodeploy"/>
+
+    <copy file="${JWSDP_HOME}/registry-server/webapps/Xindice.war" 
+        todir="${SJSAS_HOME}/domains/domain1/autodeploy"/>
+
+    <antcall target="add-registry-server-env" />
+    <antcall target="update-security-permissions" />
+  </target>
+
+  <target name="add-registry-server-env"  >
+    <echo message="Updating domain.xml with registry server properties" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='&lt;jvm-options>-Dorg.apache.xindice.root-collection=${com.sun.aas.instanceRoot}/applications/j2ee-modules/RegistryServer/Xindice&lt;/jvm-options> &lt;jvm-options>-Dxindice.db.home=${com.sun.aas.instanceRoot}/applications/j2ee-modules/RegistryServer/Xindice&lt;/jvm-options> &lt;jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy&lt;/jvm-options>'>
+      <replacetoken><![CDATA[<jvm-options>-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy</jvm-options>]]></replacetoken>
+    </replace>
+  </target>
+
+  <target name="update-security-permissions" >
+    <echo message="Updating security permissions in server.policy" />
+    <copy file="${SJSAS_HOME}/domains/domain1/config/server.policy"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSAS_HOME}/domains/domain1/config/server.policy">
+      <replacetoken><![CDATA[// Basic set of required permissions granted to all remaining code]]></replacetoken>
+      <replacevalue><![CDATA[// These permissions apply to the privileged registry-server webapp
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/j2ee-modules/RegistryServer/WEB-INF/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to wsi-server ( WSI Sample App ) webapp
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/j2ee-modules/wsi-server/WEB-INF/-" {
+        permission java.security.AllPermission;
+};
+
+// These permissions apply to saaj-translator webapp
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/j2ee-modules/saaj-translator/WEB-INF/-" {
+        permission java.util.PropertyPermission "*", "read,write";
+};
+
+// These permissions apply to the Xindice servlet
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/j2ee-modules/Xindice/WEB-INF/-" {
+         permission java.util.PropertyPermission "org.xmldb.common.xml.queries.XPathQueryFactory", "write";
+};
+
+//  Basic set of required permissions granted to all remaining code
+]]></replacevalue>
+    </replace>
+
+  </target>
+
+
+
+
+   <target name="change-env-for-xws-security.sh" if="isNotWindows" depends="init" >
+ <!--
+    <echo message="Updating domain.xml with xws-security properties" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='&lt;jvm-options>-Djava.security.auth.login.config=${SJSAS_HOME}/lib/server-jaas.config&lt;/jvm-options> &lt;jvm-options>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter &lt;/jvm-options>'>
+      <replacetoken><![CDATA[<jvm-options>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter </jvm-options>]]></replacetoken>
+    </replace>
+
+
+    <echo message="changing ${SJSAS_HOME}/domains/domain1/config/domain.xml for unix platforms" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='server-classpath="${SJSAS_HOME}/lib/xmlsec.jar:${SJSAS_HOME}/lib/jaxrpc-sec.jar:' >
+      <replacetoken><![CDATA[server-classpath="]]></replacetoken>
+    </replace>
+-->
+
+  </target>
+
+
+   <target name="change-env-for-xws-security.bat" if="isWindows" depends="init" >
+<!--
+    <echo message="Updating domain.xml with xws-security properties" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='&lt;jvm-options>-Djava.security.auth.login.config=${SJSAS_HOME}/lib/server-jaas.config&lt;/jvm-options> &lt;jvm-options>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter &lt;/jvm-options>'>
+      <replacetoken><![CDATA[<jvm-options>-Dorg.xml.sax.parser=org.xml.sax.helpers.XMLReaderAdapter </jvm-options>]]></replacetoken>
+    </replace>
+
+
+    <echo message="Changing ${SJSAS_HOME}/domains/domain1/config/domain.xml for windows platforms" />
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='server-classpath="${SJSAS_HOME}/lib/xmlsec.jar;${SJSAS_HOME}/lib/jaxrpc-sec.jar;' >
+      <replacetoken><![CDATA[server-classpath="]]></replacetoken>
+    </replace>
+-->
+  </target>
+
+
+
+   <target name="change-classpath-for-jaxb.sh" if="isNotWindows" depends="init" >
+
+    <echo message="changing ${SJSAS_HOME}/domains/domain1/config/domain.xml for unix platforms" />
+    <!-- Putting saaj-api.jar and saaj-impl.jar ahead of CLASSPATH to avoid some conflict 
+	of dependent classes --> 
+    <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='server-classpath="${SJSAS_HOME}/lib/activation.jar:${SJSAS_HOME}/lib/endorsed/xercesImpl.jar:${SJSAS_HOME}/lib/endorsed/dom.jar:${SJSAS_HOME}/lib/endorsed/xalan.jar:${SJSAS_HOME}/lib/saaj-api.jar:${SJSAS_HOME}/lib/saaj-impl.jar:${SJSAS_HOME}/lib/jaxrpc-spi.jar:${SJSAS_HOME}/lib/jwsdp-tools-lib/jax-qname.jar:${SJSAS_HOME}/lib/relaxngDatatype.jar:${SJSAS_HOME}/lib/xsdlib.jar:' >
+      <replacetoken><![CDATA[server-classpath="]]></replacetoken>
+    </replace>
+
+    <!-- Adding JAXB jar files to classpath-suffix so that this would be available to admin server also  --> 
+    <!-- Putting saaj-api.jar and saaj-impl.jar ahead of CLASSPATH to avoid some conflict 
+	of dependent classes --> 
+      <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+   value='classpath-suffix="${SJSAS_HOME}/lib/jaxb-api.jar:${SJSAS_HOME}/lib/jaxb-impl.jar:${SJSAS_HOME}/lib/jaxb-libs.jar:${SJSAS_HOME}/lib/jaxb-xjc.jar:${SJSAS_HOME}/lib/jwsdp-tools-lib/jax-qname.jar:${SJSAS_HOME}/lib/jwsdp-tools-lib/namespace.jar:${SJSAS_HOME}/lib/relaxngDatatype.jar:${SJSAS_HOME}/lib/xsdlib.jar:' >
+      <replacetoken><![CDATA[classpath-suffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+
+   <target name="change-classpath-for-jaxb.bat" if="isWindows" depends="init" >
+
+    <echo message="Changing ${SJSAS_HOME}/domains/domain1/config/domain.xml for windows platforms" />
+    <!-- Putting saaj-impl.jar ahead of CLASSPATH to avoid some conflict 
+	of dependent classes --> 
+    <!-- Putting saaj-api.jar and saaj-impl.jar ahead of CLASSPATH to avoid some conflict 
+	of dependent classes --> 
+      <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+   value='server-classpath="${SJSAS_HOME}/lib/activation.jar;${SJSAS_HOME}/lib/endorsed/xercesImpl.jar;${SJSAS_HOME}/lib/endorsed/dom.jar;${SJSAS_HOME}/lib/endorsed/xalan.jar;${SJSAS_HOME}/lib/saaj-api.jar;${SJSAS_HOME}/lib/saaj-impl.jar;${SJSAS_HOME}/lib/jaxrpc-spi.jar;${SJSAS_HOME}/lib/jwsdp-tools-lib/jax-qname.jar;${SJSAS_HOME}/lib/relaxngDatatype.jar;${SJSAS_HOME}/lib/xsdlib.jar;' >
+      <replacetoken><![CDATA[server-classpath="]]></replacetoken>
+    </replace>
+
+    <!-- Adding JAXB jar files to classpath-suffix so that this would be available to admin server also  --> 
+    <!-- Putting saaj-api.jar and saaj-impl.jar ahead of CLASSPATH to avoid some conflict 
+	of dependent classes --> 
+      <replace file="${SJSAS_HOME}/domains/domain1/config/domain.xml"
+     value='classpath-suffix="${SJSAS_HOME}/lib/jaxb-api.jar;${SJSAS_HOME}/lib/jaxb-impl.jar;${SJSAS_HOME}/lib/jaxb-libs.jar;${SJSAS_HOME}/lib/jaxb-xjc.jar;${SJSAS_HOME}/lib/jwsdp-tools-lib/jax-qname.jar;${SJSAS_HOME}/lib/jwsdp-tools-lib/namespace.jar;${SJSAS_HOME}/lib/relaxngDatatype.jar;${SJSAS_HOME}/lib/xsdlib.jar;' >
+      <replacetoken><![CDATA[classpath-suffix="]]></replacetoken>
+    </replace>
+
+  </target>
+
+
+  <!-- Template for deploying a webapp in SJSAS 8.0 
+       You have to replace @yourwar@ with the actual war name,
+       @yourwar-logicalname@ to the logicalname which you want to use
+       to refer to this webapp instance  and 
+       directory-where-war-exist to the actual directory of war 
+       location
+  -->
+  <target name="deploy.yourwar" depends="init">
+    <echo message="deploying @yourwar@" />
+
+    <exec executable="${SJSAS_DEPLOY}" vmlauncher="false">
+      <arg value="deploy" />
+      <arg value="--user" />
+      <arg value="${USERNAME}" />
+      <arg value="--password" />
+      <arg value="${PASSWORD}" />
+      <arg value="--host" />
+      <arg value="${SJSAS_HOST}" />
+      <arg value="--port" />
+      <arg value="${ADMIN_PORT}" />
+      <arg value="--type" />
+      <arg value="web" />
+      <arg value="--force=true" />
+      <arg value="--name" />
+      <arg value="@yourwar-logicalname@" />
+      <arg value="--upload=true" />
+      <arg value="directory-where-war-exist/@yourwar@.war" />
+    </exec>
+
+  </target>
+
+  <!-- Template for undeploying a webapp in SJSAS 8.0 
+       You have to replace @yourwar-logicalname@ with the actual
+       logical name which you used while deploying
+  -->
+  <target name="undeploy.yourwar" depends="init">
+    <echo message="undeploying @yourwar-logicalname@" />
+    <exec executable="${SJSAS_DEPLOY}" vmlauncher="false">
+        <arg value="undeploy" />
+        <arg value="--user" />
+        <arg value="${USERNAME}" />
+        <arg value="--password" />
+        <arg value="${PASSWORD}" />
+        <arg value="--host" />
+        <arg value="${SJSAS_HOST}" />
+        <arg value="--port" />
+        <arg value="${ADMIN_PORT}" />
+        <arg value="--type" />
+        <arg value="web" />
+        <arg value="@yourwar-logicalname@" />
+     </exec>
+
+  </target>
+
+
+
+  <target name="full-setup">
+    <antcall target="setup" />
+  </target>
+
+  <target name="revert.jaxp.changes" depends="revert.init"
+    description="Revert JAXP from Sun Java System Application Server 8.0">
+
+    
+    <delete file="${SJSAS_HOME}/lib/xercesImpl.jar" quiet="true" />
+    <delete file="${SJSAS_HOME}/lib/xalan.jar" quiet="true" />
+<!--
+    <delete dir="${SJSAS_HOME}/lib/jaxp-renamed" quiet="true" />
+
+
+    <copy file="${JWSDP_BACKUPDIR}/jaxp-api.jar" failonerror="false"
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+  
+    <copy file="${JWSDP_BACKUPDIR}/dom.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/sax.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/xalan.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/xercesImpl.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/xsltc.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+-->
+ 
+  </target>
+
+  <target name="deployAll" depends="init"
+    description="Deploy web applications into Sun Java System Application Server 8.0">
+    <antcall target="deploy.registry-server.webapps" />
+    <antcall target="deploy.saaj.webapps" />
+    <antcall target="deploy.wsi-sampleapp.webapps" />
+
+  </target>
+
+  <target name="undeployAll" depends="init"
+    description="Undeploy web applications from Sun Java System Application Server 8.0">
+
+    <antcall target="undeploy.registry-server.webapps" />
+    <antcall target="undeploy.saaj.webapps" />
+    <antcall target="undeploy.wsi-sampleapp.webapps" />	
+  </target>
+
+
+
+  <target name="revert.saaj.changes" depends="revert.init"
+    description="Revert SAAJ changes from Sun Java System Application Server 8.0">
+
+    <copy file="${JWSDP_BACKUPDIR}/activation.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/mail.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/saaj-api.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/saaj-impl.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <antcall target="undeploy.saaj.webapps" />
+
+  </target>
+
+  <target name="undeploy.saaj.webapps" depends="revert.init"
+    description="Undeploy SAAJ from Sun Java System Application Server 8.0">
+
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-simple.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-simple.war_deployed" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/saaj-simple.war" quiet="true" />
+
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-book.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-book.war_deployed" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/saaj-book.war" quiet="true" />
+
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-translator.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/saaj-translator.war_deployed" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/saaj-translator.war" quiet="true" />
+
+  </target>
+
+
+
+  <target name="revert.common-jars.changes" depends="revert.init">
+
+    <delete  dir="${SJSAS_HOME}/lib/jwsdp-tools-lib"  quiet="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/relaxngDatatype.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/xsdlib.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+  </target>
+
+  <target name="revert.jaxrpc.changes" depends="revert.init"
+    description="Revert JAX-RPC from Sun Java System Application Server 8.0">
+
+    <copy file="${JWSDP_BACKUPDIR}/jaxrpc-impl.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <antcall target="revert.common-jars.changes" />
+
+    <copy file="${JWSDP_BACKUPDIR}/wscompile" failonerror="false"
+        todir="${SJSAS_HOME}/bin"  overwrite="true" />
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wscompile" />
+
+    <copy file="${JWSDP_BACKUPDIR}/wsdeploy" failonerror="false"
+        todir="${SJSAS_HOME}/bin"  overwrite="true" />
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wsdeploy" />
+
+    <copy file="${JWSDP_BACKUPDIR}/wscompile.bat" failonerror="false"
+        todir="${SJSAS_HOME}/bin"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/wsdeploy.bat" failonerror="false"
+        todir="${SJSAS_HOME}/bin"  overwrite="true" />
+    
+    <delete  file="${SJSAS_HOME}/lib/jaxrpc-spi.jar"  quiet="true" />
+
+  </target>
+
+  <target name="revert.jaxr.changes" depends="revert.init"
+    description="Revert JAXR from Sun Java System Application Server 8.0">
+
+<!--
+    <copy file="${JWSDP_BACKUPDIR}/jaxr-api.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+
+    <copy file="${JWSDP_BACKUPDIR}/jaxr-impl.jar" failonerror="false" 
+	todir="${SJSAS_HOME}/lib"  overwrite="true" />
+-->
+  </target>
+
+  <target name="revert.jaxb.changes" depends="revert.init"
+    description="Revert JAXB from Sun Java System Application Server 8.0">
+
+    <delete file="${SJSAS_HOME}/lib/jaxb-api.jar" quiet="true" />
+    <delete file="${SJSAS_HOME}/lib/jaxb-impl.jar" quiet="true" />
+    <delete file="${SJSAS_HOME}/lib/jaxb-libs.jar" quiet="true" />
+    <delete file="${SJSAS_HOME}/lib/jaxb-xjc.jar" quiet="true" />
+
+    <antcall target="revert.common-jars.changes" />
+
+    <!-- One of the below would succeed --> 
+    <delete  file="${SJSAS_HOME}/bin/xjc.sh"  quiet="true" />
+    <delete  file="${SJSAS_HOME}/bin/xjc.bat"  quiet="true" />
+
+  </target>
+
+  <target name="revert.xws-security.changes" depends="revert.init"
+    description="Revert XML and Web Services Security from Sun Java System Application Server 8.0">
+
+    <delete  file="${SJSAS_HOME}/lib/jaxrpc-sec.jar"  quiet="true" />
+    <delete  file="${SJSAS_HOME}/lib/xmlsec.jar"  quiet="true" />
+    <delete  file="${SJSAS_HOME}/lib/soapprocessor.jar"  quiet="true" />
+    <delete  file="${SJSAS_HOME}/lib/security-plugin.jar"  quiet="true" />
+    <delete  dir="${SJSAS_HOME}/xws-security"  quiet="true" />
+
+    <!-- <delete  file="${SJSAS_HOME}/lib/server-config.jaas"  quiet="true" /> -->
+
+  </target>
+
+  <target name="revert.jsf.changes" depends="revert.init"
+    description="Revert JSF from Sun Java System Application Server 8.0">
+  </target>
+
+  <target name="revert.wsi-sampleapp.changes" depends="revert.init"
+    description="Revert WS-I Sample Application from Sun Java System Application Server 8.0">
+
+    <antcall target="undeploy.wsi-sampleapp.webapps" />
+  </target>
+
+  <target name="undeploy.wsi-sampleapp.webapps" depends="revert.init"
+    description="Undeploy WS-I Sample Application from Sun Java System Application Server 8.0">
+
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/wsi-server.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/wsi-server.war_deployed" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/wsi-server.war" quiet="true" />
+  </target>
+
+
+  <target name="revert.jstl.changes" depends="revert.init"
+    description="Revert JSTL from Sun Java System Application Server 8.0">
+  </target>
+
+  <target name="revert.registry-server.changes" depends="revert.init"
+    description="Revert Registry Server from Sun Java System Application Server 8.0">
+
+    <antcall target="undeploy.registry-server.webapps" />
+  </target>
+
+  <target name="undeploy.registry-server.webapps" depends="revert.init"
+    description="Undeploy Registry Server from Sun Java System Application Server 8.0" >
+    <copy file="${JWSDP_BACKUPDIR}/server.policy" failonerror="false" 
+	todir="${SJSAS_HOME}/domains/domain1/config" overwrite="true" />
+
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/RegistryServer.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/RegistryServer.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/RegistryServer.war_deployed" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/Xindice.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/.autodeploystatus/Xindice.war" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/autodeploy/Xindice.war_deployed" quiet="true"/>
+  </target>
+
+
+  <target name="revert.xmldsig.changes" depends="revert.init"
+    description="Revert JSR 105 from Sun Java System Application Server 8.0">
+
+    <delete  file="${SJSAS_HOME}/lib/xmldsig.jar"  quiet="true" />
+  </target>
+
+
+  <target name="revert.init" depends="init"
+    description="Revert initialization changes from Sun Java System Application Server 8.0">
+
+    <copy file="${JWSDP_BACKUPDIR}/domain.xml" failonerror="false" 
+	todir="${SJSAS_HOME}/domains/domain1/config" overwrite="true" />
+
+    <delete file="${SJSAS_HOME}/domains/domain1/docroot/JWSDP.html" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/docroot/javaxml.gif" quiet="true" />
+    <delete file="${SJSAS_HOME}/domains/domain1/docroot/Components.js" quiet="true" />
+  </target>
+
+  <target name="clean"
+    description="Clean up temporary directories for the Sun Java System Application Server 8.0">
+    <delete dir="${JWSDP_BACKUPDIR}" quiet="true" />
+    <delete dir="${MYTEMPDIR}" quiet="true" />
+  </target>
+
+
+  <target name="revert.sjsas.changes" depends="revert.init"
+    description="Backing out Java WSDP 1.4 changes from Sun Java System Application Server 8.0">
+
+    <echo message="Backing out the changes made during Java WSDP 1.4 integration into Sun Java System Application Server 8.0" />
+
+    <echo message="Reverting JAXP changes" />
+    <antcall target="revert.jaxp.changes" />
+
+    <echo message="Reverting SAAJ changes" />
+    <antcall target="revert.saaj.changes" />
+
+    <echo message="Reverting JAX-RPC changes" />
+    <antcall target="revert.jaxrpc.changes" />
+
+    <echo message="Reverting JAXR changes" />
+    <antcall target="revert.jaxr.changes" />
+
+    <echo message="Reverting JAXB changes" />
+    <antcall target="revert.jaxb.changes" />
+
+    <echo message="Reverting JSTL" />
+    <antcall target="revert.jstl.changes" />
+
+    <echo message="Reverting Registry Server" />
+    <antcall target="revert.registry-server.changes" />
+
+    <echo message="Reverting WS-I Sample Application" />
+    <antcall target="revert.wsi-sampleapp.changes" />
+
+    <echo message="Reverting XML and Web Services Security" />
+    <antcall target="revert.xws-security.changes" />
+
+    <echo message="Reverting XML Digital Signatures" />
+    <antcall target="revert.xmldsig.changes" />
+
+    <antcall target="clean" />
+  </target>
+
+  <target name="integrate.jaxb-scripts.sh" depends="init"  if="isNotWindows" >
+
+    <copy file="${SJSAS_HOME}/bin/wscompile" tofile="${SJSAS_HOME}/bin/xjc.sh"
+	overwrite="true" />
+    <replace file="${SJSAS_HOME}/bin/xjc.sh">
+      <replacetoken><![CDATA[WSCompile]]></replacetoken>
+      <replacevalue><![CDATA[xjc]]></replacevalue>
+    </replace>
+
+  <!-- Avoid setting endorsed dir. As we did package renaming and have services entry this is not needed to be set     
+  <replacevalue><![CDATA[JAVA_ENDORSED_DIRS="$AS_WEBSERVICES_LIB"/jaxp-renamed  -->
+
+    <replace file="${SJSAS_HOME}/bin/xjc.sh">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH="$AS_WEBSERVICES_LIB"/jaxb-api.jar:"$AS_WEBSERVICES_LIB"/jaxb-impl.jar:"$AS_WEBSERVICES_LIB"/jaxb-libs.jar:"$AS_WEBSERVICES_LIB"/jaxb-xjc.jar:"$AS_WEBSERVICES_LIB"/jwsdp-tools-lib/jax-qname.jar:"$AS_WEBSERVICES_LIB"/jwsdp-tools-lib/namespace.jar:"$AS_WEBSERVICES_LIB"/relaxngDatatype.jar:"$AS_WEBSERVICES_LIB"/xsdlib.jar:"$AS_WEBSERVICES_LIB"/xercesImpl.jar:"$AS_WEBSERVICES_LIB"/xalan.jar:"$AS_WEBSERVICES_LIB"/endorsed/dom.jar:]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSAS_HOME}/bin/xjc.sh">
+      <replacetoken><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.tools.xjc.Driver]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/xjc.sh" />
+
+  </target>
+
+  <target name="integrate.jaxb-scripts.bat" depends="init" if="isWindows" >
+
+    <copy file="${SJSAS_HOME}/bin/wscompile.bat" tofile="${SJSAS_HOME}/bin/xjc.bat"
+	overwrite="true" />
+    <replace file="${SJSAS_HOME}/bin/xjc.bat">
+      <replacetoken><![CDATA[WSCompile]]></replacetoken>
+      <replacevalue><![CDATA[xjc]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSAS_HOME}/bin/xjc.bat">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH=%AS_WEBSERVICES_LIB%\jaxb-api.jar;%AS_WEBSERVICES_LIB%\jaxb-impl.jar;%AS_WEBSERVICES_LIB%\jaxb-libs.jar;%AS_WEBSERVICES_LIB%\jaxb-xjc.jar;%AS_WEBSERVICES_LIB%\jwsdp-tools-lib\jax-qname.jar;%AS_WEBSERVICES_LIB%\jwsdp-tools-lib\namespace.jar;%AS_WEBSERVICES_LIB%\relaxngDatatype.jar;%AS_WEBSERVICES_LIB%\xsdlib.jar;%AS_WEBSERVICES_LIB%\xercesImpl.jar;%AS_WEBSERVICES_LIB%\xalan.jar;%AS_WEBSERVICES_LIB%\endorsed\xalan.jar;]]></replacevalue>
+    </replace>
+
+    <replace file="${SJSAS_HOME}/bin/xjc.bat">
+      <replacetoken><![CDATA[com.sun.xml.rpc.tools.wscompile.Main]]></replacetoken>
+      <replacevalue><![CDATA[com.sun.tools.xjc.Driver]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/xjc.bat" />
+  </target>
+
+  <target name="update-jaxrpc-scripts.sh" depends="init"  if="isNotWindows" >
+
+    <copy file="${SJSAS_HOME}/bin/wscompile"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSAS_HOME}/bin/wscompile">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH="$AS_WEBSERVICES_LIB"/jaxp-api.jar:"$AS_WEBSERVICES_LIB"/jaxrpc-spi.jar:"$AS_WEBSERVICES_LIB"/jwsdp-tools-lib/jax-qname.jar:"$AS_WEBSERVICES_LIB"/relaxngDatatype.jar:"$AS_WEBSERVICES_LIB"/xsdlib.jar:"$AS_WEBSERVICES_LIB"/xercesImpl.jar:"$AS_WEBSERVIES_LIB"/xalan.jar:"$AS_WEBSERVIES_LIB"/endorsed/dom.jar:]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wscompile" />
+
+    <echo message="Updating wsdeploy now" />
+
+    <copy file="${SJSAS_HOME}/bin/wsdeploy"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSAS_HOME}/bin/wsdeploy">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH="$AS_WEBSERVICES_LIB"/jaxp-api.jar:"$AS_WEBSERVICES_LIB"/jaxrpc-spi.jar:"$AS_WEBSERVICES_LIB"/jwsdp-tools-lib/jax-qname.jar:"$AS_WEBSERVICES_LIB"/relaxngDatatype.jar:"$AS_WEBSERVICES_LIB"/xsdlib.jar:"$AS_WEBSERVICES_LIB"/xercesImpl.jar:"$AS_WEBSERVIES_LIB"/xalan.jar:"$AS_WEBSERVIES_LIB"/endorsed/dom.jar:]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wsdeploy" />
+  </target>
+
+  <target name="update-jaxrpc-scripts.bat" depends="init"  if="isWindows" >
+
+    <copy file="${SJSAS_HOME}/bin/wscompile.bat"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSAS_HOME}/bin/wscompile.bat">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH=%AS_WEBSERVICES_LIB%\jaxp-api.jar;%AS_WEBSERVICES_LIB%\jaxrpc-spi.jar;%AS_WEBSERVICES_LIB%\jwsdp-tools-lib\jax-qname.jar;%AS_WEBSERVICES_LIB%\relaxngDatatype.jar;%AS_WEBSERVICES_LIB%\xsdlib.jar;%AS_WEBSERVICES_LIB%\xercesImpl.jar;%AS_WEBSERVICES_LIB%\xalan.jar;%AS_WEBSERVICES_LIB%\endorsed\dom.jar;]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wscompile.bat" />
+
+    <echo message="Now updating wsdeploy.bat" />
+    <copy file="${SJSAS_HOME}/bin/wsdeploy.bat"
+	todir="${JWSDP_BACKUPDIR}" overwrite="false" />
+
+    <replace file="${SJSAS_HOME}/bin/wsdeploy.bat">
+      <replacetoken><![CDATA[CLASSPATH=]]></replacetoken>
+      <replacevalue><![CDATA[CLASSPATH=%AS_WEBSERVICES_LIB%\jaxp-api.jar;%AS_WEBSERVICES_LIB%\jaxrpc-spi.jar;%AS_WEBSERVICES_LIB%\jwsdp-tools-lib\jax-qname.jar;%AS_WEBSERVICES_LIB%\relaxngDatatype.jar;%AS_WEBSERVICES_LIB%\xsdlib.jar;%AS_WEBSERVICES_LIB%\xercesImpl.jar;%AS_WEBSERVICES_LIB%\xalan.jar;%AS_WEBSERVICES_LIB%\endorsed\dom.jar;]]></replacevalue>
+    </replace>
+
+    <chmod perm="+x" file="${SJSAS_HOME}/bin/wsdeploy.bat" />
+  </target>
+ 
+  <target name="revert.jdbc-rowset.changes" depends="revert.init">
+    <delete  file="${SJSAS_HOME}/lib/rowset.jar"  quiet="true" />
+  </target>
+
+  <!-- Target for integrating jdbc-rowset into AppServer 8.0 PE -->
+  <target name="integrate.jdbc-rowset" depends="init" if="jdbc-rowset.integrated"
+    description="Integrating JDBC RowSet into Sun One Java System AppServer 8.0 PE">
+
+    <echo message="Copying JDBC RowSet jar file to ${SJSAS_HOME}/lib" />
+
+   <!-- As we are keeping jar file in lib dir of SJSAS_HOME we don't
+        need to update CLASSPATH -->
+   <copy file="${JWSDP_HOME}/jdbc-rowset/lib/rowset.jar"
+        todir="${SJSAS_HOME}/lib" overwrite="yes"/>
+
+  </target>
+
+
+</project>
+
+
