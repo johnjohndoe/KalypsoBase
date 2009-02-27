@@ -1,0 +1,107 @@
+<!-- 
+
+This is a template build file provided to make it easy to help
+developers to write, build and run web service clients. Please make
+sure that you have a webserviceclient.properties file either in the
+current directory or in your home directory with the following
+properties setup to be able to use this template build file.
+
+jwsdp.home -> Pointer to the location where you have installed jwsdp
+1.4. Note you do not need to set this property if you are using the
+version of ant that was part of jwsdp 1.4.
+
+build.dir -> The directory where you want the generated sources and the 
+compiled classes to be in.
+
+dist.dir -> The directory where you want the jar distribution to be
+placed to be able to use it.
+
+
+configfile -> Configuration needed for building the web service
+client. This file generally has the location to the wsdl and also the
+package name to be used for the generated source. See example
+config-client.xml.
+
+jarname -> Name of the resulting jar file.
+
+proxy.host -> Name of proxy if needed to go through a proxy server
+
+proxy.port -> Port of the proxy server to use.
+
+-->
+
+<project name="Template build file for web service clients" 
+	default="dist" basedir=".">
+
+  <property file="webserviceclient.props"/>
+  <property file="${user.home}/webserviceclient.props"/>
+
+  <!-- 
+    Setup the classpath needed to compile code and also for
+    wscompile to be able to generate stubs 
+   -->
+  <path id="build.classpath">
+    <fileset dir="${jwsdp.home}/jaxrpc/lib"/>
+    <fileset dir="${jwsdp.home}/jwsdp-shared/lib">
+      <include name="activation.jar"/>
+      <include name="mail.jar"/> 
+      <include name="jax-qname.jar"/>
+    </fileset>
+    <fileset dir="${jwsdp.home}/saaj/lib"/>
+    <fileset dir="${jwsdp.home}/jaxp/lib"/>
+  </path>
+
+  <!-- Need this to generate stubs -->
+  <taskdef name="wscompile" classname="com.sun.xml.rpc.tools.ant.Wscompile">
+    <classpath refid="build.classpath"/>
+  </taskdef>
+
+  <!-- This target does the initialization - creating directories etc -->
+  <target name="init">
+    <mkdir dir="${build.dir}/src"/>
+    <mkdir dir="${build.dir}/classes"/>
+    <mkdir dir="${dist.dir}"/>
+  </target>
+
+  <!-- This target generates the stubs -->
+  <target name="runWscompile" depends="init">
+
+    <wscompile keep="true" 
+    	       client="true"
+	       base="${build.dir}/classes"
+	       sourceBase="${build.dir}/src"
+               httpproxy="${proxy.host}:${proxy.port}"
+	       config="${configfile}">
+	       <classpath refid="build.classpath"/>
+    </wscompile>
+
+  </target>
+
+  <target name="build" depends="runWscompile">
+  </target>
+
+  <!-- This target creates the jar files for the client -->
+  <target name="jars" depends="build">
+    <jar jarfile="${build.dir}/${jarname}.jar" basedir="${build.dir}/classes"/>
+  </target>
+
+  <!-- This target creates a distribution that can be used --> 
+  <target name="dist" depends="jars">
+    <copy todir="${dist.dir}/lib" file="${build.dir}/${jarname}.jar"/>
+  </target>
+
+  <!-- This target runs the web service client -->
+
+  <target name="run" depends="dist">
+    <!-- 
+      Put the command needed to run your client here 
+    -->
+  </target>
+
+  <!-- This target is used to clean up the workspace -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+</project>
