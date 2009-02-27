@@ -1,0 +1,10 @@
+de.openali.diagram.framework/debug = true
+de.openali.diagram.framework/debug/axis = true
+de.openali.diagram.framework/debug/layer = true
+de.openali.diagram.framework/debug/plot = true
+de.openali.diagram.framework/debug/legend = true
+de.openali.diagram.framework/debug/style = true
+de.openali.diagram.framework/debug/config = true
+de.openali.diagram.framework/trace = true
+de.openali.diagram.framework/debug/chart = true
+
