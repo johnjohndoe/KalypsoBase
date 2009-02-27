@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<webServices xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/dd"
+             version="1.0">
+
+   <endpoint name="Scenario1Endpoint"
+    displayName="WSS Interop Scenario 1"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping1"
+    interface="interop.PingPort"
+    implementation="interop.Scenario1Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario2Endpoint"
+    displayName="WSS Interop Scenario 2"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping2"
+    interface="interop.PingPort"
+    implementation="interop.Scenario2Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario3Endpoint"
+    displayName="WSS Interop Scenario 3"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping3"
+    interface="interop.PingPort"
+    implementation="interop.Scenario3Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario4Endpoint"
+    displayName="WSS Interop Scenario 4"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping4"
+    interface="interop.PingPort"
+    implementation="interop.Scenario4Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario5Endpoint"
+    displayName="WSS Interop Scenario 5"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping5"
+    interface="interop.PingPort"
+    implementation="interop.Scenario5Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario6Endpoint"
+    displayName="WSS Interop Scenario 6"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping6"
+    interface="interop.PingPort"
+    implementation="interop.Scenario6Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpoint name="Scenario7Endpoint"
+    displayName="WSS Interop Scenario 7"
+    description="WSS Interop Testing Service"
+    port="{http://xmlsoap.org/Ping}Ping7"
+    interface="interop.PingPort"
+    implementation="interop.Scenario7Impl"
+    model="/WEB-INF/model.xml.gz"
+    wsdl="/WEB-INF/PingService.wsdl"/>
+
+   <endpointMapping endpointName="Scenario1Endpoint"
+    urlPattern="/Ping1"/>   
+
+   <endpointMapping endpointName="Scenario2Endpoint"
+    urlPattern="/Ping2"/>   
+
+   <endpointMapping endpointName="Scenario3Endpoint"
+    urlPattern="/Ping3"/>   
+
+   <endpointMapping endpointName="Scenario4Endpoint"
+    urlPattern="/Ping4"/>   
+
+   <endpointMapping endpointName="Scenario5Endpoint"
+    urlPattern="/Ping5"/>   
+
+   <endpointMapping endpointName="Scenario6Endpoint"
+    urlPattern="/Ping6"/>   
+
+   <endpointMapping endpointName="Scenario7Endpoint"
+    urlPattern="/Ping7"/>   
+   
+</webServices>

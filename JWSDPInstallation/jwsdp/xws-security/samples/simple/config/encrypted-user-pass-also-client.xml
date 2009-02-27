@@ -1,0 +1,18 @@
+<!--
+
+Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+
+<!-- another variation of encrypted-user-pass-client.xml configuration -->
+<xwss:SecurityConfiguration xmlns:xwss="http://com.sun.xml.wss.configuration"
+                            dumpMessages="true">
+    <xwss:Authenticate>
+        <xwss:UsernameAndPassword name="Ron" password="noR"> 
+        <xwss:Encrypt
+        	keyReferenceType="Identifier" 
+        	receiverCertificateAlias="s1as"/>
+        </xwss:UsernameAndPassword> 
+    </xwss:Authenticate>
+</xwss:SecurityConfiguration>

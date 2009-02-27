@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<services xmlns="http://java.sun.com/xml/ns/jax-rpc/wsi/configurator/cache">
+    <service name="BEA WS-I LoggingFacility on WebLogic" type="LoggingFacility">
+        <endpoint>http://webservice.bea.com/LoggingFacility/LoggingFacility</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I ManufacturerA on WebLogic" type="ManufacturerA">
+        <endpoint>http://webservice.bea.com/ManufacturerA/ManufacturerA</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I ManufacturerB on WebLogic" type="ManufacturerB">
+        <endpoint>http://webservice.bea.com/ManufacturerB/ManufacturerB</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I ManufacturerC on WebLogic" type="ManufacturerC">
+        <endpoint>http://webservice.bea.com/ManufacturerC/ManufacturerC</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I Retailer on WebLogic" type="Retailer">
+        <endpoint>http://webservice.bea.com/Retailer/Retailer</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I WarehouseA on WebLogic" type="WarehouseA">
+        <endpoint>http://webservice.bea.com/WarehouseA/WarehouseA</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I WarehouseB on WebLogic" type="WarehouseB">
+        <endpoint>http://webservice.bea.com/WarehouseB/WarehouseB</endpoint>
+        <selection-params/>
+    </service>
+    <service name="BEA WS-I WarehouseC on WebLogic" type="WarehouseC">
+        <endpoint>http://webservice.bea.com/WarehouseC/WarehouseC</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Bowstreet WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://samples.bowstreet.com/wsi/soapdoc/wsi/ManufacturerAImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://samples.bowstreet.com/wsi/soapdoc/wsi/ManufacturerBImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://samples.bowstreet.com/wsi/soapdoc/wsi/ManufacturerCImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Retailer" type="Retailer">
+        <endpoint>http://samples.bowstreet.com/wsi/soaprpc/wsi/RetailerImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://samples.bowstreet.com/wsi/soaprpc/wsi/WarehouseAImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://samples.bowstreet.com/wsi/soaprpc/wsi/WarehouseBImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Bowstreet WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://samples.bowstreet.com/wsi/soaprpc/wsi/WarehouseCImpl</endpoint>
+        <selection-params>"platform=J2EE(Tomcat);toolset=Bowstreet Factory 5;language=Java;os=Solaris"</selection-params>
+    </service>
+    <service name="Corillian WS-I Logging Facility" type="LoggingFacility">
+        <endpoint>http://websvctest.corillian.com/loggingfacility/loggingfacilityservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://websvctest.corillian.com/manufacturera/manufacturerservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://websvctest.corillian.com/manufacturerb/manufacturerservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://websvctest.corillian.com/manufacturerc/manufacturerservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Retailer" type="Retailer">
+        <endpoint>http://websvctest.corillian.com/retailer/retailerservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://websvctest.corillian.com/warehousea/warehouseservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://websvctest.corillian.com/warehouseb/warehouseservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="Corillian WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://websvctest.corillian.com/warehousec/warehouseservice.asmx</endpoint>
+        <selection-params>"platform=.NET;toolset=Corillian;language=C#;os=Windows"</selection-params>
+    </service>
+    <service name="IBM WS-I Logging Facility" type="LoggingFacility">
+        <endpoint>http://wsi.alphaworks.ibm.com/LoggingFacility/services/LoggingFacility</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://wsi.alphaworks.ibm.com/Manufacturer/services/Manufacturer</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://wsi.alphaworks.ibm.com/Manufacturer/services/ManufacturerB</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://wsi.alphaworks.ibm.com/Manufacturer/services/ManufacturerC</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Retailer" type="Retailer">
+        <endpoint>http://wsi.alphaworks.ibm.com/Retailer/services/Retailer</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://wsi.alphaworks.ibm.com/Warehouse/services/Warehouse</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://wsi.alphaworks.ibm.com/Warehouse/services/WarehouseB</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="IBM WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://wsi.alphaworks.ibm.com/Warehouse/services/WarehouseC</endpoint>
+        <selection-params>"samplePlatform=WebsphereV4;sampleLanguage=Java"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Logging Facility" type="LoggingFacility">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/LoggingFacility/LoggingFacility.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/manufacturera/manufacturer.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/manufacturerb/manufacturer.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/manufacturerc/manufacturer.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Retailer" type="Retailer">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/retailer/retailer.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/warehousea/warehouse.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/warehouseb/warehouse.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Microsoft WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://ws-i.gotdotnet.com/wsi/warehousec/warehouse.asmx</endpoint>
+        <selection-params>"samplePlatform=.NET;sampleLanguage=C#"</selection-params>
+    </service>
+    <service name="Novell WS-I LoggingFacility" type="LoggingFacility">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/LoggingFacility</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I ManufacturerA" type="ManufacturerA">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/ManufacturerA</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I ManufacturerB" type="ManufacturerB">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/ManufacturerB</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I ManufacturerC" type="ManufacturerC">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/ManufacturerC</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I Retailer" type="Retailer">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/Retailer</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I WarehouseA" type="WarehouseA">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/WarehouseA</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I WarehouseB" type="WarehouseB">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/WarehouseB</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Novell WS-I WarehouseC" type="WarehouseC">
+        <endpoint>http://ws-i.novell.com/ws-i/scm/WarehouseC</endpoint>
+        <selection-params>implPlatform=Novell extend AppServer 4.0;implOS=win32;implLanguage=Java</selection-params>
+    </service>
+    <service name="Oracle WS-I Logging Facility" type="LoggingFacility">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/LoggingFacility</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/ManufacturerA</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/ManufacturerB</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/ManufacturerC</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Retailer" type="Retailer">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/Retailer</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/WarehouseA</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/WarehouseB</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Oracle WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://ws-i.oracle.com/ws-i/supplychain/services/WarehouseC</endpoint>
+        <selection-params>"platform=J2EE(9iAS);toolset=Oracle JDevelopper;language=Java;os=Linux"</selection-params>
+    </service>
+    <service name="Quovadx's WS-I Logging" type="LoggingFacility">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/LoggingFacility</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I ManufacturerA" type="ManufacturerA">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/ManufacturerA</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I ManufacturerB" type="ManufacturerB">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/ManufacturerB</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I ManufacturerC" type="ManufacturerC">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/ManufacturerC</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I Retailer" type="Retailer">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/Retailer</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I WarehouseA" type="WarehouseA">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/WarehouseA</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I WarehouseB" type="WarehouseB">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/WarehouseB</endpoint>
+        <selection-params/>
+    </service>
+    <service name="Quovadx's WS-I WarehouseC" type="WarehouseC">
+        <endpoint>http://qdxwbsrv.quovadx.com/qdx/servlet/WarehouseC</endpoint>
+        <selection-params/>
+    </service>
+    <service name="SAP WS-I Logging Facility" type="LoggingFacility">
+        <endpoint>http://216.101.126.70:8080/LoggingService/LoggingSoap?style=document</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Manufacturer A" type="ManufacturerA">
+        <endpoint>http://216.101.126.70:8080/ManufacturerAService/ManufacturerASoap?style=document</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Manufacturer B" type="ManufacturerB">
+        <endpoint>http://216.101.126.70:8080/ManufacturerBService/ManufacturerBSoap?style=document</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Manufacturer C" type="ManufacturerC">
+        <endpoint>http://216.101.126.70:8080/ManufacturerCService/ManufacturerCSoap?style=document</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Retailer" type="Retailer">
+        <endpoint>http://216.101.126.70:8080/RetailerService/RetailerSoap?style=rpc</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Warehouse A" type="WarehouseA">
+        <endpoint>http://216.101.126.70:8080/WarehouseAService/WarehouseASoap?style=rpc</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Warehouse B" type="WarehouseB">
+        <endpoint>http://216.101.126.70:8080/WarehouseBService/WarehouseBSoap?style=rpc</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="SAP WS-I Warehouse C" type="WarehouseC">
+        <endpoint>http://216.101.126.70:8080/WarehouseCService/WarehouseCSoap?style=rpc</endpoint>
+        <selection-params>samplePlatform=SAPWebAS6.30;sampleLanguage=Java</selection-params>
+    </service>
+    <service name="Sun's WS-I Logging" type="LoggingFacility">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/logging</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I ManufacturerA" type="ManufacturerA">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/manufacturera</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I ManufacturerB" type="ManufacturerB">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/manufacturerb</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I ManufacturerC" type="ManufacturerC">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/manufacturerc</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I Retailer" type="Retailer">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/retailer</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I WarehouseA" type="WarehouseA">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/warehousea</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I WarehouseB" type="WarehouseB">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/warehouseb</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+    <service name="Sun's WS-I WarehouseC" type="WarehouseC">
+        <endpoint>http://soapinterop.java.sun.com:8080/wsi/scm/warehousec</endpoint>
+        <selection-params>platform="JWSDP1.2",language="Java";os="solaris"</selection-params>
+    </service>
+</services>
+

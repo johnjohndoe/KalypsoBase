@@ -1,0 +1,22 @@
+<!--
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<!--
+
+    Context configuration file for the JWSDP Catalog webapp
+
+    $Id$
+
+-->
+
+<Context path="/jwsdp-catalog" docBase="../server/webapps/jwsdp-catalog"
+        debug="0" privileged="true">
+
+  <Logger className="org.apache.catalina.logger.FileLogger"
+             prefix="jwsdp_log." suffix=".txt"
+          timestamp="true"/>
+
+</Context>
+

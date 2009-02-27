@@ -1,0 +1,71 @@
+<!--
+ Copyright 2003 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<!-- $Id$ -->
+
+<project name="Command Line Tool Scripts" default="run-cli-request" basedir=".">
+
+  <!-- ========== Construct Tools Classpath ================== -->
+
+  <!-- need to use Endorsed Dirs to use latest Java/XML -->
+  <property name="endorsed.dirs" value="${basedir}/../../jaxp/lib/endorsed:${basedir}/../../common/endorsed"/>
+
+  <path id="samples.classpath">
+    <!-- Registry -->
+    <fileset dir="${basedir}/jar" includes="**/*.jar"/>
+    <fileset dir="${basedir}/../../jwsdp-shared/lib" includes="**/*.jar"/>
+    <!-- JAXP -->
+    <fileset dir="${basedir}/../../jaxp/lib" includes="**/*.jar"/>
+    <!-- SAAJ -->
+    <fileset dir="${basedir}/../../saaj/lib" includes="**/*.jar"/>
+  </path>
+
+
+  <!-- ========== Command Line Client ================== -->
+
+  <!-- Running Command line client to validate xml instance against a schema -->
+  <!-- expect the instance to be validated to be passed as the
+       -Dinstance=... property -->
+  <target name="run-validate">
+    <echo message="-- Running Validation --"/>
+    <java classname="com.sun.registry_server.util.Validate"
+            classpathref="samples.classpath"
+            fork="yes">
+    <!-- need to use Endorsed Dirs to use latest Java/XML -->
+    <sysproperty key="java.endorsed.dirs" path="${endorsed.dirs}"/>
+    <arg value="-s"/>
+    <arg value="file://${basedir}${file.separator}xml${file.separator}uddi_v2.xsd"/>
+    <arg value="-i"/>
+    <arg value="${instance}"/>
+    </java>
+  </target>
+
+  <!-- Means to generate a MD5 password for storage into DB -->
+  <target name="run-md5">
+    <echo message="-- Running md5 for auth --"/>
+    <java classname="com.sun.registry_server.util.MD5HashGenerator"
+            classpathref="samples.classpath"
+            fork="yes">
+    <!-- need to use Endorsed Dirs to use latest Java/XML -->
+    <sysproperty key="java.endorsed.dirs" path="${endorsed.dirs}"/>
+    <arg value="${password}"/>
+    </java>
+  </target>
+
+  <!-- Running Command line client to process a request -->
+  <target name="run-cli-request">
+    <echo message="-- Running CLI client to process request: ${request} --"/>
+    <java classname="com.sun.registry_server.util.CLIClient"
+            classpathref="samples.classpath"
+            fork="yes">
+    <!-- need to use Endorsed Dirs to use latest Java/XML -->
+    <sysproperty key="java.endorsed.dirs" path="${endorsed.dirs}"/>
+    <arg value="-i"/>
+    <arg file="${request}"/>
+    <arg value="-r"/>
+    <arg value="http://localhost:8080/RegistryServer/"/>
+    </java>
+  </target>
+
+</project>
