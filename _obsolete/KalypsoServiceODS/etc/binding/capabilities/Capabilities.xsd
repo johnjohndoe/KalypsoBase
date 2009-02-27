@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.ksp.org/ods/capabilities"
+     xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:ods="http://www.ksp.org/ods/capabilities"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     elementFormDefault="qualified"
+     >
+     <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlinks.xsd"/>
+     <!-- ********************************************************************* -->
+     <!-- ** The Top-Level Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="ODS_Capabilities">
+          <annotation>
+               <documentation> A WMS_Capabilities document is returned in response to a
+                    GetCapabilities request made on a WMS.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Service"/>
+                    <element ref="ods:Capability"/>
+               </sequence>
+               <attribute name="version" type="string" fixed="0.0.1"/>
+               <attribute name="updateSequence" type="string"/>
+          </complexType>
+     </element>
+     <!-- ********************************************************************* -->
+     <!-- ** Elements Used In Multiple Places. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Name" type="string">
+          <annotation>
+               <documentation> The Name is typically for machine-to-machine
+               communication.</documentation>
+          </annotation>
+     </element>
+     <element name="Title" type="string">
+          <annotation>
+               <documentation> The Title is for informative display to a human.</documentation>
+          </annotation>
+     </element>
+     <element name="Abstract" type="string">
+          <annotation>
+               <documentation> The abstract is a longer narrative description of an
+               object.</documentation>
+          </annotation>
+     </element>
+
+     <element name="OnlineResource">
+          <annotation>
+               <documentation> An OnlineResource is typically an HTTP URL. The URL is placed in the
+                    xlink:href attribute, and the value "simple" is placed in the xlink:type
+                    attribute.</documentation>
+          </annotation>
+          <complexType>
+               <attributeGroup ref="xlink:simpleLink"/>
+          </complexType>
+     </element>
+
+     <element name="Format">
+          <annotation>
+               <documentation> A container for listing an available format's MIME
+                    type.
+               </documentation>
+               <documentation>
+                    Fuer WMS ist hier lediglich derTyp "string" vorgegeben; fuer den ods sollen die
+                    verschiedenen Typen vorgegeben werden, damit im Capabilites-Dokument kein
+                    Quatsch steht
+               </documentation>
+          </annotation>
+          <simpleType>
+               <restriction base="string">
+                  <enumeration value="text/html"></enumeration>
+                  <enumeration value="text/xml"></enumeration>
+                  <enumeration value="image/gif"></enumeration>
+                  <enumeration value="image/png"></enumeration>
+                  <enumeration value="image/jpeg"></enumeration>
+               </restriction>
+          </simpleType>
+     </element>
+
+     <!-- ********************************************************************* -->
+     <!-- ** General Service Metadata. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Service">
+          <annotation>
+               <documentation> General service metadata.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element name="Name">
+                         <simpleType>
+                              <restriction base="string">
+                                   <enumeration value="ods"/>
+                              </restriction>
+                         </simpleType>
+                    </element>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:OnlineResource"/>
+                    <element ref="ods:ContactInformation" minOccurs="0"/>
+                    <element ref="ods:Fees" minOccurs="0"/>
+                    <element ref="ods:AccessConstraints" minOccurs="0"/>
+                    <element ref="ods:LayerLimit" minOccurs="0"/>
+                    <element ref="ods:MaxWidth" minOccurs="0"/>
+                    <element ref="ods:MaxHeight" minOccurs="0"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="ContactInformation">
+          <annotation>
+               <documentation> Information about a contact person for the service.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:ContactPersonPrimary" minOccurs="0"/>
+                    <element ref="ods:ContactPosition" minOccurs="0"/>
+                    <element ref="ods:ContactAddress" minOccurs="0"/>
+                    <element ref="ods:ContactVoiceTelephone" minOccurs="0"/>
+                    <element ref="ods:ContactFacsimileTelephone" minOccurs="0"/>
+                    <element ref="ods:ContactElectronicMailAddress" minOccurs="0"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="ContactPersonPrimary">
+          <complexType>
+               <sequence>
+                    <element ref="ods:ContactPerson"/>
+                    <element ref="ods:ContactOrganization"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="ContactPerson" type="string"/>
+     <element name="ContactOrganization" type="string"/>
+     <element name="ContactPosition" type="string"/>
+     <element name="ContactAddress">
+          <complexType>
+               <sequence>
+                    <element ref="ods:AddressType"/>
+                    <element ref="ods:Address"/>
+                    <element ref="ods:City"/>
+                    <element ref="ods:StateOrProvince"/>
+                    <element ref="ods:PostCode"/>
+                    <element ref="ods:Country"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="AddressType" type="string"/>
+     <element name="Address" type="string"/>
+     <element name="City" type="string"/>
+     <element name="StateOrProvince" type="string"/>
+     <element name="PostCode" type="string"/>
+     <element name="Country" type="string"/>
+     <element name="ContactVoiceTelephone" type="string"/>
+     <element name="ContactFacsimileTelephone" type="string"/>
+     <element name="ContactElectronicMailAddress" type="string"/>
+     <element name="Fees" type="string"/>
+     <element name="AccessConstraints" type="string"/>
+     <element name="LayerLimit" type="positiveInteger"/>
+     <element name="MaxWidth" type="positiveInteger"/>
+     <element name="MaxHeight" type="positiveInteger"/>
+     <!-- ********************************************************************* -->
+     <!-- ** The Capability Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Capability">
+          <annotation>
+               <documentation> A Capability lists available request types, how exceptions may be
+                    reported, and whether any extended capabilities are defined. It also includes an
+                    optional list of map layers available from this server.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Request"/>
+                    <element ref="ods:Exception"/>
+                    <element ref="ods:Diagram" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="ods:Legend" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="ods:Table" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+          </complexType>
+     </element>
+     <!-- ********************************************************************* -->
+     <!-- ** The Request Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Request">
+          <annotation>
+               <documentation> Available WMS Operations are listed in a Request
+               element.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:GetCapabilities"/>
+                    <element ref="ods:GetDiagram"/>
+                    <element ref="ods:GetHTMLTable"/>
+                    <element ref="ods:GetLegend"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="GetCapabilities" type="ods:OperationType"/>
+     <element name="GetDiagram" type="ods:OperationType"/>
+     <element name="GetHTMLTable" type="ods:OperationType"/>
+     <element name="GetLegend" type="ods:OperationType"/>
+     <complexType name="OperationType">
+          <annotation>
+               <documentation> For each operation offered by the server, list the available output
+                    formats and the online resource.</documentation>
+          </annotation>
+          <sequence>
+               <element ref="ods:Format" minOccurs="1" maxOccurs="unbounded"/>
+               <element ref="ods:DCPType" minOccurs="1" maxOccurs="unbounded"/>
+          </sequence>
+     </complexType>
+     <element name="DCPType">
+          <annotation>
+               <documentation> Available Distributed Computing Platforms (DCPs) are listed here. At
+                    present, only HTTP is defined.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:HTTP"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="HTTP">
+          <annotation>
+               <documentation> Available HTTP request methods. At least "Get" shall be
+               supported.</documentation>
+          </annotation>
+          <complexType>
+               <choice>
+                    <element ref="ods:Get"/>
+                    <element ref="ods:Post" minOccurs="0"/>
+               </choice>
+          </complexType>
+     </element>
+     <element name="Get">
+          <annotation>
+               <documentation> The URL prefix for the HTTP "Get" request method.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="Post">
+          <annotation>
+               <documentation> The URL prefix for the HTTP "Post" request method.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+          </complexType>
+     </element>
+     <!-- ********************************************************************* -->
+     <!-- ** The Exception Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Exception">
+          <annotation>
+               <documentation> An Exception element indicates which error-reporting formats are
+                    supported.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format" minOccurs="1" maxOccurs="unbounded"/>
+               </sequence>
+          </complexType>
+     </element>
+
+     <!-- ********************************************************************* -->
+     <!-- ** The Diagram Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Diagram">
+          <annotation>
+               <documentation> List of zero or more Diagrams offered by this
+               server.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Name" minOccurs="0"/>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:Layers" minOccurs="0"/>
+                    <element ref="ods:DataURL" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+               <attribute name="fixedWidth" type="nonNegativeInteger"/>
+               <attribute name="fixedHeight" type="nonNegativeInteger"/>
+               <attribute name="queryable" type="boolean" default="0"/>
+          </complexType>
+     </element>
+
+
+
+
+     <element name="Layers">
+          <complexType>
+               <sequence>
+                    <element ref="ods:Layer" minOccurs="0" maxOccurs="unbounded"></element>
+               </sequence>
+          </complexType>
+     </element>
+
+     <element name="Layer" type="ods:LayerType"></element>
+
+     <complexType name="LayerType">
+          <sequence>
+               <element name="title" type="string"></element>
+               <element name="description" type="string"></element>
+          </sequence>
+          <attribute name="name" type="string" />
+     </complexType>
+
+
+
+     <!-- ********************************************************************* -->
+     <!-- ** The Table Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Table">
+          <annotation>
+               <documentation> List of zero or more Tables offered by this
+               server.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Name" minOccurs="0"/>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:DataURL" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+               <attribute name="queryable" type="boolean" default="0"/>
+          </complexType>
+     </element>
+
+     <!-- ********************************************************************* -->
+     <!-- ** The Legend Element. ** -->
+     <!-- ********************************************************************* -->
+     <element name="Legend">
+          <annotation>
+               <documentation>
+               List of zero or more Legends offered by this server.
+               </documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Name" minOccurs="0"/>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:DataURL" minOccurs="0" maxOccurs="unbounded"/>
+               </sequence>
+               <attribute name="queryable" type="boolean" default="0"/>
+          </complexType>
+     </element>
+
+
+
+
+
+     <element name="Attribution">
+          <annotation>
+               <documentation> Attribution indicates the provider of a Layer or collection of
+                    Layers. The provider's URL, descriptive title string, and/or logo image URL may
+                    be supplied. Client applications may choose to display one or more of these
+                    items. A format element indicates the MIME type of the logo image located at
+                    LogoURL. The logo image's width and height assist client applications in laying
+                    out space to display the logo.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Title" minOccurs="0"/>
+                    <element ref="ods:OnlineResource" minOccurs="0"/>
+                    <element ref="ods:LogoURL" minOccurs="0"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="LogoURL">
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format"/>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+               <attribute name="width" type="positiveInteger"/>
+               <attribute name="height" type="positiveInteger"/>
+          </complexType>
+     </element>
+
+
+     <element name="Identifier">
+          <complexType>
+               <simpleContent>
+                    <extension base="string">
+                         <attribute name="authority" type="string" use="required"/>
+                    </extension>
+               </simpleContent>
+          </complexType>
+     </element>
+     <element name="DataURL">
+          <annotation>
+               <documentation> A Map Server may use DataURL offer a link to the underlying data
+                    represented by a particular layer.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format"/>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+          </complexType>
+     </element>
+
+     <element name="Style">
+          <annotation>
+               <documentation> A Style element lists the name by which a style is requested and a
+                    human-readable title for pick lists, optionally (and ideally) provides a
+                    human-readable description, and optionally gives a style URL.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Name"/>
+                    <element ref="ods:Title"/>
+                    <element ref="ods:Abstract" minOccurs="0"/>
+                    <element ref="ods:LegendURL" minOccurs="0" maxOccurs="unbounded"/>
+                    <element ref="ods:StyleSheetURL" minOccurs="0"/>
+                    <element ref="ods:StyleURL" minOccurs="0"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="LegendURL">
+          <annotation>
+               <documentation> A Map Server may use zero or more LegendURL elements to provide an
+                    image(s) of a legend relevant to each Style of a Layer. The Format element
+                    indicates the MIME type of the legend. Width and height attributes may be
+                    provided to assist client applications in laying out space to display the
+                    legend.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format"/>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+               <attribute name="width" type="positiveInteger"/>
+               <attribute name="height" type="positiveInteger"/>
+          </complexType>
+     </element>
+     <element name="StyleSheetURL">
+          <annotation>
+               <documentation> StyleSheeetURL provides symbology information for each Style of a
+                    Layer.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format"/>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+          </complexType>
+     </element>
+     <element name="StyleURL">
+          <annotation>
+               <documentation> A Map Server may use StyleURL to offer more information about the
+                    data or symbology underlying a particular Style. While the semantics are not
+                    well-defined, as long as the results of an HTTP GET request against the StyleURL
+                    are properly MIME-typed, Viewer Clients and Cascading Map Servers can make use
+                    of this. A possible use could be to allow a Map Server to provide legend
+                    information.</documentation>
+          </annotation>
+          <complexType>
+               <sequence>
+                    <element ref="ods:Format"/>
+                    <element ref="ods:OnlineResource"/>
+               </sequence>
+          </complexType>
+     </element>
+</schema>

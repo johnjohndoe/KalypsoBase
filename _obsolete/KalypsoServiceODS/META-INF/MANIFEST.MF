@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoServicesODS Plug-in
+Bundle-SymbolicName: org.kalypso.services.ods;singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.services.ods.Activator
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.jwsdp,
+ org.kalypso.chart,
+ org.kalypso.gmlschema,
+ org.kalypso.service.ogc
+Eclipse-LazyStart: true
+Export-Package: net.opengis.ows,
+ org.kalypso.services.ods,
+ org.kalypso.services.ods.helper,
+ org.kalypso.services.ods.operation,
+ org.ksp.ods.capabilities

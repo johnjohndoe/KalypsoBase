@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="KalypsoChart-binding" default="generate">
+	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
+    <setproxy proxyhost="172.16.0.253" proxyport="8080"/>
+	<property name="project" value="${workspace}/KalypsoServiceODS" />
+	
+	  <patternset id="binding.schemata">
+	  	 <include name="etc/binding/capabilities/*.xsd"/>
+	  	 <include name="etc/binding/exception/*.xsd"/>
+	  </patternset>
+  
+	<import file="${workspace}/KalypsoBuild/common-binding/build.xml"/>
+	
+</project>
+
