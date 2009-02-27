@@ -1,0 +1,160 @@
+<!DOCTYPE HTML
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<head>
+  <title>Java(TM) Web Services Developer Pack (Java WSDP)
+  Registry Server 1.0_06 Release Notes</title>
+</head>
+
+<body bgcolor="#ffffff">
+<center>
+<h1><font color="#000099">Java<sup><font size="-2">TM</font></sup> Web
+Services Developer Pack (Java WSDP)<br>
+Registry Server 1.0_06 Release Notes</font></h1>
+</center>
+
+<p>For an updated, online version of these release notes, see 
+<a href="http://java.sun.com/webservices/docs/1.4/registry-server/ReleaseNotes.html">Release Notes</a>.</p>
+
+<p>Revised: 05/14/2004</p>
+
+<h3>Contents</h3>
+
+<ul>
+  <li><a href="#first">Read This Section First</a></li>
+  <li><a href="#what">What This Release Includes</a></li>
+  <li><a href="#limitations">Current Limitations</a></li>
+  <li><a href="#bugs">Known Bugs</a></li>
+</ul>
+
+<h3><a name="first">Read This Section First</a></h3>
+
+<p>Before you work with this release of the Java<sup><font size="-2">TM</font></sup> Web Services
+Developer Pack (Java WSDP) Registry Server, make sure that you have
+installed the required software and are on a supported operating
+system.  You can find this information in the
+<a href="../../docs/index.html">
+Java WSDP home page</a> and <a
+href="../../docs/ReleaseNotes.html">Release Notes</a> and the <a
+href="index.html">Java WSDP Registry Server home page</a>.</p>
+
+<p> The service end point for the Java WSDP Registry Server is
+<code>http://localhost:8080/RegistryServer</code>.
+The service end point can be changed by editing the property values in
+<code>&lt;<i>JWSDP_HOME</i>&gt;/jwsdp-shared/bin/launcher.xml</code>:</p>
+<pre>
+&lt;sysproperty key="org.apache.xindice.host" value="desired Xindice host"/&gt;
+&lt;sysproperty key="org.apache.xindice.port" value="desired Xindice port"/&gt;
+</pre>
+
+<p><strong>Note:</strong> The file
+<code>&lt;<i>JWSDP_HOME</i>&gt;/registry-server/webapps/RegistryServer.war</code>
+may only be used for the purposes of designing, developing, and
+testing programs. For more information, see the
+<a href="../../docs/ReleaseNotes.html#RedistributableComponents">Redistributable Components</a>
+and <a href="../../docs/ReleaseNotes.html#NonredistributableComponents">Nonredistributable Components</a>
+sections of the Java WSDP Release Notes.</p>
+
+<h3><a name="what">What This Release Includes</a></h3>
+
+<p>This release includes</p>
+
+<ul>
+  <li>The Java WSDP Registry Server 1.0_06 release</li>
+  <li>The Xindice database, the repository for registry data</li>
+</ul>
+
+<p>You can also use the Registry Browser and sample programs provided
+by the Java API for XML Registries (JAXR) to create and query
+registry data.  When you use JAXR or any other UDDI capable application
+with the Java WSDP Registry Server, the service end point is
+<code>http://localhost:8080/RegistryServer/</code>.</p>
+
+
+<p>This release implements Version 2 of the Universal Description,
+Discovery and Integration (UDDI) project, including</p>
+
+<ul>
+  <li>UDDI Version 2.00 API Specification Errata 3</li>
+  <li>UDDI Version 2.00 Data Structure Reference Errata 2</li>
+</ul>
+
+<p>The release contents are arranged in the following structure within
+the Java WSDP installation:</p>
+
+<table border="1" cellpadding="3" cellspacing="3" width="75%">
+  <thead>
+    <tr>
+      <th align="left">Directory Name</th>
+      <th align="left">Contents</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td valign="top"><code>registry-server/docs</code></td>
+    <td valign="top">Release documentation for the Java WSDP Registry Server</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>registry-server/samples</code></td>
+    <td valign="top">Command-line client script for creating new registry users</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>registry-server/webapps</code></td>
+    <td valign="top">The Registry Server application, in the file
+    <code>RegistryServer.war</code> and the Xindice database
+    application in the file <code>Xindice.war</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>registry-server/Xindice</code></td>
+    <td valign="top">Xindice database files</td>
+  </tr>
+  <tr>
+    <td valign="top"><code>jwsdp-shared/bin</code></td>
+    <td valign="top">Java WSDP scripts and configuration files</td>
+  </tr>
+  </tbody>
+</table>
+
+<h3><a name="limitations">Current Limitations</a></h3>
+
+<p>The 1.0_06 release of the Java WSDP Registry Server has the
+following limitations:</p>
+
+<ul>
+  <li>The <code>find_relatedBusinesses</code> message is not
+  supported.</li>
+
+  <li>For <code>&lt;find_*&gt;</code> messages, the find qualifiers
+  <code>orLikeKeys</code>, <code>combineCategoryBags</code>, and
+  <code>serviceSubset</code> are not supported.  All other find
+  qualifiers are supported.</li>
+</ul>
+
+<h3><a name="bugs">Known Issues</a></h3>
+
+<p>At this release, the Java WSDP Registry Server has the following known issues:</p>
+
+<ul>
+<p>
+  <li>Whenever you publish an organization to the Registry Server, a warning
+  appears in the server log, followed by a stack trace. You can ignore this 
+  warning. (Bug 4872011)</li>
+  </p>
+  <p>
+  <li>Because the <code>find_relatedBusinesses</code> request message
+  is not supported in this release (see <a href="#limitations">Current
+  Limitations</a>), use of the JAXR API <code>findAssociations</code>
+  method will fail with the Registry Server.  The Registry Server will
+  return an <code>E_unsupported message</code> in a SOAP Fault if
+  <code>find_relatedBusinesses</code> is used.</li>
+  </p>
+  </ul>
+<hr>
+<p><A href="../../docs/Copyright.html"><FONT 
+  size="-1"><I>Copyright &copy; 2004 Sun Microsystems, Inc. All rights 
+  reserved.</I></FONT></A> </P>
+</body>
+</html>
