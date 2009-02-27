@@ -1,14 +1,14 @@
 package org.kalypso.chart.ext.observation.data;
 
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.data.IDataRange;
 
 public class TupleResultDomainIntervalValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
 
   public void close( )
   {
-    // nothing to do
+    // TODO Auto-generated method stub
 
   }
 

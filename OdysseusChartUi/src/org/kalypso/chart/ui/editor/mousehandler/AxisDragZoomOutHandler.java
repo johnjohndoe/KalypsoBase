@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.mapper.IAxis;
 
 /**
  * @author burtscher1
@@ -57,7 +57,6 @@ public class AxisDragZoomOutHandler extends AxisDragZoomInHandler
     super( chartComposite );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void performZoomAction( IAxis axis )
   {

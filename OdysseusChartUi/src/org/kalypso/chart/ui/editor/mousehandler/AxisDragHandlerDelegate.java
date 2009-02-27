@@ -44,13 +44,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
  * 
@@ -87,9 +86,7 @@ public class AxisDragHandlerDelegate
     for( AxisCanvas ac : getAxesMap().keySet() )
     {
       if( handler == null )
-      {
         ac.setCursor( ac.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
-      }
       else
       {
         ac.setCursor( m_handler.getCursor() );
@@ -128,9 +125,9 @@ public class AxisDragHandlerDelegate
   private Map<AxisCanvas, IAxis> getAxesMap( )
   {
     Map<AxisCanvas, IAxis> axesMap = new HashMap<AxisCanvas, IAxis>();
-    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis[] axes = reg.getAxes();
-    for( final IAxis axis : axes )
+    final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
+    final IAxis< ? >[] axes = reg.getAxes();
+    for( final IAxis< ? > axis : axes )
     {
       final IAxisComponent component = reg.getComponent( axis );
       if( component != null )

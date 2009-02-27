@@ -7,29 +7,20 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.kalypso.chart.framework.model.styles.IStyledElement;
+import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
+import org.eclipse.swt.graphics.GC;
 import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-
-public class TupleResultLineLayer extends AbstractLineLayer
+// TODO why do we still have several tuple result layer?
+// @Alex: please combine them to ONE implementation!
+public class TupleResultLineLayer<T_domain, T_target> extends AbstractChartLayer<T_domain, T_target>
 {
 
-  private TupleResultDomainValueData m_data;
-
-  public TupleResultLineLayer( TupleResultDomainValueData data, ILineStyle lineStyle, IPointStyle pointStyle )
-  {
-    super( lineStyle, pointStyle );
-    m_data = data;
-  }
-
-  @Override
   public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
@@ -46,76 +37,67 @@ public class TupleResultLineLayer extends AbstractLineLayer
     path.add( new Point( width / 5 * 4, height / 2 ) );
     path.add( new Point( width, height / 2 ) );
 
-    drawLine( gc, path );
+    final IStyledElement element = getStyle().getElement( SE_TYPE.LINE, 1 );
+
+    element.setPath( path );
+    element.paint( gc );
+
     gc.dispose();
 
   }
 
-  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
+    final IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
+    final IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );
     final List<Point> path = new ArrayList<Point>();
+    final TupleResultDomainValueData data = (TupleResultDomainValueData) getDataContainer();
 
-    m_data.open();
+    data.open();
 
-    final TupleResult result = m_data.getTupleResult();
+    final TupleResult result = data.getTupleResult();
 
-    Object[] domainValues = m_data.getDomainValues();
-    Object[] targetValues = m_data.getTargetValues();
+    Object[] xValues = null;
+    Object[] yValues = null;
+    IAxis xAxis = null;
+    IAxis yAxis = null;
 
-    if( domainValues.length > 0 && targetValues.length > 0 )
+    if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      IAxis domainAxis = getDomainAxis();
-      IAxis targetAxis = getTargetAxis();
-      IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
-      IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
-
-      if( dopDomain == null || dopTarget == null )
-        return;
-
+      xValues = data.getDomainValues();
+      yValues = data.getTargetValues();
+      xAxis = getDomainAxis();
+      yAxis = getTargetAxis();
+    }
+    else
+    {
+      yValues = data.getDomainValues();
+      xValues = data.getTargetValues();
+      yAxis = getDomainAxis();
+      xAxis = getTargetAxis();
+    }
+    if( xValues.length > 0 && yValues.length > 0 )
+    {
       for( int i = 0; i < result.size(); i++ )
       {
-        final Object domainValue = domainValues[i];
-        final Object targetValue = targetValues[i];
-
+        final Object xObj = xValues[i];
+        final Object yObj = yValues[i];
         // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
         // in that case
-        if( domainValue != null && targetValue != null )
+        if( xObj != null && yObj != null )
         {
-          Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
-          path.add( screen );
+          final int x = xAxis.logicalToScreen( xObj );
+          final int y = yAxis.logicalToScreen( yObj );
+          path.add( new Point( x, y ) );
         }
       }
     }
 
-    drawLine( gc, path );
-    drawPoints( gc, path );
+    sl.setPath( path );
+    sl.paint( gc );
+    sp.setPath( path );
+    sp.paint( gc );
+
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
-  public IDataRange<Number> getDomainRange( )
-  {
-    IDataRange dataRange = m_data.getDomainRange();
-    IDataOperator dop = getDomainAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
-    return numRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  public IDataRange<Number> getTargetRange( )
-  {
-    IDataRange dataRange = m_data.getTargetRange();
-    IDataOperator dop = getTargetAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
-    return numRange;
-  }
-
-  protected void setData( TupleResultDomainValueData data )
-  {
-    m_data = data;
-  }
 }

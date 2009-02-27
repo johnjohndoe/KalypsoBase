@@ -20,12 +20,6 @@
             id="org.kalypso.chart.ui.view.ChartView"
             name="Chart View">
       </view>
-      <view
-            allowMultiple="false"
-            class="org.kalypso.chart.ui.SimpleChartOutline"
-            id="org.kalypso.chart.ui.view.SimpleChartOutline"
-            name="Simple Chart View ">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -56,22 +50,12 @@
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.maximize"
-            name="Reset view">
-      </command>
-      <command
-            categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.maximizeView"
             name="Maximize">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.export"
             name="Export">
-      </command>
-      <command
-            categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.openOutline"
-            name="Open outline">
       </command>
    </extension>
    <extension
@@ -82,6 +66,8 @@
       </image>
       <image
             commandId="org.kalypso.chart.ui.commands.zoomIn"
+            disabledIcon="icons/elcl16/chart_zoom_out.gif"
+            hoverIcon="icons/elcl16/chart_pan.gif"
             icon="icons/elcl16/chart_zoom_in.gif">
       </image>
       <image
@@ -99,10 +85,6 @@
       <image
             commandId="org.kalypso.chart.ui.commands.export"
             icon="icons/elcl16/chart_export_img.gif">
-      </image>
-      <image
-            commandId="org.kalypso.chart.ui.commands.openOutline"
-            icon="icons/elcl16/show_outline.gif">
       </image>
    </extension>
    <extension
@@ -128,16 +110,8 @@
             commandId="org.kalypso.chart.ui.commands.maximize">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.MaximizeViewHandler"
-            commandId="org.kalypso.chart.ui.commands.maximizeView">
-      </handler>
-      <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
             commandId="org.kalypso.chart.ui.commands.export">
-      </handler>
-      <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
-            commandId="org.kalypso.chart.ui.commands.openOutline">
       </handler>
    </extension>
    <extension
@@ -162,6 +136,7 @@
          </command>
          <command
                commandId="org.kalypso.chart.ui.commands.zoomIn"
+               id="zoomId"
                label="Zoom In"
                style="radio">
                <visibleWhen
@@ -248,11 +223,6 @@
          <command
                commandId="org.kalypso.chart.ui.commands.export"
                label="Export"
-               style="push">
-         </command>
-         <command
-               commandId="org.kalypso.chart.ui.commands.openOutline"
-               label="Open outline"
                style="push">
          </command>
       

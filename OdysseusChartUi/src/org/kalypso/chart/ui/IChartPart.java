@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui;
 
+import org.kalypso.chart.framework.impl.view.ChartComposite;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author burtscher1
@@ -56,6 +55,4 @@ public interface IChartPart
   public AxisDragHandlerDelegate getAxisDragHandler( );
 
   public ChartComposite getChartComposite( );
-
-  public Object getAdapter( Class< ? > clazz );
 }

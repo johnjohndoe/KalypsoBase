@@ -2,36 +2,51 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="de.openali.odysseus.chart.factory.LayerProvider">
+         point="org.kalypso.chart.factory.AxisProvider">
       <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.Grid"/>
+            class="org.kalypso.chart.ext.base.axis.provider.NumberAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Number"/>
       <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVBarLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.CSVBar"/>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVLineLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.CSVLine"/>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.UVF"/>
+            class="org.kalypso.chart.ext.base.axis.provider.CalendarAxisProvider"
+            id="org.kalypso.chart.ext.axis.provider.Calendar"/>
    </extension>
-      <extension
-         point="de.openali.odysseus.chart.factory.AxisProvider">
+   <extension
+         point="org.kalypso.chart.factory.LayerProvider">
       <provider
-            class="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider"
-            id="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
-      </provider>
+            class="org.kalypso.chart.ext.base.layer.provider.GridLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.Grid"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.CSVBarLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVBar"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.CSVLineLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.CSVLine"/>
+      <provider
+            class="org.kalypso.chart.ext.base.layer.provider.UVFLayerProvider"
+            id="org.kalypso.chart.ext.layer.provider.UVF"/>
    </extension>
-      <extension
-         point="de.openali.odysseus.chart.factory.AxisRendererProvider">
+   <extension
+         point="org.kalypso.chart.factory.StyledElementProvider">
       <provider
-            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericCalendarAxisRendererProvider">
-      </provider>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledLineProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledLine"/>
       <provider
-            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
-      </provider>
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPointProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledPoint"/>
+      <provider
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledPolygonProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledPolygon"/>
+      <provider
+            class="org.kalypso.chart.ext.base.style.provider.DefaultStyledTextProvider"
+            id="org.kalypso.chart.ext.style.provider.DefaultStyledText"/>
+   </extension>
+   <extension
+         point="org.kalypso.chart.factory.AxisRendererProvider">
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.CalendarAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.Calendar"/>
+      <provider
+            class="org.kalypso.chart.ext.base.axisrenderer.provider.NumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.axisrenderer.provider.Number"/>
    </extension>
 </plugin>

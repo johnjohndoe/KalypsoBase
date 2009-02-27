@@ -4,5 +4,6 @@
    <extension-point id="LayerProvider" name="LayerProvider" schema="schema/LayerProvider.exsd"/>
    <extension-point id="AxisProvider" name="AxisProvider" schema="schema/AxisProvider.exsd"/>
    <extension-point id="AxisRendererProvider" name="AxisRendererProvider" schema="schema/AxisRendererProvider.exsd"/>
+   <extension-point id="StyledElementProvider" name="StyledElementProvider" schema="schema/StyledElementProvider.exsd"/>
    <extension-point id="MapperProvider" name="MapperProvider" schema="schema/MapperProvider.exsd"/>
 </plugin>

@@ -45,20 +45,24 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
+import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import org.kalypso.chart.factory.provider.AbstractLayerProvider;
+import org.kalypso.chart.framework.impl.logging.Logger;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.data.IDataContainer;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import org.ksp.chart.factory.LayerType;
 
 /**
  * @author Gernot Belger
@@ -69,17 +73,19 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context ) throws LayerProviderException
   {
-    return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new TupleResultLineLayer();
   }
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  @SuppressWarnings("unchecked")
-  public TupleResultDomainValueData< ? , ? > getDataContainer( ) throws ConfigurationException
+  public IDataContainer getDataContainer( ) throws LayerProviderException
   {
+    final LayerType lt = getLayerType();
+    final IChartModel chartModel = getChartModel();
+    final String configLayerId = lt.getTitle();
 
     final IParameterContainer pc = getParameterContainer();
 
@@ -90,9 +96,7 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
     try
     {
       if( href == null )
-      {
         return null;
-      }
 
       final GMLXPath path = new GMLXPath( xpath );
 
@@ -102,40 +106,43 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
 
       final Feature feature;
       if( object == workspace )
-      {
         feature = workspace.getRootFeature();
-      }
       else if( object instanceof Feature )
-      {
         feature = (Feature) object;
-      }
       else
       {
         Logger.logError( Logger.TOPIC_LOG_GENERAL, "bad path not set: " + xpath );
         return null;
       }
 
+      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+      final TupleResult result = obs.getResult();
+
+      final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
+      final String valueAxisId = lt.getMapper().getTargetAxisRef().getRef();
+
+      final IAxis< ? > domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
+      final IAxis< ? > valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
+
       final String observationId = getParameterContainer().getParameterValue( "observationId", null );
       final String domainComponentName = getParameterContainer().getParameterValue( "domainComponentId", null );
       final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
 
       if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
-      {
         data = new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
-      }
 
     }
     catch( final MalformedURLException e )
     {
-      throw new ConfigurationException( "URL konnte nicht aufgelöst werden: " + href, e );
+      throw new LayerProviderException( "URL konnte nicht aufgelöst werden: " + href, e );
     }
     catch( final GMLXPathException e )
     {
-      throw new ConfigurationException( "Ungültiger GML-XPATH: " + xpath, e );
+      throw new LayerProviderException( "Ungültiger GML-XPATH: " + xpath, e );
     }
     catch( final Exception e )
     {
-      throw new ConfigurationException( "GML Workspace konnte nicht geladen werden: " + xpath, e );
+      throw new LayerProviderException( "GML Workspace konnte nicht geladen werden: " + xpath, e );
     }
     return data;
   }

@@ -46,13 +46,12 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
-
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 
 /**
  * @author burtscher1
@@ -69,16 +68,16 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
 
   protected final Map<AxisCanvas, IAxis> m_axes = new HashMap<AxisCanvas, IAxis>();
 
-  protected boolean m_applyOnAllAxes = false;
+  protected boolean m_applyOnAllAxes = true;
 
   public AbstractAxisDragHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
 
     // zugehörige Achsen rausfinden
-    final IMapperRegistry reg = m_chartComposite.getChartModel().getMapperRegistry();
-    final IAxis[] axes = reg.getAxes();
-    for( final IAxis axis : axes )
+    final IMapperRegistry reg = m_chartComposite.getModel().getMapperRegistry();
+    final IAxis< ? >[] axes = reg.getAxes();
+    for( final IAxis< ? > axis : axes )
     {
       final IAxisComponent component = reg.getComponent( axis );
       if( component != null )
@@ -111,13 +110,9 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
     final AxisCanvas ac = getEventSource( e );
     final IAxis axis = m_axes.get( ac );
     if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-    {
       return e.x;
-    }
     else
-    {
       return e.y;
-    }
   }
 
   protected AxisCanvas getEventSource( final MouseEvent e )
@@ -128,16 +123,12 @@ public abstract class AbstractAxisDragHandler implements IAxisDragHandler
   public void keyPressed( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )
-    {
-      m_applyOnAllAxes = true;
-    }
+      m_applyOnAllAxes = false;
   }
 
   public void keyReleased( KeyEvent e )
   {
     if( e.keyCode == SWT.ALT )
-    {
-      m_applyOnAllAxes = false;
-    }
+      m_applyOnAllAxes = true;
   }
 }

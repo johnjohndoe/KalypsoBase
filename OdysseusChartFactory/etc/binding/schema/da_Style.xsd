@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ods="http://www.openali.de/odysseus/chartconfig/0.1.0/" targetNamespace="http://www.openali.de/odysseus/chartconfig/0.1.0/" elementFormDefault="qualified">
+    
+
+    <element name="LineStyle" type="ods:LineStyleType" />
+    <element name="PointStyle" type="ods:PointStyleType"/>
+    <element name="AreaStyle" type="ods:AreaStyleType"/>
+        
+    <complexType name="AbstractStyleType">
+        <sequence>
+            <element name="isVisible" type="boolean" minOccurs="0"></element>
+            <element name="alpha" minOccurs="0">
+                <simpleType>
+                    <restriction base="int">
+                        <minInclusive value="0"></minInclusive>
+                        <maxInclusive value="255"></maxInclusive>
+                    </restriction>
+                </simpleType>
+            </element>
+        </sequence>
+    </complexType>
+    
+    <complexType name="LineStyleType" >
+        <complexContent>
+            <extension base="ods:StrokeType">
+                <attribute name="id"  type="ID" use="required"></attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="StrokeType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                
+                
+                <sequence>
+                    <element name="width" type="int" minOccurs="0"/>  
+                    <element name="lineColor" type="ods:ColorType"  minOccurs="0"/>
+                    <element name="dashOffset" type="int" minOccurs="0"/>
+                    <element name="dashArray" minOccurs="0">
+                        <simpleType>
+                            <list itemType="int"></list>
+                        </simpleType>
+                    </element>
+                    <element name="lineCap" type="ods:LineCapType" minOccurs="0"></element>
+                    <element name="lineJoin" type="ods:LineJoinType" minOccurs="0"></element>
+                    <element name="miterLimit" type="int" minOccurs="0" />
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <simpleType name="LineJoinType">
+        <restriction base="string">
+            <enumeration value="MITER"></enumeration>
+            <enumeration value="ROUND"></enumeration>
+            <enumeration value="BEVEL"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    
+    <simpleType name="LineCapType">
+        <restriction base="string">
+            <enumeration value="BUTT"></enumeration>
+            <enumeration value="ROUND"></enumeration>
+            <enumeration value="SQUARE"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="ColorType">
+        <restriction base="string">
+            <pattern value="#[0-9a-f]{6}"></pattern>
+        </restriction>
+    </simpleType>
+    
+    
+    
+    <complexType name="PointStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="width" minOccurs="0"></element>
+                    <element name="height" minOccurs="0"></element>
+                    <element name="outlineStyle" type="ods:StrokeType" minOccurs="0"></element>
+                    <element ref="ods:marker" minOccurs="0"></element>
+                    <element name="fillColor" type="ods:ColorType" minOccurs="0"></element>
+                </sequence>
+                <attribute name="id" type="ID" use="required"></attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    
+    <element name="marker" type="ods:MarkerType"></element>
+    <element name="ovalMarker" type="ods:OvalMarkerType" substitutionGroup="ods:marker"></element>
+    <element name="imageMarker" type="ods:ImageMarkerType"  substitutionGroup="ods:marker"></element>
+    <element name="polygonMarker" type="ods:PolygonMarkerType"  substitutionGroup="ods:marker"></element>
+    
+    <complexType name="MarkerType" abstract="true"></complexType>
+    
+    <complexType name="OvalMarkerType">
+        <complexContent>
+            <extension base="ods:MarkerType"></extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="ImageMarkerType">
+        <complexContent>
+            <extension base="ods:MarkerType">
+                <sequence>
+                    <element name="path" type="anyURI"></element>
+                </sequence>        
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="PolygonMarkerType">
+        <complexContent>
+            <extension base="ods:MarkerType">
+                <sequence>
+                    <element name="Point" type="ods:PointType" minOccurs="3" maxOccurs="unbounded">
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="PointType">
+        <attribute name="x" type="int" use="required"></attribute>
+        <attribute name="y" type="int" use="required"></attribute>
+    </complexType>
+    
+    <complexType name="AreaStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="fillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="outlineStyle" type="ods:StrokeType" minOccurs="0" ></element>
+                </sequence>               
+                <attribute name="id" type="ID" use="required"></attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+</schema> 

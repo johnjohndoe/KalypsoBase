@@ -45,14 +45,13 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import org.kalypso.chart.framework.model.mapper.component.IAxisComponent;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1
@@ -96,7 +95,7 @@ public class DragPanHandler implements IChartDragHandler
     // dann pannen
     if( m_start != null )
     {
-      m_chartComposite.getChartModel().panTo( m_start, new Point( e.x, e.y ) );
+      m_chartComposite.getModel().panTo( m_start, new Point( e.x, e.y ) );
     }
 
     // dann pan resetten
@@ -126,22 +125,18 @@ public class DragPanHandler implements IChartDragHandler
 
   private void setAxisPanOffset( int panXStart, int panXEnd, int panYStart, int panYEnd )
   {
-    IMapperRegistry mapperRegistry = m_chartComposite.getChartModel().getMapperRegistry();
-    IAxis[] axes = mapperRegistry.getAxes();
-    for( IAxis axis : axes )
+    IMapperRegistry mapperRegistry = m_chartComposite.getModel().getMapperRegistry();
+    IAxis< ? >[] axes = mapperRegistry.getAxes();
+    for( IAxis< ? > axis : axes )
     {
       IAxisComponent component = mapperRegistry.getComponent( axis );
       if( component != null && component instanceof AxisCanvas )
       {
         AxisCanvas ac = (AxisCanvas) component;
         if( axis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
-        {
           ac.setPanOffsetInterval( new Point( panXStart, panXEnd ) );
-        }
         else
-        {
           ac.setPanOffsetInterval( new Point( panYStart, panYEnd ) );
-        }
       }
     }
 

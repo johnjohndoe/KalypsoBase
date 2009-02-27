@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,6 +32,20 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.chart.factory.configuration.ChartConfigurationSaver;
+import org.kalypso.chart.factory.configuration.ChartFactory;
+import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
+import org.kalypso.chart.framework.impl.model.ChartModel;
+import org.kalypso.chart.framework.impl.model.event.AbstractChartModelEventListener;
+import org.kalypso.chart.framework.impl.model.event.AbstractLayerManagerEventListener;
+import org.kalypso.chart.framework.impl.model.event.AbstractMapperRegistryEventListener;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IMapper;
+import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -37,30 +53,9 @@ import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-
-import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
-import de.openali.odysseus.chart.factory.config.ChartConfigurationSaver;
-import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
-import de.openali.odysseus.chart.factory.config.ChartFactory;
-import de.openali.odysseus.chart.factory.config.IExtensionLoader;
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractChartModelEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
-import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
-import de.openali.odysseus.chartconfig.x020.ChartType;
+import org.ksp.chart.factory.AxisType;
+import org.ksp.chart.factory.ChartConfigurationDocument;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * @author Gernot Belger
@@ -78,7 +73,7 @@ public class ChartEditor extends EditorPart implements IChartPart
 
   private ChartConfigurationLoader m_chartConfigurationLoader = null;
 
-  private ChartEditorTreeOutlinePage m_outlinePage = null;
+  private ChartEditorOutlinePage m_outlinePage = null;
 
   private boolean m_dirty = false;
 
@@ -95,9 +90,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
-    {
       throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" );
-    }
 
     setSite( site );
     setInput( input );
@@ -163,7 +156,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       m_axisDragHandler.dispose();
     }
 
-    if( m_chartComposite != null )
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
     {
       m_chartComposite.dispose();
     }
@@ -188,24 +181,21 @@ public class ChartEditor extends EditorPart implements IChartPart
 
       return;
     }
-    setDirty( false );
 
     try
     {
-
       final IFileEditorInput input = (IFileEditorInput) editorInput;
       final IFile file = input.getFile();
 
       final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( file.getCharset() );
 
-      final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getChartModel() );
+      final ChartConfigurationDocument savedConfig = ChartConfigurationSaver.createChartConfiguration( getChartComposite().getModel() );
 
       final InputStream is = savedConfig.newInputStream( options );
       file.setContents( is, false, true, monitor );
       is.close();
-      System.out.println( savedConfig.toString() );
 
-      // setDirty( false );
+      setDirty( false );
     }
     catch( final CoreException e )
     {
@@ -283,9 +273,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   public void updateControl( )
   {
     if( m_composite == null || m_composite.isDisposed() )
-    {
       return;
-    }
 
     if( m_chartModel == null )
     {
@@ -293,9 +281,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       /* Reset controls */
       final Control[] children = m_composite.getChildren();
       for( final Control control : children )
-      {
         control.dispose();
-      }
 
       if( m_chartType == null )
       {
@@ -318,7 +304,6 @@ public class ChartEditor extends EditorPart implements IChartPart
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
              */
-            @SuppressWarnings("unchecked")
             @Override
             public void onMapperRangeChanged( IMapper mapper )
             {
@@ -365,8 +350,7 @@ public class ChartEditor extends EditorPart implements IChartPart
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-            IExtensionLoader cel = ChartExtensionLoader.getInstance();
-            ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), cel, context );
+            ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), context );
           }
           // TODO: provide message to user instead of eating the exceptions.
           catch( final ConfigurationException e )
@@ -395,48 +379,20 @@ public class ChartEditor extends EditorPart implements IChartPart
             m_chartComposite = new ChartComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
             // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
-            final AxisType[] axisArray = m_chartType.getMappers().getAxisArray();
+            final AxisType[] axisArray = m_configuration.getChartConfiguration().getAxisArray();
             final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
             final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
             for( final AxisType axisType : axisArray )
             {
-              Object min = null;
-              Object max = null;
-
-              if( axisType.isSetDateRange() )
-              {
-                AxisDateRangeType range = axisType.getDateRange();
-                min = range.getMinValue();
-                max = range.getMaxValue();
-              }
-              else if( axisType.isSetDurationRange() )
-              {
-                AxisDurationRangeType range = axisType.getDurationRange();
-                min = range.getMinValue();
-                max = range.getMaxValue();
-              }
-              else if( axisType.isSetStringRange() )
-              {
-                AxisStringRangeType range = axisType.getStringRange();
-                min = range.getMinValue();
-                max = range.getMaxValue();
-              }
-              else if( axisType.isSetNumberRange() )
-              {
-                AxisNumberRangeType range = axisType.getNumberRange();
-                min = range.getMinValue();
-                max = range.getMaxValue();
-              }
-
-              if( min == null || max == null )
-              {
+              final String min = axisType.getMinVal();
+              final String max = axisType.getMaxVal();
+              if( min.trim().equals( "" ) || max.trim().equals( "" ) )
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
-              }
             }
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
 
             // TooltipHandler - meldet sich selbst an
-            new TooltipHandler( m_chartComposite );
+            final TooltipHandler eh = new TooltipHandler( m_chartComposite );
 
             // Name des Parts
             setPartName( m_chartModel.getTitle() );
@@ -462,9 +418,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_composite.layout();
 
     if( m_outlinePage != null )
-    {
       m_outlinePage.updateControl();
-    }
   }
 
   public ChartComposite getChartComposite( )
@@ -492,24 +446,32 @@ public class ChartEditor extends EditorPart implements IChartPart
     if( IContentOutlinePage.class.equals( adapter ) )
     {
       if( m_outlinePage == null )
-      {
-        m_outlinePage = new ChartEditorTreeOutlinePage( this );
-      }
+        m_outlinePage = new ChartEditorOutlinePage( this );
 
       return m_outlinePage;
     }
 
     if( ChartComposite.class.equals( adapter ) )
-    {
       return m_chartComposite;
-    }
 
     if( IChartPart.class.equals( adapter ) )
-    {
       return this;
-    }
 
     return super.getAdapter( adapter );
+  }
+
+  public void drawLegendIcon( final String id, final Image img )
+  {
+    final IChartLayer[] layers = m_chartModel.getLayerManager().getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( layer.getId().equals( id ) )
+      {
+        final Rectangle bounds = img.getBounds();
+        layer.drawIcon( img );
+        break;
+      }
+    }
   }
 
   public ChartConfigurationDocument getConfiguration( )
@@ -535,9 +497,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   protected void setDirty( final boolean dirty )
   {
     if( m_dirty == dirty )
-    {
       return;
-    }
 
     m_dirty = dirty;
     firePropertyChange( PROP_DIRTY );

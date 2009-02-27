@@ -46,10 +46,9 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.PlotCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.impl.view.PlotCanvas;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
  * @author Gernot Belger
@@ -102,7 +101,7 @@ public class DragZoomInHandler implements IChartDragHandler
       final int endY = m_mouseDragRect.y + m_mouseDragRect.height;
 
       if( Math.abs( m_mouseDragRect.width ) > 5 && Math.abs( m_mouseDragRect.height ) > 5 )
-        m_chartComposite.getChartModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
+        m_chartComposite.getModel().zoomIn( new Point( m_mouseDragRect.x, m_mouseDragRect.y ), new Point( endX, endY ) );
 
     }
     finally

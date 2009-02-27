@@ -41,8 +41,7 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.events.KeyListener;
-
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1

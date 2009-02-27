@@ -43,9 +43,8 @@ package org.kalypso.chart.ui.editor.handler;
 import java.util.Map;
 
 import org.eclipse.ui.menus.UIElement;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.ui.IChartPart;
-
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author alibu
@@ -57,9 +56,7 @@ public class HandlerHelper
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
-  @SuppressWarnings("unchecked")
-  public static void updateElement( UIElement element, @SuppressWarnings("unused")
-  Map parameters, IChartPart part, IChartDragHandler handler )
+  public static void updateElement( UIElement element, Map parameters, IChartPart part, IChartDragHandler handler )
   {
     // chart suchen, rausfinden, welches tool aktiv
     if( part != null )
@@ -69,7 +66,7 @@ public class HandlerHelper
       if( activeHandler.getClass().equals( handler.getClass() ) )
       {
         element.setChecked( true );
-        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getChartModel().getTitle() );
+        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getModel().getTitle() );
       }
       else
       {

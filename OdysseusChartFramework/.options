@@ -1,10 +1,11 @@
-de.openali.odysseus.chart.framework/level = info
-de.openali.odysseus.chart.framework/debug = true
-de.openali.odysseus.chart.framework/debug/axis = true
-de.openali.odysseus.chart.framework/debug/layer = true
-de.openali.odysseus.chart.framework/debug/plot = true
-de.openali.odysseus.chart.framework/debug/legend = true
-de.openali.odysseus.chart.framework/debug/style = true
-de.openali.odysseus.chart.framework/debug/config = true
-de.openali.odysseus.chart.framework/debug/chart = true
-de.openali.odysseus.chart.framework/debug/data = true
+org.kalypso.chart.framework/debug = true
+org.kalypso.chart.framework/debug/axis = true
+org.kalypso.chart.framework/debug/layer = true
+org.kalypso.chart.framework/debug/plot = true
+org.kalypso.chart.framework/debug/legend = true
+org.kalypso.chart.framework/debug/style = true
+org.kalypso.chart.framework/debug/config = true
+org.kalypso.chart.framework/trace = true
+org.kalypso.chart.framework/debug/chart = true
+org.kalypso.chart.framework/debug/data = true
+

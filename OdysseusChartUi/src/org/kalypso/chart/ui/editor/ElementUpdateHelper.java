@@ -45,10 +45,8 @@ import java.util.Map;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.UIElement;
+import org.kalypso.chart.framework.view.IChartDragHandler;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
  * @author burtscher1
@@ -68,26 +66,13 @@ public class ElementUpdateHelper
 
     // chart finden,
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
-
-    if( activePart == null )
-    {
-      return;
-    }
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
     if( chartPart != null )
     {
-      PlotDragHandlerDelegate plotDragHandler = chartPart.getPlotDragHandler();
-      if( plotDragHandler != null )
+      final IChartDragHandler activeHandler = chartPart.getPlotDragHandler().getActiveHandler();
+      if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
       {
-        final IChartDragHandler activeHandler = plotDragHandler.getActiveHandler();
-        if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
-        {
-          element.setChecked( true );
-        }
-        else
-        {
-          element.setChecked( false );
-        }
+        element.setChecked( true );
       }
       else
       {

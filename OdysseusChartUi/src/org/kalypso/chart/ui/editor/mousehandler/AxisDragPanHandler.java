@@ -47,14 +47,13 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.view.impl.AxisCanvas;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import org.kalypso.chart.framework.impl.model.data.ComparableDataRange;
+import org.kalypso.chart.framework.impl.view.AxisCanvas;
+import org.kalypso.chart.framework.impl.view.ChartComposite;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 
 /**
  * @author burtscher1
@@ -66,14 +65,15 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
   public AxisDragPanHandler( ChartComposite chartComposite )
   {
     super( chartComposite );
+    // TODO Auto-generated constructor stub
   }
 
   /**
    * @see org.kalypso.chart.ui.editor.mousehandler.IAxisDragHandler#setUseCurrentAxis(boolean)
    */
-  public void setUseCurrentAxis( @SuppressWarnings("unused")
-  boolean useCurrentAxis )
+  public void setUseCurrentAxis( boolean useCurrentAxis )
   {
+    // TODO Auto-generated method stub
 
   }
 
@@ -118,7 +118,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
       else
       {
         // zugehörige Layer rausfinden
-        IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
+        IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
         m_chartComposite.getPlot().setPanOffset( pannedLayers, new Point( 0, 0 ) );
 
         curAc.setPanOffsetInterval( new Point( 0, 0 ) );
@@ -196,7 +196,7 @@ public class AxisDragPanHandler extends AbstractAxisDragHandler
             curAc.setPanOffsetInterval( new Point( 0, diff ) );
 
           // zugehörige Layer rausfinden
-          IChartLayer[] pannedLayers = m_chartComposite.getChartModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
+          IChartLayer[] pannedLayers = (IChartLayer[]) m_chartComposite.getModel().getAxis2Layers().get( curAxis ).toArray( new IChartLayer[] {} );
 
           if( curAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
           {
