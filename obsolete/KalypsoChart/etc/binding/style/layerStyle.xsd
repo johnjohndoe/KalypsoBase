@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://www.ksp.org/chart/layerStyle"
+     xmlns:kcls="http://www.ksp.org/chart/layerStyle" elementFormDefault="qualified">
+
+     <element name="Style" type="kcls:StyleType">
+          <annotation>
+               <documentation> Ein Style beschreibt die elementaren Zeicheneinheiten, aus denen ein
+                    Layer besteht. Von jedem Element können mehrere Instanzen angegeben werden;
+                    diese werden dann vom Layer auf die eigene Art interpretiert. Meist hat man es
+                    pro Typ nur mit höchstens einer Ausprägung zu tun - dann wird eben nur die "im
+                    Style-Dokument oberste" Version betrachtet. </documentation>
+          </annotation>
+     </element>
+
+
+
+     <complexType name="StyleType">
+          <sequence>
+               <element ref="kcls:AbstractPoint" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcls:Line" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcls:Font" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="kcls:Polygon" minOccurs="0" maxOccurs="unbounded"/>
+          </sequence>
+          <attribute name="id" type="ID" use="required">
+               <annotation>
+                    <documentation> Eindeutiger Bezeichner innerhalb des Dokuments; wird zur
+                         Referenzierung durch die LayerStyleConnection benötigt. </documentation>
+               </annotation>
+          </attribute>
+     </complexType>
+     
+     <element name="AbstractStyledElement" type="kcls:AbstractStyledElementType"></element>
+     
+     <complexType name="AbstractStyledElementType">
+          <sequence>
+               <element name="Alpha" type="byte" minOccurs="0">
+                    <annotation>
+                         <documentation>
+                              Der Alpha-Wert bestimmt die Durchsichtigkeit des Elements als Byte; 0 ist unsichtbar,
+                              255 ist vollkommen undurchsichtig
+                         </documentation>
+                    </annotation>
+               </element>
+          </sequence>
+     </complexType>
+
+     <element name="AbstractPoint" type="kcls:AbstractPointType" abstract="true"/>
+
+
+
+     <complexType name="AbstractPointType" abstract="true">
+          <annotation>
+               <documentation> Abstrakter Punkttyp; besteht lediglich aus Breite und Höhe
+               </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:AbstractStyledElementType">
+                    <sequence>
+                         <element name="PointWidth" type="int" minOccurs="1" maxOccurs="1"/>
+                         <element name="PointHeight" type="int" minOccurs="1" maxOccurs="1"/>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+
+     <element name="Point" substitutionGroup="kcls:AbstractPoint" type="kcls:PointType"/>
+
+     <complexType name="PointType">
+          <annotation>
+               <documentation> Definiert eine ovale Form mit Hintergrundfarbe und Umrandung soll
+               </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:AbstractPointType">
+                    <sequence>
+                         <element name="Border" type="kcls:BorderType"/>
+                         <element name="Color" type="kcls:ColorType"/>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+
+     <complexType name="ImagePointType">
+          <annotation>
+               <documentation> Definiert eine Grafik, die anstelle eines Punktes angezeigt werden
+                    soll </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:AbstractPointType">
+                    <sequence>
+                         <element name="src" type="anyURI">
+                              <annotation>
+                                   <documentation> anyURI trifft es nicht genau, ist aber besser als
+                                        string; hier soll der Dateipfad oder die URL der Bilddatei
+                                        rein. </documentation>
+                              </annotation>
+                         </element>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="PolylinePointType">
+          <annotation>
+               <documentation> Definiert eine Polyline, die anstelle eines Punktes angezeigt wird;
+                    Beispielsweise ein Rechteck oder "das Haus vom Nikolaus";
+               </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:AbstractPointType">
+                    <sequence>
+                         <element ref="kcls:Line"/>
+                         <element name="Coord" minOccurs="2" maxOccurs="unbounded">
+                              <annotation>
+                                   <documentation> Die Koordinaten werden auf die Breite und Höhe
+                                        des Punktes normalisiert </documentation>
+                              </annotation>
+                              <complexType>
+                                   <sequence>
+                                        <element name="x" type="int"/>
+                                        <element name="y" type="int"/>
+                                   </sequence>
+                              </complexType>
+                         </element>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+     <complexType name="PolygonPointType">
+          <annotation>
+               <documentation> Definiert ein Polygon, die anstelle eines Punktes angezeigt wird
+               </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:PolylinePointType">
+                    <sequence>
+                         <element name="FillColor" type="kcls:ColorType" minOccurs="0">
+                              <annotation>
+                                   <documentation> Die Füllfarbe des Polygons </documentation>
+                              </annotation>
+                         </element>
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+
+     <element name="Line" type="kcls:LineType"/>
+     <element name="Border" type="kcls:BorderType"/>
+
+     <complexType name="BorderType">
+          <annotation>
+               <documentation>repräsentiert eine GrenzLinie um ein Element</documentation>
+          </annotation>
+          <sequence>
+               <element name="BorderWidth" type="int" minOccurs="1" maxOccurs="1"/>
+               <element name="BorderColor" type="kcls:ColorType"/>
+          </sequence>
+     </complexType>
+
+     <complexType name="LineType">
+          <annotation>
+               <documentation>repräsentiert eine Linie; im Unterschied zum BorderType kann auch ein
+               LineStyle vergeben werden, der die Linie durchgezogen, gestrichelt, etc. zeichnet 
+               </documentation>
+          </annotation>
+          <complexContent>
+               <extension base="kcls:AbstractStyledElementType">
+          <sequence>
+               <element name="LineWidth" type="int" minOccurs="1" maxOccurs="1"/>
+               <element name="LineStyle" type="kcls:LineStyleType"/>
+               <element name="LineColor" type="kcls:ColorType"/>
+          </sequence>
+          </extension>
+          </complexContent>
+     </complexType>
+
+
+     <simpleType name="LineStyleType">
+          <annotation>
+               <documentation> beschreibt die Art, wie eine Linie gezeichnet wird; durchgezogen,
+                    gepunktet, gestrichelt; die Enumeration entspricht den Möglichkeiten von SWT
+               </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="SOLID"/>
+               <enumeration value="DOT"/>
+               <enumeration value="DASH"/>
+               <enumeration value="DASHDOT"/>
+               <enumeration value="DASHDOTDOT"/>
+          </restriction>
+     </simpleType>
+
+
+     <simpleType name="ColorType">
+          <restriction base="hexBinary">
+               <length value="3"></length>
+          </restriction>
+     </simpleType>
+     
+     <simpleType name="StringColorType">
+          <restriction base="string">
+               <enumeration value="RED"></enumeration>
+               <enumeration value="WHITE"></enumeration>
+               <enumeration value="BLUE"></enumeration>
+               <enumeration value="BLACK"></enumeration>
+               <enumeration value="MAGENTA"></enumeration>
+               <enumeration value="GREEN"></enumeration>
+               <enumeration value="YELLOW"></enumeration>
+          </restriction>
+     </simpleType>
+
+
+     <element name="Font" type="kcls:FontType"/>
+     <complexType name="FontType">
+               <complexContent>
+                    <extension base="kcls:AbstractStyledElementType">
+          <sequence>
+               <element name="FontFamily" type="string" minOccurs="1" maxOccurs="unbounded">
+                    <annotation>
+                         <documentation> Darf beliebig oft vorkommen; wenn die erste Schriftart
+                              nicht gefunden wird, wird einfach die nächste verwendet
+                         </documentation>
+                    </annotation>
+               </element>
+               <element name="FontColor" type="kcls:ColorType"/>
+               <element name="FontSize" type="int"/>
+               <element name="FontStyle" type="kcls:FontStyleType"/>
+          </sequence>
+               </extension>
+               </complexContent>
+     </complexType>
+
+     <simpleType name="FontStyleType">
+          <annotation>
+               <documentation> orientiert sich an den FontData-Styles von SWT </documentation>
+          </annotation>
+          <restriction base="string">
+               <enumeration value="normal"/>
+               <enumeration value="bold"/>
+               <enumeration value="italic"/>
+          </restriction>
+     </simpleType>
+
+     <element name="Polygon" type="kcls:PolygonType"/>
+     <complexType name="PolygonType">
+          <complexContent>
+               <extension base="kcls:AbstractStyledElementType">
+          <sequence>
+               <element ref="kcls:FillColor"></element>
+               <element ref="kcls:Border" minOccurs="0"></element>
+          </sequence>
+          </extension>
+          </complexContent>
+     </complexType>
+     
+     <element name="FillColor" type="kcls:ColorType"></element>
+
+</schema>
