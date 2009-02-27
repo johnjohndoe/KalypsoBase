@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-api.jar" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-impl.jar" sourcepath="jwsdp/jaxb/lib/jaxb-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxrpc/lib/jaxrpc-spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/relaxngDatatype.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/xsdlib.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/saaj/lib/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/saaj/lib/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/sax.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xalan.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/xercesImpl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxb/lib/jaxb1-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxp/lib/endorsed/jaxp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/jsr173_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/sjsxp/lib/sjsxp.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/fastinfoset/lib/FastInfoset.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxws/lib/jaxws-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxws/lib/jaxws-rt.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxws/lib/jaxws-tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxws/lib/jsr181-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jaxws/lib/jsr250-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/jaas.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/jta-spec1_0_1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/resolver.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/jwsdp-shared/lib/xmlsec.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xmldsig/lib/xmldsig.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/keyexport.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/pkcs12import.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/security-plugin.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/wss-provider-update.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/xws-security_jaxrpc.jar"/>
+	<classpathentry exported="true" kind="lib" path="jwsdp/xws-security/lib/xws-security.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>

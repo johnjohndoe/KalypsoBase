@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- 
+  This file is used to point to the wsdl location and also to
+  specify the pakcage name you want to use for the generated source 
+-->
+
+<configuration xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
+  <wsdl location="Specify the wsdl location here"
+      packageName="Specify the package name to be used for the
+      generated stubs here"/>
+</configuration> 
