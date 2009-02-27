@@ -1,0 +1,117 @@
+<?xml version="1.0"?> 
+
+<!--
+ Copyright 2003 Sun Microsystems, Inc. All rights reserved.
+ SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+
+<!-- Use the following doctypedecl for DTD aware editing
+<!DOCTYPE project PUBLIC "-//ANT//DTD project//EN" "project.dtd">
+-->
+
+<!-- ===================================================================
+
+		    Ant build file for example program
+
+This is a build file for use with the Ant build tool.  See
+http://jakarta.apache.org/ant/index.html for more info.  This build.xml
+file has been tested with Ant version 1.4.1.
+
+To compile and run this sample, you may need to execute one of the
+following commands:
+
+    % ant
+
+  Note:
+  This script defines properties named jaxp.lib and jaxp.endorsed that
+  point to the directories containing the necessary jar files. Should
+  you need to, you can modify those properties by executing a command 
+  like this: 
+    % ant -Djaxp.lib=<some_dir>  -Djaxp.endorsed=<some_dir>
+    
+  For more information, see the samples.html and release notes documents
+  that came as part of the download bundle.
+   
+======================================================================== -->
+
+<project name="SAXLocalNameCount" default="main" basedir=".">
+
+  <!-- jaxp.lib points to the directory containing the JAXP API jar file -->
+  <property name="jaxp.lib" value="../../lib"/>
+
+  <!-- jaxp.endorsed points to the JAXP directory containing jar files
+       related to the Endorsed API Override Mechanism. -->
+  <property name="jaxp.endorsed" value="../../lib/endorsed"/>
+  
+  <property name="debug" value="on"/>
+
+  <!-- Load User Defined Properties -->
+  <property file="build.properties"/>
+
+  <!-- Set the classpath. Include the RI jar files for versions of the
+       Java platform prior to 1.4. 
+    -->
+  <path id="project-classpath">
+    <pathelement location="."/>
+    <pathelement location="${jaxp.lib}/jaxp-api.jar"/>
+    <pathelement location="${jaxp.endorsed}/sax.jar"/>
+    <pathelement location="${jaxp.endorsed}/dom.jar"/>
+    <pathelement location="${jaxp.endorsed}/xercesImpl.jar"/>
+    <pathelement location="${jaxp.endorsed}/xalan.jar"/>
+    <pathelement location="${jaxp.endorsed}/xsltc.jar"/>
+  </path>
+
+  <target name="init">
+    <!-- For use with a doctypedecl, see above for an example -->
+    <antstructure output="project.dtd"/>
+  </target>
+
+  <!-- Compile the example program -->
+  <target name="compile">
+    <javac includeantruntime="no" debug="${debug}" srcdir=".">
+      <classpath refid="project-classpath"/>
+    </javac>
+  </target>
+  
+  <!-- Run the example program with sample input files.  Note, when this
+       target is executed, ant may prefix the output with "[java]".  Run
+       the program with "java" directly to avoid this. -->
+  <target name="run">
+    <echo>java SAXLocalNameCount -dtd ../data/book-order.xml</echo>
+    <java classname="SAXLocalNameCount" fork="yes">
+      <jvmarg value="-Djava.endorsed.dirs=${jaxp.endorsed}"/>
+      <arg value="-dtd" />
+      <arg value="../data/book-order.xml" />
+      <classpath refid="project-classpath" />
+    </java>
+
+    <echo>========</echo>
+    <echo>java SAXLocalNameCount ../data/namespace.xml</echo>
+    <java classname="SAXLocalNameCount" fork="yes">
+      <jvmarg value="-Djava.endorsed.dirs=${jaxp.endorsed}"/>
+      <arg value="../data/namespace.xml" />
+      <classpath refid="project-classpath" />
+    </java>
+
+    <echo>========</echo>
+    <echo>java SAXLocalNameCount -xsdss ../data/personal.xsd ../data/personal-schema.xml
+    </echo>
+    <java classname="SAXLocalNameCount" fork="yes">
+      <jvmarg value="-Djava.endorsed.dirs=${jaxp.endorsed}"/>
+      <arg value="-xsdss"/>
+      <arg value="../data/personal.xsd"/>
+      <arg value="../data/personal-schema.xml"/>
+      <classpath refid="project-classpath" />
+    </java>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="." includes="*.class" />
+    </delete>
+  </target>
+
+  <target name="main" depends="compile,run" />
+
+</project>

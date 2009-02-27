@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.kalypso.jwsdp"
+   name="JWSDPInstallation for Kalypso"
+   version="1.4"
+   provider-name="kalypso.org">
+   <runtime>
+      <library name="kalypsoJWSDP.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxb/lib/jaxb-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxb/lib/jaxb-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxb/lib/jaxb-libs.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxb/lib/jaxb-xjc.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxrpc/lib/jaxrpc-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxrpc/lib/jaxrpc-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxrpc/lib/jaxrpc-spi.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/activation.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/jax-qname.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/mail.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/namespace.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/relaxngDatatype.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jwsdp-shared/lib/xsdlib.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/saaj/lib/saaj-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/saaj/lib/saaj-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxp/lib/jaxp-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxp/lib/endorsed/dom.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxp/lib/endorsed/sax.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxp/lib/endorsed/xalan.jar">
+         <export name="*"/>
+      </library>
+      <library name="jwsdp/jaxp/lib/endorsed/xercesImpl.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+</plugin>

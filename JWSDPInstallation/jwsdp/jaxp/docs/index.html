@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Java API for XML Processing RI 1.2.6 -- Readme</title>
+  <link rel="stylesheet" type="text/css" href="style/default.css" />
+</head>
+
+<body>
+<h1>Java<sup><font size="-2">TM</font></sup> API for XML Processing<br />
+README</h1>
+
+<center>
+<b>Specification Version:</b> 1.2<br />
+<b>Reference Implementation (RI) Version:</b> 1.2.6<br />
+</center>
+
+<p>The Java API for XML Processing (JAXP) enables applications to parse and
+transform XML documents using an API that is independent of a particular XML
+processor implementation. This version of the reference implementation uses
+<a href="http://xml.apache.org/xerces2-j/">Xerces 2</a>, as its default XML
+parser and <a href="http://xml.apache.org/xalan-j/index.html">Xalan</a> as
+its default XSLT engine. However, the pluggable architecture of JAXP allows
+any conformant implementations to be used. Using this software, application
+and tool developers can build fully-functional XML-enabled Java applications
+for e-commerce, application integration, and web publishing.</p>
+
+<p>Please note the difference between the <em>specification</em> and the
+<em>implementation</em> versions. This describes version 1.2.6
+of the Reference <em>Implementation</em> (RI). Future bug fix releases of the
+RI will be of the form 1.2.x. The JAXP <em>Specification</em>
+version number remains at 1.2.</p>
+
+<p>The JAXP 1.2 specification is a maintenance release of JAXP 1.1 and adds
+support for W3C XML Schema. The JAXP 1.1 specification adds additional
+functionality over the previous version 1.0. In particular, version 1.1
+includes an XSLT framework based on TrAX (Transformation API for XML) plus
+some updates to the parsing API to support DOM Level 2 and SAX version 2.0
+and an improved scheme to locate pluggable implementations.</p>
+
+<p>For the most current information on this software, please see <a
+href="http://java.sun.com/xml/jaxp">http://java.sun.com/xml/jaxp</a>.</p>
+
+<h2>Conformance</h2>
+
+<p>This release aims to be conformant to the following specifications:</p>
+<ul>
+  <li><a href="http://java.sun.com/xml/jaxp/change-requests-11.html">JAXP 1.2
+    maintenance release of JAXP 1.1 JSR-63 </a></li>
+  <li><a href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 Second
+    Edition</a></li>
+  <li><a href="http://www.w3.org/TR/1999/REC-xml-names-19990114">XML
+    Namespaces</a></li>
+  <li><a href="http://www.saxproject.org/">SAX 2.0</a></li>
+  <li><a href="http://www.saxproject.org/">SAX2 Extensions version
+  1.0</a></li>
+  <li><a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113">DOM
+    Level 2 Core Recommendation</a></li>
+  <li><a href="http://www.w3.org/TR/1999/REC-xslt-19991116">XSLT 1.0</a></li>
+</ul>
+<a name="documentation" id="documentation"></a> 
+
+<h2>Documentation</h2>
+At this time, the documentation for this release consists of: 
+<ul>
+  <li><a href="ReleaseNotes.html">Release notes</a></li>
+  <li><a href="../../docs/api/index.html">Javadoc API documentation</a></li>
+  <li><a href="samples.html">JAXP samples</a></li>
+  <li><a href="http://xml.apache.org/xerces2-j/samples.html">Xerces2 parser
+    samples</a></li>
+  <li><a href="http://xml.apache.org/xalan-j/samples.html">Xalan XSLT
+    processor samples</a></li>
+  <li><a href="http://java.sun.com/xml/jaxp/faq.html">JAXP FAQ</a></li>
+</ul>
+<a name="license" id="license"></a> 
+
+<h2>Software Licenses</h2>
+
+<p>The software under the package hierarchies beginning with
+<code>org.w3c.dom</code> is covered by the <a href="License-W3C.html">W3C
+Software License</a>. All of the remaining software in this distribution is
+covered by the <a href="License-ASF">Apache Software Foundation
+License</a>.</p>
+<a name="source" id="source"></a> 
+
+<h2>Source Code</h2>
+
+<p>Source code for this release is available at the <a
+href="http://xml.apache.org/">Apache XML Project</a>.</p>
+<a name="feedback" id="feedback"></a> 
+
+<h2>XML Discussion Forums and Feedback</h2>
+
+<p>For better response to general problems with XML or XSLT, please use the
+following discussion forums.</p>
+
+<p>Sun hosts one discussion list and a one-way announcement list:</p>
+<ul>
+  <li><a href="http://forum.java.sun.com/forum.jsp?forum=34">The Java
+    Developer Connection (JDC) Forum on Java Technology &amp; XML</a>: for
+    general discussions about XML</li>
+  <li>xml-announce@java.sun.com: a low volume one-way mailing list for Sun
+    announcements to the community about XML developments. (To subscribe, go
+    to <a href="http://java.sun.com/xml">http://java.sun.com/xml</a> and
+    follow the directions listed there.)</li>
+</ul>
+
+<p>Some other useful discussion forums not hosted by Sun are:</p>
+<ul>
+  <li>Various <a href="http://xml.apache.org/mail.html">Apache XML mailing
+    lists</a> on parsing, XSL, and other topics. Apache lists are the
+    recommended location to post questions on the JAXP RI since the
+    implementation components originate from there.</li>
+  <li><a href="http://www.xml.org/xml-dev/index.shtml">xml-dev</a>: for
+    general XML technical discussions</li>
+  <li><a href="http://www.mulberrytech.com/xsl/xsl-list/index.html">Mulberry
+    Tech XSL list</a> for technical discussions on XSL</li>
+</ul>
+
+<p>Bugs can be reported to <a
+href="http://developer.java.sun.com/developer/bugParade/">Bug Parade</a>
+under the category <code>JAXP</code>. Feedback on this software may be sent
+to the <a
+href="mailto:xml-feedback@java.sun.com">xml-feedback@java.sun.com</a> mailing
+address; however, due to the volume of mail received, you may not get an
+immediate response. This address is not a subscribe-able mailing list.</p>
+</body>
+</html>

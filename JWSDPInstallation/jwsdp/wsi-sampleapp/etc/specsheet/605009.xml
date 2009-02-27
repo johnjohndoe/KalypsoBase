@@ -1,0 +1,12 @@
+<Specsheet
+	xmlns="http://www.ws-i.org/SampleApplications/SupplyChainManagement/2003-10/Specsheet.xsd">
+	<Color>Silver</Color>
+	<DVDSpecs>
+		<Power>Europe and Asia-Pacific</Power>
+		<Progressive>true</Progressive>
+		<Formats>DVD, DVD-R/RW, CD-R/RW, VCD, SVCD, MP3, JPEG Picture Playback</Formats>
+		<ScreenSaver>true</ScreenSaver>
+		<OpticalOutput>true</OpticalOutput>
+		<ParentalLock>true</ParentalLock>
+	</DVDSpecs>
+</Specsheet>

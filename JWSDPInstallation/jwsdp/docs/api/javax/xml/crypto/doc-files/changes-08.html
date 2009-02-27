@@ -1,0 +1,205 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sean Mullan">
+   <meta name="GENERATOR" content="Mozilla/4.79C-CCK-MCD  [en] (X11; U; SunOS 5.7 sun4u) [Netscape]">
+</head>
+<body>
+
+<center>
+<h3>
+JSR 105 API changes since Community Review</h3></center>
+
+<h4>
+JSR 105 v0.9 API&nbsp;Changes</h4>
+
+<h4>
+General</h4>
+
+<ol>
+<li>
+Added new sample program to demonstrate signing SOAP&nbsp;messages with
+SAAJ and JSR 105.</li>
+
+<li>
+Tweaked DOM provider requirements to reflect API changes below.</li>
+</ol>
+
+<h4>
+javax.xml.crypto</h4>
+
+<ol>
+<li>
+Removed <tt>MarshalInput</tt> and <tt>MarshalOutput</tt> interfaces. The
+functionality has been moved to mechanism-specific context classes (see
+subsequent changes).</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dom</h4>
+
+<ol>
+<li>
+Added new <tt>DOMIdMap</tt> interface for mapping Element/ID pairs.</li>
+
+<li>
+Added new <tt>DOMValidateContext</tt> class to hold DOM-specific validation
+context parameters.</li>
+
+<li>
+Added new <tt>DOMSignContext</tt> class to hold DOM-specific sign context
+parameters.</li>
+
+<li>
+Removed <tt>DOMMarshalInput</tt> class (parameters have been folded into
+new <tt>DOMValidateContext</tt> class)</li>
+
+<li>
+Removed <tt>DOMMarshalOutput</tt> class (parameters have been folded into
+new <tt>DOMSignContext</tt> class)</li>
+
+<li>
+State that a <tt>DOMStructure</tt>'s node is cloned into a target document
+before a signature is generated.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig</h4>
+
+<ol>
+<li>
+Removed the <tt>XMLSignatureFactory.newXMLSignature(SignedInfo) </tt>method
+as it is not deemed to be a common use-case.</li>
+
+<li>
+Removed the <tt>DEFAULT_NS_PREFIX</tt> constants from the <tt>XMLSignature</tt>
+class because it was not deemed to be very useful for applications.</li>
+
+<li>
+Removed <tt>Manifest.generate()</tt> method as it is not strictly necessary.</li>
+
+<li>
+Changed <tt>XMLSignContext</tt> and <tt>XMLValidateContext</tt> from classes
+to interfaces.</li>
+
+<li>
+Changed <tt>sign</tt> and <tt>validate</tt> methods of <tt>XMLSignature</tt>
+to throw <tt>ClassCastException</tt> if context type is invalid.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.keyinfo</h4>
+
+<ol>
+<li>
+Removed <tt>KeyInfo.marshal() </tt>method - since it is not strictly necessary
+and removed an API dependency on the <tt>MarshalOutput</tt> class, which
+has been removed.</li>
+
+<li>
+Removed <tt>KeyInfoFactory.unmarshalKeyInfo() </tt>method - since it is
+not strictly necessary and removed an API dependency on the <tt>MarshalInput</tt>
+class, which has been removed.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.spec</h4>
+
+<ol>
+<li>
+Removed the <tt>DEFAULT_NS_PREFIX</tt> constants from the <tt>ExcC14NParameterSpec</tt>
+and <tt>XPathFilter2ParameterSpec</tt> classes because they were not deemed
+to be very useful for applications.</li>
+</ol>
+
+<h4>
+
+<hr WIDTH="100%">JSR 105 v0.8 API&nbsp;Changes</h4>
+
+<h4>
+General</h4>
+
+<ol>
+<li>
+Created a new <tt>javax.xml.crypto </tt>package containing common classes
+applicable to JSR 105 and JSR 106. Moved the following classes to
+<tt>javax.xml.crypto</tt>
+: <tt>Data</tt>, <tt>KeySelector</tt>,
+<tt>KeySelectorException</tt>, <tt>KeySelectorResult</tt>,
+<tt>MarshalInput</tt>,
+<tt>MarshalOutput</tt>, <tt>MarshalException</tt>,
+<tt>NodeSetData</tt>,
+<tt>OctetStreamData</tt>, <tt>URIDereferencer</tt>,
+<tt>URIReference</tt>,
+<tt>URIReferenceException</tt>, and <tt>XMLStructure</tt>.
+Moved the <tt>javax.xml.dsig</tt> packages under the new <tt>javax.xml.crypto</tt>
+package.</li>
+
+<li>
+In the DOM Mechanism Requirements section of the API overview, clarified
+that a <tt>DOMMarshalInput</tt> type should contain an <tt>Element</tt>
+of type <tt>Signature</tt> or <tt>KeyInfo</tt>.</li>
+</ol>
+
+<h4>
+javax.xml.crypto</h4>
+
+<ol>
+<li>
+Added new <tt>XMLCryptoContext</tt> class representing common context information
+for signing or encryption. Changed <tt>URIDereferencer.dereference() </tt>and
+<tt>KeySelector.select()
+</tt>context parameter type from <tt>XMLSignatureContext</tt> to <tt>XMLCryptoContext</tt>.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig</h4>
+
+<ol>
+<li>
+Clarified that <tt>Reference.ValidateResult.status() </tt>returns the result
+of comparing the digest values.</li>
+
+<li>
+Added a <tt>getURIDereferencer</tt> method to the <tt>XMLSignatureFactory</tt>
+class that returns the default <tt>URIDereferencer</tt>.</li>
+
+<li>
+Clarified that <tt>XMLSignatureContext.setURIDereferencer() </tt>overrides
+an implementation's default <tt>URIDereferencer</tt>.</li>
+
+<li>
+Removed <tt>XMLSignatureContext</tt> class (replaced by more generic <tt>XMLCryptoContext</tt>
+class) and changed <tt>XMLSignContext</tt> and <tt>XMLValidateContext</tt>
+classes to implement <tt>XMLCryptoContext</tt>.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dom</h4>
+
+<ol>
+<li>
+Added <tt>getElement</tt> and <tt>putElement</tt> methods to the <tt>DOMMarshalOutput</tt>
+class for registering elements by ID.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.keyinfo</h4>
+
+<ol>
+<li>
+Added a <tt>dereference</tt> method to the <tt>RetrievalMethod</tt> class.
+This allows a user to more easily write a <tt>KeySelector</tt> implementation
+that supports <tt>RetrievalMethod</tt> keyinfo types.</li>
+
+<li>
+Added a <tt>getURIDereferencer</tt> method to the <tt>KeyInfoFactory</tt>
+class that returns the default <tt>URIDereferencer</tt>.</li>
+</ol>
+
+<h4>
+javax.xml.crypto.dsig.spec</h4>
+
+</body>
+</html>
