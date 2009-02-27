@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://www.ksp.org/chart/tableConfiguration"
+     xmlns:kctc="http://www.ksp.org/chart/tableConfiguration" elementFormDefault="qualified" >
+
+<element name="Table" type="kctc:TableType"/>
+
+<complexType name="TableType">
+     <annotation>
+          <documentation>
+               definiert die Spalten einer Tabelle, die als HTML-Tabelle vom ODS abgerufen werden kann
+          </documentation>
+     </annotation>
+	<sequence>
+	     <element name="TableProvider" type="string" minOccurs="1" maxOccurs="1">
+	          <annotation>
+	               <documentation>
+	                    ID des TableProviders, der die Daten in eine Tabelle umwandeln soll
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="TableClass" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Name der CSS-Klasse, die für die Tabelle verwendet wird; dieser Parameter
+	                    zeigt seine Wirkung nur in Verbindung mit einem entsprechenden CSS-Style,
+	                    der im HTML-Dokument referenziert wird
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="Title" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Titel der Tabelle
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="TitleClass" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Name der CSS-Klasse, die für den Titel der Tabelle verwendet wird 
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="Abstract" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Beschreibung zum Tabelleninhalt
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="AbstractClass" type="string" minOccurs="0">
+	          <annotation>
+	               <documentation>
+	                    Name der CSS-Klasse, die für den Abstract verwendet wird 
+	               </documentation>
+	          </annotation>
+	     </element>
+	     <element name="DataSource" type="kctc:DataSourceType" />
+	     <element ref="kctc:Component" maxOccurs="unbounded">
+	          <annotation>
+	               <documentation>
+	                    Eine Component ist eine Spalte, die in der Tabelle angezeigt werden soll.
+	               </documentation>
+	          </annotation>
+	     </element>
+	</sequence>
+	<attribute name="name" type="ID" use="required"></attribute>
+</complexType>
+
+
+     <complexType name="DataSourceType">
+          <annotation>
+               <documentation>
+                    die URL oder der Dateipfad zur Observation-Datei
+                    sowie die id der zu verwendenden Observation
+               </documentation>
+          </annotation>
+          <sequence>
+               <element name="Url" type="anyURI"></element>
+               <element name="Id" type="string"></element>
+          </sequence>
+     </complexType>
+
+     <element  name="Component" type="kctc:ComponentType"></element>
+
+     <complexType name="ComponentType">
+          <sequence>
+               <element name="Name" type="string" minOccurs="1" maxOccurs="1">
+                    <annotation>
+                         <documentation>
+                             Über den Namen wird die gewünschte Spalte des ObservationResults definiert.
+                             Der Name muss dem Namen der Procedure des ResultItems entsprechen. 
+                         </documentation>
+                    </annotation>
+               </element>
+               <element name="ComponentClass" type="string" minOccurs="0" maxOccurs="1">
+                    <annotation>
+                         <documentation>
+                              Name der CSS-Klasse, die für die Komponente verwendet wird; dieser Parameter
+                              zeigt seine Wirkung nur in Verbindung mit einem entsprechenden CSS-Style,
+                              der im HTML-Dokument referenziert wird
+                         </documentation>
+                    </annotation>
+               </element>
+               <element name="Header" type="string" minOccurs="0" maxOccurs="1">
+                    <annotation>
+                         <documentation>
+                              Der optionale Header wird in der Kopfzeile der Tabelle angezeigt. Wird er nicht
+                              angegeben, wird der Eintrag im Name-Feld des ResultItems verwendet
+                         </documentation>
+                    </annotation>
+               </element>
+               <element name="HeaderClass" type="string" minOccurs="0" maxOccurs="1">
+                    <annotation>
+                         <documentation>
+                              Name der CSS-Klasse, die für die HeaderZeile verwendet wird; dieser Parameter
+                              zeigt seine Wirkung nur in Verbindung mit einem entsprechenden CSS-Style,
+                              der im HTML-Dokument referenziert wird
+                         </documentation>
+                    </annotation>
+               </element>
+          </sequence>
+     </complexType>
+     
+     <element name="DateComponent" type="kctc:DateComponentType" substitutionGroup="kctc:Component">
+          <annotation>
+               <documentation>
+                    Eine DateComponent bietet ein zusätzliches Feld zur Angabe eines Datum-Format-Strings,
+                    z.B. dd.MM.yyyy HH:mm 
+               </documentation>
+          </annotation>
+     </element>
+     
+     <complexType name="DateComponentType">
+          <complexContent>
+               <extension base="kctc:ComponentType">
+                    <sequence>
+                         <element name="DateFormat" type="string" /> 
+                    </sequence>
+               </extension>
+          </complexContent>
+     </complexType>
+
+</schema>

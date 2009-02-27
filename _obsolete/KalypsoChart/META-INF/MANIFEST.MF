@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoChart Plug-in
+Bundle-SymbolicName: org.kalypso.chart; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.swtchart.KalypsoChartPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.jwsdp,
+ org.eclipse.core.runtime,
+ org.kalypso.contribs.eclipsercp,
+ org.kalypso.core,
+ org.eclipse.core.resources
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.swtchart,
+ org.kalypso.swtchart.chart,
+ org.kalypso.swtchart.chart.axis,
+ org.kalypso.swtchart.chart.axis.component,
+ org.kalypso.swtchart.chart.axis.provider,
+ org.kalypso.swtchart.chart.axis.registry,
+ org.kalypso.swtchart.chart.axis.renderer,
+ org.kalypso.swtchart.chart.layer,
+ org.kalypso.swtchart.chart.layer.impl,
+ org.kalypso.swtchart.chart.legend,
+ org.kalypso.swtchart.chart.mouse,
+ org.kalypso.swtchart.chart.styles,
+ org.kalypso.swtchart.chart.util,
+ org.kalypso.swtchart.configuration,
+ org.kalypso.swtchart.configuration.parameters,
+ org.kalypso.swtchart.configuration.parameters.impl,
+ org.kalypso.swtchart.exception,
+ org.kalypso.swtchart.logging,
+ org.kalypso.swtchart.math,
+ org.kalypso.swtchart.table,
+ org.ksp.chart.configuration,
+ org.ksp.chart.layerstyle

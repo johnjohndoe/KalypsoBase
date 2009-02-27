@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ChartBaseExtensions Plug-in
+Bundle-SymbolicName: org.kalypso.chart.ext.base;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Export-Package: org.kalypso.chart.ext.base.axis,
+ org.kalypso.chart.ext.base.axis.provider,
+ org.kalypso.chart.ext.base.axisrenderer,
+ org.kalypso.chart.ext.base.axisrenderer.provider,
+ org.kalypso.chart.ext.base.data,
+ org.kalypso.chart.ext.base.layer,
+ org.kalypso.chart.ext.base.layer.provider,
+ org.kalypso.chart.ext.base.style,
+ org.kalypso.chart.ext.base.style.provider
+Require-Bundle: org.kalypso.contribs.java,
+ org.kalypso.chart.factory;visibility:=reexport
+Bundle-Vendor: kalypso.sourceforge.net

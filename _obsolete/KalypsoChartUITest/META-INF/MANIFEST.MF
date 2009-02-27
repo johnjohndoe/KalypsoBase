@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoChartUITest Plug-in
+Bundle-SymbolicName: org.kalypso.chart.ui.test;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: kalypso.org
+Require-Bundle: org.kalypso.chart.ui

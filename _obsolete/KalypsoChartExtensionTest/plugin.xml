@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.kalypso.chart.factory.AxisRendererProvider">
+      <provider
+            class="org.kalypso.chart.ext.test.axisrenderer.provider.TmpNumberAxisRendererProvider"
+            id="org.kalypso.chart.ext.test.axisrenderer.provider.TmpNumberAxisRendererProvider">
+      </provider>
+   </extension>
+   <extension
+         point="org.kalypso.chart.factory.LayerProvider">
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider"
+            id="org.kalypso.chart.ext.test.EditableLineLayerProvider">
+      </provider>
+   </extension>
+
+</plugin>
