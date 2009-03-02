@@ -50,6 +50,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.security.auth.Subject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
@@ -63,6 +66,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.ietf.jgss.GSSCredential;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
@@ -192,7 +196,14 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     // final String factory = "SGE" // for kaiserslautern
 
     final String sandBoxDir = m_workingDir.getName().getBaseName();
-
+    
+    // use current security credential for grid submission
+    final Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
+    final Set creds = currentSubject.getPrivateCredentials();
+    GSSCredential credential = null; 
+    if( creds.size() >= 1 )
+      credential = (GSSCredential) creds.iterator().next();
+    
     final GDIJobProperties props = new GDIJobProperties();
     props.addPreference( "gdi.targethostname", targetHostName );
     props.addPreference( "gdi.executable", "./" + exeBaseName );
@@ -204,6 +215,7 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     props.addPreference( "gdi.queue", queue );
     props.addPreference( "gdi.sandboxdir", sandBoxDir );
     props.addPreference( "gdi.environment", m_environment );
+    props.addPreference( "gdi.credential", credential );
     m_job.setProps( props );
 
     m_monitor.subTask( String.format( "Submitting grid job to server %s.", targetHostName ) );
