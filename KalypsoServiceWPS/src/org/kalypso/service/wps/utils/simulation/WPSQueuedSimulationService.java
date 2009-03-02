@@ -59,11 +59,8 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
@@ -287,26 +284,7 @@ public class WPSQueuedSimulationService
       final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
       tmpdir.deleteOnExit();
 
-      final String resultDirectoryName = tmpdir.getName();
-
-      FileObject resultDir = null;
-      try
-      {
-        if( m_resultSpace != null )
-        {
-          final FileSystemManager manager = VFSUtilities.getManager();
-          final FileObject resultRoot = manager.resolveFile( m_resultSpace );
-          resultRoot.createFolder();
-          resultDir = resultRoot.resolveFile( resultDirectoryName );
-          resultDir.createFolder();
-        }
-      }
-      catch( final FileSystemException e )
-      {
-        throw new SimulationException( "Error resolving the result directory for this job", e);
-      }
-
-      cjt = new WPSSimulationThread( "" + id, description, typeID, job, execute, processDescription, tmpdir, resultDir );
+      cjt = new WPSSimulationThread( "" + id, description, typeID, job, execute, processDescription, tmpdir, m_resultSpace );
       m_threads.put( "" + id, cjt );
 
       /* Need the description and the result directory. */
@@ -384,7 +362,6 @@ public class WPSQueuedSimulationService
         disposeJob( jobInfo.getId() );
       }
     }
-
     super.finalize();
   }
 

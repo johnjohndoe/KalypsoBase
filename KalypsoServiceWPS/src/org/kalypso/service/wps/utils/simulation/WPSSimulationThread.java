@@ -128,13 +128,14 @@ public class WPSSimulationThread extends Thread
    * @param resultDir
    *          The job can put his results here.
    */
-  public WPSSimulationThread( String id, String description, String typeID, ISimulation job, Execute execute, ProcessDescriptionType processDescription, File tmpDir, FileObject resultDir ) throws SimulationException
+  public WPSSimulationThread( String id, String description, String typeID, ISimulation job, Execute execute, ProcessDescriptionType processDescription, File tmpDir, String resultSpace ) throws SimulationException
   {
+    super( "WPS-SimulationThread (" + typeID + ")-" + id );
     m_job = job;
     m_tmpDir = tmpDir;
 
     m_inputData = new WPSSimulationDataProvider( execute, m_tmpDir );
-    m_resultEater = new WPSSimulationResultEater( processDescription, execute, tmpDir, resultDir );
+    m_resultEater = new WPSSimulationResultEater( processDescription, execute, tmpDir, resultSpace );
     m_jobInfo = new WPSSimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
 
     /* Check, if the required input is available. */
