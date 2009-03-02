@@ -69,6 +69,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -261,6 +262,7 @@ public class NonBlockingWPSRequest
       // decide between local and remote invocation
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
+	    FileObject resultFile = null;
         try
         {
           /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
@@ -270,7 +272,7 @@ public class NonBlockingWPSRequest
 
           /* Prepare the execute response. */
           final FileObject resultDir = manager.getResultDir( info.getId() );
-          final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+		  resultFile = resultDir.resolveFile( "executeResponse.xml" );
           final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
           final StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
           executeResponse = OGCUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs, m_outputDefinitions, null, statusLocation, OGCUtilities.VERSION );
@@ -286,6 +288,18 @@ public class NonBlockingWPSRequest
         catch( final OWSException e )
         {
           throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+        }
+        finally
+        {
+          if( resultFile != null )
+            try
+            {
+              resultFile.close();
+            }
+            catch( final FileSystemException e )
+            {
+              // gobble
+            }
         }
       }
       else

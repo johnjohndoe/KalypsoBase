@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,11 @@ import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -191,6 +196,8 @@ public class WPSRequest
       return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
     }
 
+    StandardFileSystemManager manager = null;
+    FileObject statusFile = null;
     try
     {
       Debug.println( "Checking state file of the server ..." );
@@ -204,12 +211,13 @@ public class WPSRequest
       final ProcessDescriptionType processDescription = getProcessDescription( monitor );
       final String title = processDescription.getTitle();
       monitor.setTaskName( "Warte auf Prozess " + title );
+
+      manager = VFSUtilities.getNewManager();
       while( run )
       {
-        final FileObject statusFile = VFSUtilities.checkProxyFor( statusLocation );
-
         // TODO: at least put parsing of status file in a separate method to reduce the size of this one;
         // maybe use same method to handle first status?
+        statusFile = VFSUtilities.checkProxyFor( statusLocation, manager );
         if( statusFile.exists() )
         {
           final JAXBElement<ExecuteResponseType> executeState = waitForExecuteResponse( statusFile );
@@ -317,6 +325,22 @@ public class WPSRequest
     {
       status = StatusUtilities.statusFromThrowable( e );
     }
+    finally
+    {
+      if( statusFile != null )
+      {
+        try
+        {
+          statusFile.close();
+        }
+        catch( final FileSystemException e )
+        {
+          // gobble
+        }
+      }
+      if( manager != null )
+        manager.close();
+    }
 
     return status;
   }
@@ -332,9 +356,12 @@ public class WPSRequest
     JAXBElement<ExecuteResponseType> executeState = null;
     while( success == false )
     {
+      final FileContent content = statusFile.getContent();
+      InputStream inputStream = null;
       try
       {
-        final String xml = MarshallUtilities.fromInputStream( statusFile.getContent().getInputStream() );
+        inputStream = content.getInputStream();
+        final String xml = MarshallUtilities.fromInputStream( inputStream );
         final Object object = MarshallUtilities.unmarshall( xml );
         executeState = (JAXBElement<ExecuteResponseType>) object;
 
@@ -359,6 +386,11 @@ public class WPSRequest
 
         /* Wait for some milliseconds. */
         Thread.sleep( 1000 );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( inputStream );
+        statusFile.close();
       }
     }
 

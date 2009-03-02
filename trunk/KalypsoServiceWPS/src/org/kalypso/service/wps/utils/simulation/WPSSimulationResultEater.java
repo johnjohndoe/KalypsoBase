@@ -70,8 +70,8 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
@@ -87,6 +87,8 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class WPSSimulationResultEater implements ISimulationResultEater
 {
+  private final StandardFileSystemManager m_vfsManager;
+
   /**
    * The process descriptions are containing the output data.
    */
@@ -140,18 +142,29 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * @param resultDir
    *          The FileObject contains information, where the results should be put, so that the client can read them.
    */
-  public WPSSimulationResultEater( final ProcessDescriptionType processDescription, final Execute execute, final File tmpDir, final FileObject resultDir ) throws SimulationException
+  public WPSSimulationResultEater( final ProcessDescriptionType processDescription, final Execute execute, final File tmpDir, final String resultSpace ) throws SimulationException
   {
     m_processDescription = processDescription;
     m_execute = execute;
     m_tmpDir = tmpDir;
-    m_resultDir = resultDir;
     m_results = new LinkedHashMap<String, IOValueType>();
     m_references = new LinkedHashMap<File, FileObject>();
 
     m_outputList = index( m_processDescription );
     m_outputListClient = indexClient( m_execute );
 
+    try
+    {
+      m_vfsManager = VFSUtilities.getNewManager();
+      final String resultDirectoryName = tmpDir.getName();
+      final FileObject resultRoot = m_vfsManager.resolveFile( resultSpace );
+      m_resultDir = resultRoot.resolveFile( resultDirectoryName );
+      m_resultDir.createFolder();
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException( "Error resolving the result directory for this job", e );
+    }
     checkExpectedOutput();
   }
 
@@ -177,7 +190,8 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     final Object valueFormChoice;
     if( complexOutput != null )
     {
-      if( result instanceof URI ) {
+      if( result instanceof URI )
+      {
         final URI urlResult = (URI) result;
         valueFormChoice = OGCUtilities.buildComplexValueReference( urlResult.toString(), null, null, null );
       }
@@ -249,7 +263,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   public List<IOValueType> getCurrentResults( ) throws SimulationException
   {
-    FileSystemManager manager = getFileSystemManager();
+    checkResultDir();
 
     // copy all source files (references) to their destination
     for( final File sourceFile : m_references.keySet() )
@@ -258,7 +272,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       try
       {
         /* Converting the source file to a file object from VFS. */
-        final FileObject source = manager.toFileObject( sourceFile );
+        final FileObject source = m_vfsManager.toFileObject( sourceFile );
         if( FileType.FOLDER.equals( source.getType() ) )
         {
           /* Directory copy. */
@@ -291,19 +305,15 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    */
   private ComplexValueReference addComplexValueReference( final File sourceFile ) throws SimulationException
   {
-    final FileSystemManager manager = getFileSystemManager();
+    checkResultDir();
 
     try
     {
-      /* Resolving the result file object. */
-      if( m_resultDir == null )
-        throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
-
       /* Getting the relative path to the source file. */
       final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
       if( relativePathToSource == null )
         throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
-      final FileObject destination = manager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
+      final FileObject destination = m_vfsManager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
 
       // keep track of file references
       m_references.put( sourceFile, destination );
@@ -315,6 +325,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       throw new SimulationException( "Could not add ComplexValueReference for file " + sourceFile, e );
     }
+  }
+
+  private void checkResultDir( ) throws SimulationException
+  {
+    /* Resolving the result file object. */
+    if( m_resultDir == null )
+      throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
   }
 
   /**
@@ -332,19 +349,6 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
     /* Build the complex value. */
     return OGCUtilities.buildComplexValueType( null, null, null, value );
-  }
-
-  private FileSystemManager getFileSystemManager( ) throws SimulationException
-  {
-    /* Get a file system manager. */
-    try
-    {
-      return VFSUtilities.getManager();
-    }
-    catch( final FileSystemException e )
-    {
-      throw new SimulationException( "Could not get FileSystemManager", e );
-    }
   }
 
   /**
@@ -452,6 +456,15 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   public void dispose( )
   {
     m_references.clear();
+    try
+    {
+      m_resultDir.close();
+    }
+    catch( final FileSystemException e )
+    {
+      // gobble
+    }
+    m_vfsManager.close();
     /* The result data will not be deleted, because the client must get the chance to copy them. */
   }
 

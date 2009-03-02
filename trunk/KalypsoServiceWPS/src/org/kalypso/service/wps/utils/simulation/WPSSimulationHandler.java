@@ -98,6 +98,7 @@ public class WPSSimulationHandler extends Thread
    */
   public WPSSimulationHandler( WPSQueuedSimulationService service, String jobID, Execute execute )
   {
+    super("WPS-SimulationHandler");
     m_service = service;
     m_jobID = jobID;
     m_execute = execute;
@@ -218,20 +219,22 @@ public class WPSSimulationHandler extends Thread
   private synchronized void createExecuteResponse( StatusType status, List<IOValueType> ioValues ) throws Exception
   {
     /* Prepare the execute response. */
-    FileObject resultFile = m_service.getResultDir( m_jobID ).resolveFile( "executeResponse.xml" );
-    String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
+    final FileObject resultDir = m_service.getResultDir( m_jobID );
+    final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+    final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
 
     ProcessOutputs processOutputs = null;
     if( ioValues != null )
       processOutputs = OGCUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
 
-    ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, OGCUtilities.VERSION );
-    JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+    final ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, OGCUtilities.VERSION );
+    final JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
 
     /* Marshall it into one XML string. */
-    String xml = MarshallUtilities.marshall( executeResponse );
+    final String xml = MarshallUtilities.marshall( executeResponse );
 
     /* Copy the execute response to this url. */
     VFSUtilities.copyStringToFileObject( xml, resultFile );
+    resultFile.close();
   }
 }
