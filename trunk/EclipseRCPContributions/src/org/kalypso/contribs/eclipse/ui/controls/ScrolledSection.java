@@ -65,6 +65,8 @@ public class ScrolledSection
 
   protected final int m_sectionStyle;
 
+  private Composite m_composite;
+
   public ScrolledSection( final Composite parent, final FormToolkit toolkit, final int sectionStyle, final boolean scrolledBody )
   {
     m_parent = parent;
@@ -78,6 +80,14 @@ public class ScrolledSection
     return m_scrolledForm;
   }
 
+  public Composite getBody( )
+  {
+    if( m_scrolledBody )
+      return m_scrolledForm;
+    else
+      return m_composite;
+  }
+
   public Section getSection( )
   {
     return m_section;
@@ -86,22 +96,30 @@ public class ScrolledSection
   public void reflow( )
   {
     if( m_scrolledBody )
+    {
       m_scrolledForm.reflow( true );
+    }
 
   }
 
   public void setDescription( final String description )
   {
     if( description != null )
+    {
       m_section.setDescription( description );
+    }
   }
 
   protected void setLayout( final GridData secLayoutExpanded, final GridData secLayoutCollapsed )
   {
     if( m_section.isExpanded() )
+    {
       m_section.setLayoutData( secLayoutExpanded );
+    }
     else
+    {
       m_section.setLayoutData( secLayoutCollapsed );
+    }
   }
 
   public Composite setup( final String title, final GridData secLayoutExpanded, final GridData secLayoutCollapsed )
@@ -135,10 +153,10 @@ public class ScrolledSection
     }
     else
     {
-      final Composite composite = m_toolkit.createComposite( m_section );
-      m_section.setClient( composite );
+      m_composite = m_toolkit.createComposite( m_section );
+      m_section.setClient( m_composite );
 
-      return composite;
+      return m_composite;
     }
   }
 }
