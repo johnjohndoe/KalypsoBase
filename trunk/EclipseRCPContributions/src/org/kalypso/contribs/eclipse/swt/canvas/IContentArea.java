@@ -66,9 +66,15 @@ public interface IContentArea extends MouseListener
 
   public void setImage( final Image image );
 
+  public void setDisabledImage( final Image image );
+
   public void setHoverImage( final Image image );
 
   public void setText( final String text, final Font textFont, final Color textColor, final int textPosition );
+
+  public void setEnabled( boolean state );
+
+  public boolean isEnabled( );
 
   /**
    * @return hover state changed?

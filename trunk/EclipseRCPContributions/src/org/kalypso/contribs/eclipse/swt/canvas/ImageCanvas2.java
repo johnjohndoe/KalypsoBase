@@ -80,9 +80,7 @@ public class ImageCanvas2 extends Canvas
       public void paintControl( final PaintEvent e )
       {
         if( myCanvas.isDisposed() )
-        {
           return;
-        }
 
         for( final IContentArea area : m_contents )
         {
@@ -102,9 +100,7 @@ public class ImageCanvas2 extends Canvas
       public void mouseMove( final MouseEvent e )
       {
         if( myCanvas.isDisposed() )
-        {
           return;
-        }
 
         boolean changed = false;
 
@@ -113,7 +109,7 @@ public class ImageCanvas2 extends Canvas
 
         for( final IContentArea area : m_contents )
         {
-          if( area.hasMouseListener() )
+          if( area.hasMouseListener() && area.isEnabled() )
           {
             final Rectangle boundingBox = area.getBoundingBox();
             if( boundingBox.contains( e.x, e.y ) )
@@ -164,9 +160,7 @@ public class ImageCanvas2 extends Canvas
           if( area.hasMouseListener() )
           {
             if( myCanvas.isDisposed() )
-            {
               return;
-            }
 
             final Rectangle boundingBox = area.getBoundingBox();
             if( boundingBox.contains( e.x, e.y ) )
