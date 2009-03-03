@@ -80,6 +80,10 @@ public abstract class DefaultContentArea implements IContentArea
 
   private boolean m_hover;
 
+  private boolean m_enabled = true;
+
+  private Image m_disabledImage;
+
   public DefaultContentArea( )
   {
   }
@@ -97,17 +101,25 @@ public abstract class DefaultContentArea implements IContentArea
   {
     final Point point = getContentAreaAnchorPoint();
 
-    if( m_image != null )
+    if( isEnabled() )
     {
-      /* draw image */
-      if( m_hover && m_hoverImage != null )
+      if( m_image != null )
       {
-        e.gc.drawImage( m_hoverImage, point.x, point.y );
+        /* draw image */
+        if( m_hover && m_hoverImage != null )
+        {
+          e.gc.drawImage( m_hoverImage, point.x, point.y );
+        }
+        else
+        {
+          e.gc.drawImage( m_image, point.x, point.y );
+        }
       }
-      else
-      {
-        e.gc.drawImage( m_image, point.x, point.y );
-      }
+    }
+    else if( m_disabledImage != null )
+    {
+      /* draw disabled image */
+      e.gc.drawImage( m_disabledImage, point.x, point.y );
     }
 
     /* draw text */
@@ -257,9 +269,7 @@ public abstract class DefaultContentArea implements IContentArea
   public boolean hasMouseListener( )
   {
     if( m_mouseAdapter == null )
-    {
       return false;
-    }
 
     return true;
   }
@@ -279,10 +289,11 @@ public abstract class DefaultContentArea implements IContentArea
   @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
-    if( m_mouseAdapter != null )
-    {
-      m_mouseAdapter.mouseDoubleClick( e );
-    }
+    if( isEnabled() )
+      if( m_mouseAdapter != null )
+      {
+        m_mouseAdapter.mouseDoubleClick( e );
+      }
   }
 
   /**
@@ -291,10 +302,11 @@ public abstract class DefaultContentArea implements IContentArea
   @Override
   public void mouseDown( final MouseEvent e )
   {
-    if( m_mouseAdapter != null )
-    {
-      m_mouseAdapter.mouseDown( e );
-    }
+    if( isEnabled() )
+      if( m_mouseAdapter != null )
+      {
+        m_mouseAdapter.mouseDown( e );
+      }
   }
 
   /**
@@ -303,10 +315,11 @@ public abstract class DefaultContentArea implements IContentArea
   @Override
   public void mouseUp( final MouseEvent e )
   {
-    if( m_mouseAdapter != null )
-    {
-      m_mouseAdapter.mouseUp( e );
-    }
+    if( isEnabled() )
+      if( m_mouseAdapter != null )
+      {
+        m_mouseAdapter.mouseUp( e );
+      }
   }
 
   /**
@@ -315,7 +328,7 @@ public abstract class DefaultContentArea implements IContentArea
   @Override
   public boolean hover( final boolean hover )
   {
-    if( m_hover != hover )
+    if( m_hover != hover && m_enabled )
     {
       m_hover = hover;
 
@@ -323,5 +336,32 @@ public abstract class DefaultContentArea implements IContentArea
     }
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.canvas.IContentArea#isEnabled()
+   */
+  @Override
+  public boolean isEnabled( )
+  {
+    return m_enabled;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.canvas.IContentArea#setEnabled(boolean)
+   */
+  @Override
+  public void setEnabled( final boolean state )
+  {
+    m_enabled = state;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.swt.canvas.IContentArea#setDisabledImage(org.eclipse.swt.graphics.Image)
+   */
+  @Override
+  public void setDisabledImage( final Image image )
+  {
+    m_disabledImage = image;
   }
 }
