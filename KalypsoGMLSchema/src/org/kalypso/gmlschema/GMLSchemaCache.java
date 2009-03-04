@@ -56,7 +56,7 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 /**
  * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer URL) lokal in einem File-Cache
  * gespeichert und dann zusätzlich noch im Speicher gehalten.
- *
+ * 
  * @author schlienger
  */
 public class GMLSchemaCache
@@ -91,7 +91,7 @@ public class GMLSchemaCache
 
   /**
    * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
-   *
+   * 
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
@@ -132,10 +132,12 @@ public class GMLSchemaCache
       {
         Debug.CATALOG.printf( "Check for modification of: %s%n", schemaURL );
         validity = lastModified( schemaURL );
-        sw.setLastModifiedCheck(currentMillis);
+        sw.setLastModifiedCheck( currentMillis );
       }
       else
+      {
         validity = null;
+      }
 
       // We have an already loaded schema; use it, if the current validity is same (or older) the the last one
       // or if either the old or the current validity could not be determined
@@ -152,7 +154,6 @@ public class GMLSchemaCache
 
     try
     {
-
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaURL );
       final Date validity = lastModified( schemaURL );
       m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, currentMillis ) );
@@ -241,7 +242,7 @@ public class GMLSchemaCache
 
   /**
    * Clears the cache. Schematas will be reloaded after this operation.
-   *
+   * 
    * @param onlyMemoryCache
    *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */
