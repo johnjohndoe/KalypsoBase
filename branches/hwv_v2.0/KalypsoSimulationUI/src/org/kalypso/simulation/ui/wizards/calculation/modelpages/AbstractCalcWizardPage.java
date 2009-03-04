@@ -1029,8 +1029,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         {
           if( evt.getType() == ObsViewEvent.TYPE_ITEM_DATA_CHANGED )
           {
-            final Display display = getShell().getDisplay();
-            if( !display.isDisposed() )
+            final Shell shell = getShell();
+            final Display display = shell == null ? null : shell.getDisplay();
+            if( display != null && !display.isDisposed() )
               display.asyncExec( m_updateButtonsRunnable );
           }
         }
