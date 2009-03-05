@@ -54,6 +54,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
+    if( m_data == null )
+      return;
+    
     final List<Point> path = new ArrayList<Point>();
 
     m_data.open();
@@ -97,9 +100,17 @@ public class TupleResultLineLayer extends AbstractLineLayer
    */
   public IDataRange<Number> getDomainRange( )
   {
+    if( m_data == null )
+      return null;
+    
     IDataRange dataRange = m_data.getDomainRange();
-    IDataOperator dop = getDomainAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
+    Object min = dataRange.getMin();
+    Object max = dataRange.getMax();
+    if( min == null || max == null )
+      return null;
+    
+    IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
 
@@ -108,9 +119,17 @@ public class TupleResultLineLayer extends AbstractLineLayer
    */
   public IDataRange<Number> getTargetRange( )
   {
+    if( m_data == null )
+      return null;
+    
     IDataRange dataRange = m_data.getTargetRange();
-    IDataOperator dop = getTargetAxis().getDataOperator( dataRange.getMin().getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( dataRange.getMin() ), dop.logicalToNumeric( dataRange.getMax() ) );
+    Object min = dataRange.getMin();
+    Object max = dataRange.getMax();
+    if( min == null || max == null )
+      return null;
+
+    IDataOperator dop = getTargetAxis().getDataOperator( max.getClass() );
+    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
 
