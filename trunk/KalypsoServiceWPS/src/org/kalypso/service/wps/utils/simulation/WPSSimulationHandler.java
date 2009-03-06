@@ -98,7 +98,7 @@ public class WPSSimulationHandler extends Thread
    */
   public WPSSimulationHandler( WPSQueuedSimulationService service, String jobID, Execute execute )
   {
-    super("WPS-SimulationHandler");
+    super( "WPS-SimulationHandler" );
     m_service = service;
     m_jobID = jobID;
     m_execute = execute;
@@ -165,10 +165,19 @@ public class WPSSimulationHandler extends Thread
         sleep( 2000 );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      // TODO ProcessFailed...!!!
-      e.printStackTrace();
+      try
+      {
+        // cancel job
+        m_service.cancelJob( m_jobID );
+        createProcessFailedExecuteResponse( e.getLocalizedMessage() );
+      }
+      catch( final Exception e1 )
+      {
+        // TODO: what to do now??
+        e1.printStackTrace();
+      }
     }
     finally
     {
