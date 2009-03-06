@@ -1,6 +1,10 @@
 package org.kalypso.service.wps;
 
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -30,6 +34,10 @@ public class Activator extends Plugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+    // TODO: try to do this some other way
+    //workaround to force loading of marshall utilities in this place
+    final InputStream inputStream = MarshallUtilities.getInputStream( "" );
+    IOUtils.closeQuietly( inputStream );
   }
 
   /**
