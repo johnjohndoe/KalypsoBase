@@ -64,6 +64,8 @@ import org.kalypso.service.wps.utils.ogc.OGCNamespacePrefixMapper;
  */
 public class MarshallUtilities
 {
+  private static final OGCNamespacePrefixMapper NAMESPACE_PREFIX_MAPPER = new OGCNamespacePrefixMapper();
+  
   /**
    * Context for marshalling and unmarshalling.
    */
@@ -72,7 +74,7 @@ public class MarshallUtilities
   /**
    * The constructor.
    */
-  public MarshallUtilities( )
+  private MarshallUtilities( )
   {
   }
 
@@ -91,7 +93,7 @@ public class MarshallUtilities
 
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new OGCNamespacePrefixMapper() );
+    m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
 
     /* Marshall ... */
     m.marshal( object, sw );
