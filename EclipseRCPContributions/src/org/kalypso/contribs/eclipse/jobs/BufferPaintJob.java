@@ -172,6 +172,13 @@ public class BufferPaintJob extends Job
     }
     catch( final CoreException ce )
     {
+      // REMARK: We translate every error to an warning, to avoid the error-dlg popup.
+      // Especially for buffered layers this is needed, as we can have multiple thread running at once, producing lots
+      // of error output
+      final IStatus status = ce.getStatus();
+      if( status.matches( IStatus.ERROR ) )
+        return StatusUtilities.cloneStatus( status, IStatus.WARNING );
+
       return ce.getStatus();
     }
     catch( final Throwable t )

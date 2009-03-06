@@ -479,4 +479,28 @@ public final class StatusUtilities
     }
   }
 
+  /**
+   * Creates a copy of the given status, changeing its severity to the given one.<br>
+   * As the severity of a {@link MultiStatus} is defined by the severity of its children, the severities of all children
+   * of the cloned status are set to the given status.
+   *
+   * @param One
+   *          of {@link IStatus#OK}, ...
+   */
+  public static IStatus cloneStatus( final IStatus status, final int severity )
+  {
+    if( status.isMultiStatus() )
+    {
+      final IStatus[] children = status.getChildren();
+      final IStatus[] newChildren = new IStatus[children.length];
+
+      for( int i = 0; i < children.length; i++ )
+        newChildren[i] = cloneStatus( children[i], severity );
+
+      return new MultiStatus( status.getPlugin(), status.getCode(), newChildren, status.getMessage(), status.getException() );
+    }
+
+    return new Status( severity, status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
+  }
+
 }
