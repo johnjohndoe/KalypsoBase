@@ -45,8 +45,11 @@ import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.server.operations.DescribeProcess;
+import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
 import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
@@ -58,6 +61,8 @@ import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
  */
 public class WPSSimulationManager
 {
+  private static final String WPS_MAX_NUM_THREADS = "org.kalypso.service.wps.maxNumThreads";
+
   /**
    * The simulations will be handled here.
    */
@@ -73,7 +78,21 @@ public class WPSSimulationManager
    */
   private WPSSimulationManager( )
   {
-    m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), 1, 2000, FileUtilities.TMP_DIR );
+    int maxNumThreads = 1;
+    final String property = System.getProperty( WPS_MAX_NUM_THREADS );
+    if( !"".equals( property ) )
+    {
+      try
+      {
+        maxNumThreads = Integer.parseInt( property );
+      }
+      catch( final NumberFormatException e )
+      {
+        Activator.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "%s does not specify a valid maximum number of threads: %s.", WPS_MAX_NUM_THREADS, property ) );
+      }
+    }
+    Debug.println( "Setting maximum number of threads to " + maxNumThreads );
+    m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), maxNumThreads, 2000, FileUtilities.TMP_DIR );
   }
 
   /**
