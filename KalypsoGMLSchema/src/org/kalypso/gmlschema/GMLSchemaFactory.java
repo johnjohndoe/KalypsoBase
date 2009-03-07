@@ -190,7 +190,7 @@ public class GMLSchemaFactory
       // we must decide for the first schema, which gml version it is
       // if we have no appinfo, default to gml2?
 
-      version = parsedGmlVersion == null ? "2.1.2" : parsedGmlVersion;
+      version = parsedGmlVersion == null ? "3.1.1" : parsedGmlVersion;
     }
     else
       version = gmlVersion;
