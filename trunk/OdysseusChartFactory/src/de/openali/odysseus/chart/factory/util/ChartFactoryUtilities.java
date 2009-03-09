@@ -28,7 +28,10 @@ public class ChartFactoryUtilities
     }
     catch( MalformedURLException e )
     {
-      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + context.toString() + "', '" + path + "'" );
+      String contextString = "";
+      if (context!=null)
+         contextString=contextString.toString();
+      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + contextString + "', '" + path + "'" );
     }
     return null;
   }
