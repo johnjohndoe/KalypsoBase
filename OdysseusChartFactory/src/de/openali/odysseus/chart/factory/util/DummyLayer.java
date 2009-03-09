@@ -47,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -54,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
@@ -311,7 +313,18 @@ public class DummyLayer implements IChartLayer
    */
   public ILegendEntry[] getLegendEntries( )
   {
-    return new ILegendEntry[0];
+    LegendEntry le = new LegendEntry(this, m_description)
+    {
+
+      
+      @Override
+      public void paintSymbol( GC gc, Point size )
+      {
+        //nothing to do
+      }
+      
+    };
+    return new ILegendEntry[]{le};
   }
 
   /**
