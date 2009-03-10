@@ -96,11 +96,6 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     // hack:
     // deegree-bug gazetteer provides gml:box instead of gml:Box
     // (doemming)
-    if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
-    {
-      local = "Box";
-      qname = qname.replaceFirst( BOX_STRING, "Box" );
-    }
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
@@ -115,6 +110,11 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         local = "innerBoundaryIs";
         qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
       }
+    }
+    else if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
+    {
+      local = "Box";
+      qname = qname.replaceFirst( BOX_STRING, "Box" );
     }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
@@ -133,11 +133,6 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   @SuppressWarnings("unchecked")
   public void endElement( final String uri, String local, String qname ) throws SAXException
   {
-    if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
-    {
-      local = "Box";
-      qname = qname.replaceFirst( BOX_STRING, "Box" );
-    }
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
@@ -153,6 +148,12 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
         qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
       }
     }
+    else if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
+    {
+      local = "Box";
+      qname = qname.replaceFirst( BOX_STRING, "Box" );
+    }
+    
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
     m_unmarshallerHandler.endElement( uri, local, qname );
