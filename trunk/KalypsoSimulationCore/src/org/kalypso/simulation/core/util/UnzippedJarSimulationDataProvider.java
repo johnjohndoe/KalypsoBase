@@ -43,128 +43,45 @@ package org.kalypso.simulation.core.util;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 import javax.activation.DataHandler;
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
-import org.kalypso.simulation.core.simspec.DataType;
 
 /**
  * @author belger
  */
-public class UnzippedJarSimulationDataProvider implements ISimulationDataProvider
+public class UnzippedJarSimulationDataProvider extends JarSimulationDataProvider implements ISimulationDataProvider
 {
-  private final UrlUtilities m_urlUtitilies = new UrlUtilities();
-
-  private final DataHandler m_zipHandler;
-
-  private final Map<String, String> m_idhash;
-
   private URL m_baseURL;
 
   private File m_tmpdir;
 
-  private static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
-
-  private final ModelspecData m_modelspec;
-
   /**
    * @param modelspec
-   *            The modelspec of the simulation. Used to determine the type of each input. If null, the default type is
-   *            URL for backwards compability.
+   *          The modelspec of the simulation. Used to determine the type of each input. If null, the default type is
+   *          URL for backwards compability.
    */
   public UnzippedJarSimulationDataProvider( final DataHandler zipHandler, final ModelspecData modelspec, final SimulationDataPath[] input )
   {
-    m_zipHandler = zipHandler;
-    m_modelspec = modelspec;
-
-    // wir interessieren uns nur für id->pfad
-    m_idhash = indexInput( input );
+    super( zipHandler, modelspec, input );
   }
 
+  @Override
   public void dispose( )
   {
     if( m_tmpdir != null )
       FileUtilities.deleteRecursive( m_tmpdir );
   }
 
-  /** Parse the input data and put it into the hash. */
-  private Map<String, String> indexInput( final SimulationDataPath[] input )
-  {
-    final Map<String, String> index = new HashMap<String, String>( input.length );
-    for( final SimulationDataPath bean : input )
-      index.put( bean.getId(), bean.getPath() );
-
-    return index;
-  }
-
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.job.ICalcDataProvider#getURLForID(java.lang.String)
-   */
-  public Object getInputForID( final String id ) throws SimulationException
-  {
-    final String path = m_idhash.get( id );
-    if( path == null )
-      throw new NoSuchElementException( "Eingabedaten nicht vorhanden mit ID: " + id );
-
-    final DataType inputType = m_modelspec == null ? null : m_modelspec.getInput( id );
-    final QName type = inputType == null ? QNAME_ANY_URI : inputType.getType();
-
-    if( type.equals( QNAME_ANY_URI ) )
-    {
-      try
-      {
-        final URL baseURL = getBaseURL();
-        return m_urlUtitilies.resolveURL( baseURL, path );
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-
-        throw new SimulationException( "Ungültiger Pfad in Eingangsdaten", e );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-
-        throw new SimulationException( "Konnte Eingangsdaten nicht lesen", e );
-      }
-    }
-    else if( type.getNamespaceURI().equals( NS.XSD_SCHEMA ) )
-    {
-      final String localPart = type.getLocalPart();
-      // TODO: maybe better to use type registry to parse the values
-      // draw back: this would introduce a dependency on KalypsoGMLSchema
-      if( "string".equals( localPart ) )
-        return DatatypeConverter.parseString( path );
-      else if( "int".equals( localPart ) )
-        return DatatypeConverter.parseInt( path );
-      else if( "double".equals( localPart ) )
-        return DatatypeConverter.parseDouble( path );
-      else if( "boolean".equals( localPart ) )
-        return DatatypeConverter.parseBoolean( path );
-    }
-
-    throw new SimulationException( "Unbekannter Typ für 'path':" + type, null );
-  }
-
-  private URL getBaseURL( ) throws IOException
+  @Override
+  protected URL getBaseURL( ) throws IOException
   {
     if( m_baseURL == null )
     {
@@ -172,7 +89,7 @@ public class UnzippedJarSimulationDataProvider implements ISimulationDataProvide
       if( tmpdir == null )
         return null;
 
-      m_baseURL = tmpdir.toURL();
+      m_baseURL = tmpdir.toURI().toURL();
     }
 
     return m_baseURL;
@@ -205,14 +122,6 @@ public class UnzippedJarSimulationDataProvider implements ISimulationDataProvide
     }
 
     return m_tmpdir;
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcDataProvider#hasID(java.lang.String)
-   */
-  public boolean hasID( final String id )
-  {
-    return m_idhash.containsKey( id );
   }
 
 }
