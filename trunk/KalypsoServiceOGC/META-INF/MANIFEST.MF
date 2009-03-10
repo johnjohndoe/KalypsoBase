@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons;bundle-version="0.0.1";visibility:=reexport,
  org.eclipse.equinox.http.registry;bundle-version="1.0.100"
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.service.ogc,
+Export-Package: net.opengeospatial.ows,
+ org.kalypso.service.ogc,
  org.kalypso.service.ogc.exception
 Import-Package: javax.servlet,
  javax.servlet.http
