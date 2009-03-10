@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  AdvancedSimple version of the feature collection example. Show the different types of possibilities to reference sub-features.  -->
+<xs:schema targetNamespace="org.kalypso.gml.snippets.featureCollection_advanced" xmlns="org.kalypso.gml.snippets.featureCollection_advanced"
+		xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema">
+		<xs:annotation>
+				<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+						<!-- Force gml version via kalypso specific appinfo. -->
+						<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+				</xs:appinfo>
+		</xs:annotation>
+
+		<!-- Import GML-Schema: schemaLocation not specified, gml-namespace is known to kalypso-catalog -->
+		<xs:import namespace="http://www.opengis.net/gml" />
+
+		<xs:element name="AdvancedCollection" substitutionGroup="gml:_Feature">
+				<xs:complexType>
+						<xs:complexContent>
+								<xs:extension base="gml:AbstractFeatureType">
+										<xs:sequence>
+												<!--  Possibility 1: Inline forced. No links allowed. -->
+												<xs:element name="memberInline" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+																<!-- minOccurs="1" forces the element to be defined inline. -->
+																<xs:sequence minOccurs="1">
+																		<xs:element ref="SimpleSubFeature" />
+																</xs:sequence>
+														</xs:complexType>
+												</xs:element>
+												<!--  Possibility 2: Link forced. No inline features allowed. -->
+												<xs:element name="memberLinked" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+																<!-- With minOccurs="0" and maxOccurs="0" no element can be defined here. -->
+																<!-- The element reference is still needed however, as it is the HACK of kalypso
+																		to determine the type of the referenced feature. Without, any feature would be allowed. -->
+																<xs:sequence minOccurs="0" maxOccurs="0">
+																		<xs:element ref="SimpleSubFeature" />
+																</xs:sequence>
+																<!-- This attribute group defines an xlink to another feature. -->
+																<xs:attributeGroup ref="gml:AssociationAttributeGroup"></xs:attributeGroup>
+														</xs:complexType>
+												</xs:element>
+												<!--  Possibility 3: Inline or link mixed. -->
+												<xs:element name="memberMixed" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+																<!-- The element reference is optional [0..1], so either an element or
+																		an xlink may be used. Both is possible (in xml) but not allowed according to gml practice. -->
+																<xs:sequence minOccurs="0" maxOccurs="1">
+																		<xs:element ref="SimpleSubFeature" />
+																</xs:sequence>
+																<!-- This attribute group defines an xlink to another feature. -->
+																<xs:attributeGroup ref="gml:AssociationAttributeGroup"></xs:attributeGroup>
+														</xs:complexType>
+												</xs:element>
+										</xs:sequence>
+								</xs:extension>
+						</xs:complexContent>
+				</xs:complexType>
+		</xs:element>
+
+		<!-- Definition of the members of the above collection. Just a simple feature. -->
+		<xs:element name="SimpleSubFeature" substitutionGroup="gml:_Feature">
+				<xs:complexType>
+						<xs:complexContent>
+								<xs:extension base="gml:AbstractFeatureType">
+										<xs:sequence>
+												<xs:element name="value" type="xs:double" />
+										</xs:sequence>
+								</xs:extension>
+						</xs:complexContent>
+				</xs:complexType>
+		</xs:element>
+
+
+</xs:schema>
