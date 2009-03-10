@@ -3,7 +3,7 @@
 	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 	<property name="project" value="${workspace}/OdysseusChartFactory" />
 	<property name="gen.srcbind" value="${project}/srcbind" />
-	<property name="gen.bin" value="${project}/bin" />
+	<property name="gen.bin" value="${project}/build/bin" />
 	
 	  <patternset id="binding.schemata">
 	  	 <include name="etc/binding/schema/*.xsd"/>
