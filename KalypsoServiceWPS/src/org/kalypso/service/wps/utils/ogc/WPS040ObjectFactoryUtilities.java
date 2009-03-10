@@ -83,7 +83,6 @@ import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
 import net.opengeospatial.wps.LiteralOutputType;
 import net.opengeospatial.wps.LiteralValueType;
-import net.opengeospatial.wps.ObjectFactory;
 import net.opengeospatial.wps.OutputDefinitionType;
 import net.opengeospatial.wps.OutputDefinitionsType;
 import net.opengeospatial.wps.OutputDescriptionType;
@@ -101,37 +100,30 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
+import org.kalypso.service.wps.utils.WPSUtilities;
+
 /**
- * Utility functions for complying to the OGC WPS standard.
+ * Utility functions for complying to the OGC WPS 0.4.0 standard.
  * 
  * @author Holger Albert
  */
-public class OGCUtilities
+public class WPS040ObjectFactoryUtilities
 {
   /**
    * Factory for WPS Objects.
    */
-  public final static ObjectFactory WPS_OF = new ObjectFactory();
+  private final static net.opengeospatial.wps.ObjectFactory WPS_0_4_0_OF = new net.opengeospatial.wps.ObjectFactory();
+
 
   /**
    * Factory for OWS Objects.
    */
-  public final static net.opengeospatial.ows.ObjectFactory OWS_OF = new net.opengeospatial.ows.ObjectFactory();
-
-  /**
-   * Service type identifier.
-   */
-  public static final String SERVICE = "WPS";
-
-  /**
-   * Version.
-   */
-  public static final String VERSION = "0.4.0";
+  private final static net.opengeospatial.ows.ObjectFactory OWS_1_0_0_OF = new net.opengeospatial.ows.ObjectFactory();
 
   /**
    * The constructor.
    */
-  private OGCUtilities( )
+  private WPS040ObjectFactoryUtilities( )
   {
   }
 
@@ -149,7 +141,7 @@ public class OGCUtilities
   public static CodeType buildCodeType( String codeSpace, String value )
   {
     /* Create the instance via the factory. */
-    CodeType code = OWS_OF.createCodeType();
+    CodeType code = OWS_1_0_0_OF.createCodeType();
 
     /* Attributes. */
     if( codeSpace != null )
@@ -188,7 +180,7 @@ public class OGCUtilities
   public static ComplexValueReference buildComplexValueReference( String reference, String format, String encoding, String schema )
   {
     /* Create the instance via the factory. */
-    ComplexValueReference complexValueReference = WPS_OF.createIOValueTypeComplexValueReference();
+    ComplexValueReference complexValueReference = WPS_0_4_0_OF.createIOValueTypeComplexValueReference();
 
     /* Attributes. */
     complexValueReference.setReference( reference );
@@ -229,7 +221,7 @@ public class OGCUtilities
   public static ComplexValueType buildComplexValueType( String format, String encoding, String schema, List<Object> value )
   {
     /* Create the instance via the factory. */
-    ComplexValueType complexValue = WPS_OF.createComplexValueType();
+    ComplexValueType complexValue = WPS_0_4_0_OF.createComplexValueType();
 
     /* Attributes. */
     if( format != null )
@@ -266,7 +258,7 @@ public class OGCUtilities
   public static LiteralValueType buildLiteralValueType( String value, String dataType, String uom )
   {
     /* Create the instance via the factory. */
-    LiteralValueType literalValue = WPS_OF.createLiteralValueType();
+    LiteralValueType literalValue = WPS_0_4_0_OF.createLiteralValueType();
 
     /* Values. */
     literalValue.setValue( value );
@@ -310,7 +302,7 @@ public class OGCUtilities
   public static BoundingBoxType buildBoundingBoxType( List<Double> lowerCorner, List<Double> upperCorner, String crs, BigInteger dimensions )
   {
     /* Create the instance via the factory. */
-    BoundingBoxType boundingBox = OWS_OF.createBoundingBoxType();
+    BoundingBoxType boundingBox = OWS_1_0_0_OF.createBoundingBoxType();
 
     /* Elements. */
     boundingBox.getLowerCorner().addAll( lowerCorner );
@@ -352,7 +344,7 @@ public class OGCUtilities
   public static IOValueType buildIOValueType( CodeType identifier, String title, String abstrakt, Object valueFormChoice )
   {
     /* Create the instance via the factory. */
-    IOValueType ioValue = WPS_OF.createIOValueType();
+    IOValueType ioValue = WPS_0_4_0_OF.createIOValueType();
 
     /* Elements. */
     ioValue.setIdentifier( identifier );
@@ -385,7 +377,7 @@ public class OGCUtilities
   public static DataInputsType buildDataInputsType( List<IOValueType> ioValues )
   {
     /* Create the instance via the factory. */
-    DataInputsType dataInputs = WPS_OF.createDataInputsType();
+    DataInputsType dataInputs = WPS_0_4_0_OF.createDataInputsType();
 
     dataInputs.getInput().addAll( ioValues );
 
@@ -428,7 +420,7 @@ public class OGCUtilities
   public static OutputDefinitionType buildOutputDefinitionType( CodeType identifier, String title, String abstrakt, String uom, String format, String encoding, String schema )
   {
     /* Create the instance via the factory. */
-    OutputDefinitionType outputDefinition = WPS_OF.createOutputDefinitionType();
+    OutputDefinitionType outputDefinition = WPS_0_4_0_OF.createOutputDefinitionType();
 
     /* Elements. */
     outputDefinition.setIdentifier( identifier );
@@ -465,7 +457,7 @@ public class OGCUtilities
   public static OutputDefinitionsType buildOutputDefinitionsType( List<OutputDefinitionType> outputDefinition )
   {
     /* Create the instance via the factory. */
-    OutputDefinitionsType outputDefinitions = WPS_OF.createOutputDefinitionsType();
+    OutputDefinitionsType outputDefinitions = WPS_0_4_0_OF.createOutputDefinitionsType();
 
     outputDefinitions.getOutput().addAll( outputDefinition );
 
@@ -507,11 +499,11 @@ public class OGCUtilities
   public static Execute buildExecute( CodeType identifier, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, Boolean store, Boolean status )
   {
     /* Create the instance via the factory. */
-    Execute execute = WPS_OF.createExecute();
+    Execute execute = WPS_0_4_0_OF.createExecute();
 
     /* Attributes. */
-    execute.setService( SERVICE );
-    execute.setVersion( VERSION );
+    execute.setService( WPSUtilities.SERVICE );
+    execute.setVersion( WPSUtilities.WPS_VERSION.V040.toString());
 
     if( store != null )
       execute.setStore( store );
@@ -541,11 +533,11 @@ public class OGCUtilities
   public static DescribeProcess buildDescribeProcess( List<CodeType> identifier )
   {
     /* Create the instance via the factory. */
-    DescribeProcess describeProcess = WPS_OF.createDescribeProcess();
+    DescribeProcess describeProcess = WPS_0_4_0_OF.createDescribeProcess();
 
     /* Attributes. */
-    describeProcess.setService( SERVICE );
-    describeProcess.setVersion( VERSION );
+    describeProcess.setService( WPSUtilities.SERVICE );
+    describeProcess.setVersion( WPSUtilities.WPS_VERSION.V040.toString() );
 
     describeProcess.getIdentifier().addAll( identifier );
 
@@ -577,21 +569,21 @@ public class OGCUtilities
    *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
    *          traversal from the starting resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
-   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
-   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
-   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>new - load ending resource in a new window, frame, pane, or other presentation context</li>
+   *          <li>replace - load the resource in the same window, frame, pane, or other presentation context</li>
+   *          <li>embed - load ending resource in place of the presentation of the starting resource</li>
+   *          <li>other - behavior is unconstrained; examine other markup in the link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    * @param actuate
    *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
    *          starting resource to the ending resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
-   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
-   *          triggered for this purpose </li>
-   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>onLoad - traverse to the ending resource immediately on loading the starting resource</li>
+   *          <li>onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose</li>
+   *          <li>other - behavior is unconstrained; examine other markup in link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    * @param about
    *          [optional] Optional reference to the aspect of the element which includes this "metadata" element that
@@ -600,7 +592,7 @@ public class OGCUtilities
   public static MetadataType buildMetaDataType( Object abstractMetaData, String href, String role, String arcrole, String title, String show, String actuate, String about )
   {
     /* Create the instance via the factory. */
-    MetadataType metadata = OWS_OF.createMetadataType();
+    MetadataType metadata = OWS_1_0_0_OF.createMetadataType();
 
     /* Elements. */
     metadata.setAbstractMetaData( abstractMetaData );
@@ -658,7 +650,7 @@ public class OGCUtilities
   public static ComplexDataType buildComplexDataType( String format, String encoding, String schema )
   {
     /* Create the instance via the factory. */
-    ComplexDataType complexData = WPS_OF.createComplexDataType();
+    ComplexDataType complexData = WPS_0_4_0_OF.createComplexDataType();
 
     /* Elements. */
     complexData.setFormat( format );
@@ -704,7 +696,7 @@ public class OGCUtilities
   public static SupportedComplexDataType buildSupportedComplexDataType( List<ComplexDataType> supportedComplexDatas, String defaultFormat, String defaultEncoding, String defaultSchema )
   {
     /* Create the instance via the factory. */
-    SupportedComplexDataType supportedComplexData = WPS_OF.createSupportedComplexDataType();
+    SupportedComplexDataType supportedComplexData = WPS_0_4_0_OF.createSupportedComplexDataType();
 
     /* Elements. */
     supportedComplexData.getSupportedComplexData().addAll( supportedComplexDatas );
@@ -739,7 +731,7 @@ public class OGCUtilities
   public static DomainMetadataType buildDomainMetadataType( String value, String reference )
   {
     /* Create the instance via the factory. */
-    DomainMetadataType domainMetadata = OWS_OF.createDomainMetadataType();
+    DomainMetadataType domainMetadata = OWS_1_0_0_OF.createDomainMetadataType();
 
     /* Attributes. */
     if( reference != null )
@@ -766,7 +758,7 @@ public class OGCUtilities
   public static SupportedUOMsType buildSupportedUOMsType( List<DomainMetadataType> UOMs, String defaultUOM )
   {
     /* Create the instance via the factory. */
-    SupportedUOMsType supportedUOMs = WPS_OF.createSupportedUOMsType();
+    SupportedUOMsType supportedUOMs = WPS_0_4_0_OF.createSupportedUOMsType();
 
     /* Attributes. */
     if( defaultUOM != null )
@@ -793,7 +785,7 @@ public class OGCUtilities
   public static AllowedValues buildAllowedValues( List<Object> values )
   {
     /* Create the instance via the factory. */
-    AllowedValues allowedValues = OWS_OF.createAllowedValues();
+    AllowedValues allowedValues = OWS_1_0_0_OF.createAllowedValues();
 
     allowedValues.getValueOrRange().addAll( values );
 
@@ -807,7 +799,7 @@ public class OGCUtilities
   public static AnyValue buildAnyValue( )
   {
     /* Create the instance via the factory. */
-    AnyValue anyValue = OWS_OF.createAnyValue();
+    AnyValue anyValue = OWS_1_0_0_OF.createAnyValue();
 
     return anyValue;
   }
@@ -830,7 +822,7 @@ public class OGCUtilities
   public static ValuesReference buildValuesReference( String value, String reference )
   {
     /* Create the instance via the factory. */
-    ValuesReference valuesReference = OWS_OF.createValuesReference();
+    ValuesReference valuesReference = OWS_1_0_0_OF.createValuesReference();
 
     /* Attributes. */
     valuesReference.setReference( reference );
@@ -852,7 +844,7 @@ public class OGCUtilities
   public static ValueType buildValueType( String val )
   {
     /* Create the instance via the factory. */
-    ValueType value = OWS_OF.createValueType();
+    ValueType value = OWS_1_0_0_OF.createValueType();
 
     /* Values. */
     value.setValue( val );
@@ -879,7 +871,7 @@ public class OGCUtilities
   public static RangeType buildRangeType( ValueType minimumValue, ValueType maximumValue, ValueType spacing, List<String> rangeClosure )
   {
     /* Create the instance via the factory. */
-    RangeType range = OWS_OF.createRangeType();
+    RangeType range = OWS_1_0_0_OF.createRangeType();
 
     /* Elements. */
     range.setMinimumValue( minimumValue );
@@ -927,7 +919,7 @@ public class OGCUtilities
   public static LiteralInputType buildLiteralInputType( DomainMetadataType domainMetadata, SupportedUOMsType supportedUOMs, Object literalValuesChoice, RangeType defaultValue )
   {
     /* Create the instance via the factory. */
-    LiteralInputType literalInput = WPS_OF.createLiteralInputType();
+    LiteralInputType literalInput = WPS_0_4_0_OF.createLiteralInputType();
 
     /* Elements. */
     literalInput.setDataType( domainMetadata );
@@ -961,7 +953,7 @@ public class OGCUtilities
   public static SupportedCRSsType buildSupportedCRSsType( List<String> CRSs, String defaultCRS )
   {
     /* Create the instance via the factory. */
-    SupportedCRSsType supportedCRSs = WPS_OF.createSupportedCRSsType();
+    SupportedCRSsType supportedCRSs = WPS_0_4_0_OF.createSupportedCRSsType();
 
     /* Elements. */
     supportedCRSs.getCRS().addAll( CRSs );
@@ -998,7 +990,7 @@ public class OGCUtilities
   public static InputDescriptionType buildInputDescriptionType( CodeType identifier, String title, String abstrakt, Object inputFormChoice, int minimumOccurs )
   {
     /* Create the instance via the factory. */
-    InputDescriptionType inputDescription = WPS_OF.createInputDescriptionType();
+    InputDescriptionType inputDescription = WPS_0_4_0_OF.createInputDescriptionType();
 
     /* Elements. */
     inputDescription.setIdentifier( identifier );
@@ -1035,7 +1027,7 @@ public class OGCUtilities
   public static DataInputs buildDataInputs( List<InputDescriptionType> inputDescriptions )
   {
     /* Create the instance via the factory. */
-    DataInputs dataInputs = WPS_OF.createProcessDescriptionTypeDataInputs();
+    DataInputs dataInputs = WPS_0_4_0_OF.createProcessDescriptionTypeDataInputs();
 
     dataInputs.getInput().addAll( inputDescriptions );
 
@@ -1058,7 +1050,7 @@ public class OGCUtilities
   public static LiteralOutputType buildLiteralOutputType( DomainMetadataType domainMetadata, SupportedUOMsType supportedUOMs )
   {
     /* Create the instance via the factory. */
-    LiteralOutputType literalOutput = WPS_OF.createLiteralOutputType();
+    LiteralOutputType literalOutput = WPS_0_4_0_OF.createLiteralOutputType();
 
     /* Elements. */
     literalOutput.setDataType( domainMetadata );
@@ -1091,7 +1083,7 @@ public class OGCUtilities
   public static OutputDescriptionType buildOutputDescriptionType( CodeType identifier, String title, String abstrakt, Object outputFormChoice )
   {
     /* Create the instance via the factory. */
-    OutputDescriptionType outputDescription = WPS_OF.createOutputDescriptionType();
+    OutputDescriptionType outputDescription = WPS_0_4_0_OF.createOutputDescriptionType();
 
     /* Elements. */
     outputDescription.setIdentifier( identifier );
@@ -1122,7 +1114,7 @@ public class OGCUtilities
   public static ProcessOutputs buildProcessDescriptionTypeProcessOutputs( List<OutputDescriptionType> outputDescriptions )
   {
     /* Create the instance via the factory. */
-    ProcessOutputs processOutputs = WPS_OF.createProcessDescriptionTypeProcessOutputs();
+    ProcessOutputs processOutputs = WPS_0_4_0_OF.createProcessDescriptionTypeProcessOutputs();
 
     processOutputs.getOutput().addAll( outputDescriptions );
 
@@ -1175,7 +1167,7 @@ public class OGCUtilities
   public static ProcessDescriptionType buildProcessDescriptionType( CodeType identifier, String title, String abstrakt, List<MetadataType> metadata, String processVersion, DataInputs dataInputs, ProcessOutputs processOutputs, Boolean storeSupported, Boolean statusSupported )
   {
     /* Create the instance via the factory. */
-    ProcessDescriptionType processDescription = WPS_OF.createProcessDescriptionType();
+    ProcessDescriptionType processDescription = WPS_0_4_0_OF.createProcessDescriptionType();
 
     /* Elements. */
     processDescription.setIdentifier( identifier );
@@ -1215,7 +1207,7 @@ public class OGCUtilities
   public static ProcessDescriptions buildProcessDescriptions( List<ProcessDescriptionType> processDescription )
   {
     /* Create the instance via the factory. */
-    ProcessDescriptions processDescriptions = WPS_OF.createProcessDescriptions();
+    ProcessDescriptions processDescriptions = WPS_0_4_0_OF.createProcessDescriptions();
 
     processDescriptions.getProcessDescription().addAll( processDescription );
 
@@ -1241,7 +1233,7 @@ public class OGCUtilities
   public static ProcessStartedType buildProcessStartedType( String value, int percentCompleted )
   {
     /* Create the instance via the factory. */
-    ProcessStartedType processStarted = WPS_OF.createProcessStartedType();
+    ProcessStartedType processStarted = WPS_0_4_0_OF.createProcessStartedType();
 
     /* Values. */
     processStarted.setValue( value );
@@ -1276,7 +1268,7 @@ public class OGCUtilities
   public static ExceptionType buildExceptionType( List<String> exceptionText, String exceptionCode, String locator )
   {
     /* Create the instance via the factory. */
-    ExceptionType exception = OWS_OF.createExceptionType();
+    ExceptionType exception = OWS_1_0_0_OF.createExceptionType();
 
     exception.getExceptionText().addAll( exceptionText );
 
@@ -1313,7 +1305,7 @@ public class OGCUtilities
   public static ExceptionReport buildExceptionReport( List<ExceptionType> exceptions, String version, String language )
   {
     /* Create the instance via the factory. */
-    ExceptionReport exceptionReport = OWS_OF.createExceptionReport();
+    ExceptionReport exceptionReport = OWS_1_0_0_OF.createExceptionReport();
 
     exceptionReport.getException().addAll( exceptions );
 
@@ -1339,7 +1331,7 @@ public class OGCUtilities
   public static ProcessFailedType buildProcessFailedType( ExceptionReport exceptionReport )
   {
     /* Create the instance via the factory. */
-    ProcessFailedType processFailed = WPS_OF.createProcessFailedType();
+    ProcessFailedType processFailed = WPS_0_4_0_OF.createProcessFailedType();
 
     /* Elements. */
     processFailed.setExceptionReport( exceptionReport );
@@ -1353,7 +1345,7 @@ public class OGCUtilities
    * Description of the status of process execution.
    * 
    * @param value
-   *          <br>
+   * <br>
    *          Possible are
    *          <ol>
    *          <li>ProcessAccepted (as String)<br>
@@ -1371,7 +1363,7 @@ public class OGCUtilities
    *          may have been encountered. The client may display this text string to a human user. The client should make
    *          use of the presence of this element to trigger automated or manual access to the results of the process.
    *          If manual access is intended, the client should use the presence of this element to present the results as
-   *          downloadable links to the user. </li>
+   *          downloadable links to the user.</li>
    *          <li>ProcessFailedType<br>
    *          Indicates that execution of this process has failed, and includes error information.</li>
    *          </ol>
@@ -1386,7 +1378,7 @@ public class OGCUtilities
   public static StatusType buildStatusType( Object value, boolean accepted )
   {
     /* Create the instance via the factory. */
-    StatusType status = WPS_OF.createStatusType();
+    StatusType status = WPS_0_4_0_OF.createStatusType();
 
     if( value instanceof String )
     {
@@ -1418,7 +1410,7 @@ public class OGCUtilities
   public static net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs buildExecuteResponseTypeProcessOutputs( List<IOValueType> ioValues )
   {
     /* Create the instance via the factory. */
-    net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = WPS_OF.createExecuteResponseTypeProcessOutputs();
+    net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = WPS_0_4_0_OF.createExecuteResponseTypeProcessOutputs();
 
     processOutputs.getOutput().addAll( ioValues );
 
@@ -1469,7 +1461,7 @@ public class OGCUtilities
   public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs, String statusLocation, String version )
   {
     /* Create the instance via the factory. */
-    ExecuteResponseType executeResponse = WPS_OF.createExecuteResponseType();
+    ExecuteResponseType executeResponse = WPS_0_4_0_OF.createExecuteResponseType();
 
     /* Elements. */
     executeResponse.setIdentifier( identifier );
@@ -1514,7 +1506,7 @@ public class OGCUtilities
   public static JAXBElement<ExecuteResponseType> buildExecuteResponse( ExecuteResponseType value )
   {
     /* Create the instance via the factory. */
-    JAXBElement<ExecuteResponseType> executeResponse = WPS_OF.createExecuteResponse( value );
+    JAXBElement<ExecuteResponseType> executeResponse = WPS_0_4_0_OF.createExecuteResponse( value );
 
     return executeResponse;
   }
@@ -1533,7 +1525,7 @@ public class OGCUtilities
   public static KeywordsType buildKeywordsType( List<String> keyword, CodeType type )
   {
     /* Create the instance via the factory. */
-    KeywordsType keywords = OWS_OF.createKeywordsType();
+    KeywordsType keywords = OWS_1_0_0_OF.createKeywordsType();
 
     /* Elements. */
     keywords.getKeyword().addAll( keyword );
@@ -1577,7 +1569,7 @@ public class OGCUtilities
   public static ServiceIdentification buildServiceIdentification( String title, String abstrakt, List<KeywordsType> keywords, CodeType serviceType, List<String> serviceTypeVersion, String fees, List<String> accessConstraints )
   {
     /* Create the instance via the factory. */
-    ServiceIdentification serviceIdentification = OWS_OF.createServiceIdentification();
+    ServiceIdentification serviceIdentification = OWS_1_0_0_OF.createServiceIdentification();
 
     /* Elements. */
     if( title != null )
@@ -1614,7 +1606,7 @@ public class OGCUtilities
   public static TelephoneType buildTelephoneType( List<String> voices, List<String> facsimiles )
   {
     /* Create the instance via the factory. */
-    TelephoneType telephone = OWS_OF.createTelephoneType();
+    TelephoneType telephone = OWS_1_0_0_OF.createTelephoneType();
 
     /* Elements. */
     if( voices != null )
@@ -1647,7 +1639,7 @@ public class OGCUtilities
   public static AddressType buildAddressType( List<String> deliveryPoints, String city, String administrativeArea, String postalCode, String country, List<String> electronicMailAddresses )
   {
     /* Create the instance via the factory. */
-    AddressType address = OWS_OF.createAddressType();
+    AddressType address = OWS_1_0_0_OF.createAddressType();
 
     /* Elements. */
     if( deliveryPoints != null )
@@ -1688,27 +1680,27 @@ public class OGCUtilities
    *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
    *          traversal from the starting resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
-   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
-   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
-   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>new - load ending resource in a new window, frame, pane, or other presentation context</li>
+   *          <li>replace - load the resource in the same window, frame, pane, or other presentation context</li>
+   *          <li>embed - load ending resource in place of the presentation of the starting resource</li>
+   *          <li>other - behavior is unconstrained; examine other markup in the link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    * @param actuate
    *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
    *          starting resource to the ending resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
-   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
-   *          triggered for this purpose </li>
-   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>onLoad - traverse to the ending resource immediately on loading the starting resource</li>
+   *          <li>onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose</li>
+   *          <li>other - behavior is unconstrained; examine other markup in link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    */
   public static OnlineResourceType buildOnlineResourceType( String href, String role, String arcrole, String title, String show, String actuate )
   {
     /* Create the instance via the factory. */
-    OnlineResourceType onlineResource = OWS_OF.createOnlineResourceType();
+    OnlineResourceType onlineResource = OWS_1_0_0_OF.createOnlineResourceType();
 
     /* Attributes. */
     onlineResource.setType( "simple" );
@@ -1758,7 +1750,7 @@ public class OGCUtilities
   public static ContactType buildContactType( TelephoneType phone, AddressType address, OnlineResourceType onlineResource, String hoursOfService, String contactInstructions )
   {
     /* Create the instance via the factory. */
-    ContactType contact = OWS_OF.createContactType();
+    ContactType contact = OWS_1_0_0_OF.createContactType();
 
     /* Elements. */
     if( phone != null )
@@ -1797,7 +1789,7 @@ public class OGCUtilities
   public static ResponsiblePartySubsetType buildResponsiblePartySubsetType( String individualName, String positionName, ContactType contactInfo, CodeType role )
   {
     /* Create the instance via the factory. */
-    ResponsiblePartySubsetType responsiblePartySubset = OWS_OF.createResponsiblePartySubsetType();
+    ResponsiblePartySubsetType responsiblePartySubset = OWS_1_0_0_OF.createResponsiblePartySubsetType();
 
     /* Elements. */
     if( individualName != null )
@@ -1831,7 +1823,7 @@ public class OGCUtilities
   public static ServiceProvider buildServiceProvider( String providerName, OnlineResourceType providerSite, ResponsiblePartySubsetType serviceContact )
   {
     /* Create the instance via the factory. */
-    ServiceProvider serviceProvider = OWS_OF.createServiceProvider();
+    ServiceProvider serviceProvider = OWS_1_0_0_OF.createServiceProvider();
 
     /* Elements. */
     serviceProvider.setProviderName( providerName );
@@ -1863,21 +1855,21 @@ public class OGCUtilities
    *          [optional] The 'show' attribute is used to communicate the desired presentation of the ending resource on
    *          traversal from the starting resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> new - load ending resource in a new window, frame, pane, or other presentation context </li>
-   *          <li> replace - load the resource in the same window, frame, pane, or other presentation context </li>
-   *          <li> embed - load ending resource in place of the presentation of the starting resource </li>
-   *          <li> other - behavior is unconstrained; examine other markup in the link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>new - load ending resource in a new window, frame, pane, or other presentation context</li>
+   *          <li>replace - load the resource in the same window, frame, pane, or other presentation context</li>
+   *          <li>embed - load ending resource in place of the presentation of the starting resource</li>
+   *          <li>other - behavior is unconstrained; examine other markup in the link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    * @param actuate
    *          [optional] The 'actuate' attribute is used to communicate the desired timing of traversal from the
    *          starting resource to the ending resource; it's value should be treated as follows:<br>
    *          <ol>
-   *          <li> onLoad - traverse to the ending resource immediately on loading the starting resource </li>
-   *          <li> onRequest - traverse from the starting resource to the ending resource only on a post-loading event
-   *          triggered for this purpose </li>
-   *          <li> other - behavior is unconstrained; examine other markup in link for hints </li>
-   *          <li> none - behavior is unconstrained </li>
+   *          <li>onLoad - traverse to the ending resource immediately on loading the starting resource</li>
+   *          <li>onRequest - traverse from the starting resource to the ending resource only on a post-loading event
+   *          triggered for this purpose</li>
+   *          <li>other - behavior is unconstrained; examine other markup in link for hints</li>
+   *          <li>none - behavior is unconstrained</li>
    *          </ol>
    * @param constraints
    *          [optional] Optional unordered list of valid domain constraints on non-parameter quantities that each apply
@@ -1889,7 +1881,7 @@ public class OGCUtilities
   public static RequestMethodType buildRequestMethodType( String href, String role, String arcrole, String title, String show, String actuate, List<DomainType> constraints )
   {
     /* Create the instance via the factory. */
-    RequestMethodType requestMethod = OWS_OF.createRequestMethodType();
+    RequestMethodType requestMethod = OWS_1_0_0_OF.createRequestMethodType();
 
     /* Attributes. */
     requestMethod.setType( "simple" );
@@ -1932,7 +1924,7 @@ public class OGCUtilities
   public static JAXBElement<RequestMethodType> buildHTTPGet( RequestMethodType requestMethod )
   {
     /* Create the instance via the factory. */
-    JAXBElement<RequestMethodType> HTTPGet = OWS_OF.createHTTPGet( requestMethod );
+    JAXBElement<RequestMethodType> HTTPGet = OWS_1_0_0_OF.createHTTPGet( requestMethod );
 
     return HTTPGet;
   }
@@ -1950,7 +1942,7 @@ public class OGCUtilities
   public static JAXBElement<RequestMethodType> buildHTTPPost( RequestMethodType requestMethod )
   {
     /* Create the instance via the factory. */
-    JAXBElement<RequestMethodType> HTTPPost = OWS_OF.createHTTPPost( requestMethod );
+    JAXBElement<RequestMethodType> HTTPPost = OWS_1_0_0_OF.createHTTPPost( requestMethod );
 
     return HTTPPost;
   }
@@ -1967,7 +1959,7 @@ public class OGCUtilities
   public static HTTP buildHTTP( List<JAXBElement<RequestMethodType>> requestMethods )
   {
     /* Create the instance via the factory. */
-    HTTP http = OWS_OF.createHTTP();
+    HTTP http = OWS_1_0_0_OF.createHTTP();
 
     /* Elements. */
     http.getGetOrPost().addAll( requestMethods );
@@ -1989,7 +1981,7 @@ public class OGCUtilities
   public static DCP buildDCP( HTTP http )
   {
     /* Create the instance via the factory. */
-    DCP dcp = OWS_OF.createDCP();
+    DCP dcp = OWS_1_0_0_OF.createDCP();
 
     /* Elements. */
     dcp.setHTTP( http );
@@ -2005,7 +1997,7 @@ public class OGCUtilities
   public static NoValues buildNoValues( )
   {
     /* Create the instance via the factory. */
-    NoValues noValues = OWS_OF.createNoValues();
+    NoValues noValues = OWS_1_0_0_OF.createNoValues();
 
     return noValues;
   }
@@ -2043,7 +2035,7 @@ public class OGCUtilities
   public static DomainType buildDomainType( Object possibleValues, DomainMetadataType meaning, DomainMetadataType dataType, DomainMetadataType valuesUnit, boolean reference, List<MetadataType> metadata, String name )
   {
     /* Create the instance via the factory. */
-    DomainType domain = OWS_OF.createDomainType();
+    DomainType domain = OWS_1_0_0_OF.createDomainType();
 
     /* Elements. */
     if( possibleValues != null )
@@ -2113,7 +2105,7 @@ public class OGCUtilities
   public static Operation buildOperation( List<DCP> dcps, List<DomainType> parameter, List<DomainType> constraints, List<MetadataType> metadata, String name )
   {
     /* Create the instance via the factory. */
-    Operation operation = OWS_OF.createOperation();
+    Operation operation = OWS_1_0_0_OF.createOperation();
 
     /* Elements. */
     operation.getDCP().addAll( dcps );
@@ -2159,7 +2151,7 @@ public class OGCUtilities
   public static OperationsMetadata buildOperationsMetadata( List<Operation> operations, List<DomainType> parameters, List<DomainType> constraints, Object extendedCapabilities )
   {
     /* Create the instance via the factory. */
-    OperationsMetadata operationsMetadata = OWS_OF.createOperationsMetadata();
+    OperationsMetadata operationsMetadata = OWS_1_0_0_OF.createOperationsMetadata();
 
     operationsMetadata.getOperation().addAll( operations );
 
@@ -2202,7 +2194,7 @@ public class OGCUtilities
   public static ProcessBriefType buildProcessBriefType( CodeType identifier, String title, String abstrakt, List<MetadataType> metadata, String processVersion )
   {
     /* Create the instance via the factory. */
-    ProcessBriefType processBrief = WPS_OF.createProcessBriefType();
+    ProcessBriefType processBrief = WPS_0_4_0_OF.createProcessBriefType();
 
     /* Elements. */
     processBrief.setIdentifier( identifier );
@@ -2231,7 +2223,7 @@ public class OGCUtilities
   public static ProcessOfferings buildProcessOfferings( List<ProcessBriefType> processBriefs )
   {
     /* Create the instance via the factory. */
-    ProcessOfferings processOfferings = WPS_OF.createProcessOfferings();
+    ProcessOfferings processOfferings = WPS_0_4_0_OF.createProcessOfferings();
 
     processOfferings.getProcess().addAll( processBriefs );
 
@@ -2267,7 +2259,7 @@ public class OGCUtilities
   public static Capabilities buildCapabilities( ServiceIdentification serviceIdentification, ServiceProvider serviceProvider, OperationsMetadata operationsMetadata, String updateSequence, ProcessOfferings processOfferings )
   {
     /* Create the instance via the factory. */
-    Capabilities capabilities = WPS_OF.createCapabilities();
+    Capabilities capabilities = WPS_0_4_0_OF.createCapabilities();
 
     /* Elements. */
     if( serviceIdentification != null )
@@ -2282,7 +2274,7 @@ public class OGCUtilities
     capabilities.setProcessOfferings( processOfferings );
 
     /* Attributes. */
-    capabilities.setVersion( VERSION );
+    capabilities.setVersion( WPSUtilities.WPS_VERSION.V040.toString() );
 
     if( updateSequence != null )
       capabilities.setVersion( updateSequence );

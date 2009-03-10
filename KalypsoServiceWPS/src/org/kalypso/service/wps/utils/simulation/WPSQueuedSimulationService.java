@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -61,8 +60,8 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.SimulationException;
@@ -93,7 +92,7 @@ public class WPSQueuedSimulationService
       LOGGER.setUseParentHandlers( false );
   }
 
-  /** Vector of {@link CalcJobThread}s */
+  /** Map of {@link WPSSimulationThread}s */
   private final Map<String, WPSSimulationThread> m_threads = new HashMap<String, WPSSimulationThread>();
 
   /**
@@ -127,11 +126,6 @@ public class WPSQueuedSimulationService
   private final IUrlCatalog m_catalog;
 
   /**
-   * The temporary directory will be used by the jobs to copy their running data.
-   */
-  private final File m_tmpDir;
-
-  /**
    * URL to space, where the jobs can put their results, so that the client can read them.
    */
   private final String m_resultSpace;
@@ -150,13 +144,12 @@ public class WPSQueuedSimulationService
    * @param tmpDir
    *          The temporary directory will be used by the jobs to copy their running data.
    */
-  public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod, final File tmpDir )
+  public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod )
   {
     m_calcJobFactory = factory;
     m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
-    m_tmpDir = tmpDir;
 
     m_resultSpace = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
   }
@@ -257,40 +250,29 @@ public class WPSQueuedSimulationService
     }
   }
 
-  public WPSSimulationInfo startJob( final String typeID, final String description, final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
+  public WPSSimulationInfo startJob( final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
   {
+    final String typeID = execute.getIdentifier().getValue();
+    if( typeID == null || typeID.length() == 0 )
+    {
+      Debug.println( "Missing parameter Identifier!" );
+      throw new SimulationException( "Process identifier is missing!" );
+    }
+
     WPSSimulationThread cjt = null;
     synchronized( m_threads )
     {
-      /* Find an unused id. */
-      int id = -1;
-      int cnt = 0;
-      while( true )
-      {
-        /* Check, if this particular id is free. */
-        if( !m_threads.containsKey( "" + cnt ) )
-        {
-          /* If yes, take it. */
-          id = cnt;
-          break;
-        }
-
-        /* Otherwise increase the cnt and try again. */
-        cnt++;
-      }
-
       final ISimulation job = m_calcJobFactory.createJob( typeID );
-      // TODO: should this temp dir not be inside the general wps tmp-dir?
-      final File tmpdir = FileUtilities.createNewTempDir( "CalcJob-" + id + "-", m_tmpDir );
-      tmpdir.deleteOnExit();
-
-      cjt = new WPSSimulationThread( "" + id, description, typeID, job, execute, processDescription, tmpdir, m_resultSpace );
-      m_threads.put( "" + id, cjt );
 
       /* Need the description and the result directory. */
       m_descriptions.put( typeID, processDescription );
 
-      LOGGER.info( "Job waiting for scheduling: " + id );
+      cjt = new WPSSimulationThread( job, execute, processDescription, m_resultSpace );
+      
+      final String threadId = Long.toString( cjt.getId());
+      m_threads.put( threadId, cjt );
+
+      LOGGER.info( "Job waiting for scheduling: " + threadId );
     }
 
     startScheduling();

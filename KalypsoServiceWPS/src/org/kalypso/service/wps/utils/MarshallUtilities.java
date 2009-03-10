@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -52,10 +50,20 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.OGCNamespacePrefixMapper;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 
 /**
  * This class should help with handling XMLs and Binding-Objects.
@@ -65,11 +73,17 @@ import org.kalypso.service.wps.utils.ogc.OGCNamespacePrefixMapper;
 public class MarshallUtilities
 {
   private static final OGCNamespacePrefixMapper NAMESPACE_PREFIX_MAPPER = new OGCNamespacePrefixMapper();
-  
+
   /**
    * Context for marshalling and unmarshalling.
    */
-  private static JAXBContext CONTEXT = JaxbUtilities.createQuiet( net.opengeospatial.ows.ObjectFactory.class, net.opengeospatial.wps.ObjectFactory.class );
+  private static JAXBContext CONTEXT_1_0_0 = JaxbUtilities.createQuiet( net.opengis.ows._1.ObjectFactory.class, net.opengis.wps._1_0.ObjectFactory.class );
+
+  private static JAXBContext CONTEXT_0_4_0 = JaxbUtilities.createQuiet( net.opengeospatial.ows.ObjectFactory.class, net.opengeospatial.wps.ObjectFactory.class );
+
+  private static DocumentBuilderFactory m_factory = DocumentBuilderFactory.newInstance();
+
+  private static XPathFactory m_xpFactory = XPathFactory.newInstance();
 
   /**
    * The constructor.
@@ -83,14 +97,24 @@ public class MarshallUtilities
    * 
    * @return The XML representation as string.
    */
-  public static String marshall( final Object object ) throws JAXBException, IOException
+  public static String marshall( final Object object, final WPS_VERSION wpsVersion ) throws JAXBException, IOException
   {
     /* Will be marshalled into a StringWriter. */
-    final StringWriter sw = new StringWriter();
-
+    final Marshaller m;
+    switch( wpsVersion )
+    {
+      case V040:
+        m = CONTEXT_0_4_0.createMarshaller();
+        break;
+      case V100:
+        m = CONTEXT_1_0_0.createMarshaller();
+        break;
+      default:
+        throw new JAXBException( "Unsupported WPS version " + wpsVersion );
+    }
     /* Create the marshaller. */
-    final Marshaller m = CONTEXT.createMarshaller();
 
+    final StringWriter sw = new StringWriter();
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
@@ -109,8 +133,45 @@ public class MarshallUtilities
    */
   public static Object unmarshall( final String xml ) throws JAXBException
   {
-    /* Create the unmarshaller. */
-    final Unmarshaller um = CONTEXT.createUnmarshaller();
+    try
+    {
+      final XPath xpath = m_xpFactory.newXPath();
+      final XPathExpression expr = xpath.compile( "//@version" );
+
+      final DocumentBuilder builder = m_factory.newDocumentBuilder();
+      final InputSource is = new InputSource( new StringReader( xml ) );
+      final Document doc = builder.parse( is );
+
+      final Node node = (Node) expr.evaluate( doc, XPathConstants.NODE );
+      final String version = node.getTextContent();
+      final WPS_VERSION wpsVersion = WPSUtilities.WPS_VERSION.getValue( version );
+      return unmarshall( xml, wpsVersion );
+    }
+    catch( final JAXBException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      throw new JAXBException( "Malformed document", e );
+    }
+  }
+
+  public static Object unmarshall( final String xml, final WPS_VERSION wpsVersion ) throws JAXBException
+  {
+    /* Create the unmarshaller depending on WPS version */
+    final Unmarshaller um;
+    switch( wpsVersion )
+    {
+      case V040:
+        um = CONTEXT_0_4_0.createUnmarshaller();
+        break;
+      case V100:
+        um = CONTEXT_1_0_0.createUnmarshaller();
+        break;
+      default:
+        throw new JAXBException( "Unsupported WPS version " + wpsVersion );
+    }
 
     return um.unmarshal( new StringReader( xml ) );
   }
@@ -119,7 +180,7 @@ public class MarshallUtilities
    * This function returns an input stream from one string.
    * 
    * @param text
-   *            The string.
+   *          The string.
    * @return The inputstream.
    */
   public static InputStream getInputStream( final String text )
@@ -131,30 +192,14 @@ public class MarshallUtilities
    * This function reads from an input stream and returns a string representation.
    * 
    * @param is
-   *            The input stream.
+   *          The input stream.
    * @return The string.
    */
   public static String fromInputStream( final InputStream is ) throws IOException
   {
-    String value = null;
-    final BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
-
-    try
-    {
-      String line = null;
-      final StringBuffer buffer = new StringBuffer();
-
-      while( (line = reader.readLine()) != null )
-        buffer.append( line + "\n" );
-
-      reader.close();
-      value = buffer.toString();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( reader );
-    }
-
-    return value;
+    // default buffer size from IOUtils
+    final StringWriter buffer = new StringWriter( 1024 * 4 );
+    IOUtils.copy( is, buffer );
+    return buffer.toString();
   }
 }

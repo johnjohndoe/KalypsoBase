@@ -60,7 +60,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.ogc.OGCUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
+import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.ISimulationConstants.STATE;
 
@@ -96,12 +97,12 @@ public class WPSSimulationHandler extends Thread
    * @param execute
    *          The execute request.
    */
-  public WPSSimulationHandler( WPSQueuedSimulationService service, String jobID, Execute execute )
+  public WPSSimulationHandler( final WPSQueuedSimulationService service, final Execute execute, final String jobId )
   {
     super( "WPS-SimulationHandler" );
     m_service = service;
-    m_jobID = jobID;
     m_execute = execute;
+    m_jobID = jobId;
   }
 
   /**
@@ -112,7 +113,7 @@ public class WPSSimulationHandler extends Thread
   {
     try
     {
-      WPSSimulationInfo jobInfo = m_service.getJob( m_jobID );
+      final WPSSimulationInfo jobInfo = m_service.getJob( m_jobID );
 
       boolean bEnd = false;
       while( bEnd == false )
@@ -129,7 +130,7 @@ public class WPSSimulationHandler extends Thread
             /* Send user a message. */
             if( jobInfo.getFinishStatus() != IStatus.ERROR )
               // false means process succeeded
-              createExecuteResponse( OGCUtilities.buildStatusType( "Process ended successfully.", false ), ioValues );
+              createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process ended successfully.", false ), ioValues );
             else
               createProcessFailedExecuteResponse( jobInfo.getFinishText() );
 
@@ -137,9 +138,9 @@ public class WPSSimulationHandler extends Thread
             bEnd = true;
             break;
           case RUNNING:
-            ProcessStartedType processStarted = OGCUtilities.buildProcessStartedType( jobInfo.getMessage(), jobInfo.getProgress() );
+            ProcessStartedType processStarted = WPS040ObjectFactoryUtilities.buildProcessStartedType( jobInfo.getMessage(), jobInfo.getProgress() );
             // false is ignored
-            createExecuteResponse( OGCUtilities.buildStatusType( processStarted, false ), ioValues );
+            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( processStarted, false ), ioValues );
             break;
           case CANCELED:
             /* Delete all files in result directory. */
@@ -151,7 +152,7 @@ public class WPSSimulationHandler extends Thread
           case WAITING:
             // do nothing?
             // true means process accepted
-            createExecuteResponse( OGCUtilities.buildStatusType( "Process waiting.", true ), ioValues );
+            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process waiting.", true ), ioValues );
             break;
           case UNKNOWN:
           case ERROR:
@@ -207,14 +208,14 @@ public class WPSSimulationHandler extends Thread
     List<String> list = new ArrayList<String>();
     list.add( message );
 
-    ExceptionType exception = OGCUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
+    ExceptionType exception = WPS040ObjectFactoryUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
     List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
     exceptions.add( exception );
 
-    ExceptionReport exceptionReport = OGCUtilities.buildExceptionReport( exceptions, OGCUtilities.VERSION, null );
-    ProcessFailedType processFailed = OGCUtilities.buildProcessFailedType( exceptionReport );
+    ExceptionReport exceptionReport = WPS040ObjectFactoryUtilities.buildExceptionReport( exceptions, WPSUtilities.WPS_VERSION.V040.toString(), null );
+    ProcessFailedType processFailed = WPS040ObjectFactoryUtilities.buildProcessFailedType( exceptionReport );
 
-    createExecuteResponse( OGCUtilities.buildStatusType( processFailed, false ), null );
+    createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( processFailed, false ), null );
   }
 
   /**
@@ -234,13 +235,13 @@ public class WPSSimulationHandler extends Thread
 
     ProcessOutputs processOutputs = null;
     if( ioValues != null )
-      processOutputs = OGCUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
+      processOutputs = WPS040ObjectFactoryUtilities.buildExecuteResponseTypeProcessOutputs( ioValues );
 
-    final ExecuteResponseType value = OGCUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, OGCUtilities.VERSION );
-    final JAXBElement<ExecuteResponseType> executeResponse = OGCUtilities.buildExecuteResponse( value );
+    final ExecuteResponseType value = WPS040ObjectFactoryUtilities.buildExecuteResponseType( m_execute.getIdentifier(), status, m_execute.getDataInputs(), m_execute.getOutputDefinitions(), processOutputs, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
+    final JAXBElement<ExecuteResponseType> executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponse( value );
 
     /* Marshall it into one XML string. */
-    final String xml = MarshallUtilities.marshall( executeResponse );
+    final String xml = MarshallUtilities.marshall( executeResponse, WPS_VERSION.V040 );
 
     /* Copy the execute response to this url. */
     VFSUtilities.copyStringToFileObject( xml, resultFile );
