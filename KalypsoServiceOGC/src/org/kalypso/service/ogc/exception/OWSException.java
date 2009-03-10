@@ -8,9 +8,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import net.opengis.ows.ExceptionReport;
-import net.opengis.ows.ExceptionType;
-import net.opengis.ows.ObjectFactory;
+import net.opengeospatial.ows.ExceptionReport;
+import net.opengeospatial.ows.ExceptionType;
+import net.opengeospatial.ows.ObjectFactory;
 
 import org.kalypso.commons.bind.JaxbUtilities;
 
