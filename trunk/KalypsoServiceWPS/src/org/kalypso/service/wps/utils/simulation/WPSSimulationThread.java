@@ -41,7 +41,9 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import net.opengeospatial.wps.DataInputsType;
@@ -128,18 +130,70 @@ public class WPSSimulationThread extends Thread
    * @param resultDir
    *          The job can put his results here.
    */
-  public WPSSimulationThread( String id, String description, String typeID, ISimulation job, Execute execute, ProcessDescriptionType processDescription, File tmpDir, String resultSpace ) throws SimulationException
+  public WPSSimulationThread( final ISimulation job, final Execute execute, final ProcessDescriptionType processDescription, final String resultSpace ) throws SimulationException
   {
-    super( "WPS-SimulationThread (" + typeID + ")-" + id );
+    super( "WPS-SimulationThread (" + processDescription.getIdentifier().getValue() + ")");
     m_job = job;
-    m_tmpDir = tmpDir;
+    
+    // TODO: should this temp dir not be inside the general wps tmp-dir?
+    final long threadId = getId();
+    final String jobId = execute.getIdentifier().getValue();
+    
+    m_tmpDir = FileUtilities.createNewTempDir( "CalcJob-" + threadId );
+    m_tmpDir.deleteOnExit();
 
-    m_inputData = new WPSSimulationDataProvider( execute, m_tmpDir );
-    m_resultEater = new WPSSimulationResultEater( processDescription, execute, tmpDir, resultSpace );
-    m_jobInfo = new WPSSimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
+    final Map<String, Object> inputList = index( execute );
+    m_inputData = new WPSSimulationDataProvider( inputList, m_tmpDir );
+    m_resultEater = new WPSSimulationResultEater( processDescription, execute, m_tmpDir, resultSpace );
+    
+    final String description = processDescription.getAbstract();
+    m_jobInfo = new WPSSimulationInfo( threadId, jobId, description, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
 
     /* Check, if the required input is available. */
     checkInput( execute, processDescription );
+  }
+  
+  /**
+   * Indexes the input values with their id.
+   * 
+   * @param execute
+   *          The execute request, containing the input data.
+   * @return The indexed map.
+   */
+  private Map<String, Object> index( final Execute execute ) throws SimulationException
+  {
+    final Map<String, Object> inputList = new LinkedHashMap<String, Object>();
+
+    final DataInputsType dataInputs = execute.getDataInputs();
+    final List<IOValueType> inputs = dataInputs.getInput();
+    for( final IOValueType input : inputs )
+    {
+      Object value = null;
+      if( input.getComplexValue() != null )
+      {
+        value = input.getComplexValue();
+      }
+      else if( input.getLiteralValue() != null )
+      {
+        value = input.getLiteralValue();
+      }
+      else if( input.getComplexValueReference() != null )
+      {
+        value = input.getComplexValueReference();
+      }
+      else if( input.getBoundingBoxValue() != null )
+      {
+        value = input.getBoundingBoxValue();
+      }
+      else
+      {
+        throw new SimulationException( "Input has no valid value!", null );
+      }
+
+      inputList.put( input.getIdentifier().getValue(), value );
+    }
+
+    return inputList;
   }
 
   /**
@@ -152,7 +206,7 @@ public class WPSSimulationThread extends Thread
    *          The processDescription containing the output data.<br>
    *          (Ok, it contains also info about the output data, but that is not needed now.)
    */
-  private void checkInput( Execute execute, ProcessDescriptionType processDescription ) throws SimulationException
+  private void checkInput( final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
   {
     DataInputsType dataInputsExecute = execute.getDataInputs();
     DataInputs dataInputsProcessDescription = processDescription.getDataInputs();
@@ -261,11 +315,9 @@ public class WPSSimulationThread extends Thread
         LOGGER.info( "JOB exited normally: " + jobID );
       }
     }
-    catch( Throwable t )
+    catch( final Throwable t )
     {
       LOGGER.warning( "JOB exited with exception: " + jobID );
-      t.printStackTrace();
-
       m_jobInfo.setFinishText( t.getLocalizedMessage() );
       m_jobInfo.setState( ISimulationConstants.STATE.ERROR );
     }

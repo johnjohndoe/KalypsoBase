@@ -25,7 +25,8 @@ import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.ogc.OGCUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
+import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.simspec.Modelspec;
@@ -36,7 +37,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
  * @author Holger Albert
  */
 @SuppressWarnings("restriction")
-public class GetCapabilities implements IOperation
+public class GetCapabilitiesOperation implements IOperation
 {
   /**
    * All available simulations.
@@ -51,7 +52,7 @@ public class GetCapabilities implements IOperation
   /**
    * The constructor.
    */
-  public GetCapabilities( )
+  public GetCapabilitiesOperation( )
   {
     m_serverURL = FrameworkProperties.getProperty( "org.kalypso.service.wps.service" );
     if( m_serverURL == null )
@@ -75,7 +76,8 @@ public class GetCapabilities implements IOperation
       if( acceptVersions != null )
       {
         /* Check if our version does match this version. */
-        if( !acceptVersions.equals( OGCUtilities.VERSION ) )
+        // TODO: version 1.0
+        if( !acceptVersions.equals( WPSUtilities.WPS_VERSION.V040.toString() ) )
         {
           /* Versions does not match. */
           throw new OWSException( OWSException.ExceptionCode.VERSION_NEGPTIOATON_FAILED, "The server does not support the given version.", "" );
@@ -122,10 +124,10 @@ public class GetCapabilities implements IOperation
       ProcessOfferings processOfferings = buildProcessOfferings();
 
       /* Build the GetCapabilities response. */
-      Capabilities capabilities = OGCUtilities.buildCapabilities( serviceIdentification, serviceProvider, operationsMetadata, updateSequence, processOfferings );
+      Capabilities capabilities = WPS040ObjectFactoryUtilities.buildCapabilities( serviceIdentification, serviceProvider, operationsMetadata, updateSequence, processOfferings );
 
       /* Marshall it into one XML string. */
-      String xml = MarshallUtilities.marshall( capabilities );
+      String xml = MarshallUtilities.marshall( capabilities, WPS_VERSION.V040 );
 
       /* Build the response. */
       StringBuffer response = new StringBuffer();
@@ -168,9 +170,10 @@ public class GetCapabilities implements IOperation
   private ServiceIdentification buildServiceIdentification( )
   {
     List<String> serviceTypeVersion = new LinkedList<String>();
-    serviceTypeVersion.add( OGCUtilities.VERSION );
+    // TODO: add version 1.0
+    serviceTypeVersion.add( WPSUtilities.WPS_VERSION.V040.toString() );
 
-    return OGCUtilities.buildServiceIdentification( null, null, null, OGCUtilities.buildCodeType( "kalypso:wps", "ISimulation" ), serviceTypeVersion, null, null );
+    return WPS040ObjectFactoryUtilities.buildServiceIdentification( null, null, null, WPS040ObjectFactoryUtilities.buildCodeType( "kalypso:wps", "ISimulation" ), serviceTypeVersion, null, null );
   }
 
   /**
@@ -180,7 +183,7 @@ public class GetCapabilities implements IOperation
    */
   private ServiceProvider buildServiceProvider( )
   {
-    return OGCUtilities.buildServiceProvider( "", null, OGCUtilities.buildResponsiblePartySubsetType( null, null, null, null ) );
+    return WPS040ObjectFactoryUtilities.buildServiceProvider( "", null, WPS040ObjectFactoryUtilities.buildResponsiblePartySubsetType( null, null, null, null ) );
   }
 
   /**
@@ -202,7 +205,7 @@ public class GetCapabilities implements IOperation
     /* Execute. */
     operations.add( buildExecute() );
 
-    return OGCUtilities.buildOperationsMetadata( operations, null, null, null );
+    return WPS040ObjectFactoryUtilities.buildOperationsMetadata( operations, null, null, null );
   }
 
   /**
@@ -213,28 +216,28 @@ public class GetCapabilities implements IOperation
   private Operation buildGetCapabilities( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
-    JAXBElement<RequestMethodType> get = OGCUtilities.buildHTTPGet( requestMethod );
+    RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
+    JAXBElement<RequestMethodType> get = WPS040ObjectFactoryUtilities.buildHTTPGet( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
     requestMethods.add( get );
-    HTTP http = OGCUtilities.buildHTTP( requestMethods );
-    dcps.add( OGCUtilities.buildDCP( http ) );
+    HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
+    dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
     List<DomainType> parameter = new LinkedList<DomainType>();
 
     List<Object> values = new LinkedList<Object>();
-    values.add( OGCUtilities.buildValueType( "WPS" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
+    values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
 
     List<Object> values1 = new LinkedList<Object>();
-    values1.add( OGCUtilities.buildValueType( "GetCapabilities" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
+    values1.add( WPS040ObjectFactoryUtilities.buildValueType( "GetCapabilities" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
 
     List<Object> values2 = new LinkedList<Object>();
-    values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "AcceptVersions" ) );
+    values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "AcceptVersions" ) );
 
-    return OGCUtilities.buildOperation( dcps, parameter, null, null, "GetCapabilities" );
+    return WPS040ObjectFactoryUtilities.buildOperation( dcps, parameter, null, null, "GetCapabilities" );
   }
 
   /**
@@ -245,40 +248,40 @@ public class GetCapabilities implements IOperation
   private Operation buildDescribeProcess( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
-    JAXBElement<RequestMethodType> get = OGCUtilities.buildHTTPGet( requestMethod );
-    JAXBElement<RequestMethodType> post = OGCUtilities.buildHTTPPost( requestMethod );
+    RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
+    JAXBElement<RequestMethodType> get = WPS040ObjectFactoryUtilities.buildHTTPGet( requestMethod );
+    JAXBElement<RequestMethodType> post = WPS040ObjectFactoryUtilities.buildHTTPPost( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
     requestMethods.add( get );
     requestMethods.add( post );
-    HTTP http = OGCUtilities.buildHTTP( requestMethods );
-    dcps.add( OGCUtilities.buildDCP( http ) );
+    HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
+    dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
     List<DomainType> parameter = new LinkedList<DomainType>();
 
     List<Object> values = new LinkedList<Object>();
-    values.add( OGCUtilities.buildValueType( "WPS" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
+    values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
 
     List<Object> values1 = new LinkedList<Object>();
-    values1.add( OGCUtilities.buildValueType( "DescribeProcess" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
+    values1.add( WPS040ObjectFactoryUtilities.buildValueType( "DescribeProcess" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
 
     List<Object> values2 = new LinkedList<Object>();
-    values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
+    values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
 
     List<Object> allowedValues = new LinkedList<Object>();
     for( int i = 0; i < m_simModelspecs.size(); i++ )
     {
       /* Get the modelspec. */
       Modelspec modelData = m_simModelspecs.get( i );
-      allowedValues.add( OGCUtilities.buildValueType( modelData.getTypeID() ) );
+      allowedValues.add( WPS040ObjectFactoryUtilities.buildValueType( modelData.getTypeID() ) );
     }
 
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
 
-    return OGCUtilities.buildOperation( dcps, parameter, null, null, "DescribeProcess" );
+    return WPS040ObjectFactoryUtilities.buildOperation( dcps, parameter, null, null, "DescribeProcess" );
   }
 
   /**
@@ -289,37 +292,37 @@ public class GetCapabilities implements IOperation
   private Operation buildExecute( )
   {
     List<DCP> dcps = new LinkedList<DCP>();
-    RequestMethodType requestMethod = OGCUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
-    JAXBElement<RequestMethodType> post = OGCUtilities.buildHTTPPost( requestMethod );
+    RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
+    JAXBElement<RequestMethodType> post = WPS040ObjectFactoryUtilities.buildHTTPPost( requestMethod );
     List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
     requestMethods.add( post );
-    HTTP http = OGCUtilities.buildHTTP( requestMethods );
-    dcps.add( OGCUtilities.buildDCP( http ) );
+    HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
+    dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
     List<DomainType> parameter = new LinkedList<DomainType>();
     List<Object> values = new LinkedList<Object>();
-    values.add( OGCUtilities.buildValueType( "WPS" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
+    values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) );
 
     List<Object> values1 = new LinkedList<Object>();
-    values1.add( OGCUtilities.buildValueType( "Execute" ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
+    values1.add( WPS040ObjectFactoryUtilities.buildValueType( "Execute" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) );
 
     List<Object> values2 = new LinkedList<Object>();
-    values2.add( OGCUtilities.buildValueType( OGCUtilities.VERSION ) );
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
+    values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) );
 
     List<Object> allowedValues = new LinkedList<Object>();
     for( int i = 0; i < m_simModelspecs.size(); i++ )
     {
       /* Get the modelspec. */
       Modelspec modelData = m_simModelspecs.get( i );
-      allowedValues.add( OGCUtilities.buildValueType( modelData.getTypeID() ) );
+      allowedValues.add( WPS040ObjectFactoryUtilities.buildValueType( modelData.getTypeID() ) );
     }
 
-    parameter.add( OGCUtilities.buildDomainType( OGCUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
+    parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( allowedValues ), null, null, null, false, null, "Identifier" ) );
 
-    return OGCUtilities.buildOperation( dcps, parameter, null, null, "Execute" );
+    return WPS040ObjectFactoryUtilities.buildOperation( dcps, parameter, null, null, "Execute" );
   }
 
   /**
@@ -335,14 +338,14 @@ public class GetCapabilities implements IOperation
       /* Get the modelspec. */
       Modelspec modelData = m_simModelspecs.get( i );
 
-      CodeType identifier = OGCUtilities.buildCodeType( "", modelData.getTypeID() );
+      CodeType identifier = WPS040ObjectFactoryUtilities.buildCodeType( "", modelData.getTypeID() );
       String title = modelData.getTypeID();
       String abstrakt = "No descriptions available.";
 
-      ProcessBriefType processBrief = OGCUtilities.buildProcessBriefType( identifier, title, abstrakt, null, null );
+      ProcessBriefType processBrief = WPS040ObjectFactoryUtilities.buildProcessBriefType( identifier, title, abstrakt, null, null );
       processBriefs.add( processBrief );
     }
 
-    return OGCUtilities.buildProcessOfferings( processBriefs );
+    return WPS040ObjectFactoryUtilities.buildProcessOfferings( processBriefs );
   }
 }

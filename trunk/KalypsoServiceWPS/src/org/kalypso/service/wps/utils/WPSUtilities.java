@@ -72,7 +72,7 @@ import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
-import org.kalypso.service.wps.utils.ogc.OGCUtilities;
+import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 
@@ -88,6 +88,44 @@ public class WPSUtilities
    * AnyURI QName.
    */
   public static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+
+  /**
+   * Service type identifier.
+   */
+  public static final String SERVICE = "WPS";
+
+  public static enum WPS_VERSION
+  {
+    V100("1.0.0"),
+    V040("0.4.0");
+
+    private final String m_version;
+
+    WPS_VERSION( final String version )
+    {
+      m_version = version;
+    }
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString( )
+    {
+      return m_version;
+    }
+
+    public static WPS_VERSION getValue( final String value )
+    {
+      for( WPS_VERSION version : values() )
+      {
+        if( version.toString().equals( value ) )
+          return version;
+      }
+      return null;
+    }
+
+  }
 
   /**
    * The constructor.
@@ -150,19 +188,19 @@ public class WPSUtilities
     List<CodeType> identifiers = new LinkedList<CodeType>();
     for( String processId : processIds )
     {
-      identifiers.add( OGCUtilities.buildCodeType( "", processId ) );
+      identifiers.add( WPS040ObjectFactoryUtilities.buildCodeType( "", processId ) );
     }
 
-    DescribeProcess describeProcess = OGCUtilities.buildDescribeProcess( identifiers );
+    DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifiers );
 
     /* Send the request. */
     Object describeProcessObject = null;
     try
     {
-      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess ), serviceEndpoint );
+      String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), serviceEndpoint );
 
       /* Try to unmarshall. */
-      describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse );
+      describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse, WPS_VERSION.V040 );
     }
     catch( IOException e )
     {
@@ -202,8 +240,8 @@ public class WPSUtilities
     try
     {
       /* Build the execute request. */
-      Execute execute = OGCUtilities.buildExecute( OGCUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
-      String executeRequestString = MarshallUtilities.marshall( execute );
+      Execute execute = WPS040ObjectFactoryUtilities.buildExecute( WPS040ObjectFactoryUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
+      String executeRequestString = MarshallUtilities.marshall( execute, WPS_VERSION.V040 );
       String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
 
       /* Handle the execute response. */
@@ -212,7 +250,7 @@ public class WPSUtilities
       if( executeResponseString == null || executeResponseString.length() == 0 )
         throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
 
-      Object response = MarshallUtilities.unmarshall( executeResponseString );
+      Object response = MarshallUtilities.unmarshall( executeResponseString, WPS_VERSION.V040 );
 
       if( response instanceof ExceptionReport )
         throw new CoreException( StatusUtilities.createErrorStatus( WPSUtilities.createErrorString( (ExceptionReport) response ) ) );
@@ -255,28 +293,11 @@ public class WPSUtilities
    *          The simulations type id.
    * @return The simulation.
    */
-  public static ISimulation getSimulation( String simulationType ) throws OWSException
+  public static ISimulation getSimulation( final String simulationType ) throws CoreException
   {
-    ISimulation simulation = null;
-    try
-    {
-      /* Get the simulation. */
-      Debug.println( "Searching for simulation \"" + simulationType + "\" ..." );
-      simulation = KalypsoSimulationCoreExtensions.createSimulation( simulationType );
-
-      if( simulation == null )
-      {
-        Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "The simulation \"" + simulationType + "\" is not available.", "" );
-      }
-    }
-    catch( CoreException e )
-    {
-      Debug.println( "Unsupported simulation \"" + simulationType + "\"!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
-    }
-
-    Debug.println( "Found simulation \"" + simulationType + "\"." );
+    /* Get the simulation. */
+    Debug.println( "Searching for simulation \"" + simulationType + "\" ..." );
+    final ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( simulationType );
     return simulation;
   }
 

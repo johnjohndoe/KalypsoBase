@@ -57,21 +57,6 @@ import org.kalypso.simulation.core.SimulationException;
 public class WPSSimulationInfo implements Serializable, ISimulationMonitor
 {
   /**
-   * The id of the descriped thread (job).
-   */
-  private String m_id = null;
-
-  /**
-   * Description of the job, which has been given at creation time to the service.
-   */
-  private String m_description;
-
-  /**
-   * Der Berechnungstyp des Jobs.
-   */
-  private String m_type;
-
-  /**
    * Status of the job.
    */
   private ISimulationConstants.STATE m_state = ISimulationConstants.STATE.UNKNOWN;
@@ -102,6 +87,12 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
    */
   private int m_status = 0; // = IStatus.OK;
 
+  private final long m_threadId;
+
+  private final String m_type;
+
+  private final String m_description;
+
   /**
    * The construtor.
    */
@@ -109,18 +100,21 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   {
     // nur für wscompile
     m_resultEeater = null;
+    m_threadId = -1;
+    m_type = null;
+    m_description = null;
   }
 
   /**
    * The constructor.
    */
-  public WPSSimulationInfo( final String id, final String description, final String type, final ISimulationConstants.STATE state, final int progress, final WPSSimulationResultEater eater )
+  public WPSSimulationInfo( final long threadId, final String type, final String description, final ISimulationConstants.STATE state, final int progress, final WPSSimulationResultEater eater )
   {
-    m_id = id;
+    m_threadId = threadId;
+    m_type = type;
     m_description = description;
     m_state = state;
     m_progress = progress;
-    m_type = type;
     m_resultEeater = eater;
   }
 
@@ -131,7 +125,7 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
 
   public String getId( )
   {
-    return m_id;
+    return Long.toString( m_threadId );
   }
 
   /**
@@ -150,16 +144,6 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   public String getMessage( )
   {
     return m_message;
-  }
-
-  public void setDescription( final String string )
-  {
-    m_description = string;
-  }
-
-  public void setId( final String string )
-  {
-    m_id = string;
   }
 
   public void setProgress( final int i )
@@ -185,11 +169,6 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   public final String getType( )
   {
     return m_type;
-  }
-
-  public final void setType( String type )
-  {
-    m_type = type;
   }
 
   public void cancel( )

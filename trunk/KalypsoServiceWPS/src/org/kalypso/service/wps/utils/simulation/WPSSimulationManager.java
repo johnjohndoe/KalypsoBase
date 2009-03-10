@@ -44,12 +44,12 @@ import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.apache.commons.vfs.FileObject;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.Activator;
-import org.kalypso.service.wps.server.operations.DescribeProcess;
+import org.kalypso.service.wps.server.operations.DescribeProcessOperation;
 import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
 import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
@@ -92,7 +92,7 @@ public class WPSSimulationManager
       }
     }
     Debug.println( "Setting maximum number of threads to " + maxNumThreads );
-    m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), maxNumThreads, 2000, FileUtilities.TMP_DIR );
+    m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), maxNumThreads, 2000 );
   }
 
   /**
@@ -118,25 +118,28 @@ public class WPSSimulationManager
    * @param execute
    *          The execute request of the WPS.
    */
-  public WPSSimulationInfo startSimulation( final String typeID, final String description, final Execute execute ) throws OWSException
+  public WPSSimulationInfo startSimulation( final ExecuteMediator executeMediator ) throws OWSException
   {
     try
     {
       /* Get the process description. */
-      final ProcessDescriptionType processDescription = DescribeProcess.buildProcessDescriptionType( typeID );
+      final String typeID = executeMediator.getProcessId();
+      final ProcessDescriptionType processDescription = DescribeProcessOperation.buildProcessDescriptionType( typeID );
 
       /* Start the job. */
-      final WPSSimulationInfo info = m_service.startJob( typeID, description, execute, processDescription );
+      //TODO version 1.0
+      final Execute executeV04 = executeMediator.getV04();
+      final WPSSimulationInfo info = m_service.startJob( executeV04, processDescription );
 
       /* This thread will check for the status of the other one. */
-      final WPSSimulationHandler handler = new WPSSimulationHandler( m_service, info.getId(), execute );
+      final WPSSimulationHandler handler = new WPSSimulationHandler( m_service, executeV04, info.getId() );
       handler.start();
 
       return info;
     }
-    catch( Exception e )
+    catch( final SimulationException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "Could not start process." );
     }
   }
 

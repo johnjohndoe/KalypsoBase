@@ -16,10 +16,10 @@ import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.ResponseBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.server.operations.CancelSimulation;
-import org.kalypso.service.wps.server.operations.DescribeProcess;
+import org.kalypso.service.wps.server.operations.DescribeProcessOperation;
 import org.kalypso.service.wps.server.operations.DisposeSimulation;
-import org.kalypso.service.wps.server.operations.Execute;
-import org.kalypso.service.wps.server.operations.GetCapabilities;
+import org.kalypso.service.wps.server.operations.ExecuteOperation;
+import org.kalypso.service.wps.server.operations.GetCapabilitiesOperation;
 import org.kalypso.service.wps.server.operations.IOperation;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -235,9 +235,9 @@ public class WPSService implements IOGCService
     m_operations = new HashMap<String, IOperation>();
 
     /* Mandatory operations. */
-    m_operations.put( "DescribeProcess", new DescribeProcess() );
-    m_operations.put( "Execute", new Execute() );
-    m_operations.put( "GetCapabilities", new GetCapabilities() );
+    m_operations.put( "DescribeProcess", new DescribeProcessOperation() );
+    m_operations.put( "Execute", new ExecuteOperation() );
+    m_operations.put( "GetCapabilities", new GetCapabilitiesOperation() );
 
     /* Not OGC conform operations. */
     m_operations.put( "CancelSimulation", new CancelSimulation() );
