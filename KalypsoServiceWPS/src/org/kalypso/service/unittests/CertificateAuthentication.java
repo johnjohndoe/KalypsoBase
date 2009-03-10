@@ -57,8 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
-import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 
 /**
  * This unit test should help verifying, if the client can send a certificate to a server, which requests client-side
@@ -134,12 +133,12 @@ public class CertificateAuthentication
 
     /* Build the describe process request. */
     List<CodeType> identifier = new LinkedList<CodeType>();
-    identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", IDENTIFIER ) );
-    DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
+    identifier.add( OGCUtilities.buildCodeType( "", IDENTIFIER ) );
+    DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
     Debug.println( "Asking for a process describtion ..." );
-    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), SERVICE_URL );
+    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), SERVICE_URL );
 
     /* Handle the response. */
     Debug.println( "Response:\n" + describeProcessResponse );

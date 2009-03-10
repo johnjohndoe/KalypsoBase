@@ -42,6 +42,7 @@ package org.kalypso.service.wps.client;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,11 +79,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.client.exceptions.WPSException;
-import org.kalypso.service.wps.server.operations.DescribeProcessOperation;
+import org.kalypso.service.wps.server.operations.DescribeProcess;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
-import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationManager;
 import org.kalypso.simulation.core.SimulationException;
@@ -202,7 +202,7 @@ public class NonBlockingWPSRequest
       // decide between local and remote invocation
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
-        m_processDescription = DescribeProcessOperation.buildProcessDescriptionType( m_identifier );
+        m_processDescription = DescribeProcess.buildProcessDescriptionType( m_identifier );
       }
       else
       {
@@ -255,29 +255,27 @@ public class NonBlockingWPSRequest
     Debug.println( "Start the simulation ..." );
 
     ExecuteResponseType executeResponse;
-    final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
+    final CodeType simulationIdentifier = OGCUtilities.buildCodeType( "", m_identifier );
 
     try
     {
       // decide between local and remote invocation
       if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
-        FileObject resultFile = null;
+	    FileObject resultFile = null;
         try
         {
           /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-          final Execute execute = WPS040ObjectFactoryUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
+          final Execute execute = OGCUtilities.buildExecute( simulationIdentifier, m_dataInputs, m_outputDefinitions, true, true );
           final WPSSimulationManager manager = WPSSimulationManager.getInstance();
-
-          final ExecuteMediator executeMediator = new ExecuteMediator( execute );
-          final WPSSimulationInfo info = manager.startSimulation( executeMediator );
+          final WPSSimulationInfo info = manager.startSimulation( m_identifier, m_identifier, execute );
 
           /* Prepare the execute response. */
           final FileObject resultDir = manager.getResultDir( info.getId() );
-          resultFile = resultDir.resolveFile( "executeResponse.xml" );
+		  resultFile = resultDir.resolveFile( "executeResponse.xml" );
           final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
-          final StatusType status = WPS040ObjectFactoryUtilities.buildStatusType( "Process accepted.", true );
-          executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs, m_outputDefinitions, null, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
+          final StatusType status = OGCUtilities.buildStatusType( "Process accepted.", true );
+          executeResponse = OGCUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs, m_outputDefinitions, null, statusLocation, OGCUtilities.VERSION );
         }
         catch( final IOException e )
         {
@@ -370,7 +368,7 @@ public class NonBlockingWPSRequest
       }
     }
 
-    return WPS040ObjectFactoryUtilities.buildDataInputsType( inputValues );
+    return OGCUtilities.buildDataInputsType( inputValues );
   }
 
   private IOValueType createDataInput( final InputDescriptionType inputDescription, final Object inputValue )
@@ -386,9 +384,9 @@ public class NonBlockingWPSRequest
       {
         /* Build the complex value reference. */
         final URI uri = (URI) inputValue;
-        final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
-        final ComplexValueReference valueReference = WPS040ObjectFactoryUtilities.buildComplexValueReference( uri.toASCIIString(), null, null, null );
-        final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
+        final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+        final ComplexValueReference valueReference = OGCUtilities.buildComplexValueReference( uri.toASCIIString(), null, null, null );
+        final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
 
         /* Add the input. */
         return ioValue;
@@ -399,9 +397,9 @@ public class NonBlockingWPSRequest
       value.add( inputValue );
 
       /* Build the complex value. */
-      final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
-      final ComplexValueType valueType = WPS040ObjectFactoryUtilities.buildComplexValueType( null, null, null, value );
-      final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
+      final ComplexValueType valueType = OGCUtilities.buildComplexValueType( null, null, null, value );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
 
       /* Add the input. */
       return ioValue;
@@ -412,13 +410,13 @@ public class NonBlockingWPSRequest
     if( literalInput != null )
     {
       /* Build the literal value type. */
-      final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
+      final CodeType code = OGCUtilities.buildCodeType( null, inputId );
 
       final String inputType = literalInput.getDataType().getValue();
       final String value = marshalLiteral( inputValue, inputType );
 
-      final LiteralValueType literalValue = WPS040ObjectFactoryUtilities.buildLiteralValueType( value, inputType, null );
-      final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
+      final LiteralValueType literalValue = OGCUtilities.buildLiteralValueType( value, inputType, null );
+      final IOValueType ioValue = OGCUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
 
       /* Add the input. */
       return ioValue;
@@ -467,21 +465,20 @@ public class NonBlockingWPSRequest
       if( !outputs.contains( identifier.getValue() ) )
       {
         /* Ooops, it is missing in our model data. */
-        // throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() +
-        // " is missing. Check your model data." ) );
+        // throw new CoreException( StatusUtilities.createErrorStatus( "The data output " + identifier.getValue() + " is missing. Check your model data." ) );
         continue;
       }
 
       // TODO: maybe only ask for outputs that are in the list m_outputs?
 
-      final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, identifier.getValue() );
-      final OutputDefinitionType outputDefinition = WPS040ObjectFactoryUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
+      final CodeType code = OGCUtilities.buildCodeType( null, identifier.getValue() );
+      final OutputDefinitionType outputDefinition = OGCUtilities.buildOutputDefinitionType( code, outputDescription.getTitle(), outputDescription.getAbstract(), null, null, null, null );
 
       /* Add the output. */
       outputValues.add( outputDefinition );
     }
 
-    return WPS040ObjectFactoryUtilities.buildOutputDefinitionsType( outputValues );
+    return OGCUtilities.buildOutputDefinitionsType( outputValues );
   }
 
   public String getStatusLocation( )

@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,9 @@ import javax.xml.bind.DatatypeConverter;
 
 import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.wps.ComplexValueType;
+import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.Execute;
+import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
@@ -68,9 +72,14 @@ import org.kalypso.simulation.core.SimulationException;
 public class WPSSimulationDataProvider implements ISimulationDataProvider
 {
   /**
+   * The execute request contains the input data.
+   */
+  private Execute m_execute = null;
+
+  /**
    * Contains the id of the inputs as key and the input itself as value.
    */
-  private final Map<String, Object> m_inputList;
+  private Map<String, Object> m_inputList = null;
 
   /**
    * The temporary directory.
@@ -83,10 +92,11 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * @param execute
    *          The execute request.
    */
-  public WPSSimulationDataProvider( final Map<String, Object> inputList, final File tmpDir )
+  public WPSSimulationDataProvider( final Execute execute, final File tmpDir ) throws SimulationException
   {
-    m_inputList = inputList;
+    m_execute = execute;
     m_tmpDir = tmpDir;
+    m_inputList = index( m_execute );
   }
 
   /**
@@ -201,5 +211,48 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   public boolean hasID( final String id )
   {
     return m_inputList.containsKey( id );
+  }
+
+  /**
+   * Indexes the input values with their id.
+   * 
+   * @param execute
+   *          The execute request, containing the input data.
+   * @return The indexed map.
+   */
+  private Map<String, Object> index( final Execute execute ) throws SimulationException
+  {
+    final Map<String, Object> inputList = new LinkedHashMap<String, Object>();
+
+    final DataInputsType dataInputs = execute.getDataInputs();
+    final List<IOValueType> inputs = dataInputs.getInput();
+    for( final IOValueType input : inputs )
+    {
+      Object value = null;
+      if( input.getComplexValue() != null )
+      {
+        value = input.getComplexValue();
+      }
+      else if( input.getLiteralValue() != null )
+      {
+        value = input.getLiteralValue();
+      }
+      else if( input.getComplexValueReference() != null )
+      {
+        value = input.getComplexValueReference();
+      }
+      else if( input.getBoundingBoxValue() != null )
+      {
+        value = input.getBoundingBoxValue();
+      }
+      else
+      {
+        throw new SimulationException( "Input has no valid value!", null );
+      }
+
+      inputList.put( input.getIdentifier().getValue(), value );
+    }
+
+    return inputList;
   }
 }

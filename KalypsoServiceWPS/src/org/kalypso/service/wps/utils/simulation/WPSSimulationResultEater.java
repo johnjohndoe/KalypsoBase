@@ -76,7 +76,7 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
@@ -193,13 +193,13 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       if( result instanceof URI )
       {
         final URI urlResult = (URI) result;
-        valueFormChoice = WPS040ObjectFactoryUtilities.buildComplexValueReference( urlResult.toString(), null, null, null );
+        valueFormChoice = OGCUtilities.buildComplexValueReference( urlResult.toString(), null, null, null );
       }
       else if( result instanceof URL )
       {
         final URL urlResult = (URL) result;
         final String clientUrlResult = WPSUtilities.convertInternalToClient( urlResult.toExternalForm() );
-        valueFormChoice = WPS040ObjectFactoryUtilities.buildComplexValueReference( clientUrlResult, null, null, null );
+        valueFormChoice = OGCUtilities.buildComplexValueReference( clientUrlResult, null, null, null );
       }
       else if( result instanceof File )
       {
@@ -257,7 +257,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       throw new SimulationException( "The type of the output with the identifier '" + id + "' is not correctly defined by the simulation ...", null );
 
     /* Build io value. */
-    final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
+    final IOValueType ioValue = OGCUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
     m_results.put( id, ioValue );
   }
 
@@ -319,7 +319,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       m_references.put( sourceFile, destination );
 
       /* Build complex value reference. */
-      return WPS040ObjectFactoryUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
+      return OGCUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
     }
     catch( final FileSystemException e )
     {
@@ -348,7 +348,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     value.add( result );
 
     /* Build the complex value. */
-    return WPS040ObjectFactoryUtilities.buildComplexValueType( null, null, null, value );
+    return OGCUtilities.buildComplexValueType( null, null, null, value );
   }
 
   /**
@@ -389,7 +389,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
 
     /* Build the literal value type. */
-    return WPS040ObjectFactoryUtilities.buildLiteralValueType( value, dataType, null );
+    return OGCUtilities.buildLiteralValueType( value, dataType, null );
   }
 
   /**

@@ -51,8 +51,7 @@ import org.junit.Test;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
-import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
-import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.ogc.OGCUtilities;
 
 /**
  * This unittest should test a http connection, accepting every certificate.<br>
@@ -88,12 +87,12 @@ public class HttpsAcceptCertificate
 
     /* Build the describe process request. */
     List<CodeType> identifier = new LinkedList<CodeType>();
-    identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", "InformDSSHydraulicV1.0" ) );
-    DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
+    identifier.add( OGCUtilities.buildCodeType( "", "InformDSSHydraulicV1.0" ) );
+    DescribeProcess descripeProcess = OGCUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
     Debug.println( "Asking for a process description ..." );
-    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), "https://informdss.bafg.de/bridge/ogc?" );
+    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( descripeProcess ), "https://informdss.bafg.de/bridge/ogc?" );
 
     /* Handle the response. */
     Debug.println( "Response:\n" + describeProcessResponse );
