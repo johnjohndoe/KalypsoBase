@@ -56,6 +56,8 @@ import org.xml.sax.SAXException;
  */
 public class BindingUnmarshalingContentHandler implements ContentHandler
 {
+  private static final String BOX_STRING = "box";
+
   private int m_level;
 
   private final ContentHandler m_unmarshallerHandler;
@@ -65,6 +67,8 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   private final UnmarshalResultProvider m_unmarshallResultProvider;
 
   private final String m_gmlVersion;
+
+  private final boolean m_isGML2;
 
   /**
    * @param unmarshallerHandler
@@ -80,6 +84,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
     m_gmlVersion = gmlVersion;
+    m_isGML2 = m_gmlVersion.startsWith( "2" );
   }
 
   /**
@@ -91,22 +96,25 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     // hack:
     // deegree-bug gazetteer provides gml:box instead of gml:Box
     // (doemming)
-    if( NS.GML2.equals( uri ) && "box".equals( local ) )
+    if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
     {
       local = "Box";
-      qname = qname.replaceFirst( "box", "Box" );
+      qname = qname.replaceFirst( BOX_STRING, "Box" );
     }
-    // hack for loading invalid gml2 polygons, do not remove (doemming)
-    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "exterior".equals( local ) )
+    if( m_isGML2 && NS.GML3.equals( uri ) )
     {
-      local = "outerBoundaryIs";
-      qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
-    }
-    // hack for loading invalid gml2 polygons, do not remove (doemming)
-    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "interior".equals( local ) )
-    {
-      local = "innerBoundaryIs";
-      qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+      // hack for loading invalid gml2 polygons, do not remove (doemming)
+      if( "exterior".equals( local ) )
+      {
+        local = "outerBoundaryIs";
+        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+      }
+      // hack for loading invalid gml2 polygons, do not remove (doemming)
+      else if( "interior".equals( local ) )
+      {
+        local = "innerBoundaryIs";
+        qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+      }
     }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
@@ -122,34 +130,29 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
   }
 
-  // private String indent( )
-  // {
-  // if( m_level > 0 )
-  // return StringUtils.repeat( " ", m_level );
-  // return "?";
-  // }
-
+  @SuppressWarnings("unchecked")
   public void endElement( final String uri, String local, String qname ) throws SAXException
   {
-    // hack, see comment in startElement
-    if( NS.GML2.equals( uri ) && "box".equals( local ) )
+    if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
     {
       local = "Box";
-      qname = qname.replaceFirst( "box", "Box" );
+      qname = qname.replaceFirst( BOX_STRING, "Box" );
     }
-    // hack for loading invalid gml2 polygons, do not remove (doemming)
-    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "exterior".equals( local ) )
+    if( m_isGML2 && NS.GML3.equals( uri ) )
     {
-      local = "outerBoundaryIs";
-      qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+      // hack for loading invalid gml2 polygons, do not remove (doemming)
+      if( "exterior".equals( local ) )
+      {
+        local = "outerBoundaryIs";
+        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+      }
+      // hack for loading invalid gml2 polygons, do not remove (doemming)
+      if( "interior".equals( local ) )
+      {
+        local = "innerBoundaryIs";
+        qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+      }
     }
-    // hack for loading invalid gml2 polygons, do not remove (doemming)
-    if( m_gmlVersion.startsWith( "2" ) && NS.GML3.equals( uri ) && "interior".equals( local ) )
-    {
-      local = "innerBoundaryIs";
-      qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
-    }
-
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
     m_unmarshallerHandler.endElement( uri, local, qname );
