@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
 Bundle-Version: 0.2.0
-Bundle-ClassPath: bin/
 Bundle-Localization: plugin
 Export-Package: de.openali.odysseus.chart.ext.base.axis,
  de.openali.odysseus.chart.ext.base.axis.provider,
