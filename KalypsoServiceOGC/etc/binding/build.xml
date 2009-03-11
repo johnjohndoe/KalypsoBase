@@ -4,7 +4,10 @@
 
 	<property name="project" value="${workspace}/KalypsoServiceOGC" />
 	<patternset id="binding.schemata">
-		<include name="etc/binding/**/*.xsd" />
+		<include name="etc/binding/ows/1.0.0/*.xsd" />
+		<!-- TODO Stefan
+		<include name="etc/binding/ows/1.1.0/*.xsd" />
+		-->
 	</patternset>
 	<property name="xjc-args" value="-nv" />
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
