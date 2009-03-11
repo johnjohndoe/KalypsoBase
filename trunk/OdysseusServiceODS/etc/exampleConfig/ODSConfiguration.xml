@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ODSConfiguration xmlns="http://www.openali.de/odysseus/service/odsimpl/0.2.0">
+     <ServiceParameters>
+          <Parameter name="proxyPort" value="8080"/>
+          <Parameter name="proxyHost" value="172.16.0.253"/>
+     </ServiceParameters>
+     <ServiceIdentification xmlns="http://www.opengis.net/ows">
+          <Title>Observation Chart Service</Title>
+          <Abstract>Observation Chart Service maintained by Example Corp.</Abstract>
+          <Keywords>
+               <Keyword>Observation</Keyword>
+               <Keyword>Chart</Keyword>
+               <Keyword>Legend</Keyword>
+          </Keywords>
+          <ServiceType>ODS</ServiceType>
+          <ServiceTypeVersion>0.0.1</ServiceTypeVersion>
+          <Fees>None</Fees>
+          <AccessConstraints>None</AccessConstraints>
+     </ServiceIdentification>
+     <ServiceProvider xmlns="http://www.opengis.net/ows">
+          <ProviderName>Example Corp.</ProviderName>
+          <ProviderSite xlink:href="http://www.example.org" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          <ServiceContact>
+               <IndividualName>Manfred Musterman</IndividualName>
+               <PositionName>ODS Administrator</PositionName>
+               <ContactInfo>
+                    <Phone>
+                         <Voice>+49-261-123456-7</Voice>
+                         <Facsimile>+49-261-123456-8</Facsimile>
+                    </Phone>
+                    <Address>
+                         <DeliveryPoint>Small Street 1</DeliveryPoint>
+                         <City>Koblenz</City>
+                         <AdministrativeArea>Rhineland-Palatinate</AdministrativeArea>
+                         <PostalCode>56073</PostalCode>
+                         <Country>Germany</Country>
+                         <ElectronicMailAddress>mm@example.org</ElectronicMailAddress>
+                    </Address>
+                    <HoursOfService>08:00 AM - 04:00 PM on weekdays</HoursOfService>
+               </ContactInfo>
+               <Role>Point of contact</Role>
+          </ServiceContact>
+     </ServiceProvider>
+     <Scenes>
+          <DefaultScene id="genericScene" path="./editTestChart.kod"/>
+     </Scenes>
+</ODSConfiguration>
+

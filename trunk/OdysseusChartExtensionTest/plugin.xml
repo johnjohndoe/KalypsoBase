@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="de.openali.odysseus.chart.factory.LayerProvider"> 
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider"
+            id="org.kalypso.chart.ext.test.EditableLineLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.BfgPegelLayerProvider"
+            id="org.kalypso.chart.ext.test.BfgPegelLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.TortenLayerProvider"
+            id="org.kalypso.chart.ext.test.TortenLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.BfgPegelDoubleLayerProvider"
+            id="org.kalypso.chart.ext.test.BfgPegelDoubleLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.BfgPegelDoubleUnfilteredLayerProvider"
+            id="org.kalypso.chart.ext.test.BfgPegelDoubleUnfilteredLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.BfgPegelUnfilteredLayerProvider"
+            id="org.kalypso.chart.ext.test.BfgPegelUnfilteredLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.ColoredTestBarLayerProvider"
+            id="org.kalypso.chart.ext.test.ColoredTestBarLayerProvider">
+      </provider>
+      <provider
+            class="org.kalypso.chart.ext.test.layer.provider.TooltipTestLayerProvider"
+            id="org.kalypso.chart.ext.test.TooltipTestLayerProvider">
+      </provider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.kalypso.chart.ext.test.view.InstalledExtensionView"
+            id="de.openali.odysseus.chart.test.InstalledExtensionTestView"
+            name="Installed Chart Extensions">
+         <description>
+            A view which displays all installed chart extensions
+         </description>
+      </view>
+   </extension>
+
+
+</plugin>
