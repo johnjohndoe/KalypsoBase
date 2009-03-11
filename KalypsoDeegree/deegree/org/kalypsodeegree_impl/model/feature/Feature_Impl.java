@@ -1,587 +1,266 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- *
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree,
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.model.feature;
+/*----------------    FILE HEADER  ------------------------------------------
 
-import java.util.ArrayList;
-import java.util.List;
+This file is part of deegree.
+Copyright (C) 2001 by:
+EXSE, Department of Geography, University of Bonn
+http://www.giub.uni-bonn.de/exse/
+lat/lon Fitzke/Fretter/Poth GbR
+http://www.lat-lon.de
 
-import javax.xml.namespace.QName;
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
-import org.deegree.model.spatialschema.GeometryException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.PlatformObject;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Contact:
+
+Andreas Poth
+lat/lon Fitzke/Fretter/Poth GbR
+Meckenheimer Allee 176
+53115 Bonn
+Germany
+E-Mail: poth@lat-lon.de
+
+Jens Fitzke
+Department of Geography
+University of Bonn
+Meckenheimer Allee 166
+53115 Bonn
+Germany
+E-Mail: jens.fitzke@uni-bonn.de
+
+
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.model.feature;
+
+import java.io.Serializable;
+import java.util.*;
+
+import org.opengis.gc.*;
+
+import org.deegree.model.geometry.*;
+import org.deegree.model.feature.*;
+import org.deegree_impl.model.geometry.GeometryFactory;
+
+
 
 /**
- * Implementation of ogc feature
+ * Features are, according to the Abstract Specification, digital representations
+ * of real world entities. Feature Identity thus refers to mechanisms to identify
+ * such representations: not to identify the real world entities that are the
+ * subject of a representation. Thus two different representations of a real world
+ * entity (say the Mississippi River) will be two different features with distinct
+ * identities. Real world identification systems, such as title numbers, while
+ * possibly forming a sound basis for an implementation of a feature identity
+ * mechanism, are not of themselves such a mechanism.
+ * <p>-----------------------------------------------------------------------</p>
  *
- * @author doemming
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
+ * @version $Revision$ $Date$
  */
-public class Feature_Impl extends PlatformObject implements Feature
-{
-  private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
-
-  /**
-   * all property-values are stored here in sequential order (as defined in application-schema) properties with
-   * maxOccurency = 1 are stored direct properties with maxOccurency > 1 are stored in a list properties with
-   * maxOccurency = "unbounded" should use FeatureCollections
-   */
-  private final Object[] m_properties;
-
-  private final IFeatureType m_featureType;
-
-  private final String m_id;
-
-  private Object m_parent = null;
-
-  private final IRelationType m_parentRelation;
-
-  private GM_Envelope m_envelope = Feature_Impl.INVALID_ENV;
-
-  protected Feature_Impl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    if( ft == null )
-      throw new UnsupportedOperationException( "must provide a featuretype" );
-
-    m_parent = parent;
-
-    m_parentRelation = parentRelation;
-    m_featureType = ft;
-    m_id = id;
-    m_properties = propValues;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getId()
-   */
-  public String getId( )
-  {
-    return m_id;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
-   */
-  public IFeatureType getFeatureType( )
-  {
-    return m_featureType;
-  }
-
-  /**
-   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
-   *         java.util.List-objects
-   * @see org.kalypsodeegree.model.feature.Feature#getProperties()
-   */
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public Object[] getProperties( )
-  {
-    return m_properties;
-  }
-
-  /**
-   * Accesses a property value of this feature.
-   *
-   * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
-   *         embedded in java.util.List-objects
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
-   */
-  public Object getProperty( final IPropertyType pt )
-  {
-    if( pt == null )
-      throw new IllegalArgumentException( "pt may not null" );
-
-    final int pos = m_featureType.getPropertyPosition( pt );
-    final IFeaturePropertyHandler fsh = getPropertyHandler();
-    if( pos == -1 && !fsh.isFunctionProperty( pt ) )
-    {
-      final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
-      throw new IllegalArgumentException( msg );
-    }
-
-    final Object currentValue = pos == -1 ? null : m_properties[pos];
-
-    return fsh.getValue( this, pt, currentValue );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
-   */
-  public GM_Object[] getGeometryProperties( )
-  {
-    return getGeometryPropertyValues();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
-   */
-  public GM_Object getDefaultGeometryProperty( )
-  {
-    return getDefaultGeometryPropertyValue();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
-   */
-  public GM_Envelope getEnvelope( )
-  {
-    try
-    {
-      return getBoundedBy();
-    }
-    catch( final GeometryException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
-  }
-
-  private void calculateEnv( )
-  {
-    GM_Envelope env = null;
-    final GM_Object[] geoms = getGeometryProperties();
-    for( final GM_Object geometry : geoms )
-    {
-      final GM_Envelope geomEnv = GeometryUtilities.getEnvelope( geometry );
-      if( env == null )
-      {
-        env = geomEnv;
-      }
-      else
-      {
-        env = env.getMerged( geomEnv );
-      }
-    }
-    m_envelope = env;
-  }
-
-  public void invalidEnvelope( )
-  {
-    setEnvelopesUpdated();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
-  public void setProperty( final IPropertyType pt, final Object value )
-  {
-    final int pos = m_featureType.getPropertyPosition( pt );
-    if( pos == -1 )
-    {
-      final String message = String.format( "Feature[%s] does not know this property %s", toString(), pt.getQName().toString() );
-      throw new RuntimeException( new GMLSchemaException( message ) );
-    }
-    else
-    {
-      final IFeaturePropertyHandler fsh = getPropertyHandler();
-      m_properties[pos] = fsh.setValue( this, pt, value );
-
-      if( fsh.invalidateEnvelope( pt ) )
-      {
-        invalidEnvelope();
-      }
-    }
-  }
-
-  /**
-   * @deprecated use getProperty(IPropertyType)
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
-   */
-  @Deprecated
-  public Object getProperty( final String propNameLocalPart )
-  {
-    if( propNameLocalPart.indexOf( ':' ) > 0 )
-      throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
-
-    final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
-    if( pt == null )
-      throw new IllegalArgumentException( "unknown local part: " + propNameLocalPart );
-
-    return getProperty( pt );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
-   */
-  public Object getProperty( final QName propQName )
-  {
-    final IPropertyType pt = m_featureType.getProperty( propQName );
-    if( pt == null )
-    {
-      final String message = String.format( "Unknown property:\n\tfeatureType=%s\n\tprop QName=%s", getFeatureType().getQName(), propQName );
-      throw new IllegalArgumentException( message );
-    }
-    return getProperty( pt );
-  }
-
-  /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Deprecated
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    final IPropertyType pt = FeatureHelper.getPT( this, propLocalName );
-    setProperty( pt, value );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
-   */
-  public GMLWorkspace getWorkspace( )
-  {
-    if( m_parent instanceof GMLWorkspace )
-      return (GMLWorkspace) m_parent;
-    if( m_parent instanceof Feature )
-      return ((Feature) m_parent).getWorkspace();
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParent()
-   */
-  public Feature getParent( )
-  {
-    return getOwner();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
-   */
-  public IRelationType getParentRelation( )
-  {
-    return m_parentRelation;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
-  public void setWorkspace( final GMLWorkspace workspace )
-  {
-    if( (m_parent == null) || (m_parent == workspace) )
-    {
-      m_parent = workspace;
-    }
-    else
-      throw new UnsupportedOperationException( "is not a root feature" );
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    final StringBuffer buffer = new StringBuffer( "Feature " );
-    if( m_featureType != null )
-    {
-      buffer.append( m_featureType.getQName().getLocalPart() );
-    }
-    if( m_id != null )
-    {
-      buffer.append( "#" + m_id );
-    }
-    return buffer.toString();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
-   */
-  public void setProperty( final QName propQName, final Object value )
-  {
-    final IFeatureType featureType = getFeatureType();
-
-    final IPropertyType prop = featureType.getProperty( propQName );
-    if( prop == null )
-      throw new IllegalArgumentException( "Property not found: " + propQName );
-
-    setProperty( prop, value );
-  }
-
-  private IFeaturePropertyHandler getPropertyHandler( )
-  {
-    return FeaturePropertyHandlerFactory.getInstance().getHandler( getFeatureType() );
-  }
-
-  /**
-   * REMARK: only for internal use. Is used to determine if a property is a function property. Function properties do
-   * not get transformed during load.<br/>
-   * This is needed in order to prohibit loading of xlinked-workspaces during gml-loading, in order to avoid dead-locks.
-   */
-  public boolean isFunctionProperty( final IPropertyType pt )
-  {
-    final IFeaturePropertyHandler propertyHandler = getPropertyHandler();
-    return propertyHandler.isFunctionProperty( pt );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
-   */
-  public GM_Envelope getBoundedBy( ) throws GeometryException
-  {
-    if( m_envelope == Feature_Impl.INVALID_ENV )
-    {
-      calculateEnv();
-    }
-
-    return m_envelope;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
-   */
-  public GM_Object getDefaultGeometryPropertyValue( )
-  {
-    final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
-    if( defaultGeomProp == null )
-      return null;
-
-    final Object prop = getProperty( defaultGeomProp );
-    if( defaultGeomProp.isList() )
-    {
-      final List props = (List) prop;
-      return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
-    }
-
-    if( prop == null || prop instanceof GM_Object )
-      return (GM_Object) prop;
-
-    throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
-   */
-  public GM_Object[] getGeometryPropertyValues( )
-  {
-    final List<GM_Object> result = new ArrayList<GM_Object>();
-    final IPropertyType[] ftp = m_featureType.getProperties();
-    for( final IPropertyType element : ftp )
-    {
-      if( element instanceof IValuePropertyType && ((IValuePropertyType) element).isGeometry() )
-      {
-        final Object o = getProperty( element );
-        if( o == null )
-        {
-          continue;
-        }
-
-        if( element.isList() )
-        {
-          result.addAll( (List) o );
-        }
-        else
-        {
-          result.add( (GM_Object) o );
-        }
-      }
-    }
-
-    return result.toArray( new GM_Object[result.size()] );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
-   */
-  public Feature getOwner( )
-  {
-    if( m_parent instanceof Feature )
-      return (Feature) m_parent;
-
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
-   */
-  public QName getQualifiedName( )
-  {
-    return getFeatureType().getQName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
-   */
-  public void setEnvelopesUpdated( )
-  {
-    m_envelope = INVALID_ENV;
-
-    /* Invalidate geo-index of all feature-list which contains this feature. */
-    // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
-    // invalidated.
-    // TODO: This code is probably not very performant. How to improve this?
-    // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
-    final Feature parent = getParent();
-    if( parent == null )
-      return;
-
-    final IRelationType rt = getParentRelation();
-    if( (rt != null) && rt.isList() )
-    {
-      // rt relation type and this relation type can differ (differnt feature workspaces!)
-      final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
-      final FeatureList list = (FeatureList) parent.getProperty( relation );
-      list.invalidate( this );
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
-   */
-  public void setFeatureType( final IFeatureType ft )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
-   */
-  public void setId( final String fid )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( this );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-   */
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( this, name );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-   */
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( this );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-   */
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( this, desc );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
-   */
-  public GM_Object getLocation( )
-  {
-    final Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
-    if( property instanceof GM_Object )
-      return (GM_Object) property;
-
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
-   */
-  public void setLocation( final GM_Object location )
-  {
-    setProperty( NamedFeatureHelper.GML_LOCATION, location );
-  }
-
-  /**
-   * feature given the property {@link QName}
-   *
-   * @param propertyQName
-   *          the {@link QName} of the property to get.
-   */
-  @SuppressWarnings("unchecked")
-  protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
-  {
-    final Object prop = getProperty( propertyQName );
-    try
-    {
-      if( prop == null )
-        return null;
-
-      if( propClass.isAssignableFrom( prop.getClass() ) )
-        return (T) prop;
-
-      if( prop instanceof IAdaptable )
-        return (T) ((IAdaptable) prop).getAdapter( propClass );
-
-      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
-    }
-    catch( final ClassCastException e )
-    {
-      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
-    }
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    /*
-     * Small performance tweak and also works for new directly instantiated features when not registered with adapter
-     * stuff.
+public class Feature_Impl implements Feature, Serializable {
+
+    protected String id = "";
+    protected FeatureType featureType = null;
+    protected ArrayList geoProps = new ArrayList();
+    protected HashMap properties = new HashMap();
+    protected Object[] propRef = null;
+    protected GM_Envelope envelope = null;
+  
+
+    /**
+     * initializes a feature with its id its FeatureType and an array of
+     * properties. It is assumed that the properties are in the same order
+     * then the property definition within the FeatureType.
      */
-    if( adapter.isInstance( this ) )
-      return this;
+    Feature_Impl(String id, FeatureType featureType, Object[] properties) {
+        this.id = id;
+        this.featureType = featureType;
+	//	System.out.println("Feature_Impl() id "+id);
+        if ( featureType != null && properties != null ) {
+            FeatureTypeProperty[] ftp = featureType.getProperties();
+            propRef = properties;
+            for (int i = 0; i < ftp.length; i++) {
+                this.properties.put( ftp[i].getName(), new int[]{i} );
+                if ( properties[i] != null && (properties[i] instanceof GM_Object ||
+                     properties[i] instanceof GC_GridCoverage) ) {
+                    geoProps.add( properties[i] );
+                }
+            }
+        }
+    }
+    
+    /**
+     * initializes a feature with its id its FeatureType and an array of
+     * properties. It is assumed that the properties are in the same order
+     * then the property definition within the FeatureType.
+     */
+    protected Feature_Impl(String id, FeatureType featureType, FeatureProperty[] properties) {
+        this.id = id;
+        this.featureType = featureType;
 
-    return super.getAdapter( adapter );
-  }
+        if ( featureType != null && properties != null ) {            
+            propRef = new Object[ properties.length ];
+            for (int i = 0; i < properties.length; i++) {
+                this.properties.put( properties[i].getName(), new int[]{i} );
+                Object o = properties[i].getValue();
+                if ( o != null && (o instanceof GM_Object || o instanceof GC_GridCoverage) ) {
+                    geoProps.add( o );
+                }
+                propRef [i] = o;
+            }
+        }
+    }
+
+    /**
+     * returns the id of the Feature. the id has to be a name space
+     * that must be unique for each feature. use the adress of the
+     * datasource in addition to a number for example .
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * returns the FeatureType of this Feature
+     */
+    public FeatureType getFeatureType() {
+        return featureType;
+    }
+
+    /**
+     * returns the properties of the feature as array of Objects
+     */
+    public Object[] getProperties() {
+        return propRef;
+    }
+
+    /**
+     * returns the property of the feature that matches the submitted name
+     * TODO --> throw ModelException
+     */
+    public Object getProperty(String name) {
+        int[] i = (int[])properties.get( name );
+        if ( i == null ) {
+            return null;
+        }
+        return propRef[ i[0] ];
+    }
+
+    /**
+     * returns the property of the feature that matches the submitted index
+     */
+    public Object getProperty(int index) {
+        return propRef[index];
+    }
+
+    /**
+     * returns all geometry properties of the feature. If no geometry could
+     * be found an <tt>GM_Object[]</tt> with zero length will be returned.
+     */
+    public GM_Object[] getGeometryProperties() {
+        return (GM_Object[])geoProps.toArray( new GM_Object[geoProps.size()] );
+    }
+
+    /**
+     * Returns the default geometry of the <tt>Feature</tt>. If there are
+     * no geometry properties at all, or the default geometry is null
+     * (which is possible when using ESRI-Shapefiles), null is returned.
+     * <p>
+     * @return default geometry or null, if the <tt>Feature</tt> has none
+     */
+    public GM_Object getDefaultGeometryProperty () {
+        if (geoProps.size () < 1) return null;
+        return (GM_Object) geoProps.get (0);
+    }
+
+    /**
+     * the value for the submitted property.
+     * if no property with the submitted name exists the property
+     * will be added
+     */
+    public void setProperty(FeatureProperty property) {
+
+        Object o = null;
+        int[] index = (int[])properties.get( property.getName() );
+	// index zeigt auf positionen von property in propref
+        if ( index == null ) // existiert noch nicht
+	    {
+		Object[] tmp = new Object[ propRef.length+1 ];
+		for (int i = 0; i < propRef.length; i++) 
+		    {
+			tmp[i] = propRef[i];
+		    }
+		tmp[tmp.length-1] = property.getValue();
+		properties.put( property.getName(), new int[] {tmp.length-1}  );
+		propRef=tmp;
+	    } 
+	else
+	    {
+		o=propRef[index[0]];
+		propRef[ index[0] ] = property.getValue();
+	    }
+	
+        if ( property.getValue() instanceof GM_Object ||
+             property.getValue() instanceof GC_GridCoverage ) {
+	    if ( o != null ) 
+		{
+		    System.out.println("remove? "+o.getClass().toString());
+		    geoProps.remove(o);
+		}
+            geoProps.add( property.getValue() );
+            envelope = null;
+        }
+    }
+	/**
+	   * returns the envelope / boundingbox of the feature
+	   */
+	  public GM_Envelope getEnvelope() {
+			  if ( envelope == null  ) {
+					  if ( geoProps.size() > 0 ) {
+							  GM_Object geo = (GM_Object)geoProps.get(0);
+							  GM_Envelope env = null;
+							  if ( !(geo instanceof GM_Point ) ) {
+									  env = geo.getEnvelope();
+							  } else {
+									  env = GeometryFactory.createGM_Envelope( ((GM_Point)geo).getPosition(),
+																													   ((GM_Point)geo).getPosition() );
+							  }
+							  for (int i = 1; i < geoProps.size(); i++ ) {
+									  GM_Envelope env2 = null;
+									  if ( !(geo instanceof GM_Point ) ) {
+											  env2 = geo.getEnvelope();
+									  } else {
+											  env2 = GeometryFactory.createGM_Envelope( ((GM_Point)geo).getPosition(),
+															  ((GM_Point)geo).getPosition() );
+									  }
+									  env = env.merge( env2 );
+							  }
+							  envelope = env;
+					  }
+			  }
+			  return envelope;
+	  }
+
+    public String toString() {
+        String ret = getClass().getName() + "\n";
+        ret = "id = " + id + "\n";
+        ret += "featureType = " + featureType + "\n";
+        ret += "geoProps = " + geoProps + "\n";
+        ret += "properties = " + properties + "\n";
+        return ret;
+    } 
+    
+ 
+    
 }

@@ -1,6 +1,0 @@
-/** Login Configuration for the Sample Application **/
-
-XWS_SECURITY_SERVER {
-   com.sun.xml.wss.sample.UserPassLoginModule REQUIRED debug=true;
-};
-
