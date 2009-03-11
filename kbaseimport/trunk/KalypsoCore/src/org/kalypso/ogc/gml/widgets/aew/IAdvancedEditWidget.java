@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.widgets.aew;
 
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.vividsolutions.jts.geom.Point;
@@ -57,7 +56,7 @@ public interface IAdvancedEditWidget
 
   Point getOriginPoint( );
 
-  ISnappedPoint[] getSnappedPointsAtOrigin( );
+  IAdvancedEditWidgetSnappedPoint[] getSnappedPointsAtOrigin( );
   
   boolean isLeftMouseButtonPressed( );
 }
