@@ -40,35 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets.aew;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
+import org.kalypso.ogc.gml.widgets.tools.IPointHighLighter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * @author Dirk Kuch
  */
-public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelegate
+public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetDelegate
 {
+
+  static final IPointHighLighter REMOVABLE_VERTEX_POINT = new IPointHighLighter()
+  {
+    Color cVertex = new Color( 0xec, 0x44, 0x4a );
+
+    Color cWhite = new Color( 0xFF, 0xFF, 0xFF );
+    
+    final int size = 14;
+
+    @Override
+    public void draw( final Graphics g, final java.awt.Point point )
+    {
+      final Color original = g.getColor();
+      g.setColor( cVertex );
+      g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
+      g.setColor( cWhite );
+      g.fillOval( point.x - size / 2 + 3, point.y - size / 2 + 3, size - 6, size - 6 );
+      
+      g.setColor( original );
+    }
+  };
 
   private final IAdvancedEditWidget m_widget;
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
-  public AdvancedEditModePointsDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
+  private Point m_lastPossibleVertexPoint;
+
+  public AdvancedEditModePointRemoveDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
     m_widget = widget;
     m_provider = provider;
@@ -80,7 +111,6 @@ public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelega
   @Override
   public void paint( final Graphics g )
   {
-
     final GM_Point gmp = m_widget.getCurrentGmPoint();
     if( gmp == null )
       return;
@@ -100,6 +130,18 @@ public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelega
 
       /* find underlying geometry */
       final IAdvancedEditWidgetGeometry underlying = findUnderlyingGeometry( mapGeometries, jtsPoint );
+      if( underlying == null )
+      {
+        m_lastPossibleVertexPoint = null;
+      }
+      else
+      {
+        m_lastPossibleVertexPoint = findVertexPoint( underlying );
+        if( m_lastPossibleVertexPoint != null )
+        {
+          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint }, REMOVABLE_VERTEX_POINT );
+        }
+      }
 
     }
     catch( final GM_Exception e )
@@ -109,41 +151,79 @@ public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelega
 
   }
 
+  private Point findVertexPoint( final IAdvancedEditWidgetGeometry underlying )
+  {
+    final Geometry geometry = underlying.getUnderlyingGeometry();
+    if( geometry == null )
+      return null;
+
+    if( !(geometry instanceof Polygon) )
+      throw new NotImplementedException();
+
+    final Polygon polygon = (Polygon) geometry;
+    final LineString ring = polygon.getExteriorRing();
+    final double range = getRange();
+
+    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_POINT, range / 8 );
+
+    return snapped;
+  }
+
   private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
   {
     final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
     for( final Entry<Geometry, Feature> entry : entries )
     {
-      if( !entry.getKey().intersection( point ).isEmpty() )
-        return new IAdvancedEditWidgetGeometry()
-        {
-          @Override
-          public Point getBasePoint( )
-          {
-            return point;
-          }
+      try
+      {
+        final Geometry geometry = entry.getKey();
+        final Geometry intersection = geometry.intersection( point );
 
-          @Override
-          public Feature getFeature( )
+        if( !intersection.isEmpty() )
+          return new IAdvancedEditWidgetGeometry()
           {
-            return entry.getValue();
-          }
+            @Override
+            public Point getBasePoint( )
+            {
+              return point;
+            }
 
-          @Override
-          public Geometry getUnderlyingGeometry( )
-          {
-            return entry.getKey();
-          }
-        };
+            @Override
+            public Feature getFeature( )
+            {
+              return entry.getValue();
+            }
+
+            @Override
+            public Geometry getUnderlyingGeometry( )
+            {
+              return geometry;
+            }
+          };
+      }
+      catch( final TopologyException e )
+      {
+        // nothing to do
+        // System.out.println( "JTS TopologyException" );
+      }
     }
 
     return null;
   }
 
-  private double getRange( )
+  public double getRange( )
   {
     final IMapPanel mapPanel = m_widget.getIMapPanel();
     return mapPanel.getCurrentScale() * 4;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#getToolTip()
+   */
+  @Override
+  public String getToolTip( )
+  {
+    return "Editiermodus: Punkte entfernen";
   }
 
 }

@@ -174,17 +174,12 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     return true;
   }
 
-  protected double getRange( )
+  public double getRange( )
   {
     final double scale = getWidget().getIMapPanel().getCurrentScale();
     final double range = scale / 4;
 
     return range;
-  }
-
-  public IAdvancedEditWidgetSnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
-  {
-    return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getWidget().getOriginPoint(), getRange() );
   }
 
 }

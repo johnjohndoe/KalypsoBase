@@ -167,4 +167,13 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     return map;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#getToolTip()
+   */
+  @Override
+  public String getToolTip( )
+  {
+    return "Editiermodus: Gemeinsames verschieben";
+  }
+
 }
