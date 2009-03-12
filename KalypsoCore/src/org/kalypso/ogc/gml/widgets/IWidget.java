@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,33 +36,28 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author bce
  */
-public interface IWidget
+public interface IWidget 
 {
-  public String getName( );
+  public void rightReleased( final Point p );
 
-  public String getToolTip( );
+  public void clickPopup( final Point p );
 
-  // KeyEvents
-  public void keyPressed( KeyEvent e );
+  public void dragged( Point p );
 
-  public void keyReleased( KeyEvent e );
-
-  public void keyTyped( KeyEvent e );
+  public void finish();
 
   // MouseClicks
   public void leftClicked( Point p );
@@ -71,58 +66,26 @@ public interface IWidget
 
   public void leftReleased( Point p );
 
-  public void doubleClickedLeft( Point p );
+  public void middleClicked( Point p );
 
-  public void doubleClickedRight( Point p );
+  public void middlePressed( Point p );
 
-  /**
-   * @deprecated Do not use: widget must use only left button
-   */
-  @Deprecated
-  public void rightClicked( Point p );
-
-  /**
-   * @deprecated Do not use: widget must use only left button
-   */
-  @Deprecated
-  public void rightPressed( Point p );
-
-  /**
-   * @deprecated Do not use: widget must use only left button
-   */
-  @Deprecated
-  public void rightReleased( final Point p );
-
-  /**
-   * @deprecated Do not use: widget must use only left button
-   */
-  @Deprecated
-  public void clickPopup( final Point p );
+  public void middleReleased( Point p );
 
   // MouseMotions
   public void moved( Point p );
 
-  public void dragged( Point p );
-
   // Graphics
   public void paint( Graphics g );
 
-  public void finish( );
-
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel );
-
   /**
-   * Will be called:
-   * <ul>
-   * <li>after activation</li>
-   * <li>everytime the selection changes if active</li>
-   * </ul>
+   * fuehrt die aktion aus
    */
-  public void setSelection( final ISelection selection );
+  public void perform();
 
-  /**
-   * This function checks and returns if the widget may be activated. This may be used by the action delegates, to
-   * determine if the action should be enabled.
-   */
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel );
+  public void rightClicked( Point p );
+
+  public void rightPressed( Point p );
+
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
 }

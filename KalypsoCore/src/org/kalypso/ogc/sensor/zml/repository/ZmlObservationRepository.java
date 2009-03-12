@@ -53,7 +53,8 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationRepository extends FileRepository
 {
-  public ZmlObservationRepository( final String factory, final String conf, final String root_location, final String identifier, final boolean readOnly, final FileFilter filter )
+  public ZmlObservationRepository( String factory, String conf, String root_location,
+      String identifier, boolean readOnly, FileFilter filter )
   {
     super( factory, conf, root_location, identifier, readOnly, filter );
   }
@@ -61,12 +62,8 @@ public class ZmlObservationRepository extends FileRepository
   /**
    * @see org.kalypso.repository.file.FileRepository#createItem(java.io.File)
    */
-  @Override
-  public FileItem createItem( final File file )
+  public FileItem createItem( File file )
   {
-    if( file == null )
-      return null;
-
     if( !file.isDirectory() )
       return new ZmlObservationItem( this, file );
 

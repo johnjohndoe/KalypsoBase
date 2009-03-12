@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -53,55 +52,33 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.util.SafeRunnable;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
 
 /**
  * @author belger
  */
 public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 {
-  private final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
+  final AbstractLoaderResourceDeltaVisitor m_visitor = new AbstractLoaderResourceDeltaVisitor( this );
 
-  private final List<ILoaderListener> m_listener = new ArrayList<ILoaderListener>();
+  private final List m_listener = new ArrayList();
 
-  private final List<Object> m_objectList = new ArrayList<Object>();
+  private final List m_objectList = new ArrayList();
 
-  private IStatus m_status = Status.OK_STATUS;
-
-  /** Resources in this list will be ignored at the next resource change event. */
-  private final Collection<String> m_ignoreresourceList = new HashSet<String>();
-
-  public AbstractLoader( )
+  public AbstractLoader()
   {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( this, IResourceChangeEvent.POST_CHANGE );
+    ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
 
-  /**
-   * TODO: this will never be called. The resource pool caches the loaders and reuse them, but never disposes them.
-   * Maybe it would better to use one loader per resource, in order to do so we should refaktor the loaders as well.
-   * Each loader should be responsible for exakt one object.
-   */
-  public void dispose( )
+  public void dispose()
   {
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
-    m_listener.clear();
-    m_objectList.clear();
-  }
-
-  public Object[] getObjects( )
-  {
-    return m_objectList.toArray( new Object[m_objectList.size()] );
   }
 
   /**
    * @see org.kalypso.loader.ILoader#load(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public Object load( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  public Object load( final String source, final URL context, final IProgressMonitor monitor )
+      throws LoaderException
   {
     final Object newObject = loadIntern( source, context, monitor );
 
@@ -112,8 +89,15 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
 
   /**
    * This method should be overriden by clients extending this class.
+   * 
+   * @param source
+   * @param context
+   * @param monitor
+   * @return loaded object
+   * @throws LoaderException
    */
-  protected abstract Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException;
+  protected abstract Object loadIntern( final String source, final URL context,
+      final IProgressMonitor monitor ) throws LoaderException;
 
   /**
    * @see org.kalypso.loader.ILoader#addLoaderListener(org.kalypso.loader.ILoaderListener)
@@ -131,36 +115,33 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
     m_listener.remove( l );
   }
 
-  public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload ) throws Exception
+  public final void fireLoaderObjectInvalid( final Object oldObject, final boolean bCannotReload )
+      throws Exception
   {
-    if( m_ignoreresourceList.contains( m_visitor.pathForObject( oldObject ) ) )
-      return;
+    beforeObjectInvalid();
+    
+    for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
+      ( (ILoaderListener)iter.next() ).onLoaderObjectInvalid( oldObject, bCannotReload );
+  }
 
-    // protect against concurrent modification exception and broken listeners
-    final ILoaderListener[] ls = m_listener.toArray( new ILoaderListener[m_listener.size()] );
-    for( int i = 0; i < ls.length; i++ )
-    {
-      final ILoaderListener listener = ls[i];
-      SafeRunnable.run( new SafeRunnable()
-      {
-        public void run( ) throws Exception
-        {
-          listener.onLoaderObjectInvalid( oldObject, bCannotReload );
-        }
-      } );
-    }
+  protected void beforeObjectInvalid() 
+  {
+    // overwrite it
   }
 
   /**
-   * Always call super implementation if overwritten.
-   * 
    * @see org.kalypso.loader.ILoader#release(java.lang.Object)
    */
-  public void release( final Object object )
+  public final void release( final Object object )
   {
     m_objectList.remove( object );
 
     m_visitor.releaseResources( object );
+  }
+
+  protected final boolean hasObject( final Object oldValue )
+  {
+    return m_objectList.contains( oldValue );
   }
 
   /**
@@ -168,7 +149,6 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
    */
   public final void resourceChanged( final IResourceChangeEvent event )
   {
-    // allways true, because of the bitmask set on adding this listener
     if( event.getType() == IResourceChangeEvent.POST_CHANGE )
     {
       final IResourceDelta delta = event.getDelta();
@@ -178,8 +158,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoCorePlugin.getDefault().getLog().log( status );
+        e.printStackTrace();
       }
     }
   }
@@ -190,35 +169,19 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor,
+      final Object data ) throws LoaderException
   {
-    throw new LoaderException( Messages.getString("org.kalypso.loader.AbstractLoader.0") ); //$NON-NLS-1$
+    throw new LoaderException( "Operation not supported" );
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#lockEvents(java.lang.Object, boolean)
-   */
-  public void lockEvents( final Object data, boolean doLock )
+  protected void savingResource( final IResource resource )
   {
-    if( doLock )
-      m_ignoreresourceList.add( m_visitor.pathForObject( data ) );
-    else
-      m_ignoreresourceList.remove( m_visitor.pathForObject( data ) );
-  }
-
-  /**
-   * @see org.kalypso.loader.ILoader#getStatus()
-   */
-  public IStatus getStatus( )
-  {
-    return m_status;
-  }
-
-  protected void setStatus( final IStatus status )
-  {
-    m_status = status;
+    // den nächsten change event der resource ignorieren
+    // etwas dirty, weil wir nicht sicher sien können, dass
+    // der wirklich vom save kommt
+    m_visitor.ignoreResourceOneTime( resource ); 
   }
 }

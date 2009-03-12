@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 
@@ -51,8 +50,9 @@ import org.eclipse.ui.IEditorInput;
 public interface IDefaultTemplateLauncher
 {
   /**
-   * Dieser 'Dateiname' dient zur Anzeige im Auswahldialog. Der Prefix (vor dem Punkt) bestimmt den Anzeigenamen, die
-   * Extension das Icon = Icon des DefaultEditors für diese Endung.
+   * Dieser 'Dateiname' dient zur Anzeige im Auswahldialog. Der Prefix (vor dem
+   * Punkt) bestimmt den Anzeigenamen, die Extension das Icon = Icon des
+   * DefaultEditors für diese Endung.
    * 
    * @return filename
    */
@@ -60,5 +60,5 @@ public interface IDefaultTemplateLauncher
 
   public IEditorDescriptor getEditor();
 
-  public IEditorInput createInput( final IFile file ) throws CoreException;
+  public IEditorInput createInput( final IFile file );
 }

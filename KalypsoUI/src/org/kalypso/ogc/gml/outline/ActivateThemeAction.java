@@ -36,48 +36,60 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
-public class ActivateThemeAction extends MapModellViewActionDelegate
+public class ActivateThemeAction extends AbstractOutlineAction
 {
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
-  @Override
-  public void run( final IAction action )
+  public ActivateThemeAction( final String text, final ImageDescriptor image,
+      final String tooltipText, final GisMapOutlineViewer outlineViewer )
   {
-    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
-    if( selectedThemes.length == 0 )
-      return;
+    super( text, image, tooltipText, outlineViewer, null );
 
-    final IKalypsoTheme themeToActivate = selectedThemes[0];
-
-    final IMapModellView viewer = getView();
-    final IMapModell mapModell = viewer.getMapPanel().getMapModell();
-    viewer.postCommand( new ActivateThemeCommand( mapModell, themeToActivate ), null );
+    refresh();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public void run()
   {
-    super.selectionChanged( action, selection );
+    final Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
+    
+    if( o instanceof IKalypsoTheme )
+    {
+      final IMapModell mapModell = getOutlineviewer().getMapModell();
+      getOutlineviewer().postCommand( new ActivateThemeCommand( mapModell, (IKalypsoTheme)o ), null );
+    }
+  }
 
-    action.setEnabled( getSelectedThemes( selection ).length == 1 );
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    refresh();
+  }
+
+  protected void refresh()
+  {
+    boolean bEnable = false;
+
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+
+    if( s.getFirstElement() instanceof IKalypsoTheme )
+      bEnable = true;    
+    setEnabled( bEnable );
   }
 }

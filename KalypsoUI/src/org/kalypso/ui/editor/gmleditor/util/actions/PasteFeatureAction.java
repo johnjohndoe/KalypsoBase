@@ -40,55 +40,50 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.action.Action;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 public final class PasteFeatureAction extends Action
 {
-  private IRelationType m_propertyName;
+  private String m_propertyName;
 
   private CommandableWorkspace m_workspace;
 
   private Feature m_parentFeature;
 
   private Clipboard m_clipboard = null;
+  
+  public static final String NAME = "Paste Feature";
 
-  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0"); //$NON-NLS-1$
-
-  public PasteFeatureAction(final  CommandableWorkspace workspace, final Feature parentFeature, IRelationType propertyName,
-      Clipboard clipboard )
+  public PasteFeatureAction(CommandableWorkspace workspace, Feature parentFeature,
+      String propertyName, Clipboard clipboard)
   {
-    super( NAME );
-    m_propertyName = propertyName;
-    m_workspace = workspace;
-    m_parentFeature = parentFeature;
+    super(NAME);
+    m_propertyName = propertyName;   
+    m_workspace = workspace;   
+    m_parentFeature = parentFeature;    
     m_clipboard = clipboard;
   }
 
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
   public void run()
-  {
+  {    
     //m_clipboard.setClipboardFeature(null);
-    if( m_clipboard.getClipboardFeature() != null )
+    if(m_clipboard.getClipboardFeature() != null)
       try
       {
-        // TODO use command !!
-        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature()
-            .getId() );
+        m_workspace.addLinkedFeature(m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature());
       }
       catch( Exception e )
       {
         e.printStackTrace();
       }
-
-    m_workspace.fireModellEvent( new ModellEvent( m_workspace, ModellEvent.FULL_CHANGE ) );
+      
+    m_workspace.fireModellEvent(new ModellEvent(m_workspace, ModellEvent.FULL_CHANGE));
   }
 }

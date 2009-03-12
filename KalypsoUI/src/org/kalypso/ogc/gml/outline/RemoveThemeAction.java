@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,68 +36,37 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.RemoveThemeCommand;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.util.list.IListManipulator;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
-public class RemoveThemeAction extends MapModellViewActionDelegate
+public class RemoveThemeAction extends AbstractOutlineAction
 {
+  public RemoveThemeAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
+  {
+    super( text, image, tooltipText, outlineViewer, listManip );
+  }
+  
   /**
-   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
-   *      org.eclipse.swt.widgets.Event)
+   * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
-  public void runWithEvent( final IAction action, final Event event )
+  public void run()
   {
-    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
-    for( final IKalypsoTheme theme : selectedThemes )
-      removeElement( theme );
+    getListManipulator().removeElement( ((IStructuredSelection)getOutlineviewer().getSelection()).getFirstElement() );
   }
 
-  protected void removeElement( final IKalypsoTheme theme )
+  protected void refresh()
   {
-    final IMapModellView view = getView();
-    if( view != null )
-      view.postCommand( new RemoveThemeCommand( theme.getMapModell(), theme ), null );
-  }
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    super.selectionChanged( action, selection );
-
-    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
-
-    final boolean allDeleteable = determineDeleteable( selectedThemes );
-
-    final boolean enabled = (selectedThemes.length > 0) && allDeleteable;
-    action.setEnabled( enabled );
-  }
-
-  private boolean determineDeleteable( final IKalypsoTheme[] selectedThemes )
-  {
-    for( final IKalypsoTheme kalypsoTheme : selectedThemes )
-    {
-      final String delStr = kalypsoTheme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
-      final boolean canDelete = Boolean.parseBoolean( delStr );
-      if( !canDelete )
-        return false;
-    }
-
-    return true;
+    setEnabled( !s.isEmpty()  && (s.getFirstElement() instanceof IKalypsoFeatureTheme));
   }
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 import java.util.Properties;
@@ -49,13 +49,12 @@ import java.util.Properties;
  */
 public class MetadataList extends Properties
 {
-  public MetadataList( )
+  public MetadataList()
   {
     super();
   }
 
-  /** Sets the given properties as default values. Doesn't mean 'putAll'! */
-  public MetadataList( final Properties arg0 )
+  public MetadataList( Properties arg0 )
   {
     super( arg0 );
   }

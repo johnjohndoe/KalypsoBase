@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,95 +36,62 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
+import java.io.Reader;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
-import org.apache.commons.lang.NotImplementedException;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.IPoolListener;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.KeyComparator;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.ObjectFactory;
+import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
+import org.xml.sax.InputSource;
 
 /**
  * @author belger
  */
 public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 {
-  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
+  private final ObjectFactory m_templateFactory = new ObjectFactory();
 
-  private final FeatureviewHelper m_featureViewHelper = new FeatureviewHelper();
+  protected final Marshaller m_marshaller;
 
-  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( m_featureViewHelper );
+  private final Unmarshaller m_unmarshaller;
 
-  private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
-
-  private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
-  {
-    public void featureChanged( final ICommand changeCommand )
-    {
-      onFeatureChanged( changeCommand );
-    }
-
-    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
-    {
-      // feature view öffnen
-      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      final IWorkbenchPage page = window.getActivePage();
-      try
-      {
-        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
-      }
-      catch( final PartInitException e )
-      {
-        e.printStackTrace();
-        final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-
-      // getLayerTable().setFocusedFeature( feature, ftp );
-    }
-  };
+  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
   protected Composite m_panel;
 
@@ -134,33 +101,45 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private String m_featurePath;
 
+  private FeatureComposite m_featureComposite = new FeatureComposite( null, new URL[] {} );
+
   private Label m_label;
+
+  private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
+  {
+    public void featureChanged( final FeatureChange change )
+    {
+      onFeatureChanged( change );
+    }
+  };
 
   private final JobExclusiveCommandTarget m_commandtarget;
 
-  private ScrolledCompositeCreator m_creator;
-
-  private final int m_marginWidth;
-
-  private final int m_marginHeight;
-
-  private boolean m_disposed = false;
-
-  private Featuretemplate m_template;
-
-  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight, final int marginWidth )
+  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
-    m_marginHeight = marginHeight;
-    m_marginWidth = marginWidth;
+
+    try
+    {
+      m_marshaller = m_templateFactory.createMarshaller();
+      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+      m_unmarshaller = m_templateFactory.createUnmarshaller();
+    }
+    catch( final JAXBException e )
+    {
+      // sollte nie passieren
+      e.printStackTrace();
+
+      throw new RuntimeException( e );
+    }
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    m_disposed = true;
     setWorkspace( null );
 
     m_featureComposite.dispose();
@@ -178,43 +157,55 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3" ) ); //$NON-NLS-1$
+      return KalypsoGisPlugin.createErrorStatus( "Fehler beim Speichern", e );
     }
 
     return Status.OK_STATUS;
   }
 
-  public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
+  public final void loadInput( final Reader reader, final URL context,
+      final IProgressMonitor monitor, Properties props ) throws CoreException
   {
-    m_template = template;
-
-    final List<FeatureviewType> view = template.getView();
-    for( final FeatureviewType featureviewType : view )
-      m_fvFactory.addView( featureviewType );
-
-    final Layer layer = template.getLayer();
-    final String source;
-    final String linktype;
-    if( layer == null )
+    monitor.beginTask( "Ansicht laden", 1000 );
+    try
     {
-      m_featurePath = featurePath;
-      source = href;
-      linktype = linkType;
-    }
-    else
-    {
-      m_featurePath = layer.getFeaturePath();
-      source = layer.getHref();
-      linktype = layer.getLinktype();
-    }
+      final InputSource is = new InputSource( reader );
 
-    // only load, if href non null; in this case, the feature must be set via setFeature()
-    if( source != null )
-    {
-      m_key = new PoolableObjectType( linktype, source, context );
+      final Featuretemplate m_template = (Featuretemplate)m_unmarshaller.unmarshal( is );
+
+      final List views = m_template.getView();
+      for( Iterator iter = views.iterator(); iter.hasNext(); )
+        m_featureComposite.addView( (FeatureviewType)iter.next() );
+
+      final LayerType layer = m_template.getLayer();
+      final String href;
+      final String linktype;
+      if( layer != null )
+      {
+        m_featurePath = layer.getFeaturePath();
+        href = layer.getHref();
+        linktype = layer.getLinktype();
+      }
+      else
+      {
+        m_featurePath = props.getProperty( "featurepath", "/" );
+        href = props.getProperty( "href", "" );
+        linktype = props.getProperty( "linktype", "gml" );
+      }
+      m_key = new PoolableObjectType( linktype, href, context );
       m_pool.addPoolListener( this, m_key );
     }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
 
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen der Vorlage",
+          e ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   private void setWorkspace( final CommandableWorkspace workspace )
@@ -227,7 +218,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     if( m_workspace != null )
       m_workspace.addModellListener( this );
 
-    // TODO!
     m_commandtarget.setCommandManager( workspace );
 
     if( m_panel == null || m_panel.isDisposed() )
@@ -235,7 +225,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
     m_panel.getDisplay().asyncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
         updateControls();
       }
@@ -243,71 +233,47 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue,
+      final IStatus status )
   {
     // Daten sind jetzt da!
-    if( KeyComparator.getInstance().compare( m_key, key ) == 0 )
-      setWorkspace( (CommandableWorkspace) newValue );
+    if( m_pool.equalsKeys( m_key, key ) )
+      setWorkspace( (CommandableWorkspace)newValue );
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
+   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
+   *      java.lang.Object)
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
+    if( m_pool.equalsKeys( key, m_key ) )
       setWorkspace( null );
   }
 
-  public Composite createControls( final Composite parent, final int style )
+  public void createControls( final Composite parent, final int style )
   {
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = m_marginHeight;
-    gridLayout.marginWidth = m_marginWidth;
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.H_SCROLL
+        | SWT.V_SCROLL | style );
+    //    scrolledComposite.setLayout( new GridLayout( ) );
+    //    final Composite composite = m_templateviewer.createControls(
+    // scrolledComposite );
+    //    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    m_creator = new ScrolledCompositeCreator( null )
-    {
-      @Override
-      protected Control createContents( final Composite scrollParent, final int contentStyle )
-      {
-        final Composite panel = new Composite( scrollParent, contentStyle );
-        panel.setLayout( gridLayout );
-        panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        return panel;
-      }
-    };
+    m_panel = new Composite( scrolledComposite, SWT.NONE );
+    m_panel.setLayout( new GridLayout() );
 
-    m_creator.createControl( parent, style | SWT.V_SCROLL, SWT.NONE );
-
-    m_panel = (Composite) m_creator.getContentControl();
-
-    try
-    {
-      updateControls();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return m_creator.getScrolledComposite();
+    updateControls();
+    scrolledComposite.setContent( m_panel );
   }
 
-  protected void updateControls( )
+  protected void updateControls()
   {
-    final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
-    final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
-
-    final String errorMessage = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
-
     try
     {
-      if( m_panel == null || m_panel.isDisposed() )
-        return;
-
       if( m_label != null && !m_label.isDisposed() )
         m_label.dispose();
 
@@ -319,147 +285,69 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( m_workspace == null )
       {
-        m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
-        m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        if( m_panel != null )
+        {
+          m_label = new Label( m_panel, SWT.CENTER );
+          m_label.setText( "laden..." );
+          m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        }
+
         return;
       }
 
-      if( feature != null )
+      final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
+      if( featureFromPath instanceof Feature )
       {
-        m_featureComposite.addChangeListener( m_changeListener );
+        final Feature feature = (Feature)featureFromPath;
+
         m_featureComposite.setFeature( feature );
-
-        /* process rendering properties */
-        int style = SWT.NONE;
-
-        if( m_template != null )
-        {
-          if( m_template.isToolkit() )
-          {
-            m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
-          }
-
-          // FIXME ask gernot for an existing helper which can interpret swt-flags
-          final String swtflag = m_template.getSwtflags();
-          final String[] flags = swtflag.split( " | " );
-          for( final String flag : flags )
-          {
-            if( flag.length() < 1 )
-              continue;
-
-            final String f = flag.trim();
-            if( "SWT.BORDER".equals( f ) )
-            {
-              style = style | SWT.BORDER;
-            }
-            else
-              throw new NotImplementedException();
-          }
-
-        }
-
-        final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
-        control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
         m_featureComposite.setFeature( feature );
         m_featureComposite.updateControl();
 
         m_panel.layout();
 
+        m_featureComposite.addChangeListener( m_changeListener );
+
         m_commandtarget.resetDirty();
       }
       else
       {
-        m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( errorMessage );
-        m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+        // todo Fehlermeldung anzeigen
       }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
     }
     finally
     {
-      final ScrolledCompositeCreator creator = m_creator;
-      final ScrolledComposite scrolledComposite = m_creator.getScrolledComposite();
-      if( scrolledComposite != null && !scrolledComposite.isDisposed() )
-      {
-        scrolledComposite.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            if( !scrolledComposite.isDisposed() )
-              creator.updateControlSize( true );
-          }
-        } );
-      }
+      m_panel.setSize( m_panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
     }
   }
 
-  protected void onFeatureChanged( final ICommand changeCommand )
+  protected void onFeatureChanged( final FeatureChange change )
   {
-    m_commandtarget.postCommand( changeCommand, null );
+    m_commandtarget.postCommand( new ChangeFeaturesCommand( m_workspace, new FeatureChange[]
+    { change } ), null );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
     final FeatureComposite featureComposite = m_featureComposite;
-    if( m_panel != null && !m_panel.isDisposed() )
+    if( m_panel != null )
     {
       m_panel.getDisplay().asyncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
           featureComposite.updateControl();
         }
       } );
     }
   }
-
-  public Feature getFeature( )
+  
+  public Feature getFeature()
   {
     return m_featureComposite.getFeature();
-  }
-
-  public Control getControl( )
-  {
-    return m_panel;
-  }
-
-  public void setFeature( final CommandableWorkspace workspace, final Feature feature )
-  {
-    m_featurePath = workspace.getFeaturepathForFeature( feature ).toString();
-    setWorkspace( workspace );
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
-   */
-  public boolean isDisposed( )
-  {
-    return m_disposed;
-  }
-
-  /**
-   * @return true, if this template own an data object. This is the case, if in
-   *         {@link #loadInput(Reader, URL, IProgressMonitor, Properties)}the properties parameter has an entry 'href'.
-   *         This Option was needed to fix the annoying bug concerning display of FeatureView in Sachsen/Sachsen-Anhalt
-   *         Wizards.
-   */
-  public boolean hasAdditionalDataObject( )
-  {
-    return m_key != null;
-  }
-
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-   */
-  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
-  {
-    // TODO Auto-generated method stub
   }
 }

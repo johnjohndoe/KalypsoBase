@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,77 +36,46 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import java.util.Arrays;
-
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.util.list.IListManipulator;
 
 /**
- * @author Stefan Kurzbach
+ * @author belger
  */
-public class MoveThemeUpAction extends MapModellViewActionDelegate
+public class MoveThemeUpAction extends AbstractOutlineAction
 {
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
-   *      org.eclipse.swt.widgets.Event)
-   */
-  @Override
-  public void runWithEvent( final IAction action, final Event event )
+  public MoveThemeUpAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer, final IListManipulator listManip )
   {
-    /* Order the selection as the themes are ordered in the outline. */
-    final IKalypsoTheme[] selectedThemesInOrder = MoveThemeDownAction.getSelectedThemesInOrder( getSelection() );
-
-    /* Move up in original order, else it wont happen. */
-    for( final IKalypsoTheme theme : selectedThemesInOrder )
-      moveElementUp( theme, event.display );
+    super( text, image, tooltipText, outlineViewer, listManip );
+  }
+  
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  public void run()
+  {
+    getListManipulator().moveElementUp( ((IStructuredSelection)getOutlineviewer().getSelection()).getFirstElement() );
   }
 
-  protected void moveElementUp( final IKalypsoTheme theme, final Display display )
+  protected final void refresh()
   {
-    final IMapModellView view = getView();
-    if( view == null )
-      return;
-
-    final IMapModell themeMapModell = theme.getMapModell();
-
-    final MoveThemeUpCommand moveThemeUpCommand = new MoveThemeUpCommand( themeMapModell, theme );
-    view.postCommand( moveThemeUpCommand, new SelectThemeRunner( theme, view, display ) );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.MapModellViewActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    super.selectionChanged( action, selection );
-
-    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
-    final IMapModell[] selectedModels = MoveThemeDownAction.getSelectedModels( selectedThemes );
-
-    final boolean bEnable;
-    if( selectedModels.length != 1 )
-      bEnable = false;
-    else if( selectedThemes.length > 0 )
+    boolean bEnable = false;
+    
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+//    if( !s.isEmpty()  && (s.getFirstElement() instanceof PoolableKalypsoFeatureTheme) )
+    if( !s.isEmpty()  && (s.getFirstElement() instanceof IKalypsoTheme) )
     {
-      final IMapModell mapModell = selectedModels[0];
-      final Object[] elements = mapModell.getAllThemes();
-      bEnable = !(elements.length == 0) && !Arrays.asList( selectedThemes ).contains( elements[0] );
+      final Object[] elements = getOutlineviewer().getContentProvider().getElements(getOutlineviewer().getMapModell());
+          
+      bEnable = ( elements[0] != s.getFirstElement() ); 
     }
-    else
-      bEnable = false;
 
-    action.setEnabled( bEnable );
+    setEnabled( bEnable );
   }
 }

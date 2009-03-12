@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
@@ -55,137 +54,71 @@ import org.kalypso.template.obsdiagview.TypeAxis;
 public class GrafikAchsen
 {
   /** maps diag-axis-id to grafik-axis (only for vertical axes) */
-  private final Map<String, GrafikAchse> m_name2grafikAxis = new HashMap<String, GrafikAchse>();
+  private final Map m_name2grafikAxis = new HashMap();
 
-  private final Map<String, Integer> m_id2axisnr = new HashMap<String, Integer>();
+  private String m_leftLabel = "";
 
-  private int m_axisIdCounter = 0;
+  private String m_rightLabel = "";
 
-  private String m_leftLabel = ""; //$NON-NLS-1$
+  private String m_bottomLabel = "";
 
-  private String m_rightLabel = ""; //$NON-NLS-1$
-
-  private String m_bottomLabel = ""; //$NON-NLS-1$
-
-  private boolean m_rightAchseCreated = false;
-
-  private boolean m_leftAchseCreated = false;
-
-  private boolean m_invertedAchseCreated = false;
-
-  public GrafikAchsen( final List<TypeAxis> taxList )
+  public GrafikAchsen( final List taxList )
   {
-    for( final TypeAxis ta : taxList )
+    for( final Iterator ita = taxList.iterator(); ita.hasNext(); )
     {
-      if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_VERTICAL ) )
+      final TypeAxis ta = (TypeAxis) ita.next();
+
+      if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
       {
         GrafikAchse gAchse = null;
-
-        final String name = ta.getLabel() + " [" + ta.getUnit() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-
-        final int axisnr = axisnrByType( ta );
-        m_id2axisnr.put( ta.getDatatype(), new Integer( axisnr ) );
-
+        
+        final String name = ta.getLabel() + " [" + ta.getUnit() + "]";
+        
         if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
-          if( ta.getPosition().toString().equalsIgnoreCase( DiagramAxis.POSITION_LEFT ) )
-            gAchse = createLeftAchse( axisnr, name );
-          else if( ta.getPosition().toString().equalsIgnoreCase( DiagramAxis.POSITION_RIGHT ) )
-            gAchse = createRightAchse( axisnr, name );
+          if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+          {
+            gAchse = new GrafikAchse( 1, name );
+            m_leftLabel = name;
+          }
+          else if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
+          {
+            gAchse = new GrafikAchse( 2, name );
+            m_rightLabel = name;
+          }
         }
         else
-          gAchse = createInvertedAchse( axisnr, name );
-
-        if( gAchse != null )
-          m_name2grafikAxis.put( ta.getId(), gAchse );
-        else
-          Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.5" ) + name + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.6" ) + axisnr + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          gAchse = new GrafikAchse( 3, name );
+        
+        m_name2grafikAxis.put( ta.getId(), gAchse );
       }
-      else if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_HORIZONTAL ) )
+      else if( ta.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();
     }
-  }
-
-  private GrafikAchse createInvertedAchse( final int axisnr, final String name )
-  {
-    if( !m_invertedAchseCreated )
-    {
-      m_invertedAchseCreated = true;
-      return new GrafikAchse( axisnr, name );
-    }
-    else
-      return null;
-  }
-
-  private GrafikAchse createRightAchse( final int axisnr, final String name )
-  {
-    if( !m_rightAchseCreated )
-    {
-      m_rightAchseCreated = true;
-      m_rightLabel = name;
-      return new GrafikAchse( axisnr, name );
-    }
-    else if( !m_leftAchseCreated )
-      return createLeftAchse( axisnr, name );
-    else
-      return null;
-  }
-
-  private GrafikAchse createLeftAchse( final int axisnr, final String name )
-  {
-    if( !m_leftAchseCreated )
-    {
-      m_leftAchseCreated = true;
-      m_leftLabel = name;
-      return new GrafikAchse( axisnr, name );
-    }
-    else if( !m_rightAchseCreated )
-      return createRightAchse( axisnr, name );
-    else
-      return null;
-  }
-
-  private int axisnrByType( final TypeAxis ta )
-  {
-    final String axisId = ta.getId();
-
-    if( m_id2axisnr.containsKey( axisId ) )
-      return m_id2axisnr.get( axisId ).intValue();
-
-    if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
-    {
-      final int axisnr = m_axisIdCounter % 2 + 1;
-
-      m_axisIdCounter++;
-
-      return axisnr;
-    }
-
-    return 3;
   }
 
   public String getBottomLabel( )
   {
     return m_bottomLabel;
   }
-
-  public String getRightLabel( )
+  
+  public String getRightLabel()
   {
     return m_rightLabel;
   }
-
-  public String getLeftLabel( )
+  
+  public String getLeftLabel()
   {
     return m_leftLabel;
   }
-
+  
   /**
    * @param diagAxisID
    * @return corresponding Achse for the Grafik tool or null if not possible
    */
   public GrafikAchse getFor( final String diagAxisID )
   {
-    return m_name2grafikAxis.get( diagAxisID );
+    return (GrafikAchse) m_name2grafikAxis.get( diagAxisID );
   }
 
   /**
@@ -220,11 +153,10 @@ public class GrafikAchsen
     {
       return m_name;
     }
-
+    
     /**
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString( )
     {
       return getName();

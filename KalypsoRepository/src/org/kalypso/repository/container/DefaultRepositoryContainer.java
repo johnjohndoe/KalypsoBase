@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.container;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -49,63 +50,53 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 
+
 /**
- * Default implementation.
+ * Beinhaltet eine Liste von Repositories und verwaltet Listeners.
  * 
  * @author schlienger
  */
 public class DefaultRepositoryContainer implements IRepositoryContainer
 {
-  private final List<IRepository> m_reps = new Vector<IRepository>();
+  private final List m_reps = new Vector();
 
-  private final List<IRepositoryContainerListener> m_listeners = new Vector<IRepositoryContainerListener>();
+  private final List m_listeners = new Vector();
 
-  public DefaultRepositoryContainer( )
+  public DefaultRepositoryContainer()
   {
     this( new IRepository[0] );
   }
 
-  public DefaultRepositoryContainer( final IRepository[] repositories )
+  public DefaultRepositoryContainer( IRepository[] repositories )
   {
     m_reps.addAll( Arrays.asList( repositories ) );
   }
 
-  public void dispose( )
-  {
-    for( final IRepository element : m_reps )
-      element.dispose();
-
-    m_reps.clear();
-    m_listeners.clear();
-  }
-
   public void addRepository( final IRepository rep )
   {
-    m_reps.add( rep );
+     m_reps.add( rep );
 
     fireRepositoryChanged();
   }
 
-  private void fireRepositoryChanged( )
+  private void fireRepositoryChanged()
   {
-    for( final Object element2 : m_listeners )
+    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
-      final IRepositoryContainerListener element = (IRepositoryContainerListener) element2;
-
+      IRepositoryContainerListener element = (IRepositoryContainerListener)iter.next();
+      
       element.onRepositoryContainerChanged();
     }
   }
 
-  public void removeRepository( final IRepository rep )
+  public void removeRepository( IRepository rep )
   {
     m_reps.remove( rep );
-
-    rep.dispose();
-
+    
     fireRepositoryChanged();
   }
 
-  public int getRepositoriesCount( )
+  public int getRepositoriesCount()
   {
     return m_reps.size();
   }
@@ -113,7 +104,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#addRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
-  public void addRepositoryContainerListener( final IRepositoryContainerListener l )
+  public void addRepositoryContainerListener( IRepositoryContainerListener l )
   {
     m_listeners.add( l );
   }
@@ -121,7 +112,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#removeRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
-  public void removeRepositoryContainerListener( final IRepositoryContainerListener l )
+  public void removeRepositoryContainerListener( IRepositoryContainerListener l )
   {
     m_listeners.remove( l );
   }
@@ -129,9 +120,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#getRepositories()
    */
-  public IRepository[] getRepositories( )
+  public List getRepositories()
   {
-    return m_reps.toArray( new IRepository[m_reps.size()] );
+    return m_reps;
   }
 
   /**
@@ -139,23 +130,23 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
    */
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException
   {
-    for( final Object element : m_reps )
+    for( final Iterator it = m_reps.iterator(); it.hasNext(); )
     {
-      final IRepository rep = (IRepository) element;
+      final IRepository rep = (IRepository)it.next();
 
       if( rep.getIdentifier().equals( id ) )
         return rep;
-
+      
       try
       {
         return rep.findItem( id );
       }
-      catch( final RepositoryException e )
+      catch( RepositoryException e )
       {
         // ignored, try with next repository
       }
     }
-
+    
     throw new NoSuchElementException( "Item not found: " + id );
   }
 }

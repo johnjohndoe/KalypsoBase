@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,68 +36,58 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.util.command.ICommand;
 
 /**
- * {@link ICommand} implementation that changes the extent of a map-panel.
  * 
- * @author Gernot Belger
+ * @author Belger
  */
 public class ChangeExtentCommand implements ICommand
 {
-  private final GM_Envelope m_doBoundingBox;
+  private final GM_Envelope myDoBoundingBox;
 
-  private final GM_Envelope m_undoBoundingBox;
+  private final GM_Envelope myUndoBoundingBox;
 
-  private final IMapPanel m_mapPanel;
+  private final MapPanel m_mapPanel;
 
-  private final boolean m_useHistory;
-
-  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox )
-  {
-    this( mapPanel, boundingBox, true );
-  }
-
-  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox, final boolean useHistory )
+  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
   {
     m_mapPanel = mapPanel;
-    m_useHistory = useHistory;
-    m_doBoundingBox = boundingBox;
-    m_undoBoundingBox = mapPanel.getBoundingBox();
+    myUndoBoundingBox = mapPanel.getBoundingBox();
+    myDoBoundingBox = boundingBox;
   }
 
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    m_mapPanel.setBoundingBox( m_doBoundingBox, m_useHistory );
+    m_mapPanel.setBoundingBox( myDoBoundingBox );
   }
 
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
     process();
   }
 
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    m_mapPanel.setBoundingBox( m_undoBoundingBox, m_useHistory );
+    m_mapPanel.setBoundingBox( myUndoBoundingBox );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ChangeExtentCommand.0"); //$NON-NLS-1$
+    return "Ausschnitt ändern";
   }
 }

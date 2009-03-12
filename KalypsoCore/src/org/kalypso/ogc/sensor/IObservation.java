@@ -1,4 +1,4 @@
-/*--------------- Kalypso-Header -------------------------------------------
+/*--------------- Kalypso-Header --------------------------------------------------------------------
 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
@@ -36,72 +36,76 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- --------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.xml.xlink.IXlink;
 
 /**
- * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschliche Wert-Erfassung.
+ * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle
+ * oder menschlische Wert-Erfassung.
  * 
  * @author schlienger
  */
 public interface IObservation extends IObservationEventProvider
 {
   /**
-   * Returns the identifier of this Observation. The identifier can be used to uniquely identify the Observation within
-   * its repository.
+   * Returns the identifier of this Observation. The identifier can be used to
+   * uniquely identify the Observation within its repository.
    * 
    * @return identifier
    */
-  public String getIdentifier( );
+  public String getIdentifier();
 
   /**
    * Returns the name of this Observation
    * 
    * @return name
    */
-  public String getName( );
+  public String getName();
 
   /**
    * Returns true if this observation is editable.
    * 
    * @return editable flag
    */
-  public boolean isEditable( );
+  public boolean isEditable();
 
   /**
    * Returns the target object for which this observation has measurements.
    * 
    * @return target or null
    */
-  public Object getTarget( );
+  public IXlink getTarget();
 
   /**
    * Returns the list of Metadata.
    * 
    * @return metadata
    */
-  public MetadataList getMetadataList( );
+  public MetadataList getMetadataList();
 
   /**
    * Returns the list of axis
    * 
    * @return axes array
    */
-  public IAxis[] getAxisList( );
+  public IAxis[] getAxisList();
 
   /**
-   * Returns the values resulting from the measurements this observation stands for.
+   * Returns the values resulting from the measurements this observation stands
+   * for.
    * 
    * @param args
-   *          some client defined arguments that can be interpretated by the implementation. Implementors of this
-   *          interface can use this parameter, but they are not forced to do so.
+   *          some client defined arguments that can be interpretated by the
+   *          implementation. Implementors of this interface can use this
+   *          parameter, but they are not forced to do so.
    * @return model
    * @throws SensorException
    */
-  public ITuppleModel getValues( final IRequest args ) throws SensorException;
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException;
 
   /**
    * Sets the given values.
@@ -109,7 +113,7 @@ public interface IObservation extends IObservationEventProvider
    * @param values
    * @throws SensorException
    */
-  public void setValues( final ITuppleModel values ) throws SensorException;
+  public void setValues( ITuppleModel values ) throws SensorException;
 
   /**
    * Returns the localisation of the base file behind this observation

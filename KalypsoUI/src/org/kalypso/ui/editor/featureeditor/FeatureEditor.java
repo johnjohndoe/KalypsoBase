@@ -40,13 +40,15 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -55,14 +57,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -70,12 +69,9 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.GisTemplateHelper;
-import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.command.DefaultCommandManager;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -89,14 +85,14 @@ public class FeatureEditor extends EditorPart
 {
   private final Runnable m_dirtyRunnable = new Runnable()
   {
-    public void run( )
+    public void run()
     {
       final Shell shell = getSite().getShell();
       if( shell != null )
       {
         shell.getDisplay().asyncExec( new Runnable()
         {
-          public void run( )
+          public void run()
           {
             fireDirtyChange();
           }
@@ -105,15 +101,15 @@ public class FeatureEditor extends EditorPart
     }
   };
 
-  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+      new DefaultCommandManager(), m_dirtyRunnable );
 
-  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget, 5, 5 );
+  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget );
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     m_commandTarget.dispose();
 
@@ -125,8 +121,7 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
    */
-  @Override
-  public boolean isSaveAsAllowed( )
+  public boolean isSaveAsAllowed()
   {
     return false;
   }
@@ -134,20 +129,19 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
    */
-  @Override
-  public void doSaveAs( )
+  public void doSaveAs()
   {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite,
+   *      org.eclipse.ui.IEditorInput)
    */
-  @Override
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
-    if( !(input instanceof IStorageEditorInput) )
-      throw new PartInitException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.0") ); //$NON-NLS-1$
+    if( !( input instanceof IStorageEditorInput ) )
+      throw new PartInitException( "Can only use IStorageEditorInput" );
 
     setSite( site );
 
@@ -157,21 +151,19 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
    */
-  @Override
   protected final void setInput( final IEditorInput input )
   {
-    if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.1") ); //$NON-NLS-1$
+    if( !( input instanceof IStorageEditorInput ) )
+      throw new IllegalArgumentException( "Only IStorageEditorInput supported" );
 
     super.setInput( input );
 
-    load( (IStorageEditorInput) input );
+    load( (IStorageEditorInput)input );
   }
 
   /**
    * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   public void doSave( final IProgressMonitor monitor )
   {
     try
@@ -182,16 +174,16 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.2"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.3"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus status = KalypsoGisPlugin.createErrorStatus( "", e );
+      ErrorDialog.openError( getSite().getShell(), "Speichern", "Fehler beim Speichern der Daten",
+          status );
     }
   }
 
   /**
    * @see org.eclipse.ui.part.EditorPart#isDirty()
    */
-  @Override
-  public boolean isDirty( )
+  public boolean isDirty()
   {
     return m_commandTarget.isDirty();
   }
@@ -199,35 +191,28 @@ public class FeatureEditor extends EditorPart
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
-    // nix
+  // nix
   }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
-    parent.setLayout( new GridLayout() );
-    parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final Composite composite = m_viewer.createControls( parent, SWT.NONE );
-    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_viewer.createControls( parent, SWT.NONE );
 
     final IActionBars actionBars = getEditorSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
     actionBars.updateActionBars();
-
   }
 
   protected final void load( final IStorageEditorInput input )
   {
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         loadInput( input, monitor );
@@ -238,10 +223,6 @@ public class FeatureEditor extends EditorPart
     try
     {
       progressService.busyCursorWhile( op );
-
-      setPartName( input.getName() );
-      if( input instanceof IFileEditorInput )
-        setContentDescription( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
     }
     catch( final InvocationTargetException e )
     {
@@ -251,15 +232,16 @@ public class FeatureEditor extends EditorPart
 
       final IStatus status;
       if( targetException instanceof CoreException )
-        status = ((CoreException) targetException).getStatus();
+        status = ( (CoreException)targetException ).getStatus();
       else
       {
         final String locmsg = targetException.getLocalizedMessage();
-        final String msg = locmsg == null ? "" : locmsg; //$NON-NLS-1$
-        status = StatusUtilities.statusFromThrowable( targetException, msg );
+        final String msg = locmsg == null ? "" : locmsg;
+        status = KalypsoGisPlugin.createErrorStatus( msg, targetException );
       }
 
-      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.5"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Laden der Ansicht",
+          status );
     }
     catch( final InterruptedException e )
     {
@@ -267,29 +249,38 @@ public class FeatureEditor extends EditorPart
     }
   }
 
-  protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
+  protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor )
+      throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.7"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( "Ansicht laden", 1000 );
 
-    InputStream contents = null;
     try
     {
       final IStorage storage = input.getStorage();
-      contents = new BufferedInputStream( storage.getContents() );
+
+      final Reader r;
+      if( storage instanceof IEncodedStorage )
+        r = new InputStreamReader( storage.getContents(), ( (IEncodedStorage)storage ).getCharset() );
+      else
+        r = new InputStreamReader( storage.getContents() );
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );
 
-      Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
-      m_viewer.setTemplate( template, context, null, null, null );
-
-      contents.close();
+      m_viewer.loadInput( r, context, monitor, new Properties() );
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.8") ) ); //$NON-NLS-1$
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus(
+          "Fehler beim Parsen der Context-URL", e ) );
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( KalypsoGisPlugin.createErrorStatus( "Fehler beim Lesen von XML", e ) );
     }
     catch( final CoreException e )
     {
@@ -297,20 +288,13 @@ public class FeatureEditor extends EditorPart
 
       throw e;
     }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.9") ) ); //$NON-NLS-1$
-    }
     finally
     {
-      IOUtils.closeQuietly( contents );
       monitor.done();
     }
   }
 
-  protected void fireDirtyChange( )
+  protected void fireDirtyChange()
   {
     firePropertyChange( PROP_DIRTY );
   }

@@ -2,8 +2,11 @@ package org.kalypso.ui.editor.abstractobseditor;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ogc.sensor.diagview.DiagViewTheme;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
+import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
 
 /**
  * ObsTemplateContentProvider
@@ -17,9 +20,27 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getChildren( Object parentElement )
   {
-    if( parentElement instanceof ObsView )
-      return ( (ObsView)parentElement ).getItems();
+    if( parentElement instanceof AbstractViewTemplate )
+    {
+      final AbstractViewTemplate tpl = (AbstractViewTemplate) parentElement;
+      
+      return tpl.getThemes().toArray();
+    }
+    
+    if( parentElement instanceof TableViewTheme )
+    {
+      final TableViewTheme theme = (TableViewTheme) parentElement;
+      
+      return theme.getColumns().toArray();
+    }
 
+    if( parentElement instanceof DiagViewTheme )
+    {
+      final DiagViewTheme theme = (DiagViewTheme) parentElement;
+      
+      return theme.getCurves().toArray();
+    }
+    
     return null;
   }
 
@@ -28,9 +49,20 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
    */
   public Object getParent( Object element )
   {
-    if( element instanceof ObsViewItem )
-      return ( (ObsViewItem)element ).getView();
+    if( element instanceof TableViewColumn )
+    {
+      final TableViewColumn col = (TableViewColumn) element;
+      
+      return col.getTheme();
+    }
 
+    if( element instanceof DiagViewCurve )
+    {
+      final DiagViewCurve col = (DiagViewCurve) element;
+      
+      return col.getTheme();
+    }
+    
     return null;
   }
 
@@ -39,7 +71,28 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( Object element )
   {
-    return ( element instanceof ObsView ) && ( (ObsView)element ).getItems().length > 0;
+    if( element instanceof AbstractViewTemplate )
+    {
+      final AbstractViewTemplate tpl = (AbstractViewTemplate) element;
+      
+      return tpl.getThemes().size() > 0;
+    }
+    
+    if( element instanceof TableViewTheme )
+    {
+      final TableViewTheme theme = (TableViewTheme) element;
+      
+      return theme.getColumns().size() > 0;
+    }
+    
+    if( element instanceof DiagViewTheme )
+    {
+      final DiagViewTheme theme = (DiagViewTheme) element;
+      
+      return theme.getCurves().size() > 0;
+    }
+    
+    return false;
   }
 
   /**
@@ -47,26 +100,24 @@ public class ObsTemplateContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( Object inputElement )
   {
-    if( inputElement instanceof ObsView )
-      return ( (ObsView)inputElement ).getItems();
-
-    return null;
+    final AbstractViewTemplate template = (AbstractViewTemplate) inputElement;
+    
+    return template.getThemes().toArray();
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-  // empty
+    // empty
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // empty
+    // empty
   }
 }

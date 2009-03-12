@@ -46,8 +46,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.java.awt.ColorUtilities;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.GrafikAchse;
@@ -62,7 +62,7 @@ import org.kalypso.template.obsdiagview.TypeCurve;
  */
 public class GrafikKurven
 {
-  private final List<GrafikKurve> m_kurven = new ArrayList<GrafikKurve>();
+  private final List m_kurven = new ArrayList();
 
   private final GrafikAchsen m_achsen;
 
@@ -81,25 +81,28 @@ public class GrafikKurven
    * 
    * @param tc
    * @param numberAxes
-   * @return the axis for which the curve will be displayed
+   * @return
+   * @return
    */
   public IAxis addCurve( final IFile file, final TypeCurve tc, final IAxis[] numberAxes )
   {
-    final GrafikKurve gk = new GrafikKurve( file.getName(), tc.getName(), tc.isShown(), toGrafikColor( tc.getColor() ) );
+    final GrafikKurve gk = new GrafikKurve( file.getName(), tc.getName(), tc
+        .isShown(), toGrafikColor( tc.getColor() ) );
 
     m_kurven.add( gk );
 
     IAxis axis = null;
-
+    
     final List tmList = tc.getMapping();
     for( Iterator itm = tmList.iterator(); itm.hasNext(); )
     {
-      final TypeAxisMapping tm = (TypeAxisMapping)itm.next();
+      final TypeAxisMapping tm = (TypeAxisMapping) itm.next();
 
       final GrafikAchse ga = m_achsen.getFor( tm.getDiagramAxis() );
       if( ga != null )
       {
-        axis = ObservationUtilities.findAxisByName( numberAxes, tm.getObservationAxis() );
+        axis = ObservationUtilities.findAxisByName( numberAxes, tm
+            .getObservationAxis() );
 
         gk.setNr( m_kurven.size() );
         gk.setType( toGrafikType( axis.getType() ) );
@@ -115,25 +118,25 @@ public class GrafikKurven
   /**
    * @return die Grafik Vorlage welche in der tpl-Datei geschrieben werden soll
    */
-  public String toVorlagentext()
+  public String toVorlagentext( )
   {
     final StringBuffer sb = new StringBuffer();
 
     sb
-        .append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" ); //$NON-NLS-1$
+        .append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" );
     for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
     {
-      final GrafikKurve gk = (GrafikKurve)it.next();
+      final GrafikKurve gk = (GrafikKurve) it.next();
 
       sb.append( gk.getCurveSpec() ).append( '\n' );
     }
 
     sb.append( '\n' );
 
-    sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" ); //$NON-NLS-1$
+    sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" );
     for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
     {
-      final GrafikKurve gk = (GrafikKurve)it.next();
+      final GrafikKurve gk = (GrafikKurve) it.next();
 
       sb.append( gk.getColorSpec() ).append( '\n' );
     }
@@ -146,15 +149,14 @@ public class GrafikKurven
    * 
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString( )
   {
     return toVorlagentext();
   }
 
   /**
-   * Converts the string representation of the color into an integer as used in the grafik template using the getRGB()
-   * method of the color class.
+   * Converts the string representation of the color into an integer as used in
+   * the grafik template using the getRGB() method of the color class.
    * 
    * @param strColor
    * @return integer representation
@@ -162,7 +164,7 @@ public class GrafikKurven
   private static int toGrafikColor( final String strColor )
   {
     final Color c;
-
+    
     if( strColor != null )
     {
       // TRICKY: Aus irgendeiner Grund muss man die ROT-BLAU Komponente der Farber
@@ -186,9 +188,9 @@ public class GrafikKurven
   private static String toGrafikType( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return "N"; //$NON-NLS-1$
+      return "N";
 
-    return "L"; //$NON-NLS-1$
+    return "L";
   }
 
   /**
@@ -200,7 +202,7 @@ public class GrafikKurven
   {
     private int m_axisNr = 0;
 
-    private String m_type = "X"; //$NON-NLS-1$
+    private String m_type = "X";
 
     private final String m_name;
 
@@ -218,10 +220,10 @@ public class GrafikKurven
     {
       m_filename = filename;
       m_name = name;
-      m_shown = shown ? "J" : "N"; //$NON-NLS-1$ //$NON-NLS-2$
+      m_shown = shown ? "J" : "N";
       m_color = color;
     }
-
+    
     /**
      * @param unit
      *          string representation of the unit
@@ -261,22 +263,24 @@ public class GrafikKurven
     /**
      * @return the grafik color spec for this curve
      */
-    public String getColorSpec()
+    public String getColorSpec( )
     {
       final StringBuffer sb = new StringBuffer();
-      sb.append( "K" ).append( m_nr ).append( ":\t" ).append( m_color ).append( "\t0\t1\t" ).append( m_axisNr ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      sb.append( "K" ).append( m_nr ).append( ":\t" ).append( m_color ).append(
+          "\t0\t1\t" ).append( m_axisNr );
       return sb.toString();
     }
 
     /**
      * @return the grafik curve spec for this curve
      */
-    public String getCurveSpec()
+    public String getCurveSpec( )
     {
       final StringBuffer sb = new StringBuffer();
-      sb.append( m_nr ).append( "- " ).append( m_filename ).append( " " ).append( m_shown ).append( " " ).append( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          m_type ).append( " " ).append( m_axisNr ).append( " " ).append( m_name ).append( " [" ).append( m_unit ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          .append( "]" ); //$NON-NLS-1$
+      sb.append( m_nr ).append( "- " ).append( m_filename ).append( " " )
+          .append( m_shown ).append( " " ).append( m_type ).append( " " )
+          .append( m_axisNr ).append( " " ).append( m_name ).append( " [" )
+          .append( m_unit ).append( "]" );
       return sb.toString();
     }
   }

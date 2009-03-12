@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
@@ -44,41 +44,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.loader.LoaderException;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
-import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.template.obstableview.ObjectFactory;
-import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
-import org.kalypso.template.obstableview.Obstableview.Rules;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.template.obstableview.ObstableviewType.RulesType;
 import org.xml.sax.InputSource;
 
 /**
@@ -86,13 +68,11 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public final class TableViewUtils
+public class TableViewUtils
 {
-  public final static String OTT_FILE_EXTENSION = "ott"; //$NON-NLS-1$
+  public final static String OTT_FILE_EXTENSION = "ott";
 
   private final static ObjectFactory OTT_OF = new ObjectFactory();
-
-  private final static JAXBContext OTT_JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   /**
    * Not to be instanciated
@@ -108,7 +88,7 @@ public final class TableViewUtils
    * @return table view template
    * @throws JAXBException
    */
-  public static Obstableview loadTableTemplateXML( final Reader reader ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final Reader reader ) throws JAXBException
   {
     try
     {
@@ -123,9 +103,11 @@ public final class TableViewUtils
   /**
    * Loads the xml template from the given stream. Closes the stream.
    * 
+   * @param ins
    * @return table view template
+   * @throws JAXBException
    */
-  public static Obstableview loadTableTemplateXML( final InputStream ins ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputStream ins ) throws JAXBException
   {
     try
     {
@@ -136,27 +118,36 @@ public final class TableViewUtils
       IOUtils.closeQuietly( ins );
     }
   }
-
+  
   /**
-   * Loads the xml template from the given inputsource
+   * Loads the xml template from the given inutsource
    * 
+   * @param ins
    * @return table view template
+   * @throws JAXBException
    */
-  public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
+  public static ObstableviewType loadTableTemplateXML( final InputSource ins )
+      throws JAXBException
   {
-    final Obstableview baseTemplate = (Obstableview) OTT_JC.createUnmarshaller().unmarshal( ins );
+      final ObstableviewType baseTemplate = (ObstableviewType) OTT_OF
+          .createUnmarshaller().unmarshal( ins );
 
-    return baseTemplate;
+      return baseTemplate;
   }
 
   /**
    * Saves the given template (binding). Closes the stream.
+   * 
+   * @param xml
+   * @param outs
+   * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final Obstableview xml, final OutputStream outs ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml,
+      final OutputStream outs ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC );
+      final Marshaller m = OTT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, outs );
     }
@@ -168,12 +159,17 @@ public final class TableViewUtils
 
   /**
    * Saves the given template (binding). Closes the writer.
+   * 
+   * @param xml
+   * @param writer
+   * @throws JAXBException
    */
-  public static void saveTableTemplateXML( final Obstableview xml, final Writer writer ) throws JAXBException
+  public static void saveTableTemplateXML( final ObstableviewType xml,
+      final Writer writer ) throws JAXBException
   {
     try
     {
-      final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC );
+      final Marshaller m = OTT_OF.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( xml, writer );
     }
@@ -186,30 +182,25 @@ public final class TableViewUtils
   /**
    * Builds the xml binding object using the given the table view template
    * 
+   * @param template
    * @return xml binding object (ready for marshalling for instance)
+   * @throws JAXBException
    */
-  public static Obstableview buildTableTemplateXML( final TableView template )
+  public static ObstableviewType buildTableTemplateXML(
+      final TableViewTemplate template ) throws JAXBException
   {
-    final Obstableview xmlTemplate = OTT_OF.createObstableview();
-
-    xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
-
-    xmlTemplate.setAlphaSort( template.isAlphaSort() );
+    final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
     // rendering rules
-    final Rules xmlRulesType = OTT_OF.createObstableviewRules();
+    final RulesType xmlRulesType = OTT_OF.createObstableviewTypeRulesType();
     xmlTemplate.setRules( xmlRulesType );
-    final List<TypeRenderingRule> xmlRules = xmlRulesType.getRenderingrule();
-
-    // only set timezone if not default one
-    if( !template.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
-      xmlTemplate.setTimezone( template.getTimezone().getID() );
+    final List xmlRules = xmlRulesType.getRenderingrule();
 
     final List rules = template.getRules().getRules();
     for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
     {
       final RenderingRule rule = (RenderingRule) itRules.next();
-
+      
       final TypeRenderingRule xmlRule = OTT_OF.createTypeRenderingRule();
       xmlRule.setMask( rule.getMask() );
       if( rule.getForegroundColor() != null )
@@ -219,178 +210,50 @@ public final class TableViewUtils
       if( rule.getFont() != null )
         xmlRule.setFont( StringUtilities.fontToString( rule.getFont() ) );
       xmlRule.setTooltip( rule.getTooltipText() );
-
+      
       xmlRules.add( xmlRule );
     }
-
+    
     // themes
-    final List<TypeObservation> xmlObsList = xmlTemplate.getObservation();
-
+    final List xmlObsList = xmlTemplate.getObservation();
+    
     int colCount = 0;
-
-    final Map map = ObsView.mapItems( template.getItems() );
-
-    for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
+    
+    final Collection themes = template.getThemes();
+    for( final Iterator itThemes = themes.iterator(); itThemes.hasNext(); )
     {
-      final Map.Entry entry = (Entry) itThemes.next();
-      final IObservation obs = (IObservation) entry.getKey();
+      final TableViewTheme theme = (TableViewTheme) itThemes.next();
+      
+      final IObservation obs = theme.getObservation();
       if( obs == null )
         continue;
-
+      
       final TypeObservation xmlObs = OTT_OF.createTypeObservation();
       xmlObs.setHref( obs.getHref() );
-      xmlObs.setLinktype( "zml" ); //$NON-NLS-1$
+      xmlObs.setLinktype( "zml" );
 
       xmlObsList.add( xmlObs );
-
+      
       // columns
-      final List<TypeColumn> xmlColumns = xmlObs.getColumn();
-
-      final List columns = (List) entry.getValue();
-      for( final Iterator itCol = columns.iterator(); itCol.hasNext(); )
+      final List xmlColumns = xmlObs.getColumn();
+      
+      final List columns = theme.getColumns();
+      for( Iterator itCol = columns.iterator(); itCol.hasNext(); )
       {
         final TableViewColumn col = (TableViewColumn) itCol.next();
-
+        
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
         xmlCol.setAxis( col.getAxis().getName() );
         xmlCol.setEditable( col.isEditable() );
-        xmlCol.setId( "c" + String.valueOf( colCount ) ); //$NON-NLS-1$
+        xmlCol.setId( "c" + String.valueOf( colCount ) );
         xmlCol.setName( col.getName() );
         xmlCol.setWidth( col.getWidth() );
-        xmlCol.setFormat( col.getFormat() );
-
+        
         xmlColumns.add( xmlCol );
       }
     }
-
+    
     return xmlTemplate;
-  }
-
-  public static IStatus applyXMLTemplate( final TableView view, final Obstableview xml, final URL context, final boolean synchron, final String ignoreHref )
-  {
-    view.removeAllItems();
-
-    // features-list is optional
-    if( xml.getFeatures() != null )
-    {
-      view.clearFeatures();
-
-      final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
-      for( final String element : featureNames )
-        view.setFeatureEnabled( element, true );
-    }
-
-    final Boolean alphaSort = xml.isAlphaSort();
-    final boolean as = alphaSort == null ? false : alphaSort.booleanValue();
-    view.setAlphaSort( as );
-
-    // timezone is optional
-    if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )
-    {
-      final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
-      view.setTimezone( timeZone );
-    }
-
-    final Rules trules = xml.getRules();
-    if( trules != null )
-    {
-      // clear the rules since we get ones from the xml
-      view.getRules().removeAllRules();
-
-      for( final Object element : trules.getRenderingrule() )
-        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) element ) );
-    }
-
-    final List<IStatus> stati = new ArrayList<IStatus>();
-
-    final List<TypeObservation> list = xml.getObservation();
-    final TypeObservation[] tobs = list.toArray( new TypeObservation[list.size()] );
-    for( int i = 0; i < tobs.length; i++ )
-    {
-      // check, if href is ok
-      final String href = tobs[i].getHref();
-
-      // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
-      if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
-      {
-        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.4") + href ); //$NON-NLS-1$
-        continue;
-      }
-
-      final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
-      stati.add( loader.getResult() );
-    }
-
-    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.5") ); //$NON-NLS-1$
-  }
-
-  /**
-   * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
-   * are based on it.
-   */
-  public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List tableViewColumns )
-  {
-    final Map<IObservation, ArrayList<TableViewColumn>> map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
-
-    for( final Iterator it = tableViewColumns.iterator(); it.hasNext(); )
-    {
-      final TableViewColumn col = (TableViewColumn) it.next();
-      final IObservation obs = col.getObservation();
-
-      if( !map.containsKey( obs ) )
-        map.put( obs, new ArrayList<TableViewColumn>() );
-
-      map.get( obs ).add( col );
-    }
-
-    return map;
-  }
-
-  /**
-   * Save the dirty observations
-   */
-  public static IStatus saveDirtyObservations( final List tableViewColumns, final IProgressMonitor monitor )
-  {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
-
-    final Map map = buildObservationColumnsMap( tableViewColumns );
-
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.7"), map.size() ); //$NON-NLS-1$
-
-    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
-    {
-      final Map.Entry entry = (Entry) it.next();
-      final IObservation obs = (IObservation) entry.getKey();
-      final List cols = (List) entry.getValue();
-
-      boolean obsSaved = false;
-
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
-      {
-        final TableViewColumn col = (TableViewColumn) itCols.next();
-
-        if( col.isDirty() && !obsSaved )
-        {
-          try
-          {
-            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-
-            obsSaved = true;
-          }
-          catch( final LoaderException e )
-          {
-            e.printStackTrace();
-            status.addMessage( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.8") + obs, e ); //$NON-NLS-1$
-          }
-        }
-
-        col.setDirty( false, null );
-      }
-
-      monitor.worked( 1 );
-    }
-
-    return status;
   }
 }

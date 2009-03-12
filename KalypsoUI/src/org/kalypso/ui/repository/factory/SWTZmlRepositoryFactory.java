@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.factory;
 
 import org.eclipse.jface.window.Window;
@@ -45,12 +45,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.repository.dialogs.FileRepositoryConfigDialog;
 
 /**
- * A GUI oriented File- <code>RepositoryFactory</code>. Please note that this factory currently creates a
- * <code>ZmlObservationRepository</code>. This could be changed to some other subclass of <code>FileRepository</code>
- * as long as the constructor sticks to the arguments used here. To achieve more flexibility, this class could be
- * improved so that the concrete <code>FileRepository</code> class to instantiate could be parametrised.
+ * A GUI oriented File-<code>RepositoryFactory</code>. Please note that this factory
+ * currently creates a <code>ZmlObservationRepository</code>. This could be changed
+ * to some other subclass of <code>FileRepository</code> as long as the constructor
+ * sticks to the arguments used here. To achieve more flexibility, this class could
+ * be improved so that the concrete <code>FileRepository</code> class to instantiate
+ * could be parametrised. 
  * 
  * @author schlienger
  */
@@ -59,30 +62,28 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  @Override
-  public boolean configureRepository( )
+  public boolean configureRepository(  )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-
-    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        .getDefault() );
-
+   
+    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin.getDefault() );
+    
     final int res = dlg.open();
-
+    
     boolean b = false;
-
+    
     if( res == Window.OK )
     {
       // update configuration to stay consistent
       setConfiguration( dlg.getLocation() + SEPARATOR + dlg.getFilters() );
-
+      
       setRepositoryName( dlg.getIdentifier() );
-
+      
       b = true;
     }
-
+    
     dlg.dispose();
-
+    
     return b;
   }
 }

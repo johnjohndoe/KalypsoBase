@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  *  
  */
@@ -56,23 +56,23 @@ public class LogicalFilterComboPanel extends FilterComboPanel
   {
     super( parent );
     items = new String[3];
-    items[0] = "AND"; //$NON-NLS-1$
-    items[1] = "OR"; //$NON-NLS-1$
-    items[2] = "NOT"; //$NON-NLS-1$
+    items[0] = "AND";
+    items[1] = "OR";
+    items[2] = "NOT";
     init();
   }
 
-  @Override
   public int getSelection()
   {
     return selection_index;
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
     selection_index = index;
     comboBox.select( index );

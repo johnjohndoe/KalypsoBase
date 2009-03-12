@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,57 +36,50 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import org.eclipse.jface.viewers.IColorProvider;
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Belger
  */
-public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvider
+public class LayerTableLabelProvider implements ITableLabelProvider
 {
   private final LayerTableViewer m_viewer;
 
-  private final Color m_noSelectionColor;
-
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
-    m_viewer = layerTable;
-    m_noSelectionColor = m_viewer.getControl().getBackground();
+    m_viewer = layerTable;    
   }
-
+  
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // nothing to dispose
+    // nix zu disposen  
   }
-
+  
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  public Image getColumnImage( final Object element, final int columnIndex )
+  public Image getColumnImage( Object element, int columnIndex )
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
       return null;
 
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
-
-    final Image image = modifier == null ? null : modifier.getImage( feature );
-    return image;
+    
+    return modifier.getImage( feature );
   }
 
   /**
@@ -96,21 +89,16 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
-      return ""; //$NON-NLS-1$
-
-    final Feature feature = (Feature) element;
+      return "";
+    
+    final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
-      return ""; //$NON-NLS-1$
-
-    final IPropertyType pt = modifier.getFeatureTypeProperty();
-    final IPropertyType realPt = feature.getFeatureType().getProperty( pt.getQName() );
-    if( realPt == null )
-      return "<Eigenschaft nicht vorhanden>";
+      return "";
     
     final String label = modifier.getLabel( feature );
-    return label == null ? "" : label; //$NON-NLS-1$
+    return label == null ? "" : label;
   }
 
   /**
@@ -118,8 +106,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void addListener( final ILabelProviderListener listener )
   {
-    // TODO Listener informieren, wenn sich der Wert eines Features geändert
-    // hat?
+    // TODO  Listener informieren, wenn sich der Wert eines Features geändert hat?    
   }
 
   /**
@@ -135,36 +122,6 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void removeListener( final ILabelProviderListener listener )
   {
-    // TODO
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-   */
-  public Color getForeground( final Object element )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-   */
-  public Color getBackground( final Object element )
-  {
-// if( element instanceof Feature )
-// {
-// final ISelection selection = m_viewer.getSelection();
-// if( selection instanceof IStructuredSelection )
-// {
-// final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
-// while( iterator.hasNext() )
-// {
-// final Object object = iterator.next();
-// if( element == object )
-// return m_selectionColor;
-// }
-// }
-// }
-    return m_noSelectionColor;
+    //  TODO
   }
 }

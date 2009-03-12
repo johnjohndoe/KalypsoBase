@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -71,7 +71,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   private final List m_widgetLines = new ArrayList();
 
-  private INativeObservationAdapter m_nativeAdapter;
+  private NativeObservationAdapter m_nativeAdapter;
 
   private File m_fileTarget;
 
@@ -91,6 +91,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    */
   public void createControl( Composite parent )
   {
+
     initializeDialogUnits( parent );
     m_topLevel = new Composite( parent, SWT.NONE );
 
@@ -118,8 +119,15 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public void validate()
   {
     // page is always complete
-    getWizard().getContainer().updateButtons();
     setPageComplete( true );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+   */
+  public boolean canFlipToNextPage()
+  {
+    return isPageComplete();
   }
 
   /**
@@ -147,7 +155,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     if( !( eventSelection instanceof ObservationImportSelection ) )
       return;
     final ObservationImportSelection selection = (ObservationImportSelection)eventSelection;
-    INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
+    NativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
     if( nativeAdapter != m_nativeAdapter )
       m_nativeAdapter = nativeAdapter;
 
@@ -159,13 +167,13 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     {
       try
       {
-
-        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL() ).getAxisList() );
+        
+        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL(), true )
+            .getAxisList() );
       }
       catch( Exception e )
       {
-        MessageDialog.openInformation( getShell(), "Fehler beim laden der Zieldatei-Datei",
-            "Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich" );
+        MessageDialog.openInformation(getShell(), "Fehler beim laden der Zieldatei-Datei","Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich");
       }
     }
 
@@ -209,7 +217,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
    * @throws SensorException
    *  
    */
-  public IObservation getTargetObservation( final URL url ) throws SensorException
+  public IObservation getTargetObservation( URL url, boolean guessWQ ) throws SensorException
   {
     final IObservation observation = ZmlFactory.parseXML( url, "targetFile" );
     return observation;

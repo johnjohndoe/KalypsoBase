@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,17 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.file;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.io.filter.AcceptAllFileFilter;
+import org.kalypso.java.io.FileUtilities;
+import org.kalypso.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 
@@ -69,15 +67,16 @@ public class FileRepository extends AbstractRepository
    * @param factory
    * @param conf
    * @param location
-   *            path of the root
+   *          path of the root
    * @param identifier
-   *            user defined identifier for this repository
+   *          user defined identifier for this repository
    * @param readOnly
-   *            if true the repository is read only
+   *          if true the repository is read only
    * @param filter
-   *            [optional] if null an <code>AcceptAllFileFilter</code> is used.
+   *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
-  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final FileFilter filter )
+  public FileRepository( String factory, String conf, String location,
+      String identifier, boolean readOnly, FileFilter filter )
   {
     super( identifier, factory, conf, readOnly );
 
@@ -90,7 +89,8 @@ public class FileRepository extends AbstractRepository
 
     m_root = new File( location );
     if( !m_root.exists() )
-      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+      throw new IllegalArgumentException(
+          "Location existiert nicht! (Location: " + location + ")" );
 
   }
 
@@ -100,9 +100,12 @@ public class FileRepository extends AbstractRepository
    * @param location
    * @param identifier
    * @param readOnly
-   * @see FileRepository#FileRepository(String, String, String, String, boolean, FileFilter)
+   * 
+   * @see FileRepository#FileRepository(String, String, String, String, boolean,
+   *      FileFilter)
    */
-  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly )
+  public FileRepository( String factory, String conf, String location,
+      String identifier, boolean readOnly )
   {
     this( factory, conf, location, identifier, readOnly, null );
   }
@@ -110,12 +113,11 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  @Override
   public String getDescription( )
   {
     return m_root.toString();
   }
-
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
@@ -138,7 +140,8 @@ public class FileRepository extends AbstractRepository
   }
 
   /**
-   * Factory method that can be overriden by subclasses to create adequate items.
+   * Factory method that can be overriden by subclasses to create adequate
+   * items.
    * 
    * @param file
    * @return IRepositoryItem instance
@@ -163,7 +166,7 @@ public class FileRepository extends AbstractRepository
    */
   public void reload( )
   {
-    fireRepositoryStructureChanged();
+    // nothing to do
   }
 
   /**
@@ -185,7 +188,7 @@ public class FileRepository extends AbstractRepository
     final String strRoot = m_root.getAbsolutePath().replace( '\\', '/' );
 
     // replaceFirst can not handle "$" in itemId, so replaced by next line
-    // final String path = itemId.replaceFirst( scheme, strRoot );
+    //    final String path = itemId.replaceFirst( scheme, strRoot );
     final String path = strRoot + itemId.replaceFirst( scheme, "" );
     final File f = new File( path );
 
@@ -200,37 +203,4 @@ public class FileRepository extends AbstractRepository
 
     return createItem( f );
   }
-
-  /**
-   * @see org.kalypso.repository.AbstractRepository#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class anotherClass )
-  {
-    if( File.class.equals( anotherClass ) )
-      return m_root;
-
-    return super.getAdapter( anotherClass );
-  }
-
-  public void makeItem( final File dir ) throws IOException
-  {
-    if( !dir.exists() )
-      FileUtils.forceMkdir( dir );
-
-    fireRepositoryStructureChanged();
-  }
-
-  public void deleteItem( final FileItem item ) throws IOException
-  {
-    final File file = item.getFile();
-
-    if( file.isDirectory() )
-      FileUtils.deleteDirectory( file );
-    else
-      FileUtils.forceDelete( file );
-
-    fireRepositoryStructureChanged();
-  }
-
 }

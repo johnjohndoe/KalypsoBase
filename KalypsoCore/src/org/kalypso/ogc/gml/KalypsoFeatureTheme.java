@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,426 +36,173 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
+import org.deegree.graphics.displayelements.DisplayElement;
+import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.deegree.graphics.sld.UserStyle;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.sort.SplitSort;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.awt.HighlightGraphics;
-import org.kalypso.core.KalypsoCoreDebug;
-import org.kalypso.core.KalypsoCoreExtensions;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
-import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypso.util.command.ICommand;
 
 /**
- * @author Andreas von Dömming
+ * @author vdoemming
  */
-public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
+public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
-  /* Preserve order of styles. */
-  private final Map<KalypsoUserStyle, UserStylePainter> m_styleMap = new LinkedHashMap<KalypsoUserStyle, UserStylePainter>();
-
   private CommandableWorkspace m_workspace;
 
-  private final IFeatureType m_featureType;
+  private final HashMap m_styleDisplayMap = new HashMap();
 
-  private final FeatureList m_featureList;
+  private final FeatureType m_featureType;
 
-  private final IFeatureSelectionManager m_selectionManager;
+  final FeatureList m_featureList;
 
-  private final String m_featurePath;
-
-  /**
-   * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
-   */
-  private Image m_featureThemeIcon;
-
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath,
+      final String name )
   {
-    super( name, "FeatureTheme", mapModel ); //$NON-NLS-1$
+    super( name );
 
     m_workspace = workspace;
-    m_featurePath = featurePath;
-    m_selectionManager = selectionManager;
 
-    final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
-
+    final Object featureFromPath = workspace.getFeatureFromPath( featurePath );
     if( featureFromPath instanceof FeatureList )
     {
-      m_featureList = (FeatureList) featureFromPath;
-      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
+      m_featureType = workspace.getFeatureTypeFromPath( featurePath );
+      m_featureList = (FeatureList)featureFromPath;
     }
     else if( featureFromPath instanceof Feature )
     {
-      final Feature singleFeature = (Feature) featureFromPath;
-      final Feature parent = singleFeature.getOwner();
-      m_featureList = new SplitSort( parent, singleFeature.getParentRelation() );
-      m_featureList.add( singleFeature );
-      m_featureType = singleFeature.getFeatureType();
+      m_featureList = new SplitSort();
+      m_featureList.add( featureFromPath );
+      m_featureType = ( (Feature)featureFromPath ).getFeatureType();
     }
     else
-    {
-      // Should'nt we throw an exception here?
-      m_featureList = null;
-      m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, "FeaturePath does not point to any feature: " + featurePath, null ) );
-    }
-
+      throw new IllegalArgumentException( "FeaturePath doesn't point to feature collection: "
+          + featurePath );
     m_workspace.addModellListener( this );
   }
 
-  @Override
-  public void dispose( )
+  public void dispose()
   {
-    final Set<KalypsoUserStyle> set = m_styleMap.keySet();
-    final KalypsoUserStyle[] styles = set.toArray( new KalypsoUserStyle[set.size()] );
-    for( final KalypsoUserStyle element : styles )
-      removeStyle( element );
+    final Set set = m_styleDisplayMap.keySet();
+    final KalypsoUserStyle[] styles = (KalypsoUserStyle[])set.toArray( new KalypsoUserStyle[set
+        .size()] );
+    for( int i = 0; i < styles.length; i++ )
+      removeStyle( styles[i] );
+    m_workspace.removeModellListener( this );
+  }
 
-    if( m_workspace != null )
+  private void setDirty()
+  {
+    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
-      m_workspace.removeModellListener( this );
-      m_workspace = null;
+      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      map.setDirty();
     }
-
-    if( m_featureThemeIcon != null )
-      m_featureThemeIcon.dispose();
-
-    super.dispose();
   }
 
-  private void setDirty( )
-  {
-    fireRepaintRequested( getFullExtent() );
-  }
-
-  public CommandableWorkspace getWorkspace( )
+  public CommandableWorkspace getWorkspace()
   {
     return m_workspace;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
-   */
-  public IFeatureType getFeatureType( )
+  public FeatureType getFeatureType()
   {
     return m_featureType;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
-   */
-  public String getFeaturePath( )
+  public void paintSelected( final Graphics graphics, final GeoTransform projection,
+      final double scale, final GM_Envelope bbox, final int selectionId )
   {
-    return m_featurePath;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
-  {
-    final Graphics graphics = wrapGrahicForSelection( g, selected );
-
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
+    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
-      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
-      {
-        displayElement.paint( graphics, p, paintMonitor );
-
-        // DEBUG output to show feature envelope: TODO: put into tracing option
-        // final GM_Envelope envelope = displayElement.getFeature().getEnvelope();
-        // if( envelope != null )
-        // {
-        // GM_Position destPointMin = projection.getDestPoint( envelope.getMin() );
-        // GM_Position destPointMax = projection.getDestPoint( envelope.getMax() );
-        //
-        // GM_Envelope_Impl env = new GM_Envelope_Impl( destPointMin, destPointMax, null );
-        //
-        // graphics.drawRect( (int) env.getMin().getX(), (int) env.getMin().getY(), (int) env.getWidth(), (int)
-        // env.getHeight()
-        // );
-        // }
-      }
-    };
-
-    final double scale = p.getScale();
-    final GM_Envelope bbox = p.getSourceRect();
-    paint( scale, bbox, selected, monitor, paintDelegate );
-
-    if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
-      m_featureList.paint( g, p );
-  }
-
-  /**
-   * Determines, if a {@link HighlightGraphics} will be used to draw the selection or not.
-   */
-  // TODO (future): replace highlightGraphics concept by highlight-style
-  private Graphics wrapGrahicForSelection( final Graphics g, final Boolean selected )
-  {
-    /* If we draw normally, never use highlight graphics */
-    if( selected == null || selected == false )
-      return g;
-
-    boolean hasSelectionStyle = false;
-    for( final KalypsoUserStyle style : m_styleMap.keySet() )
-    {
-      if( style.isUsedForSelection() )
-        hasSelectionStyle = true;
+      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      map.paintSelected( graphics, projection, scale, bbox, selectionId );
     }
-
-    if( hasSelectionStyle )
-      return g;
-
-    /* Use normal style with highlight graphics to paint */
-    return new HighlightGraphics( (Graphics2D) g );
-  }
-
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
-  {
-    final UserStylePainter[] styleArray = getStylesForPaint( selected );
-
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.1" ), styleArray.length ); //$NON-NLS-1$
-
-    if( m_featureList == null )
-      return;
-
-    final GMLWorkspace workspace = getWorkspace();
-
-    for( final UserStylePainter painter : styleArray )
-    {
-      final SubMonitor childProgress = progress.newChild( 1 );
-      painter.paintSelected( workspace, scale, bbox, m_featureList, selected, childProgress, delegate );
-      ProgressUtilities.done( childProgress );
-    }
-  }
-
-  private UserStylePainter[] getStylesForPaint( final Boolean selected )
-  {
-    final List<UserStylePainter> normalStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
-    final List<UserStylePainter> selectionStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
-    for( final Entry<KalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
-    {
-      if( entry.getKey().isUsedForSelection() )
-        selectionStyles.add( entry.getValue() );
-      else
-        normalStyles.add( entry.getValue() );
-    }
-
-    /* If no selection style is present, we will paint with old HighlightGraphics stuff, so return normal styles. */
-    if( selected == null || selected == false || selectionStyles.size() == 0 )
-      return normalStyles.toArray( new UserStylePainter[normalStyles.size()] );
-
-    return selectionStyles.toArray( new UserStylePainter[selectionStyles.size()] );
   }
 
   public void addStyle( final KalypsoUserStyle style )
   {
-    final UserStylePainter styleDisplayMap = new UserStylePainter( style, m_selectionManager );
-    m_styleMap.put( style, styleDisplayMap );
-    style.addStyleListener( this );
-
-    fireStatusChanged();
+    final StyleDisplayMap styleDisplayMap = new StyleDisplayMap( style );
+    m_styleDisplayMap.put( style, styleDisplayMap );
+    style.addModellListener( this );
   }
 
   public void removeStyle( final KalypsoUserStyle style )
   {
-    style.removeStyleListener( this );
-    m_styleMap.remove( style );
+    style.removeModellListener( this );
+    m_styleDisplayMap.remove( style );
   }
 
-  public UserStyle[] getStyles( )
+  public UserStyle[] getStyles()
   {
-    final Set<KalypsoUserStyle> set = m_styleMap.keySet();
-    return set.toArray( new UserStyle[set.size()] );
+    Set set = m_styleDisplayMap.keySet();
+    return (UserStyle[])set.toArray( new UserStyle[set.size()] );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
-  public void onModellChange( final ModellEvent modellEvent )
+  public void onModellChange( ModellEvent modellEvent )
   {
-    if( m_featureList == null )
-      return;
-
-    if( modellEvent instanceof IGMLWorkspaceModellEvent )
-    {
-      // my workspace ?
-      final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
-        return; // not my workspace
-
-      if( modellEvent instanceof FeaturesChangedModellEvent )
-      {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
-        final Feature[] features = featuresChangedModellEvent.getFeatures();
-
-        // TODO: BOTH ways (if and else) are mayor performance bugs.
-        // we MUST first determine if we have to restyle at all that is, if this modell event
-        // did change any features belonging to me
-
-        // Optimise: i think it is faster to restyle all than to find and
-        // exchange so many display elements
-        if( features.length > m_featureList.size() / 5 )
-          setDirty();
-        else
-          for( final Feature feature : features )
-            restyleFeature( feature );
-      }
-      else if( modellEvent instanceof FeatureStructureChangeModellEvent )
-      {
-        final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
-        final Feature[] parents = fscme.getParentFeatures();
-        for( final Feature parent : parents )
-        {
-          if( m_featureList.getParentFeature() == parent )
-          {
-            switch( fscme.getChangeType() )
-            {
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
-                // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
-                // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-                setDirty();
-                break;
-              default:
-                setDirty();
-            }
-          }
-        }
-      }
-    }
-    else
-      // unknown event, set dirty
-      // TODO : if the event-hierarchy is implemented correctly the else-part can be removed
-      setDirty();
-  }
-
-  private void restyleFeature( final Feature feature )
-  {
-    // my feature ?
-    // FIXME: SLOW!! This is a major performance bug
-    if( !m_featureList.contains( feature ) )
-      return;
-
-    // TODO: invalidation should made via the screen-rectangle of this feature
-    // depending on the styled geometry
-    fireRepaintRequested( feature.getEnvelope() );
+    setDirty();
+    fireModellEvent( modellEvent );
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getFullExtent( )
+  public GM_Envelope getBoundingBox()
   {
-    return m_featureList == null ? null : m_featureList.getBoundingBox();
+    return m_featureList.getBoundingBox();
   }
 
-  public FeatureList getFeatureList( )
+  public FeatureList getFeatureList()
   {
     return m_featureList;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.deegree.model.geometry.GM_Envelope)
    */
-  public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
+  public FeatureList getFeatureListVisible( GM_Envelope env )
   {
-    if( m_featureList == null )
-      return null;
-
-    /* Use complete bounding box if search envelope is not set. */
-    final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
-
-    final GMLWorkspace workspace = getWorkspace();
-
-    // Put features in set in order to avoid duplicates
-    final Set<Feature> features = new HashSet<Feature>();
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
+    if( env == null )
+      env = getBoundingBox();
+    final Set result = new HashSet();
+    for( Iterator iter = m_styleDisplayMap.values().iterator(); iter.hasNext(); )
     {
-      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
-      {
-        final Feature feature = displayElement.getFeature();
-        final GM_Envelope envelope = feature.getEnvelope();
-        if( envelope != null && env.intersects( envelope ) )
-          features.add( feature );
-      }
-    };
-
-    final IProgressMonitor monitor = new NullProgressMonitor();
-
-    for( final Entry<KalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
-    {
-      final KalypsoUserStyle style = entry.getKey();
-      if( style.isUsedForSelection() )
-        continue;
-
-      final UserStylePainter stylePainter = entry.getValue();
-
-      final Boolean selected = null; // selection is not considered here
-      final Double scale = null; // TODO: scale is not considered here, but it should
-      try
-      {
-        stylePainter.paintFeatureTypeStyles( workspace, scale, env, m_featureList, selected, monitor, paintDelegate );
-      }
-      catch( final CoreException e )
-      {
-        KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-      }
+      StyleDisplayMap map = (StyleDisplayMap)iter.next();
+      map.queryVisibleFeatures( env, result );
     }
-
-    final FeatureList resultList = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
-    resultList.addAll( features );
-    return resultList;
+    final FeatureList list = FeatureFactory.createFeatureList();
+    list.addAll( result );
+    return list;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
    *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
@@ -466,108 +213,124 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     catch( final Exception e )
     {
-      // TODO: error handling
       e.printStackTrace();
     }
-    if( runnable != null )
-      runnable.run();
+    runnable.run();
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
    */
-  public ISchedulingRule getSchedulingRule( )
+  public ISchedulingRule getSchedulingRule()
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
-   */
-  public IFeatureSelectionManager getSelectionManager( )
+  public class StyleDisplayMap
   {
-    return m_selectionManager;
-  }
+    private final List m_dispayElements = new ArrayList();
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
-  @Override
-  protected ImageDescriptor getDefaultIcon( )
-  {
-    if( m_featureThemeIcon == null )
-      m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) ); //$NON-NLS-1$
+    private final UserStyle[] m_style;
 
-    return ImageDescriptor.createFromImage( m_featureThemeIcon );
-  }
+    private GM_Envelope m_vaildEnvelope = null;
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
-   */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    if( o != this )
-      throw new IllegalStateException();
+    private int m_maxDisplayArray = 0;
 
-    final UserStyle[] styles = getStyles();
-    if( styles == null )
-      return super.getChildren( o );
-
-    final List<UserStyleTreeObject> treeObjects = new ArrayList<UserStyleTreeObject>( styles.length );
-    for( final UserStyle style : styles )
+    public StyleDisplayMap( UserStyle style )
     {
-      final KalypsoUserStyle kus = (KalypsoUserStyle) style;
-      // We do not show selection-styles
-      // TODO: optinally...
-      if( !kus.isUsedForSelection() )
-        treeObjects.add( new UserStyleTreeObject( this, kus ) );
+      m_style = new UserStyle[]
+      { style };
     }
 
-    return treeObjects.toArray( new UserStyleTreeObject[treeObjects.size()] );
+    public Set queryVisibleFeatures( GM_Envelope env, Set result )
+    {
+      if( result == null )
+        result = new HashSet();
+      restyle( env );
+      for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
+        result.add( ( (DisplayElement[])iter.next() )[0].getFeature() );
+      return result;
+    }
+
+    public void setDirty()
+    {
+      m_vaildEnvelope = null;
+      m_dispayElements.clear();
+    }
+
+    public List getSelectedDisplayElements( List result, int selectionId, GM_Envelope bbox )
+    {
+      if( result == null )
+        result = new ArrayList();
+
+      for( Iterator iter = m_dispayElements.iterator(); iter.hasNext(); )
+      {
+        DisplayElement[] de = (DisplayElement[])iter.next();
+        if( de.length > 0 )
+        {
+          Feature feature = de[0].getFeature();
+          if( feature.isSelected( selectionId ) && feature.getEnvelope().intersects( bbox ) )
+            result.add( de );
+        }
+      }
+      return result;
+    }
+
+    public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
+        int selectionId )
+    {
+      restyle( bbox );
+      final List selectedDE = getSelectedDisplayElements( null, selectionId, bbox );
+      final List[] layerList = new List[m_maxDisplayArray];
+      // try to keep order of rules in userstyle
+      for( int i = 0; i < layerList.length; i++ )
+        layerList[i] = new ArrayList();
+      for( Iterator iter = selectedDE.iterator(); iter.hasNext(); )
+      {
+        Object object = iter.next();
+        DisplayElement[] element = (DisplayElement[])object;
+        for( int i = 0; i < element.length; i++ )
+        {
+          if( element[i].doesScaleConstraintApply( scale ) )
+            layerList[i].add( element[i] );
+        }
+      }
+      for( int i = 0; i < layerList.length; i++ )
+        for( Iterator iterator = layerList[i].iterator(); iterator.hasNext(); )
+  				((DisplayElement)iterator.next()).paint( g, p );
+    }
+
+    public void restyle( GM_Envelope env )
+    {
+      //      m_vaildEnvelope = null;
+      if( m_vaildEnvelope == null || !m_vaildEnvelope.contains( env ) )
+      { // restyle
+        if( m_vaildEnvelope == null )
+          m_vaildEnvelope = env;
+        else
+          m_vaildEnvelope = m_vaildEnvelope.getMerged( env );
+        m_dispayElements.clear();
+        m_maxDisplayArray = 0;
+        List features = m_featureList.query( m_vaildEnvelope, null );
+        for( Iterator iter = features.iterator(); iter.hasNext(); )
+        {
+          Feature feature = (Feature)iter.next();
+          try
+          {
+            DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature,
+                m_style );
+            if( elements.length > 0 )
+              m_dispayElements.add( elements );
+            if( elements.length > m_maxDisplayArray )
+              m_maxDisplayArray = elements.length;
+          }
+          catch( IncompatibleGeometryTypeException e )
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
-  public void styleChanged( final KalypsoUserStyle source )
-  {
-    setDirty();
-    fireStatusChanged();
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter == IKalypsoThemeInfo.class )
-      return createThemeInfo();
-
-    return super.getAdapter( adapter );
-  }
-
-  private IKalypsoThemeInfo createThemeInfo( )
-  {
-    final IFeatureType featureType = getFeatureType();
-    if( featureType == null )
-      return null; // no data available; maybe show some status-message?
-
-    /* If an explicit info is configured for this map, use it */
-    // REMARK: is necessary to copy this from AbstractFeatureTheme, as this adapter must be called first
-    final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
-    if( themeInfoId != null )
-      return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
-
-    // HACK: use featureThemeInfo from KalypsoUI as a default. This is needed, because this feature info the
-    // featureType-properties mechanisms from KalypsoUI in order find a registered featureThemeInfo for the current
-    // qname
-    final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this ); //$NON-NLS-1$
-    if( defaultFeatureThemeInfo != null )
-      return defaultFeatureThemeInfo;
-
-    return new FeatureThemeInfo( this, new Properties() );
-  }
 }

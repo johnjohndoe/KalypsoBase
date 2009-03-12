@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,70 +36,49 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
+import org.deegree.graphics.sld.Symbolizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.i18n.Messages;
+import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
-import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
-import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
-import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
-import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
+ *  
  */
 
 public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public RasterSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
+  public RasterSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
+      KalypsoUserStyle m_userStyle )
   {
     super( m_composite, m_symbolizer, m_userStyle );
   }
 
-  @Override
-  public void draw( )
+  public void draw()
   {
-    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer) symbolizer;
-
-    final GridLayout compositeLayout = new GridLayout();
+    GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
-    // ***** ColorMap Group
-    final Group colorMapGroup = new Group( composite, SWT.NULL );
-    final GridData colorMapGroupData = new GridData();
-    colorMapGroupData.widthHint = 210;
-    colorMapGroupData.heightHint = 246;
-    colorMapGroup.setLayoutData( colorMapGroupData );
-    colorMapGroup.setLayout( compositeLayout );
-    colorMapGroup.layout();
-    colorMapGroup.setText( MessageBundle.STYLE_EDITOR_COLORMAP );
+    // ***** Label Group
+    Group labelGroup = new Group( composite, SWT.NULL );
+    GridData labelGroupData = new GridData();
+    labelGroupData.widthHint = 210;
+    labelGroupData.heightHint = 246;
+    labelGroup.setLayoutData( labelGroupData );
+    labelGroup.setLayout( compositeLayout );
+    labelGroup.layout();
 
-    // ***** ComboBox Mode Panel
-
-    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, Messages.getString("org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout.0"), 0 ); //$NON-NLS-1$
-    modeComboPanel.addPanelListener( new PanelListener()
-    {
-      public void valueChanged( final PanelEvent event )
-      {
-        final int mode = ((ModeSelectionComboPanel) event.getSource()).getSelection();
-// rasterSymbolizer.setMode( mode );
-        userStyle.fireStyleChanged();
-      }
-    } );
-
-    // ***** Table
-    final Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
-    new ColorMapEntryTable( tableComposite, userStyle, rasterSymbolizer );
+    Label label = new Label( labelGroup, SWT.NULL );
+    label.setText( MessageBundle.STYLE_EDITOR_ERROR_NO_IMPLEMENTATION );
   }
 }

@@ -1,110 +1,65 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.model.feature;
+package org.deegree_impl.model.feature;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureAssociationTypeProperty;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.FeatureVisitor;
+import org.deegree.model.feature.GMLWorkspace;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
- * In order to use this workspace with support of xlinks, a
- * {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
- * 
- * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
 public class GMLWorkspace_Impl implements GMLWorkspace
 {
-  /** id -> feature */
-  final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
-
   private final Feature m_rootFeature;
 
-  /** The namespace context for which to resolve any namespcae-prefixes inside this workspace. */
-  private final NamespaceContext m_namespaceContext;
+  private final URL m_context;
 
-  private String m_schemaLocation;
+  private final String m_schemaLocation;
 
-  private final IFeatureType[] m_featureTypes;
+  private final String m_schemaNamespace;
 
-  private final IGMLSchema m_schema;
+  /** id -> feature */
+  final Map m_indexMap = new HashMap();
 
-  private final FeatureProviderFactoryCache m_factory;
+  private final FeatureType[] m_featureTypes;
 
-  /** The url-context against which to resolve any references inside this workspace. */
-  private URL m_context;
+  /** xmlns -> namespaceURI */
+  private final Map m_nsMap;
 
-  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final NamespaceContext namespaceContext, final String schemaLocation, final IFeatureProviderFactory factory )
+  /**
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   */
+  public Feature getFeature( final String id )
   {
-    m_schema = schema;
+    return (Feature)m_indexMap.get( id );
+  }
+
+  public GMLWorkspace_Impl( final FeatureType[] featureTypes, final Feature feature,
+      final URL context, final String schemaLocation, final String schemaNamespace, final Map nsMap )
+  {
     m_featureTypes = featureTypes;
     m_context = context;
-    m_namespaceContext = namespaceContext;
     m_schemaLocation = schemaLocation;
+    m_schemaNamespace = schemaNamespace;
+    m_nsMap = nsMap;
+
     m_rootFeature = feature;
-
-    m_factory = new FeatureProviderFactoryCache( factory );
-
-    if( m_rootFeature != null )
-      m_rootFeature.setWorkspace( this );
 
     try
     {
@@ -114,128 +69,111 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       e.printStackTrace();
     }
-
-    addModellListener( new GMLWorkspaceModellListener( this ) );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
-   */
-  public void dispose( )
+  public Feature resolveLink( Feature srcFeature, String linkPropertyName )
   {
-    m_listener.clear();
-    m_factory.dispose();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
-   */
-  public Feature getFeature( final String id )
-  {
-    return m_indexMap.get( id );
-  }
-
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty )
-  {
-    return resolveLink( srcFeature, linkProperty, RESOLVE_ALL );
-  }
-
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
-  {
-    final Object linkValue = srcFeature.getProperty( linkProperty );
+    Object linkValue = srcFeature.getProperty( linkPropertyName );
     if( linkValue == null )
       return null;
     if( linkValue instanceof Feature )
-    {
-      if( resolveMode != RESOLVE_LINK )
-        return (Feature) linkValue;
-      return null;
-    }
+      return (Feature)linkValue;
     // must be a reference
-    final String linkID = (String) linkValue;
-    if( resolveMode != RESOLVE_COMPOSITION )
-      return getFeature( linkID );
+    String linkID = (String)linkValue;
+    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature
+        .getFeatureType().getProperty( linkPropertyName );
+    FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
+    for( int _ft = 0; _ft < linkFTs.length; _ft++ )
+    {
+      Feature[] features = getFeatures( linkFTs[_ft] );
+      // todo: performance-todo: todo oben aufloesen und hier das feature
+      // aus dem hash holen:
+      for( int i = 0; i < features.length; i++ )
+      {
+        if( linkID.equals( features[i].getId() ) )
+          return features[i];
+      }
+    }
+    // broken Link
     return null;
   }
 
-  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty )
-  {
-    return resolveLinks( srcFeature, linkProperty, RESOLVE_ALL );
-  }
-
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
+   * @see org.deegree.model.feature.GMLWorkspace#resolveLinks(org.deegree.model.feature.Feature,
    *      java.lang.String)
    */
-  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
+  public Feature[] resolveLinks( Feature srcFeature, String linkPropertyName )
   {
-    if( !linkProperty.isList() )
-    {
-      final Feature feature = resolveLink( srcFeature, linkProperty, resolveMode );
-      if( feature != null )
-        return new Feature[] { feature };
-      return new Feature[] {};
-    }
-    final List<Feature> result = new ArrayList<Feature>();
-    final List linkList = (List) srcFeature.getProperty( linkProperty );
+    final List result = new ArrayList();
+    final List linkList = (List)srcFeature.getProperty( linkPropertyName );
 
-    for( final Object linkValue : linkList )
+    for( Iterator iter = linkList.iterator(); iter.hasNext(); )
     {
+      Object linkValue = iter.next();
       if( linkValue instanceof Feature )
       {
-        if( !(resolveMode == RESOLVE_LINK) )
-          result.add( (Feature) linkValue );
+        result.add( linkValue );
         continue;
       }
       // must be a reference
-      if( !(resolveMode == RESOLVE_COMPOSITION) )
+      String linkID = (String)linkValue;
+      FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)srcFeature
+          .getFeatureType().getProperty( linkPropertyName );
+      FeatureType[] linkFTs = ftp.getAssociationFeatureTypes();
+      for( int _ft = 0; _ft < linkFTs.length; _ft++ )
       {
-        final String linkID = (String) linkValue;
-        result.add( getFeature( linkID ) );
+        Feature[] features = getFeatures( linkFTs[_ft] );
+        // todo performance-todo: todo oben aufloesen und hier das feature
+        // aus dem hash holen:
+        for( int i = 0; i < features.length; i++ )
+        {
+          if( linkID.equals( features[i].getId() ) )
+          {
+            result.add( features[i] );
+            continue;
+          }
+        }
       }
     }
-
-    return result.toArray( new Feature[result.size()] );
+    // broken Link
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
-  public Feature getRootFeature( )
+  public Feature getRootFeature()
   {
     return m_rootFeature;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypes()
-   */
-  public IFeatureType[] getFeatureTypes( )
+  public FeatureType[] getFeatureTypes()
   {
     return m_featureTypes;
   }
 
   /**
-   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht
+   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution
+   * gilt nicht
    */
-  public Feature[] getFeatures( final IFeatureType ft )
+  public Feature[] getFeatures( final FeatureType ft )
   {
-    final CollectorVisitor collector = new CollectorVisitor();
-    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( collector, ft, false );
+    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( ft, false );
     try
     {
       accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     }
-    catch( final Throwable e )
+    catch( Throwable e )
     {
       e.printStackTrace();
     }
 
-    return collector.getResults( true );
+    final Collection results = visitor.getResults();
+    return (Feature[])results.toArray( new Feature[results.size()] );
   }
 
-  private final Collection<ModellEventListener> m_listener = new HashSet<ModellEventListener>();
+  private final Collection m_listener = new ArrayList();
 
   /**
-   * Every listener is registered only once.
    * 
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
+   * @see org.deegree.model.feature.event.ModellEventProvider#addModellListener(org.deegree.model.feature.event.ModellEventListener)
    */
   public void addModellListener( final ModellEventListener listener )
   {
@@ -243,7 +181,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
+   * 
+   * @see org.deegree.model.feature.event.ModellEventProvider#removeModellListener(org.deegree.model.feature.event.ModellEventListener)
    */
   public void removeModellListener( final ModellEventListener listener )
   {
@@ -251,138 +190,110 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * 
+   * @see org.deegree.model.feature.event.ModellEventProvider#fireModellEvent(org.deegree.model.feature.event.ModellEvent)
    */
   public void fireModellEvent( final ModellEvent event )
   {
-    // use array instead of iterator, because the listener list may change in
-    // response to this event (lead to a ConcurrentodificationException)
-    final ModellEventListener[] objects = m_listener.toArray( new ModellEventListener[m_listener.size()] );
-    for( final ModellEventListener element : objects )
-    {
-      try
-      {
-        element.onModellChange( event );
-      }
-      catch( final Throwable t )
-      {
-        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
+    for( final Iterator iter = m_listener.iterator(); iter.hasNext(); )
+      ( (ModellEventListener)iter.next() ).onModellChange( event );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.IFeatureType, java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.deegree.model.feature.Feature,
+   *      org.deegree.model.feature.FeatureType, java.lang.String)
    */
-  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final IFeatureType linkSrcFeatureType, final IRelationType linkProperty )
+  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, FeatureType linkSrcFeatureType,
+      String linkPropertyName )
   {
     if( linkTargetfeature == null )
       return new Feature[0];
 
-    final List<Feature> result = new ArrayList<Feature>();
+    final List result = new ArrayList();
     final Feature[] features = getFeatures( linkSrcFeatureType );
-    for( final Feature element : features )
+    for( int i = 0; i < features.length; i++ )
     {
-      final Object prop = element.getProperty( linkProperty );
+      Object prop = features[i].getProperty( linkPropertyName );
       if( prop == linkTargetfeature )
-        result.add( element );
+        result.add( features[i] );
       if( linkTargetfeature.getId().equals( prop ) )
-        result.add( element );
+        result.add( features[i] );
     }
 
-    // final IFeatureType[] substiFTs =
-    // GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
-    final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
-
-    for( final IFeatureType element : substiFTs )
+    FeatureType[] substiFTs = GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType,
+        getFeatureTypes() );
+    for( int _ft = 0; _ft < substiFTs.length; _ft++ )
     {
-      final Feature[] substiFeatures = getFeatures( element );
+      final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
 
-      for( final Feature element2 : substiFeatures )
+      for( int i = 0; i < features.length; i++ )
       {
-        final Object prop = element2.getProperty( linkProperty );
+        Object prop = substiFeatures[i].getProperty( linkPropertyName );
         if( prop == linkTargetfeature )
-          result.add( element2 );
+          result.add( substiFeatures[i] );
         if( linkTargetfeature.getId().equals( prop ) )
-          result.add( element2 );
+          result.add( substiFeatures[i] );
       }
     }
-    return result.toArray( new Feature[result.size()] );
+
+    return (Feature[])result.toArray( new Feature[result.size()] );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getContext()
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getContext()
    */
-  public URL getContext( )
+  public URL getContext()
   {
     return m_context;
   }
 
-  public void setContext( final URL context )
-  {
-    m_context = context;
-  }
-
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      org.kalypsodeegree.model.feature.IFeatureType, int)
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   *      org.deegree.model.feature.FeatureType, int)
    */
-  public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
+  public void accept( final FeatureVisitor fv, final FeatureType ft, final int depth )
   {
     final Feature[] features = getFeatures( ft );
 
-    for( final Feature feature : features )
+    for( int i = 0; i < features.length; i++ )
     {
+      final Feature feature = features[i];
       accept( fv, feature, depth );
     }
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      org.kalypsodeegree.model.feature.Feature, int)
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
+   *      org.deegree.model.feature.Feature, int)
    */
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
-    accept( fv, feature, depth, feature.getFeatureType().getProperties() );
-  }
+    final FeatureType ft = feature.getFeatureType();
+    final FeatureTypeProperty[] ftps = ft.getProperties();
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor,
-   *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.IPropertyType[])
-   */
-  public void accept( final FeatureVisitor fv, final Feature feature, final int depth, final IPropertyType[] ftps )
-  {
     final boolean recurse = fv.visit( feature );
 
     if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
     {
-      for( final IPropertyType element : ftps )
+      for( int j = 0; j < ftps.length; j++ )
       {
-        if( element instanceof IRelationType )
+        if( ftps[j] instanceof FeatureAssociationTypeProperty )
         {
-          final Object value = feature.getProperty( element );
+          Object value = feature.getProperty( ftps[j].getName() );
           if( value == null )
             continue;
 
-          if( value instanceof XLinkedFeature_Impl )
+          if( value instanceof Feature )
           {
-            if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
-            {
-              final Feature f = getFeature( (String) value );
-              accept( fv, f, depth );
-            }
-          }
-          else if( value instanceof Feature )
-          {
-            final Feature f = (Feature) value;
+            final Feature f = (Feature)value;
             accept( fv, f, depth );
           }
           else if( value instanceof List )
-            accept( fv, (List) value, depth );
+            accept( fv, (List)value, depth );
           else if( value instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
           {
-            final Feature f = getFeature( (String) value );
+            final Feature f = getFeature( (String)value );
             accept( fv, f, depth );
           }
         }
@@ -391,12 +302,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   * @see org.deegree.model.feature.GMLWorkspace#accept(org.deegree.model.feature.FeatureVisitor,
    *      java.util.List, int)
    */
   public void accept( final FeatureVisitor fv, final List features, final int depth )
   {
-    for( final Iterator iter = features.iterator(); iter.hasNext(); )
+    for( Iterator iter = features.iterator(); iter.hasNext(); )
     {
       final Object next = iter.next();
 
@@ -405,518 +316,251 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         // ACHTUNG LINK!
         if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
         {
-          final Feature f = getFeature( (String) next );
+          final Feature f = getFeature( (String)next );
           accept( fv, f, depth );
         }
       }
       else if( next instanceof Feature )
-        accept( fv, (Feature) next, depth );
+        accept( fv, (Feature)next, depth );
     }
   }
 
-  protected final class RegisterVisitor implements FeatureVisitor
+  private final class RegisterVisitor implements FeatureVisitor
   {
     /**
-     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-     */
-    public boolean visit( final Feature f )
-    {
-      String id = f.getId();
-      // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
-      // if( m_indexMap.containsKey( id ) )
-      // System.out.println( "Workspace already contains a feature with id: " +
-      // id );
-      // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
-      // System.out.println( "found" );
-
-      if( id == null || id.length() == 0 )
-      {
-        id = createFeatureId( f.getFeatureType() );
-        // System.out.println( "Feature has no id: " + f );
-      }
-
-      // TODO: better generate new ids and remember wich ones are generated (because
-      // we dont want to write the gernerated ones)
-      // IDEA: put an prefix before the generated id (a 'strong' prefix which will not be in any other id)
-      // When writing the gml, we then can quickly determine if the id is generated
-
-      // TODO: do not put null-ids into this map ? What sideeffects do we expect
-      m_indexMap.put( id, f );
-      return true;
-    }
-  }
-
-  protected final class UnRegisterVisitor implements FeatureVisitor
-  {
-    /**
-     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+     * @see org.deegree.model.feature.FeatureVisitor#visit(org.deegree.model.feature.Feature)
      */
     public boolean visit( final Feature f )
     {
       final String id = f.getId();
-      m_indexMap.remove( id );
+      if( m_indexMap.containsKey( id ) )
+        System.out.println( "Workspace already contains a feature with id: " + id );
+      m_indexMap.put( id, f );
+
       return true;
     }
   }
 
   /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
-  @Deprecated
-  public IFeatureType getFeatureType( final String nameLocalPart )
+  public FeatureType getFeatureType( final String featureName )
   {
-    for( final IFeatureType ft : m_featureTypes )
+    for( int i = 0; i < m_featureTypes.length; i++ )
     {
-      if( ft.getQName().getLocalPart().equals( nameLocalPart ) )
+      final FeatureType ft = m_featureTypes[i];
+      if( ft.getName().equals( featureName ) )
         return ft;
     }
+
     return null;
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(javax.xml.namespace.QName)
-   */
-  public IFeatureType getFeatureType( final QName featureQName )
-  {
-    for( final IFeatureType ft : m_featureTypes )
-    {
-      if( ft.getQName().equals( featureQName ) )
-        return ft;
-    }
-
-    // HACK: because a workspace has only its own feature types
-    // maybe allways use this method?
-    return m_schema.getFeatureType( featureQName );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
+   * <p>
+   * Gibt das durch den FeaturPath gegebene Feature zurück.
+   * </p>
+   * <p>
+   * Syntax des FeaturePath:
+   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
+   * der featureTypeName optional ist
+   * </p>
+   * <p>
+   * Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende
+   * </p>
+   * <p>
+   * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue)
+   * FeatureList zurückgegeben, deren Elemente alle vom angegebenen Typ sind
+   * </p>
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeatureFromPath( final String featurePath )
   {
-    try
+    final FeaturePath path = new FeaturePath( featurePath );
+
+    Feature aktuFeature = getRootFeature();
+    for( int i = 0; i < path.getLength(); i++ )
     {
-      final FeaturePath fPath = new FeaturePath( featurePath );
-      return fPath.getFeature( this );
+      final Object value = aktuFeature.getProperty( path.getSegment( i ) );
+      if( value instanceof Feature )
+      {
+        aktuFeature = (Feature)value;
+        continue;
+      }
+      else if( value instanceof String )
+      {
+        aktuFeature = getFeature( (String)value );
+        continue;
+      }
+      else if( value instanceof FeatureList )
+      {
+        // wir können nicht in listen absteigen
+        // deshalb: falls wir auf eine Liste stossen, muss es das ergebnios sein
+        // sonst fehler
+        if( i == path.getLength() - 1 )
+        {
+          final String typename = path.getTypename();
+          if( typename == null )
+            return value;
+
+          // falls ein typ angegeben wurde, nur die Elemente
+          // dieses Typs raussuchen
+          // auch, wenn es sich um substituierende handelt!
+          final FeatureTypeVisitor visitor = new FeatureTypeVisitor( typename, true );
+
+          final FeatureList fl = (FeatureList)value;
+          fl.accept( visitor );
+          final Collection results = visitor.getResults();
+
+          final FeatureList newList = FeatureFactory.createFeatureList();
+          newList.addAll( results );
+
+          return newList;
+        }
+        return null;
+      }
     }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+
+    return aktuFeature;
   }
 
   /**
    * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName optional ist
+   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei
+   * der featureTypeName optional ist
    * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
+   * 
+   * @see org.deegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
    */
-  public IFeatureType getFeatureTypeFromPath( final String featurePath )
+  public FeatureType getFeatureTypeFromPath( final String featurePath )
   {
-    return new FeaturePath( featurePath ).getFeatureType( this );
+    final FeaturePath path = new FeaturePath( featurePath );
+    final String typename = path.getTypename();
+
+    FeatureType aktuType = getRootFeature().getFeatureType();
+    for( int i = 0; i < path.getLength(); i++ )
+    {
+      final FeatureAssociationTypeProperty property = (FeatureAssociationTypeProperty)aktuType
+          .getProperty( path.getSegment( i ) );
+
+      if( i == path.getLength() - 1 && typename != null )
+      {
+        // falls ein typname vorgegeben ist, schaun, ob dieser hier vorkommt
+        final FeatureType[] associationFeatureTypes = property.getAssociationFeatureTypes();
+        for( int j = 0; j < associationFeatureTypes.length; j++ )
+        {
+          final FeatureType type = associationFeatureTypes[j];
+          if( type.getName().equals( typename ) )
+          {
+            aktuType = type;
+            break;
+          }
+        }
+      }
+      else
+        aktuType = property.getAssociationFeatureType();
+    }
+
+    return aktuType;
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.kalypsodeegree.model.feature.Feature)
+   * @see org.deegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.deegree.model.feature.Feature)
    */
-  public FeaturePath getFeaturepathForFeature( final Feature feature )
+  public String getFeaturepathForFeature( final Feature feature )
   {
-    return new FeaturePath( feature );
+    // TODO: implement it!
+    return "";
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
+   * @see org.deegree.model.feature.GMLWorkspace#getSchemaLocation()
    */
-  public String getSchemaLocationString( )
+  public String getSchemaLocation()
   {
     return m_schemaLocation;
   }
 
   /**
-   * Creates a new feature and registers it with this workspace.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.deegree.model.feature.GMLWorkspace#getSchemaNamespace()
    */
-  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type )
+  public String getSchemaNamespace()
   {
-    return createFeature( parent, parentRelation, type, 0 );
+    return m_schemaNamespace;
   }
 
   /**
-   * Creates a new feature and registers it with this workspace.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
+   * @see org.deegree.model.feature.GMLWorkspace#createFeature(org.deegree.model.feature.FeatureType)
    */
-  public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth )
+  public Feature createFeature( FeatureType type )
   {
-    if( type.isAbstract() )
-    {
-      // TODO: throw an exception?
-      // throw new IllegalArgumentException( "Cannot create feature from abstract type: " + type );
-      System.out.println( "Creating feature from abstract type: " + type );
-    }
-
-    // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
-    final String newId = createFeatureId( type );
-    final Feature newFeature = FeatureFactory.createFeature( parent, parentRelation, newId, type, true, depth );
-    // TODO: because we nowadys do recurse, another feature might be created meanwhile
-    // so there is a chance, that an id is used twice
-    m_indexMap.put( newId, newFeature );
-    return newFeature;
+    String newId = createFeatureId( type );
+    return FeatureFactory.createFeature( newId, type );
   }
 
-  private String createFeatureId( final IFeatureType type )
+  private String createFeatureId( FeatureType type )
   {
-    // REMARK: Performance Bufix
-    // The commented code (see below) caused a serious performance
-    // problem to long lists of homogenous features.
-
-    // SLOW: do not comment in!
-    // int no = 0;
-    // while( m_indexMap.containsKey( id + Integer.toString( no ) ) )
-    // no++;
-    // return id + Integer.toString( no );
-
-    // We now create random numbered feature ids,
-    // which normally should lead to only one try for finding a new id
-    final String name = type.getQName().getLocalPart();
-    while( true )
-    {
-      final long rnd = Math.round( Math.random() * m_indexMap.size() );
-      final long time = System.currentTimeMillis();
-      final String id = name + time + rnd;
-      if( !m_indexMap.containsKey( id ) )
-        return id;
-    }
-
+    String id = type.getName();
+    int no = 0;
+    while( m_indexMap.containsKey( id + Integer.toString( no ) ) )
+      no++;
+    return id + Integer.toString( no );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
+  /*
+   * @param parent null if rootFeature else parent @param propname @param pos if
+   * propvalue is list, else ignore
    */
-  public void addFeatureAsComposition( final Feature parent, final IRelationType propName, final int pos, final Feature newFeature ) throws Exception
+  public void addFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
   {
-    final Object prop = parent.getProperty( propName );
+    Object prop = parent.getProperty( propName );
 
     if( prop instanceof List )
     {
-      final List list = (List) prop;
-      // when pos = -1 -> append to end of the list
-      if( pos == -1 )
-        list.add( newFeature );
-      else
-        list.add( pos, newFeature );
-    }
-    else
-      parent.setProperty( propName, newFeature );
-
-    m_indexMap.put( newFeature.getId(), newFeature );
-
-    // register also features in subtree of new feature
-    accept( new RegisterVisitor(), newFeature, FeatureVisitor.DEPTH_INFINITE );
-    return;
-  }
-
-  /**
-   * @throws Exception
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
-   */
-  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProp, final Feature linkedFE, final boolean overwrite ) throws Exception
-  {
-    final Object value = parentFE.getProperty( linkProp );
-    if( linkProp.isList() )
-      throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
-    if( value == null | overwrite )
-    {
-      // TODO check if value is allready a feature, then remove it from gmlworkspace
-      parentFE.setProperty( linkProp, linkedFE );
-      m_indexMap.put( linkedFE.getId(), linkedFE );
-      // accept all subfeatures
-      accept( new RegisterVisitor(), linkedFE, FeatureVisitor.DEPTH_INFINITE );
+      ( (List)prop ).add( pos, newFeature );
+      m_indexMap.put( newFeature.getId(), newFeature );
       return;
     }
+    else if( prop == null ) // element not set
+    {
+      final FeatureProperty newProp = FeatureFactory.createFeatureProperty( propName, newFeature );
+      parent.setProperty( newProp );
+      m_indexMap.put( newFeature.getId(), newFeature );
+      return;
+    }
+    // TODO eigene exception entwerfen
+    throw new Exception( "New Feature violates maxOccurs" );
+  }
+
+  public void addLinkedFeature( Feature parent, String propName, int pos, Feature newFeature )
+      throws Exception
+  {
+    Object prop = parent.getProperty( propName );
+    if( prop instanceof List )
+    {
+      ( (List)prop ).add( pos, newFeature.getId() );
+      return;
+    }
+    else if( prop == null ) // element not set
+    {
+      int propPos = parent.getFeatureType().getPropertyPosition( propName );
+      if( propPos != -1 )
+      {
+        parent.getProperties()[propPos] = newFeature.getId();
+      }
+      return;
+    }
+    // TODO eigene exception entwerfen
     throw new Exception( "New Feature violates maxOccurs" );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, java.lang.String)
+   * @see org.deegree.model.feature.GMLWorkspace#getNamespaceMap()
    */
-  public void addFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
+  public Map getNamespaceMap()
   {
-    // test if feature exists in workspace
-    final GMLWorkspace workspace = srcFE.getWorkspace();
-    if( workspace.getFeature( featureID ) == null )
-      throw new Exception( "tried to link a feature that does not exist in the workspace" );
-    if( linkProp.isList() )
-    {
-      final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List) srcFE.getProperty( linkProp );
-      if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-        // when pos = -1 -> append to end of the list
-        if( pos == -1 )
-        {
-          list.add( featureID );
-        }
-        else
-        {
-          list.add( pos, featureID );
-        }
-      else
-        throw new Exception( "New Feature violates maxOccurs" );
-    }
-    else if( srcFE.getProperty( linkProp ) == null )
-      srcFE.setProperty( linkProp, featureID );
-    else
-      throw new Exception( "New Feature as already set" );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, java.lang.String)
-   */
-  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
-  {
-    if( linkProp.isList() )
-    {
-      // TODO check remove existing correctly
-      final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List) srcFE.getProperty( linkProp );
-      if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-      {
-        if( pos >= 0 )
-        {
-          list.set( pos, featureID );
-        }
-        else
-        {
-          list.add( featureID );
-        }
-      }
-      else
-      {
-        throw new Exception( "New Feature violates maxOccurs" );
-      }
-    }
-    else if( srcFE.getProperty( linkProp ) == null )
-    {
-      // TODO check remove existing correctly
-      srcFE.setProperty( linkProp, featureID );
-    }
-    else
-      throw new Exception( "New Feature as allready set" );
-  }
-
-  /**
-   * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked
-   * features.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String, boolean)
-   */
-  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final String featureID, final boolean overwrite ) throws Exception
-  {
-    // TODO remove existing link correctly
-    if( srcFE.getProperty( linkProp ) == null || overwrite )
-      srcFE.setProperty( linkProp, featureID );
-    else
-      throw new Exception( "feature is allready set" );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String)
-   */
-  public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType linkProp, final String childFeatureId )
-  {
-    final Object prop = parentFeature.getProperty( linkProp );
-
-    if( linkProp.isList() )
-      return ((List) prop).remove( childFeatureId );
-
-    if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
-    {
-      parentFeature.setProperty( linkProp, null );
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
-   */
-  public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType linkProp, final Feature childFeature )
-  {
-    boolean result = false;
-    final Object prop = parentFeature.getProperty( linkProp );
-    if( linkProp.isList() )
-    {
-      final List list = (List) prop;
-      result = list.remove( childFeature );
-    }
-    else
-    {
-      if( parentFeature.getProperty( linkProp ) == childFeature )
-      {
-        parentFeature.setProperty( linkProp, null );
-        result = true;
-      }
-    }
-    if( result )
-    {
-      accept( new UnRegisterVisitor(), childFeature, FeatureVisitor.DEPTH_INFINITE );
-      unregisterFeature( childFeature );
-    }
-    return result;
-  }
-
-  private void unregisterFeature( final Feature childFeature )
-  {
-    m_indexMap.remove( childFeature.getId() );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      java.lang.String, int)
-   */
-  public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
-  {
-    final Object featureFromPath = getFeatureFromPath( featurePath );
-    if( featureFromPath instanceof Feature )
-      accept( fv, (Feature) featureFromPath, depth );
-    else if( featureFromPath instanceof FeatureList )
-      accept( fv, (FeatureList) featureFromPath, depth );
-    else
-      throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
-   */
-  public boolean isExistingRelation( final Feature srcFE, final Feature destFE, final IRelationType relationProp )
-  {
-    final Feature[] features = resolveLinks( srcFE, relationProp );
-    for( final Feature element : features )
-    {
-      if( element == destFE )
-        return true;
-    }
-    return false;
-  }
-
-  /**
-   * TODO: this method does not use any members of this class and so does not depends on this specific implementation.
-   * Move it into a utility class.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int)
-   */
-  public boolean isAggregatedLink( final Feature parent, final IRelationType linkProp, final int pos )
-  {
-    final boolean undefined = false;
-    final Object value = parent.getProperty( linkProp );
-    if( linkProp.isList() )
-    {
-      // else must be a list
-      final List list = (List) value;
-      // TODO: test for 0 does not suffice, test also if length < pos
-      if( list.size() == 0 )
-        return false;
-      final Object object = list.get( pos );
-      if( object instanceof Feature )
-        return false;
-      if( object instanceof String )
-        return true;
-      return undefined;
-    }
-    if( value instanceof Feature )
-      return false;
-    if( value instanceof String )
-      return true;
-    return undefined;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
-   */
-  public boolean contains( final Feature feature )
-  {
-    if( feature == null )
-      return false;
-    return m_indexMap.containsKey( feature.getId() );
-  }
-
-  /**
-   * @param parentFeature
-   * @param ftp
-   * @param pos
-   */
-  public boolean isBrokenLink( final Feature parentFeature, final IPropertyType ftp, final int pos )
-  {
-    final Object property = parentFeature.getProperty( ftp );
-    if( property == null )
-      return false;
-    if( property instanceof List )
-    {
-      final Object object = ((List) property).get( pos );
-      if( object instanceof Feature )
-        return false;
-      return !m_indexMap.containsKey( object );
-    }
-    if( property instanceof Feature )
-      return false;
-    return !m_indexMap.containsKey( property );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getGMLSchema()
-   */
-  public IGMLSchema getGMLSchema( )
-  {
-    return m_schema;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureProviderFactory()
-   */
-  public IFeatureProviderFactory getFeatureProviderFactory( )
-  {
-    return m_factory.getFactory();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceContext()
-   */
-  public NamespaceContext getNamespaceContext( )
-  {
-    return m_namespaceContext;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setSchemaLocation(java.lang.String)
-   */
-  public void setSchemaLocation( final String schemaLocation )
-  {
-    m_schemaLocation = schemaLocation;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getLinkedWorkspace(java.lang.String)
-   */
-  public GMLWorkspace getLinkedWorkspace( final String uri )
-  {
-    final IFeatureProvider provider = m_factory.getFeatureProvider( this, uri );
-    if( provider == null )
-      return null;
-
-    return provider.getWorkspace();
+    return m_nsMap;
   }
 }

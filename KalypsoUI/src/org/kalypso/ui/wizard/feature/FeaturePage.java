@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.feature;
 
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.Collection;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -51,17 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypso.ogc.gml.featureview.FeatureComposite;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -70,42 +61,19 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class FeaturePage extends WizardPage
 {
-  private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
-
-  private final ModellEventListener m_modellListener = new ModellEventListener()
-  {
-    public void onModellChange( final ModellEvent modellEvent )
-    {
-      handleModellChange();
-    }
-  };
-
   private FeatureComposite m_featureComposite;
 
-  private final boolean m_overrideCanFlipToNextPage;
+  private boolean m_overrideCanFlipToNextPage;
 
-  private final Feature m_feature;
+  private Feature m_feature;
 
-  private final IFeatureSelectionManager m_selectionManager;
-
-  private final IFeatureviewFactory m_factory;
-
-  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory factory )
+  public FeaturePage( final String pagename, final String title, final ImageDescriptor image,
+      final boolean overrideCanFlipToNextPage, final Feature feature )
   {
     super( pagename, title, image );
 
-    m_factory = factory;
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
     m_feature = feature;
-    m_selectionManager = selectionManager;
-
-    m_feature.getWorkspace().addModellListener( m_modellListener );
-  }
-
-  protected void handleModellChange( )
-  {
-    if( m_featureComposite != null )
-      m_featureComposite.updateControl();
   }
 
   /**
@@ -118,61 +86,33 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( null, m_selectionManager, m_factory );
+    m_featureComposite = new FeatureComposite( null, new URL[] {} );
     m_featureComposite.setFeature( m_feature );
-    m_featureComposite.addChangeListener( new IFeatureChangeListener()
-    {
-      public void featureChanged( final ICommand changeCommand )
-      {
-        applyFeatureChange( changeCommand );
-      }
-
-      public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
-      {
-        // TODO: open modal dialog?
-      }
-    } );
-
     final Control control = m_featureComposite.createControl( group, SWT.NONE );
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
+    
     setControl( group );
   }
 
-  /**
-   * Add the change to our list of changes. Subclass may override (and call super.applyFeatureChange())
-   */
-  protected void applyFeatureChange( final ICommand changeCommand )
+  public void setFeature( final Feature feature )
   {
-    m_changes.add( changeCommand );
+    m_feature = feature;
+    m_featureComposite.setFeature( feature );
+    m_featureComposite.updateControl();
   }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_featureComposite != null )
-      m_featureComposite.dispose();
-
-    m_feature.getWorkspace().removeModellListener( m_modellListener );
-  }
-
+  
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
-  @Override
-  public boolean isPageComplete( )
+  public boolean isPageComplete()
   {
-    return m_featureComposite != null && m_featureComposite.isValid();
+    return m_featureComposite.isValid();
   }
 
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
-  @Override
-  public boolean canFlipToNextPage( )
+  public boolean canFlipToNextPage()
   {
     if( m_overrideCanFlipToNextPage )
       return super.canFlipToNextPage() && isPageComplete();
@@ -180,8 +120,8 @@ public class FeaturePage extends WizardPage
     return super.canFlipToNextPage();
   }
 
-  public Collection<ICommand> getChanges( )
+  public void collectChanges( final Collection changes )
   {
-    return new ArrayList<ICommand>( m_changes );
+    m_featureComposite.collectChanges( changes );
   }
 }

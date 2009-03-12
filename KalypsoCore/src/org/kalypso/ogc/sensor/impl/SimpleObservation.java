@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.HashMap;
@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -55,7 +54,9 @@ import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.util.runtime.IVariableArguments;
+import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.kalypso.util.xml.xlink.IXlink;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
@@ -66,38 +67,38 @@ public class SimpleObservation implements IObservation
 {
   private String m_name;
 
-  private final boolean m_editable;
+  private boolean m_editable;
 
-  private final Object m_target;
+  private IXlink m_target;
 
-  private final MetadataList m_metadata;
+  private MetadataList m_metadata;
 
-  private final IAxis[] m_axes;
+  private IAxis[] m_axes;
 
   private ITuppleModel m_tupples = null;
 
-  private final String m_identifier;
+  private String m_identifier;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
   private String m_href;
 
-  public SimpleObservation( )
+  /**
+   * Default constructor
+   */
+  public SimpleObservation()
   {
-    this( "", "", "", false, null, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", "", false, null, new MetadataList(), new IAxis[0] );
   }
 
-  public SimpleObservation( final IAxis[] axes )
-  {
-    this( "", "", "", false, null, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  }
-
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes )
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
+      final IXlink target, final MetadataList metadata, final IAxis[] axes )
   {
     this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
   }
-
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable,
+      final IXlink target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
     m_identifier = identifier;
@@ -112,20 +113,15 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getName()
    */
-  public String getName( )
+  public String getName()
   {
     return m_name;
-  }
-
-  public void setName( final String name )
-  {
-    m_name = name;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#isEditable()
    */
-  public boolean isEditable( )
+  public boolean isEditable()
   {
     return m_editable;
   }
@@ -133,7 +129,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getTarget()
    */
-  public Object getTarget( )
+  public IXlink getTarget()
   {
     return m_target;
   }
@@ -141,7 +137,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList( )
+  public MetadataList getMetadataList()
   {
     return m_metadata;
   }
@@ -149,25 +145,22 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxisList()
   {
     return m_axes;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  public ITuppleModel getValues( final IRequest request ) throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     if( m_tupples == null )
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.6") ); //$NON-NLS-1$
+      throw new SensorException( "Keine Werte vorhanden." );
 
-    // TODO this leads to unsaved changes when a value is set because the underlying
-    // (real) model isn't changed, just the copy of it (see setFrom and the calling
-    // constructors in SimpleTuppleModel).
-    if( (request != null) && (request.getDateRange() != null) )
-      return new SimpleTuppleModel( m_tupples, request.getDateRange() );
-
+    if( args instanceof DateRangeArgument )
+      return new SimpleTuppleModel( m_tupples, (DateRangeArgument)args );
+    
     return m_tupples;
   }
 
@@ -181,15 +174,23 @@ public class SimpleObservation implements IObservation
       m_tupples = null;
       return;
     }
-
+    
     if( m_tupples == null )
     {
       m_tupples = values;
       return;
     }
-
+    
     final IAxis[] otherAxes = values.getAxisList();
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( m_axes.length );
+
+    // TODO: commented this test out because the gui might add the status axis when not
+    // already available, thus leading to one more axis.
+    // even if this is the case, this additional axis won't be added to this observation
+    // since we only take the axes that are already present in this observation.
+    //    if( m_axes.length != otherAxes.length )
+    // throw new SensorException( "Not same amount of Axes" );
+
+    final Map map = new HashMap( m_axes.length );
 
     for( int i = 0; i < m_axes.length; i++ )
     {
@@ -201,13 +202,13 @@ public class SimpleObservation implements IObservation
 
         map.put( myA, A );
       }
-      catch( final NoSuchElementException e )
+      catch( NoSuchElementException e )
       {
-        throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.7") + toString(), e ); //$NON-NLS-1$
+        throw new SensorException( "Values Models are not compatible. Current Observation: " + this.toString(), e );
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.findAxesByKey( m_axes );
+    final IAxis[] keys = ObservationUtilities.findAxisByKey( m_axes );
 
     for( int i = 0; i < values.getCount(); i++ )
     {
@@ -216,10 +217,10 @@ public class SimpleObservation implements IObservation
 
       for( int j = 0; j < keys.length; j++ )
       {
-        final Object obj = values.getElement( i, map.get( keys[j] ) );
+        final Object obj = values.getElement( i, (IAxis)map.get( keys[j] ) );
         final int ix = m_tupples.indexOf( obj, keys[j] );
 
-        if( (ix >= 0) && (ixPresent != -1) )
+        if( ix >= 0 && ixPresent != -1 )
         {
           if( ixPresent != ix )
             break;
@@ -235,9 +236,9 @@ public class SimpleObservation implements IObservation
 
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
-          final IAxis myA = (IAxis) it.next();
-          final IAxis oA = map.get( myA );
-
+          final IAxis myA = (IAxis)it.next();
+          final IAxis oA = (IAxis)map.get( myA );
+          
           final Object obj = values.getElement( i, oA );
           m_tupples.setElement( ixPresent, obj, myA );
         }
@@ -246,45 +247,47 @@ public class SimpleObservation implements IObservation
       {
         final Set kset = map.keySet();
 
-        final Object[] tupple = new Object[kset.size()];
-
+        final Object[] tupple = new Object[ kset.size() ];
+        
         final SimpleTuppleModel stm = prepareForAdding();
-
+        
         for( final Iterator it = kset.iterator(); it.hasNext(); )
         {
-          final IAxis myA = (IAxis) it.next();
+          final IAxis myA = (IAxis)it.next();
 
-          final Object obj = values.getElement( i, map.get( myA ) );
-          tupple[stm.getPositionFor( myA )] = obj;
+          final Object obj = values.getElement( i, (IAxis)map.get( myA ) );
+          tupple[ stm.getPositionFor( myA ) ] = obj;
         }
-
+        
         stm.addTupple( tupple );
       }
     }
-
-    m_evtPrv.fireChangedEvent( null );
+    
+    m_evtPrv.fireChangedEvent();
   }
 
   /**
-   * Helper: since we are adding tupples to our model, we need a way to be sure that this is possible. For now, we
-   * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
+   * Helper: since we are adding tupples to our model, we need a way to be sure that this
+   * is possible. For now, we simply copy the existing values in a SimpleTuppleModel
+   * which finally allows to add tupples as desired.
    * 
    * @return a SimpleTuppleModel
+   * 
    * @throws SensorException
    */
-  private SimpleTuppleModel prepareForAdding( ) throws SensorException
+  private SimpleTuppleModel prepareForAdding() throws SensorException
   {
     // since we are adding
-    if( !(m_tupples instanceof SimpleTuppleModel) )
+    if( !( m_tupples instanceof SimpleTuppleModel ) )
       m_tupples = new SimpleTuppleModel( m_tupples );
-
-    return (SimpleTuppleModel) m_tupples;
+    
+    return (SimpleTuppleModel)m_tupples;
   }
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifier;
   }
@@ -292,7 +295,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void addListener( final IObservationListener listener )
+  public void addListener( IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
@@ -300,11 +303,11 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void removeListener( final IObservationListener listener )
+  public void removeListener( IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
-
+  
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#clearListeners()
    */
@@ -314,38 +317,28 @@ public class SimpleObservation implements IObservation
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
-   */
-  public void fireChangedEvent( final Object source )
-  {
-    m_evtPrv.fireChangedEvent( source );
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.IObservation#getHref()
    */
   public String getHref( )
   {
     return m_href;
   }
-
+  
   /**
    * Sets the href
    * 
-   * @param href
-   *            localisation of the observation when it comes from a zml file for instance.
+   * @param href localisation of the observation when it comes from a zml file for instance.
    */
   public void setHref( final String href )
   {
     m_href = href;
   }
-
+  
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.8") + m_name + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.9") + m_identifier + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.10") + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return "Obs: " + m_name + " - Id:" + m_identifier + " - Href:" + m_href;
   }
 }

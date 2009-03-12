@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.kalypso.contribs.eclipse.jface.action.FullAction;
-import org.kalypso.i18n.Messages;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.eclipse.jface.action.FullAction;
 import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
@@ -54,38 +54,46 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  * 
  * @author schlienger
  */
-public class RemoveThemeAction extends FullAction
+public class RemoveThemeAction extends FullAction implements
+    ISelectionChangedListener
 {
   private final ObservationEditorOutlinePage m_page;
 
-  public RemoveThemeAction( final ObservationEditorOutlinePage page )
+  public RemoveThemeAction( ObservationEditorOutlinePage page )
   {
-    super( Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.0"), ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Thema entfernen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE,
+        "Entfernt aktives Thema" );
 
     m_page = page;
+
+    m_page.addSelectionChangedListener( this );
+  }
+
+  public void dispose( )
+  {
+    m_page.removeSelectionChangedListener( this );
   }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  @Override
   public void run( )
   {
-    final ObsViewItem[] items = m_page.getSelectedItems();
+    final AbstractObservationTheme selectedTheme = m_page.getSelectedTheme();
 
-    if( items.length > 0 )
-    {
-      final String str = ArrayUtils.toString( items, ", " ); //$NON-NLS-1$
-      final String msg = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.3") + ( items.length > 1 ? "n " : " " ) + str + Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.6"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      if( MessageDialog.openConfirm( m_page.getSite().getShell(), Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.7"), msg ) ) //$NON-NLS-1$
-      {
-        for( int i = 0; i < items.length; i++ )
-        {
-          final ObsViewItem item = items[i];
+    if( selectedTheme != null
+        && MessageDialog.openConfirm( m_page.getSite().getShell(),
+            "Zeitreihe entfernen", "Wollen Sie wirklich die Zeitreihe "
+                + selectedTheme.getName() + " entfernen" ) )
+      
+      m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getTemplate(), selectedTheme ), null );
+  }
 
-          m_page.getEditor().postCommand( new RemoveThemeCommand( m_page.getView(), item ), null );
-        }
-      }
-    }
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+   */
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    setEnabled( m_page.isThemeSelected() );
   }
 }

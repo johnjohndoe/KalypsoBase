@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
-import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * Ein Item innerhalb des Repository. Die Items sind hierarchisch organisiert.
@@ -49,17 +49,17 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
-  public final static IRepositoryItem[] EMPTY_ARRAY = new IRepositoryItem[0];
-
   /**
-   * Returns the item's name. The name is used to display the item in the repository for instance.
+   * Returns the item's name. The name is used to display the item in the
+   * repository for instance.
    * 
    * @return name
    */
-  public String getName();
+  public String getName( );
 
   /**
-   * Returns a unique identifier for this item. The identifier should be build using the following rule (URL oriented):
+   * Returns a unique identifier for this item. The identifier should be build
+   * using the following rule (URL oriented):
    * <p>
    * 
    * <pre>
@@ -69,12 +69,12 @@ public interface IRepositoryItem extends IAdaptable
    * </pre>
    * 
    * <p>
-   * Thus, the item's id is made of the id of the item's repository id plus its own id. The identifier should be build
-   * according to the URL specification.
+   * Thus, the item's id is made of the id of the item's repository id plus its
+   * own id. The identifier should be build according to the URL specification.
    * 
    * @return identifier
    */
-  public String getIdentifier();
+  public String getIdentifier( );
 
   /**
    * returns the parent item to which this one belongs
@@ -82,7 +82,7 @@ public interface IRepositoryItem extends IAdaptable
    * @return parent item or null if no parent
    * @throws RepositoryException
    */
-  public IRepositoryItem getParent() throws RepositoryException;
+  public IRepositoryItem getParent( ) throws RepositoryException;
 
   /**
    * returns true when this item has children
@@ -90,7 +90,7 @@ public interface IRepositoryItem extends IAdaptable
    * @return hasChildren flag
    * @throws RepositoryException
    */
-  public boolean hasChildren() throws RepositoryException;
+  public boolean hasChildren( ) throws RepositoryException;
 
   /**
    * returns the children of this item
@@ -98,12 +98,12 @@ public interface IRepositoryItem extends IAdaptable
    * @return array of items
    * @throws RepositoryException
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException;
+  public IRepositoryItem[] getChildren( ) throws RepositoryException;
 
   /**
    * returns the repository into which this item exists
    * 
    * @return repository
    */
-  public IRepository getRepository();
+  public IRepository getRepository( );
 }

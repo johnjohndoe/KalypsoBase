@@ -40,148 +40,67 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.filters.StringInputStream;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
+import org.deegree.graphics.sld.StyledLayerDescriptor;
+import org.deegree_impl.graphics.sld.SLDFactory;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.IKalypsoCoreConstants;
-import org.kalypso.i18n.Messages;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypso.util.url.UrlResolver;
 
 /**
  * @author schlienger
+ *  
  */
 public class SldLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver = new UrlResolver();
+  private final UrlResolver m_urlResolver;
+
+  public SldLoader()
+  {
+    m_urlResolver = new UrlResolver();
+
+  }
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return "OGC SLD"; //$NON-NLS-1$
+    return "OGC SLD";
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String,
+   *      java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context,
+      final IProgressMonitor monitor ) throws LoaderException
   {
-    InputStream is = null;
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.1"), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( "Lade SLD", 1000 );
 
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      // create reader via resolver in order to use the right encoding
-      is = new BufferedInputStream( url.openStream() );
-      final IUrlResolver2 resolver = new IUrlResolver2()
-      {
-        public URL resolveURL( final String href ) throws MalformedURLException
-        {
-          return UrlResolverSingleton.resolveUrl( url, href );
-        }
-      };
-
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
-
-      is.close();
+      final Reader reader = new InputStreamReader( url.openStream() );
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( reader );
+      reader.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
-      if( resource != null )
-        addResource( resource, styledLayerDescriptor );
+      addResource( resource, styledLayerDescriptor );
 
       monitor.done();
       return styledLayerDescriptor;
     }
     catch( final Exception e )
     {
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.2") + source, e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
-  {
-    if( data instanceof StyledLayerDescriptor )
-    {
-      IFile sldFile = null;
-      try
-      {
-        final StyledLayerDescriptor userStyle = (StyledLayerDescriptor) data;
-        final URL styleURL = m_urlResolver.resolveURL( context, source );
-
-        sldFile = ResourceUtilities.findFileFromURL( styleURL );
-
-        final String charset = sldFile.getCharset();
-
-        final String sldXML = userStyle.exportAsXML();
-        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
-
-        if( sldFile != null )
-        {
-          sldFile.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
-          sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
-        }
-        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
-        {
-//          sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
-        }
-        else
-          throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.6") + styleURL ); //$NON-NLS-1$
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.7") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      catch( final Throwable e )
-      {
-        e.printStackTrace();
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.9") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
-      }
-      finally
-      {
-        /* delete all markers on the corresponding resource */
-        if( sldFile != null )
-        {
-          try
-          {
-            final IMarker[] markers = sldFile.findMarkers( source, false, IResource.DEPTH_ZERO );
-            for( final IMarker marker : markers )
-              marker.delete();
-          }
-          catch( final CoreException e )
-          {
-            KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-          }
-        }
-      }
+      throw new LoaderException( e );
     }
   }
 }

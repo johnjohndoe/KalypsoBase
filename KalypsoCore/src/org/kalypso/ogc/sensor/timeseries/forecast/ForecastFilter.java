@@ -36,17 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
-
-import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * MergeFilter
@@ -56,32 +54,29 @@ import org.kalypso.ogc.sensor.request.IRequest;
 public class ForecastFilter extends AbstractObservationFilter
 {
   private IObservation[] m_obsArray = null;
-
+  
   /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object, org.kalypso.ogc.sensor.IObservation)
    */
-  public void initFilter( IObservation[] conf, IObservation baseObs, final URL context ) throws SensorException
+  public void initFilter( Object conf, IObservation obs )
+      throws SensorException
   {
-    super.initFilter( conf, baseObs, context );
-
-    m_obsArray = conf;
+    super.initFilter( conf, obs );
+    
+    m_obsArray = (IObservation[]) conf;
   }
-
+  
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   * @param args
-   *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a
-   *          forecastfilter should expect <code>null</code> here.
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  @Override
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITuppleModel getValues( IVariableArguments args )
+      throws SensorException
   {
     final ITuppleModel models[] = new ITuppleModel[m_obsArray.length];
-
+    
     for( int i = 0; i < models.length; i++ )
       models[i] = m_obsArray[i].getValues( args );
-
+    
     return new ForecastTuppleModel( models );
   }
 }

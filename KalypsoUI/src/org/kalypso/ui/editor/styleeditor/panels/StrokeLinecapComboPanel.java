@@ -36,19 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
+import org.deegree.graphics.sld.Stroke;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class StrokeLinecapComboPanel extends ComboPanel
 {
@@ -57,51 +58,53 @@ public class StrokeLinecapComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[3];
-    items[0] = "round"; //$NON-NLS-1$
-    items[1] = "square"; //$NON-NLS-1$
-    items[2] = "butt"; //$NON-NLS-1$
+    items[0] = "round";
+    items[1] = "square";
+    items[2] = "butt";
     init();
     setSelection( value );
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  @Override
-  public int getSelection( )
+  public int getSelection()
   {
     switch( selection_index )
     {
-      case 0:
-        return Stroke.LC_ROUND;
-      case 1:
-        return Stroke.LC_SQUARE;
-      case 2:
-        return Stroke.LC_BUTT;
-      default:
-        return Stroke.LC_DEFAULT;
+    case 0:
+      return Stroke.LC_ROUND;
+    case 1:
+      return Stroke.LC_SQUARE;
+    case 2:
+      return Stroke.LC_BUTT;
+    default:
+      return Stroke.LC_DEFAULT;
     }
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
     switch( index )
     {
-      case Stroke.LC_ROUND:
-        comboBox.select( 0 );
-        break;
-      case Stroke.LC_SQUARE:
-        comboBox.select( 1 );
-        break;
-      case Stroke.LC_BUTT:
-        comboBox.select( 2 );
-        break;
-      default:
-        comboBox.select( 2 );
+    case Stroke.LC_ROUND:
+      comboBox.select( 0 );
+      break;
+    case Stroke.LC_SQUARE:
+      comboBox.select( 1 );
+      break;
+    case Stroke.LC_BUTT:
+      comboBox.select( 2 );
+      break;
+    default:
+      comboBox.select( 2 );
     }
   }
 }

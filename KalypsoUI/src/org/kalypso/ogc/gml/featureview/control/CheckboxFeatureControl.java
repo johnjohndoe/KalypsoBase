@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,15 +55,9 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
@@ -69,15 +68,16 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final IFeatureModifier m_modifier;
 
-  private final Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
+  private Collection m_modlistener = new ArrayList();
 
-  private final String m_text;
+  public CheckboxFeatureControl( final FeatureTypeProperty ftp )
+  {
+    this( null, ftp );
+  }
 
-  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp, String text )
+  public CheckboxFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
   {
     super( feature, ftp );
-
-    m_text = text;
 
     m_modifier = new BooleanModifier( ftp );
   }
@@ -85,8 +85,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
     super.dispose();
 
@@ -95,27 +94,27 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   public Control createControl( final Composite parent, final int style )
   {
     m_checkbox = new Button( parent, style | SWT.CHECK );
 
-    m_checkbox.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( final SelectionEvent e )
+    m_checkbox.addSelectionListener( new SelectionListener() {
+
+      public void widgetSelected( SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireChange( getChange() );
         fireModified();
       }
 
-      public void widgetDefaultSelected( final SelectionEvent e )
+      public void widgetDefaultSelected( SelectionEvent e )
       {
-        fireFeatureChange( getChange() );
+        fireChange( getChange() );
         fireModified();
-      }
-    } );
-
+      }} );
+    
     updateControl();
 
     return m_checkbox;
@@ -126,7 +125,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
    * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return true;
   }
@@ -139,7 +138,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
     if( m_checkbox == null || m_checkbox.isDisposed() )
       return;
@@ -149,16 +148,23 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     {
       // compare with old to prevent loop
       final boolean oldValue = m_checkbox.getSelection();
-      final Boolean newvalue = (Boolean) m_modifier.getValue( feature );
+      final Boolean newvalue = (Boolean)m_modifier.getValue( feature );
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }
-
-    if( m_text != null )
-      m_checkbox.setText( m_text );
   }
 
-  protected ICommand getChange( )
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
+   */
+  public void collectChanges( final Collection c )
+  {
+    final FeatureChange change = getChange();
+    if( change != null )
+      c.add( change );
+  }
+
+  protected FeatureChange getChange()
   {
     final Feature feature = getFeature();
 
@@ -166,18 +172,18 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
     final Object newData = m_modifier.parseInput( getFeature(), value );
 
-    final IPropertyType pt = getFeatureTypeProperty();
-    final Object oldData = feature.getProperty( pt );
+    final String name = getFeatureTypeProperty().getName();
+    final Object oldData = feature.getProperty( name );
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
-      return new ChangeFeatureCommand( feature, pt, newData );
+    if( ( newData == null && oldData != null ) || ( newData != null && !newData.equals( oldData ) ) )
+      return new FeatureChange( feature, name, newData );
 
     return null;
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -199,11 +205,12 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   {
     m_modlistener.remove( l );
   }
-
-  protected void fireModified( )
+  
+  protected void fireModified()
   {
-    for( final ModifyListener l : m_modlistener )
+    for( final Iterator modIt = m_modlistener.iterator(); modIt.hasNext(); )
     {
+      final ModifyListener l = (ModifyListener)modIt.next();
       l.modifyText( null );
     }
   }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree_impl.gml.schema.DateWithoutTime;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -53,127 +59,69 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
+import org.kalypso.ogc.gml.featureview.dialog.CalendarFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
-import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * This control behaves in two ways: if the type of the proeprty to edit is simple, it opens a fitting dialog to edit
- * the property. If the property is a feature, it just informs its listeners, that it whichs to open that feature.
- * 
  * @author belger
  */
 public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private Button m_button;
+  private IFeatureDialog m_dialog;
+  private Collection m_modifyListener = new ArrayList();
 
-  private IFeatureDialog m_dialog = null;
+  public ButtonFeatureControl( final FeatureTypeProperty ftp )
+  {
+    this( null, ftp );
+  }
 
-  private final Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
 
-  private final IFeatureChangeListener m_listener;
-
-  public ButtonFeatureControl( final Feature feature, final IPropertyType ftp )
+  public ButtonFeatureControl( final Feature feature, final FeatureTypeProperty ftp )
   {
     super( feature, ftp );
-
-    m_listener = new IFeatureChangeListener()
-    {
-      public void featureChanged( final ICommand changeCommand )
-      {
-        fireFeatureChange( changeCommand );
-      }
-
-      public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
-      {
-        fireOpenFeatureRequested( featureToOpen, ftpToOpen );
-      }
-    };
+    
+    m_dialog = chooseDialog( feature, ftp );
   }
 
-  public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType pt, final IFeatureChangeListener listener )
+  private IFeatureDialog chooseDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
-    // TODO: should never happen remove if fixed
-    if( feature == null )
-      return new NotImplementedFeatureDialog();
-
-    if( pt instanceof IValuePropertyType )
-    {
-      final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-      final IGuiTypeHandler handler = typeRegistry.getTypeHandlerFor( pt );
-      if( handler != null )
-        return handler.createFeatureDialog( feature, pt );
-    }
-
-    // TODO: make gui type handler for this?
-    if( pt instanceof IRelationType )
-    {
-      final IRelationType rt = (IRelationType) pt;
-      if( rt.isList() )
-      {
-        // it is a list of features or links to features or mixed
-        // return new FeatureDialog( workspace, feature, ftp, selectionManager );
-        return new JumpToFeatureDialog( listener, feature, pt );
-      }
-
-      // it is not a list
-      final Object property = feature.getProperty( pt );
-      final Feature linkedFeature;
-
-      if( property == null )
-        return new CreateFeaturePropertyDialog( listener, feature, rt );
-
-      if( property instanceof String ) // link auf ein Feature mit FeatureID
-      {
-        if( ((String) property).length() < 1 )
-          return new CreateFeaturePropertyDialog( listener, feature, rt );
-// return new NotImplementedFeatureDialog(
-// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"),
-// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$
-// //$NON-NLS-2$
-
-        final GMLWorkspace workspace = feature.getWorkspace();
-        linkedFeature = workspace.getFeature( (String) property );
-      }
-      else if( property instanceof Feature )
-        linkedFeature = (Feature) property;
-      else
-        return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new JumpToFeatureDialog( listener, linkedFeature, null );
-    }
-
+    final String typename = ftp.getType();
+    
+//    if( typename.equals( "java.lang.String" ) )
+//      return text;
+//    if( typeName.equals( "java.lang.Double" ) )
+//      return new Double( text );
+//    if( typeName.equals( "java.lang.Integer" ) )
+//      return new Integer( text );
+//    if( typeName.equals( "java.lang.Float" ) )
+//      return new Float( text );
+//    if( typeName.equals( "java.lang.Long" ) )
+//      return new Long( text );
+//    if( typeName.equals( "java.lang.Boolean" ) )
+//      return new Boolean( text );
+//    if( typeName.equals( "java.util.Date" ) )
+//      return DATE_FORMATTER.parse( text );
+    if( DateWithoutTime.class.getName().equals( typename ) )
+      return new CalendarFeatureDialog( feature, ftp );
+    
     return new NotImplementedFeatureDialog();
   }
-
+  
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
-    if( !(m_button.isDisposed()) )
-      m_button.dispose();
+    if( !( m_button.isDisposed() ) )
+        m_button.dispose();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   public Control createControl( final Composite parent, final int style )
   {
@@ -183,40 +131,57 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         buttonPressed();
       }
     } );
-
+    
     updateControl();
-
+    
     return m_button;
   }
 
-  protected void buttonPressed( )
+//  public String toString()
+//  {
+//    final FeatureTypeProperty ftp = getFeatureTypeProperty();
+//    final String typename = ftp.getType();
+//    
+//    if( typename.startsWith( GM_Object.class.getPackage().getName() ) )
+//      return "Geometrie editieren";
+//    
+//    if( typename.startsWith( Feature.class.getPackage().getName() ) )
+//      return "Feature editieren";
+//
+//    if( TypeRegistrySingleton.getTypeRegistry().hasClassName( typename ) )
+//      return TypeRegistrySingleton.getTypeRegistry().getTypeHandlerForClassName( typename ).getShortname() + " editieren";
+//    
+//    return "<unbekannter Typ>";
+//  }
+
+  protected void buttonPressed()
   {
     if( m_dialog.open( m_button.getShell() ) == Window.OK )
     {
-      final Collection<FeatureChange> c = new LinkedList<FeatureChange>();
+      final Collection c = new LinkedList();
       m_dialog.collectChanges( c );
-      final FeatureChange[] changes = c.toArray( new FeatureChange[c.size()] );
-      fireFeatureChange( new ChangeFeaturesCommand( getFeature().getWorkspace(), changes ) );
-
+      for( final Iterator iter = c.iterator(); iter.hasNext(); )
+        fireChange( (FeatureChange)iter.next() );
+      
       fireModfied();
-
+      
       updateControl();
     }
   }
-
-  private void fireModfied( )
+  
+  private void fireModfied()
   {
-    for( final Object element : m_modifyListener )
+    for( final Iterator iter = m_modifyListener.iterator(); iter.hasNext(); )
     {
-      final ModifyListener l = (ModifyListener) element;
-      final Event event = new Event();
-      event.widget = m_button;
+      final ModifyListener l = (ModifyListener)iter.next();
+      final Event event = new Event(  );
+      // TODO: create a real event?
+      
       l.modifyText( new ModifyEvent( event ) );
     }
   }
@@ -226,9 +191,17 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
-  public boolean isValid( )
+  public boolean isValid()
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#collectChanges(java.util.Collection)
+   */
+  public void collectChanges( final Collection c )
+  {
+    m_dialog.collectChanges( c );
   }
 
   /**
@@ -248,7 +221,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -258,10 +231,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
    */
-  public void updateControl( )
+  public void updateControl()
   {
-    m_dialog = chooseDialog( getFeature(), getFeatureTypeProperty(), m_listener );
-
     m_button.setText( m_dialog.getLabel() );
   }
 }

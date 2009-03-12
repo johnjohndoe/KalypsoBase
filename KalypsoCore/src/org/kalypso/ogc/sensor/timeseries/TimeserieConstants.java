@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.text.DateFormat;
 import java.util.Arrays;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.ObservationConstants;
 
 /**
@@ -54,78 +53,28 @@ import org.kalypso.ogc.sensor.ObservationConstants;
 public abstract class TimeserieConstants implements ObservationConstants
 {
   /** default date format used within some of the timeseries dependent properties */
-// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
-// locale
   public final static DateFormat DEFAULT_DF = DateFormat.getDateTimeInstance();
 
   /** Niederschlag */
-  public final static String TYPE_RAINFALL = "N"; //$NON-NLS-1$
+  public final static String TYPE_RAINFALL = "N";
 
   /** Abfluss */
-  public final static String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
+  public final static String TYPE_RUNOFF = "Q";
 
   /** Wasserstand */
-  public final static String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$
-
-  /** Wasserstand gauge in cm */
-  public final static String TYPE_WATERLEVEL_GAUGE_CM = "W_GAUGE_CM"; //$NON-NLS-1$
-
-  /** Wasserstand gauge in m */
-  public final static String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
-
-  /** Normal Null */
-  public final static String TYPE_NORMNULL = "NN"; //$NON-NLS-1$
+  public final static String TYPE_WATERLEVEL = "W";
 
   /** Temperatur */
-  public final static String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
+  public final static String TYPE_TEMPERATURE = "T";
 
   /** Datum */
-  public final static String TYPE_DATE = "date"; //$NON-NLS-1$
-
-  /** Day - day 0-365 */
-  public final static String TYPE_DAY = "DAY"; //$NON-NLS-1$
+  public final static String TYPE_DATE = "date";
 
   /** Füllung (VOLUMEN) */
-  public static final String TYPE_VOLUME = "V"; //$NON-NLS-1$
+  public static final String TYPE_VOLUME = "V";
 
-  /** Evaporation [mm] */
-  public static final String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
-
-  /** hours [h] */
-  public static final String TYPE_HOURS = "H"; //$NON-NLS-1$
-
-  /** minutes [min] */
-  public static final String TYPE_MIN = "min"; //$NON-NLS-1$
-
-  /** area as norm [A/Asum] */
-  public static final String TYPE_NORM = "n"; //$NON-NLS-1$
-
-  /** AREA [m^2] */
-  public static final String TYPE_AREA = "A"; //$NON-NLS-1$
-
-  /** Die Wurzeltiefe in einem Nutzungszyklus [dm] */
-  public static final String TYPE_WT = "WT"; //$NON-NLS-1$
-
-  /** Der Korrekturwert der Verdunstung gegenüber der pot. Verdunstung in einem Nutzungszyklus [-] */
-  public static final String TYPE_KC = "KC"; //$NON-NLS-1$
-
-  /** Der Speicherinhalt des Interzeptionsspeichers in einem Nutzungszyklus [mm] */
-  public static final String TYPE_LAI = "LAI"; //$NON-NLS-1$
-
-  /** Humidity [%] */
-  public static final String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
-
-  /** Velocity [m/s] */
-  public static final String TYPE_VELOCITY = "v"; //$NON-NLS-1$
-
-  /** Polder-Kontrolle: an/aus */
-  public static final String TYPE_POLDER_CONTROL = "POLDER_CONTROL";
-
-  public static final String TYPE_ORDINAL_NUMBER = "ordinalNr"; //$NON-NLS-1$
-
-  public static final String TYPE_NODEID = "nodeID"; //$NON-NLS-1$
-
-  public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
+  /** Evaporation */
+  public static final String TYPE_EVAPORATION = "E";
 
   public static final String[] TYPES_ALL;
 
@@ -134,60 +83,53 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   static
   {
-    String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC,
-        TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
+    String[] types = new String[]
+    {
+        TYPE_DATE,
+        TYPE_EVAPORATION,
+        TYPE_RAINFALL,
+        TYPE_RUNOFF,
+        TYPE_TEMPERATURE,
+        TYPE_VOLUME,
+        TYPE_WATERLEVEL };
     Arrays.sort( types );
     TYPES_ALL = types;
   }
 
   // METADATEN
 
-  public final static String MD_TIMEZONE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.17" ); //$NON-NLS-1$
+  public final static String MD_WQ = "WQ-Parameter";
 
-  public final static String MD_WQWECHMANN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.18" ); //$NON-NLS-1$
+  public final static String MD_GKR = "Rechtswert";
 
-  public final static String MD_WQTABLE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.19" ); //$NON-NLS-1$
+  public final static String MD_GKH = "Hochwert";
 
-  public final static String MD_GKR = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.20" ); //$NON-NLS-1$
+  public final static String MD_ALARM_1 = "Alarmstufe 1";
 
-  public final static String MD_GKH = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.21" ); //$NON-NLS-1$
+  public final static String MD_ALARM_2 = "Alarmstufe 2";
 
-  public final static String MD_COORDSYS = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.22" ); //$NON-NLS-1$
+  public final static String MD_ALARM_3 = "Alarmstufe 3";
 
-  public final static String MD_ALARM_1 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.23" ); //$NON-NLS-1$
+  public final static String MD_ALARM_4 = "Alarmstufe 4";
 
-  public final static String MD_ALARM_2 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.24" ); //$NON-NLS-1$
+  public final static String MD_PEGELNULLPUNKT = "Pegelnullpunkt";
 
-  public final static String MD_ALARM_3 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.25" ); //$NON-NLS-1$
+  public final static String MD_HOEHENANGABEART = "Höhenangabeart";
 
-  public final static String MD_ALARM_4 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.26" ); //$NON-NLS-1$
+  public final static String MD_MESSTISCHBLATT = "Messtischblattnummer";
 
-  public final static String MD_PEGELNULLPUNKT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.27" ); //$NON-NLS-1$
+  public final static String MD_FLUSSGEBIET = "Flussgebiet";
 
-  public final static String MD_HOEHENANGABEART = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.28" ); //$NON-NLS-1$
-
-  public final static String MD_MESSTISCHBLATT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.29" ); //$NON-NLS-1$
-
-  public final static String MD_FLUSSGEBIET = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.30" ); //$NON-NLS-1$
-
-  public final static String MD_GEWAESSER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.31" ); //$NON-NLS-1$
-
-  /** Stationskennziffer */
-  public final static String MD_KENNZIFFER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.32" ); //$NON-NLS-1$
+  public final static String MD_FLUSS = "Fluss";
 
   /**
-   * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
+   * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true),
+   * handelt es sich um eine Vorhersage Zeitreihe.
    */
-  public final static String MD_VORHERSAGE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.33" ); //$NON-NLS-1$
+  public final static String MD_VORHERSAGE = "Vorhersage";
 
-  public final static String MD_DATE_BEGIN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.34" ); //$NON-NLS-1$
+  public final static String MD_DATE_BEGIN = "Datum-Von";
 
-  public final static String MD_DATE_END = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.35" ); //$NON-NLS-1$
-
-  /** the forecast feature is used in some of the views to mark the forecast date-range */
-  public static final String FEATURE_FORECAST = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.36" ); //$NON-NLS-1$
-
-  /** the alarm-level feature used to show the alarm-levels in some views */
-  public static final String FEATURE_ALARMLEVEL = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.37" ); //$NON-NLS-1$
+  public final static String MD_DATE_END = "Datum-Bis";
 
 }

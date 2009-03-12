@@ -46,7 +46,7 @@ package org.kalypso.ui.editor.styleeditor.dialogs;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree_impl.filterencoding.OperationDefines;
+import org.deegree_impl.filterencoding.OperationDefines;
 
 /**
  * @author F.Lindemann
@@ -88,11 +88,11 @@ public class FilterDialogTreeNode
   public static final int COMPARISON_GREATERTHANOREQUALTO = OperationDefines.PROPERTYISGREATERTHANOREQUALTO;
 
   // not implemented yet
-  // public static final int PROPERTYISNOTEQUALTO = 108;
+  //public static final int PROPERTYISNOTEQUALTO = 108;
 
   public FilterDialogTreeNode parent = null;
 
-  public ArrayList<FilterDialogTreeNode> children = null;
+  public ArrayList children = null;
 
   private String name = null;
 
@@ -102,9 +102,9 @@ public class FilterDialogTreeNode
 
   private int subtype = -1;
 
-  private FilterDialogTreeNode( )
+  private FilterDialogTreeNode()
   {
-    // nothing
+  // nothing
   }
 
   public FilterDialogTreeNode( String string, int m_type )
@@ -113,37 +113,37 @@ public class FilterDialogTreeNode
     this.type = m_type;
     switch( type )
     {
-      case LOGICAL_NODE_TYPE:
-      {
-        if( string.equals( "AND" ) ) //$NON-NLS-1$
-          subtype = LOCICAL_AND;
-        else if( string.equals( "OR" ) ) //$NON-NLS-1$
-          subtype = LOCICAL_OR;
-        else if( string.equals( "NOT" ) ) //$NON-NLS-1$
-          subtype = LOCICAL_NOT;
-        break;
-      }
-      case COMPARISON_NODE_TYPE:
-      {
-        if( string.equals( "LIKE" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_LIKE;
-        else if( string.equals( "NULL" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_NULL;
-        else if( string.equals( "BETWEEN" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_BETWEEN;
-        else if( string.equals( "EQUAL_TO" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_EQUALTO;
-        else if( string.equals( "LESS_THAN" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_LESSTHAN;
-        else if( string.equals( "GREATER_THAN" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_GREATERTHAN;
-        else if( string.equals( "LESS_THAN_OR_EQUAL_TO" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_LESSTHANOREQUALTO;
-        else if( string.equals( "GREATER_THAN_OR_EQUAL_TO" ) ) //$NON-NLS-1$
-          subtype = COMPARISON_GREATERTHANOREQUALTO;
-      }
-      default:
-        break;
+    case LOGICAL_NODE_TYPE:
+    {
+      if( string.equals( "AND" ) )
+        subtype = LOCICAL_AND;
+      else if( string.equals( "OR" ) )
+        subtype = LOCICAL_OR;
+      else if( string.equals( "NOT" ) )
+        subtype = LOCICAL_NOT;
+      break;
+    }
+    case COMPARISON_NODE_TYPE:
+    {
+      if( string.equals( "LIKE" ) )
+        subtype = COMPARISON_LIKE;
+      else if( string.equals( "NULL" ) )
+        subtype = COMPARISON_NULL;
+      else if( string.equals( "BETWEEN" ) )
+        subtype = COMPARISON_BETWEEN;
+      else if( string.equals( "EQUAL_TO" ) )
+        subtype = COMPARISON_EQUALTO;
+      else if( string.equals( "LESS_THAN" ) )
+        subtype = COMPARISON_LESSTHAN;
+      else if( string.equals( "GREATER_THAN" ) )
+        subtype = COMPARISON_GREATERTHAN;
+      else if( string.equals( "LESS_THAN_OR_EQUAL_TO" ) )
+        subtype = COMPARISON_LESSTHANOREQUALTO;
+      else if( string.equals( "GREATER_THAN_OR_EQUAL_TO" ) )
+        subtype = COMPARISON_GREATERTHANOREQUALTO;
+    }
+    default:
+      break;
     }
 
     if( type == ROOT_TYPE )
@@ -152,17 +152,18 @@ public class FilterDialogTreeNode
 
   public static boolean isBinaryComparisonType( int type )
   {
-    if( type >= OperationDefines.PROPERTYISEQUALTO && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
+    if( type >= OperationDefines.PROPERTYISEQUALTO
+        && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
       return true;
     return false;
   }
 
-  public String getName( )
+  public String getName()
   {
     return name;
   }
 
-  public boolean validate( )
+  public boolean validate()
   {
     if( type == LOGICAL_NODE_TYPE )
     {
@@ -187,7 +188,7 @@ public class FilterDialogTreeNode
     parent = new FilterDialogTreeNode();
     parent.name = m_name;
     parent.type = ROOT_TYPE;
-    children = new ArrayList<FilterDialogTreeNode>();
+    children = new ArrayList();
     children.add( parent );
   }
 
@@ -195,7 +196,7 @@ public class FilterDialogTreeNode
   {
     if( children == null )
     {
-      children = new ArrayList<FilterDialogTreeNode>();
+      children = new ArrayList();
     }
     node.parent = this;
     children.add( node );
@@ -209,31 +210,31 @@ public class FilterDialogTreeNode
     }
   }
 
-  public Object[] getChildren( )
+  public Object[] getChildren()
   {
     if( children == null )
     {
-      children = new ArrayList<FilterDialogTreeNode>();
+      children = new ArrayList();
     }
     return children.toArray();
   }
 
-  public int getType( )
+  public int getType()
   {
     return type;
   }
 
-  public int getSubType( )
+  public int getSubType()
   {
     return subtype;
   }
 
-  public FilterDialogTreeNode getParent( )
+  public FilterDialogTreeNode getParent()
   {
     return parent;
   }
 
-  public AbstractData getData( )
+  public AbstractData getData()
   {
     return data;
   }
@@ -243,3 +244,4 @@ public class FilterDialogTreeNode
     this.data = m_data;
   }
 }
+

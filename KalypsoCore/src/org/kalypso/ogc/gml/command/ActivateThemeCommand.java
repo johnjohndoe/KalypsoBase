@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author bce
@@ -64,7 +63,7 @@ public class ActivateThemeCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -72,7 +71,7 @@ public class ActivateThemeCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -80,7 +79,7 @@ public class ActivateThemeCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -88,7 +87,7 @@ public class ActivateThemeCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -96,11 +95,11 @@ public class ActivateThemeCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
   public String getDescription()
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.ActivateThemeCommand.0"); //$NON-NLS-1$
+    return "aktives Thema setzen";
   }
 
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -46,11 +46,11 @@ import org.kalypso.ogc.sensor.IAxis;
  * Default implementation of <code>IAxisMapping</code>.
  * 
  * @author schlienger
+ *
  */
 public class AxisMapping
 {
   private final IAxis m_oAxis;
-
   private final DiagramAxis m_dAxis;
 
   public AxisMapping( final IAxis oAxis, final DiagramAxis dAxis )
@@ -59,22 +59,38 @@ public class AxisMapping
     m_dAxis = dAxis;
   }
 
-  public IAxis getObservationAxis( )
+  public IAxis getObservationAxis()
   {
     return m_oAxis;
   }
 
-  public DiagramAxis getDiagramAxis( )
+  public DiagramAxis getDiagramAxis()
   {
     return m_dAxis;
   }
-
+  
   /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString( )
   {
-    return m_oAxis + " - " + m_dAxis; //$NON-NLS-1$
+    return m_oAxis + " - " + m_dAxis;
   }
+  
+//  /**
+//   * Convenience method that builds a properties object and sets its property-entries
+//   * so that they are adequate to the given mappings.
+//   * 
+//   * @param mappings
+//   * @return properties
+//   */
+//  public static Properties saveAsProperties( IAxisMapping[] mappings )
+//  {
+//    Properties props = new Properties();
+//    
+//    for( int i = 0; i < mappings.length; i++ )
+//      props.setProperty( mappings[i].getObservationAxis().getName(), mappings[i].getDiagramAxis().getIdentifier() );
+//    
+//    return props;
+//  }
 }

@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.template.obstableview.TypeRenderingRule;
@@ -54,14 +54,15 @@ public class RulesFactory
 {
   private static ITableViewRules DEFAULT_RULES = null;
 
-  private RulesFactory()
+  private RulesFactory( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
    * Factory method for creating a RenderingRule object with a binding object.
    * 
+   * @param rr
    * @return RenderingRule
    */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
@@ -73,37 +74,33 @@ public class RulesFactory
     final String tt = rr.getTooltip();
     final String icon = rr.getIcon();
 
-    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ), bg == null ? null
-        : StringUtilities.stringToColor( bg ), font == null ? null : StringUtilities.stringToFont( font ), tt,
-        KalypsoStatusUtils.getIconFor( icon ) );
+    return new RenderingRule( mask, fg == null ? null : StringUtilities
+        .stringToColor( fg ), bg == null ? null : StringUtilities
+        .stringToColor( bg ), font == null ? null : StringUtilities
+        .stringToFont( font ), tt, KalypsoStatusUtils.getIconFor( icon ) );
   }
 
   /**
-   * @return default rules for Kalypso (only a copy is returned!)
+   * @return default rules for Kalypso
    */
-  public static synchronized ITableViewRules getDefaultRules()
+  public static ITableViewRules getDefaultRules( )
   {
     // lazy loading
     if( DEFAULT_RULES == null )
     {
       DEFAULT_RULES = new Rules();
 
-      final int[] bits =
-      {
-          KalypsoStati.BIT_CHECK,
-          KalypsoStati.BIT_REQUIRED,
-          KalypsoStati.BIT_USER_MODIFIED,
-          KalypsoStati.BIT_DERIVATED,
-          KalypsoStati.BIT_DERIVATION_ERROR };
+      final int[] bits = { KalypsoStati.BIT_CHECK, KalypsoStati.BIT_REQUIRED,
+          KalypsoStati.BIT_USER_MODIFIED };
 
       for( int i = 0; i < bits.length; i++ )
       {
-        DEFAULT_RULES.addRule( new RenderingRule( bits[i], KalypsoStatusUtils.getForegroundFor( bits[i] ),
-            KalypsoStatusUtils.getBackgroundFor( bits[i] ), null, KalypsoStatusUtils.getTooltipFor( bits[i] ),
-            KalypsoStatusUtils.getIconFor( bits[i] ) ) );
+        DEFAULT_RULES.addRule( new RenderingRule( bits[i], null, null, null,
+            KalypsoStatusUtils.getTooltipFor( bits[i] ), KalypsoStatusUtils
+                .getIconFor( bits[i] ) ) );
       }
     }
 
-    return DEFAULT_RULES.cloneRules();
+    return DEFAULT_RULES;
   }
 }

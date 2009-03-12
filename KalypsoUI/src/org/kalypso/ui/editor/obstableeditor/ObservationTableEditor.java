@@ -41,27 +41,27 @@
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
-import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URL;
 
-import org.apache.commons.configuration.Configuration;
+import javax.swing.JScrollPane;
+
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.ogc.sensor.tableview.TableView;
+import org.eclipse.ui.IStorageEditorInput;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.util.SetContentHelper;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.template.obstableview.Obstableview;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
+import org.kalypso.template.obstableview.ObstableviewType;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
@@ -69,29 +69,38 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
+public class ObservationTableEditor extends AbstractObservationEditor
 {
   protected final ObservationTable m_table;
-  private Composite m_swingContainer;
 
   /**
-   * The ObservationTable is already created here because of the listening functionality that needs to be set up before
+   * Constructor: the ObservationTable is already created here because
+   * of the listening functionality that needs to be set up before
    * the template gets loaded.
    * <p>
-   * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
-   * loadIntern are called is not guaranteed to be always the same.
+   * Doing this stuff in createPartControl would prove inadequate, because
+   * the order in which createPartControl and loadIntern are called is
+   * not guaranteed to be always the same.
    */
-  public ObservationTableEditor()
+  public ObservationTableEditor( )
   {
-    super( new TableView() );
-
-    m_table = new ObservationTable( (TableView)getView() );
+    super( new TableViewTemplate() );
+    
+    m_table = new ObservationTable( (TableViewTemplate) getTemplate() );
+  }
+  
+  /**
+   * @return Returns the observation table model
+   */
+  public ObservationTableModel getModel( )
+  {
+    return (ObservationTableModel) m_table.getModel();
   }
 
   /**
    * @return Returns the table.
    */
-  public ObservationTable getTable()
+  public ObservationTable getTable( )
   {
     return m_table;
   }
@@ -99,15 +108,16 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
-    m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    final Frame vFrame = SWT_AWT.new_Frame( m_swingContainer );
+    // SWT-AWT Brücke für die Darstellung von JFreeChart
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
 
-    vFrame.add( m_table );
+    final JScrollPane pane = new JScrollPane( m_table );
+    vFrame.add( pane );
 
     vFrame.setVisible( true );
   }
@@ -115,43 +125,30 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose()
+  public void dispose( )
   {
     m_table.dispose();
-
+    
     super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter == IExportableObjectFactory.class )
-      return this;
-
-    return super.getAdapter( adapter );
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( IProgressMonitor monitor,
+      IFileEditorInput input ) throws CoreException
   {
-    final TableView template = (TableView)getView();
+    final TableViewTemplate template = (TableViewTemplate) getTemplate();
     if( template == null )
       return;
 
     final SetContentHelper helper = new SetContentHelper()
     {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
+      protected void write( Writer writer ) throws Throwable
       {
-        final Obstableview type = TableViewUtils.buildTableTemplateXML( template );
+        final ObstableviewType type = TableViewUtils
+            .buildTableTemplateXML( template );
 
         TableViewUtils.saveTableTemplateXML( type, writer );
       }
@@ -161,31 +158,42 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
-  public void setFocus()
+  protected void loadInternal( final IProgressMonitor monitor,
+      final IStorageEditorInput input ) throws Exception
   {
-    if( m_swingContainer != null )
-      m_swingContainer.setFocus();
-  }
+    monitor.beginTask( "Tabelle-Vorlage laden", IProgressMonitor.UNKNOWN );
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
-  public IExportableObject[] createExportableObjects( final Configuration configuration )
-  {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0"), getTitle() ); //$NON-NLS-1$
-    return new IExportableObject[]
-    { exportable };
-  }
+    final TableViewTemplate template = (TableViewTemplate) getTemplate();
+    try
+    {
+      final IStorage storage = input.getStorage();
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
-   */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
-  {
-    return new IWizardPage[0];
+      if( storage instanceof TemplateStorage )
+      {
+        final TemplateStorage ts = (TemplateStorage) storage;
+        template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+            "zml", false, null );
+      }
+      else
+      {
+        final ObstableviewType baseTemplate = TableViewUtils
+            .loadTableTemplateXML( storage.getContents() );
+
+        final String strUrl = ResourceUtilities.createURLSpec( input
+            .getStorage().getFullPath() );
+        template.setBaseTemplate( baseTemplate, new URL( strUrl ), false );
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 }

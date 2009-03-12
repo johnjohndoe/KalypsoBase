@@ -3,7 +3,7 @@ package org.kalypso.ui.wizard.sensor;
 import java.io.File;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.adapter.NativeObservationAdapter;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 public class ObservationImportSelection implements ISelection
 {
 
-  private final INativeObservationAdapter m_selectedAdapter;
+  private final NativeObservationAdapter m_selectedAdapter;
 
   private final File m_fileTarget;
 
@@ -67,7 +67,7 @@ public class ObservationImportSelection implements ISelection
    * 
    * @author doemming
    */
-  public ObservationImportSelection( File fileSource, File fileTarget, INativeObservationAdapter adapter,
+  public ObservationImportSelection( File fileSource, File fileTarget, NativeObservationAdapter adapter,
       boolean append, boolean retainMetadata )
   {
     m_fileSource = fileSource;
@@ -95,11 +95,10 @@ public class ObservationImportSelection implements ISelection
     return m_fileTarget;
   }
 
-  public INativeObservationAdapter getNativeAdapter()
+  public NativeObservationAdapter getNativeAdapter()
   {
     return m_selectedAdapter;
   }
-
   public boolean isRetainMetadata()
   {
     return m_retainMetadata;

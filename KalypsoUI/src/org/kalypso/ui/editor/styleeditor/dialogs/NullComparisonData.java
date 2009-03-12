@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -46,8 +46,8 @@ package org.kalypso.ui.editor.styleeditor.dialogs;
 
 public class NullComparisonData extends AbstractComparisonData
 {
-  @Override
-  public boolean verify( )
+
+  public boolean verify()
   {
     if( propertyName != null )
       return true;

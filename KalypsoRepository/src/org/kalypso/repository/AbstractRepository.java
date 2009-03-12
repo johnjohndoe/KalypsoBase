@@ -40,18 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.commons.java.util.PropertiesHelper;
-
 /**
- * Abstract implementation of <code>IRepository</code> to provide basic functionality.
+ * Abstract implementation of <code>IRepository</code> to provide basic
+ * functionality.
  * 
  * @author schlienger
  */
@@ -63,30 +59,22 @@ public abstract class AbstractRepository implements IRepository
 
   private boolean m_readOnly;
 
-  private final List<IRepositoryListener> m_listeners;
+  private final List m_listeners;
 
   private final Properties m_properties;
 
   private final String m_conf;
 
-  public AbstractRepository( final String name, final String factory, final String conf, final boolean readOnly )
+  public AbstractRepository( String name, String factory, String conf,
+      boolean readOnly )
   {
     m_name = name;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
 
-    m_listeners = new Vector<IRepositoryListener>();
+    m_listeners = new Vector();
     m_properties = new Properties();
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepository#dispose()
-   */
-  public void dispose( )
-  {
-    m_listeners.clear();
-    m_properties.clear();
   }
 
   public String getFactory( )
@@ -98,7 +86,7 @@ public abstract class AbstractRepository implements IRepository
   {
     return m_conf;
   }
-
+  
   public boolean isReadOnly( )
   {
     return m_readOnly;
@@ -116,7 +104,7 @@ public abstract class AbstractRepository implements IRepository
   {
     return "";
   }
-
+  
   /**
    * @see org.kalypso.repository.IRepository#addRepositoryListener(org.kalypso.repository.IRepositoryListener)
    */
@@ -130,9 +118,9 @@ public abstract class AbstractRepository implements IRepository
    */
   public void fireRepositoryStructureChanged( )
   {
-    for( final Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
-      final IRepositoryListener element = (IRepositoryListener) iter.next();
+      IRepositoryListener element = (IRepositoryListener) iter.next();
 
       element.onRepositoryStructureChanged();
     }
@@ -163,46 +151,21 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * This default implementation uses recursion to find an item with the requested id. Subclasses may use this method if
-   * they want to implement findItem using recursion.
-   * 
-   * @return item if found, else null
-   */
-  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
-  {
-    if( item.getIdentifier().equalsIgnoreCase( id ) )
-      return item;
-
-    final IRepositoryItem[] items = item.getChildren();
-    if( items == null )
-      return null;
-
-    for( int i = 0; i < items.length; i++ )
-    {
-      final IRepositoryItem item2 = findItemRecursive( items[i], id );
-
-      if( item2 != null )
-        return item2;
-    }
-
-    return null;
-  }
-
-  /**
    * @see java.lang.Object#toString()
    */
-  @Override
   public String toString( )
   {
     final String desc = getDescription();
-    if( (desc != null) && (desc.length() > 0) )
+    if( desc != null )
       return getName() + " (" + desc + ")";
-
+    
     return getName();
   }
 
   /**
    * This default implementation always returns null.
+   * 
+   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
    */
   public Object getAdapter( final Class anotherClass )
   {
@@ -218,57 +181,8 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
-  {
-    dumpRecursive( writer, this, "", monitor );
-  }
-
-  /**
-   * Dumps the contents of this item and all its children using recursion
-   */
-  private static void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
-  {
-    if( monitor.isCanceled() )
-      throw new InterruptedException();
-
-    if( item == null )
-      return;
-
-    monitor.subTask( item.getIdentifier() );
-
-    try
-    {
-      // let's look if the item can be adapted to properties. In the positive,
-      // we dump the properties too.
-      final Properties props = (Properties) item.getAdapter( Properties.class );
-      if( props != null )
-        writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) );
-      else
-        writer.write( indent + item.toString() );
-
-      writer.write( "\n" );
-    }
-    catch( final IOException e )
-    {
-      throw new RepositoryException( e );
-    }
-
-    final String recIndent = indent + "\t";
-
-    final IRepositoryItem[] items = item.getChildren();
-    if( items == null )
-      return;
-
-    for( int i = 0; i < items.length; i++ )
-      dumpRecursive( writer, items[i], recIndent, monitor );
-
-    monitor.worked( 1 );
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String, java.lang.String)
+   * @see org.kalypso.repository.IRepository#getProperty(java.lang.String,
+   *      java.lang.String)
    */
   public String getProperty( final String name, final String defaultValue )
   {
@@ -301,7 +215,8 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
-   * @see org.kalypso.repository.IRepository#setProperty(java.lang.String, java.lang.String)
+   * @see org.kalypso.repository.IRepository#setProperty(java.lang.String,
+   *      java.lang.String)
    */
   public void setProperty( final String name, final String value )
   {

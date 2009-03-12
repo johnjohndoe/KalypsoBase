@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.commands;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.template.AbstractObservationTheme;
+import org.kalypso.ogc.sensor.template.AbstractViewTemplate;
+import org.kalypso.util.command.ICommand;
 
 /**
  * RemoveThemeCommand
@@ -52,53 +51,54 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
  */
 public class RemoveThemeCommand implements ICommand
 {
-  private final ObsView m_template;
+  private final AbstractViewTemplate m_template;
 
-  private final ObsViewItem m_item;
+  private final AbstractObservationTheme m_theme;
 
-  public RemoveThemeCommand( ObsView template, ObsViewItem item )
+  public RemoveThemeCommand( AbstractViewTemplate template,
+      AbstractObservationTheme theme )
   {
     m_template = template;
-    m_item = item;
+    m_theme = theme;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
-    m_template.removeItem( m_item );
+    m_template.removeTheme( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
-    m_template.addItem( m_item );
+    m_template.addTheme( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0"); //$NON-NLS-1$
+    return "Entfernt einen Thema";
   }
 }

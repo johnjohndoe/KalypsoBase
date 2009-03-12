@@ -36,19 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
- * @author Gernot Belger
+ * @author Belger
  */
 public interface IFeatureModifierFactory
 {
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
+  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp );
 }

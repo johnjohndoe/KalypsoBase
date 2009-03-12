@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -46,34 +46,31 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.util.ArrayList;
 
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class TextLabelComboPanel extends ComboPanel
 {
 
-  public TextLabelComboPanel( final Composite parent, final String label, final IFeatureType featureType, final String value )
+  public TextLabelComboPanel( Composite parent, String label, FeatureType featureType, String value )
   {
     super( parent, label );
     // read possible items to get the label text from
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
-    final IPropertyType[] ftp = featureType.getProperties();
+    ArrayList labelStringItems = new ArrayList();
+    FeatureTypeProperty[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-    {
-      if( !GeometryUtilities.isGeometry( ftp[i] ) )
+      if( !ftp[i].getType().startsWith( "org.deegree.model.geometry." ) )
         labelStringItems.add( ftp[i].getName() );
-    }
-
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
-      items[j] = labelStringItems.get( j );
+      items[j] = (String)labelStringItems.get( j );
     init();
-    comboBox.setText( "..." ); //$NON-NLS-1$
+    comboBox.setText( "..." );
     if( value != null )
     {
       for( int m = 0; m < items.length; m++ )
@@ -85,31 +82,33 @@ public class TextLabelComboPanel extends ComboPanel
     }
   }
 
-  public String getSelectedFeatureTypeProperty( )
+  public String getSelectedFeatureTypeProperty()
   {
     return items[getSelection()];
   }
 
   // sets the comboBox to a default state
-  public void reset( )
+  public void reset()
   {
-    comboBox.setText( "..." ); //$NON-NLS-1$
+    comboBox.setText( "..." );
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
-  @Override
-  public int getSelection( )
+  public int getSelection()
   {
     return selection_index;
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
     selection_index = index;
   }

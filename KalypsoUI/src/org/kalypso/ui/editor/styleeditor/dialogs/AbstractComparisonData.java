@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -58,6 +58,5 @@ public abstract class AbstractComparisonData extends AbstractData
     this.propertyName = m_propertyName;
   }
 
-  @Override
-  public abstract boolean verify( );
+  public abstract boolean verify();
 }

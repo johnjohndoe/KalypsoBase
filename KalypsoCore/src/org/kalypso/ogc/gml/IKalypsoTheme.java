@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,126 +36,34 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.deegree.model.geometry.GM_Envelope;
 
 /**
- * Implements {@link org.eclipse.ui.model.IWorkbenchAdapter} in order to provider nice labels/images, ..... Does NOT
- * implement {@link org.eclipse.ui.model.IWorkbenchAdapter2}. Fonts, and so on are decided outside of the theme scope.
- *
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
+ *  
  */
-public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStateProvider
+public interface IKalypsoTheme extends ModellEventProvider, ModellEventListener
 {
-  /**
-   * Name of the property which determines if the user is allowed to deleted this theme.
-   */
-  public final static String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
-
-  /**
-   * Name of the property which determines the id of the IKalypsoThemeInfo for this theme.
-   */
-  public final static String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
-
-  /**
-   * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
-   */
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
-
-  /**
-   * Removes a listener from the list of listeners. Has no effect if the listeners is not registered.
-   */
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
-
-  public void dispose( );
-
-  public void paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
-
+  public void dispose();
+  
+  public void paintSelected( final Graphics g, final GeoTransform p, final double scale,
+      final GM_Envelope bbox, final int selectionId );
+  
   /**
    * returns the name of the layer
    */
-  public I10nString getName( );
+  public String getName();
 
-  /**
-   * Returns the label of this label, in the current locale.
-   * <p>
-   * No status texts are added here
-   * </p>.
-   */
-  public String getLabel( );
-
-  public String getType( );
-
-  public void setName( final I10nString name );
-
-  /**
-   * Returns the full extent bounding box for the theme.
-   */
-  public GM_Envelope getFullExtent( );
-
-  public IMapModell getMapModell( );
-
-  /**
-   * Returns the context id that this theme represents.
-   */
-  public String getTypeContext( );
-
-  /**
-   * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was
-   * successful or not. I.e. in case of a WMS it would return true, if the theme connected to the WMS and the connection
-   * was finished. It does not matter if it could successfully retrieve the image or not.
-   *
-   * @return <code>true</code>, if the first loading try has finished
-   */
-  public boolean isLoaded( );
-
-  public IStatus getStatus( );
-
-  public boolean isVisible( );
-
-  public void setVisible( final boolean visible );
-
-  /**
-   * Retrieves the indicated property from this theme.
-   * <p>
-   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
-   * </p>
-   *
-   * @param defaultValue
-   *            If the property is not set, use this default value.
-   * @throws IllegalArgumentException
-   *             If the given property name is unknown.
-   */
-  public String getProperty( final String name, final String defaultValue );
-
-  /**
-   * Sets the given property of this theme.<br>
-   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
-   */
-  public void setProperty( final String name, final String value );
-
-  /**
-   * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
-   * null.
-   *
-   * @param font
-   *            This font will be used for the self created text of the legend.
-   * @return An legend graphic or null.
-   */
-  public Image getLegendGraphic( Font font ) throws CoreException;
+  public void setName( final String name );
+  
+  public GM_Envelope getBoundingBox();
 }

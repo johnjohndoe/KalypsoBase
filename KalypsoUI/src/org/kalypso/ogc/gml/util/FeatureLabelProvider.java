@@ -36,17 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot Belger
+ * @author Belger
  */
 public class FeatureLabelProvider extends LabelProvider
 {
@@ -56,20 +56,18 @@ public class FeatureLabelProvider extends LabelProvider
   {
     m_modifier = modifier;
   }
-
+  
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  @Override
   public void dispose()
   {
-  // nix zu disposen
+    // nix zu disposen  
   }
-
+  
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  @Override
   public Image getImage( final Object element )
   {
     final Feature feature = (Feature)element;
@@ -79,7 +77,6 @@ public class FeatureLabelProvider extends LabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  @Override
   public String getText( final Object element )
   {
     final Feature feature = (Feature)element;

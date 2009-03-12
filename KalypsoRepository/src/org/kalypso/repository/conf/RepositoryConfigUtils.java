@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,20 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.conf.Repconf.Repository;
 
 /**
  * Utility class for the repository config package.
@@ -58,42 +58,59 @@ import org.kalypso.repository.conf.Repconf.Repository;
  */
 public class RepositoryConfigUtils
 {
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   private RepositoryConfigUtils( )
   {
     // not to be instanciated
   }
 
   /**
-   * Loads the config from an <code>InputStream</code> and closes the stream once finished.
+   * Loads the config from an <code>InputStream</code> and closes the stream
+   * once finished.
    * 
    * @param ins
+   * @return
    * @throws RepositoryException
    */
-  public static List<RepositoryFactoryConfig> loadConfig( final URL location ) throws RepositoryException
+  public static List loadConfig( final InputStream ins )
+      throws RepositoryException
   {
     try
     {
-      final Unmarshaller unmarshaller = JC.createUnmarshaller();
+      final ObjectFactory factory = new ObjectFactory();
+      final Unmarshaller unmarshaller = factory.createUnmarshaller();
 
-      final Repconf repconf = (Repconf) unmarshaller.unmarshal( location );
+      final RepconfType repconf = (RepconfType) unmarshaller.unmarshal( ins );
 
-      final List<Repconf.Repository> list = repconf.getRepository();
+      final List list = repconf.getRepository();
 
-      final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
+      final List fConfs = new Vector( list.size() );
 
-      for( final Repository elt : list )
+      for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
+        final RepconfType.RepositoryType elt = (RepconfType.RepositoryType) it
+            .next();
+
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt
+            .getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
         fConfs.add( item );
       }
 
       return fConfs;
     }
-    catch( final Exception e )
+    catch( JAXBException e )
     {
-      throw new RepositoryException( "Unable to load repository config from location: " + location, e );
+      throw new RepositoryException( e );
+    }
+    finally
+    {
+      try
+      {
+        ins.close();
+      }
+      catch( IOException e )
+      {
+        throw new RepositoryException( e );
+      }
     }
   }
 }

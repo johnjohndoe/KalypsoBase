@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -64,7 +64,6 @@ public class LikeComparisonData extends AbstractComparisonData
     this.literal = m_literal;
   }
 
-  @Override
   public boolean verify()
   {
     if( literal != null && propertyName != null )

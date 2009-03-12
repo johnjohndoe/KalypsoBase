@@ -40,20 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
+import org.deegree.model.feature.Feature;
 import org.eclipse.jface.action.Action;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand;
-import org.kalypsodeegree.model.feature.Feature;
 
 public final class CopyFeatureAction extends Action
 {
+
   private CommandableWorkspace m_workspace;
 
   private Feature m_originalFeature;
 
-  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0"); //$NON-NLS-1$
+  public static final String NAME = "Copy As Link";
 
   private Clipboard m_clipboard;
 
@@ -68,8 +68,7 @@ public final class CopyFeatureAction extends Action
   /**
    * @see org.eclipse.jface.action.IAction#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
     CopyFeatureCommand command = new CopyFeatureCommand( m_originalFeature, m_clipboard );
     try

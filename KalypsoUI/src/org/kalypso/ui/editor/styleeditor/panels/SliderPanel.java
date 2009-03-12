@@ -89,7 +89,8 @@ public class SliderPanel
 
   private double selection = 0.0;
 
-  public SliderPanel( Composite parent, String m_label, int minimum, int maximum, int inc, int m_format, double value )
+  public SliderPanel( Composite parent, String m_label, int minimum, int maximum, int inc,
+      int m_format, double value )
   {
     composite = new Composite( parent, SWT.NULL );
     FormLayout compositeLayout = new FormLayout();
@@ -124,9 +125,9 @@ public class SliderPanel
   {
     this.selection = m_selection;
     if( format == DECIMAL )
-      text.setText( "" + ( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
+      text.setText( "" + ( selection + ( min / 100.00 ) ) );
     else
-      text.setText( "" + (int)( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
+      text.setText( "" + (int)( selection + ( min / 100.00 ) ) );
     slider.setSelection( (int)( selection * 100 ) );
   }
 

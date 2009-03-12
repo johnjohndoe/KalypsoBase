@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
-import org.kalypso.i18n.Messages;
 
 /**
  * @author belger
@@ -49,9 +48,7 @@ import org.kalypso.i18n.Messages;
 public class DefaultCellValidators
 {
   public static final ICellEditorValidator DOUBLE_VALIDATOR = new DoubleCellValidator();
-
   public static final ICellEditorValidator INTEGER_VALIDATOR = new IntegerCellValidator();
-
   public static final ICellEditorValidator BOOLEAN_VALIDATOR = new BooleanCellValidator();
 
   public static final class BooleanCellValidator implements ICellEditorValidator
@@ -64,17 +61,18 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Boolean.valueOf( value.toString() );
+          Boolean.valueOf(value.toString());
         return null;
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
+        return "Dezimalzahl erwartet (z.B. 10.4)";
       }
     }
 
   }
 
+  
   public static final class DoubleCellValidator implements ICellEditorValidator
   {
     /**
@@ -85,18 +83,18 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Double.parseDouble( value.toString() );
-
+          Double.parseDouble(value.toString());
+        
         return null;
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
+        return "Dezimalzahl erwartet (z.B. 10.4)";
       }
     }
 
   }
-
+  
   public static final class IntegerCellValidator implements ICellEditorValidator
   {
     /**
@@ -107,13 +105,13 @@ public class DefaultCellValidators
       try
       {
         if( value != null )
-          Integer.parseInt( value.toString() );
-
+          Integer.parseInt(value.toString());
+        
         return null;
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
+        return "Ganzzahl erwartet (z.B. 10)";
       }
     }
 

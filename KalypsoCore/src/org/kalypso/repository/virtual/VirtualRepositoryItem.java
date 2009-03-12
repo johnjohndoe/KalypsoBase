@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
 import java.lang.reflect.UndeclaredThrowableException;
@@ -59,17 +59,20 @@ import org.kalypso.zml.filters.AbstractFilterType;
 public class VirtualRepositoryItem implements IRepositoryItem
 {
   private IRepository m_repository;
-
   private String m_name;
-
   private String m_itemId;
-
   private IRepositoryItem m_parent = null;
-
-  private IRepositoryItem[] m_children = IRepositoryItem.EMPTY_ARRAY;
-
+  private IRepositoryItem[] m_children = null;
   private AbstractFilterType m_filterType = null;
 
+  /**
+   * Constructor
+   * 
+   * @param rep
+   * @param name
+   * @param itemId
+   * @param parent
+   */
   public VirtualRepositoryItem( final IRepository rep, final String name, final String itemId, final VirtualRepositoryItem parent )
   {
     m_repository = rep;
@@ -87,11 +90,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   }
 
   /**
-   * Returns
-   * 
-   * <pre>
-   * vrep://&lt;item_id&gt;
-   * </pre>.
+   * Returns <pre>vrep://<item_id></pre>.
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
@@ -124,11 +123,11 @@ public class VirtualRepositoryItem implements IRepositoryItem
     return m_children;
   }
 
-  public void setChildren( final List<IRepositoryItem> children )
+  public void setChildren( final List children )
   {
-    m_children = children.toArray( new IRepositoryItem[children.size()] );
+    m_children = (IRepositoryItem[]) children.toArray( new IRepositoryItem[children.size()] );
   }
-
+  
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
@@ -146,7 +145,10 @@ public class VirtualRepositoryItem implements IRepositoryItem
   {
     m_filterType = filterType;
   }
-
+  
+  /**
+   * @see org.kalypso.util.adapter.IAdaptable#getAdapter(java.lang.Class)
+   */
   public Object getAdapter( Class anotherClass )
   {
     if( m_filterType != null && anotherClass == IObservation.class )
@@ -154,18 +156,18 @@ public class VirtualRepositoryItem implements IRepositoryItem
       try
       {
         final IFilterCreator creator = FilterFactory.getCreatorInstance( m_filterType );
-
-        final IObservationFilter filter = creator.createFilter( m_filterType, null, null );
-
+        
+        final IObservationFilter filter = creator.createFilter( m_filterType, null );
+        
         return filter;
       }
-      catch( final Exception e ) // generic exception caught for simplicity
+      catch( Exception e ) // generic exception caught for simplicity
       {
         e.printStackTrace();
         throw new UndeclaredThrowableException( e );
       }
     }
-
+    
     return null;
   }
 }

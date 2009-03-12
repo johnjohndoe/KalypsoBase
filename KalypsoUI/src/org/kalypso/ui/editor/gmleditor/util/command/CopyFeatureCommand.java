@@ -40,10 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
+import org.deegree.model.feature.Feature;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author belger
@@ -61,7 +60,7 @@ public class CopyFeatureCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -69,7 +68,7 @@ public class CopyFeatureCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -77,7 +76,7 @@ public class CopyFeatureCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -85,7 +84,7 @@ public class CopyFeatureCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -93,11 +92,11 @@ public class CopyFeatureCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
   public String getDescription()
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0"); //$NON-NLS-1$
+    return "Feature kopieren";
   }
 
   private void copyFeature() throws Exception

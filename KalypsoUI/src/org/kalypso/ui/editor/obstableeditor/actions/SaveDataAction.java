@@ -36,30 +36,26 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor.actions;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
-import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
-import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.tableview.TableViewTemplate;
+import org.kalypso.ogc.sensor.tableview.TableViewTheme;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
@@ -76,71 +72,85 @@ public class SaveDataAction extends AbstractEditorActionDelegate
    */
   public void run( final IAction action )
   {
-    boolean atLeastOneDirty = false;
+    boolean atLeastOneDirtySave = false;
+    
+    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
+    final TableViewTemplate template = (TableViewTemplate) editor.getTemplate();
+    final ObservationTableModel model = editor.getModel();
 
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.0") ); //$NON-NLS-1$
+    final Collection themes = template.getThemes();
 
-    final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
-
-    final Map map = TableViewUtils.buildObservationColumnsMap( Arrays.asList( tableView.getItems() ) );
-    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
+    for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
-      final Map.Entry entry = (Entry) it.next();
-      final IObservation obs = (IObservation) entry.getKey();
-      final List cols = (List) entry.getValue();
+      final TableViewTheme theme = (TableViewTheme) it.next();
 
-      boolean obsSaved = false;
+      boolean dirtySave = false;
 
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
       {
-        final TableViewColumn col = (TableViewColumn) itCols.next();
+        final TableViewColumn col = (TableViewColumn) itcol.next();
+        dirtySave = col.isDirtySave();
 
-        if( col.isDirty() && !obsSaved )
+        // at least one col dirty-save?
+        if( dirtySave )
         {
-          atLeastOneDirty = true;
+          atLeastOneDirtySave = true;
+          break;
+        }
+      }
 
-          final String msg = Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.1") + obs.getName() + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.2") + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final IObservation obs = theme.getObservation();
 
-          final boolean bConfirm = MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.4"), msg ); //$NON-NLS-1$
+      if( dirtySave )
+      {
+        final String msg = "Sie haben Änderungen in " + obs.getName()
+            + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
 
-          if( !bConfirm )
-            break;
+        final boolean b = MessageDialog.openQuestion( getShell(),
+            "Änderungen speichern", msg );
 
-          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
-          final Job job = new Job( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.5") + obs.getName() ) //$NON-NLS-1$
+        if( b )
+        {
+          final ITuppleModel values;
+          try
           {
-            @Override
-            public IStatus run( final IProgressMonitor monitor )
+            values = model.getValues( theme );
+          }
+          catch( SensorException e1 )
+          {
+            e1.printStackTrace();
+            return;
+          }
+          
+          final Job job = new Job( "ZML-Speichern: " + obs.getName() )
+          {
+            protected IStatus run( IProgressMonitor monitor )
             {
               try
               {
-                pool.saveObject( obs, monitor );
+                obs.setValues( values );
+
+                template.saveObservation( obs, monitor );
+                
+                for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+                  ((TableViewColumn) itcol.next()).resetDirtySave( );
               }
-              catch( final Exception e )
+              catch( Exception e )
               {
                 e.printStackTrace();
-                status.addMessage( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.6") + obs, e ); //$NON-NLS-1$
+                return KalypsoGisPlugin.createErrorStatus( "", e );
               }
 
               return Status.OK_STATUS;
             }
           };
-
+          
           job.schedule();
-
-          // flag se to true so next time we don't save obs if already done
-          obsSaved = true;
         }
-
-        col.setDirty( false, null );
       }
     }
-
-    if( !atLeastOneDirty )
-      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.7"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.8") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( !status.isOK() )
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.10"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    if( !atLeastOneDirtySave )
+      MessageDialog.openInformation( getShell(), "Keine Änderung", "Keine geänderte Zeitreihe" );
   }
 }

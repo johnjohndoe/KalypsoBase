@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 /**
@@ -48,13 +48,8 @@ package org.kalypso.ogc.sensor;
 public interface IObservationEventProvider
 {
   public void addListener( final IObservationListener listener );
-
+  
   public void removeListener( final IObservationListener listener );
-
-  /**
-   * @param source optional source of the event, can be null
-   */
-  public void fireChangedEvent( final Object source );
   
   public void clearListeners();
 }

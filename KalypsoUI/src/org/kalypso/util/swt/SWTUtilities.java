@@ -1,148 +1,139 @@
+package org.kalypso.util.swt;
+
+import java.util.HashMap;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.swt;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-
-/**
- * @author doemming
- */
 public class SWTUtilities
 {
-  private static final Map<String, Integer> SWT_MAP = new HashMap<String, Integer>();
+
+  /*
+   * 
+   * @author doemming
+   */
+  static final HashMap m_gridDataMap = new HashMap();
   static
   {
-    SWT_MAP.put( "SWT.BEGINNING", SWT.BEGINNING ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.BOLD", SWT.BOLD ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.BORDER", SWT.BORDER ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.CENTER", SWT.CENTER ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.CHECK", SWT.CHECK ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.END", SWT.END ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.FILL", SWT.FILL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.HORIZONTAL", SWT.HORIZONTAL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.LEAD", SWT.LEAD ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.LEFT", SWT.LEFT ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.MULTI", SWT.MULTI ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.NONE", SWT.NONE ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.PUSH", SWT.PUSH ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.RADIO", SWT.RADIO ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.RIGHT", SWT.RIGHT ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.TRAIL", SWT.TRAIL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.VERTICAL", SWT.VERTICAL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.DROP_DOWN", SWT.DROP_DOWN ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.READ_ONLY", SWT.READ_ONLY ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.FULL_SELECTION", SWT.FULL_SELECTION ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.WRAP", SWT.WRAP ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.V_SCROLL", SWT.V_SCROLL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.H_SCROLL", SWT.H_SCROLL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.FILL", SWT.FILL ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.TOP", SWT.TOP ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.BOTTOM", SWT.BOTTOM ); //$NON-NLS-1$
-    // Add other keys to complete the map
+    putGridData( "GridData.BEGINNING", GridData.BEGINNING );
+    putGridData( "GridData.CENTER", GridData.CENTER );
+    putGridData( "GridData.END", GridData.END );
+    putGridData( "GridData.FILL", GridData.FILL );
+    putGridData( "GridData.FILL_BOTH", GridData.FILL_BOTH );
+    putGridData( "GridData.FILL_HORIZONTAL", GridData.FILL_HORIZONTAL );
+    putGridData( "GridData.FILL_VERTICAL", GridData.FILL_VERTICAL );
+    putGridData( "GridData.GRAB_HORIZONTAL", GridData.GRAB_HORIZONTAL );
+    putGridData( "GridData.GRAB_VERTICAL", GridData.GRAB_VERTICAL );
+    putGridData( "GridData.HORIZONTAL_ALIGN_BEGINNING", GridData.HORIZONTAL_ALIGN_BEGINNING );
+    putGridData( "GridData.HORIZONTAL_ALIGN_CENTER", GridData.HORIZONTAL_ALIGN_CENTER );
+    putGridData( "GridData.HORIZONTAL_ALIGN_END", GridData.HORIZONTAL_ALIGN_END );
+    putGridData( "GridData.HORIZONTAL_ALIGN_FILL", GridData.HORIZONTAL_ALIGN_FILL );
+    putGridData( "GridData.VERTICAL_ALIGN_BEGINNING", GridData.VERTICAL_ALIGN_BEGINNING );
+    putGridData( "GridData.VERTICAL_ALIGN_CENTER", GridData.VERTICAL_ALIGN_CENTER );
+    putGridData( "GridData.VERTICAL_ALIGN_END", GridData.VERTICAL_ALIGN_END );
+    putGridData( "GridData.VERTICAL_ALIGN_FILL", GridData.VERTICAL_ALIGN_FILL );
   }
 
-  private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
+  static final HashMap m_swtMap = new HashMap();
   static
   {
-    GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.CENTER", new Integer( GridData.CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.END", new Integer( GridData.END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL", new Integer( GridData.FILL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_BOTH", new Integer( GridData.FILL_BOTH ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_HORIZONTAL", new Integer( GridData.FILL_HORIZONTAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_VERTICAL", new Integer( GridData.FILL_VERTICAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.GRAB_HORIZONTAL", new Integer( GridData.GRAB_HORIZONTAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.GRAB_VERTICAL", new Integer( GridData.GRAB_VERTICAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_BEGINNING", new Integer( GridData.HORIZONTAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_CENTER", new Integer( GridData.HORIZONTAL_ALIGN_CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_END", new Integer( GridData.HORIZONTAL_ALIGN_END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_FILL", new Integer( GridData.HORIZONTAL_ALIGN_FILL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_BEGINNING", new Integer( GridData.VERTICAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_CENTER", new Integer( GridData.VERTICAL_ALIGN_CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_END", new Integer( GridData.VERTICAL_ALIGN_END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_FILL", new Integer( GridData.VERTICAL_ALIGN_FILL ) ); //$NON-NLS-1$
-
-    // Also add SWT constants, as GridData uses them for the more complex constructors
-    GRID_DATA_MAP.putAll( SWT_MAP );
+    putSWT( "SWT.FILL", SWT.FILL );
+    putSWT( "SWT.NONE", SWT.NONE );
+    putSWT( "SWT.BEGINNING", SWT.BEGINNING );
+    putSWT( "SWT.END", SWT.END );
+    putSWT( "SWT.CENTER", SWT.CENTER );
+    putSWT( "SWT.FILL", SWT.FILL );
+    putSWT( "SWT.HORIZONTAL", SWT.HORIZONTAL );
+    putSWT( "SWT.VERTICAL", SWT.VERTICAL );
+    putSWT( "SWT.RADIO", SWT.RADIO );
+    putSWT( "SWT.BOLD", SWT.BOLD );
+    putSWT( "SWT.BORDER", SWT.BORDER );
+    putSWT( "SWT.PUSH", SWT.PUSH );
+    putSWT( "SWT.CHECK", SWT.CHECK );
+    putSWT( "SWT.CHECK", SWT.CHECK );
+    // TODO really a lot to complete SWT keys
   }
 
-
-  public static int createStyleFromString( final String key )
+  private static void putSWT( String key, int value )
   {
-    return SWTUtilities.createStyleFromString( SWT_MAP, key );
+    m_swtMap.put( key, new Integer( value ) );
   }
 
-  public static int getGridData( final String key )
+  private static void putGridData( String key, int value )
   {
-    return SWTUtilities.createStyleFromString( GRID_DATA_MAP, key );
+    m_gridDataMap.put( key, new Integer( value ) );
   }
 
-  private static int createStyleFromString( final Map<String, Integer> map, final String style )
+  public static int createStyleFromString( String key )
+  {
+    return createStyleFromString( m_swtMap, key );
+  }
+
+  public static int getGridData( String key )
+  {
+    return createStyleFromString( m_gridDataMap, key );
+  }
+
+  private static int createStyleFromString( HashMap map, String style )
   {
     try
     {
-      if( style == null )
-        return SWT.NONE;
-
       int result = SWT.NONE;
-      if( style.matches( "[0-9]+" ) ) //$NON-NLS-1$
+      if( style.matches( "[0-9]+" ) )
         return Integer.parseInt( style );
-
-      final String[] keys = style.split( "\\|" ); //$NON-NLS-1$
-      for( final String element : keys )
+      final String[] keys = style.split( "\\|" );
+      for( int i = 0; i < keys.length; i++ )
       {
-        final String key = element.trim();
-        final Integer value = map.get( key );
+        final Integer value = (Integer)map.get( keys[i] );
         if( value != null )
           result |= value.intValue();
         else
-          System.out.println( "// TODO: implement " + key ); //$NON-NLS-1$
+          System.out.println( "// TODO: implement " + keys[i] );
       }
       return result;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return SWT.NONE;

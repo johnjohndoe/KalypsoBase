@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,45 +36,36 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.geometry.GM_Envelope;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
  * @author vdoemming
  */
 public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 {
-  public CommandableWorkspace getWorkspace( );
-
-  public ISchedulingRule getSchedulingRule( );
-
-  public IFeatureType getFeatureType( );
-
-  public String getFeaturePath();
+  public CommandableWorkspace getWorkspace();
+  
+  public ISchedulingRule getSchedulingRule();
+  
+  public FeatureType getFeatureType();
 
   public void addStyle( final KalypsoUserStyle style );
 
   public void removeStyle( final KalypsoUserStyle style );
 
-  public UserStyle[] getStyles( );
+  public UserStyle[] getStyles();
+  
+  public FeatureList getFeatureList();
 
-  public FeatureList getFeatureList( );
-
-  public FeatureList getFeatureListVisible( final GM_Envelope env );
-
-  public IFeatureSelectionManager getSelectionManager( );
-
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException;
+  public FeatureList getFeatureListVisible(GM_Envelope env);
 }
