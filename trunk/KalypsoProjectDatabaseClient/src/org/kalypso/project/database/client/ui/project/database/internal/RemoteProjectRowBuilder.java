@@ -100,12 +100,12 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
     if( m_remote.getBean().isProjectLockedForEditing() )
     {
       lnk.setImage( IMG_REMOTE_PROJECT_LOCKED );
-      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder.4"), m_remote.getName() ) ); //$NON-NLS-1$
+      lnk.setToolTipText( String.format( "Projekt: \"%s\" befindet sich aktuell in Bearbeitung.", m_remote.getName() ) ); 
     }
     else
     {
       lnk.setImage( IMG_REMOTE_PROJECT );
-      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder.5"), m_remote.getName() ) ); //$NON-NLS-1$
+      lnk.setToolTipText( String.format( "Projekt: %s", m_remote.getName() ) ); 
     }
 
     lnk.setUnderlined( false );

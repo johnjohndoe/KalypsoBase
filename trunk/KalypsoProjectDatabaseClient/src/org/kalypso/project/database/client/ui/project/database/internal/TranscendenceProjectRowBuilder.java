@@ -139,21 +139,25 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
       if( preferences.isLocked() )
       {
         lnk.setImage( IMG_LORE_LOCKED );
+        lnk.setToolTipText( String.format( "Öffne Projekt: %s (Bearbeitungsmodus)", getLocalProject().getName() ) ); 
       }
       else if( !ProjectDatabaseServerUtils.isServerOnline() )
       {
         lnk.setImage( IMG_LORE_PROJECT_DISABLED );
+        lnk.setToolTipText( String.format( "Öffne Projekt: %s (Deaktiviert - Lesemodus)", getLocalProject().getName() ) ); 
       }
       else if( m_transcendence.getBean().isProjectLockedForEditing() )
       {
         lnk.setImage( IMG_LORE_OTHER_LOCK );
+        lnk.setToolTipText( String.format( "Öffne Projekt: %s (Extern gesperrt - Lesemodus)", getLocalProject().getName() ) ); 
       }
       else
       {
         lnk.setImage( IMG_LORE_PROJECT );
+        lnk.setToolTipText( String.format( "Öffne Projekt: %s (Lesemodus)", getLocalProject().getName() ) ); 
       }
 
-      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.12"), getLocalProject().getName() ) ); //$NON-NLS-1$
+    
       lnk.setText( getLocalProject().getName() );
 
       addProjectOpenListener( lnk );
@@ -411,9 +415,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell == null )
-            {
               return;
-            }
 
             if( !shell.isDisposed() )
             {

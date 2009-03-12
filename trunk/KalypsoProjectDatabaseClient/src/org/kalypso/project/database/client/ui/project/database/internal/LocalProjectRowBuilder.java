@@ -102,7 +102,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_LOCAL_PROJECT );
-    lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.2"), project.getName() ) ); //$NON-NLS-1$
+    lnk.setToolTipText( String.format( "Öffne Projekt: %s (Bearbeitungsmodus)", project.getName() ) ); //$NON-NLS-1$
     lnk.setText( project.getName() );
 
     addProjectOpenListener( lnk );
@@ -136,9 +136,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
       final IRemoteProjectPreferences preferences = project.getRemotePreferences();
 
       if( preferences != null )
-      {
         return true;
-      }
     }
     catch( final CoreException e )
     {
