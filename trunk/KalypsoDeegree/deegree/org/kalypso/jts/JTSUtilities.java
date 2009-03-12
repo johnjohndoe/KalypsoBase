@@ -190,7 +190,6 @@ public class JTSUtilities
       final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
       line = factory.createLineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) } );
       final double lineLength = line.getLength();
-
       if( distance - lineLength < 0 )
       {
         break;
