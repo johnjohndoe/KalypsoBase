@@ -47,7 +47,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ICheckStateProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
 /**
  * The this label provider modifies some labels for handling themes, that have only one style.
@@ -102,13 +102,13 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
         return isActiveMsg + input;
 
       final Object[] children = adapter.getChildren( element );
-      if( !(children instanceof UserStyleTreeObject[]) )
+      if( !(children instanceof ThemeStyleTreeObject[]) )
         return isActiveMsg + input;
 
       if( children != null && (children.length == 0 || children.length > 1) )
         return isActiveMsg + input;
 
-      final UserStyleTreeObject style = (UserStyleTreeObject) children[0];
+      final ThemeStyleTreeObject style = (ThemeStyleTreeObject) children[0];
       final String label = style.getLabel( style );
 
       if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )

@@ -75,7 +75,6 @@ import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceP
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -85,29 +84,29 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuilder
 {
-  public static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
 
-  public static Image IMG_LORE_RELEASE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_release_lock.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_RELEASE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_release_lock.gif" ) );
 
-  public static Image IMG_LORE_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
 
-  public static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) );
 
-  public static Image IMG_LORE_UPDATEABLE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_update.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_UPDATEABLE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_update.gif" ) );
 
-  public static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) );
 
-  public static Image IMG_LORE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
 
-  public static Image IMG_LORE_PROJECT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_disabled.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_PROJECT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_disabled.gif" ) );
 
-  public static Image IMG_LORE_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
 
-  public static Image IMG_LORE_OTHER_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_other_locked.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_OTHER_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_other_locked.gif" ) );
 
-  public static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
 
-  public static Image IMG_CHANGE_VERSION = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/transcendence_change_version.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_CHANGE_VERSION = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/transcendence_change_version.gif" ) );
 
   protected final ITranscendenceProject m_transcendence;
 
@@ -153,7 +152,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
         lnk.setImage( IMG_LORE_PROJECT );
       }
 
-      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.12"), getLocalProject().getName() ) ); //$NON-NLS-1$
+      lnk.setToolTipText( String.format( "Öffne Projekt: %s", getLocalProject().getName() ) );
       lnk.setText( getLocalProject().getName() );
 
       addProjectOpenListener( lnk );
@@ -188,7 +187,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
     {
       final ImageHyperlink lnkChangeVersion = toolkit.createImageHyperlink( body, SWT.NONE );
       lnkChangeVersion.setImage( IMG_CHANGE_VERSION );
-      lnkChangeVersion.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.13") ); //$NON-NLS-1$
+      lnkChangeVersion.setToolTipText( "Ändere den Versionstand des Projektes" );
 
       if( ProjectDatabaseServerUtils.isServerOnline() )
       {
@@ -205,7 +204,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
               getLocker().acquireUiUpdateLock();
 
               /* delete old bean */
-              if( MessageDialog.openConfirm( lnkChangeVersion.getShell(), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.14"), String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.15"), getLocalProject().getName(), getLocalProject().getName() ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+              if( MessageDialog.openConfirm( lnkChangeVersion.getShell(), "Ändere Versionsstand", String.format( "Zum ändern der Projektversion muß das bestehende Projekt \"%s\" gelöscht werden. Projekt \"%s\" wirklich löschen?", getLocalProject().getName(), getLocalProject().getName() ) ) )
               {
                 final String editTicket = preferences.getEditTicket();
                 int version = preferences.getVersion();
@@ -216,7 +215,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
                 final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
                 if( shell != null && !shell.isDisposed() )
                 {
-                  ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.16"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.17"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+                  ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
                 }
 
                 /* download bean */
@@ -224,7 +223,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
                 final Set<ProjectTemplate> templates = new LinkedHashSet<ProjectTemplate>();
 
                 final KalypsoProjectBean bean = m_transcendence.getBean();
-                final ProjectTemplate head = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
+                final ProjectTemplate head = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
                 templates.add( head );
                 mapping.put( head, bean );
 
@@ -232,7 +231,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
                 for( int i = children.length - 1; i >= 0; i-- )
                 {
                   final KalypsoProjectBean child = children[i];
-                  final ProjectTemplate childTemplate = new ProjectTemplate( String.format( "%s - Version %d", child.getName(), child.getProjectVersion() ), child.getUnixName(), child.getDescription(), null, child.getUrl() ); //$NON-NLS-1$
+                  final ProjectTemplate childTemplate = new ProjectTemplate( String.format( "%s - Version %d", child.getName(), child.getProjectVersion() ), child.getUnixName(), child.getDescription(), null, child.getUrl() );
                   templates.add( childTemplate );
                   mapping.put( childTemplate, child );
                 }
@@ -337,7 +336,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
     else
     {
       final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.20"), getLocalProject().getName() ) ); //$NON-NLS-1$
+      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", getLocalProject().getName() ) );
       lnkLock.setImage( IMG_LORE_COMMIT );
 
       lnkLock.addHyperlinkListener( new HyperlinkAdapter()
@@ -370,7 +369,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
             {
-              ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.21"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.22"), StatusUtilities.createErrorStatus( "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", StatusUtilities.createErrorStatus( "" ) );
             }
           }
           finally
@@ -392,7 +391,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
     else
     {
       final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.24"), m_transcendence.getName() ) ); //$NON-NLS-1$
+      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_transcendence.getName() ) );
       lnkLock.setImage( IMG_LORE_LOCK );
 
       lnkLock.addHyperlinkListener( new HyperlinkAdapter()
@@ -417,7 +416,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
             if( !shell.isDisposed() )
             {
-              ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.25"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.26"), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
             }
           }
           finally
@@ -434,7 +433,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
   {
 
     final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkLock.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.27"), getLocalProject().getName() ) ); //$NON-NLS-1$
+    lnkLock.setToolTipText( String.format( "Freigabe der Projektsperre für das Projekt \"%s\"", getLocalProject().getName() ) );
 
     lnkLock.setImage( IMG_LORE_RELEASE_LOCK );
 
@@ -454,7 +453,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
           final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_transcendence );
           if( !shell.isDisposed() )
           {
-            ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29"), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+            ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", lockStatus );
           }
 
           try
@@ -485,7 +484,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
       final ImageHyperlink lnkUpdate = toolkit.createImageHyperlink( body, SWT.NONE );
       lnkUpdate.setImage( IMG_LORE_UPDATEABLE );
-      lnkUpdate.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.30"), localVersion, remoteVersion ) ); //$NON-NLS-1$
+      lnkUpdate.setToolTipText( String.format( "Neue Version des Projektes auf dem Server verfügbar. Lokale Version: %d Server Version: %d", localVersion, remoteVersion ) );
 
       lnkUpdate.addHyperlinkListener( new HyperlinkAdapter()
       {
@@ -506,7 +505,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
             {
-              ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.31"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.32"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
             }
 
             // import head version of project from server
@@ -516,7 +515,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
               final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
 
               final KalypsoProjectBean bean = m_transcendence.getBean();
-              final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
+              final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
               mapping.put( template, bean );
 
               RemoteProjectHelper.importRemoteProject( new ProjectTemplate[] { template }, mapping );

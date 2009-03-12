@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * @author kuch
@@ -84,7 +83,7 @@ public class LocalInfoDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.0") ); //$NON-NLS-1$
+    setTitle( "Projekthistorie" );
     setMessage( null );
 
     return contents;
@@ -115,14 +114,14 @@ public class LocalInfoDialog extends TitleAreaDialog
   private void renderProjectInfo( final Composite parent )
   {
     /* name */
-    new Label( parent, SWT.NULL ).setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.1") ); //$NON-NLS-1$
+    new Label( parent, SWT.NULL ).setText( "Name:" );
 
     final Text name = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
     name.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     /* description */
     final Label labelDescription = new Label( parent, SWT.TOP );
-    labelDescription.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.2") ); //$NON-NLS-1$
+    labelDescription.setText( "Beschreibung:" );
     labelDescription.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );

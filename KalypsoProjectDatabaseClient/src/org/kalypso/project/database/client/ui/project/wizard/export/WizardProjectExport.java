@@ -50,7 +50,6 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination;
 
 /**
@@ -65,7 +64,7 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
   public WizardProjectExport( final IProject project )
   {
     m_project = project;
-    setWindowTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport.0") ); //$NON-NLS-1$
+    setWindowTitle( "Projektexport" );
 
     setHelpAvailable( false );
   }
@@ -97,7 +96,7 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
     final ProjectExportHandler worker = new ProjectExportHandler( m_project, m_pageSelectZipFile.getSelectedFile() );
 
     final IStatus result = ProgressUtilities.busyCursorWhile( worker );
-    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport.1"), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport.2"), result ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Projektexport fehlgeschlagen", "Fehler beim exportieren des Projektes.", result );
 
     if( result.getSeverity() != IStatus.OK )
     {

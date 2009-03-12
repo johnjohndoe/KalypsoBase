@@ -49,7 +49,6 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -101,23 +100,13 @@ public class FeatureUtils
     return geoDataSetName;
   }
 
-  public static void deleteFeature( final CommandableWorkspace workspace, final Feature feature ) throws Exception
+  public static void deleteFeature( final CommandableWorkspace workspace, final Feature f ) throws Exception
   {
-    if( feature == null )
+    if( f == null )
       return;
 
-    final DeleteFeatureCommand command = new DeleteFeatureCommand( feature );
+    final DeleteFeatureCommand command = new DeleteFeatureCommand( f );
     workspace.postCommand( command );
-  }
-
-  public static void deleteFeatures( final CommandableWorkspace workspace, final Feature[] features ) throws Exception
-  {
-    if( ArrayUtils.isEmpty( features ) )
-      return;
-
-    final DeleteFeatureCommand command = new DeleteFeatureCommand( features );
-    workspace.postCommand( command );
-
   }
 
   public static String getFeatureName( final String namespace, final Feature node )
@@ -277,5 +266,4 @@ public class FeatureUtils
     return base;
 
   }
-
 }

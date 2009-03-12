@@ -69,7 +69,6 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -101,7 +100,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.0") ); //$NON-NLS-1$
+    setTitle( "Projekthistorie" );
     setMessage( null );
 
     return contents;
@@ -144,7 +143,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupVersions = new Group( parent, SWT.NULL );
     groupVersions.setLayout( new GridLayout() );
     groupVersions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    groupVersions.setText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.1"), m_handler.getBean().getName() ) ); //$NON-NLS-1$
+    groupVersions.setText( String.format( "Version des Projektes: %s", m_handler.getBean().getName() ) );
 
     final ComboViewer viewerVersions = new ComboViewer( groupVersions );
     viewerVersions.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -161,7 +160,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          return String.format( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.2"), project.getProjectVersion(), project.getCreationDate() ); //$NON-NLS-1$
+          return String.format( "Version: %d vom %tF", project.getProjectVersion(), project.getCreationDate() );
         }
 
         return super.getText( element );
@@ -173,10 +172,10 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupDetails = new Group( parent, SWT.NULL );
     groupDetails.setLayout( new GridLayout( 2, false ) );
     groupDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupDetails.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.3") ); //$NON-NLS-1$
+    groupDetails.setText( "Details" );
 
     /* version */
-    new Label( groupDetails, SWT.NULL ).setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.4") ); //$NON-NLS-1$
+    new Label( groupDetails, SWT.NULL ).setText( "Version:" );
 
     final Text version = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
     version.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -184,19 +183,19 @@ public class RemoteInfoDialog extends TitleAreaDialog
     if( m_isExpert )
     {
       /* type */
-      new Label( groupDetails, SWT.NULL ).setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.5") ); //$NON-NLS-1$
+      new Label( groupDetails, SWT.NULL ).setText( "Projekttyp:" );
 
       final Text type = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
       type.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       /* unix name */
-      new Label( groupDetails, SWT.NULL ).setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.6") ); //$NON-NLS-1$
+      new Label( groupDetails, SWT.NULL ).setText( "Unix Name:" );
 
       final Text unix = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
       unix.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       /* server url */
-      new Label( groupDetails, SWT.NULL ).setText( "Url:" ); //$NON-NLS-1$
+      new Label( groupDetails, SWT.NULL ).setText( "Url:" );
 
       final Text url = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
       url.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -231,7 +230,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupChanges = new Group( parent, SWT.NULL );
     groupChanges.setLayout( new GridLayout() );
     groupChanges.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupChanges.setText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.8") ) ); //$NON-NLS-1$
+    groupChanges.setText( String.format( "Änderungen" ) );
 
     final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -253,7 +252,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          version.setText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9"), project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
+          version.setText( String.format( "Version %d erstellt am  %tc", project.getProjectVersion(), project.getCreationDate() ) );
 
           if( project.getChanges() != null )
           {
@@ -270,14 +269,14 @@ public class RemoteInfoDialog extends TitleAreaDialog
   private void renderProjectInfo( final Composite parent )
   {
     /* name */
-    new Label( parent, SWT.NULL ).setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.10") ); //$NON-NLS-1$
+    new Label( parent, SWT.NULL ).setText( "Name:" );
 
     final Text name = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
     name.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     /* description */
     final Label labelDescription = new Label( parent, SWT.TOP );
-    labelDescription.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.11") ); //$NON-NLS-1$
+    labelDescription.setText( "Beschreibung:" );
     labelDescription.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );

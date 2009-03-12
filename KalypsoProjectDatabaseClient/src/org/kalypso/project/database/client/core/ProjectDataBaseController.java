@@ -77,7 +77,7 @@ public class ProjectDataBaseController
   {
     if( JOB == null )
     {
-      JOB = new WorkspaceJob( "" ) //$NON-NLS-1$
+      JOB = new WorkspaceJob( "" )
       {
 
         @Override

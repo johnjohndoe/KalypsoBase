@@ -153,7 +153,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
     final GeoTransform m_world2screen = tile.getWorld2Screen();
 
-    if( !m_world2screen.getSourceRect().equals( world2screen.getSourceRect(), true ) )
+    if( !m_world2screen.getSourceRect().equals( world2screen.getSourceRect() ) )
       return false;
 
     if( m_world2screen.getDestWidth() != world2screen.getDestWidth() )

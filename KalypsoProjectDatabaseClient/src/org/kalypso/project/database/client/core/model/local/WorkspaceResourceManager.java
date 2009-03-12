@@ -143,7 +143,7 @@ public class WorkspaceResourceManager
     {
       final IResource resource = child.getResource();
       final String name = resource.getName();
-      if( !".settings".equalsIgnoreCase( name ) ) //$NON-NLS-1$
+      if( !".settings".equalsIgnoreCase( name ) )
         return true;
     }
     return false;

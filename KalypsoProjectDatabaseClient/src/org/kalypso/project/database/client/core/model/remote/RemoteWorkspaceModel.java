@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -30,7 +29,7 @@ public class RemoteWorkspaceModel
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0") ); //$NON-NLS-1$
+  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( "aktualisiere" );
 
   protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
 
@@ -40,7 +39,7 @@ public class RemoteWorkspaceModel
   {
     init();
 
-    UPDATE_JOB = new WorkspaceJob( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.1") ) //$NON-NLS-1$
+    UPDATE_JOB = new WorkspaceJob( "updating status of remote projects" )
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -56,7 +55,7 @@ public class RemoteWorkspaceModel
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
           if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
           {
-            m_connectionState = StatusUtilities.createOkStatus( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.2") ); //$NON-NLS-1$
+            m_connectionState = StatusUtilities.createOkStatus( "Verbindung OK" );
             fireConnectionStatusChanged();
           }
 

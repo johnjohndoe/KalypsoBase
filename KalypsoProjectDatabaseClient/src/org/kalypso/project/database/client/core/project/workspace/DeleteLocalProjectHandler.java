@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * Deletes an local IProject
@@ -70,7 +69,7 @@ public class DeleteLocalProjectHandler implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, String.format( Messages.getString("org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler.0"), m_project.getName() ), true ); //$NON-NLS-1$
+    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, String.format( "Lösche Projekt %s", m_project.getName() ), true );
     try
     {
       return operation.execute( monitor, null );

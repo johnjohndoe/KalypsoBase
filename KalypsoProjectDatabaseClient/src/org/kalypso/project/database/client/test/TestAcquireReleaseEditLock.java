@@ -53,7 +53,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class TestAcquireReleaseEditLock
 {
-  private static final String PROJECT_TYPE = "PlanerClientProject"; //$NON-NLS-1$
+  private static final String PROJECT_TYPE = "PlanerClientProject";
 
   private static String TICKET = null;
 

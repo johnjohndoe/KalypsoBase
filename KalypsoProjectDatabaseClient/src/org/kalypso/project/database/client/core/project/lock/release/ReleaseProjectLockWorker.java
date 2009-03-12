@@ -50,7 +50,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -79,7 +78,7 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     /* project preferences */
     if( !(m_handler instanceof ITranscendenceProject) )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString("org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker.0"), m_handler.getName() ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
     }
 
     final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
@@ -91,8 +90,8 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     Assert.isTrue( released );
 
     /* reset edit ticket */
-    preferences.setEditTicket( "" ); //$NON-NLS-1$
-    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) ); //$NON-NLS-1$
+    preferences.setEditTicket( "" );
+    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) );
 
     return Status.OK_STATUS;
   }

@@ -348,25 +348,20 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     if( m_legendIcon == null )
     {
       final Object[] styles = getChildren( this );
-      if( styles instanceof UserStyleTreeObject[] && styles.length == 1 )
+      if( styles instanceof ThemeStyleTreeObject[] && styles.length == 1 )
       {
         /* Cast ... . */
-        final UserStyleTreeObject[] themeStyles = (UserStyleTreeObject[]) styles;
+        final ThemeStyleTreeObject[] themeStyles = (ThemeStyleTreeObject[]) styles;
 
         /* One must exist here! */
-        final UserStyleTreeObject style = themeStyles[0];
+        final ThemeStyleTreeObject style = themeStyles[0];
 
-        final Object[] ftStyles = style.getChildren( style );
-        if( ftStyles.length == 1 )
+        /* Get the rules. */
+        final Object[] rules = style.getChildren( style );
+        if( rules.length == 1 )
         {
-          final FeatureTypeStyleTreeObject ftStyle = (FeatureTypeStyleTreeObject) ftStyles[0];
-          /* Get the rules. */
-          final Object[] rules = ftStyle.getChildren( ftStyle );
-          if( rules.length == 1 )
-          {
-            final RuleTreeObject rule = (RuleTreeObject) rules[0];
-            return rule.getImageDescriptor( rule );
-          }
+          final RuleTreeObject rule = (RuleTreeObject) rules[0];
+          return rule.getImageDescriptor( rule );
         }
 
         /* Otherwise there are more styles or rules, so give them the default image. */
@@ -395,10 +390,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       final String ruleName = m.group( 2 );
 
       final Object[] children = getChildren( this );
-      if( children instanceof UserStyleTreeObject[] )
+      if( children instanceof ThemeStyleTreeObject[] )
       {
-        final UserStyleTreeObject[] styles = (UserStyleTreeObject[]) children;
-        for( final UserStyleTreeObject style : styles )
+        final ThemeStyleTreeObject[] styles = (ThemeStyleTreeObject[]) children;
+        for( final ThemeStyleTreeObject style : styles )
         {
           final String sName = style.getStyle().getName();
           if( styleName.equals( sName ) )

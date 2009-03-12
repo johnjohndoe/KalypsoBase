@@ -45,7 +45,6 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -60,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  * Class representing the wbGml:RangeSetFeature element. The feature contained in the range set need to be adaptable
  * into a {@link RangeSetCls} object
- * 
+ *
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -92,7 +91,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   * 
+   *
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -545,35 +544,27 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final IPropertyType pt = feature.getFeatureType().getProperty( qname );
-        if( pt != null )
+        try
         {
-          try
+          final Object property = feature.getProperty( qname );
+          if( property instanceof GM_Object )
           {
-            final Object property = feature.getProperty( qname );
-            if( property instanceof GM_Object )
+            final GM_Object gmo = (GM_Object) property;
+            if( containedOnly )
             {
-              final GM_Object gmo = (GM_Object) property;
-              if( containedOnly )
-              {
-                if( selectionSurface.contains( gmo ) )
-                {
-                  selFW.add( feature );
-                }
-              }
-              else
-              {
-                if( selectionSurface.intersects( gmo ) )
-                {
-                  selFW.add( feature );
-                }
-              }
+              if( selectionSurface.contains( gmo ) )
+                selFW.add( feature );
+            }
+            else
+            {
+              if( selectionSurface.intersects( gmo ) )
+                selFW.add( feature );
             }
           }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
         }
       }
     }

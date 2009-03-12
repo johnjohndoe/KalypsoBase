@@ -56,7 +56,6 @@ import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
@@ -80,28 +79,28 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.0"), 4 ); //$NON-NLS-1$
+    monitor.beginTask( "Aktualisiere Projekt", 4 );
 
     // remove local project lock
     final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
     final String ticket = preferences.getEditTicket();
-    preferences.setEditTicket( "" ); //$NON-NLS-1$
+    preferences.setEditTicket( "" );
 
-    final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
-    final File src = new File( urlTempDir, "update.zip" ); //$NON-NLS-1$
+    final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) );
+    final File src = new File( urlTempDir, "update.zip" );
 
     monitor.worked( 1 );
 
     try
     {
-      monitor.subTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.4") ); //$NON-NLS-1$
+      monitor.subTask( "Exportiere Projekt in lokales, temporäres Verzeichnis" );
       final ProjectExportHandler worker = new ProjectExportHandler( m_handler.getProject(), src );
       final IStatus status = worker.execute( monitor );
       monitor.worked( 1 );
 
       if( !status.isOK() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( "Creating archive of project failed." ) );
       }
 
       final FileSystemManager manager = VFSUtilities.getManager();
@@ -115,9 +114,9 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
         }
 
-      }, "update.zip" ); //$NON-NLS-1$
+      }, "update.zip" );
 
-      monitor.subTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7") ); //$NON-NLS-1$
+      monitor.subTask( "Übertrage Projekt auf Server" );
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
 
@@ -129,7 +128,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
         }
 
-      }, "update.zip" ); //$NON-NLS-1$
+      }, "update.zip" );
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
       final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), myDestinationUrl );

@@ -36,15 +36,15 @@ public class KalypsoProjectDatabaseClient extends Plugin
     {
       try
       {
-        final String namespaceURI = "http://server.database.project.kalypso.org/"; //$NON-NLS-1$
+        final String namespaceURI = "http://server.database.project.kalypso.org/";
         final String serviceImplName = ProjectDatabase.class.getSimpleName();
 
         final String wsdlLocationProperty = System.getProperty( IProjectDataBaseClientConstant.SERVER_WSDL_LOCATION );
         final URL wsdlLocation = new URL( wsdlLocationProperty );
-        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
+        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
 
         final Service service = Service.create( wsdlLocation, serviceName );
-        m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class ); //$NON-NLS-1$
+        m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
 
       }
       catch( final Throwable e )
@@ -69,7 +69,7 @@ public class KalypsoProjectDatabaseClient extends Plugin
   }
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.project.database.client"; //$NON-NLS-1$
+  public static final String PLUGIN_ID = "org.kalypso.project.database.client";
 
   // The shared instance
   private static KalypsoProjectDatabaseClient plugin;

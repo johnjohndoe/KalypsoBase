@@ -55,17 +55,12 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
   private Rule m_rule = null;
 
-  private final FeatureTypeStyleTreeObject m_parent;
+  private ThemeStyleTreeObject m_parent = null;
 
-  public RuleTreeObject( final FeatureTypeStyleTreeObject parent, final Rule rule )
+  public RuleTreeObject( final Rule rule, final ThemeStyleTreeObject parent )
   {
     m_rule = rule;
     m_parent = parent;
-  }
-
-  public FeatureTypeStyleTreeObject getParent( )
-  {
-    return m_parent;
   }
 
   public Rule getRule( )
@@ -81,11 +76,10 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 
     if( m_rule.getTitle() != null )
       return m_rule.getTitle();
-
-    if( m_rule.getName() != null )
+    else if( m_rule.getName() != null )
       return m_rule.getName();
-
-    return "rule"; //$NON-NLS-1$
+    else
+      return "rule"; //$NON-NLS-1$
   }
 
   /**
@@ -186,12 +180,22 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
    */
-  public FeatureTypeStyleTreeObject getParent( final Object o )
+  public Object getParent( final Object o )
   {
     if( o != this )
       throw new IllegalStateException();
 
     return m_parent;
+  }
+
+  public KalypsoUserStyle getStyle( )
+  {
+    return m_parent.getStyle();
+  }
+
+  public IKalypsoFeatureTheme getTheme( )
+  {
+    return m_parent.getTheme();
   }
 
   /**
@@ -204,5 +208,4 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 
     return m_rule.getAbstract();
   }
-
 }

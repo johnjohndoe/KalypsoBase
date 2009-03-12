@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
- *
+ *  
  */
 package org.kalypso.ui.editor.styleeditor;
 
@@ -49,7 +49,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
@@ -69,18 +68,18 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class SymbolizerTabItemBuilder
 {
-  private final FormToolkit m_toolkit;
 
-  public SymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final KalypsoUserStyle userStyle, final IFeatureType featureType )
+  public SymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle,
+      IFeatureType featureType )
   {
-    m_toolkit = toolkit;
-    final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
+    TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 
-    final Composite composite = new Composite( tabFolder, SWT.NULL );
-    final GridLayout compositeLayout = new GridLayout();
+    Composite composite = new Composite( tabFolder, SWT.NULL );
+    GridLayout compositeLayout = new GridLayout();
     composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
     compositeLayout.marginHeight = 0;
@@ -116,7 +115,7 @@ public class SymbolizerTabItemBuilder
     else if( symbolizer instanceof TextSymbolizer )
     {
       tabItem.setText( "Text" ); //$NON-NLS-1$
-      symbolizerLayout = new TextSymbolizerLayout( m_toolkit, composite, symbolizer, userStyle, featureType );
+      symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType );
     }
 
     if( symbolizerLayout != null )
@@ -125,7 +124,7 @@ public class SymbolizerTabItemBuilder
       {
         symbolizerLayout.draw();
       }
-      catch( final FilterEvaluationException e )
+      catch( FilterEvaluationException e )
       {
         e.printStackTrace();
       }

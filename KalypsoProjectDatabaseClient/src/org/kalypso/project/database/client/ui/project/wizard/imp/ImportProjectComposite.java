@@ -56,7 +56,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage;
 import org.eclipse.ui.wizards.datatransfer.ExternalProjectImportWizard;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * Composite for calling the new project wizard
@@ -66,7 +65,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 @SuppressWarnings("restriction")
 public class ImportProjectComposite extends Composite
 {
-  public static Image IMG_IMPORT = new Image( null, ImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) ); //$NON-NLS-1$
+  public static Image IMG_IMPORT = new Image( null, ImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) );
 
   private final FormToolkit m_toolkit;
 
@@ -96,7 +95,7 @@ public class ImportProjectComposite extends Composite
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );
-    lnkImport.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.imp.ImportProjectComposite.1") ); //$NON-NLS-1$
+    lnkImport.setText( "Projekt importieren" );
 
     lnkImport.addHyperlinkListener( new HyperlinkAdapter()
     {
