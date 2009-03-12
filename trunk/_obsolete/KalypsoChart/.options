@@ -1,8 +1,0 @@
-org.kalypso.chart/debug = true
-org.kalypso.chart/debug/axis = true
-org.kalypso.chart/debug/layer = true
-org.kalypso.chart/debug/plot = true
-org.kalypso.chart/debug/legend = true
-org.kalypso.chart/debug/style = true
-org.kalypso.chart/debug/config = true
-org.kalypso.chart/trace = true
