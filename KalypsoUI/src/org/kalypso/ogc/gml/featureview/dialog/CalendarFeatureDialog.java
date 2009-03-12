@@ -36,40 +36,37 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
-// import java.text.DateFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.gml.schema.DateWithoutTime;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.xml.DateWithoutTime;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
-import org.kalypsodeegree.model.feature.Feature;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author belger
  */
 public class CalendarFeatureDialog implements IFeatureDialog
 {
+  private DateFormat m_dateFormat = new SimpleDateFormat( "dd.MM.yyyy" );
+
   private FeatureChange m_change = null;
 
   private final Feature m_feature;
 
-  private final IValuePropertyType m_ftp;
+  private final FeatureTypeProperty m_ftp;
 
-  public CalendarFeatureDialog( final Feature feature, final IValuePropertyType ftp )
+  public CalendarFeatureDialog( final Feature feature, final FeatureTypeProperty ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -80,43 +77,33 @@ public class CalendarFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    final Date date = getDate();
-    final Date dialogDate = date == null ?  new Date() : date;
-    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, dialogDate );
+    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, getDate() );
 
     final int open = dialog.open();
     if( open == Window.OK )
     {
       Date newDate = dialog.getDate();
-      if( m_ftp.getValueClass() == DateWithoutTime.class )
+      if( m_ftp.getType().equals( DateWithoutTime.class.getName() ) )
         newDate = new DateWithoutTime( newDate );
-      final GregorianCalendar cal = new GregorianCalendar();
-      cal.setTime( newDate );
-      m_change = new FeatureChange( m_feature, m_ftp, new XMLGregorianCalendarImpl( cal ) );
-    }
 
+      m_change = new FeatureChange( m_feature, m_ftp.getName(), newDate );
+    }
+    
     return open;
   }
 
-  private Date getDate( )
+  private Date getDate()
   {
-    // If no calue is set, use today as default
-    final XMLGregorianCalendar calendar = getCalendar();
-    if( calendar == null )
-      return new Date();
+    if( m_change != null )
+      return (Date)m_change.newValue;
     
-    return DateUtilities.toDate( calendar );
-  }
-
-  private XMLGregorianCalendar getCalendar( )
-  {
-    return (XMLGregorianCalendar) m_feature.getProperty( m_ftp );
+    return (Date)m_feature.getProperty( m_ftp.getName() );
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( final Collection c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
@@ -125,8 +112,10 @@ public class CalendarFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
-  public String getLabel( )
+  public String getLabel()
   {
-    return "..."; //$NON-NLS-1$
+    final Date date = getDate();
+
+    return m_dateFormat.format( date );
   }
 }

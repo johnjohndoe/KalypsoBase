@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.test;
 
 import java.io.InputStream;
@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.filter.filters.DataHoleFilter;
+import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 
 /**
  * FilterFactoryTest
@@ -58,24 +58,22 @@ public class FilterFactoryTest extends TestCase
 {
   private InputStream m_ins;
 
-  @Override
-  protected void setUp() throws Exception
+  protected void setUp( ) throws Exception
   {
     super.setUp();
-
-    m_ins = getClass().getResourceAsStream( "filter.xml" ); //$NON-NLS-1$
+    
+    m_ins = getClass().getResourceAsStream( "wqfilter.xml" );
   }
-
-  @Override
+  
   protected void tearDown( ) throws Exception
   {
-    super.tearDown();
+    super.tearDown();    
     m_ins.close();
   }
 
-  public void testCreateFilter() throws SensorException
+  public void testCreateFilter( ) throws SensorException
   {
-    IObservation obs = FilterFactory.createFilter( m_ins, getClass().getResource("filter.xml") ); //$NON-NLS-1$
-    assertTrue( obs instanceof DataHoleFilter );
-  }
+    IObservation obs = FilterFactory.createFilter( m_ins );    
+    assertTrue( obs instanceof WQObservationFilter );
+  }  
 }

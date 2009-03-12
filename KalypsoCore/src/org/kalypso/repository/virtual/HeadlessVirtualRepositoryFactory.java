@@ -36,45 +36,44 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.repository.AbstractRepositoryFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.factory.AbstractRepositoryFactory;
 
 /**
- * VirtualRepositoryFactory. Configuration should be built according to the following rules:
- * <p>
- * <ul>
- * <li>name: a unique identifier (also used as the name of the repository) to identify the repository
- * <li>conf: the location of the config file for the repository (this string is used with the file constructor)
- * </ul>
+ * VirtualRepositoryFactory
  * 
  * @author schlienger
  */
 public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
 {
+  private final static String SEPARATOR = "#";
+  
   /**
-   * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
+   * @see org.kalypso.repository.IRepositoryFactory#configureRepository()
    */
-  public boolean configureRepository()
+  public boolean configureRepository( )
   {
     return true;
   }
 
   /**
-   * Configuration string contains the location of the repository specification file (xml)
+   * Configuration string contains the location of the repository specification
+   * file (xml)
    * 
-   * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
+   * @see org.kalypso.repository.IRepositoryFactory#createRepository()
    */
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository( ) throws RepositoryException
   {
-    if( getConfiguration() == null )
-      throw new RepositoryException( Messages.getString("org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory.0") ); //$NON-NLS-1$
-
-    return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly() );
+    final String[] splits = getConfiguration().split( SEPARATOR );
+    
+    if( splits.length != 2 )
+      throw new RepositoryException( "Configuration must contain location and identifier, separated by a " + SEPARATOR );
+    
+    return new VirtualRepository( this, splits[0], splits[1], isReadOnly() );
   }
 }

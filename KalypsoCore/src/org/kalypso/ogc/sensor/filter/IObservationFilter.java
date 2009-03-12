@@ -36,11 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter;
-
-import java.net.URL;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -55,16 +53,12 @@ import org.kalypso.ogc.sensor.SensorException;
 public interface IObservationFilter extends IObservation
 {
   /**
-   * Initializes the filter with the given configuration and the observation.
+   * Initializes the filter with the given configuration and the
+   * observation.
    * 
-   * @param conf
-   *          implementation dependent configuration.
-   * @param obs
-   *          [nullable] observation that will be filtered. Can also be a subclass of IObservationFiler. This argument
-   *          is optional.
-   * @param context
-   *          [nullable] the context to use when resolving a zml-url. This argument is optional.
+   * @param conf implementation dependent configuration.
+   * @param obs observation that will be filtered. Can also be a subclass of IObservationFiler.
    * @throws SensorException
    */
-  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException;
+  public void initFilter( final Object conf, final IObservation obs ) throws SensorException;
 }

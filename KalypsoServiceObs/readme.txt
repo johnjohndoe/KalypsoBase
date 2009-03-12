@@ -1,2 +1,2 @@
 Zeitreihendienst: Lieferung von Zeitreihen und deren Metadaten. Zurückspeicherung
-von Zeitreihen.
+von Zeitreihen. Verwaltung von Zeitreihen-Repositories.

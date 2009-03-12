@@ -45,7 +45,6 @@
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import javax.swing.event.EventListenerList;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -127,7 +126,7 @@ public class LabelPointPlacementPanel
     offsetInputData.left = new FormAttachment( 660, 1000, 0 );
     offsetInputData.top = new FormAttachment( 100, 1000, 0 );
     yInput.setLayoutData( offsetInputData );
-    yInput.setText( "" + yValue ); //$NON-NLS-1$
+    yInput.setText( "" + yValue );
 
     Label yLabel = new Label( composite, SWT.NULL );
     FormData yLabelData = new FormData();
@@ -136,7 +135,7 @@ public class LabelPointPlacementPanel
     yLabelData.left = new FormAttachment( 640, 1000, 0 );
     yLabelData.top = new FormAttachment( 100, 1000, 0 );
     yLabel.setLayoutData( yLabelData );
-    yLabel.setText( "/" ); //$NON-NLS-1$
+    yLabel.setText( "/" );
 
     xInput = new Text( composite, SWT.BORDER );
     FormData xInputData = new FormData();
@@ -145,7 +144,7 @@ public class LabelPointPlacementPanel
     xInputData.left = new FormAttachment( 490, 1000, 0 );
     xInputData.top = new FormAttachment( 100, 1000, 0 );
     xInput.setLayoutData( xInputData );
-    xInput.setText( "" + xValue ); //$NON-NLS-1$
+    xInput.setText( "" + xValue );
 
     final Label xLabel = new Label( composite, SWT.NULL );
     FormData xLabelData = new FormData();
@@ -154,7 +153,7 @@ public class LabelPointPlacementPanel
     xLabelData.left = new FormAttachment( 340, 1000, 0 );
     xLabelData.top = new FormAttachment( 100, 1000, 0 );
     xLabel.setLayoutData( xLabelData );
-    xLabel.setText( "x/y" ); //$NON-NLS-1$
+    xLabel.setText( "x/y" );
 
     Label offsetLabel = new Label( composite, SWT.NULL );
     FormData offsetLabelData = new FormData();
@@ -179,7 +178,7 @@ public class LabelPointPlacementPanel
           if( getXValue() <= 0.0 )
           {
             setXValue( 1f );
-            xLabel.setText( "" + getXValue() ); //$NON-NLS-1$
+            xLabel.setText( "" + getXValue() );
           }
           setYValue( yDouble.doubleValue() );
           fire();
@@ -187,10 +186,11 @@ public class LabelPointPlacementPanel
         catch( NumberFormatException nfe )
         {
           StyleEditorErrorDialog error = new StyleEditorErrorDialog( getComposite().getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           error.showError();
-          getXInput().setText( "" + getXValue() ); //$NON-NLS-1$
-          getYInput().setText( "" + getYValue() ); //$NON-NLS-1$
+          getXInput().setText( "" + getXValue() );
+          getYInput().setText( "" + getYValue() );
         }
       }
 

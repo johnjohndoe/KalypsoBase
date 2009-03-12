@@ -41,194 +41,111 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import java.util.List;
-import java.util.Map;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.GMLWorkspace;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.kalypso.util.command.ICommand;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public class AddFeatureCommand implements ICommand
 {
   private final Feature m_parentFeature;
 
-  private final int m_pos;
+  private final ModellEventProvider m_eventprovider;
 
-  private final IRelationType m_propName;
+  private GMLWorkspace m_workspace;
 
-  private final IFeatureType m_type;
+  private int m_pos = 0;
 
-  private Feature m_newFeature = null;
+  private final String m_propName;
 
-  private final GMLWorkspace m_workspace;
+  private FeatureType m_type;
 
-  /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_props;
+  private Feature newFeature = null;
 
-  private final IFeatureSelectionManager m_selectionManager;
-
-  private final int m_depth;
-
-  /**
-   * This variable states, if all features in the selection manager should be removed, by adding a feature.
-   */
-  private boolean m_dropSelection = true;
-
-  /* HACK: this fixes the create fe element speed problem */
-  private final boolean m_doFireEvents;
-
-  private final boolean m_doAddOnProcess;
-
-  /**
-   * @param If dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
-   */
-  public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
+  public AddFeatureCommand( final ModellEventProvider eventprovider, FeatureType type,
+      Feature parentFeature, String propertyName, int pos )
   {
-    m_workspace = workspace;
+    m_eventprovider = eventprovider;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_props = properties;
     m_type = type;
-    m_selectionManager = selectionManager;
-    m_depth = depth;
-    m_doFireEvents = true;
-    m_doAddOnProcess = true;
+    m_workspace = (GMLWorkspace)eventprovider;
   }
 
   /**
-   * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
-   * created feature is provided from outside.
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager )
-  {
-    this( workspace, parentFeature, propertyName, pos, newFeature, selectionManager, true, true );
-  }
-
-  /**
-   * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
-   * created feature is provided from outside.
-   */
-  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents )
-  {
-    this( workspace, parentFeature, propertyName, pos, newFeature, selectionManager, doFireEvents, true );
-  }
-
-  /**
-   * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
-   * created feature is provided from outside.
-   * 
-   * @param doAddOnProcess
-   *          If false, the new feature will NOT be added/set to the given relation (propertyName). This is necessary if
-   *          the feature was already added before.
-   */
-  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents, final boolean doAddOnProcess )
-  {
-    m_workspace = workspace;
-    m_parentFeature = parentFeature;
-    m_propName = propertyName;
-    m_pos = pos;
-    m_doFireEvents = doFireEvents;
-    m_doAddOnProcess = doAddOnProcess;
-    m_props = null;
-    m_newFeature = newFeature;
-    m_type = null;
-    m_selectionManager = selectionManager;
-    m_depth = -1;
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    if( m_newFeature == null )
-    {
-      m_newFeature = m_workspace.createFeature( m_parentFeature, m_propName, m_type, m_depth );
-
-      if( m_props != null )
-      {
-        for( final Map.Entry<IPropertyType, Object> entry : m_props.entrySet() )
-          m_newFeature.setProperty( entry.getKey(), entry.getValue() );
-      }
-    }
-
-    /* Add the new feature */
-    if( m_doAddOnProcess )
-      m_workspace.addFeatureAsComposition( m_parentFeature, m_propName, m_pos, m_newFeature );
-
-    if( m_doFireEvents )
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
+    addFeature();
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
-    process();
+    m_workspace.addFeature( m_parentFeature, m_propName, m_pos, newFeature );
+    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    if( m_newFeature == null )
+    if( newFeature == null )
       return;
 
-    if( m_propName.isList() )
+    Object prop = m_parentFeature.getProperty( m_propName );
+    Object properties[] = m_parentFeature.getProperties();
+    int propIndex = 0;
+    for( ; propIndex < properties.length; propIndex++ )
+      if( properties[propIndex] == prop )
+        break;
+
+    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+    if( maxOccurs == 1 )
     {
-      final List<?> list = (List<?>) m_parentFeature.getProperty( m_propName );
-      list.remove( m_newFeature );
+      properties[propIndex] = null;
     }
-    else
-      m_parentFeature.setProperty( m_propName, null );
-
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    else if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
+      List list = (List)prop;
+      list.remove( newFeature );
+    }
+    if( m_eventprovider != null )
+      m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0"); //$NON-NLS-1$
+    return "Feature addieren";
   }
 
-  public Feature getNewFeature( )
+  private void addFeature() throws Exception
   {
-    return m_newFeature;
+    newFeature = m_workspace.createFeature( m_type );
+    m_workspace.addFeature( m_parentFeature, m_propName, m_pos, newFeature );
+    m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
   }
-
-  /**
-   * Sets, if a existing selection should be dropped after the creation of the feature.
-   */
-  public void dropSelection( boolean dropSelection )
-  {
-    m_dropSelection = dropSelection;
-  }
-  
 }

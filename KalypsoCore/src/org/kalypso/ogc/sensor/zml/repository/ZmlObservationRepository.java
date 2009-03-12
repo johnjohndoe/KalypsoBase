@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
 import java.io.FileFilter;
 
+import org.kalypso.repository.IRepositoryFactory;
 import org.kalypso.repository.file.FileItem;
 import org.kalypso.repository.file.FileRepository;
 
@@ -53,23 +54,19 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationRepository extends FileRepository
 {
-  public ZmlObservationRepository( final String factory, final String conf, final String root_location, final String identifier, final boolean readOnly, final FileFilter filter )
+  public ZmlObservationRepository( final IRepositoryFactory factory, final String root_location, final String identifier, final boolean readOnly, final FileFilter filter )
   {
-    super( factory, conf, root_location, identifier, readOnly, filter );
+    super( factory, root_location, identifier, readOnly, filter );
   }
 
   /**
    * @see org.kalypso.repository.file.FileRepository#createItem(java.io.File)
    */
-  @Override
-  public FileItem createItem( final File file )
+  public FileItem createItem( File file )
   {
-    if( file == null )
-      return null;
-
     if( !file.isDirectory() )
       return new ZmlObservationItem( this, file );
-
+    
     return super.createItem( file );
   }
 }

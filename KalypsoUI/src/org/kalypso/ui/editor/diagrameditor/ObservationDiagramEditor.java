@@ -36,130 +36,149 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor;
 
 import java.awt.Frame;
-import java.io.OutputStreamWriter;
-import java.util.logging.Logger;
+import java.io.Writer;
+import java.net.URL;
 
-import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.metadoc.ui.ImageExportPage;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.jfree.chart.ChartPanel;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewTemplate;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.template.obsdiagview.Obsdiagview;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
+import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
+import org.kalypso.ogc.sensor.template.ITemplateEventListener;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
+import org.kalypso.template.obsdiagview.ObsdiagviewType;
+import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
  * Observation Diagram Editor.
  * 
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory, IEditorPart
+public class ObservationDiagramEditor extends AbstractEditorPart implements
+    ITemplateEventListener
 {
+  protected final DiagViewTemplate m_template = new DiagViewTemplate();
+
   protected Frame m_diagFrame = null;
 
   protected ObservationChart m_obsChart = null;
 
-  private Composite m_swingContainer;
+  protected ObsDiagOutlinePage m_outline = null;
 
-  public ObservationDiagramEditor()
+  // TODO: maybe set a preference for this flag. It is currently always true.
+  private boolean m_useAutoProxy = true;
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
+  public void createPartControl( Composite parent )
   {
-    super( new DiagView( true ) );
+    super.createPartControl( parent );
+
+    // SWT-AWT Brücke für die Darstellung von JFreeChart
+    m_diagFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
+
+    // listener on template in order to set dirty flag when template changes
+    m_template.addTemplateEventListener( this );
+
+    try
+    {
+      m_obsChart = new ObservationChart( m_template );
+      
+      // chart panel without any popup menu
+      final ChartPanel chartPanel = new ChartPanel( m_obsChart, false, false,
+          false, false, false );
+      chartPanel.setMouseZoomable( true, false );
+      m_diagFrame.add( chartPanel );
+
+      m_diagFrame.setVisible( true );
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    if( adapter == IContentOutlinePage.class )
+    {
+      // lazy loading
+      if( m_outline == null || m_outline.getControl() != null
+          && m_outline.getControl().isDisposed() )
+      {
+        // dispose when not null (not sure if this is ok)
+        if( m_outline != null )
+          m_outline.dispose();
+
+        m_outline = new ObsDiagOutlinePage();
+        m_outline.setTemplate( m_template );
+      }
+
+      return m_outline;
+    }
+
+    return super.getAdapter( adapter );
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose()
+  public void dispose( )
   {
     if( m_obsChart != null )
       m_obsChart.dispose();
 
+    if( m_template != null )
+    {
+      m_template.removeTemplateEventListener( this );
+      m_template.dispose();
+    }
+
+    if( m_outline != null )
+      m_outline.dispose();
+
     super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    super.createPartControl( parent );
-
-    m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    m_diagFrame = SWT_AWT.new_Frame( m_swingContainer );
-
-    try
-    {
-      m_obsChart = new ObservationChart( (DiagView)getView() );
-      m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
-      m_diagFrame.setVisible( true );
-    }
-    catch( final SensorException e )
-    {
-      Logger.getLogger( getClass().getName() ).warning( e.getLocalizedMessage() );
-    }
-
-    // print action
-    final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-    helpSystem.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter == IExportableObjectFactory.class )
-      return this;
-
-    return super.getAdapter( adapter );
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( IProgressMonitor monitor,
+      IFileEditorInput input ) throws CoreException
   {
-    final DiagView template = (DiagView)getView();
-    if( template == null )
+    if( m_template == null )
       return;
 
     final SetContentHelper helper = new SetContentHelper()
     {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
+      protected void write( Writer writer ) throws Throwable
       {
-        final Obsdiagview type = DiagViewUtils.buildDiagramTemplateXML( template );
+        final ObsdiagviewType type = DiagViewUtils
+            .buildDiagramTemplateXML( m_template );
 
         DiagViewUtils.saveDiagramTemplateXML( type, writer );
       }
@@ -169,45 +188,80 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
+   */
+  protected void loadInternal( final IProgressMonitor monitor,
+      final IStorageEditorInput input )
+  {
+    monitor.beginTask( "Diagramm-Vorlage laden", IProgressMonitor.UNKNOWN );
+
+    try
+    {
+      final IStorage storage = input.getStorage();
+
+      if( storage instanceof TemplateStorage )
+      {
+        final TemplateStorage ts = (TemplateStorage) storage;
+        m_template.setTitle( ts.getName() );
+
+        if( m_useAutoProxy )
+          m_template.setProxyFactory( AutoProxyFactory.getInstance() );
+
+        m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+            "zml", false, null );
+      }
+      else
+      {
+        final ObsdiagviewType baseTemplate = DiagViewUtils
+            .loadDiagramTemplateXML( storage.getContents() );
+
+        final String strUrl = ResourceUtilities.createURLSpec( input
+            .getStorage().getFullPath() );
+        m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
+   */
+  public void onTemplateChanged( TemplateEvent evt )
+  {
+    if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
+        | TemplateEvent.TYPE_REMOVE_ALL ) )
+    {
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          fireDirty();
+        }
+      } );
+    }
+  }
+
+  /**
    * @return chart
    */
-  public ObservationChart getChart()
+  public ObservationChart getChart( )
   {
     return m_obsChart;
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   * @return template
    */
-  @Override
-  public void setFocus( )
+  public DiagViewTemplate getTemplate( )
   {
-    if( m_swingContainer != null )
-      m_swingContainer.setFocus();
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
-  public IExportableObject[] createExportableObjects( final Configuration conf )
-  {
-    return new IExportableObject[]
-    { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
-        ExportableChart.DEFAULT_FORMAT ),
-        conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
-            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1") ) }; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(IPublishingConfiguration, ImageDescriptor)
-   */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
-  {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
-        "icons/util/img_props.gif" ); //$NON-NLS-1$
-    final IWizardPage page = new ImageExportPage( configuration, "diagprops", Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.4"), imgDesc, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return new IWizardPage[]
-    { page };
+    return m_template;
   }
 }

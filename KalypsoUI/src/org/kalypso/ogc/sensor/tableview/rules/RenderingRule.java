@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
 import java.awt.Color;
@@ -46,7 +46,8 @@ import java.awt.Font;
 import javax.swing.Icon;
 
 /**
- * Stores information on how to render something. Its primary purpose is to be used within the context of table views.
+ * Stores information on how to render something. Its primary purpose is to be
+ * used within the context of table views.
  * <p>
  * Wrapper-class over the jaxb-generated class <code>TypeRenderingRule</code>
  * 
@@ -63,10 +64,11 @@ public class RenderingRule
   private final int m_mask;
 
   private final Font m_ft;
-
+  
   private final Icon m_icon;
 
-  public RenderingRule( final int mask, final Color fg, final Color bg, final Font font, final String tt, final Icon icon )
+  public RenderingRule( final int mask, final Color fg, final Color bg, final Font font,
+      final String tt, final Icon icon )
   {
     m_mask = mask;
     m_fg = fg;
@@ -76,31 +78,31 @@ public class RenderingRule
     m_icon = icon;
   }
 
-  public Color getForegroundColor( )
+  public Color getForegroundColor()
   {
     return m_fg;
   }
 
-  public Color getBackgroundColor( )
+  public Color getBackgroundColor()
   {
     return m_bg;
   }
 
-  public String getTooltipText( )
+  public String getTooltipText()
   {
     return m_tt;
   }
 
-  public Font getFont( )
+  public Font getFont()
   {
     return m_ft;
   }
 
-  public int getMask( )
+  public int getMask()
   {
     return m_mask;
   }
-
+  
   public Icon getIcon( )
   {
     return m_icon;
@@ -115,26 +117,6 @@ public class RenderingRule
    */
   public boolean contains( final int mask )
   {
-    if( m_mask == 0 || mask == 0 )
-      return mask == m_mask;
-
-    return (m_mask & mask) == mask;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return m_mask + " - " + m_tt == null ? "" : m_tt; //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  /**
-   * Create a deep copy of this rule.
-   */
-  public RenderingRule cloneRule()
-  {
-    return new RenderingRule( m_mask, m_fg, m_bg, m_ft, m_tt, m_icon );
+    return ( m_mask & mask ) == mask;
   }
 }

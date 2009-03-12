@@ -1,141 +1,171 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
+/*--------------- Kalypso-Deegree-Header ------------------------------------------------------------
 
-package org.kalypsodeegree_impl.io.shpapi;
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
 
-import java.util.LinkedList;
-import java.util.List;
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
 
-import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_CurveSegment;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
-import org.kalypsodeegree_impl.tools.Debug;
+ and
+ 
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+ 
+ 
+ history:
+  
+ Files in this package are originally taken from deegree and modified here
+ to fit in kalypso. As goals of kalypso differ from that one in deegree
+ interface-compatibility to deegree is wanted but not retained always. 
+     
+ If you intend to use this software in other ways than in kalypso 
+ (e.g. OGC-web services), you should consider the latest version of deegree,
+ see http://www.deegree.org .
+
+ all modifications are licensed as deegree, 
+ original copyright:
+ 
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon GmbH
+ http://www.lat-lon.de
+ 
+---------------------------------------------------------------------------------------------------*/
+
+package org.deegree_impl.io.shpapi;
+
+import org.deegree.model.geometry.ByteUtils;
+import org.deegree.model.geometry.GM_Curve;
+import org.deegree.model.geometry.GM_CurveSegment;
+import org.deegree.model.geometry.GM_Ring;
+import org.deegree.model.geometry.GM_Surface;
+import org.deegree_impl.model.geometry.GeometryFactory;
+import org.deegree_impl.tools.Debug;
 
 /**
  * Class representig a two dimensional ESRI Polygon <BR>
+ * 
  * <B>Last changes <B>: <BR>
  * 12.01.2000 ap: constructor re-declared <BR>
- * 25.01.2000 ap: constructor modified; 25.01.2000 ap: public variables numRings and numPoints declared <BR>
+ * 25.01.2000 ap: constructor modified; 25.01.2000 ap: public variables numRings
+ * and numPoints declared <BR>
  * 21.03.2000 ap: parameter list of the second constructor modified <BR>
  * 14.08.2000 ap: constructor SHPPolygon (GM_Point[][] gm_points) added <BR>
  * 14.08.2000 ap: method writeSHPPolygon(..) added <BR>
  * 14.08.2000 ap: import clauses added <BR>
  * 14.08.2000 ap: method size() added <BR>
  * 16.08.2000 ap: constructor SHPPolygon (byte[] recBuf) modified <BR>
+ * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
+ *  
  */
 
-public class SHPPolygon implements ISHPGeometry
+public class SHPPolygon extends SHPGeometry
 {
 
   public int numRings = 0;
 
   public int numPoints = 0;
 
-  public SHPPolyLine m_rings = null;
-
-  private SHPEnvelope m_envelope;
+  public SHPPolyLine rings = null;
 
   /**
    * constructor: recieves a stream <BR>
    */
   public SHPPolygon( byte[] recBuf )
   {
-    m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
-    m_rings = new SHPPolyLine( recBuf );
+    super( recBuf );
 
-    numPoints = m_rings.numPoints;
-    numRings = m_rings.numParts;
+    envelope = ShapeUtils.readBox( recBuf, 4 );
+
+    rings = new SHPPolyLine( recBuf );
+
+    numPoints = rings.numPoints;
+    numRings = rings.numParts;
+
   }
 
   /**
    * constructor: recieves an array of arrays of GM_Points <BR>
    */
-  @SuppressWarnings("unchecked")
-  public SHPPolygon( GM_SurfacePatch[] surfacePatch )
+  public SHPPolygon( GM_Surface[] surface )
   {
 
     Debug.debugMethodBegin( this, "SHPPolygon" );
 
     try
     {
-      final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
-      String crs = surfacePatch[0].getCoordinateSystem();
+      int count = 0;
 
-      for( int i = 0; i < surfacePatch.length; i++ )
+      for( int i = 0; i < surface.length; i++ )
       {
-        final GM_Position[] exteriorRing = surfacePatch[i].getExteriorRing();
-
-        GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( exteriorRing, crs );
-
-        final GM_Position[] positions = GM_PositionOrientation.orient( cs.getPositions(), TYPE.NEGATIV );
-        cs = GeometryFactory.createGM_CurveSegment( positions, crs );
-        if( cs != null )
-          curveList.add( GeometryFactory.createGM_Curve( cs ) );
-
-        final GM_Position[][] interiorRings = surfacePatch[i].getInteriorRings();
-
-        if( interiorRings != null )
+        // increment for exterior ring
+        count++;
+        // increment for inner rings
+        GM_Ring[] rings = surface[i].getSurfaceBoundary().getInteriorRings();
+        if( rings != null )
         {
-          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, crs );
-          if( rings != null )
+          count += rings.length;
+        }
+      }
+
+      GM_Curve[] curves = new GM_Curve[count];
+
+      count = 0;
+      for( int i = 0; i < surface.length; i++ )
+      {
+
+        GM_CurveSegment cs = surface[i].getSurfaceBoundary().getExteriorRing().getAsCurveSegment();
+        curves[count++] = GeometryFactory.createGM_Curve( cs );
+
+        GM_Ring[] rings = surface[i].getSurfaceBoundary().getInteriorRings();
+        if( rings != null )
+        {
+          for( int j = 0; j < rings.length; j++ )
           {
-            for( int j = 0; j < rings.length; j++ )
-            {
-              curveList.add( rings[j] );
-            }
+            cs = rings[j].getAsCurveSegment();
+            curves[count++] = GeometryFactory.createGM_Curve( cs );
           }
         }
       }
 
-      m_rings = new SHPPolyLine( curveList.toArray( new GM_Curve[curveList.size()] ) );
+      rings = new SHPPolyLine( curves );
 
-      m_envelope = m_rings.getEnvelope();
+      envelope = rings.envelope;
 
-      numPoints = m_rings.numPoints;
-      numRings = m_rings.numParts;
+      numPoints = rings.numPoints;
+      numRings = rings.numParts;
 
     }
     catch( Exception e )
@@ -143,122 +173,118 @@ public class SHPPolygon implements ISHPGeometry
       System.out.println( "SHPPolygon::" + e );
     }
 
-    Debug.debugMethodEnd(); 
+    Debug.debugMethodEnd();
   }
 
   /**
    * method: writeSHPPolygon(byte[] bytearray, int start) <BR>
    */
-  public byte[] writeShape( )
+  public byte[] writeSHPPolygon( byte[] bytearray, int start )
   {
-    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
-    final byte[] byteArray = new byte[offset + size()];
 
-    double xmin = m_rings.points[0][0].getX();
-    double xmax = m_rings.points[0][0].getX();
-    double ymin = m_rings.points[0][0].getY();
-    double ymax = m_rings.points[0][0].getY();
+    int offset = start;
+
+    double xmin = rings.points[0][0].x;
+    double xmax = rings.points[0][0].x;
+    double ymin = rings.points[0][0].y;
+    double ymax = rings.points[0][0].y;
 
     // write shape type identifier
-    ByteUtils.writeLEInt( byteArray, offset, ShapeConst.SHAPE_TYPE_POLYGON );
+    ByteUtils.writeLEInt( bytearray, offset, ShapeConst.SHAPE_TYPE_POLYGON );
 
     offset += 4;
     // save offset of the bounding box
     int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += ( 4 * 8 );
 
     // write numRings
-    ByteUtils.writeLEInt( byteArray, offset, numRings );
+    ByteUtils.writeLEInt( bytearray, offset, numRings );
     offset += 4;
     // write numpoints
-    ByteUtils.writeLEInt( byteArray, offset, numPoints );
+    ByteUtils.writeLEInt( bytearray, offset, numPoints );
     offset += 4;
 
     // save offset of the list of offsets for each polyline
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += (4 * numRings);
+    offset += ( 4 * numRings );
 
     int count = 0;
-    for( int i = 0; i < m_rings.points.length; i++ )
+    for( int i = 0; i < rings.points.length; i++ )
     {
 
       // stores the index of the i'th part
-      ByteUtils.writeLEInt( byteArray, tmp2, count );
+      ByteUtils.writeLEInt( bytearray, tmp2, count );
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
-      for( int j = 0; j < m_rings.points[i].length; j++ )
+      for( int j = 0; j < rings.points[i].length; j++ )
       {
         // number of the current point
         count++;
 
         // calculate bounding box
-        if( m_rings.points[i][j].getX() > xmax )
+        if( rings.points[i][j].x > xmax )
         {
-          xmax = m_rings.points[i][j].getX();
+          xmax = rings.points[i][j].x;
         }
-        else if( m_rings.points[i][j].getX() < xmin )
+        else if( rings.points[i][j].x < xmin )
         {
-          xmin = m_rings.points[i][j].getX();
+          xmin = rings.points[i][j].x;
         }
 
-        if( m_rings.points[i][j].getY() > ymax )
+        if( rings.points[i][j].y > ymax )
         {
-          ymax = m_rings.points[i][j].getY();
+          ymax = rings.points[i][j].y;
         }
-        else if( m_rings.points[i][j].getY() < ymin )
+        else if( rings.points[i][j].y < ymin )
         {
-          ymin = m_rings.points[i][j].getY();
+          ymin = rings.points[i][j].y;
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( byteArray, offset, m_rings.points[i][j].getX() );
+        ByteUtils.writeLEDouble( bytearray, offset, rings.points[i][j].x );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( byteArray, offset, m_rings.points[i][j].getY() );
+        ByteUtils.writeLEDouble( bytearray, offset, rings.points[i][j].y );
         offset += 8;
+
       }
+
     }
 
     // jump back to the offset of the bounding box
     offset = tmp1;
 
     // write bounding box to the byte array
-    ByteUtils.writeLEDouble( byteArray, offset, xmin );
+    ByteUtils.writeLEDouble( bytearray, offset, xmin );
     offset += 8;
-    ByteUtils.writeLEDouble( byteArray, offset, ymin );
+    ByteUtils.writeLEDouble( bytearray, offset, ymin );
     offset += 8;
-    ByteUtils.writeLEDouble( byteArray, offset, xmax );
+    ByteUtils.writeLEDouble( bytearray, offset, xmax );
     offset += 8;
-    ByteUtils.writeLEDouble( byteArray, offset, ymax );
+    ByteUtils.writeLEDouble( bytearray, offset, ymax );
 
-    return byteArray;
+    return bytearray;
   }
 
   /**
    * returns the polygon shape size in bytes <BR>
    */
-  public int size( )
+  public int size()
   {
     return 44 + numRings * 4 + numPoints * 16;
   }
 
-  @Override
-  public String toString( )
+  public String toString()
   {
 
     return "WKBPOLYGON" + " numRings: " + numRings;
 
-  }
-
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
   }
 
 }

@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -125,7 +125,7 @@ public class ColorChooserPanel
     colorChooserButtonData.left = new FormAttachment( 540, 1000, 0 );
     colorChooserButtonData.top = new FormAttachment( 100, 1000, 0 );
     colorChooserButton.setLayoutData( colorChooserButtonData );
-    colorChooserButton.setText( "..." ); //$NON-NLS-1$
+    colorChooserButton.setText( "..." );
 
     final ColorDialog dialog = new ColorDialog( composite.getShell() );
     dialog.setRGB( color.getRGB() );

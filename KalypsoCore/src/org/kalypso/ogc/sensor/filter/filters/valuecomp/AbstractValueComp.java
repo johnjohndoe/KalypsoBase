@@ -36,17 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.valuecomp;
 
 import java.lang.reflect.UndeclaredThrowableException;
 
-import org.kalypso.commons.parser.IParser;
-import org.kalypso.commons.parser.ParserException;
-import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.util.parser.IParser;
+import org.kalypso.util.parser.ParserException;
+import org.kalypso.util.parser.ParserFactory;
+
 
 /**
  * AbstractValueComp
@@ -56,9 +57,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 public abstract class AbstractValueComp implements IValueComp
 {
   protected final String m_axisType;
-
   protected final IAxis m_axis;
-
   protected final IParser m_parser;
 
   /**
@@ -70,7 +69,7 @@ public abstract class AbstractValueComp implements IValueComp
   public AbstractValueComp( final IAxis[] axes, final String axisType )
   {
     m_axisType = axisType;
-
+    
     m_axis = ObservationUtilities.findAxisByType( axes, axisType );
 
     m_parser = ParserFactory.createParser( m_axis.getDataClass() );
@@ -79,11 +78,11 @@ public abstract class AbstractValueComp implements IValueComp
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#getAxis()
    */
-  public IAxis getAxis()
+  public IAxis getAxis( )
   {
     return m_axis;
   }
-
+  
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp#validates(java.lang.Object)
    */
@@ -96,7 +95,7 @@ public abstract class AbstractValueComp implements IValueComp
     catch( ParserException e )
     {
       e.printStackTrace();
-
+      
       throw new UndeclaredThrowableException( e );
     }
   }

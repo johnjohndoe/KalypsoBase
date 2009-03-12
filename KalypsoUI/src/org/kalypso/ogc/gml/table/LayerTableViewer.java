@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,134 +36,111 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBException;
+
+import org.deegree.model.feature.Annotation;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureList;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
+import org.deegree_impl.model.feature.visitors.UnselectFeatureVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.command.InvisibleCommand;
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.eclipse.swt.custom.ExcelLikeTableCursor;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
-import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
-import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.ObjectFactory;
-import org.kalypso.template.gistableview.Gistableview.Layer;
-import org.kalypso.template.gistableview.Gistableview.Layer.Column;
-import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
+import org.kalypso.template.gistableview.GistableviewType.LayerType;
+import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
+import org.kalypso.template.gistableview.GistableviewType.LayerType.SortType;
+import org.kalypso.util.command.DefaultCommandManager;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
+import org.kalypso.util.command.InvisibleCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.swt.SWTUtilities;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
-import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
+ * 
  * @author Belger
  */
-public class LayerTableViewer extends TableViewer implements ModellEventListener, ModellEventProvider, ICommandTarget, ICellModifier
+public class LayerTableViewer extends TableViewer implements ISelectionProvider,
+    ModellEventListener, ICommandTarget, ModellEventProvider, SelectionListener, ICellModifier
 {
   protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
-  public static final String COLUMN_PROP_NAME = "columnName"; //$NON-NLS-1$
+  public static final String COLUMN_PROP_NAME = "columnName";
 
-  /**
-   * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
-   * the shown list.
-   */
-  public static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
+  public static final String COLUMN_PROP_EDITABLE = "columnEditable";
 
-  /**
-   * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
-   * the shown list.
-   */
-  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
+  public static final String COLUMN_PROP_WIDTH = "columnWidth";
 
-  public static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
-
-  public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
-
-  public static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
+  private final ObjectFactory m_gistableviewFactory = new ObjectFactory();
 
   private final IFeatureModifierFactory m_featureControlFactory;
 
-  private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+  private ICommandTarget m_commandTarget = new JobExclusiveCommandTarget(
+      new DefaultCommandManager(), null );
 
-  private final ModellEventProviderAdapter m_modellEventProvider = new ModellEventProviderAdapter();
+  private ModellEventProvider m_modellEventProvider = new ModellEventProviderAdapter();
+
+  private final int m_selectionID;
+
+  private final Color m_selectColor;
+
+  private final Color m_unselectColor;
+
+  private final TableCursor m_tableCursor;
 
   private IFeatureModifier[] m_modifier;
+
+  private final boolean m_bCursorSelects;
 
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
@@ -171,135 +148,76 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   protected boolean m_isApplyTemplate = false;
 
-  private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
-  {
-    public void selectionChanged( final IFeatureSelection selection )
-    {
-      final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
-      final List<Feature> globalFeatureList = new ArrayList<Feature>( Arrays.asList( features ) );
-
-      // filter ths which are in my list
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
-      if( theme == null )
-        return;
-      final FeatureList featureList = theme.getFeatureList();
-      final List themeFeatures = featureList == null ? new ArrayList() : (List) featureList;
-      globalFeatureList.retainAll( themeFeatures );
-      final Feature[] globalFeatures = globalFeatureList.toArray( new Feature[globalFeatureList.size()] );
-
-      final Control control = getControl();
-      if( control.isDisposed() )
-        return;
-
-      control.getDisplay().syncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !getTable().isDisposed() )
-          {
-            final ISelection tableSelection = getSelection();
-            if( tableSelection instanceof IFeatureSelection )
-            {
-              final IFeatureSelection currentSelection = (IFeatureSelection) tableSelection;
-              final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
-              if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
-              {
-                // setting table selection to:
-                setSelection( selection );
-              }
-            }
-          }
-        }
-      } );
-    }
-  };
-
   /**
-   * This class handles selections of the column headers. Selection of the column header will cause resorting of the
-   * shown tasks using that column's sorter. Repeated selection of the header will toggle sorting order (ascending
-   * versus descending).
+   * This class handles selections of the column headers. Selection of the
+   * column header will cause resorting of the shown tasks using that column's
+   * sorter. Repeated selection of the header will toggle sorting order
+   * (ascending versus descending).
    */
   private final SelectionListener m_headerListener = new SelectionAdapter()
   {
     /**
      * Handles the case of user selecting the header area.
      * <p>
-     * If the column has not been selected previously, it will set the sorter of that column to be the current tasklist
-     * sorter. Repeated presses on the same column header will toggle sorting order (ascending/descending/original).
+     * If the column has not been selected previously, it will set the sorter of
+     * that column to be the current tasklist sorter. Repeated presses on the
+     * same column header will toggle sorting order (ascending/descending).
      */
-    @Override
     public void widgetSelected( final SelectionEvent e )
     {
       // column selected - need to sort
-      final TableColumn tableColumn = (TableColumn) e.widget;
+      final TableColumn tableColumn = (TableColumn)e.widget;
 
-      m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ), null );
+      m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ),
+          null );
     }
   };
 
-  private final ControlListener m_headerControlListener = new ControlAdapter()
+  private ControlListener m_headerControlListener = new ControlAdapter()
   {
+
     /**
      * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
      */
-    @Override
     public void controlResized( final ControlEvent e )
     {
       if( m_isApplyTemplate == true )
         return;
 
-      final TableColumn tc = (TableColumn) e.widget;
+      final TableColumn tc = (TableColumn)e.widget;
 
       // kann nicht rückgüngig gemacht werden, sorgt aber dafür, dass der Editor
       // dirty ist
       final int width = tc.getWidth();
-      if( width != ((Integer) tc.getData( COLUMN_PROP_WIDTH )).intValue() )
+      if( width != ( (Integer)tc.getData( COLUMN_PROP_WIDTH ) ).intValue() )
       {
         m_templateTarget.postCommand( new InvisibleCommand(), null );
-        // removeListener and again add listener may reduce some flickering
-        // effects ?? (doemming)
-        tc.removeControlListener( this );
         tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
-        tc.addControlListener( this );
       }
     }
   };
-
-  private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
-  {
-    /**
-     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
-     */
-    @Override
-    public void statusChanged( final IKalypsoTheme source )
-    {
-      handleStatusChanged( source );
-    }
-  };
-
-  private final IFeatureSelectionManager m_selectionManager;
-
-  private final IFeatureChangeListener m_fcl;
-
-  private final TableViewerFocusCellManager m_focusCellManager;
 
   /**
    * @param parent
    * @param templateTarget
    * @param featureControlFactory
+   * @param selectionID
+   * @param bCursorSelects
+   *          falls true, wird immer die unter dem Cursor liegende Zeile
+   *          selektiert
    */
-  public LayerTableViewer( final Composite parent, final int style, final ICommandTarget templateTarget, final IFeatureModifierFactory featureControlFactory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public LayerTableViewer( final Composite parent, final ICommandTarget templateTarget,
+      final IFeatureModifierFactory featureControlFactory, final int selectionID,
+      final boolean bCursorSelects )
   {
-    super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
+    super( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
     m_featureControlFactory = featureControlFactory;
+    m_selectionID = selectionID;
+    m_bCursorSelects = bCursorSelects;
     m_templateTarget = templateTarget;
-    m_selectionManager = selectionManager;
-    m_fcl = fcl;
-    if( m_selectionManager != null )
-      m_selectionManager.addSelectionListener( m_globalSelectionListener );
 
-    setContentProvider( new LayerTableContentProvider( selectionManager ) );
+    setContentProvider( new LayerTableContentProvider() );
     setLabelProvider( new LayerTableLabelProvider( this ) );
     setCellModifier( this );
     setSorter( m_sorter );
@@ -308,175 +226,144 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    // disable capture to let selection of table and tableviewer in sync
-    table.setCapture( false );
 
-    // Override the default TableViewerEditor:
-    // - multi-selection is enabled
-    // - there is a focused cell
-    // - right-click opens context-menu everywhere
-    // - single-click starts editing
-    final FocusCellHighlighter focusHighlighter = new FocusCellOwnerDrawHighlighter( this );
-    m_focusCellManager = new TableViewerFocusCellManager( this, focusHighlighter );
-    final ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy( this );
-    TableViewerEditor.create( this, m_focusCellManager, editorActivationStrategy, ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditor.TABBING_HORIZONTAL
-        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+    final TableCursor tc = new ExcelLikeTableCursor( this, SWT.NONE );
+    m_tableCursor = tc;
+
+    m_unselectColor = table.getBackground();
+    m_selectColor = table.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
+
+    table.addSelectionListener( this );
   }
 
-  public void dispose( )
+  public void assignSelectionToFeatures()
+  {
+    final IKalypsoFeatureTheme theme = getTheme();
+
+    // clear selection
+    final UnselectFeatureVisitor unselectvisitor = new UnselectFeatureVisitor( m_selectionID );
+    theme.getFeatureList().accept( unselectvisitor );
+
+    final TableItem[] selection = getTable().getSelection();
+    for( int i = 0; i < selection.length; i++ )
+      ( (Feature)selection[i].getData() ).select( m_selectionID );
+
+    getTheme().getWorkspace().fireModellEvent(
+        new ModellEvent( getTheme().getWorkspace(), ModellEvent.SELECTION_CHANGED ) );
+  }
+
+  public boolean isCursorSelects()
+  {
+    return m_bCursorSelects;
+  }
+
+  public void dispose()
   {
     applyTableTemplate( null, null );
 
-    if( m_selectionManager != null )
-      m_selectionManager.removeSelectionListener( m_globalSelectionListener );
+    m_tableCursor.dispose();
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
-      final boolean dummy )
+  /**
+   * @see org.eclipse.jface.viewers.TableViewer#hookControl(org.eclipse.swt.widgets.Control)
+   */
+  protected void hookControl( final Control control )
   {
-    m_isApplyTemplate = true;
-
-    setFilters( new ViewerFilter[0] );
-
-    if( tableView != null )
+    // wir wollen nicht die Hooks von TableViewer und StrukturedViewer
+    // geht das auch anders?
+    control.addDisposeListener( new DisposeListener()
     {
-      final Layer layer = tableView.getLayer();
-      if( layer.getHref() != null )
+      public void widgetDisposed( DisposeEvent event )
       {
-        // Only dispose theme if we really replace it
-        // TODO: check this: sometimes we get a theme from outside... what to do in that case?
-        disposeTheme( getInput() );
-
-        final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
-
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
-        setInput( theme );
+        handleDispose( event );
       }
-      final Sort sort = layer.getSort();
-      final List<Column> columnList = layer.getColumn();
-      setSortAndColumns( sort, columnList );
+    } );
+  }
 
-      applyFilter( layer );
-    }
-
-    refreshAll();
-    m_isApplyTemplate = false;
+  protected void handleDispose( final DisposeEvent event )
+  {
+    super.handleDispose( event );
   }
 
   public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
+
     clearColumns();
-
-    setFilters( new ViewerFilter[0] );
-
-    if( getContentProvider() != null )
-      setInput( null );
+    setTheme( null );
 
     if( tableView != null )
     {
-      // Only dispose theme if we really replace it
-      disposeTheme( getInput() );
+      final LayerType layer = tableView.getLayer();
+      setTheme( new GisTemplateFeatureTheme( layer, context ) );
 
-      final Layer layer = tableView.getLayer();
+      final SortType sort = layer.getSort();
+      if( sort != null )
+      {
+        m_sorter.setPropertyName( sort.getPropertyName() );
+        m_sorter.setInverse( sort.isInverse() );
+      }
 
-      final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
-
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
-      setInput( theme );
-
-      final Sort sort = layer.getSort();
-      final List<Column> columnList = layer.getColumn();
-      setSortAndColumns( sort, columnList );
-
-      applyFilter( layer );
+      final List columnList = layer.getColumn();
+      for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
+      {
+        final ColumnType ct = (ColumnType)iter.next();
+        addColumn( ct.getName(), ct.getWidth(), ct.isEditable(), false );
+      }
     }
 
-    refreshAll();
-    checkColumns();
+    refreshCellEditors();
+    refreshColumnProperties();
+    refresh();
+
     m_isApplyTemplate = false;
   }
 
-  private void applyFilter( final Layer layer )
+  public IKalypsoFeatureTheme getTheme()
   {
-    try
-    {
-      final Filter filter = GisTemplateHelper.getFilter( layer );
-      if( filter == null )
-        return;
-
-      final ViewerFilter viewerFilter = new ViewerFilter()
-      {
-        @Override
-        public boolean select( final Viewer viewer, final Object parentElement, final Object element )
-        {
-          try
-          {
-            final Feature feature = (Feature) element;
-            return filter.evaluate( feature );
-          }
-          catch( final FilterEvaluationException e )
-          {
-            e.printStackTrace();
-
-            return false;
-          }
-        }
-      };
-
-      addFilter( viewerFilter );
-    }
-    catch( final FilterConstructionException e )
-    {
-      e.printStackTrace();
-    }
+    return (IKalypsoFeatureTheme)getInput();
   }
 
-  private void setSortAndColumns( final Sort sort, final List<Column> columnList )
+  private void setTheme( final IKalypsoFeatureTheme theme )
   {
-    if( sort != null )
+    final IKalypsoTheme oldTheme = (IKalypsoTheme)getInput();
+
+    if( oldTheme != null )
     {
-      m_sorter.setPropertyName( sort.getPropertyName() );
-      m_sorter.setInverse( sort.isInverse() );
+      oldTheme.removeModellListener( this );
+      oldTheme.dispose();
     }
 
-    for( final Column ct : columnList )
-      addColumn( ct.getName(), ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
+    if( theme != null )
+      theme.addModellListener( this );
+
+    if( !isDisposed() )
+      setInput( theme );
   }
 
-  public IKalypsoFeatureTheme getTheme( )
-  {
-    return (IKalypsoFeatureTheme) getInput();
-  }
-
-  public void clearColumns( )
+  public void clearColumns()
   {
     final Table table = getTable();
     if( table.isDisposed() )
       return;
 
     final TableColumn[] columns = table.getColumns();
-    for( final TableColumn element : columns )
-      element.dispose();
+    for( int i = 0; i < columns.length; i++ )
+      columns[i].dispose();
   }
 
-  public void addColumn( final String propertyName, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final int width, final boolean isEditable,
+      final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
-    final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
-    final TableColumn tc = new TableColumn( table, alignmentInt );
-    tc.setAlignment( alignmentInt );
-
+    final TableColumn tc = new TableColumn( table, SWT.CENTER );
     tc.setData( COLUMN_PROP_NAME, propertyName );
-    tc.setData( COLUMN_PROP_LABEL, label );
-    tc.setData( COLUMN_PROP_TOOLTIP, tooltip );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
-    tc.setData( COLUMN_PROP_FORMAT, format );
-    tc.setToolTipText( tooltip );
     tc.setWidth( width );
+
     setColumnText( tc );
 
     tc.addSelectionListener( m_headerListener );
@@ -484,107 +371,38 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( bRefreshColumns )
     {
-      refreshAll();
+      refreshCellEditors();
+      refreshColumnProperties();
+
+      refresh();
     }
   }
 
   protected void setColumnText( final TableColumn tc )
   {
-    final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
-
-    final String label = (String) tc.getData( COLUMN_PROP_LABEL );
-    final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
-
+    final String propertyName = (String)tc.getData( COLUMN_PROP_NAME );
     final String sortPropertyName = m_sorter.getPropertyName();
-
-    final String[] textAndTooltip = getLabelAndTooltip( label, tooltip, propertyName );
-
-    final String text;
-    if( propertyName.equals( sortPropertyName ) )
-      text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else
-      text = textAndTooltip[0];
-
-    final String tooltipText = textAndTooltip[1];
-
-    tc.setText( text );
-    tc.setToolTipText( tooltipText );
-  }
-
-  private String[] getLabelAndTooltip( final String label, final String tooltip, final String propertyName )
-  {
-    final String[] result = new String[2];
-
-    result[0] = propertyName; // prepare for exception
-
+    String text;
     try
     {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
-
-      final IFeatureType featureType = theme.getFeatureType();
-
-      if( featureType != null )
-      {
-        final IPropertyType property = featureType.getProperty( propertyName );
-
-        final IAnnotation annotation = property.getAnnotation();
-        result[0] = annotation.getLabel();
-        result[1] = annotation.getTooltip();
-      }
-
-      if( label != null )
-        result[0] = label;
-
-      if( tooltip != null )
-        result[1] = tooltip;
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)getInput();
+      FeatureType featureType = theme.getFeatureType();
+      FeatureTypeProperty property = featureType.getProperty( propertyName );
+  
+      final String lang = Locale.getDefault().getLanguage();
+      final Annotation annotation = property.getAnnotation( lang);
+      
+      text = annotation.getLabel() + " (" + propertyName + ")";
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       // if data is not loaded yet, we provide the propertyname
-      e.printStackTrace();
-
-      result[1] = e.toString();
+      text = propertyName;
     }
+    if( propertyName.equals( sortPropertyName ) )
+      text += " " + ( m_sorter.isInverse() ? "\u00ab" : "\u00bb" );
 
-    return result;
-  }
-
-  private void checkColumns( )
-  {
-    final Object input = getInput();
-    if( input == null || !(input instanceof GisTemplateFeatureTheme) )
-      return;
-    final IFeatureType featureType = ((GisTemplateFeatureTheme) input).getFeatureType();
-    final Table table = getTable();
-
-    if( featureType == null || table == null || table.isDisposed() )
-      return;
-
-    final TableColumn[] columns = table.getColumns();
-    boolean changed = false;
-
-    for( final TableColumn column : columns )
-    {
-      if( column != null )
-      {
-        final String propName = column.getData( COLUMN_PROP_NAME ).toString();
-        if( featureType.getProperty( propName ) == null )
-        {
-          column.dispose();
-          changed = true;
-        }
-      }
-    }
-
-    if( changed )
-      refreshAll();
-  }
-
-  public void refreshAll( )
-  {
-    refreshCellEditors();
-    refreshColumnProperties();
-    refresh();
+    tc.setText( text );
   }
 
   public void removeColumn( final String name )
@@ -593,39 +411,55 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( column != null )
       column.dispose();
 
-    refreshAll();
+    refreshCellEditors();
+    refreshColumnProperties();
+    refresh();
   }
 
   /**
    * @see org.eclipse.jface.viewers.StructuredViewer#refresh()
    */
-  @Override
-  public void refresh( )
+  public void refresh()
   {
     if( isDisposed() )
       return;
-    checkColumns();
-    // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
+
+    // die Namen der Spalten auffrisch, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
-    for( final TableColumn element : columns )
-      setColumnText( element );
+    for( int i = 0; i < columns.length; i++ )
+      setColumnText( columns[i] );
+
     super.refresh();
+
+    // und die tableitems einfärben
+    final TableItem[] items = getTable().getItems();
+    for( int i = 0; i < items.length; i++ )
+    {
+      final TableItem item = items[i];
+      final Feature kf = (Feature)item.getData();
+      if( kf.isSelected( m_selectionID ) )
+        item.setBackground( m_selectColor );
+      else
+        item.setBackground( m_unselectColor );
+    }
+
+    if( m_tableCursor != null )
+      m_tableCursor.redraw();
   }
 
   /**
    * @see org.eclipse.jface.viewers.TableViewer#getCellEditors()
    */
-  private void refreshCellEditors( )
+  private void refreshCellEditors()
   {
     m_modifier = null;
-    // dispose old modifiers
     final CellEditor[] oldEditors = getCellEditors();
     if( oldEditors != null )
     {
-      for( final CellEditor element : oldEditors )
+      for( int i = 0; i < oldEditors.length; i++ )
       {
-        if( element != null )
-          element.dispose();
+        if( oldEditors[i] != null )
+          oldEditors[i].dispose();
       }
     }
 
@@ -637,31 +471,32 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final CellEditor[] editors = new CellEditor[columns.length];
     setCellEditors( editors );
 
-    final IKalypsoTheme theme = (IKalypsoTheme) getInput();
-    final IFeatureType featureType = theme == null ? null : getTheme().getFeatureType();
+    final IKalypsoTheme theme = (IKalypsoTheme)getInput();
+    final FeatureType featureType = theme == null ? null : getTheme().getFeatureType();
     if( featureType == null )
       return;
-    // set new modifiers, new celleditors and new cellvalidators
+
     m_modifier = new IFeatureModifier[columns.length];
     for( int i = 0; i < editors.length; i++ )
     {
       final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
-      final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-      final IPropertyType ftp = featureType.getProperty( propName );
+      final FeatureTypeProperty ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp, format, m_selectionManager, m_fcl );
+        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp );
         editors[i] = m_modifier[i].createCellEditor( table );
+
         editors[i].setValidator( m_modifier[i] );
       }
     }
+
     setCellEditors( editors );
   }
 
   /**
-   *
+   * @see org.eclipse.jface.viewers.TableViewer#getColumnProperties()
    */
-  private void refreshColumnProperties( )
+  private void refreshColumnProperties()
   {
     final Table table = getTable();
     if( table.isDisposed() )
@@ -676,77 +511,71 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     setColumnProperties( properties );
   }
 
+  public void selectRow( final Feature feature )
+  {
+    getControl().getDisplay().asyncExec( new Runnable()
+    {
+      public void run()
+      {
+        setSelection( new StructuredSelection( feature ) );
+      }
+    } );
+  }
+
   /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( getTheme() == null )
-      return;
-    if( (modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == getTheme().getWorkspace()) )
+    final List selFeatures = new ArrayList();
+
+    // Feature-Selection auf Selection übertragen
+    final FeatureList featureList = getTheme().getFeatureList();
+    if( featureList != null )
     {
-      if( !isDisposed() )
-        getControl().getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            handleModelChanged( modellEvent );
-          }
-        } );
-    }
-    else
-    {
-      if( !isDisposed() )
+      for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
       {
-        getControl().getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            refresh();
-          }
-        } );
+        final Feature f = (Feature)iter.next();
+        if( f.isSelected( m_selectionID ) )
+          selFeatures.add( f );
       }
     }
+
+    if( !isDisposed() )
+      getControl().getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          handleModelChanged( modellEvent, selFeatures );
+        }
+      } );
 
     fireModellEvent( modellEvent );
   }
 
-  protected void handleModelChanged( final ModellEvent event )
+  protected void handleModelChanged( final ModellEvent event, final List newSelection )
   {
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
-    if( theme == null )
-      return;
-    if( !(event instanceof IGMLWorkspaceModellEvent) )
-      return;
-    if( ((IGMLWorkspaceModellEvent) event).getGMLWorkspace() != theme.getWorkspace() )
-      return;
+    if( event != null && event.getEventSource() == getTheme()
+        && event.getType() == ModellEvent.THEME_ADDED )
+    {
+      refreshCellEditors();
+      refreshColumnProperties();
+    }
 
-    if( event instanceof FeaturesChangedModellEvent )
-    {
-      final Feature[] features = ((FeaturesChangedModellEvent) event).getFeatures();
-      update( features, null );
-    }
-    if( event instanceof FeatureStructureChangeModellEvent )
-    {
-      final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
-      for( final Feature feature : features )
-      {
-        if( feature == theme.getFeatureList().getParentFeature() )
-        {
-          refresh();
-          break;
-        }
-      }
-    }
+    refresh();
+
+    final IStructuredSelection selection = (IStructuredSelection)getSelection();
+    if( !newSelection.equals( selection.toList() ) )
+      setSelection( new StructuredSelection( newSelection ), false );
   }
 
-  public boolean isDisposed( )
+  public boolean isDisposed()
   {
     return getTable().isDisposed();
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand,
    *      java.lang.Runnable)
    */
   public void postCommand( final ICommand command, final Runnable runnable )
@@ -760,54 +589,24 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return column.getData( COLUMN_PROP_NAME ).toString();
   }
 
-  public String getColumnAlignment( final int columnIndex )
-  {
-    if( columnIndex == -1 )
-      return "SWT.LEAD"; //$NON-NLS-1$
-
-    final TableColumn column = getTable().getColumn( columnIndex );
-    return "" + column.getStyle(); //$NON-NLS-1$
-  }
-
-  public String getColumnFormat( final int columnIndex )
-  {
-    if( columnIndex == -1 )
-      return null;
-
-    final TableColumn column = getTable().getColumn( columnIndex );
-    return (String) column.getData( COLUMN_PROP_FORMAT );
-  }
-
   public boolean isEditable( final String property )
   {
     final TableColumn column = getColumn( property );
-    return column == null ? false : ((Boolean) column.getData( COLUMN_PROP_EDITABLE )).booleanValue();
+    return column == null ? false : ( (Boolean)column.getData( COLUMN_PROP_EDITABLE ) )
+        .booleanValue();
   }
 
   private TableColumn getColumn( final String property )
-  {
-    final TableColumn[] columns = getTable().getColumns();
-    for( final TableColumn element : columns )
-    {
-      final String name = element.getData( COLUMN_PROP_NAME ).toString();
-      if( property.equals( name ) )
-        return element;
-    }
-
-    return null;
-  }
-
-  public int getColumnID( final String property )
   {
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
     {
       final String name = columns[i].getData( COLUMN_PROP_NAME ).toString();
       if( property.equals( name ) )
-        return i;
+        return columns[i];
     }
 
-    return -1;
+    return null;
   }
 
   public int getWidth( final String propertyName )
@@ -824,44 +623,42 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return getColumn( propertyName ) != null;
   }
 
-  public int getColumnCount( )
+  public int getColumnCount()
   {
     return getTable().getColumnCount();
   }
 
-  public Gistableview createTableTemplate( )
+  public Gistableview createTableTemplate() throws JAXBException
   {
-    final ObjectFactory m_gistableviewFactory = new ObjectFactory();
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
-    final Layer layer = m_gistableviewFactory.createGistableviewLayer();
+    final LayerType layer = m_gistableviewFactory.createGistableviewTypeLayerType();
 
-    ((GisTemplateFeatureTheme) getTheme()).fillLayerType( layer, "id", true ); //$NON-NLS-1$
+    ( (GisTemplateFeatureTheme)getTheme() ).fillLayerType( layer, "id", true );
 
     tableTemplate.setLayer( layer );
 
-    final List<Column> columns = layer.getColumn();
+    final List columns = layer.getColumn();
 
     final TableColumn[] tableColumns = getTable().getColumns();
-    for( final TableColumn tc : tableColumns )
+    for( int i = 0; i < tableColumns.length; i++ )
     {
-      final Column columnType = m_gistableviewFactory.createGistableviewLayerColumn();
+      final TableColumn tc = tableColumns[i];
+
+      final ColumnType columnType = m_gistableviewFactory
+          .createGistableviewTypeLayerTypeColumnType();
 
       columnType.setName( tc.getData( COLUMN_PROP_NAME ).toString() );
-      columnType.setLabel( (String) tc.getData( COLUMN_PROP_LABEL ) );
-      columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
-      columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
+      columnType.setEditable( ( (Boolean)tc.getData( COLUMN_PROP_EDITABLE ) ).booleanValue() );
       columnType.setWidth( tc.getWidth() );
-      columnType.setAlignment( "" + tc.getStyle() ); //$NON-NLS-1$
-      columnType.setFormat( (String) tc.getData( COLUMN_PROP_FORMAT ) );
 
       columns.add( columnType );
     }
 
-    final LayerTableSorter sorter = (LayerTableSorter) getSorter();
+    final LayerTableSorter sorter = (LayerTableSorter)getSorter();
     final String propertyName = sorter.getPropertyName();
     if( propertyName != null )
     {
-      final Sort sort = m_gistableviewFactory.createGistableviewLayerSort();
+      final SortType sort = m_gistableviewFactory.createGistableviewTypeLayerTypeSortType();
       sort.setPropertyName( propertyName );
       sort.setInverse( sorter.isInverse() );
       layer.setSort( sort );
@@ -872,10 +669,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public void saveData( final IProgressMonitor monitor ) throws CoreException
   {
-    // TODO inserted this test against null because got a NullPointerException, ok?
-    final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme) getTheme();
-    if( theme != null )
-      theme.saveFeatures( monitor );
+    ( (GisTemplateFeatureTheme)getTheme() ).saveFeatures( monitor );
   }
 
   public String[][] exportTable( final boolean onlySelected )
@@ -884,51 +678,66 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( onlySelected )
     {
-      final IStructuredSelection sel = (IStructuredSelection) getSelection();
+      final IStructuredSelection sel = (IStructuredSelection)getSelection();
       features = sel.toArray();
     }
     else
       features = getTheme().getFeatureList().toFeatures();
 
-    final Collection<String[]> lines = new ArrayList<String[]>();
+    final Collection lines = new ArrayList();
 
-    final ITableLabelProvider labelProvider = (ITableLabelProvider) getLabelProvider();
+    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
 
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
 
-    // TODO: exports the property name, not the current label; change this
     final String[] firstLine = new String[columns.length];
     for( int j = 0; j < columns.length; j++ )
-      firstLine[j] = (String) columns[j].getData( COLUMN_PROP_NAME );
+      firstLine[j] = (String)columns[j].getData( COLUMN_PROP_NAME );
     lines.add( firstLine );
 
-    for( final Object element : features )
+    for( int i = 0; i < features.length; i++ )
     {
       final String[] line = new String[columns.length];
 
       for( int j = 0; j < columns.length; j++ )
-        line[j] = labelProvider.getColumnText( element, j );
+        line[j] = labelProvider.getColumnText( features[i], j );
 
       lines.add( line );
     }
 
-    return lines.toArray( new String[features.length][] );
+    return (String[][])lines.toArray( new String[features.length][] );
   }
 
-  public void addModellListener( final ModellEventListener listener )
+  public void addModellListener( ModellEventListener listener )
   {
     m_modellEventProvider.addModellListener( listener );
   }
 
-  public void fireModellEvent( final ModellEvent event )
+  public void fireModellEvent( ModellEvent event )
   {
     m_modellEventProvider.fireModellEvent( event );
   }
 
-  public void removeModellListener( final ModellEventListener listener )
+  public void removeModellListener( ModellEventListener listener )
   {
     m_modellEventProvider.removeModellListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetSelected( SelectionEvent e )
+  {
+    assignSelectionToFeatures();
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetDefaultSelected( SelectionEvent e )
+  {
+  // nix tun
   }
 
   public IFeatureModifier getModifier( final int columnIndex )
@@ -937,29 +746,31 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
+   *      java.lang.String)
    */
   public boolean canModify( final Object element, final String property )
   {
-    // TODO ask modifier also, as for some types editor may not be implemented
     return isEditable( property );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
+   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
+   *      java.lang.String)
    */
   public Object getValue( final Object element, final String property )
   {
     final IFeatureModifier modifier = getModifier( property );
 
     if( modifier != null )
-      return modifier.getValue( (Feature) element );
+      return modifier.getValue( (Feature)element );
 
     return null;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
+   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
+   *      java.lang.String, java.lang.Object)
    */
   public void modify( final Object element, final String property, final Object value )
   {
@@ -967,37 +778,18 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( modifier != null )
     {
-      final TableItem ti = (TableItem) element;
-      final Feature feature = (Feature) ti.getData();
-      // as result==null does not explicitly mean that
-      // the value is invalid, we have to ask the celleditor for invalidity
-      final int columnID = getColumnID( property );
-      if( !getCellEditors()[columnID].isValueValid() )
-        return;
-
+      final TableItem ti = (TableItem)element;
+      final Feature feature = (Feature)ti.getData();
       final Object object = modifier.parseInput( feature, value );
-      final Object oldValue = modifier.getValue( feature );
-      if( oldValue != null && oldValue.equals( value ) )
-        return;
 
-      // dialogs may return FeatureChange objects (doemming)
-      final FeatureChange fc;
       final IKalypsoFeatureTheme theme = getTheme();
-      if( object instanceof FeatureChange )
-        fc = (FeatureChange) object;
-      else
-      {
-        final IPropertyType pt = FeatureHelper.getPT( feature, property );
-        fc = new FeatureChange( feature, pt, object );
-      }
-      final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[] { fc } );
-      theme.postCommand( command, new Runnable()
-      {
-        public void run( )
-        {
-          ViewerUtilities.refresh( LayerTableViewer.this, true );
-        }
-      } );
+
+      final FeatureChange fc = new FeatureChange( feature, property, object );
+
+      final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[]
+      { fc } );
+      theme.postCommand( command, null );
+
     }
   }
 
@@ -1005,100 +797,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     if( m_modifier != null )
     {
-      for( final IFeatureModifier fm : m_modifier )
+      for( int i = 0; i < m_modifier.length; i++ )
       {
-        if( fm != null )
-        {
-          final IPropertyType ftp = fm.getFeatureTypeProperty();
-          if( ftp.getName().equals( name ) )
-            return fm;
-        }
+        final IFeatureModifier fm = m_modifier[i];
+        final FeatureTypeProperty ftp = fm.getFeatureTypeProperty();
+        if( ftp.getName().equals( name ) )
+          return fm;
       }
     }
+
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
-   */
-  @Override
-  public ISelection getSelection( )
-  {
-    final IKalypsoFeatureTheme theme = getTheme();
-    final IStructuredSelection selection = (IStructuredSelection) super.getSelection();
-    if( theme == null )
-      return selection;
-
-    final ViewerCell focusCell = m_focusCellManager.getFocusCell();
-
-    final Feature focusedFeature = focusCell == null ? null : (Feature) focusCell.getElement();
-    final int column = focusCell == null ? -1 : focusCell.getColumnIndex();
-
-    final IPropertyType focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
-
-    return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, focusedFeature, focusedProperty );
-  }
-
-  @Override
-  protected void inputChanged( final Object input, final Object oldInput )
-  {
-    if( !isDisposed() )
-      super.inputChanged( input, oldInput );
-
-    disposeTheme( oldInput );
-
-    clearColumns();
-
-    setTheme( input );
-  }
-
-  private void setTheme( final Object input )
-  {
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) input;
-    if( theme != null )
-    {
-      theme.addKalypsoThemeListener( m_themeListener );
-
-      final CommandableWorkspace workspace = theme.getWorkspace();
-      if( workspace != null )
-        workspace.addModellListener( this );
-    }
-  }
-
-  /*
-   * HACK: we let the content provider dispose the theme, because when our dispose method is called nowadays, the input
-   * is already set to null. <p>TODO: move everything into the content provider.
-   */
-  public void disposeTheme( final Object oldInput )
-  {
-    final IKalypsoFeatureTheme oldTheme = (IKalypsoFeatureTheme) oldInput;
-
-    if( oldTheme != null )
-    {
-      oldTheme.removeKalypsoThemeListener( m_themeListener );
-
-      final CommandableWorkspace workspace = oldTheme.getWorkspace();
-      if( workspace != null )
-        workspace.removeModellListener( this );
-      oldTheme.dispose();
-    }
-  }
-
-  /** Registers this MenuManager es context menu on table and table cursor */
-  public void setMenu( final MenuManager menuManager )
-  {
-    final Table table = getTable();
-    final Menu tablemenu = menuManager.createContextMenu( table );
-    table.setMenu( tablemenu );
-  }
-
-  protected void handleStatusChanged( final IKalypsoTheme source )
-  {
-    if( source instanceof IKalypsoFeatureTheme )
-    {
-      final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) source).getWorkspace();
-      if( workspace != null )
-        workspace.addModellListener( this );
-    }
-  }
 }

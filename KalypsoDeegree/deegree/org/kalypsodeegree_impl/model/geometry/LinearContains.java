@@ -1,55 +1,79 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.model.geometry;
+/*--------------- Kalypso-Deegree-Header ------------------------------------------------------------
+
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+ 
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+ 
+ 
+ history:
+  
+ Files in this package are originally taken from deegree and modified here
+ to fit in kalypso. As goals of kalypso differ from that one in deegree
+ interface-compatibility to deegree is wanted but not retained always. 
+     
+ If you intend to use this software in other ways than in kalypso 
+ (e.g. OGC-web services), you should consider the latest version of deegree,
+ see http://www.deegree.org .
+
+ all modifications are licensed as deegree, 
+ original copyright:
+ 
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon GmbH
+ http://www.lat-lon.de
+ 
+---------------------------------------------------------------------------------------------------*/
+package org.deegree_impl.model.geometry;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_CurveSegment;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.deegree.model.geometry.GM_Curve;
+import org.deegree.model.geometry.GM_CurveSegment;
+import org.deegree.model.geometry.GM_Exception;
+import org.deegree.model.geometry.GM_Point;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree.model.geometry.GM_Ring;
+import org.deegree.model.geometry.GM_Surface;
+import org.deegree.model.geometry.GM_SurfaceBoundary;
+import org.deegree.model.geometry.GM_SurfacePatch;
 
 /**
- * Andreas: This code doesn't seems to be used, doesn't do anything and causes yellow thingis. Delete it?
+ * 
  * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -57,23 +81,43 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 class LinearContains
 {
   /**
-   * the operation returns true if the submitted point contains the submitted surface patch
+   * the operations returns true if two the submitted points contains
    */
-  public static boolean contains( final GM_SurfacePatch surface, final GM_Position point )
+  public static boolean contains( GM_Position point1, GM_Position point2 ) throws Exception
+  {
+    throw new NoSuchMethodException( "contains(GM_Position, GM_Position)"
+        + " not supported at the moment." );
+  }
+
+  /**
+   * the operations returns true if the submitted point contains the submitted
+   * curve segment
+   */
+  public static boolean contains( GM_CurveSegment curve, GM_Position point ) throws Exception
+  {
+    throw new NoSuchMethodException( "contains(GM_CurveSegment, GM_Position)"
+        + " not supported at the moment." );
+  }
+
+  /**
+   * the operation returns true if the submitted point contains the submitted
+   * surface patch
+   */
+  public static boolean contains( GM_SurfacePatch surface, GM_Position point )
   {
     boolean con = false;
-    final GM_Position[] ex = surface.getExteriorRing();
+    GM_Position[] ex = surface.getExteriorRing();
     con = contains( ex, point );
 
     if( con )
     {
-      final GM_Position[][] inner = surface.getInteriorRings();
+      GM_Position[][] inner = surface.getInteriorRings();
 
       if( inner != null )
       {
-        for( final GM_Position[] element : inner )
+        for( int i = 0; i < inner.length; i++ )
         {
-          if( contains( element, point ) )
+          if( contains( inner[i], point ) )
           {
             con = false;
             break;
@@ -86,13 +130,23 @@ class LinearContains
   }
 
   /**
-   * the operation returns true if the submitted curve segment contains the submitted surface patch
+   * the operation returns true if the two submitted curves segments contains
    */
-  public static boolean contains( final GM_SurfacePatch surface, final GM_CurveSegment curve )
+  public static boolean contains( GM_CurveSegment curve1, GM_CurveSegment curve2 ) throws Exception
+  {
+    throw new NoSuchMethodException( "contains(GM_CurveSegment, GM_CurveSegment)"
+        + " not supported at the moment." );
+  }
+
+  /**
+   * the operation returns true if the submitted curve segment contains the
+   * submitted surface patch
+   */
+  public static boolean contains( GM_SurfacePatch surface, GM_CurveSegment curve )
   {
     boolean con = true;
-    final GM_Position[] ex = surface.getExteriorRing();
-    final GM_Position[] cu = curve.getPositions();
+    GM_Position[] ex = surface.getExteriorRing();
+    GM_Position[] cu = curve.getPositions();
 
     for( int i = 0; i < cu.length; i++ )
     {
@@ -105,15 +159,15 @@ class LinearContains
 
     if( con )
     {
-      final GM_Position[][] inner = surface.getInteriorRings();
+      GM_Position[][] inner = surface.getInteriorRings();
 
       if( inner != null )
       {
-        for( final GM_Position[] element : inner )
+        for( int i = 0; i < inner.length; i++ )
         {
-          for( final GM_Position element2 : cu )
+          for( int j = 0; j < cu.length; j++ )
           {
-            if( contains( element, element2 ) )
+            if( contains( inner[i], cu[j] ) )
             {
               con = false;
               break;
@@ -132,13 +186,14 @@ class LinearContains
   }
 
   /**
-   * the operation returns true if the first surface patches contains the second one
+   * the operation returns true if the first surface patches contains the second
+   * one
    */
-  public static boolean contains( final GM_SurfacePatch surface1, final GM_SurfacePatch surface2 )
+  public static boolean contains( GM_SurfacePatch surface1, GM_SurfacePatch surface2 )
   {
     boolean con = true;
-    final GM_Position[] ex = surface1.getExteriorRing();
-    final GM_Position[] ex_ = surface2.getExteriorRing();
+    GM_Position[] ex = surface1.getExteriorRing();
+    GM_Position[] ex_ = surface2.getExteriorRing();
 
     for( int i = 0; i < ex_.length; i++ )
     {
@@ -151,18 +206,18 @@ class LinearContains
 
     if( con )
     {
-      final GM_Position[][] inner = surface1.getInteriorRings();
-      final GM_Position[][] inner_ = surface2.getInteriorRings();
+      GM_Position[][] inner = surface1.getInteriorRings();
+      GM_Position[][] inner_ = surface2.getInteriorRings();
 
       if( inner != null )
       {
-        for( final GM_Position[] element : inner )
+        for( int i = 0; i < inner.length; i++ )
         {
           // a point of the second exterior is not allowed to be
           // within a inner ring of the first
-          for( final GM_Position element2 : ex_ )
+          for( int j = 0; j < ex_.length; j++ )
           {
-            if( contains( element, element2 ) )
+            if( contains( inner[i], ex_[j] ) )
             {
               con = false;
               break;
@@ -178,11 +233,11 @@ class LinearContains
           // to be within a inner ring of the first
           if( inner_ != null )
           {
-            for( final GM_Position[] element2 : inner_ )
+            for( int k = 0; k < inner_.length; k++ )
             {
-              for( int j = 0; j < element2.length; j++ )
+              for( int j = 0; j < inner_[k].length; j++ )
               {
-                if( contains( element, element2[j] ) )
+                if( contains( inner[i], inner_[k][j] ) )
                 {
                   con = false;
                   break;
@@ -198,9 +253,9 @@ class LinearContains
 
           // a point of the inner rings of the first is not allowed
           // to be within the second surface
-          for( int j = 0; j < element.length; j++ )
+          for( int j = 0; j < inner[i].length; j++ )
           {
-            if( contains( surface2, element[j] ) )
+            if( contains( surface2, inner[i][j] ) )
             {
               con = false;
               break;
@@ -218,9 +273,9 @@ class LinearContains
     // surface2 is not allowed to contain one point of surface1
     if( con )
     {
-      for( final GM_Position element : ex )
+      for( int i = 0; i < ex.length; i++ )
       {
-        if( contains( surface2, element ) )
+        if( contains( surface2, ex[i] ) )
         {
           con = false;
           break;
@@ -232,16 +287,36 @@ class LinearContains
   }
 
   /**
-   * the operation returns true if the submitted point contains the submitted surface
+   * the operations returns true if two the submitted points contains
    */
-  public static boolean contains( final GM_Surface< ? > surface, final GM_Point point ) throws Exception
+  public static boolean contains( GM_Point point1, GM_Point point2 ) throws Exception
+  {
+    throw new NoSuchMethodException( "contains(GM_Point, GM_Point)"
+        + " not supported at the moment." );
+  }
+
+  /**
+   * the operations returns true if the submitted point contains the submitted
+   * curve
+   */
+  public static boolean contains( GM_Curve curve, GM_Point point ) throws Exception
+  {
+    throw new NoSuchMethodException( "contains(GM_Curve, GM_Point)"
+        + " not supported at the moment." );
+  }
+
+  /**
+   * the operation returns true if the submitted point contains the submitted
+   * surface
+   */
+  public static boolean contains( GM_Surface surface, GM_Point point ) throws Exception
   {
     boolean contain = false;
-    final int cnt = surface.size();
+    int cnt = surface.getNumberOfSurfacePatches();
 
     for( int i = 0; i < cnt; i++ )
     {
-      if( contains( surface.get( i ), point.getPosition() ) )
+      if( contains( surface.getSurfacePatchAt( i ), point.getPosition() ) )
       {
         contain = true;
         break;
@@ -252,38 +327,49 @@ class LinearContains
   }
 
   /**
-   * Convenience method to extract all <tt>GM_Position</tt> s from a <tt>GM_Curve</tt>.
+   * the operation returns true if the two submitted curves contains
    */
-  private static GM_Position[] getPositions( final GM_Curve curve ) throws GM_Exception
+  public static boolean contains( GM_Curve curve1, GM_Curve curve2 ) throws Exception
   {
-    final List<GM_Position> positions = new ArrayList<GM_Position>( 1000 );
-
-    for( int i = 0; i < curve.getNumberOfCurveSegments(); i++ )
-    {
-      final GM_CurveSegment segment = curve.getCurveSegmentAt( i );
-      final GM_Position[] segmentPos = segment.getPositions();
-
-      for( final GM_Position element : segmentPos )
-        positions.add( element );
-    }
-
-    return (GM_Position[]) positions.toArray();
+    throw new NoSuchMethodException( "contains(GM_Curve, GM_Curve)"
+        + " not supported at the moment." );
   }
 
   /**
-   * the operation returns true if the submitted curve contains the submitted surface
+   * Convenience method to extract all <tt>GM_Position</tt> s from a
+   * <tt>GM_Curve</tt>.
    */
-  public static boolean contains( final GM_Surface< ? > surface, final GM_Curve curve ) throws GM_Exception
+  private static GM_Position[] getPositions( GM_Curve curve ) throws GM_Exception
+  {
+    ArrayList positions = new ArrayList( 1000 );
+
+    for( int i = 0; i < curve.getNumberOfCurveSegments(); i++ )
+    {
+      GM_CurveSegment segment = curve.getCurveSegmentAt( i );
+      GM_Position[] segmentPos = segment.getPositions();
+
+      for( int j = 0; j < segmentPos.length; j++ )
+        positions.add( segmentPos[j] );
+    }
+
+    return (GM_Position[])positions.toArray();
+  }
+
+  /**
+   * the operation returns true if the submitted curve contains the submitted
+   * surface
+   */
+  public static boolean contains( GM_Surface surface, GM_Curve curve ) throws GM_Exception
   {
     // gather the positions of the crings (exterior and interior) and
     // the curve as arrays of GM_Positions
-    final GM_SurfaceBoundary boundary = (GM_SurfaceBoundary) surface.getBoundary();
-    final GM_Ring extRing = boundary.getExteriorRing();
-    final GM_Ring[] intRings = boundary.getInteriorRings();
+    GM_SurfaceBoundary boundary = (GM_SurfaceBoundary)surface.getBoundary();
+    GM_Ring extRing = boundary.getExteriorRing();
+    GM_Ring[] intRings = boundary.getInteriorRings();
 
-    final GM_Position[] curvePos = getPositions( curve );
-    final GM_Position[] extRingPos = extRing.getPositions();
-    final GM_Position[][] intRingsPos = new GM_Position[intRings.length][];
+    GM_Position[] curvePos = getPositions( curve );
+    GM_Position[] extRingPos = extRing.getPositions();
+    GM_Position[][] intRingsPos = new GM_Position[intRings.length][];
 
     for( int i = 0; i < intRings.length; i++ )
       intRingsPos[i] = intRings[i].getPositions();
@@ -313,15 +399,16 @@ class LinearContains
   /**
    * the operation returns true if the two submitted surfaces contains
    */
-  public static boolean contains( final GM_Surface< ? > surface2, final GM_Surface< ? > surface1 ) throws Exception
+  public static boolean contains( GM_Surface surface2, GM_Surface surface1 ) throws Exception
   {
-    return contains( surface2.get( 0 ), surface1.get( 0 ) );
+    return contains( surface2.getSurfacePatchAt( 0 ), surface1.getSurfacePatchAt( 0 ) );
   }
 
   /**
-   * the operation returns true if polygon defined by an array of GM_Position contains the submitted point.
+   * the operation returns true if polygon defined by an array of GM_Position
+   * contains the submitted point.
    */
-  protected static boolean contains( final GM_Position[] positions, final GM_Position point )
+  protected static boolean contains( GM_Position[] positions, GM_Position point )
   {
     if( positions.length <= 2 )
     {
@@ -372,7 +459,7 @@ class LinearContains
 
       if( cury < lasty )
       {
-        if( (point.getY() < cury) || (point.getY() >= lasty) )
+        if( ( point.getY() < cury ) || ( point.getY() >= lasty ) )
         {
           continue;
         }
@@ -388,7 +475,7 @@ class LinearContains
       }
       else
       {
-        if( (point.getY() < lasty) || (point.getY() >= cury) )
+        if( ( point.getY() < lasty ) || ( point.getY() >= cury ) )
         {
           continue;
         }
@@ -403,12 +490,12 @@ class LinearContains
         test2 = point.getY() - lasty;
       }
 
-      if( test1 < (test2 / (lasty - cury) * (lastx - curx)) )
+      if( test1 < ( test2 / ( lasty - cury ) * ( lastx - curx ) ) )
       {
         hits++;
       }
     }
 
-    return ((hits & 1) != 0);
+    return ( ( hits & 1 ) != 0 );
   }
 }

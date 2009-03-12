@@ -40,22 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
-import java.util.Set;
-
-import org.kalypso.i18n.Messages;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
- * A column for an observation table view. It is based on a key axis and a value axis.
+ * A column for an observation table view. It is based on a key axis and a value
+ * axis.
  * 
  * @author schlienger
  */
-public class TableViewColumn extends ObsViewItem
+public class TableViewColumn
 {
-  /** denotes the default column-position in the table: means table can do what it wants */
-  private final static int DEFAULT_POSITION = -1;
+  private String m_name = "";
 
   private boolean m_isEditable = true;
 
@@ -65,39 +63,62 @@ public class TableViewColumn extends ObsViewItem
 
   private final IAxis m_valueAxis;
 
+  private TableViewTheme m_theme;
+
+  /**
+   * flag specifying when the column needs to be saved. It comes along with the
+   * dirty flag. Once the dirty flag is set to true, the dirtySave flag becomes
+   * true as well. It will only be reset to false once setDirtySave( false ) is
+   * called. A call to setDirty( false ) only changes the dirty flag, not the
+   * dirtySave one.
+   * <p>
+   * This mechanism is used to know when the column has been persisted
+   * (dirtySave=false)in opposition to the model is in sync (dirty=false).
+   */
+  private boolean m_dirtySave = false;
+
   /** column has been modified, model is not in sync */
   private boolean m_dirty = false;
 
+  private final TableViewTemplate m_template;
+
   private boolean m_shown = true;
 
-  private final String m_format;
-
-  private final int m_position;
-
   /**
-   * Constructor with default position
+   * Constructor
+   * 
+   * @param name
+   * @param isEditable
+   * @param width
+   * @param keyAxis
+   * @param valueAxis
+   * @param theme
+   * @param template
    */
-  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format )
+  public TableViewColumn( final String name, final boolean isEditable,
+      final int width, final IAxis keyAxis, final IAxis valueAxis,
+      final TableViewTheme theme, final TableViewTemplate template )
   {
-    this( view, provider, name, isEditable, width, keyAxis, valueAxis, format, DEFAULT_POSITION );
-  }
-
-  /**
-   * Full Constructor
-   */
-  public TableViewColumn( final TableView view, final IObsProvider provider, final String name, final boolean isEditable, final int width, final IAxis keyAxis, final IAxis valueAxis, final String format, final int position )
-  {
-    super( view, provider, name );
-
-    if( format == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.0") + name + Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.1") ); //$NON-NLS-1$ //$NON-NLS-2$
-
+    m_name = name;
     m_isEditable = isEditable;
     m_width = width;
     m_keyAxis = keyAxis;
     m_valueAxis = valueAxis;
-    m_format = format;
-    m_position = position;
+    m_theme = theme;
+    m_template = template;
+  }
+
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
   }
 
   public boolean isEditable( )
@@ -110,34 +131,43 @@ public class TableViewColumn extends ObsViewItem
     return m_width;
   }
 
+  public void setWidth( int width )
+  {
+    m_width = width;
+  }
+
   public boolean isDirty( )
   {
     return m_dirty;
   }
 
   /**
-   * Set the dirty flag. Optionally an eventSource object can be passed, it designates the origin of the event.
+   * As soon as dirty is true, dirtySave also gets true.
    * 
-   * @param eventSource
-   *            [optional, can be null] designates the origin of the event
+   * @param dirty
    */
-  public void setDirty( final boolean dirty, final Object eventSource )
+  public void setDirty( boolean dirty )
   {
     m_dirty = dirty;
-
-    // TODO: A ITuppleModel has currently no way to tell its IObservation
-    // that the model has changed. The only way is using IObservation.setValues()
-    // but since the refactoring in ObservationTableModel, the ITuppleModel is
-    // diretly updated and setValues() isn't called any more. So for the meantime,
-    // until the whole IObservation stuff is refactored, we use this TableViewColumn
-    // to call the fireChangedEvent on the underlying observation.
-    // Another solution could have been to give a reference of its IObservation to a
-    // ITuppleModel... but I decided not to use that one.
+    
     if( dirty )
-      getObservation().fireChangedEvent( eventSource );
+      m_dirtySave = true;
   }
-
-  public Class<?> getColumnClass( )
+  
+  public boolean isDirtySave( )
+  {
+    return m_dirtySave;
+  }
+  
+  /**
+   * This is the only means by which dirtySave can be set to false.
+   */
+  public void resetDirtySave( )
+  {
+    m_dirtySave = false;
+  }
+  
+  public Class getColumnClass( )
   {
     return m_valueAxis.getDataClass();
   }
@@ -152,47 +182,55 @@ public class TableViewColumn extends ObsViewItem
     return m_keyAxis;
   }
 
-  @Override
+  public TableViewTheme getTheme( )
+  {
+    return m_theme;
+  }
+
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
   public boolean isShown( )
   {
     return m_shown;
   }
 
-  @Override
-  public void setShown( final boolean shown )
+  public void setShown( boolean shown )
   {
     if( shown != m_shown )
     {
       m_shown = shown;
 
-      getView().refreshItemState( this, null );
+      m_template.fireTemplateChanged( new TemplateEvent( this,
+          TemplateEvent.TYPE_SHOW_STATE ) );
     }
   }
 
   /**
-   * @return the format-specification (non-null).
+   * Two TableViewColumn objects are equal if they have the same name and belong
+   * to the same theme.
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
    */
-  public String getFormat( )
+  public boolean equals( final Object obj )
   {
-    return m_format;
-  }
+    if( !this.getClass().equals( obj.getClass() ) )
+      return false;
 
-  public int getPosition( )
-  {
-    return m_position;
-  }
+    final TableViewColumn col = (TableViewColumn) obj;
 
-  public boolean isDefaultPosition( )
-  {
-    return m_position == DEFAULT_POSITION;
+    return new EqualsBuilder().append( col.m_name, m_name ).append(
+        col.m_theme, m_theme ).isEquals();
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
+   * @see java.lang.Object#hashCode()
    */
-  @Override
-  public boolean shouldBeHidden( final Set<String> hiddenTypes )
+  public int hashCode( )
   {
-    return hiddenTypes.contains( m_valueAxis.getType() );
+    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
+        .toHashCode();
   }
 }

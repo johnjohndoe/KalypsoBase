@@ -36,67 +36,66 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.util.command.ICommand;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
 public class MoveThemeUpCommand implements ICommand
 {
-  private final IMapModell m_mapModell;
+  private final IMapModell m_MapModell;
 
   private final IKalypsoTheme m_theme;
 
   public MoveThemeUpCommand( final IMapModell mapModell, final IKalypsoTheme theme )
   {
-    m_mapModell = mapModell;
+    m_MapModell = mapModell;
     m_theme = theme;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    m_mapModell.moveDown( m_theme );
+    m_MapModell.moveUp( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
-    m_mapModell.moveDown( m_theme );
+    m_MapModell.moveUp( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    m_mapModell.moveUp( m_theme );
+    m_MapModell.moveDown( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.MoveThemeUpCommand.0"); //$NON-NLS-1$
+    return "Thema nach unten verschieben";
   }
 }

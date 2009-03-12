@@ -36,14 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
  *  
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
+import org.deegree.filterencoding.FilterEvaluationException;
+import org.deegree.graphics.sld.PolygonSymbolizer;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -55,12 +59,10 @@ import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
+ *  
  */
 
 public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayout
@@ -74,35 +76,35 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
 
   ColorPalettePanel colorPalettePanel = null;
 
-  public FilterPatternPolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
+  public FilterPatternPolygonSymbolizerLayout( Composite m_composite, Symbolizer m_symbolizer,
+      KalypsoUserStyle m_userStyle, RuleCollection m_ruleCollection, int m_symbolizerIndex )
   {
     super( m_composite, m_symbolizer, m_userStyle );
     this.ruleCollection = m_ruleCollection;
     this.symbolizerIndex = m_symbolizerIndex;
   }
 
-  @Override
-  public void draw( ) throws FilterEvaluationException
+  public void draw() throws FilterEvaluationException
   {
-    final GridLayout compositeLayout = new GridLayout();
+    GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
     // ***** group
-    final Group group = new Group( composite, SWT.NULL );
-    final GridData groupData = new GridData();
+    Group group = new Group( composite, SWT.NULL );
+    GridData groupData = new GridData();
     groupData.widthHint = 210;
     groupData.heightHint = 215;
     group.setLayoutData( groupData );
     group.setLayout( compositeLayout );
     group.layout();
 
-    // get all colors for each rule of the pattern for this specific symbolizer
-    final Color[] colors = new Color[getRuleCollection().size()];
+    // get all colors for each rule of the pattern for this specific symbolizer    
+    Color[] colors = new Color[getRuleCollection().size()];
     for( int i = 0; i < getRuleCollection().size(); i++ )
     {
-      final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
+      Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
       if( symb instanceof PolygonSymbolizer )
       {
-        final java.awt.Color color = ((PolygonSymbolizer) symb).getFill().getFill( null );
+        java.awt.Color color = ( (PolygonSymbolizer)symb ).getFill().getFill( null );
         colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
       }
     }
@@ -114,28 +116,31 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
       // init colors of PolygonSymbolizer
       for( int i = 0; i < getRuleCollection().size(); i++ )
       {
-        final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
+        Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof PolygonSymbolizer )
         {
-          ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
+          ( (PolygonSymbolizer)symb ).getFill().setFill(
+              new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
         }
-      }
+      }     
 
       colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
-        public void valueChanged( final PanelEvent event )
+        public void valueChanged( PanelEvent event )
         {
-          final Color[] colorArray = colorPalettePanel.getColorPalette();
+          Color[] colorArray = colorPalettePanel.getColorPalette();
 
           for( int i = 0; i < getRuleCollection().size(); i++ )
           {
-            final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
+            Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof PolygonSymbolizer )
             {
-              ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
+              ( (PolygonSymbolizer)symb ).getFill().setFill(
+                  new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(),
+                      colorArray[i].getBlue() ) );
             }
           }
-          userStyle.fireStyleChanged();
+          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
         }
       } );
     }
@@ -143,32 +148,32 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
       colorPalettePanel.draw( composite );
   }
 
-  public int getSelectionIndex( )
+  public int getSelectionIndex()
   {
     return selectionIndex;
   }
 
-  public void setSelectionIndex( final int m_selectionIndex )
+  public void setSelectionIndex( int m_selectionIndex )
   {
     this.selectionIndex = m_selectionIndex;
   }
 
-  public int getSymbolizerIndex( )
+  public int getSymbolizerIndex()
   {
     return symbolizerIndex;
   }
 
-  public void setSymbolizerIndex( final int m_symbolizerIndex )
+  public void setSymbolizerIndex( int m_symbolizerIndex )
   {
     this.symbolizerIndex = m_symbolizerIndex;
   }
 
-  public RuleCollection getRuleCollection( )
+  public RuleCollection getRuleCollection()
   {
     return ruleCollection;
   }
 
-  public void setRuleCollection( final RuleCollection m_ruleCollection )
+  public void setRuleCollection( RuleCollection m_ruleCollection )
   {
     this.ruleCollection = m_ruleCollection;
   }

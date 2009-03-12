@@ -1,42 +1,31 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.io.rtree;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Copyright (C) 2002 Wolfgang Baer - WBaer@gmx.de
+ 
+ Adapted May 2003 by IDgis, The Netherlands - www.idgis.nl
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.io.rtree;
 
 /**
- * Implementierung eines Blatt-Knotens. Erbt Methoden von AbstractNode. Implementiert abstrakte Methoden.
+ * Implementierung eines Blatt-Knotens. Erbt Methoden von AbstractNode.
+ * Implementiert abstrakte Methoden.
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -62,7 +51,8 @@ public class LeafNode extends Node
   }
 
   /**
-   * Konstruktor Leaf-AbstractNode. PageNumber wird beim ersten Abspeichern zugewiesen.
+   * Konstruktor Leaf-AbstractNode. PageNumber wird beim ersten Abspeichern
+   * zugewiesen.
    * 
    * @param file
    *          PageFile des Knotens
@@ -131,7 +121,8 @@ public class LeafNode extends Node
   }
 
   /**
-   * Erstellt eine Kopie des LeafNodes. Tiefe Kopie bis auf Referenz auf PageFile.
+   * Erstellt eine Kopie des LeafNodes. Tiefe Kopie bis auf Referenz auf
+   * PageFile.
    * 
    * @return Object LeafNode-Kopie
    */

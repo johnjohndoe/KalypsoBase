@@ -36,21 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ui.ImageProvider;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author belger
@@ -58,34 +56,32 @@ import org.kalypsodeegree.model.feature.Feature;
 public class BooleanModifier implements IFeatureModifier
 {
   private Image m_checkedImage = null;
-
   private Image m_uncheckedImage = null;
-
-  private final IPropertyType m_ftp;
-
-  public BooleanModifier( final IValuePropertyType ftp )
+  
+  private final FeatureTypeProperty m_ftp;
+  
+  public BooleanModifier( final FeatureTypeProperty ftp )
   {
     m_ftp = ftp;
-
-    if( !(java.lang.Boolean.class == ftp.getValueClass()) )
-      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$
+    
+    if( !"java.lang.Boolean".equals( ftp.getType() ) )
+      throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.deegree.model.feature.Feature)
    */
   public Object getValue( final Feature f )
   {
-    final Object property = f.getProperty( m_ftp );
+    final Object property = f.getProperty( m_ftp.getName() );
     if( property == null )
       return Boolean.FALSE;
-
+    
     return property;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.deegree.model.feature.Feature, java.lang.Object)
    */
   public Object parseInput( final Feature f, final Object value )
   {
@@ -108,69 +104,58 @@ public class BooleanModifier implements IFeatureModifier
     if( value instanceof Boolean )
       return null;
 
-    return Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool" ); //$NON-NLS-1$
+    return "Only Boolean values accepted";
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty( )
+  public FeatureTypeProperty getFeatureTypeProperty()
   {
     return m_ftp;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.deegree.model.feature.Feature)
    */
   public String getLabel( final Feature f )
   {
-    return null;
-//    final Boolean b = (Boolean) getValue( f );
-//    return String.valueOf( b );
+    return "";
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.deegree.model.feature.Feature)
    */
   public Image getImage( final Feature f )
   {
-    final Boolean b = (Boolean) getValue( f );
+    final Boolean b = (Boolean)getValue( f );
     if( b == null || !b.booleanValue() )
     {
       if( m_uncheckedImage == null )
       {
-        final ImageDescriptor id = ImageProvider.IMAGE_UTIL_UNCHECKED;
+         final ImageDescriptor id = ImageProvider.IMAGE_UTIL_UNCHECKED;
         m_uncheckedImage = id.createImage();
       }
-
+      
       return m_uncheckedImage;
     }
-
+    
     if( m_checkedImage == null )
     {
       final ImageDescriptor id = ImageProvider.IMAGE_UTIL_CHECKED;
       m_checkedImage = id.createImage();
     }
-
+    
     return m_checkedImage;
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    if( m_checkedImage != null )
-      m_checkedImage.dispose();
-    if( m_uncheckedImage != null )
-      m_uncheckedImage.dispose();
+    m_checkedImage.dispose();
+    m_uncheckedImage.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return newData.equals( oldData );
-  }
 }

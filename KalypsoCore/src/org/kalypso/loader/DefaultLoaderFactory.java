@@ -36,57 +36,30 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.factory.FactoryException;
+import java.util.Properties;
+
+import org.kalypso.util.factory.ConfigurableCachableObjectFactory;
+import org.kalypso.util.factory.FactoryException;
 
 /**
- * The default implementation of {@link ILoaderFactory}.
- * 
- * @author Holger Albert
+ * Die Standardimplementation der {@link ILoaderFactory}
+ *
+ * @author Schlienger
+ *
  */
-public class DefaultLoaderFactory implements ILoaderFactory
+public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
 {
-  /**
-   * The constructor.
-   */
-  public DefaultLoaderFactory( )
+  public DefaultLoaderFactory( final Properties props, final ClassLoader cl )
   {
+    super( props, false, cl );
   }
 
-  /**
-   * @see org.kalypso.loader.ILoaderFactory#getLoaderInstance(java.lang.String)
-   */
-  public ILoader getLoaderInstance( String type ) throws FactoryException
+  public ILoader getLoaderInstance( final String type ) throws FactoryException
   {
-    /* Memory for the loader. */
-    ILoader loader = null;
-
-    try
-    {
-      IExtensionRegistry registry = Platform.getExtensionRegistry();
-      IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" );
-      for( IConfigurationElement element : elements )
-      {
-        String elementType = element.getAttribute( "type" );
-        if( type.equals( elementType ) )
-          loader = (ILoader) element.createExecutableExtension( "class" );
-      }
-
-      /* If there is no loader, this is an error. */
-      if( loader == null )
-        throw new Exception( "Unknown type: " + type );
-
-      return loader;
-    }
-    catch( Exception ex )
-    {
-      throw new FactoryException( "Could not instantiate the loader type: " + type, ex );
-    }
+    return (ILoader)getObjectInstance( type, ILoader.class );
   }
 }

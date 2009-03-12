@@ -105,7 +105,7 @@ public class StrokeDashoffsetPanel
     offsetInputData.left = new FormAttachment( 340, 1000, 0 );
     offsetInputData.top = new FormAttachment( 100, 1000, 0 );
     offsetInput.setLayoutData( offsetInputData );
-    offsetInput.setText( "0.0" ); //$NON-NLS-1$
+    offsetInput.setText( "0.0" );
 
     Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
@@ -129,10 +129,11 @@ public class StrokeDashoffsetPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getOffsetInput().setText( "" + getValue() ); //$NON-NLS-1$
+          getOffsetInput().setText( "" + getValue() );
         }
       }
 

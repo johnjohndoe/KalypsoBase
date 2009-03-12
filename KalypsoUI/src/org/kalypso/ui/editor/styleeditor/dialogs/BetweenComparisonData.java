@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -70,8 +70,7 @@ public class BetweenComparisonData extends AbstractComparisonData
     this.upper = m_upper;
   }
 
-  @Override
-  public boolean verify( )
+  public boolean verify()
   {
     if( lower != null && upper != null && propertyName != null )
       return true;

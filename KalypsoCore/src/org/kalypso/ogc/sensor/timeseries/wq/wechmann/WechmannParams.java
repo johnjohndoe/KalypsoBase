@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 
@@ -58,23 +58,29 @@ public final class WechmannParams
   private final double m_K2;
 
   /**
-   * obere Wasserstandsgrenze in cm. When no WGR value is defined, this class supposes Double.MAX_VALUE is used
+   * obere Wasserstandsgrenze in cm. When no WGR value is defined, this class
+   * supposes Double.MAX_VALUE is used
    */
   private final double m_WGR;
-
+  
   /**
-   * this is the Q computed from WGR usign the Wechmann function. This Q is also stored as a member of this class
-   * because it is used when convert Q to W.
+   * this is the Q computed from WGR usign the Wechmann function. This Q is also
+   * stored as a member of this class because it is used when convert Q to W.
    * <p>
    * this is a computed value, it is not serialized.
    */
-  private double m_Q4WGR;
+  private final double m_Q4WGR;
 
   /**
-   * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
-   * defined, thus the parameters are valid for all possible W values.
+   * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this
+   * constructor when the WGR value is not defined, thus the parameters are
+   * valid for all possible W values.
+   * 
+   * @param W1
+   * @param LNK1
+   * @param K2
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2 ) 
+  public WechmannParams( double W1, double LNK1, double K2 ) 
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -90,24 +96,16 @@ public final class WechmannParams
    *          Konstante
    * @param WGR
    *          obere Wasserstandsgrenze in cm
-   *  
+   * 
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2, final double WGR ) 
+  public WechmannParams( double W1, double LNK1, double K2, double WGR ) 
   {
     m_W1 = W1;
     m_LNK1 = LNK1;
     m_K2 = K2;
     m_WGR = WGR;
-
-    try
-    {
-      m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      m_Q4WGR = Double.MAX_VALUE;
-    }
+    
+    m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
   }
 
   /**
@@ -133,7 +131,7 @@ public final class WechmannParams
   {
     return m_W1;
   }
-
+  
   /**
    * @return WGR
    */
@@ -141,15 +139,15 @@ public final class WechmannParams
   {
     return m_WGR;
   }
-
+  
   /**
    * @return true if WGR was defined once object was constructed
    */
   public boolean hasWGR()
   {
-    return Double.compare( m_WGR, Double.MAX_VALUE ) != 0;
+  	return Double.compare( m_WGR, Double.MAX_VALUE ) != 0;
   }
-
+  
   /**
    * @return the corresponding Q-value to the WGR
    */

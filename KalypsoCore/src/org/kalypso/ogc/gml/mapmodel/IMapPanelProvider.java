@@ -36,16 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
+
 
 /**
  * @author bce
  */
 public interface IMapPanelProvider
 {
-  public IMapPanel getMapPanel();
+  public MapPanel getMapPanel();
 }

@@ -36,29 +36,24 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.wizard;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.io.CSV;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ui.metadoc.IExportableTableDocument;
+import org.kalypso.util.io.CSV;
 
 /**
  * ExportableTableDocument
  * 
  * @author schlienger
  */
-public class ExportableLayerTable implements IExportableObject
+public class ExportableLayerTable implements IExportableTableDocument
 {
   private final LayerTableViewer m_layerTable;
 
@@ -69,68 +64,42 @@ public class ExportableLayerTable implements IExportableObject
     m_layerTable = layerTable;
   }
 
-  public void setOnlySelectedRows( final boolean flag )
-  {
-    m_onlyRows = flag;
-  }
-
   /**
-   * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
+   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
    */
-  public String getPreferredDocumentName( )
-  {
-    // TODO besserer Name zurückgeben
-    return FileUtilities.validateName( "GisTabelle.csv", "_" ); //$NON-NLS-1$ $NON-NLS-2$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public void exportDocument( final OutputStream outs )
   {
     final LayerTableViewer layerTable = m_layerTable;
     final boolean onlyRows = m_onlyRows;
 
     final Runnable runnable = new Runnable()
     {
-      public void run( )
+      public void run()
       {
         final String[][] csv = layerTable.exportTable( onlyRows );
-        final PrintWriter pw = new PrintWriter( new OutputStreamWriter( output ) );
+        final PrintWriter pw = new PrintWriter( new OutputStreamWriter( outs ) );
         CSV.writeCSV( csv, pw );
         pw.close();
+
       }
     };
-
+    
     layerTable.getTable().getDisplay().syncExec( runnable );
-
-    return Status.OK_STATUS;
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
+   * @see org.kalypso.ui.metadoc.IExportableTableDocument#setOnlySelectedRows(boolean)
    */
-  public String getIdentifier( )
+  public void setOnlySelectedRows( boolean flag )
   {
-    // TODO bessere Id zurückgeben
-    return getPreferredDocumentName();
+    m_onlyRows = flag;
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#getCategory()
+   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
    */
-  public String getCategory( )
+  public String getDocumentExtension()
   {
-    // TODO bessere Category zurückgeben
-    return Messages.getString( "org.kalypso.ogc.gml.table.command.ExportableLayerTable.1" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return "";
+    return ".csv";
   }
 }

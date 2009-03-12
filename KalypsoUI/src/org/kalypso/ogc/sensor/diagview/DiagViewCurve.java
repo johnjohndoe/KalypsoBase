@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,41 +36,74 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
-import java.awt.Stroke;
-import java.util.Set;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.template.IObsProvider;
-import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
 
 /**
  * Default implementation of the <code>ITableViewColumn</code> interface
  * 
  * @author schlienger
  */
-public class DiagViewCurve extends ObsViewItem
+public class DiagViewCurve
 {
-  private Color m_color;
-
-  private Stroke m_stroke;
-
+  private DiagViewTheme m_theme;
+  private final DiagViewTemplate m_template;
+  
+  private String m_name = "";
+  private final Color m_color;
+  private boolean m_shown = true;
+  
   private final AxisMapping[] m_mappings;
 
-  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color, final Stroke stroke, final AxisMapping[] mappings )
-  {
-    super( view, obsProvider, name );
 
+  /**
+   * Constructor
+   * 
+   * @param name
+   * @param color
+   * @param theme
+   * @param mappings
+   * @param template
+   */
+  public DiagViewCurve( final String name, final Color color,
+      final DiagViewTheme theme, final AxisMapping[] mappings,
+      final DiagViewTemplate template )
+  {
+    m_name = name;
     m_color = color;
-    m_stroke = stroke;
     m_mappings = mappings;
+    m_theme = theme;
+    m_template = template;
+  }
+
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString( )
+  {
+    return getName();
+  }
+
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
+  public DiagViewTheme getTheme( )
+  {
+    return m_theme;
   }
 
   public AxisMapping[] getMappings( )
@@ -82,100 +115,46 @@ public class DiagViewCurve extends ObsViewItem
   {
     return m_color;
   }
-
-  public void setColor( final Color color )
+  
+  public boolean isShown( )
   {
-    m_color = color;
+    return m_shown;
   }
 
-  public Stroke getStroke( )
+  public void setShown( boolean shown )
   {
-    return m_stroke;
-  }
-
-  public void setStroke( final Stroke stroke )
-  {
-    m_stroke = stroke;
-  }
-
-  /**
-   * @return true when this curve represents a Water-Level and the Water-Level-Feature is activated in the view
-   */
-  public boolean isDisplayAlarmLevel( )
-  {
-    boolean hasWaterLevelAxis = false;
-    for( final AxisMapping element : m_mappings )
+    if( shown != m_shown )
     {
-      if( element.getObservationAxis().getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      {
-        hasWaterLevelAxis = true;
-        break;
-      }
-    }
+      m_shown = shown;
 
-    return hasWaterLevelAxis && getView().isFeatureEnabled( TimeserieConstants.FEATURE_ALARMLEVEL );
+      m_template.fireTemplateChanged( new TemplateEvent( this,
+          TemplateEvent.TYPE_SHOW_STATE ) );
+    }
   }
 
   /**
-   * @return the list of alarm-levels, or an empty array if nothing found
-   */
-  public AlarmLevel[] getAlarmLevels( )
-  {
-    final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( getObservation() );
-    final AlarmLevel[] als = new AlarmLevel[alarms.length];
-
-    final MetadataList mdl = getObservation().getMetadataList();
-
-    for( int i = 0; i < alarms.length; i++ )
-    {
-      final String alarmProperty = mdl.getProperty( alarms[i] );
-      final double value = NumberUtils.parseQuietDouble( alarmProperty );
-      als[i] = new AlarmLevel( value, alarms[i] );
-    }
-
-    return als;
-  }
-
-  /**
-   * Simple structre holding the alarm-level information
+   * Two TableViewColumn objects are equal if they have the same name and belong
+   * to the same theme.
    * 
-   * @author schlienger
+   * @see java.lang.Object#equals(java.lang.Object)
    */
-  public static class AlarmLevel
+  public boolean equals( final Object obj )
   {
-    public final double value;
+    if( !this.getClass().equals( obj.getClass() ) )
+      return false;
 
-    public final String label;
+    final DiagViewCurve col = (DiagViewCurve) obj;
 
-    public final Color color;
-
-    public AlarmLevel( final double val, final String lbl )
-    {
-      this.value = val;
-      this.label = lbl;
-
-      this.color = TimeserieUtils.getColorForAlarmLevel( lbl );
-    }
-
-    @Override
-    public String toString( )
-    {
-      return label;
-    }
+    return new EqualsBuilder().append( col.m_name, m_name ).append(
+        col.m_theme, m_theme ).isEquals();
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
+   * @see java.lang.Object#hashCode()
    */
-  @Override
-  public boolean shouldBeHidden( final Set<String> hiddenTypes )
+  public int hashCode( )
   {
-    for( final AxisMapping element : m_mappings )
-    {
-      if( hiddenTypes.contains( element.getObservationAxis().getType() ) )
-        return true;
-    }
-
-    return false;
+    return new HashCodeBuilder( 7, 31 ).append( m_name ).append( m_theme )
+        .toHashCode();
   }
 }

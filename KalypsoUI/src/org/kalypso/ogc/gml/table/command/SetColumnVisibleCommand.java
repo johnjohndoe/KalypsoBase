@@ -36,18 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.util.command.ICommand;
 
 /**
- * TODO: does not yet handle the label/tooltip properties of the template
- * 
- * @author Gernot Belger
+ * @author Belger
  */
 public class SetColumnVisibleCommand implements ICommand
 {
@@ -61,69 +58,64 @@ public class SetColumnVisibleCommand implements ICommand
 
   private final int m_oldWidth;
 
-  private final String m_alignment;
-
-  private final String m_format;
-
-  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName, final String alignment, final String format, final boolean bVisible )
+  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName,
+      final boolean bVisible )
   {
     m_viewer = viewer;
     m_propertyName = propertyName;
-    m_alignment = alignment;
-    m_format = format;
     m_bVisible = bVisible;
     m_wasEditable = viewer.isEditable( propertyName );
     m_oldWidth = viewer.getWidth( propertyName );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, true );
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, true );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, true );
+    doIt( m_viewer, m_propertyName, m_bVisible, 100, true );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    doIt( m_viewer, m_propertyName, !m_bVisible, m_oldWidth, m_alignment, m_format, m_wasEditable );
+    doIt( m_viewer, m_propertyName, !m_bVisible, m_oldWidth, m_wasEditable );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0") + m_propertyName + "' " + (m_bVisible ? Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2") : Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    return "Spalte '" + m_propertyName + "' " + ( m_bVisible ? "anzeigen" : "verstecken" );
   }
-
-  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final String alignment, final String format, final boolean editable )
+  
+  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final boolean editable )
   {
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {
-      public void run( )
+      public void run()
       {
         if( bVisible )
-          viewer.addColumn( propertyName, null, null, editable, width, alignment, format, true );
+          viewer.addColumn( propertyName, width, editable, true );
         else
           viewer.removeColumn( propertyName );
       }

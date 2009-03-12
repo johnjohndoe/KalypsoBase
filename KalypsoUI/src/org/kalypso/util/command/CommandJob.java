@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,52 +36,47 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
-import org.eclipse.core.runtime.Assert;
+import java.util.logging.Logger;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
-/**
- * Job to process / undo / redo a ICommand Wird sofort gestartet
+/** Job to process / undo / redo a ICommand 
+ * Wird sofort gestartet  
  */
 public final class CommandJob extends Job
 {
-  public final static TYPE POST = new TYPE( "POST" ); //$NON-NLS-1$
+  public final static TYPE POST = new TYPE( "POST" );
 
-  public final static TYPE UNDO = new TYPE( "UNDO" ); //$NON-NLS-1$
+  public final static TYPE UNDO = new TYPE( "UNDO" );
 
-  public final static TYPE REDO = new TYPE( "REDO" ); //$NON-NLS-1$
+  public final static TYPE REDO = new TYPE( "REDO" );
 
   private final ICommand myCommand;
 
   private final ICommandManager myCommandManager;
 
-  // TODO: change to tracing option
-// private static final Logger LOGGER = Logger.getLogger( CommandJob.class.getName() );
+  private static final Logger LOGGER = Logger.getLogger( CommandJob.class.getName() );
 
   private final Runnable myRunnable;
 
   private final TYPE m_type;
 
-  public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule, final Runnable runnable, final TYPE type )
+  public CommandJob( final ICommand command, final ICommandManager commandManager,
+      final ISchedulingRule rule, final Runnable runnable, final TYPE type )
   {
-    super( Messages.getString("org.kalypso.util.command.CommandJob.3") + getCommandDescription( commandManager, command, type ) ); //$NON-NLS-1$
-
-    Assert.isNotNull( commandManager );
-    Assert.isNotNull( command );
+    super( "Kalypso: " + getCommandDescription( commandManager, command, type ) );
 
     // Nein: dann bleiben die Jobs als 'Waiting' in der ProgressAnzeige
-    // setUser( true );
+    //setUser( true );
 
     setPriority( Job.SHORT );
     setRule( rule );
@@ -94,12 +89,11 @@ public final class CommandJob extends Job
     schedule();
   }
 
-  @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
     final String description = getCommandDescription( myCommandManager, myCommand, m_type );
 
-//    LOGGER.info( m_type.toString() + ": " + description ); //$NON-NLS-1$
+    LOGGER.info( m_type.toString() + ": " + description );
 
     try
     {
@@ -116,18 +110,24 @@ public final class CommandJob extends Job
     catch( final Exception e )
     {
       e.printStackTrace();
+      
+      LOGGER.warning( "Failed " + m_type + ": " + description );
 
-//      LOGGER.warning( Messages.getString("org.kalypso.util.command.CommandJob.5") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.util.command.CommandJob.7") + m_type + ": " + description, e ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new Status( IStatus.ERROR,
+          KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: " + m_type
+              + ": " + description, e );
     }
 
-//    LOGGER.info( Messages.getString("org.kalypso.util.command.CommandJob.9") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( description == null )
+      System.out.print(false);
+    
+    LOGGER.info( "Finished " + m_type + ": " + description );
 
     return Status.OK_STATUS;
   }
 
-  private static String getCommandDescription( final ICommandManager cm, final ICommand c, final TYPE type )
+  private static String getCommandDescription( final ICommandManager cm, final ICommand c,
+      final TYPE type )
   {
     if( type == POST )
       return c.getDescription();
@@ -136,7 +136,7 @@ public final class CommandJob extends Job
     else if( type == REDO )
       return cm.getRedoDescription();
 
-    return ""; //$NON-NLS-1$
+    return "";
   }
 
   private static final class TYPE
@@ -151,8 +151,7 @@ public final class CommandJob extends Job
     /**
      * @see java.lang.Object#toString()
      */
-    @Override
-    public String toString( )
+    public String toString()
     {
       return m_name;
     }

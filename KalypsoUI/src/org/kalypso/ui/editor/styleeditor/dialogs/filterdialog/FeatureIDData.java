@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -60,11 +60,11 @@ public class FeatureIDData extends AbstractData
     this.featureId = m_featureId.trim();
   }
 
-  @Override
-  public boolean verify( ) throws FilterDialogException
+  public boolean verify() throws FilterDialogException
   {
     if( featureId == null || featureId.trim().length() == 0 )
-      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
+      throw new FilterDialogException( new FilterDialogError( null,
+          MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
 
     return true;
   }

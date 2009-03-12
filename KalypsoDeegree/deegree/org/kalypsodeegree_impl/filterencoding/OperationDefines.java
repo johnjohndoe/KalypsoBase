@@ -1,45 +1,71 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.filterencoding;
+/*--------------- Kalypso-Deegree-Header ------------------------------------------------------------
+
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+ 
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+ 
+ 
+ history:
+  
+ Files in this package are originally taken from deegree and modified here
+ to fit in kalypso. As goals of kalypso differ from that one in deegree
+ interface-compatibility to deegree is wanted but not retained always. 
+     
+ If you intend to use this software in other ways than in kalypso 
+ (e.g. OGC-web services), you should consider the latest version of deegree,
+ see http://www.deegree.org .
+
+ all modifications are licensed as deegree, 
+ original copyright:
+ 
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon GmbH
+ http://www.lat-lon.de
+ 
+---------------------------------------------------------------------------------------------------*/
+package org.deegree_impl.filterencoding;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Defines codes and constants for easy coping with the different kinds of Operations (both XML-Entities & JavaObjects).
+ * Defines codes and constants for easy coping with the different kinds of
+ * Operations (both XML-Entities & JavaObjects).
  * 
  * @author Markus Schneider
  * @version 06.08.2002
@@ -48,10 +74,10 @@ public class OperationDefines
 {
 
   // used to associate names with the OperationInfos
-  private static Map<String, OperationInfo> names = null;
+  private static Map names = null;
 
   // used to associate ids (Integers) with the OperationInfos
-  private static Map<Integer, OperationInfo> ids = null;
+  private static Map ids = null;
 
   // different types of operations
   public static final int TYPE_SPATIAL = 0;
@@ -83,7 +109,7 @@ public class OperationDefines
 
   public static final int BBOX = 9;
 
-  // calvin added on 10/21/2003
+  //calvin added on 10/21/2003
   public static final int DWITHIN = 10;
 
   // comparison operations
@@ -103,10 +129,6 @@ public class OperationDefines
 
   public static final int PROPERTYISBETWEEN = 107;
 
-  public static final int PROPERTYISNOTEQUALTO = 108;
-
-  public static final int PROPERTYISINSTANCEOF = 150;
-  
   // logical operations
   public static final int AND = 200;
 
@@ -119,9 +141,7 @@ public class OperationDefines
   static
   {
     if( names == null )
-    {
       buildHashMaps();
-    }
   }
 
   /**
@@ -129,12 +149,12 @@ public class OperationDefines
    * 
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
-  public static int getTypeByName( final String name )
+  public static int getTypeByName( String name )
   {
-    final OperationInfo operationInfo = names.get( name.toLowerCase() );
+    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.m_type;
+    return operationInfo.type;
   }
 
   /**
@@ -142,12 +162,12 @@ public class OperationDefines
    * 
    * @return BBOX / PROPERTYISEQUAL / AND / ...
    */
-  public static int getIdByName( final String name )
+  public static int getIdByName( String name )
   {
-    final OperationInfo operationInfo = names.get( name.toLowerCase() );
+    OperationInfo operationInfo = (OperationInfo)names.get( name.toLowerCase() );
     if( operationInfo == null )
       return UNKNOWN;
-    return operationInfo.m_id;
+    return operationInfo.id;
   }
 
   /**
@@ -155,12 +175,12 @@ public class OperationDefines
    * 
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
-  public static int getTypeById( final int id )
+  public static int getTypeById( int id )
   {
-    final OperationInfo operationInfo = ids.get( new Integer( id ) );
+    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
-    return operationInfo.m_type;
+    return operationInfo.type;
   }
 
   /**
@@ -168,28 +188,28 @@ public class OperationDefines
    * 
    * @return null / Name of operation
    */
-  public static String getNameById( final int id )
+  public static String getNameById( int id )
   {
 
-    final OperationInfo operationInfo = ids.get( new Integer( id ) );
+    OperationInfo operationInfo = (OperationInfo)ids.get( new Integer( id ) );
     if( operationInfo == null )
       return null;
-    return operationInfo.m_name;
+    return operationInfo.name;
   }
 
-  private static void addOperationInfo( final int id, final String name, final int type )
+  private static void addOperationInfo( int id, String name, int type )
   {
-    final OperationInfo operationInfo = new OperationInfo( id, type, name );
+    OperationInfo operationInfo = new OperationInfo( id, type, name );
     names.put( name, operationInfo );
     names.put( name.toLowerCase(), operationInfo );
     names.put( name.toUpperCase(), operationInfo );
     ids.put( new Integer( id ), operationInfo );
   }
 
-  private static void buildHashMaps( )
+  private static void buildHashMaps()
   {
-    names = new HashMap<String, OperationInfo>( 25 );
-    ids = new HashMap<Integer, OperationInfo>( 25 );
+    names = new HashMap( 25 );
+    ids = new HashMap( 25 );
 
     addOperationInfo( BBOX, "BBOX", TYPE_SPATIAL );
     addOperationInfo( EQUALS, "Equals", TYPE_SPATIAL );
@@ -207,32 +227,30 @@ public class OperationDefines
     addOperationInfo( PROPERTYISLESSTHAN, "PropertyIsLessThan", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISGREATERTHAN, "PropertyIsGreaterThan", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISLESSTHANOREQUALTO, "PropertyIsLessThanOrEqualTo", TYPE_COMPARISON );
-    addOperationInfo( PROPERTYISGREATERTHANOREQUALTO, "PropertyIsGreaterThanOrEqualTo", TYPE_COMPARISON );
+    addOperationInfo( PROPERTYISGREATERTHANOREQUALTO, "PropertyIsGreaterThanOrEqualTo",
+        TYPE_COMPARISON );
     addOperationInfo( PROPERTYISLIKE, "PropertyIsLike", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISNULL, "PropertyIsNull", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISBETWEEN, "PropertyIsBetween", TYPE_COMPARISON );
-    addOperationInfo( PROPERTYISNOTEQUALTO, "PropertyIsNotEqualTo", TYPE_COMPARISON );
-    addOperationInfo( PROPERTYISINSTANCEOF, "PropertyIsInstanceOf", TYPE_COMPARISON );
-    
+
     addOperationInfo( AND, "And", TYPE_LOGICAL );
     addOperationInfo( OR, "Or", TYPE_LOGICAL );
     addOperationInfo( NOT, "Not", TYPE_LOGICAL );
   }
-
 }
 
 class OperationInfo
 {
-  int m_id;
+  int id;
 
-  int m_type;
+  int type;
 
-  String m_name;
+  String name;
 
-  OperationInfo( final int id, final int type, final String name )
+  OperationInfo( int id, int type, String name )
   {
-    m_id = id;
-    m_type = type;
-    m_name = name;
+    this.id = id;
+    this.type = type;
+    this.name = name;
   }
 }

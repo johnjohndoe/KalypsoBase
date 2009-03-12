@@ -36,31 +36,26 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.loaders;
 
-import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.core.IKalypsoCoreConstants;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.util.SetContentHelper;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
+import org.kalypso.util.url.UrlResolver;
+import org.kalypso.zml.ObservationType;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
@@ -69,20 +64,24 @@ import org.kalypso.zml.Observation;
  */
 public class ZmlLoader extends AbstractLoader
 {
-  private final UrlResolver m_urlResolver = new UrlResolver();
+  private final UrlResolver m_urlResolver;
+
+  public ZmlLoader()
+  {
+    m_urlResolver = new UrlResolver();
+  }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, URL context,
+      IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
       final URL url = m_urlResolver.resolveURL( context, source );
-
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.0") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      
+      monitor.beginTask( "Zml laden aus: " + url, IProgressMonitor.UNKNOWN );
 
       final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
 
@@ -94,7 +93,7 @@ public class ZmlLoader extends AbstractLoader
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-//      e.printStackTrace();
+      e.printStackTrace();
       // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }
@@ -105,64 +104,44 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
-  @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final String source, URL context, IProgressMonitor monitor,
+      Object data ) throws LoaderException
   {
-    IMarker lockMarker = null;
-
     try
     {
-      if( data == null )
-        return;
       final URL url = m_urlResolver.resolveURL( context, source );
-
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.1") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      
+      monitor.beginTask( "ZML speichern in: " + url, IProgressMonitor.UNKNOWN );
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.2") + url ); //$NON-NLS-1$
+        throw new IllegalArgumentException(
+            "Datei konnte nicht gefunden werden: " + url );
 
-      // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation
-      lockMarker = file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
+      final ObservationType xmlObs = ZmlFactory.createXML( (IObservation) data,
+          null );
       
-      final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
-
       // set contents of ZML-file
-      final SetContentHelper helper = new SetContentHelper()
+      final SetContentHelper helper = new SetContentHelper(  )
       {
-        @Override
-        protected void write( final OutputStreamWriter writer ) throws Throwable
+        protected void write( final Writer writer ) throws Throwable
         {
           final Marshaller marshaller = ZmlFactory.getMarshaller();
           marshaller.setProperty( Marshaller.JAXB_ENCODING, getCharset() );
-
+          
           marshaller.marshal( xmlObs, writer );
         }
       };
-      helper.setFileContents( file, false, true, new NullProgressMonitor() );
+      helper.setFileContents(file, false, true, new NullProgressMonitor());
     }
-    catch( final Throwable e ) // generic exception caught for simplicity
+    catch( Throwable e ) // generic exception caught for simplicity
     {
       throw new LoaderException( e );
     }
     finally
     {
-      /* delete all markers on the corresponding resource */
-      if( lockMarker != null )
-      {
-        try
-        {
-          lockMarker.delete();
-        }
-        catch( final CoreException e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-        }
-      }
-      
       monitor.done();
     }
   }
@@ -172,6 +151,6 @@ public class ZmlLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return "ZML"; //$NON-NLS-1$
+    return "ZML";
   }
 }

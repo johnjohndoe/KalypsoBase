@@ -36,23 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
-import java.io.StringReader;
-
-import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
-import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
-import org.xml.sax.InputSource;
+import org.kalypso.ogc.sensor.timeseries.wq.WQObservationFilter;
 
 /**
- * AutoProxyFactory: this class can create proxy of an IObservation based on its metadata.
+ * AutoProxyFactory: this class can create proxy of an IObservation based on its
+ * metadata.
  * 
  * @author schlienger
  */
@@ -66,123 +63,63 @@ public class AutoProxyFactory implements IProxyFactory
   }
 
   /**
-   * Return a proxy IObservation that may be a proxy of the original observation if sufficient information is found to
-   * create such a proxy.
+   * Return a proxy IObservation that may be a proxy of the original observation
+   * if sufficient information is found to create such a proxy.
    * <p>
-   * For instance, some observations have WQ-Information in their metadata that allows one to create a WQ-Observation
-   * from it.
+   * For instance, some observations have WQ-Information in their metadata that
+   * allows one to create a WQ-Observation from it.
    * 
    * @param obs
    * @return either a proxy observation or the original observation
+   * @throws SensorException
    */
-  public IObservation proxyObservation( final IObservation obs )
+  public IObservation proxyObservation( final IObservation obs ) throws SensorException
   {
-    // direct assignment, just to be able to use 'proxy' as name everywhere
-    IObservation proxy = obs;
-
-    proxy = proxyForWQTable( proxy );
-    proxy = proxyForWQWechmann( proxy );
+    // currently only the wechmann wq-filter as proxy for the observation
+    IObservation proxy = proxyForWechmannWQ( obs );
 
     return proxy;
   }
 
-  private static IObservation proxyForWQTable( final IObservation obs )
+  /**
+   * Checks the metadata of the given observation for the presence of some
+   * Wechmann WQ-Parameter. In the positive, it creates a WQ-Filter from this
+   * information.
+   * 
+   * @param obs
+   * @return either a WQObservationFilter or the original obs
+   * @throws SensorException
+   */
+  private static IObservation proxyForWechmannWQ( final IObservation obs ) throws SensorException
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( TimeserieConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( TimeserieConstants.MD_WQ, "" );
 
     if( wq.length() > 0 )
     {
-      StringReader sr = new StringReader( wq );
-      try
-      {
-        final RatingTableList tableList;
-        tableList = WQTableFactory.parseSimple( new InputSource( sr ) );
-        sr.close();
-
-        final String type1 = tableList.getFromType();
-        final String type2 = tableList.getToType();
-
-        boolean foundType1 = false;
-        boolean foundType2 = false;
-
-        final IAxis[] axes = obs.getAxisList();
-        for( int i = 0; i < axes.length; i++ )
-        {
-          if( axes[i].getType().equals( type1 ) )
-            foundType1 = true;
-          else if( axes[i].getType().equals( type2 ) )
-            foundType2 = true;
-        }
-
-        // directly return original observation if none or all of the types found
-        if( !foundType1 && !foundType2 || foundType1 && foundType2 )
-          return obs;
-
-        final String realAxisType = foundType1 ? type1 : type2;
-        final String proxyAxisType = foundType1 ? type2 : type1;
-
-        final WQTimeserieProxy wqf = new WQTimeserieProxy( realAxisType, proxyAxisType, obs );
-        return wqf;
-      }
-      catch( final Exception e )
-      {
-        final StackTraceElement trace = e.getStackTrace()[0];
-        System.out.println( trace.getClassName() + ":" + trace.getMethodName() + "#" + trace.getLineNumber() ); //$NON-NLS-1$ //$NON-NLS-2$
-        // e.printStackTrace();
-        return obs;
-      }
-      finally
-      {
-        sr.close();
-      }
-    }
-
-    return obs;
-  }
-
-  private static IObservation proxyForWQWechmann( final IObservation obs )
-  {
-    final MetadataList mdl = obs.getMetadataList();
-
-    final String wq = mdl.getProperty( TimeserieConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
-
-    if( wq.length() > 0 )
-    {
+      final WQObservationFilter wqf = new WQObservationFilter();
+      
       boolean foundW = false;
       boolean foundQ = false;
       final IAxis[] axes = obs.getAxisList();
       for( int i = 0; i < axes.length; i++ )
       {
-        if( axes[i].getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
+        if( axes[i].getType().equals( TimeserieConstants.TYPE_RUNOFF) )
           foundQ = true;
-        else if( axes[i].getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        else if( axes[i].getType().equals( TimeserieConstants.TYPE_WATERLEVEL) )
           foundW = true;
       }
-
+      
       // directly return original observation if no W nor Q or if both
       // already present
       if( !foundW && !foundQ || foundW && foundQ )
         return obs;
-
-      final String source;
-      final String dest;
-
-      if( foundW )
-      {
-        source = TimeserieConstants.TYPE_WATERLEVEL;
-        dest = TimeserieConstants.TYPE_RUNOFF;
-      }
-      else
-      {
-        source = TimeserieConstants.TYPE_RUNOFF;
-        dest = TimeserieConstants.TYPE_WATERLEVEL;
-      }
-
+      
       // now that we have wq-params and that we know the type of the
       // axis, let's say the filter can be created
-      final WQTimeserieProxy wqf = new WQTimeserieProxy( source, dest, obs );
+      wqf.initFilter( foundW ? TimeserieConstants.TYPE_WATERLEVEL : TimeserieConstants.TYPE_RUNOFF, obs );
+
       return wqf;
     }
 
@@ -196,7 +133,7 @@ public class AutoProxyFactory implements IProxyFactory
   {
     if( m_instance == null )
       m_instance = new AutoProxyFactory();
-
+    
     return m_instance;
   }
 }

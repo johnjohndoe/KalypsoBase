@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.09.2004
  *  
@@ -46,21 +46,24 @@ package org.kalypso.ui.editor.styleeditor.rulePattern;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.graphics.sld.Rule;
+import org.deegree.graphics.sld.Rule;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class RuleCollection
 {
-  private final ArrayList<Rule> m_rules = new ArrayList<Rule>();
 
-  private final String m_id;
+  private ArrayList rules = null;
 
-  private RuleCollection( final Rule rule )
+  private String id = null;
+
+  private RuleCollection( Rule rule )
   {
-    m_id = rule.getTitle();
-    m_rules.add( rule );
+    rules = new ArrayList();
+    id = rule.getTitle();
+    rules.add( rule );
   }
 
   public static RuleCollection getInstance( Rule rule )
@@ -70,26 +73,26 @@ public class RuleCollection
 
   public void addRule( Rule rule )
   {
-    m_rules.add( rule );
+    rules.add( rule );
   }
 
   public void removeRule( Rule rule )
   {
-    m_rules.remove( rule );
+    rules.remove( rule );
   }
 
-  public String getId( )
+  public String getId()
   {
-    return m_id;
+    return id;
   }
 
-  public Rule get( final int index )
+  public Rule get( int index )
   {
-    return m_rules.get( index );
+    return (Rule)rules.get( index );
   }
 
-  public int size( )
+  public int size()
   {
-    return m_rules.size();
+    return rules.size();
   }
 }

@@ -36,18 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * ObservationViewHelper
@@ -62,44 +62,69 @@ public final class ObservationViewHelper
   }
 
   /**
-   * Makes a DateRangeArgument using the properties of the repository into which the item belongs. If the property is
-   * not defined, it returns a default one with the last seven days.
+   * Makes a DateRangeArgument using the properties of the repository into which
+   * the item belongs. If the property is not defined, it uses the Kalypso
+   * Preferences.
    * 
    * @param item
    * @return new instance of DateRangeArgument
    */
-  public static DateRange makeDateRange( final IRepositoryItem item )
+  public static DateRangeArgument makeDateRange( final IRepositoryItem item )
   {
-    // REMARK: make sure that this DateFormat instance is the same with which the
-    // repository properties where formatted (look at DateRangeInputControlStruct) 
-    final DateFormat df = TimeserieUtils.getDateFormat();
+    final DateFormat df = DateFormat.getDateTimeInstance();
 
-    if( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) != null )
+    if( item.getRepository().getProperty( IKalypsoPreferences.USE_RANGE ) != null )
     {
-      final boolean useRange = Boolean.valueOf( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) )
-          .booleanValue();
+      final boolean useRange = Boolean.valueOf(
+          item.getRepository().getProperty( IKalypsoPreferences.USE_RANGE ) ).booleanValue();
 
       if( useRange )
       {
         try
         {
-          final Date dateFrom = df.parse( item.getRepository().getProperty( DateRangeInputControl.DATE_FROM ) );
+          final Date dateFrom = df.parse( item.getRepository().getProperty(
+              IKalypsoPreferences.DATE_FROM ) );
 
-          final Date dateTo = df.parse( item.getRepository().getProperty( DateRangeInputControl.DATE_TO ) );
+          final Date dateTo = df.parse( item.getRepository().getProperty(
+              IKalypsoPreferences.DATE_TO ) );
 
-          return new DateRange( dateFrom, dateTo );
+          return new DateRangeArgument( dateFrom, dateTo );
         }
         catch( ParseException e )
         {
-          return new DateRange();
+          return new DateRangeArgument();
         }
       }
 
-      final String strDays = item.getRepository().getProperty( DateRangeInputControl.NUMBER_OF_DAYS );
+      final String strDays = item.getRepository().getProperty( IKalypsoPreferences.NUMBER_OF_DAYS );
 
-      return DateRange.createFromPastDays( Integer.valueOf( strDays ).intValue() );
+      return DateRangeArgument.createFromPastDays( Integer.valueOf( strDays ).intValue() );
     }
 
-    return DateRange.createFromPastDays( 7 );
+    final boolean useRange = KalypsoGisPlugin.getDefault().getPluginPreferences().getBoolean(
+        IKalypsoPreferences.USE_RANGE );
+
+    if( useRange )
+    {
+      try
+      {
+        final Date dateFrom = df.parse( KalypsoGisPlugin.getDefault().getPluginPreferences()
+            .getString( IKalypsoPreferences.DATE_FROM ) );
+
+        final Date dateTo = df.parse( KalypsoGisPlugin.getDefault().getPluginPreferences()
+            .getString( IKalypsoPreferences.DATE_TO ) );
+
+        return new DateRangeArgument( dateFrom, dateTo );
+      }
+      catch( ParseException e )
+      {
+        return new DateRangeArgument();
+      }
+    }
+
+    final int days = KalypsoGisPlugin.getDefault().getPluginPreferences().getInt(
+        IKalypsoPreferences.NUMBER_OF_DAYS );
+
+    return DateRangeArgument.createFromPastDays( days );
   }
 }

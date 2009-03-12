@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,120 +36,75 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Point;
 
+import org.deegree.model.geometry.GM_Envelope;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.util.command.ICommand;
 
 /**
- * @author Andreas von Dömming
+ * @author vDoemming
  */
 public class PanToWidget extends AbstractWidget
 {
-  private GeoTransform m_world2screen = null;
+  private Point endPoint = null;
 
-  private GM_Position m_startPoint = null;
-
-  private GM_Position m_endPoint = null;
-
-  public PanToWidget( final String name, final String toolTip )
+  private Point startPoint = null;
+  
+  public void dragged( Point p )
   {
-    super( name, toolTip );
-  }
-
-  public PanToWidget( )
-  {
-    super( "pan to", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  @Override
-  public void dragged( final Point p )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    if( m_world2screen != null && m_startPoint != null )
+    if( startPoint != null )
     {
-      final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
-      m_endPoint = m_world2screen.getSourcePoint( pixelPos );
+      endPoint = p;
 
-      final GM_Envelope panExtent = calcPanExtent();
-      mapPanel.setBoundingBox( panExtent, false, false );
+      int dx = (int)( endPoint.getX() - startPoint.getX() );
+      int dy = (int)( endPoint.getY() - startPoint.getY() );
+      getMapPanel().setOffset( dx, dy );
     }
   }
 
-  private GM_Envelope calcPanExtent( )
+  public void finish()
   {
-    final double[] vector = new double[] { m_startPoint.getX() - m_endPoint.getX(), m_startPoint.getY() - m_endPoint.getY() };
-
-    final GM_Envelope startExtent = m_world2screen.getSourceRect();
-
-    final GM_Position panMin = GeometryFactory.createGM_Position( startExtent.getMin().getAsArray() );
-    final GM_Position panMax = GeometryFactory.createGM_Position( startExtent.getMax().getAsArray() );
-
-    panMin.translate( vector );
-    panMax.translate( vector );
-
-    return GeometryFactory.createGM_Envelope( panMin, panMax, startExtent.getCoordinateSystem() );
+    getMapPanel().clearOffset();
   }
 
-  @Override
-  public void finish( )
+  public void leftPressed( Point p )
   {
+    startPoint = p;
+    endPoint = null;
+    getMapPanel().clearOffset();
   }
 
-  @Override
-  public void leftPressed( final Point p )
+  public void leftReleased( Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    m_world2screen = mapPanel.getProjection();
-    if( m_world2screen == null )
-      return;
-
-    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
-    m_startPoint = m_world2screen.getSourcePoint( pixelPos );
-
-    m_endPoint = null;
-  }
-
-  @Override
-  public void leftReleased( final Point p )
-  {
-    if( m_world2screen == null )
-      return;
-
-    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
-    m_endPoint = m_world2screen.getSourcePoint( pixelPos );
-
+    endPoint = p;
     perform();
   }
 
-  public void perform( )
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#performIntern()
+   */
+  public ICommand performIntern()
   {
-    final IMapPanel mapPanel = getMapPanel();
-
-    if( m_world2screen != null && m_startPoint != null && m_endPoint != null && !m_startPoint.equals( m_endPoint ) )
+    if( startPoint != null && endPoint != null )
     {
-      final GM_Envelope panExtent = calcPanExtent();
+      final MapPanel mapPanel = getMapPanel();
+      final double mx = mapPanel.getWidth() / 2d - ( endPoint.getX() - startPoint.getX() );
+      final double my = mapPanel.getHeight() / 2d - ( endPoint.getY() - startPoint.getY() );
 
-      m_startPoint = null;
-      m_world2screen = null;
-      m_endPoint = null;
+      final GM_Envelope panBox = mapPanel.getPanToPixelBoundingBox( mx, my );
 
-      final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, panExtent );
-      postViewCommand( command, null );
+      startPoint = null;
+      endPoint = null;
+
+      if( panBox != null )
+        return new ChangeExtentCommand( mapPanel, panBox );
     }
+    return null;
   }
 }

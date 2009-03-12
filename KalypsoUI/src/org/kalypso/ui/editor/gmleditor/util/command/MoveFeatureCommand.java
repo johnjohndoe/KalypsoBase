@@ -40,21 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventProvider;
+import org.kalypso.util.command.ICommand;
 
 /**
- * This command moves an arbitrary element within a list property of a feature.
- * 
- * @author Gernot Belger
+ * @author belger
  */
 public class MoveFeatureCommand implements ICommand
 {
@@ -62,82 +57,122 @@ public class MoveFeatureCommand implements ICommand
 
   private final Object m_moveItem;
 
+  private final ModellEventProvider m_eventprovider;
+
   public static int UP = 0;
 
   public static int DOWN = 1;
 
-  private final IPropertyType m_pt;
+  private int m_type = -1;
 
-  private final int m_step;
+  private int index = -1;
 
-  /**
-   * @param prop
-   *          Must be a list property.
-   * @param moveItem
-   *          The element of the list which is to be moved
-   * @param step
-   *          The amount by which the element is moved (<0 for backwards)
-   */
-  public MoveFeatureCommand( final Feature parentFeature, final IPropertyType pt, final Object moveItem, final int step )
+  private final String m_propName;
+
+  public MoveFeatureCommand( final ModellEventProvider eventprovider, Feature parentFeature,
+      String propName, Object moveItem, int type )
   {
+    m_eventprovider = eventprovider;
     m_parentFeature = parentFeature;
-    m_pt = pt;
+    m_propName = propName;
     m_moveItem = moveItem;
-    m_step = step;
+    m_type = type;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    move( m_step );
+    move();
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
-    move( m_step );
+    move();
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    move( -m_step );
+    Object prop = m_parentFeature.getProperty( m_propName );
+    Object properties[] = m_parentFeature.getProperties();
+    int propIndex = 0;
+    for( ; propIndex < properties.length; propIndex++ )
+      if( properties[propIndex] == prop )
+        break;
+
+    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
+
+    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
+      List list = (List)prop;
+      index = list.indexOf( m_moveItem );
+      if( m_type == UP && ( ( index - 1 ) >= 0 ) )
+      {
+        list.remove( m_moveItem );
+        list.add( ( index + 1 ), m_moveItem );
+      }
+      else if( m_type == DOWN && ( ( index + 1 ) < list.size() ) )
+      {
+        list.remove( m_moveItem );
+        list.add( ( index - 1 ), m_moveItem );
+      }
+      if( m_eventprovider != null )
+        m_eventprovider.fireModellEvent( new ModellEvent( m_eventprovider,
+            ModellEvent.FEATURE_CHANGE ) );
+    }
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand.0"); //$NON-NLS-1$
+    return "Feature löschen";
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  private void move( final int step )
+  private void move()
   {
-    final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );
-    final int currentIndex = list.indexOf( m_moveItem );
-    final int newIndex = currentIndex + step;
+    Object prop = m_parentFeature.getProperty( m_propName );
+    Object properties[] = m_parentFeature.getProperties();
+    int propIndex = 0;
+    for( ; propIndex < properties.length; propIndex++ )
+      if( properties[propIndex] == prop )
+        break;
 
-    Collections.swap( list, currentIndex, newIndex );
+    int maxOccurs = m_parentFeature.getFeatureType().getMaxOccurs( propIndex );
 
-    final List<Feature> feList = new ArrayList<Feature>();
-    feList.add( m_parentFeature );
-    final GMLWorkspace workspace = m_parentFeature.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+    if( maxOccurs > 1 || maxOccurs == FeatureType.UNBOUND_OCCURENCY )
+    {
+      List list = (List)prop;
+      index = list.indexOf( m_moveItem );
+      if( m_type == UP && ( ( index - 1 ) >= 0 ) )
+      {
+        list.remove( m_moveItem );
+        list.add( ( index - 1 ), m_moveItem );
+      }
+      else if( m_type == DOWN && ( ( index + 1 ) < list.size() ) )
+      {
+        list.remove( m_moveItem );
+        list.add( ( index + 1 ), m_moveItem );
+      }
+      if( m_eventprovider != null )
+        m_eventprovider
+            .fireModellEvent( new ModellEvent( m_eventprovider, ModellEvent.FULL_CHANGE ) );
+    }
   }
 }

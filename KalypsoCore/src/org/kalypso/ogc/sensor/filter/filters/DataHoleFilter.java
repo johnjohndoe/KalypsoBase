@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.HashMap;
@@ -47,12 +47,13 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
- * DataHoleFilter sets the status of elements that equals the marker-value. TODO: This filter only works if there
- * already is a status axis. It does not add one on its own.
+ * DataHoleFilter sets the status of elements that equals the marker-value.
+ * TODO: This filter only works if there already is a status axis. It does not
+ * add one on its own.
  * 
  * @author schlienger
  */
@@ -64,9 +65,10 @@ public class DataHoleFilter extends AbstractObservationFilter
 
   private final Double m_replace;
 
-  private final Map<IAxis, IAxis> m_map = new HashMap<IAxis, IAxis>();
+  private final Map m_map = new HashMap();
 
-  public DataHoleFilter( final double value, final int status, final Double replace )
+  public DataHoleFilter( final double value, final int status,
+      final Double replace )
   {
     m_value = new Double( value );
     m_status = new Integer( status );
@@ -74,13 +76,14 @@ public class DataHoleFilter extends AbstractObservationFilter
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args )
+      throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
-    final IAxis[] valueAxes = KalypsoStatusUtils.findAxesByClass( values.getAxisList(), Number.class, true );
+    final IAxis[] valueAxes = ObservationUtilities.findAxisByClass( values
+        .getAxisList(), Number.class, true );
 
     for( int index = 0; index < values.getCount(); index++ )
     {
@@ -93,10 +96,10 @@ public class DataHoleFilter extends AbstractObservationFilter
           {
             // update the status
             values.setElement( index, m_status, sa );
-
+            
             // and replace value
             if( m_replace != null )
-              values.setElement( index, m_replace, valueAxes[ia] );
+              values.setElement( index, m_replace, valueAxes[ia]);
           }
         }
       }
@@ -108,18 +111,21 @@ public class DataHoleFilter extends AbstractObservationFilter
   /**
    * Helper
    * 
+   * @param axis
+   * @param axes
    * @return status axis or null if none
    */
   private IAxis getStatusAxisFor( final IAxis axis, final IAxis[] axes )
   {
     if( m_map.containsKey( axis ) )
-      return m_map.get( axis );
+      return (IAxis) m_map.get( axis );
 
     final String label = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
-    final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( axes, label );
+    final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( axes,
+        label );
 
     m_map.put( axis, statusAxis );
-
+    
     return statusAxis;
   }
 }

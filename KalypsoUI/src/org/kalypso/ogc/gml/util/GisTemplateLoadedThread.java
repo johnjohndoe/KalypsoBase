@@ -36,26 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
-import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * <p>
- * Dieser Thread wartet solange, bis eine Karte vollständig geladen wurde.
- * </p>
- * <p>
- * Danach macht er etwas (d.h. führt ein übergebenen Runnable aus) und beendet sich.
- * </p>
+ * <p>Dieser Thread wartet solange, bis eine Karte vollständig geladen wurde.</p>
+ * <p>Danach macht er etwas (d.h. führt ein übergebenen Runnable aus) und beendet sich.</p>
  * 
- * @deprecated Use {@link org.kalypso.ogc.gml.mapmodel.MapModellHelper} instead.
  * @author belger
  */
-@Deprecated
 public class GisTemplateLoadedThread extends Thread
 {
   private final IMapModell m_modell;
@@ -63,21 +58,20 @@ public class GisTemplateLoadedThread extends Thread
   public GisTemplateLoadedThread( final IMapModell modell, final Runnable runnable )
   {
     super( runnable );
-
+    
     m_modell = modell;
   }
-
+  
   /**
    * @see java.lang.Thread#run()
    */
-  @Override
-  public void run( )
+  public void run()
   {
-    int maxWait = 10;
     while( true )
     {
       if( isLoaded() )
         break;
+      
       try
       {
         sleep( 500 );
@@ -86,27 +80,27 @@ public class GisTemplateLoadedThread extends Thread
       {
         e.printStackTrace();
       }
-      if( maxWait-- < 0 ) // do not wait for ever
-      {
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.util.GisTemplateLoadedThread.0") ); //$NON-NLS-1$
-        break;
-      }
     }
+    
     super.run();
   }
 
-  private boolean isLoaded( )
+  private boolean isLoaded()
   {
-    if( m_modell == null )
-      return false;
-
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
-
-    for( final IKalypsoTheme theme : themes )
+    for( int i = 0; i < themes.length; i++ )
     {
-      if( !theme.isLoaded() )
-        return false;
+      final IKalypsoTheme theme = themes[i];
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        final CommandableWorkspace workspace = ((IKalypsoFeatureTheme)theme).getWorkspace();
+        if( workspace == null )
+          return false;
+      }
     }
+
+    // falls alle Workspace aller Feature-Themes geladen sind
+    // gehen wir davon aus, dass die Karte geladen ist
     return true;
   }
 

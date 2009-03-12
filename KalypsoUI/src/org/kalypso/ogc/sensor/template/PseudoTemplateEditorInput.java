@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.java.io.FileUtilities;
 
 /**
  * PseudoTemplateEditorInput
@@ -64,9 +63,11 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    * @param storage
    *          template storage on which this pseudo template is based
    * @param fileExtension
-   *          name of the file extension that this template should have once saved
+   *          name of the file extension that this template should have once
+   *          saved
    */
-  public PseudoTemplateEditorInput( final TemplateStorage storage, final String fileExtension )
+  public PseudoTemplateEditorInput( final TemplateStorage storage,
+      final String fileExtension )
   {
     m_storage = storage;
     m_fileExtension = fileExtension;
@@ -75,7 +76,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.ui.IStorageEditorInput#getStorage()
    */
-  public IStorage getStorage( )
+  public IStorage getStorage( ) 
   {
     return m_storage;
   }
@@ -101,7 +102,8 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput.0") + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension; //$NON-NLS-1$
+    return "Vorlage für "
+        + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
   }
 
   /**
@@ -123,19 +125,17 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
   public Object getAdapter( Class adapter )
   {
     return null;
   }
 
   /**
-   * Call is delegated to Object class since we always want new pseudo templates even if the underlying file is the same
-   * one.
+   * Call is delegated to Object class since we always want new pseudo templates
+   * even if the underlying file is the same one.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
   public boolean equals( Object obj )
   {
     return super.equals( obj );

@@ -36,18 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.util.command.ICommand;
 
 /**
- * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die Breite der Spalte (d.h. des Widgets)
- * bereits gesetzt wurde.
+ * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die
+ * Breite der Spalte (d.h. des Widgets) bereits gesetzt wurde.
  * 
  * @author Belger
  */
@@ -68,7 +67,7 @@ public class SetColumnWidthCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -76,7 +75,7 @@ public class SetColumnWidthCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -84,7 +83,7 @@ public class SetColumnWidthCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -92,7 +91,7 @@ public class SetColumnWidthCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -100,11 +99,11 @@ public class SetColumnWidthCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
   public String getDescription()
   {
-    return Messages.getString("org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0"); //$NON-NLS-1$
+    return "Spaltenbreite ändern";
   }
 
   private void setWidth( final int width, final boolean bSetControlWidth )

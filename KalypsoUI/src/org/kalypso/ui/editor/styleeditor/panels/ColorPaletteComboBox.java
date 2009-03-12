@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  *  
  */
@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class ColorPaletteComboBox extends FilterComboPanel
 {
@@ -55,23 +56,23 @@ public class ColorPaletteComboBox extends FilterComboPanel
   {
     super( parent );
     items = new String[4];
-    items[0] = "RedGreen"; //$NON-NLS-1$
-    items[1] = "BlueGreen"; //$NON-NLS-1$
-    items[2] = "RedBlue"; //$NON-NLS-1$
-    items[3] = "Custom"; //$NON-NLS-1$
+    items[0] = "RedGreen";
+    items[1] = "BlueGreen";
+    items[2] = "RedBlue";
+    items[3] = "Custom";
     init();
   }
 
-  @Override
-  public int getSelection( )
+  public int getSelection()
   {
     return selection_index;
   }
 
-  /**
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.kalypso.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
-  @Override
   public void setSelection( int index )
   {
     selection_index = index;

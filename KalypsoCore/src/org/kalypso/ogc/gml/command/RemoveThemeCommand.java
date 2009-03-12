@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author belger
@@ -54,67 +53,49 @@ public class RemoveThemeCommand implements ICommand
 
   private final IKalypsoTheme m_theme;
 
-  private final boolean m_force;
-
   public RemoveThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme )
-  {
-    this( mapModell, theme, false );
-  }
-
-  /**
-   * @param force
-   *          force the deletion of a not deleteable theme
-   */
-  public RemoveThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean force )
   {
     m_mapModell = mapModell;
     m_theme = theme;
-    m_force = force;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
-  public void process( ) throws Exception
-  {
-    /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
-    final String deleteableStr = m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
-    final boolean deletable = Boolean.parseBoolean( deleteableStr );
-    if( !m_force && !deletable )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.0" ) + m_theme.getName() ); //$NON-NLS-1$
-
-    m_mapModell.removeTheme( m_theme );
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
-  public void redo( ) throws Exception
+  public void process() throws Exception
   {
     m_mapModell.removeTheme( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
-  public void undo( ) throws Exception
+  public void redo() throws Exception
+  {
+    m_mapModell.removeTheme( m_theme );
+  }
+
+  /**
+   * @see org.kalypso.util.command.ICommand#undo()
+   */
+  public void undo() throws Exception
   {
     m_mapModell.addTheme( m_theme );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.1" ); //$NON-NLS-1$
+    return "Thema nach unten verschieben";
   }
 }
