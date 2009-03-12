@@ -710,12 +710,13 @@ public class JTSUtilities
   public static LineString addPointsToLine( final LineString line, final List<Point> points )
   {
     /* Check for intersection. */
-    for( int i = 0; i < points.size(); i++ )
+    for( final Point point : points )
     {
-      if( points.get( i ).distance( line ) >= 10E-06 )
-        throw new IllegalStateException( "One of the points does not lie on the line ..." );
+      final double distance = point.distance( line );
+      if( distance >= 10E-06 )
+        throw new IllegalStateException( String.format( "One of the points does not lie on the line. Distance from line: %s", distance ) );
     }
-
+    
     /* The geometry factory. */
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
