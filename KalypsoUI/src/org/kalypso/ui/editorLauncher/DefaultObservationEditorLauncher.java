@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.net.MalformedURLException;
@@ -49,7 +49,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 
@@ -61,7 +61,6 @@ import org.kalypso.ogc.sensor.template.TemplateStorage;
 public class DefaultObservationEditorLauncher implements IDefaultTemplateLauncher
 {
   private final String m_pseudoFilename;
-
   private final String m_fileExtension;
 
   public DefaultObservationEditorLauncher( final String pseudoFilename, final String fileExtension )
@@ -69,11 +68,11 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
     m_pseudoFilename = pseudoFilename;
     m_fileExtension = fileExtension;
   }
-
+  
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
-  public String getFilename()
+  public String getFilename( )
   {
     return m_pseudoFilename;
   }
@@ -81,10 +80,11 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
-  public IEditorDescriptor getEditor()
+  public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+
     return editorRegistry.getDefaultEditor( getFilename() );
   }
 
@@ -96,9 +96,10 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
     try
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
-
-      final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput( new TemplateStorage( file,
-          ResourceUtilities.createURL( file ), "project:/" + projectRelativePath ), m_fileExtension ); //$NON-NLS-1$
+      
+      final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput(
+          new TemplateStorage( file, ResourceUtilities
+              .createURL( file ), "project:/" + projectRelativePath ), m_fileExtension );
 
       return input;
     }

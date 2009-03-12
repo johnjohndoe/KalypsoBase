@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.java.util.DateUtilities;
 
 /**
  * A Set of WechmannParams ordered by WGR and valid for the given Date.
@@ -56,14 +56,15 @@ import org.kalypso.contribs.java.util.DateUtilities;
  */
 public class WechmannSet
 {
-  private final SortedMap<Double, WechmannParams> m_mapW;
+  private final SortedMap m_mapW;
 
-  private final SortedMap<Double, WechmannParams> m_mapQ;
+  private final SortedMap m_mapQ;
 
   private final Date m_validity;
 
   /**
-   * Constructor with Params only. Takes the minimum Date as delivered by DateUtilities as validity.
+   * Constructor with Params only. Takes the minimum Date as delivered by
+   * DateUtilities as validity.
    * 
    * @param wps
    */
@@ -73,8 +74,9 @@ public class WechmannSet
   }
 
   /**
-   * Sets the WechmannParams, they will be sorted by WGR (ascending). The order is taken into account by the iterator
-   * when you call <code>WechmannSet.iterator()</code>.
+   * Sets the WechmannParams, they will be sorted by WGR (ascending). The order
+   * is taken into account by the iterator when you call
+   * <code>WechmannSet.iterator()</code>.
    * 
    * @param validity
    * @param wps
@@ -83,8 +85,8 @@ public class WechmannSet
   {
     m_validity = validity;
 
-    m_mapW = new TreeMap<Double, WechmannParams>();
-    m_mapQ = new TreeMap<Double, WechmannParams>();
+    m_mapW = new TreeMap();
+    m_mapQ = new TreeMap();
 
     for( int i = 0; i < wps.length; i++ )
     {
@@ -94,12 +96,12 @@ public class WechmannSet
   }
 
   /**
-   * Returns an iterator over the WechmannParamList backed by this WechmannSet. The list ist sorted according to the
-   * WechmannParams' WGR attribute.
+   * Returns an iterator over the WechmannParamList backed by this WechmannSet.
+   * The list ist sorted according to the WechmannParams' WGR attribute.
    * 
    * @return iterator over WechmannParams objects
    */
-  public Iterator<WechmannParams> iterator( )
+  public Iterator iterator()
   {
     return m_mapW.values().iterator();
   }
@@ -107,7 +109,7 @@ public class WechmannSet
   /**
    * @return the validity of this set of WechmannParams.
    */
-  public Date getValidity( )
+  public Date getValidity()
   {
     return m_validity;
   }
@@ -116,28 +118,24 @@ public class WechmannSet
    * @param W
    * @return the WechmannParams that are relevant for the given Waterlevel.
    */
-  public WechmannParams getForW( final double W )
+  public WechmannParams getForW(final double W)
   {
-    final Double[] ds = m_mapW.keySet().toArray( new Double[0] );
+    final Double[] ds = (Double[]) m_mapW.keySet().toArray( new Double[0] );
     int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
 
     if( i < 0 )
       i = -i - 1;
 
-    if( i < ds.length )
-      return m_mapW.get( ds[i] );
-
-    // W was too big for current parameters, just use last branch of Wechmann-Set
-    return null;
+    return (WechmannParams) m_mapW.get( ds[i] );
   }
 
   /**
    * @param Q
    * @return the WechmannParams that are relevant for the given Runoff.
    */
-  public WechmannParams getForQ( final double Q )
+  public WechmannParams getForQ(final double Q)
   {
-    final Double[] ds = m_mapQ.keySet().toArray( new Double[0] );
+    final Double[] ds = (Double[]) m_mapQ.keySet().toArray( new Double[0] );
     int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), Q );
 
     if( i < 0 )
@@ -145,7 +143,7 @@ public class WechmannSet
 
     if( i >= ds.length )
       i = ds.length - 1;
-
-    return m_mapQ.get( ds[i] );
+    
+    return (WechmannParams) m_mapQ.get( ds[i] );
   }
 }

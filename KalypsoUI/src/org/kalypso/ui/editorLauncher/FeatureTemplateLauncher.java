@@ -36,32 +36,28 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.eclipse.core.resources.StringStorage;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.eclipse.core.resources.StringStorage;
+import org.kalypso.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.template.featureview.Featuretemplate.Layer;
-import org.kalypso.template.types.LayerTypeUtilities;
+import org.kalypso.template.featureview.FeaturetemplateType.LayerType;
 
 /**
  * @author belger
@@ -73,7 +69,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    */
   public String getFilename()
   {
-    return "<Standard Feature Editor>.gft"; //$NON-NLS-1$
+    return "<Standard Feature Editor>.gft";
   }
 
   /**
@@ -88,44 +84,51 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
   }
 
   /**
-   * @throws CoreException
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
    */
-  public IEditorInput createInput( final IFile file ) throws CoreException
+  public IEditorInput createInput( final IFile file )
   {
     try
     {
+      final IPath projectRelativePath = file.getProjectRelativePath();
+      
       // ein default template erzeugen
       final ObjectFactory factory = new ObjectFactory();
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Layer layer = factory.createFeaturetemplateLayer();
-      LayerTypeUtilities.initLayerType( layer, file );
+
+      final LayerType layer = factory.createFeaturetemplateTypeLayerType();
+      layer.setId( file.toString() );
+      layer.setHref( "project:/" + projectRelativePath );
+      layer.setLinktype( "gml" );
+      layer.setFeaturePath( "" ); // immer das root-feature
 
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc);
+      final Marshaller marshaller = factory.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();
       marshaller.marshal( featuretemplate, w );
       w.close();
 
-      final String templateXml = w.toString();
+      final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gft", templateXml, file //$NON-NLS-1$
-          .getFullPath() ) );
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( string, file.getFullPath() ) );
 
       return input;
     }
-    catch( final JAXBException e )
+    catch( JAXBException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      e.printStackTrace();
+      
+      return null;
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      e.printStackTrace();
+      
+      return null;
     }
   }
 

@@ -36,23 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.logging.Logger;
 
 import org.jfree.data.general.Series;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
-import org.kalypso.ogc.sensor.diagview.DiagramAxis;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.diagview.IDiagramAxis;
+import org.kalypso.ogc.sensor.diagview.IDiagramCurve;
 
 /**
  * A CurveSerie.
@@ -63,17 +58,15 @@ class XYCurveSerie extends Series
 {
   private transient final IAxis m_xAxis;
 
-  private transient final DiagramAxis m_xDiagAxis;
+  private transient final IDiagramAxis m_xDiagAxis;
 
   private transient final IAxis m_yAxis;
 
-  private transient final DiagramAxis m_yDiagAxis;
+  private transient final IDiagramAxis m_yDiagAxis;
 
-  private transient final DiagViewCurve m_curve;
+  private transient final IDiagramCurve m_curve;
 
   private transient ITuppleModel m_values = null;
-
-  private transient IAxis m_statusAxis = null;
 
   /**
    * Constructor. Fetches the values (ITuppleModel).
@@ -89,8 +82,8 @@ class XYCurveSerie extends Series
    *          the IDiagramAxis mapped to yAxis
    * @throws SensorException
    */
-  public XYCurveSerie( final DiagViewCurve curve, final IAxis xAxis, final IAxis yAxis, final DiagramAxis xDiagAxis,
-      final DiagramAxis yDiagAxis ) throws SensorException
+  public XYCurveSerie( final IDiagramCurve curve, final IAxis xAxis, final IAxis yAxis,
+      final IDiagramAxis xDiagAxis, final IDiagramAxis yDiagAxis ) throws SensorException
   {
     super( curve.getName() );
 
@@ -100,44 +93,22 @@ class XYCurveSerie extends Series
     m_xDiagAxis = xDiagAxis;
     m_yDiagAxis = yDiagAxis;
 
-    final Logger logger = Logger.getLogger( getClass().getName() );
-
-    final IObservation obs = m_curve.getObservation();
-    if( obs == null )
-      logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0") + m_curve.getName() ); //$NON-NLS-1$
-    else
-    {
-      m_values = obs.getValues( m_curve.getArguments() );
-
-      if( m_values != null )
-      {
-        try
-        {
-          m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( m_values.getAxisList(), m_yAxis );
-        }
-        catch( NoSuchElementException ignored )
-        {
-          // empty
-        }
-      }
-      else
-        logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1") + obs ); //$NON-NLS-1$
-    }
+    m_values = m_curve.getTheme().getObservation().getValues( m_curve.getTheme().getArguments() );
   }
 
-  public DiagramAxis getXDiagAxis()
+  public IDiagramAxis getXDiagAxis()
   {
     return m_xDiagAxis;
   }
 
-  public DiagramAxis getYDiagAxis()
+  public IDiagramAxis getYDiagAxis()
   {
     return m_yDiagAxis;
   }
 
   public int getItemCount() throws SensorException
   {
-    return m_values == null ? 0 : m_values.getCount();
+    return m_values.getCount();
   }
 
   public Number getXValue( int item ) throws SensorException
@@ -145,9 +116,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_xAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
     else if( obj instanceof Date )
-      return new Double( ( (Date)obj ).getTime() );
+      return new Double(( (Date)obj ).getTime());
 
     return null;
   }
@@ -157,29 +128,7 @@ class XYCurveSerie extends Series
     final Object obj = m_values.getElement( item, m_yAxis );
 
     if( obj instanceof Number )
-      return (Number)obj;
-
-    if( obj instanceof Boolean )
-    {
-      final Boolean b = (Boolean)obj;
-      return b.booleanValue() ? new Integer( 1 ) : new Integer( 0 );
-    }
-    
-    return null;
-  }
-
-  /**
-   * @return the kalypso-status of the given item, or null if no status
-   */
-  public Number getStatus( int item ) throws SensorException
-  {
-    if( m_statusAxis == null )
-      return null;
-
-    final Object obj = m_values.getElement( item, m_statusAxis );
-
-    if( obj instanceof Number )
-      return (Number)obj;
+      return (Number) obj;
 
     return null;
   }

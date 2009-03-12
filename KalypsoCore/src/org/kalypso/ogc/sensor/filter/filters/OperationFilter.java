@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,17 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
-import java.net.URL;
-
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.util.runtime.IVariableArguments;
 import org.kalypso.zml.filters.OperationFilterType;
 
 /**
@@ -70,53 +67,43 @@ public class OperationFilter extends AbstractObservationFilter
 
   private final double m_operand;
 
-  public OperationFilter( final OperationFilterType filter )
+  public OperationFilter( OperationFilterType filter )
   {
     m_operand = Double.parseDouble( filter.getOperand() );
     final String operator = filter.getOperator();
-    if( operator.equals( "+" ) ) //$NON-NLS-1$
+    if( operator.equals( "+" ) )
       m_operation = OPERATION_PLUS;
-    else if( operator.equals( "-" ) ) //$NON-NLS-1$
+    else if( operator.equals( "-" ) )
       m_operation = OPERATION_MINUS;
-    else if( operator.equals( "*" ) ) //$NON-NLS-1$
+    else if( operator.equals( "*" ) )
       m_operation = OPERATION_MAL;
-    else if( operator.equals( "/" ) ) //$NON-NLS-1$
+    else if( operator.equals( "/" ) )
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.4" ) + operator + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
   }
 
-  public OperationFilter( final int operation, final double operand, final IObservation observation ) throws SensorException
-  {
-    m_operation = operation;
-    m_operand = operand;
-
-    m_baseobservation = observation;
-
-    super.initFilter( null, observation, null );
-  }
-
-  @Override
-  public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
+  public void initFilter( Object dummy, IObservation baseObs ) throws SensorException 
   {
     m_baseobservation = baseObs;
-    super.initFilter( dummy, baseObs, context );
+    super.initFilter( dummy, baseObs );
   }
 
-  @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITuppleModel getValues( IVariableArguments args ) throws SensorException
   {
     return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
+
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  @Override
-  public void setValues( final ITuppleModel values )
+  public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.6" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName()
+        + " setValues() wird zur Zeit nicht unterstuetzt ." );
   }
 
 }

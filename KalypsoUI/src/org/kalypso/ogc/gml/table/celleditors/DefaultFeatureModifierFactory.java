@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,22 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.deegree.model.feature.FeatureTypeProperty;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.modfier.ButtonModifier;
-import org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier;
+import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
-import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Belger
@@ -59,32 +51,29 @@ import org.kalypsodeegree.model.feature.Feature;
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.IPropertyType, java.lang.String,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.deegree.model.feature.FeatureTypeProperty)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final FeatureTypeProperty ftp )
   {
-    if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( vpt.isGeometry() || (!vpt.getQName().equals( Feature.QN_NAME ) && vpt.isList()) )
-        return new ButtonModifier( vpt, fcl );
+    final String type = ftp.getType();
 
-      final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
-      if( typeHandler != null )
-        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl, format );
-      return new StringModifier( vpt, format );
-    }
-    if( ftp instanceof IRelationType )
-    {
-      final IRelationType rpt = (IRelationType) ftp;
-      if( !rpt.isInlineAble() && rpt.isLinkAble() && !rpt.isList() )
-        return new ComboBoxModifier( rpt );
-      else
-        return new ButtonModifier( rpt, fcl );
-    }
-    throw new UnsupportedOperationException();
+    if( "java.lang.String".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Integer".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Long".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Float".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Double".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Date".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.String".equals( type ) )
+      return new StringModifier( ftp );
+    if( "java.lang.Boolean".equals( type ) )
+      return new BooleanModifier( ftp );
+
+    return new StringModifier( ftp );
   }
 }

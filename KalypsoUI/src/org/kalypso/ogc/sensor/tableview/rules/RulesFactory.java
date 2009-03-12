@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.java.util.StringUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.tableview.ITableViewRules;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 
 /**
@@ -54,56 +55,55 @@ public class RulesFactory
 {
   private static ITableViewRules DEFAULT_RULES = null;
 
-  private RulesFactory()
+  private RulesFactory( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
    * Factory method for creating a RenderingRule object with a binding object.
    * 
+   * TODO: extend binding type to include name of an icon that would be loaded
+   * here.
+   * 
+   * @param rr
    * @return RenderingRule
    */
   public static RenderingRule createRenderingRule( final TypeRenderingRule rr )
   {
-    final int mask = rr.getMask();
-    final String fg = rr.getForegroundcolor();
-    final String bg = rr.getBackgroundcolor();
-    final String font = rr.getFont();
-    final String tt = rr.getTooltip();
-    final String icon = rr.getIcon();
+    int mask = rr.getMask();
+    String fg = rr.getForegroundcolor();
+    String bg = rr.getBackgroundcolor();
+    String font = rr.getFont();
+    String tt = rr.getTooltip();
 
-    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ), bg == null ? null
-        : StringUtilities.stringToColor( bg ), font == null ? null : StringUtilities.stringToFont( font ), tt,
-        KalypsoStatusUtils.getIconFor( icon ) );
+    return new RenderingRule( mask, fg == null ? null : StringUtilities
+        .stringToColor( fg ), bg == null ? null : StringUtilities
+        .stringToColor( bg ), font == null ? null : StringUtilities
+        .stringToFont( font ), tt, null );
   }
 
   /**
-   * @return default rules for Kalypso (only a copy is returned!)
+   * @return default rules for Kalypso
    */
-  public static synchronized ITableViewRules getDefaultRules()
+  public static ITableViewRules getDefaultRules( )
   {
     // lazy loading
     if( DEFAULT_RULES == null )
     {
       DEFAULT_RULES = new Rules();
 
-      final int[] bits =
-      {
-          KalypsoStati.BIT_CHECK,
-          KalypsoStati.BIT_REQUIRED,
-          KalypsoStati.BIT_USER_MODIFIED,
-          KalypsoStati.BIT_DERIVATED,
-          KalypsoStati.BIT_DERIVATION_ERROR };
+      final int[] bits = { KalypsoStati.BIT_CHECK, KalypsoStati.BIT_REQUIRED,
+          KalypsoStati.BIT_USER_MODIFIED };
 
       for( int i = 0; i < bits.length; i++ )
       {
-        DEFAULT_RULES.addRule( new RenderingRule( bits[i], KalypsoStatusUtils.getForegroundFor( bits[i] ),
-            KalypsoStatusUtils.getBackgroundFor( bits[i] ), null, KalypsoStatusUtils.getTooltipFor( bits[i] ),
-            KalypsoStatusUtils.getIconFor( bits[i] ) ) );
+        DEFAULT_RULES.addRule( new RenderingRule( bits[i], null, null, null,
+            KalypsoStatusUtils.getTooltipFor( bits[i] ), KalypsoStatusUtils
+                .getIconFor( bits[i] ) ) );
       }
     }
 
-    return DEFAULT_RULES.cloneRules();
+    return DEFAULT_RULES;
   }
 }

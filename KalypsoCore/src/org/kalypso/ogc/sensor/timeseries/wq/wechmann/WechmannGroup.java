@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import java.util.Arrays;
@@ -46,26 +46,23 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
-import org.kalypso.ogc.sensor.timeseries.wq.WQException;
-
 /**
- * A List of WechmannSets sorted according to the date of validity of the WechmannSet objects. You can call the iterator
- * to step through the list in the ascending order of date of validity.
+ * A List of WechmannSets sorted according to the date of validity of the
+ * WechmannSet objects. You can call the iterator to step through the list in
+ * the ascending order of date of validity.
  * 
  * @author schlienger
  */
-public class WechmannGroup implements IWQConverter
+public class WechmannGroup
 {
-  private final SortedMap<Date, WechmannSet> m_map = new TreeMap<Date, WechmannSet>();
+  private final SortedMap m_map;
 
   /**
    * @param wsets
    */
   public WechmannGroup( final WechmannSet[] wsets )
   {
+    m_map = new TreeMap(  );
     for( int i = 0; i < wsets.length; i++ )
       m_map.put( wsets[i].getValidity(), wsets[i] );
   }
@@ -73,7 +70,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @return Iterator on the WechmannSet objects
    */
-  public Iterator<WechmannSet> iterator( )
+  public Iterator iterator()
   {
     return m_map.values().iterator();
   }
@@ -81,59 +78,21 @@ public class WechmannGroup implements IWQConverter
   /**
    * Returns the WechmannSet that is valid for the given date.
    * 
-   * @throws WQException
+   * @param d
+   * @return the set
    */
-  public WechmannSet getFor( final Date d ) throws WQException
+  public WechmannSet getFor(final Date d)
   {
-    final Date[] dates = m_map.keySet().toArray( new Date[0] );
+    final Date[] dates = (Date[]) m_map.keySet().toArray( new Date[0] );
     int i = Arrays.binarySearch( dates, d );
 
     if( i < 0 )
       i = -i - 2;
-
-    if( i < 0 )
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup.0") ); //$NON-NLS-1$
-
-    return m_map.get( dates[i] );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
-   */
-  public double computeW( Date date, double Q ) throws WQException
-  {
-    final WechmannParams params = getFor( date ).getForQ( Q );
-    return WechmannFunction.computeW( params, Q );
-  }
-
-  /**
-   * Returns 0.0, if W is too big for current validity
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
-   */
-  public double computeQ( Date date, double W ) throws WQException
-  {
-    final WechmannParams params = getFor( date ).getForW( W );
-    if( params == null )
-      return 0.0;
     
-    return WechmannFunction.computeQ( params, W );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
-   */
-  public String getFromType()
-  {
-    // HARDCODED: Wechman always converts from W to Q?
-    return TimeserieConstants.TYPE_WATERLEVEL;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getToType()
-   */
-  public String getToType()
-  {
-    // HARDCODED: Wechman always converts from W to Q?
-    return TimeserieConstants.TYPE_RUNOFF;
+    // TODO: check this please (wenn d smaller than any validity)
+    if( i < 0 )
+      return null;
+    
+    return (WechmannSet) m_map.get( dates[i] );
   }
 }

@@ -36,30 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.deegree.model.feature.event.ModellEventListener;
 
 /**
- * TODO: name and comment wrong. This is something which holds a MapPanel, not a MapModell.
- * <p>
- * Provides a view on a {@link IMapModell} and can handle selections on that model.
- * 
- * @author doemming, Stefan Kurzbach
+ * @author vDoemming
  */
-public interface IMapModellView extends ISelectionProvider, ICommandTarget
+public interface IMapModellView extends ModellEventListener
 {
-  public IMapPanel getMapPanel( );
-
-  public void setMapPanel( final IMapPanel panel );
-
-  public void dispose( );
-
-  public void addMapModellViewListener( final IMapModellViewListener l );
-
-  public void removeMapModellViewListener( final IMapModellViewListener l );
+  public IMapModell getMapModell();
+  public void setMapModell( final IMapModell modell );
 }

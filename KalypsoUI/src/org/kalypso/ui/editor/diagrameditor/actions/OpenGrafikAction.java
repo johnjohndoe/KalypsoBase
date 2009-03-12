@@ -36,30 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor.actions;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.dialogs.ResourceSelectionDialog;
-import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.diagview.DiagView;
-import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
-import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
 
 /**
  * OpenGrafikAction
@@ -71,58 +53,11 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( final IAction action )
+  public void run( IAction action )
   {
-    final ObservationDiagramEditor editor = (ObservationDiagramEditor)getEditor();
-    final DiagView diag = (DiagView)editor.getView();
+//    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
+//    final LinkedDiagramTemplate template = editor.getTemplate();
 
-    try
-    {
-      final Obsdiagview xml = DiagViewUtils.buildDiagramTemplateXML( diag );
-
-      final IEditorInput input = editor.getEditorInput();
-      final IFolder dest;
-      if( input instanceof IFileEditorInput )
-      {
-        final IContainer parent = ( (IFileEditorInput)input ).getFile().getParent();
-        dest = parent.getFolder( new Path( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ) ); //$NON-NLS-1$
-      }
-      else
-      {
-        final IProject[] projects = ProjectUtilities.getSelectedProjects();
-        if( projects.length > 0 )
-          dest = projects[0].getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.1") ); //$NON-NLS-1$
-        else
-        {
-          final ResourceSelectionDialog dlg = new ResourceSelectionDialog( getShell(), ResourcesPlugin.getWorkspace()
-              .getRoot(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.2") ); //$NON-NLS-1$
-
-          if( dlg.open() != Window.OK )
-            return;
-
-          final Object[] results = dlg.getResult();
-          if( results.length == 0 )
-            return;
-
-          if( results[0] instanceof IFolder )
-            dest = ( (IFolder)results[0] ).getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.3") ); //$NON-NLS-1$
-          else
-          {
-            MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4"), //$NON-NLS-1$
-                Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5") //$NON-NLS-1$
-                    + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.6") + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
-            return;
-          }
-        }
-      }
-
-      GrafikLauncher.startGrafikODT( diag.getTitle(), xml, dest, new NullProgressMonitor() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      
-      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.8"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.9") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+    // TODO
   }
 }

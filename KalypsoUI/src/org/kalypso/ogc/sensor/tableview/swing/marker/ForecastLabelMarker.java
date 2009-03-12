@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.marker;
 
 import java.awt.Color;
@@ -45,10 +45,9 @@ import java.util.Date;
 
 import javax.swing.JLabel;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * ForecastLabelMarker
@@ -61,14 +60,19 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final static String FORECAST_TT = TimeserieConstants.MD_VORHERSAGE;
 
-  private final DateRange m_dra;
+//  private final static Icon FORECAST_ICON = new ImageIcon(
+//      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
 
-  private final Color m_defaultBackground;
+  private final DateRangeArgument m_dra;
 
-  public ForecastLabelMarker( DateRange dra, Color defaultBackground )
+  /**
+   * Constructor
+   * 
+   * @param dra
+   */
+  public ForecastLabelMarker( DateRangeArgument dra )
   {
     m_dra = dra;
-    m_defaultBackground = defaultBackground;
   }
 
   /**
@@ -76,12 +80,10 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public boolean validates( final Object value )
   {
-    if( !( value instanceof Date ) )
+    if( !(value instanceof Date) )
       return false;
 
-    final Date date = (Date)value;
-    // Check if date lies within ]from, to]
-    return m_dra.getFrom().compareTo( date ) < 0 && m_dra.getTo().compareTo( date ) >= 0;
+    return m_dra.contains( (Date) value );
   }
 
   /**
@@ -99,8 +101,8 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public void reset( JLabel label )
   {
-    label.setBackground( m_defaultBackground );
-    label.setToolTipText( "" ); //$NON-NLS-1$
+    label.setBackground( null );
+    label.setToolTipText( "" );
     label.setIcon( null );
   }
 
@@ -109,27 +111,9 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public int compareTo( Object o )
   {
-    if( !( o instanceof ForecastLabelMarker ) )
+    if( !(o instanceof ForecastLabelMarker) )
       return -1;
 
-    return m_dra.compareTo( ( (ForecastLabelMarker)o ).m_dra );
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( Object obj )
-  {
-    return compareTo( obj ) == 0;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode()
-  {
-    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).toHashCode();
+    return m_dra.compareTo( ((ForecastLabelMarker) o).m_dra );
   }
 }

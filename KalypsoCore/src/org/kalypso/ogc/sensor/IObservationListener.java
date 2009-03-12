@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
 /**
@@ -47,9 +47,5 @@ package org.kalypso.ogc.sensor;
  */
 public interface IObservationListener
 {
-  /**
-   * @param obs the observation that changed
-   * @param source the source of the change event, optional can be null
-   */
-  public void observationChanged( final IObservation obs, final Object source );
+  public void observationChanged( final IObservation obs );
 }

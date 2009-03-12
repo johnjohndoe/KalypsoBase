@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,22 +36,17 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.repository.IRepository;
+import org.eclipse.ui.internal.Workbench;
+import org.kalypso.repository.IRepositoryContainer;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.IRepositoryListener;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.repository.container.IRepositoryContainerListener;
 
 /**
  * Tree Content provider for contents of the RepositoryExplorer.
@@ -60,21 +55,18 @@ import org.kalypso.repository.container.IRepositoryContainerListener;
  */
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
-  private IRepositoryContainerListener m_containerListener;
-
-  private IRepositoryListener m_repositoryListener;
-
   /**
-   * Helper
+   * helper
    * 
+   * @param arg
    * @return item or throws IllegalArgumentException if type is not an IRepositoryItem
    */
-  private IRepositoryItem testArg( final Object arg )
+  private IRepositoryItem testArg( Object arg )
   {
-    if( !(arg instanceof IRepositoryItem) )
+    if( !( arg instanceof IRepositoryItem ) )
       throw new IllegalArgumentException();
 
-    return (IRepositoryItem) arg;
+    return (IRepositoryItem)arg;
   }
 
   /**
@@ -88,11 +80,11 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.getChildren();
     }
-    catch( final RepositoryException e )
+    catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
       return new Object[0];
     }
   }
@@ -111,11 +103,11 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.getParent();
     }
-    catch( final RepositoryException e )
+    catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
       return null;
     }
   }
@@ -131,11 +123,11 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.hasChildren();
     }
-    catch( final RepositoryException e )
+    catch( RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.2" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-
+      MessageDialog.openError( Workbench.getInstance().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      
       return false;
     }
   }
@@ -145,74 +137,25 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    */
   public Object[] getElements( final Object inputElement )
   {
-    final IRepositoryContainer container = (IRepositoryContainer) inputElement;
-
-    return container.getRepositories();
+    final IRepositoryContainer container = (IRepositoryContainer)inputElement;
+    
+    return container.getRepositories().toArray();
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
-  public void dispose( )
+  public void dispose()
   {
-    // empty
+  // ?
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+   *      java.lang.Object, java.lang.Object)
    */
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    /* oldInput has an IRepositoryContainerListener attached? remove old listener */
-    if( oldInput instanceof IRepositoryContainer )
-    {
-      final IRepositoryContainer con = (IRepositoryContainer) oldInput;
-
-      con.removeRepositoryContainerListener( m_containerListener );
-
-      final IRepository[] repositories = con.getRepositories();
-      for( final IRepository ar : repositories )
-      {
-        ar.removeRepositoryListener( m_repositoryListener );
-      }
-    }
-
-    /* attach new IRepositoryContainerLister to new repository input! */
-    if( newInput instanceof IRepositoryContainer )
-    {
-      final IRepositoryContainer con = (IRepositoryContainer) newInput;
-
-      /* Re-create both listeners in order to have a fresh reference to the new viewer */
-      m_repositoryListener = new IRepositoryListener()
-      {
-        public void onRepositoryStructureChanged( )
-        {
-          ViewerUtilities.refresh( viewer, true );
-        }
-      };
-
-      m_containerListener = new IRepositoryContainerListener()
-      {
-        public void onRepositoryContainerChanged( )
-        {
-          ViewerUtilities.refresh( viewer, true );
-
-          /* Re-Register all listeners for the repositories */
-
-          final IRepository[] repositories = con.getRepositories();
-          for( final IRepository repository : repositories )
-          {
-            repository.removeRepositoryListener( m_repositoryListener );
-            repository.addRepositoryListener( m_repositoryListener );
-          }
-        }
-      };
-
-      con.addRepositoryContainerListener( m_containerListener );
-
-      m_containerListener.onRepositoryContainerChanged();
-    }
-
+  // TODO
   }
 }

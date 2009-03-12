@@ -36,16 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.interpolation;
 
-import java.net.URL;
-
-import javax.xml.bind.JAXBElement;
-
-import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -61,24 +56,24 @@ import org.kalypso.zml.filters.InterpolationFilterType;
  */
 public class InterpolationFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
-      throws SensorException
+  /**
+   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType,
+   *      org.kalypso.ogc.sensor.IObservation)
+   */
+  public IObservationFilter createFilter( AbstractFilterType aft,
+      IObservation baseObs ) throws SensorException
   {
-    if( !( aft instanceof InterpolationFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator.0") + InterpolationFilterType.class.getName() ); //$NON-NLS-1$
+    if( !(aft instanceof InterpolationFilterType) )
+      throw new IllegalArgumentException( "Not a "
+          + InterpolationFilterType.class.getName() );
 
-    final InterpolationFilterType ft = (InterpolationFilterType)aft;
+    final InterpolationFilterType ft = (InterpolationFilterType) aft;
 
-    final JAXBElement< ? extends AbstractFilterType> innerFilter = ft.getFilter();
-    final AbstractFilterType innerFilterValue = innerFilter == null ? null : innerFilter.getValue();
-    
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( innerFilterValue, baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft
+        .getFilter(), baseObs );
 
-    final String defaultValue = ft.getDefaultValue();
-    
-    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
-        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), defaultValue, ft.getDefaultStatus(), ft.isFillLastWithValid() );
-    filter.initFilter( null, filteredObs, context );
+    final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft.getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus() );
+    filter.initFilter( null, filteredObs );
 
     return filter;
   }

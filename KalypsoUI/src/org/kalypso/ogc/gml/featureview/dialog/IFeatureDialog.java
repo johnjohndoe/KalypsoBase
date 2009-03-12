@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.command.FeatureChange;
 
 /**
  * @author belger
@@ -52,7 +51,7 @@ public interface IFeatureDialog
 {
   public int open( final Shell shell );
 
-  public void collectChanges( final Collection<FeatureChange> c );
+  public void collectChanges( final Collection c );
 
   public String getLabel();
 }

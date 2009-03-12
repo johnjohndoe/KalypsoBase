@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.io.FileFilter;
@@ -52,24 +52,19 @@ import org.eclipse.ui.IEditorLauncher;
  */
 public class ObsTemplateLauncher implements IEditorLauncher
 {
+
   /**
    * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
    */
   public void open( final IPath filePath )
   {
-    final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" ); //$NON-NLS-1$
-    final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" ); //$NON-NLS-1$
-
+    final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" );
+    final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" );
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
-    final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Tabellen Editor>.ott", //$NON-NLS-1$
-        ".ott" ); //$NON-NLS-1$
-    final IDefaultTemplateLauncher dlDiag = new DefaultObservationEditorLauncher( "<Standard Diagramm Editor>.odt", //$NON-NLS-1$
-        ".odt" ); //$NON-NLS-1$
+    final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Tabellen Editor>.ott", ".ott" );
+    final IDefaultTemplateLauncher dlDiag = new DefaultObservationEditorLauncher( "<Standard Diagramm Editor>.odt", ".odt" );
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[]
-    {
-        dlTable,
-        dlDiag } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { dlTable, dlDiag } );
   }
 }

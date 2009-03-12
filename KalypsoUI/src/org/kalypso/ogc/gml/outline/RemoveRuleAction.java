@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,83 +36,76 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.deegree.model.feature.event.ModellEvent;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IActionDelegate;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.ogc.gml.FeatureTypeStyleTreeObject;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.RuleTreeObject;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
+import org.kalypso.util.list.IListManipulator;
 
 /**
  * @author belger
  */
-public class RemoveRuleAction implements IActionDelegate
+public class RemoveRuleAction extends AbstractOutlineAction
 {
+  public RemoveRuleAction( final String text, final ImageDescriptor image, final String tooltipText, final GisMapOutlineViewer outlineViewer,final IListManipulator listManip  )
+  {
+    super( text, image, tooltipText, outlineViewer, listManip );
+    refresh();
+  }
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
-  public void run( final IAction action )
-  {
-    if( action instanceof PluginMapOutlineAction )
+  public void run()
+  {          
+    Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
+    if( o instanceof RuleTreeObject )
     {
-      final PluginMapOutlineAction outlineaction = (PluginMapOutlineAction) action;
-      final IMapModellView viewer = outlineaction.getOutlineviewer();
-      final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-      if( o instanceof RuleTreeObject )
-      {
-        final RuleTreeObject obj = (RuleTreeObject) o;
-        final FeatureTypeStyleTreeObject ftStyle = obj.getParent();
-        ftStyle.getStyle().removeRule( obj.getRule() );
-        final UserStyleTreeObject userStyleNode = ftStyle.getParent();
-        final KalypsoUserStyle userStyle = userStyleNode.getStyle();
-        userStyle.fireStyleChanged();
-
-        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        StyleEditorViewPart part;
-        try
-        {
-          part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
-          if( part != null )
-          {
-            part.setSelectionChangedProvider( viewer );
-            part.setStyle( userStyle, userStyleNode.getParent() );
-          }
-        }
-        catch( final PartInitException e )
-        {
-          e.printStackTrace();
-        }
-      }
+    	RuleTreeObject obj = (RuleTreeObject) o;
+    	KalypsoUserStyle userStyle = obj.getStyle();
+    	userStyle.getFeatureTypeStyles()[0].removeRule(obj.getRule());
+    	userStyle.fireModellEvent(new ModellEvent(userStyle, ModellEvent.STYLE_CHANGE));	
+    	
+    	IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();
+    	StyleEditorViewPart part;
+		try {
+			part = (StyleEditorViewPart)window.getActivePage().showView("org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+			if( part != null )
+			{
+	    	 	part.setSelectionChangedProvider( getOutlineviewer() );
+	    	 	part.initStyleEditor(userStyle, obj.getTheme());	    	 		    	 
+			}
+		} catch (PartInitException e) {			
+			e.printStackTrace();
+		}
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public void selectionChanged( final SelectionChangedEvent event )
+  {
+    refresh();
+  }
+
+  protected void refresh()
   {
     boolean bEnable = false;
 
-    if( selection instanceof IStructuredSelection )
-    {
-      final IStructuredSelection s = (IStructuredSelection) selection;
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
 
-      if( s.getFirstElement() instanceof RuleTreeObject )
-        bEnable = true;
-      action.setEnabled( bEnable );
-    }
+    if( s.getFirstElement() instanceof RuleTreeObject)
+      bEnable = true;    
+    setEnabled( bEnable );
   }
 }

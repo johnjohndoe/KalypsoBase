@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.perspectives;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -56,38 +55,34 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   /**
    * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
    */
-  @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {
-    final IFolderLayout topLeft = layout
-        .createFolder( "topLeft", IPageLayout.LEFT, (float)0.26, layout.getEditorArea() ); //$NON-NLS-1$
+    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float)0.26,
+        layout.getEditorArea() );
     topLeft.addView( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
     topLeft.addPlaceholder( IPageLayout.ID_RES_NAV );
 
-    final IFolderLayout botLeft = layout.createFolder( "bottom", IPageLayout.BOTTOM, (float)0.70, "topLeft" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolderLayout botLeft = layout.createFolder( "bottom", IPageLayout.BOTTOM, (float)0.70,
+        "topLeft" );
     botLeft.addView( IPageLayout.ID_PROP_SHEET );
 
-    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float)0.0, layout //$NON-NLS-1$
-        .getEditorArea() );
+    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM,
+        (float)0.0, layout.getEditorArea() );
     leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
 
-    final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float)0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT,
+        (float)0.50, "leftBottom" );
     rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
 
     setContentsOfShowViewMenu( layout );
     layout.setEditorAreaVisible( false );
-    
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 
   /**
    * Sets the intial contents of the "Show View" menu
-   * 
    * @param layout
    */
-  protected void setContentsOfShowViewMenu( final IPageLayout layout )
+  protected void setContentsOfShowViewMenu( IPageLayout layout )
   {
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
     layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );

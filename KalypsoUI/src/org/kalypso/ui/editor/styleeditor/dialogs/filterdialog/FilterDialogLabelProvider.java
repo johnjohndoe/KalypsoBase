@@ -97,7 +97,8 @@ public class FilterDialogLabelProvider implements ILabelProvider
   /*
    * (non-Javadoc)
    * 
-   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+   * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
+   *      java.lang.String)
    */
   public boolean isLabelProperty( Object element, String property )
   {

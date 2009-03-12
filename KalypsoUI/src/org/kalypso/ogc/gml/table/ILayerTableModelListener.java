@@ -36,18 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.deegree.model.feature.Feature;
 
 /**
  * @author bce
  */
 public interface ILayerTableModelListener
 {
-  public void onRowsChanged( final Feature fe );
+  public void onRowsChanged( final Feature fe);
 
   public void onColumnsChanged();
 }

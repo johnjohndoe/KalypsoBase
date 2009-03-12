@@ -36,46 +36,50 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
- * <code>DefaultTableModel</code> based implementation of the <code>ITuppleModel</code> interface.
+ * <code>DefaultTableModel</code> based implementation of the
+ * <code>ITuppleModel</code> interface.
  * 
  * @author schlienger
  */
 public class SimpleTuppleModel extends AbstractTuppleModel
 {
-  public final static ITuppleModel EMPTY_TUPPLEMODEL = new SimpleTuppleModel( new IAxis[0] );
-
   /** values are backed by this table model */
   private DefaultTableModel m_tupples;
 
+  /** axes used within this model */
+  private final IAxis[] m_axes;
+
   /**
    * Constructor with axes, empty data
+   * 
+   * @param axes
    */
-  public SimpleTuppleModel( final List<IAxis> axes )
+  public SimpleTuppleModel( final List axes )
   {
-    this( axes.toArray( new IAxis[axes.size()] ) );
+    this( (IAxis[]) axes.toArray( new IAxis[axes.size()] ) );
   }
 
   /**
    * Constructor with axes, empty data
+   * 
+   * @param axes
    */
   public SimpleTuppleModel( final IAxis[] axes )
   {
@@ -83,61 +87,75 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
-   * given model.
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back
+   * the values which are taken from the given model.
+   * 
+   * @param copyTupples
+   * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel copyTupples ) throws SensorException
+  public SimpleTuppleModel( final ITuppleModel copyTupples )
+      throws SensorException
   {
     this( copyTupples.getAxisList() );
 
-    // TODO this leads to unsaved changes when a value is set because the underlying
-    // (real) model isn't changed, just the copy of it (see setFrom and the calling
-    // constructors in SimpleTuppleModel).
     setFrom( copyTupples );
   }
-
+  
   /**
-   * Constructor with model. A <code>DefaultTableModel</code> is used to back the values which are taken from the
-   * given model. The additional DateRangeArgument is used to limit the values that are returned by this model.
+   * Constructor with model. A <code>DefaultTableModel</code> is used to back
+   * the values which are taken from the given model. The additional
+   * DateRangeArgument is used to limit the values that are returned by this
+   * model.
+   * 
+   * @param tupples
+   * @param dra
+   * @throws SensorException
    */
-  public SimpleTuppleModel( final ITuppleModel tupples, final DateRange dra ) throws SensorException
+  public SimpleTuppleModel( final ITuppleModel tupples,
+      final DateRangeArgument dra ) throws SensorException
   {
     this( tupples.getAxisList() );
 
-    // TODO this leads to unsaved changes when a value is set because the underlying
-    // (real) model isn't changed, just the copy of it (see setFrom and the calling
-    // constructors in SimpleTuppleModel).
     setFrom( tupples, dra );
   }
 
   /**
    * Constructor with data
+   * 
+   * @param axes
+   * @param values
    */
   public SimpleTuppleModel( final IAxis[] axes, final Object[][] values )
   {
-    super( axes );
-
     m_tupples = new DefaultTableModel( values, axes );
+    m_axes = axes;
+    
+    clearAxesPositions();
+    for( int ia = 0; ia < m_axes.length; ia++ )
+      mapAxisToPos( m_axes[ia], ia );
   }
-
+  
   /**
-   * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model.
+   * A <code>DefaultTableModel</code> is used to back the values which are
+   * taken from the given model.
+   * 
+   * @param copyTupples
+   * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples ) throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples )
+      throws SensorException
   {
-    IAxis[] axes = getAxisList();
-
-    m_tupples = new DefaultTableModel( copyTupples.getCount(), axes.length );
+    m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
 
     clearAxesPositions();
-    for( int ia = 0; ia < axes.length; ia++ )
-      mapAxisToPos( axes[ia], ia );
-
+    for( int ia = 0; ia < m_axes.length; ia++ )
+      mapAxisToPos( m_axes[ia], ia );
+    
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
     {
-      for( int ia = 0; ia < axes.length; ia++ )
+      for( int ia = 0; ia < m_axes.length; ia++ )
       {
-        final Object element = copyTupples.getElement( ix, axes[ia] );
+        final Object element = copyTupples.getElement( ix, m_axes[ia] );
 
         m_tupples.setValueAt( element, ix, ia );
       }
@@ -145,27 +163,34 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * A <code>DefaultTableModel</code> is used to back the values which are taken from the given model. Uses the given
-   * <code>DateRangeArgument</code> to check which values to copy.
+   * A <code>DefaultTableModel</code> is used to back the values which are
+   * taken from the given model. Uses the given <code>DateRangeArgument</code>
+   * to check which values to copy.
+   * 
+   * @param copyTupples
+   * @param dra
+   * @throws SensorException
    */
-  public final void setFrom( final ITuppleModel copyTupples, final DateRange dra ) throws SensorException
+  public final void setFrom( final ITuppleModel copyTupples,
+      final DateRangeArgument dra ) throws SensorException
   {
-    IAxis[] axes = getAxisList();
-
-    final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes, Date.class );
-    if( dra == null || dateAxis == null )
+    final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( m_axes,
+        Date.class, false );
+    if( dra == null || dateAxes.length == 0 )
     {
       setFrom( copyTupples );
       return;
     }
 
+    final IAxis dateAxis = dateAxes[0];
+
     // uses same row count as original model, adjusted before method finishes
-    m_tupples = new DefaultTableModel( copyTupples.getCount(), axes.length );
+    m_tupples = new DefaultTableModel( copyTupples.getCount(), m_axes.length );
 
     clearAxesPositions();
-    for( int ia = 0; ia < axes.length; ia++ )
-      mapAxisToPos( axes[ia], ia );
-
+    for( int ia = 0; ia < m_axes.length; ia++ )
+      mapAxisToPos( m_axes[ia], ia );
+    
     int realIx = 0;
 
     for( int ix = 0; ix < copyTupples.getCount(); ix++ )
@@ -174,9 +199,9 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
       if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
       {
-        for( int ia = 0; ia < axes.length; ia++ )
+        for( int ia = 0; ia < m_axes.length; ia++ )
         {
-          final Object element = copyTupples.getElement( ix, axes[ia] );
+          final Object element = copyTupples.getElement( ix, m_axes[ia] );
 
           m_tupples.setValueAt( element, realIx, ia );
         }
@@ -210,6 +235,8 @@ public class SimpleTuppleModel extends AbstractTuppleModel
 
   /**
    * Adds a tupple at the end of the model
+   * 
+   * @param tupple
    */
   public void addTupple( final Vector tupple )
   {
@@ -217,13 +244,25 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * Inserts the tupple at given position.
+   * 
+   * @param index
+   * @param tupple
+   */
+  public void insertTupple( final int index, final Object[] tupple )
+  {
+    m_tupples.insertRow( index, tupple );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( element == null )
       return -1;
-
+    
     for( int i = 0; i < m_tupples.getRowCount(); i++ )
     {
       if( element.equals( m_tupples.getValueAt( i, getPositionFor( axis ) ) ) )
@@ -234,24 +273,29 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public IAxis[] getAxisList( )
   {
-    final Object value = m_tupples.getValueAt( index, getPositionFor( axis ) );
-
-    return value;
+    return m_axes;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
-    // for debug purposes! once problem with "null" is solved remove?
-    if( element == null )
-      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleTuppleModel.0") + index + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleTuppleModel.1") + axis ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_tupples.getValueAt( index, getPositionFor( axis ) );
+  }
 
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
+   */
+  public void setElement( final int index, final Object element,
+      final IAxis axis ) throws SensorException
+  {
     m_tupples.setValueAt( element, index, getPositionFor( axis ) );
   }
 }

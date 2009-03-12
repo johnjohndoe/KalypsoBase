@@ -36,12 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
 /**
- * Constants for the Kalypso UI. Not intended to be implemented nor extended.
+ * Constants for the Kalypso UI.
+ * 
+ * Not intended to be implemented nor extended.
  * 
  * @author schlienger
  */
@@ -52,19 +54,15 @@ public interface IKalypsoUIConstants
 
   /** Observation Table View identifier (value <code>org.kalypso.ogc.sensor.view.TableViewPart</code>) */
   public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
-
+  
   /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
-  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
+  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart";
+
+  public final static String ID_PROGNOSE_VIEW = "org.kalypso.view.prognose";
 
   public static final String MODELER_PERSPECTIVE = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
 
   public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
-  /**
-   * Constant for system property intended to be defined in config.ini.
-   * <p>
-   * if true, the pool asks to save released objects if they are dirty.
-   * </p>
-   */
-  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
+  public static final String PROGNOSE_PERSPECTIVE = "org.kalypso.ui.perspectives.PrognosePerspective"; //$NON-NLS-1$
 }

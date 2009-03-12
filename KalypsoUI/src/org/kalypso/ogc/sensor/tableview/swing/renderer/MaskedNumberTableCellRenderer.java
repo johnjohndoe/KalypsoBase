@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Color;
@@ -52,33 +52,41 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.ogc.sensor.tableview.swing.tablemodel.IObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 
 /**
- * Handles the rendering with the given NumberFormat and for each value asks the ObservationTableModel for possible
- * RenderingRules that will be used to modify the layout: icon, tooltip, color, etc.
+ * Handles the rendering with the given NumberFormat and for each
+ * value asks the ObservationTableModel for possible RenderingRules
+ * that will be used to modify the layout: icon, tooltip, color, etc.
  * 
  * @author schlienger
  */
 public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 {
-  private final IObservationTableModel m_model;
+  private final NumberFormat m_nf;
 
-  public MaskedNumberTableCellRenderer( final IObservationTableModel model )
+  public MaskedNumberTableCellRenderer( final NumberFormat nf )
   {
-    m_model = model;
-
     setHorizontalAlignment( SwingConstants.RIGHT );
+    m_nf = nf;
   }
-
+  
   /**
-   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
-   *      boolean, boolean, int, int)
+   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+   *      java.lang.Object, boolean, boolean, int, int)
    */
-  @Override
-  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
+  public Component getTableCellRendererComponent( JTable table, Object value,
+      boolean isSelected, boolean hasFocus, int row, int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel) super.getTableCellRendererComponent( table,
+        value, isSelected, hasFocus, row, column );
+
+    final Number n = (Number) value;
+    if( n == null )
+      return label;
+
+    final RenderingRule[] r = ((ObservationTableModel) table.getModel())
+        .findRules( row, column );
 
     // reset visual settings
     label.setToolTipText( null );
@@ -87,30 +95,21 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     label.setIcon( null );
     label.setFont( null );
 
-    final Number n = (Number) value;
-    if( n == null )
-      return label;
-
-    final RenderingRule[] r = m_model.findRules( row, column );
-
     // different handling when cell is selected/focus
     if( isSelected )
     {
       if( hasFocus )
         label.setBackground( Color.LIGHT_GRAY );
       else
-      {
-        label.setForeground( table.getSelectionForeground() );
-        label.setBackground( table.getSelectionBackground() );
-      }
+        label.setBackground( Color.YELLOW );
     }
-
+    
     // apply rendering rule
     String ttext = table.getColumnName( column );
     for( int i = 0; i < r.length; i++ )
     {
       // TOOLTIP
-      ttext += "; " + r[i].getTooltipText(); //$NON-NLS-1$
+      ttext += "; " + r[i].getTooltipText();
 
       // FONT
       final Font f = r[i].getFont();
@@ -118,7 +117,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
       final Icon ic = r[i].getIcon();
       label.setIcon( ic );
-
+      
       if( !isSelected )
       {
         // FOREGROUND
@@ -132,12 +131,8 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     }
 
     label.setToolTipText( ttext );
-
-    // type dependent format
-    final NumberFormat nf = m_model.getNumberFormat( column );
-    final String text = nf.format( n.doubleValue() );
-    label.setText( text );
-
+    
+    label.setText( m_nf.format( n.doubleValue() ) );
     return label;
   }
 }

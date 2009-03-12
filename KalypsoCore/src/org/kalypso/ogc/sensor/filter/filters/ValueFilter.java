@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
-import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +52,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.valuecomp.IValueComp;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.util.runtime.IVariableArguments;
 
 /**
  * ValueFilter
@@ -62,47 +61,50 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public class ValueFilter extends AbstractObservationFilter
 {
-  private final Map<IAxis, IValueComp> m_axisMap = new Hashtable<IAxis, IValueComp>();
+  private final Map m_axisMap = new Hashtable();
 
-  @Override
-  public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
+  /**
+   * @throws SensorException
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IObservation)
+   */
+  public void initFilter( final Object conf, final IObservation obs ) throws SensorException 
   {
-    super.initFilter( conf, obs, context );
+    super.initFilter( conf, obs );
 
     m_axisMap.clear();
-
-    final Iterator it = ((List) conf).iterator();
+    
+    final Iterator it = ((List)conf).iterator();
     while( it.hasNext() )
     {
       final IValueComp vc = (IValueComp) it.next();
-
+      
       m_axisMap.put( vc.getAxis(), vc );
     }
   }
-
+  
   /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.util.runtime.IVariableArguments)
    */
-  @Override
-  public ITuppleModel getValues( final IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IVariableArguments args ) throws SensorException
   {
     final ITuppleModel values = super.getValues( args );
     final IAxis[] axes = values.getAxisList();
-
+    
     final SimpleTuppleModel newValues = new SimpleTuppleModel( axes );
-
+    
     for( int i = 0; i < values.getCount(); i++ )
     {
-      final Vector<Object> tupple = new Vector<Object>( axes.length );
-
+      final Vector tupple = new Vector( axes.length );
+      
       boolean add = true;
-
+      
       for( int j = 0; j < axes.length; j++ )
       {
-        final IValueComp comp = m_axisMap.get( axes[j] );
-
+        final IValueComp comp = (IValueComp) m_axisMap.get( axes[j] );
+        
         final Object elt = values.getElement( i, axes[j] );
-
+        
         if( comp == null || comp.validates( elt ) )
           tupple.add( newValues.getPositionFor( axes[j] ), elt );
         else
@@ -111,11 +113,11 @@ public class ValueFilter extends AbstractObservationFilter
           continue;
         }
       }
-
+      
       if( add )
         newValues.addTupple( tupple );
     }
-
+    
     return newValues;
   }
 }

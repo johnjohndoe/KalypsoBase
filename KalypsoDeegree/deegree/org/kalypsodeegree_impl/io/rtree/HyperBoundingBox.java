@@ -1,39 +1,27 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.io.rtree;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Copyright (C) 2002 Wolfgang Baer - WBaer@gmx.de
+ 
+ Adapted May 2003 by IDgis, The Netherlands - www.idgis.nl
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.io.rtree;
 
 /**
  * HyperBoundingBox für Objekte im mehrdimensionalen Raum.
@@ -48,7 +36,8 @@ public class HyperBoundingBox
   private HyperPoint pMin;
 
   /**
-   * Konstruktor HyperBoundingBox. Erzeugt eine BoundingBox im Hyperraum für die übergebenen Punkte.
+   * Konstruktor HyperBoundingBox. Erzeugt eine BoundingBox im Hyperraum für die
+   * übergebenen Punkte.
    * 
    * @param pMin -
    *          Minimum Punkt im Hyperraum
@@ -75,7 +64,8 @@ public class HyperBoundingBox
    */
   public static HyperBoundingBox getNullHyperBoundingBox( int dimension )
   {
-    return new HyperBoundingBox( HyperPoint.getNullHyperPoint( dimension ), HyperPoint.getNullHyperPoint( dimension ) );
+    return new HyperBoundingBox( HyperPoint.getNullHyperPoint( dimension ), HyperPoint
+        .getNullHyperPoint( dimension ) );
   }
 
   /**
@@ -121,7 +111,8 @@ public class HyperBoundingBox
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMax().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMin().getCoord( i ) ) )
+      if( ( pMin.getCoord( i ) > box.getPMax().getCoord( i ) )
+          || ( pMax.getCoord( i ) < box.getPMin().getCoord( i ) ) )
       {
         intersect = false;
         break;
@@ -144,7 +135,8 @@ public class HyperBoundingBox
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMin().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMax().getCoord( i ) ) )
+      if( ( pMin.getCoord( i ) > box.getPMin().getCoord( i ) )
+          || ( pMax.getCoord( i ) < box.getPMax().getCoord( i ) ) )
       {
         contains = false;
         break;
@@ -220,8 +212,8 @@ public class HyperBoundingBox
   }
 
   /**
-   * Berechnet das minimale Abstandsquadrat der HyperBoundingBox zum HyperPoint. Nach Roussopoulos Nick: Nearest
-   * Neighbor Queries - MINDIST
+   * Berechnet das minimale Abstandsquadrat der HyperBoundingBox zum HyperPoint.
+   * Nach Roussopoulos Nick: Nearest Neighbor Queries - MINDIST
    * 
    * @param point
    *          für Abstandberechnung.
@@ -257,7 +249,8 @@ public class HyperBoundingBox
   }
 
   /**
-   * Erstellt eine tiefe Kopie der HyperBoundingBox. - in Verbindung mit clone() bei HyperPoint
+   * Erstellt eine tiefe Kopie der HyperBoundingBox. - in Verbindung mit clone()
+   * bei HyperPoint
    * 
    * @return Object geklonte HyperBoundingBox
    */

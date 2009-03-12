@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.repository;
 
 import java.io.File;
@@ -63,25 +63,8 @@ public class ZmlObservationItem extends FileItem
   }
 
   /**
-   * @see org.kalypso.repository.file.FileItem#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof ZmlObservationItem )
-    {
-      final ZmlObservationItem item = (ZmlObservationItem) obj;
-
-      return getFile().equals( item.getFile() );
-    }
-
-    return super.equals( obj );
-  }
-
-  /**
    * @see org.kalypso.repository.file.FileItem#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( final Class anotherClass )
   {
     try
@@ -89,7 +72,7 @@ public class ZmlObservationItem extends FileItem
       if( anotherClass == IObservation.class )
         return parseZmlFile();
     }
-    catch( final SensorException e )
+    catch( SensorException e )
     {
       // TODO handling
       throw new RuntimeException( e );
@@ -100,11 +83,11 @@ public class ZmlObservationItem extends FileItem
 
   /**
    * Helper, lazy loading.
-   * 
    * @return observation object read from the file
+   * 
    * @throws SensorException
    */
-  private IObservation parseZmlFile( ) throws SensorException
+  private IObservation parseZmlFile() throws SensorException
   {
     try
     {
@@ -117,7 +100,7 @@ public class ZmlObservationItem extends FileItem
 
       return m_zml;
     }
-    catch( final Exception e ) // generic Exception caught for simplicity
+    catch( Exception e ) // generic Exception caught for simplicity
     {
       throw new SensorException( e );
     }

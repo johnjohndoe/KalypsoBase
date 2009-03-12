@@ -1,50 +1,76 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.filterencoding;
+/*--------------- Kalypso-Deegree-Header ------------------------------------------------------------
 
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.ElementList;
-import org.kalypsodeegree.xml.XMLTools;
+ This file is part of kalypso.
+ Copyright (C) 2004, 2005 by:
+
+ Technical University Hamburg-Harburg (TUHH)
+ Institute of River and coastal engineering
+ Denickestr. 22
+ 21073 Hamburg, Germany
+ http://www.tuhh.de/wb
+
+ and
+ 
+ Bjoernsen Consulting Engineers (BCE)
+ Maria Trost 3
+ 56070 Koblenz, Germany
+ http://www.bjoernsen.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ E-Mail:
+ belger@bjoernsen.de
+ schlienger@bjoernsen.de
+ v.doemming@tuhh.de
+ 
+ 
+ history:
+  
+ Files in this package are originally taken from deegree and modified here
+ to fit in kalypso. As goals of kalypso differ from that one in deegree
+ interface-compatibility to deegree is wanted but not retained always. 
+     
+ If you intend to use this software in other ways than in kalypso 
+ (e.g. OGC-web services), you should consider the latest version of deegree,
+ see http://www.deegree.org .
+
+ all modifications are licensed as deegree, 
+ original copyright:
+ 
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon GmbH
+ http://www.lat-lon.de
+ 
+---------------------------------------------------------------------------------------------------*/
+package org.deegree_impl.filterencoding;
+
+import org.deegree.filterencoding.FilterConstructionException;
+import org.deegree.filterencoding.FilterEvaluationException;
+import org.deegree.filterencoding.Operation;
+import org.deegree.model.feature.Feature;
+import org.deegree.xml.ElementList;
+import org.deegree.xml.XMLTools;
 import org.w3c.dom.Element;
 
 /**
- * Encapsulates the information of a <PropertyIsLike>-element (as defined in Filter DTD).
+ * Encapsulates the information of a <PropertyIsLike>-element (as defined in
+ * Filter DTD).
  * 
  * @author Markus Schneider
  * @version 10.08.2002
@@ -52,63 +78,65 @@ import org.w3c.dom.Element;
 public class PropertyIsLikeOperation extends ComparisonOperation
 {
 
-  private PropertyName m_propertyName;
+  private PropertyName propertyName;
 
-  private Literal m_literal;
+  private Literal literal;
 
   // attributes of <PropertyIsLike>
-  private char m_wildCard;
+  private char wildCard;
 
-  private char m_singleChar;
+  private char singleChar;
 
-  private char m_escapeChar;
+  private char escapeChar;
 
-  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard, char singleChar, char escapeChar )
+  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard,
+      char singleChar, char escapeChar )
   {
     super( OperationDefines.PROPERTYISLIKE );
-    m_propertyName = propertyName;
-    m_literal = literal;
-    m_wildCard = wildCard;
-    m_singleChar = singleChar;
-    m_escapeChar = escapeChar;
+    this.propertyName = propertyName;
+    this.literal = literal;
+    this.wildCard = wildCard;
+    this.singleChar = singleChar;
+    this.escapeChar = escapeChar;
   }
 
-  public char getWildCard( )
+  public char getWildCard()
   {
-    return m_wildCard;
+    return wildCard;
   }
 
-  public char getSingleChar( )
+  public char getSingleChar()
   {
-    return m_singleChar;
+    return singleChar;
   }
 
-  public char getEscapeChar( )
+  public char getEscapeChar()
   {
-    return m_escapeChar;
+    return escapeChar;
   }
 
   public void setWildCard( char wildCard )
   {
-    this.m_wildCard = wildCard;
+    this.wildCard = wildCard;
   }
 
   public void setSingleChar( char singleChar )
   {
-    this.m_singleChar = singleChar;
+    this.singleChar = singleChar;
   }
 
   public void setEscapeChar( char escapeChar )
   {
-    this.m_escapeChar = escapeChar;
+    this.escapeChar = escapeChar;
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This
+   * method recursively calls other buildFromDOM () - methods to validate the
+   * structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *                   if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
@@ -121,8 +149,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( children.getLength() != 2 )
       throw new FilterConstructionException( "'PropertyIsLike' requires exactly 2 elements!" );
 
-    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
-    Literal literal = (Literal) Literal.buildFromDOM( children.item( 1 ) );
+    PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( children.item( 0 ) );
+    Literal literal = (Literal)Literal.buildFromDOM( children.item( 1 ) );
 
     // determine the needed attributes
     String wildCard = element.getAttribute( "wildCard" );
@@ -143,71 +171,67 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( escapeChar.length() != 1 )
       throw new FilterConstructionException( "escape-Attribute must be exactly one character!" );
 
-    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar.charAt( 0 ), escapeChar.charAt( 0 ) );
+    return new PropertyIsLikeOperation( propertyName, literal, wildCard.charAt( 0 ), singleChar
+        .charAt( 0 ), escapeChar.charAt( 0 ) );
   }
 
   /**
    * returns the name of the property that shall be compared to the literal
    */
-  public PropertyName getPropertyName( )
+  public PropertyName getPropertyName()
   {
-    return m_propertyName;
-  }
-
-  public void setPropertyName( PropertyName propName )
-  {
-    m_propertyName = propName;
+    return propertyName;
   }
 
   /**
    * returns the literal the property shall be compared to
    */
-  public Literal getLiteral( )
+  public Literal getLiteral()
   {
-    return m_literal;
-  }
-
-  public void setLiteral( Literal literal )
-  {
-    this.m_literal = literal;
+    return literal;
   }
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML( )
+  public StringBuffer toXML()
   {
     StringBuffer sb = new StringBuffer( 500 );
-    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( m_wildCard ).append( "\" singleChar=\"" ).append( m_singleChar ).append( "\" escape=\"" ).append( m_escapeChar ).append( "\">" ).append( m_propertyName.toXML() ).append( m_literal.toXML() );
+    sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( wildCard )
+        .append( "\" singleChar=\"" ).append( singleChar ).append( "\" escape=\"" ).append(
+            escapeChar ).append( "\">" ).append( propertyName.toXML() ).append( literal.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
 
   /**
-   * Calculates the <tt>PropertyIsLike</tt>'s logical value based on the certain property values of the given
-   * <tt>Feature</tt>.
+   * Calculates the <tt>PropertyIsLike</tt>'s logical value based on the
+   * certain property values of the given <tt>Feature</tt>.
    * <p>
    * 
    * @param feature
-   *          that determines the property values
-   * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>'s value
+   *                   that determines the property values
+   * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>
+   *                's value
+   * @throws FilterEvaluationException
+   *                   if the evaluation could not be performed (for example a specified
+   *                   Property did not exist)
    */
-  public boolean evaluate( Feature feature )
+  public boolean evaluate( Feature feature ) throws FilterEvaluationException
   {
 
     Object value1 = null;
     Object value2 = null;
     try
     {
-      value1 = m_propertyName.evaluate( feature );
-      value2 = m_literal.getValue();
+      value1 = propertyName.evaluate( feature );
+      value2 = literal.getValue();
       if( value1 == null || value2 == null )
         return false;
-      return matches( value2.toString(), value1.toString() );
     }
     catch( Exception e )
     {
-      // nothing
+      System.out.println( e );
     }
-    return false;
+    return matches( value2.toString(), value1.toString() );
   }
 
   /**
@@ -242,17 +266,17 @@ public class PropertyIsLikeOperation extends ComparisonOperation
       if( escapeMode )
       {
         // just append every character (except the escape character)
-        if( c != m_escapeChar )
+        if( c != escapeChar )
           sb.append( c );
         escapeMode = false;
       }
       else
       {
         // escapeChar means: switch to escapeMode
-        if( c == m_escapeChar )
+        if( c == escapeChar )
           escapeMode = true;
         // wildCard / singleChar means: prefix ends here
-        else if( c == m_wildCard || c == m_singleChar )
+        else if( c == wildCard || c == singleChar )
         {
           specialChar = c;
           break;
@@ -268,7 +292,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( !buffer.startsWith( prefix ) )
       return false;
 
-    if( specialChar == m_wildCard )
+    if( specialChar == wildCard )
     {
       // the prefix is terminated by a wildcard-character
       pattern = pattern.substring( skip + 1, pattern.length() );
@@ -280,7 +304,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
           return true;
       }
     }
-    else if( specialChar == m_singleChar )
+    else if( specialChar == singleChar )
     {
       // the prefix is terminated by a singlechar-character
       pattern = pattern.substring( skip + 1, pattern.length() );
@@ -297,14 +321,5 @@ public class PropertyIsLikeOperation extends ComparisonOperation
         return true;
     }
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
-   *      org.kalypsodeegree.filterencoding.Operation, int)
-   */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
-  {
-    fv.visit( this );
   }
 }

@@ -36,15 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 
-import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -53,106 +51,64 @@ import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 
 /**
- * TODO: die Reihenfolge der models[] sollte von auﬂerhalb der Klasse entschieden werden. Somit kann der "client"
- * entscheiden ob:
- * <ul>
- * <li>die models[] sortiert sind
- * <li>die models[] eine "andere" Reihenfolge haben
- * </ul>
- * <p>
- * TODO Rename class to something like MultiTimeseriesTuppleModel
+ * MergeTuppleModel
  * 
  * @author schlienger
  */
 public class ForecastTuppleModel extends AbstractTuppleModel
 {
-  private final SimpleTuppleModel m_model;
+  private SimpleTuppleModel m_model;
 
   /**
    * Constructor
+   * 
+   * @param models
+   * 
+   * @throws SensorException
    */
-  public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
+  public ForecastTuppleModel( final ITuppleModel[] models )
+      throws SensorException
   {
-    super( models[0].getAxisList() );
-
     Date lastDate = DateUtilities.getMinimum();
 
     m_model = new SimpleTuppleModel( models[0].getAxisList() );
 
-    // let them sort, so order does not matter (TODO siehe Klassenkommentar)
-    Arrays.sort( models, new Comparator<ITuppleModel>()
+    for( int i = 0; i < models.length; i++ )
     {
-      @Override
-      public boolean equals( final Object obj )
-      {
-        return false;
-      }
+      final IAxis[] axes = models[i].getAxisList();
+      final IAxis[] dateAxes = ObservationUtilities.findAxisByClass( axes,
+          Date.class );
+      if( dateAxes.length == 0 )
+        throw new IllegalArgumentException( "no date axis" );
 
-      public int compare( final ITuppleModel t1, final ITuppleModel t2 )
-      {
-        final IAxis t1axis = ObservationUtilities.findAxisByClass( t1.getAxisList(), Date.class );
-        final IAxis t2axis = ObservationUtilities.findAxisByClass( t2.getAxisList(), Date.class );
-        Date d1 = null, d2 = null;
-        boolean statusD1 = false, statusD2 = false;
-        try
-        {
-          d1 = (Date) t1.getElement( 0, t1axis );
-          if( d1 != null )
-            statusD1 = true;
-        }
-        catch( final Exception e )
-        {
-          // nothing
-        }
-        try
-        {
-          d2 = (Date) t2.getElement( 0, t2axis );
-          if( d2 != null )
-            statusD2 = true;
-        }
-        catch( final Exception e )
-        {
-          // nothing
-        }
-        if( !statusD1 && statusD2 )
-          return -1;
-        if( !statusD1 && !statusD2 )
-          return 0;
-        if( statusD1 && !statusD2 )
-          return 1;
-        return d1.compareTo( d2 );
-      }
-    } );
+      final IAxis dateAxis = dateAxes[0];
 
-    for( final ITuppleModel model : models )
-    {
-      if( model == null )
-        continue;
-      final IAxis[] modelAxes = model.getAxisList();
-      final IAxis[] targetAxes = m_model.getAxisList();
-      final IAxis modelDateAxis = ObservationUtilities.findAxisByClass( modelAxes, Date.class );
-      final int[] map = ObservationUtilities.getAxisMapping( targetAxes, modelAxes );
-      for( int rowIx = 0; rowIx < model.getCount(); rowIx++ )
+      for( int rowIx = 0; rowIx < models[i].getCount(); rowIx++ )
       {
-        final Date date = (Date) model.getElement( rowIx, modelDateAxis );
-        if( date.after( lastDate ) )
-        {
-          final Object[] targetTupple = new Object[targetAxes.length];
+        final Date date = (Date) models[i].getElement( rowIx, dateAxis );
 
-          for( int colIx = 0; colIx < targetAxes.length; colIx++ )
-          {
-            if( targetAxes[colIx].isPersistable() )
-            {
-            if( map[colIx] > -1 )
-              targetTupple[colIx] = model.getElement( rowIx, modelAxes[map[colIx]] );
-            }
-          }
-          // tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
-          m_model.addTupple( targetTupple );
-          lastDate = date;
+        if( date.compareTo( lastDate ) > 0 )
+        {
+          final Object[] tupple = new Object[axes.length];
+
+          for( int colIx = 0; colIx < axes.length; colIx++ )
+            tupple[m_model.getPositionFor( axes[colIx] )] = models[i]
+                .getElement( rowIx, axes[colIx] );
+
+          m_model.addTupple( tupple );
         }
+
+        lastDate = date;
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
+   */
+  public IAxis[] getAxisList( )
+  {
+    return m_model.getAxisList();
   }
 
   /**
@@ -164,25 +120,29 @@ public class ForecastTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( final int index, final IAxis axis ) throws SensorException
+  public Object getElement( int index, IAxis axis ) throws SensorException
   {
     return m_model.getElement( index, axis );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
+  public void setElement( int index, Object element, IAxis axis )
+      throws SensorException
   {
     m_model.setElement( index, element, axis );
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( final Object element, final IAxis axis ) throws SensorException
+  public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     return m_model.indexOf( element, axis );
   }

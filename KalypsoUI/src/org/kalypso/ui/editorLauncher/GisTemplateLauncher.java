@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -55,23 +55,17 @@ public class GisTemplateLauncher implements IEditorLauncher
    */
   public void open( final IPath filePath )
   {
-    final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" ); //$NON-NLS-1$
-    final IOFileFilter gmtFilter = FileFilterUtils.suffixFileFilter( ".gtt" ); //$NON-NLS-1$
-    final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" ); //$NON-NLS-1$
+    final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" );
+    final IOFileFilter gmtFilter = FileFilterUtils.suffixFileFilter( ".gtt" );
+    final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" );
     final IOFileFilter filter1 = FileFilterUtils.orFileFilter( gmtFilter, gttFilter );
     final IOFileFilter filter = FileFilterUtils.orFileFilter( filter1, gftFilter );
-
+    
     // virtuelle Vorlagen finden
-    //    final Object gmtDefault = "<Standard Kartenansicht>";
-    //    final Object gttDefault = "<Standard Datenansicht>";
+//    final Object gmtDefault = "<Standard Kartenansicht>";
+//    final Object gttDefault = "<Standard Datenansicht>";
     final IDefaultTemplateLauncher featureDefault = new FeatureTemplateLauncher();
-    final IDefaultTemplateLauncher baumDefault = new GmlEditorTemplateLauncher();
-    final IDefaultTemplateLauncher mapDefault = new GisMapEditorTemplateLauncher();
 
-    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[]
-    {
-        featureDefault,
-        baumDefault,
-        mapDefault } );
+    ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[] { featureDefault } );
   }
 }

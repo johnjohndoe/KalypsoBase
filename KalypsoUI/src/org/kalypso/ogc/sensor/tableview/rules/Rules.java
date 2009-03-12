@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
 import java.util.ArrayList;
@@ -48,6 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.kalypso.ogc.sensor.tableview.ITableViewRules;
+
 /**
  * Holds a list of rules.
  * 
@@ -55,115 +57,68 @@ import java.util.NoSuchElementException;
  */
 public class Rules implements ITableViewRules
 {
-  private final List<RenderingRule> m_rules = new ArrayList<RenderingRule>();
+  private final List m_rules = new ArrayList();
 
-  private final Map<Number, RenderingRule[]> m_map = new HashMap<Number, RenderingRule[]>();
+  private final Map m_map = new HashMap();
 
-  public Rules( )
+  public Rules()
   {
     // empty
   }
-
+  
   /**
    * Constructor with given rules
-   * 
    * @param rules
    */
   public Rules( final RenderingRule[] rules )
   {
-    m_rules.addAll( Arrays.asList( rules ) );
+    m_rules.addAll(  Arrays.asList( rules ) );
   }
 
   public void addRule( final RenderingRule rule )
   {
     m_rules.add( rule );
   }
-
+  
   public void removeRule( final RenderingRule rule )
   {
     m_rules.remove( rule );
   }
-
+  
   /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(int)
+   * Finds a rule that contains the mask
+   * @param mask
+   * @return list of rules that apply
+   * @throws NoSuchElementException
    */
-  public RenderingRule[] findRules( int mask )
+  public RenderingRule[] findRules( final int mask ) throws NoSuchElementException
   {
-    return findRules( new Integer( mask ) );
-  }
+    RenderingRule[] r = (RenderingRule[])m_map.get( new Integer( mask ) );
 
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(java.lang.Integer)
-   */
-  public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
-  {
-    RenderingRule[] r = m_map.get( mask );
-    // TODO: the map is never reset, this smells buggy...
     if( r != null )
       return r;
 
-    final List<RenderingRule> lrules = new ArrayList<RenderingRule>();
-
+    List lrules = new ArrayList();
+    
     for( Iterator it = m_rules.iterator(); it.hasNext(); )
     {
-      final RenderingRule rule = (RenderingRule) it.next();
-
-      if( rule.contains( mask.intValue() ) )
+      RenderingRule rule = (RenderingRule)it.next();
+      
+      if( rule.contains( mask ) )
         lrules.add( rule );
     }
 
-    r = lrules.toArray( new RenderingRule[0] );
-    m_map.put( mask, r );
-
+    r = (RenderingRule[])lrules.toArray( new RenderingRule[0]);
+    m_map.put( new Integer( mask ), r );
+    
     return r;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#isEmpty()
+   * @see org.kalypso.ogc.sensor.tableview.ITableViewRules#isEmpty()
    */
   public boolean isEmpty( )
   {
     return m_rules.size() == 0;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#getRules()
-   */
-  public List getRules( )
-  {
-    return m_rules;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#removeAllRules()
-   */
-  public void removeAllRules( )
-  {
-    m_rules.clear();
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return "Rules (Amount= " + m_rules.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#cloneRules()
-   */
-  public ITableViewRules cloneRules()
-  {
-    final Rules rules = new Rules();
-
-    for( Iterator iter = m_rules.iterator(); iter.hasNext(); )
-    {
-      final RenderingRule rule = (RenderingRule)iter.next();
-      rules.addRule( rule.cloneRule() );
-    }
-
-    return rules;
   }
 }

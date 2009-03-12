@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,82 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanelUtilities;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
- * Der Controller für die MapView
+ * Der Controller fuer die MapView
  * 
  * @author vdoemming
  */
-public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
+public class WidgetManager implements MouseListener, MouseMotionListener
 {
-  private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
+  private IWidget myNormalWidget = null;
 
-  private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
-  {
-    public void selectionChanged( final IFeatureSelection selection )
-    {
-      onSelectionChanged( selection );
-    }
-  };
+  private IWidget myTemporaryWidget = null;
 
-  private final IMapPanel m_mapPanel;
-
+  private final MapPanel myMapPanel;
+  
   private final ICommandTarget m_commandTarget;
+  
+  private Point m_lastDragged=null;
 
-  private IWidget m_actualWidget = null;
-
-  /** Widget used for middle mouse actions */
-  private final IWidget m_middleWidget = new PanToWidget();
-
-  /** If middle was pressed down; prohibits dragging any other widget */
-  private boolean m_middleDown = false;
-
-  public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
+  private static final double MINIMUM_MOUSE_DISTANCE = 5;
+  
+  private Point m_lastMoved=null;
+  
+  public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
-    m_mapPanel = mapPanel;
+    myMapPanel = mapPanel;
     m_commandTarget = commandTarget;
-
-    m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
-
-    m_middleWidget.activate( commandTarget, mapPanel );
-  }
-
-  public void dispose( )
-  {
-    setActualWidget( null );
-
-    m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
-  }
-
-  public ICommandTarget getCommandTarget( )
-  {
-    return m_commandTarget;
   }
 
   // MouseAdapter
-  public void mouseClicked( final MouseEvent e )
+  public void mouseClicked( MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
     if( actualWidget == null )
@@ -120,242 +86,202 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
-    {
       switch( e.getButton() )
       {
-        case MouseEvent.BUTTON1:
-        {
-          if( e.getClickCount() == 1 )
-            actualWidget.leftClicked( e.getPoint() );
-          else if( e.getClickCount() == 2 )
-            actualWidget.doubleClickedLeft( e.getPoint() );
-        }
-          break;
+      case MouseEvent.BUTTON1:
+        actualWidget.leftClicked( e.getPoint() );
+        break;
 
-        case MouseEvent.BUTTON2:
-          m_middleWidget.leftClicked( e.getPoint() );
-          break;
+      case MouseEvent.BUTTON2:
+        actualWidget.middleClicked( e.getPoint() );
+        break;
 
-        case MouseEvent.BUTTON3:
-        {
-          if( e.getClickCount() == 1 )
-            actualWidget.rightClicked( e.getPoint() );
-          else if( e.getClickCount() == 2 )
-            actualWidget.doubleClickedRight( e.getPoint() );
-        }
-          break;
+      case MouseEvent.BUTTON3:
+        actualWidget.rightClicked( e.getPoint() );
+        stopTemporaryWidget();
+        break;
 
-        default:
-          break;
+      default:
+        break;
       }
+  }
+  
+  public void mouseMoved( MouseEvent e )
+  {
+    if( m_lastMoved==null 
+        || m_lastMoved.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)        
+      if(  getActualWidget() != null )
+    {
+      m_lastMoved=e.getPoint();
+      getActualWidget().moved( m_lastMoved );
+
+      myMapPanel.repaint();
     }
   }
-
-  public void mouseMoved( final MouseEvent e )
+  
+  // MouseMotionAdapter:
+  public void mouseDragged( MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
-      actualWidget.moved( e.getPoint() );
+  if(m_lastDragged==null 
+        || m_lastDragged.distance(e.getPoint())>MINIMUM_MOUSE_DISTANCE)
+    
+        if(getActualWidget() != null )
+    {
+      m_lastDragged=e.getPoint();
+      getActualWidget().dragged( m_lastDragged);
+      myMapPanel.repaint();
+    }
 
-    m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
 
-  // MouseMotionAdapter:
-  public void mouseDragged( final MouseEvent e )
+  public void mouseEntered( MouseEvent e )
   {
-    if( m_middleDown )
+  //
+  }
+
+  public void mouseExited( MouseEvent e )
+  {
+  //
+  }
+
+  public void mousePressed( MouseEvent e )
+  {
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget == null )
+      return;
+    if( e.isPopupTrigger() )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+      switch( e.getButton() )
+      {
+      case MouseEvent.BUTTON1:
+        actualWidget.leftPressed( e.getPoint() );
+
+        break;
+
+      case MouseEvent.BUTTON2:
+        actualWidget.middlePressed( e.getPoint() );
+
+        break;
+
+      case MouseEvent.BUTTON3:
+        actualWidget.rightPressed( e.getPoint() );
+
+        break;
+
+      default:
+        break;
+      }
+  }
+
+  public void mouseReleased( MouseEvent e )
+  {
+    final IWidget actualWidget = getActualWidget();
+    if( getActualWidget() == null )
+      return;
+
+    if( e.isPopupTrigger() )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+      switch( e.getButton() )
+      {
+      case MouseEvent.BUTTON1: // Left
+        actualWidget.leftReleased( e.getPoint() );
+        break;
+
+      case MouseEvent.BUTTON2:
+        actualWidget.middleReleased( e.getPoint() );
+
+        break;
+
+      case MouseEvent.BUTTON3: //Right
+        actualWidget.perform();
+
+        //		    getActualWidget().rightReleased(e.getPoint());
+        break;
+
+      default:
+        break;
+      }
+
+  }
+
+  public void paintWidget( Graphics g )
+  {
+    if( getActualWidget() != null )
+      getActualWidget().paint( g );
+  }
+
+  public IWidget getActualWidget()
+  {
+    if( myTemporaryWidget != null )
+      return myTemporaryWidget;
+
+    return myNormalWidget;
+  }
+
+  public void changeWidget( final IWidget newWidget )
+  {
+    if( newWidget == null )
     {
-      m_middleWidget.dragged( e.getPoint() );
+      myNormalWidget = null;
       return;
     }
+    if( myTemporaryWidget != null ) // finish temporary widget if required
+    {
+      myTemporaryWidget.finish();
+      myTemporaryWidget = null;
+    }
 
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
-      actualWidget.dragged( e.getPoint() );
-  }
-
-  public void mouseEntered( final MouseEvent e )
-  {
-    //
-  }
-
-  public void mouseExited( final MouseEvent e )
-  {
-    //
-  }
-
-  public void mousePressed( final MouseEvent e )
-  {
-    final IWidget actualWidget = getActualWidget();
-    if( e.isPopupTrigger() && actualWidget != null )
-      actualWidget.clickPopup( e.getPoint() );
+    if( newWidget instanceof TemporaryActionWidget )
+    {
+      myTemporaryWidget = newWidget;
+    }
     else
+    // normal widget
     {
-      switch( e.getButton() )
-      {
-        case MouseEvent.BUTTON1:
-          if( actualWidget != null )
-            actualWidget.leftPressed( e.getPoint() );
-          break;
+      if( myNormalWidget != null )// && normalWidget != newWidget )
+        myNormalWidget.finish();
 
-        case MouseEvent.BUTTON2:
-          m_middleDown = true;
-          m_middleWidget.leftPressed( e.getPoint() );
-          break;
+      myNormalWidget = newWidget;
+      myNormalWidget.activate( m_commandTarget, myMapPanel );
+    }
 
-        case MouseEvent.BUTTON3:
-          if( actualWidget != null )
-            actualWidget.rightPressed( e.getPoint() );
-          break;
-
-        default:
-          break;
-      }
+    if( getActualWidget() != null )
+    {
+      //            JPanel panel = new JPanel( );
+      //            panel.setLayout( new BorderLayout( ) );
+      //
+      //            if( normalWidget != null && normalWidget != getActualWidget( ) )
+      //            {
+      //                JButton lastWidgetButton = new JButton( normalWidget.getName( ) );
+      //                lastWidgetButton.setActionCommand( "stopTemporaryWidget" );
+      //                lastWidgetButton.addActionListener( this );
+      //                panel.add( lastWidgetButton, BorderLayout.SOUTH );
+      //            }
+      //
+      //            panel.add( new JLabel( getActualWidget( ).getName( ) ),
+      // BorderLayout.NORTH );
+      //
+      //            JComponent component = getActualWidget( ).getOptionDialog( );
+      //
+      //            if( component != null )
+      //                panel.add( component, BorderLayout.CENTER );
+      //
+      //            JMMapFrame.getInstance( ).setOptionDialog( panel );
+      //       
     }
   }
 
-  public void mouseReleased( final MouseEvent e )
+  private void stopTemporaryWidget()
   {
-    final IWidget actualWidget = getActualWidget();
-    if( e.isPopupTrigger() && getActualWidget() != null )
-      actualWidget.clickPopup( e.getPoint() );
-    else
+    if( myTemporaryWidget != null )
     {
-      switch( e.getButton() )
-      {
-        case MouseEvent.BUTTON1: // Left
-          if( getActualWidget() != null )
-            actualWidget.leftReleased( e.getPoint() );
-          break;
-
-        case MouseEvent.BUTTON2:
-          m_middleWidget.leftReleased( e.getPoint() );
-          break;
-
-        case MouseEvent.BUTTON3: // Right
-          if( getActualWidget() != null )
-            actualWidget.rightReleased( e.getPoint() );
-          break;
-
-        default:
-          break;
-      }
+      myTemporaryWidget.finish();
+      myTemporaryWidget = null;
     }
 
-    m_middleDown = false;
+    if( getActualWidget() != null )
+      changeWidget( getActualWidget() );
   }
-
-  /**
-   * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
-   */
-  @Override
-  public void mouseWheelMoved( final MouseWheelEvent e )
-  {
-    e.consume();
-
-    final int wheelRotation = e.getWheelRotation();
-
-    final boolean in = wheelRotation > 0 ? false : true;
-
-    GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
-    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
-      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
-
-    getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
-  }
-
-  public void paintWidget( final Graphics g )
-  {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
-      actualWidget.paint( g );
-  }
-
-  public IWidget getActualWidget( )
-  {
-    return m_actualWidget;
-  }
-
-  public void setActualWidget( final IWidget newWidget )
-  {
-    if( m_actualWidget != null )
-      m_actualWidget.finish();
-
-    m_actualWidget = newWidget;
-
-    if( m_actualWidget != null )
-    {
-      m_actualWidget.activate( m_commandTarget, m_mapPanel );
-      m_actualWidget.setSelection( m_mapPanel.getSelectionManager() );
-    }
-
-    fireWidgetChangeEvent( newWidget );
-
-    if( m_mapPanel != null )
-      m_mapPanel.repaintMap();
-  }
-
-  /**
-   * Adds a listener to this manager.
-   * <p>
-   * Has no effect, if the same listener was already registered.
-   */
-  public void addWidgetChangeListener( final IWidgetChangeListener listener )
-  {
-    m_widgetChangeListener.add( listener );
-  }
-
-  /**
-   * Removes a listener from this manager.
-   * <p>
-   * Has no effect, if this listener was not added to this manager before.
-   */
-  public void removeWidgetChangeListener( final IWidgetChangeListener listener )
-  {
-    m_widgetChangeListener.remove( listener );
-  }
-
-  private void fireWidgetChangeEvent( final IWidget newWidget )
-  {
-    final IWidgetChangeListener[] listener = m_widgetChangeListener.toArray( new IWidgetChangeListener[m_widgetChangeListener.size()] );
-    for( final IWidgetChangeListener element : listener )
-      element.widgetChanged( newWidget );
-  }
-
-  /**
-   * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-   */
-  public void keyTyped( final KeyEvent e )
-  {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
-      widget.keyTyped( e );
-  }
-
-  /**
-   * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-   */
-  public void keyPressed( final KeyEvent e )
-  {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
-      widget.keyPressed( e );
-  }
-
-  /**
-   * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-   */
-  public void keyReleased( final KeyEvent e )
-  {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
-      widget.keyReleased( e );
-  }
-
-  protected void onSelectionChanged( final IFeatureSelection selection )
-  {
-    if( m_actualWidget != null )
-      m_actualWidget.setSelection( selection );
-  }
-
 }

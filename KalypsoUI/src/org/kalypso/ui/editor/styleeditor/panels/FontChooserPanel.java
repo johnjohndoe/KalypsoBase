@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -48,6 +48,9 @@ import java.awt.Color;
 
 import javax.swing.event.EventListenerList;
 
+import org.deegree.filterencoding.FilterEvaluationException;
+import org.deegree.graphics.sld.Font;
+import org.deegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -62,9 +65,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.Font;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -126,9 +126,10 @@ public class FontChooserPanel
     textData.left = new FormAttachment( 340, 1000, 0 );
     textData.top = new FormAttachment( 10, 1000, 0 );
     text.setLayoutData( textData );
-    text.setText( "abc" ); //$NON-NLS-1$
+    text.setText( "abc" );
     text.setFont( font );
-    text.setForeground( new org.eclipse.swt.graphics.Color( null, color.getRed(), color.getGreen(), color.getBlue() ) );
+    text.setForeground( new org.eclipse.swt.graphics.Color( null, color.getRed(), color.getGreen(),
+        color.getBlue() ) );
 
     Button fontChooserButton = new Button( composite, SWT.PUSH );
     FormData fontChooserButtonData = new FormData();
@@ -137,7 +138,7 @@ public class FontChooserPanel
     fontChooserButtonData.left = new FormAttachment( 540, 1000, 0 );
     fontChooserButtonData.top = new FormAttachment( 100, 1000, 0 );
     fontChooserButton.setLayoutData( fontChooserButtonData );
-    fontChooserButton.setText( "..." ); //$NON-NLS-1$
+    fontChooserButton.setText( "..." );
 
     final FontDialog dialog = new FontDialog( composite.getShell() );
     dialog.setFontList( font.getFontData() );
@@ -193,7 +194,8 @@ public class FontChooserPanel
     return local_font;
   }
 
-  public static org.eclipse.swt.graphics.Font convertDegreeToSWTFont( Font font ) throws FilterEvaluationException
+  public static org.eclipse.swt.graphics.Font convertDegreeToSWTFont( Font font )
+      throws FilterEvaluationException
   {
     int style = font.getStyle( null );
     int weight = font.getWeight( null );

@@ -1,39 +1,27 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.io.rtree;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Copyright (C) 2002 Wolfgang Baer - WBaer@gmx.de
+ 
+ Adapted May 2003 by IDgis, The Netherlands - www.idgis.nl
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.io.rtree;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,15 +33,21 @@ import java.io.RandomAccessFile;
 import java.util.Stack;
 
 /**
- * Persistente Implementierung einer PageFile. Implementiert als RandomAccesFile.
+ * Persistente Implementierung einer PageFile. Implementiert als
+ * RandomAccesFile.
  * 
- * Aufbau der Datei -- Header -- int pageFileVersion int dimension int capacity = maximum + 1 for overflow int minimum --
- * Body -- aufeinanderfolgende Pages mit int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im Vaterknoten
- * steht int counter - Derzeit benutzer Platz im Knoten int parentNode - Nummer der PageFile des Vaterknotens int
- * pageNumber - eigene PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i - pageNumber Kindknoten oder
- * Objekt-ID der Dateneinträge - jeweils Abhängigkeit von dimension = x double pMin x.Dimension - pMin der gemeinsamen
- * HyperBoundingBox double pMax x.Dimension - pMax der gemeinsamen HyperBoundingBox - for(i = 0; i < capacity; i++)
- * double pMin x.Dimension - pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag i
+ * Aufbau der Datei -- Header -- int pageFileVersion int dimension int capacity =
+ * maximum + 1 for overflow int minimum -- Body -- aufeinanderfolgende Pages mit
+ * int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im
+ * Vaterknoten steht int counter - Derzeit benutzer Platz im Knoten int
+ * parentNode - Nummer der PageFile des Vaterknotens int pageNumber - eigene
+ * PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i -
+ * pageNumber Kindknoten oder Objekt-ID der Dateneinträge - jeweils Abhängigkeit
+ * von dimension = x double pMin x.Dimension - pMin der gemeinsamen
+ * HyperBoundingBox double pMax x.Dimension - pMax der gemeinsamen
+ * HyperBoundingBox - for(i = 0; i < capacity; i++) double pMin x.Dimension -
+ * pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag
+ * i
  * 
  * int entspr. 4 Bytes - double entspr. 8 Bytes
  * 
@@ -131,10 +125,10 @@ public class PersistentPageFile extends PageFile
         }
 
         // Auslesend der Dimension - Initialisierung PageFile
-        m_dimension = file.readInt();
-        m_capacity = file.readInt();
-        m_minimum = file.readInt();
-        this.pageSize = ( ( 4 * ( 5 + m_capacity ) ) + ( ( m_capacity + 1 ) * ( m_dimension * 16 ) ) );
+        this.dimension = file.readInt();
+        this.capacity = file.readInt();
+        this.minimum = file.readInt();
+        this.pageSize = ( ( 4 * ( 5 + this.capacity ) ) + ( ( this.capacity + 1 ) * ( this.dimension * 16 ) ) );
         this.buffer = new byte[pageSize];
 
         // Einlesen leerer Seiten
@@ -155,9 +149,7 @@ public class PersistentPageFile extends PageFile
           }
         }
         catch( IOException ioe )
-        {
-          // shouldnt we print stack trace?
-        }
+        {}
       }
       else
       {
@@ -170,9 +162,9 @@ public class PersistentPageFile extends PageFile
         // header schreiben (Dimension , Dateiversion)
         file.seek( 0 );
         file.writeInt( PAGEFILE_VERSION );
-        file.writeInt( m_dimension );
-        file.writeInt( m_capacity );
-        file.writeInt( m_minimum );
+        file.writeInt( this.dimension );
+        file.writeInt( this.capacity );
+        file.writeInt( this.minimum );
       }
     }
     catch( IOException e )
@@ -217,18 +209,18 @@ public class PersistentPageFile extends PageFile
 
         if( type == 1 )
         {
-          for( int i = 0; i < m_capacity; i++ )
+          for( int i = 0; i < capacity; i++ )
             ( (LeafNode)node ).data[i] = ds.readInt();
         }
         else
         {
-          for( int i = 0; i < m_capacity; i++ )
+          for( int i = 0; i < capacity; i++ )
             ( (NoneLeafNode)node ).childNodes[i] = ds.readInt();
         }
 
         node.unionMinBB = readNextHyperBoundingBox( ds );
 
-        for( int i = 0; i < m_capacity; i++ )
+        for( int i = 0; i < capacity; i++ )
           node.hyperBBs[i] = readNextHyperBoundingBox( ds );
 
         ds.close();
@@ -248,19 +240,24 @@ public class PersistentPageFile extends PageFile
   }
 
   /**
-   * @throws IOException
+   * 
+   * 
+   * @param ds
+   * 
+   * @return @throws
+   *         IOException
    */
   public HyperBoundingBox readNextHyperBoundingBox( DataInputStream ds ) throws IOException
   {
     double[] point1;
     double[] point2;
-    point1 = new double[m_dimension];
-    point2 = new double[m_dimension];
+    point1 = new double[dimension];
+    point2 = new double[dimension];
 
-    for( int i = 0; i < m_dimension; i++ )
+    for( int i = 0; i < dimension; i++ )
       point1[i] = ds.readDouble();
 
-    for( int i = 0; i < m_dimension; i++ )
+    for( int i = 0; i < dimension; i++ )
       point2[i] = ds.readDouble();
 
     return new HyperBoundingBox( new HyperPoint( point1 ), new HyperPoint( point2 ) );
@@ -313,7 +310,7 @@ public class PersistentPageFile extends PageFile
           ds.writeInt( ( (LeafNode)node ).data[i] );
         }
 
-        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
+        for( int i = 0; i < ( capacity - node.counter ); i++ )
           ds.writeInt( -1 );
       }
       else
@@ -323,28 +320,28 @@ public class PersistentPageFile extends PageFile
           ds.writeInt( ( (NoneLeafNode)node ).childNodes[i] );
         }
 
-        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
+        for( int i = 0; i < ( capacity - node.counter ); i++ )
           ds.writeInt( -1 );
       }
 
-      for( int i = 0; i < m_dimension; i++ )
+      for( int i = 0; i < dimension; i++ )
         ds.writeDouble( node.unionMinBB.getPMin().getCoord( i ) );
 
-      for( int i = 0; i < m_dimension; i++ )
+      for( int i = 0; i < dimension; i++ )
         ds.writeDouble( node.unionMinBB.getPMax().getCoord( i ) );
 
       for( int j = 0; j < node.counter; j++ )
       {
-        for( int i = 0; i < m_dimension; i++ )
+        for( int i = 0; i < dimension; i++ )
           ds.writeDouble( node.hyperBBs[j].getPMin().getCoord( i ) );
 
-        for( int i = 0; i < m_dimension; i++ )
+        for( int i = 0; i < dimension; i++ )
           ds.writeDouble( node.hyperBBs[j].getPMax().getCoord( i ) );
       }
 
-      for( int j = 0; j < ( m_capacity - node.counter ); j++ )
+      for( int j = 0; j < ( capacity - node.counter ); j++ )
       {
-        for( int i = 0; i < ( m_dimension * 2 ); i++ )
+        for( int i = 0; i < ( dimension * 2 ); i++ )
           ds.writeDouble( -1 );
       }
 
@@ -413,7 +410,7 @@ public class PersistentPageFile extends PageFile
    */
   public void finalize() throws Throwable
   {
-    if( !closed && file!=null)
+    if( !closed )
     {
       file.close();
     }

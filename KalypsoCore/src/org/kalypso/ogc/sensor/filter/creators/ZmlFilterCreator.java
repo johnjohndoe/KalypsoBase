@@ -36,13 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
-import java.net.URL;
-
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -50,7 +47,6 @@ import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
-import org.w3._1999.xlinkext.SimpleLinkType;
 
 /**
  * ZmlFilterCreator
@@ -59,18 +55,20 @@ import org.w3._1999.xlinkext.SimpleLinkType;
  */
 public final class ZmlFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation obs, final URL context )
-      throws SensorException
+  /**
+   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
+   */
+  public IObservationFilter createFilter( final AbstractFilterType aft,
+      final IObservation obs ) throws SensorException
   {
-    if( !( aft instanceof ZmlFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator.0") + ZmlFilterType.class.getName() ); //$NON-NLS-1$
-
-    final ZmlFilterType ft = (ZmlFilterType)aft;
+    if( !(aft instanceof ZmlFilterType) )
+      throw new IllegalArgumentException( "Not a " + ZmlFilterType.class.getName() );
+    
+    final ZmlFilterType ft = (ZmlFilterType) aft;
 
     final ZmlFilter filter = new ZmlFilter();
-    final SimpleLinkType zml = ft.getZml();
-    filter.initFilter( zml.getHref(), obs, context );
-
+    filter.initFilter( ft.getZml().getHref(), obs );
+    
     return filter;
   }
 }

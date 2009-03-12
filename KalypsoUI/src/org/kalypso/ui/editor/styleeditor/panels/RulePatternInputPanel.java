@@ -84,7 +84,8 @@ public class RulePatternInputPanel
 
   private String label = null;
 
-  public RulePatternInputPanel( Composite parent, String m_label, double m_min, double m_max, double m_step )
+  public RulePatternInputPanel( Composite parent, String m_label, double m_min, double m_max,
+      double m_step )
   {
     setLabel( m_label );
     setMin( m_min );
@@ -121,7 +122,7 @@ public class RulePatternInputPanel
     minText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData minTextData = new GridData( 25, 10 );
     minText.setLayoutData( minTextData );
-    minText.setText( "" + min ); //$NON-NLS-1$
+    minText.setText( "" + min );
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -136,7 +137,7 @@ public class RulePatternInputPanel
     maxText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData maxTextData = new GridData( 25, 10 );
     maxText.setLayoutData( maxTextData );
-    maxText.setText( "" + max ); //$NON-NLS-1$
+    maxText.setText( "" + max );
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -151,7 +152,7 @@ public class RulePatternInputPanel
     stepText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData stepTextData = new GridData( 25, 10 );
     stepText.setLayoutData( stepTextData );
-    stepText.setText( "" + step ); //$NON-NLS-1$
+    stepText.setText( "" + step );
 
     Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
@@ -171,29 +172,33 @@ public class RulePatternInputPanel
           // 1. min < max !!!
           if( t_min > t_max )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_MIN_MAX );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_MIN_MAX );
             errorDialog.showError();
           }
           // step>(max-min)
           else if( t_step > ( t_max - t_min ) )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
             errorDialog.showError();
           }
           // step needs to be positive
           else if( t_step <= 0 )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
             errorDialog.showError();
           }
           // restrict editor to 35 steps
           else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 35 )
           {
-            new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_REMARK,
-                MessageBundle.STYLE_EDITOR_PATTERN_LIMIT ).showError();
+            new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_REMARK, MessageBundle.STYLE_EDITOR_PATTERN_LIMIT )
+                .showError();
           }
           else
           {
@@ -205,12 +210,13 @@ public class RulePatternInputPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getMinText().setText( "" + getMin() ); //$NON-NLS-1$
-          getMaxText().setText( "" + getMax() ); //$NON-NLS-1$
-          getStepText().setText( "" + getStep() ); //$NON-NLS-1$
+          getMinText().setText( "" + getMin() );
+          getMaxText().setText( "" + getMax() );
+          getStepText().setText( "" + getStep() );
         }
         catch( Exception ex )
         {

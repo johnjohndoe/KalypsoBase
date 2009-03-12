@@ -36,13 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
-import java.net.URL;
-
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -58,26 +55,26 @@ import org.kalypso.zml.filters.DataholeFilterType;
  */
 public class DataHoleFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, URL context )
-      throws SensorException
+  /**
+   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
+   */
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs ) throws SensorException
   {
-    if( !( aft instanceof DataholeFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator.0") + DataholeFilterType.class.getName() ); //$NON-NLS-1$
+    if( !(aft instanceof DataholeFilterType) )
+      throw new IllegalArgumentException( "Not a " + DataholeFilterType.class.getName() );
+    
+    final DataholeFilterType ft = (DataholeFilterType) aft;
 
-    final DataholeFilterType ft = (DataholeFilterType)aft;
-
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
-
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter(), baseObs );
+	
     Double replaceWith = null;
     if( ft.isReplace() )
       replaceWith = new Double( ft.getReplaceWith() );
-
-    final Double value = ft.getValue();
-    final Integer status = ft.getStatus();
-    final DataHoleFilter filter = new DataHoleFilter( value.doubleValue(), status.intValue(), replaceWith );
-
-    filter.initFilter( null, filteredObs, context );
-
-    return filter;
+    
+    final DataHoleFilter filter = new DataHoleFilter( ft.getValue(), ft.getStatus(), replaceWith );
+    
+    filter.initFilter( null, filteredObs );
+    
+    return filter;  
   }
 }

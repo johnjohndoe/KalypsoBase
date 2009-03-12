@@ -36,11 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.test;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -62,22 +64,28 @@ public class WQObservationFilterTest extends TestCase
   /**
    * first test
    * 
+   * @throws MalformedURLException
    * @throws SensorException
    */
-  public void testGetValues() throws SensorException
+  public void testGetValues( ) throws MalformedURLException, SensorException
   {
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" ); //$NON-NLS-1$
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
 
       final ITuppleModel wqValues = obs.getValues( null );
 
       assertNotNull( wqValues );
 
-      System.out.println( ObservationUtilities.dump( wqValues, "  " ) ); //$NON-NLS-1$
+      System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
     }
     finally
     {
@@ -88,22 +96,29 @@ public class WQObservationFilterTest extends TestCase
   /**
    * tests schirgiswalde
    * 
+   * @throws MalformedURLException
    * @throws SensorException
    */
-  public void testSchirgiswalde() throws SensorException
+  public void testSchirgiswalde( ) throws MalformedURLException,
+      SensorException
   {
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" ); //$NON-NLS-1$
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test2.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
 
       final ITuppleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
-      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
+      System.out.println( ObservationUtilities.dump( values, "  " ) );
     }
     finally
     {
@@ -111,41 +126,32 @@ public class WQObservationFilterTest extends TestCase
     }
   }
 
-  public void testObsWithoutWQParam() throws SensorException
+  /**
+   * tests a wq filter over an observation that does not have any wq param spec
+   * 
+   * @throws MalformedURLException
+   * @throws SensorException
+   */
+  public void testObsWithoutWQParam( ) throws MalformedURLException,
+      SensorException
   {
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" ); //$NON-NLS-1$
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
+      final IObservation obs = ZmlFactory
+          .parseXML(
+              new InputSource( ins ),
+              "",
+              new URL(
+                  "file:/wq-test3.zml?<filter><wqFilter xmlns=\"filters.zml.kalypso.org\" type=\"W\"/></filter>" ) );
 
       final ITuppleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
-      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( ins );
-    }
-  }
-
-  public void testWQTable() throws SensorException
-  {
-    InputStream ins = null;
-    try
-    {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" ); //$NON-NLS-1$
-
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
-
-      final ITuppleModel values = obs.getValues( null );
-
-      assertNotNull( values );
-
-      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
+      System.out.println( ObservationUtilities.dump( values, "  " ) );
     }
     finally
     {

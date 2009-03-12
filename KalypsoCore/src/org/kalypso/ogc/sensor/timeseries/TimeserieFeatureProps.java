@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.util.Properties;
@@ -49,23 +49,9 @@ import java.util.Properties;
  */
 public class TimeserieFeatureProps
 {
-  /** If set, use this property of the feature to create name */
-  private final static String PROP_NAMECOLUMN = "nameColumn"; //$NON-NLS-1$
+  private final static String PROP_NAMECOLUMN = "nameColumn";
 
-  /** If {@link #PROP_NAMECOLUMN}is not set, use this name instead */
-  private final static String PROP_NAMESTRING = "nameString"; //$NON-NLS-1$
-
-  private final static String PROP_LINKCOLUM = "linkColumn"; //$NON-NLS-1$
-
-  private final static String PROP_COLOR = "color"; //$NON-NLS-1$
-
-  /** Line width as float */
-  private final static String PROP_LINE_WIDTH = "lineWidth"; //$NON-NLS-1$
-  
-  /** Lenght of simple dash as float */
-  private final static String PROP_LINE_DASH = "lineDash"; //$NON-NLS-1$
-
-  private final static String DEFAULT_NAMESTRING = "%obsname% (%axisname%)"; //$NON-NLS-1$
+  private final static String PROP_LINKCOLUM = "linkColumn";
 
   private final String m_nameColumn;
 
@@ -73,79 +59,38 @@ public class TimeserieFeatureProps
 
   private final String m_filter;
 
-  private static final String PROP_FILTER = "filter"; //$NON-NLS-1$
-
-  private final String m_nameString;
-
-  private final String m_color;
-
-  private final String m_lineWidth;
-
-  private final String m_lineDash;
+  private static final String PROP_FILTER = "filter";
 
   public TimeserieFeatureProps( final Properties props )
   {
-    this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_NAMESTRING ), props
-        .getProperty( PROP_LINKCOLUM ), props.getProperty( PROP_FILTER ), props.getProperty( PROP_COLOR ), props.getProperty( PROP_LINE_WIDTH ), props.getProperty( PROP_LINE_DASH ) );
+    this( props.getProperty( PROP_NAMECOLUMN ), props.getProperty( PROP_LINKCOLUM ),props.getProperty( PROP_FILTER ) );
   }
 
-  public TimeserieFeatureProps( final String nameColumn, final String nameString, final String linkColumn,
-      final String filter, final String color, final String lineWidth, final String lineDash )
+  public TimeserieFeatureProps( final String nameColumn, final String linkColumn, final String filter )
   {
     m_nameColumn = nameColumn;
-    m_color = color;
-    m_lineWidth = lineWidth;
-    m_lineDash = lineDash;
-
-    if( nameColumn != null && nameString == null )
-      m_nameString = "%featureprop%"; //$NON-NLS-1$
-    else if( nameString == null )
-      m_nameString = DEFAULT_NAMESTRING;
-    else
-      m_nameString = nameString;
-
     m_linkColumn = linkColumn;
     m_filter = filter;
   }
-
+  
   public String getFilter()
   {
     return m_filter;
   }
-
+  
   /**
    * @return Returns the linkColumn.
    */
-  public String getLinkColumn()
+  public String getLinkColumn( )
   {
     return m_linkColumn;
   }
-
+  
   /**
    * @return Returns the nameColumn.
    */
-  public String getNameColumn()
+  public String getNameColumn( )
   {
     return m_nameColumn;
-  }
-
-  public String getNameString()
-  {
-    return m_nameString;
-  }
-
-  public String getColor()
-  {
-    return m_color;
-  }
-
-  public String getLineWidth()
-  {
-    return m_lineWidth;
-  }
-
-  public String getLineDash()
-  {
-    return m_lineDash;
   }
 }

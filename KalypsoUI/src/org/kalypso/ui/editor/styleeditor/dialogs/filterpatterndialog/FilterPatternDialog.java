@@ -36,12 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterpatterndialog;
 
 import javax.swing.event.EventListenerList;
 
+import org.deegree.filterencoding.Operation;
+import org.deegree_impl.filterencoding.BoundaryExpression;
+import org.deegree_impl.filterencoding.PropertyIsBetweenOperation;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -61,9 +64,6 @@ import org.kalypso.ui.editor.styleeditor.panels.ColorBox;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
-import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
-import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 
 public class FilterPatternDialog extends Dialog
 {
@@ -86,7 +86,6 @@ public class FilterPatternDialog extends Dialog
       operation = (PropertyIsBetweenOperation)m_operation;
   }
 
-  @Override
   protected void configureShell( Shell shell )
   {
     super.configureShell( shell );
@@ -94,7 +93,6 @@ public class FilterPatternDialog extends Dialog
     shell.setSize( 200, 200 );
   }
 
-  @Override
   protected void okPressed()
   {
     // check whether boundaries are set and lowerBoundary<upperBoundary
@@ -105,7 +103,8 @@ public class FilterPatternDialog extends Dialog
       super.cancelPressed();
       return;
     }
-    else if( upperBoundaryText.getText() == null || upperBoundaryText.getText().trim().length() == 0 )
+    else if( upperBoundaryText.getText() == null
+        || upperBoundaryText.getText().trim().length() == 0 )
     {
       new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
           MessageBundle.STYLE_EDITOR_PATTERN_UPPER_BOUNDARY ).showError();
@@ -126,7 +125,8 @@ public class FilterPatternDialog extends Dialog
       super.cancelPressed();
       return;
     }
-    else if( Double.parseDouble( lowerBoundaryText.getText() ) > Double.parseDouble( upperBoundaryText.getText() ) )
+    else if( Double.parseDouble( lowerBoundaryText.getText() ) > Double
+        .parseDouble( upperBoundaryText.getText() ) )
     {
       new StyleEditorErrorDialog( getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
           MessageBundle.STYLE_EDITOR_PATTERN_UPPER_LOWER_ERROR ).showError();
@@ -140,7 +140,6 @@ public class FilterPatternDialog extends Dialog
     super.okPressed();
   }
 
-  @Override
   protected void cancelPressed()
   {
     fire();
@@ -165,7 +164,6 @@ public class FilterPatternDialog extends Dialog
     }
   }
 
-  @Override
   protected Control createDialogArea( Composite parent )
   {
     Composite composite = (Composite)super.createDialogArea( parent );

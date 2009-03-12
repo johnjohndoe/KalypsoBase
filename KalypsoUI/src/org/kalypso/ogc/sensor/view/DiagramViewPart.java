@@ -36,81 +36,78 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view;
 
 import java.awt.Font;
 import java.awt.Frame;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.TextTitle;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.cache.ObservationCache;
-import org.kalypso.ogc.sensor.diagview.DiagView;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
+import org.kalypso.ogc.sensor.diagview.impl.ObservationDiagramTemplate;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
-import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.util.runtime.args.DateRangeArgument;
 
 /**
  * Diagram QuickView.
  * 
  * @author schlienger
  */
-public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
+public class DiagramViewPart extends ViewPart implements
+    ISelectionChangedListener, IPartListener
 {
-  public static final String ID = "org.kalypso.ogc.sensor.view.DiagramViewPart"; //$NON-NLS-1$
-
-  protected final DiagView m_diagView = new DiagView( true );
+  protected final ObservationDiagramTemplate m_template = new ObservationDiagramTemplate();
 
   private ObservationChart m_chart;
 
   private TextTitle m_subTitle;
 
-  public DiagView getDiagView( )
-  {
-    return m_diagView;
-  }
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     try
     {
-      m_chart = new ObservationChart( m_diagView );
+      m_chart = new ObservationChart( m_template );
     }
-    catch( final SensorException e )
+    catch( SensorException e )
     {
-      e.printStackTrace();
+      MessageDialog.openError( parent.getShell(), "", e.getLocalizedMessage() );
       return;
     }
 
-    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_template.addTemplateEventListener( m_chart );
+
+    m_subTitle = new TextTitle("", new Font( "Default", Font.PLAIN, 12));
     m_chart.addSubtitle( m_subTitle );
 
+    // chart panel without any popup menu
+    ChartPanel chartPanel = new ChartPanel( m_chart, false, false, false, false, false );
+    chartPanel.setMouseZoomable( true, false );
+
     // SWT-AWT Brücke für die Darstellung von JFreeChart
-    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT | SWT.EMBEDDED ) );
-    vFrame.add( ChartFactory.createChartPanel( m_chart ) );
+    Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
+
     vFrame.setVisible( true );
+    chartPanel.setVisible( true );
+    vFrame.add( chartPanel );
 
     getSite().getPage().addPartListener( this );
   }
@@ -118,15 +115,14 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
   public void dispose( )
   {
     getSite().getPage().removePartListener( this );
 
+    m_template.removeTemplateEventListener( m_chart );
+
     if( m_chart != null )
       m_chart.dispose();
-
-    m_diagView.dispose();
 
     super.dispose();
   }
@@ -134,7 +130,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
   public void setFocus( )
   {
     // noch nix
@@ -145,41 +140,36 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    // always remove items first (we don't know which selection we get)
-    m_diagView.removeAllItems();
+    m_template.removeAllThemes();
 
-    final StructuredSelection selection = (StructuredSelection) event.getSelection();
+    final StructuredSelection selection = (StructuredSelection) event
+        .getSelection();
 
     if( !(selection.getFirstElement() instanceof IRepositoryItem) )
       return;
 
     final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
 
-    final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
+    final IObservation obs = ObservationCache.getInstance().getObservationFor(
+        item );
 
     if( obs != null )
     {
-      final DateRange dra = ObservationViewHelper.makeDateRange( item );
+      final DateRangeArgument dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_template.setObservation( obs, dra );
 
       // sub title of diagram contains date-range info
-      m_subTitle.setText( "" ); //$NON-NLS-1$
+      m_subTitle.setText("");
       if( dra != null )
         m_subTitle.setText( dra.toString() );
-
-      final IActionBars actionbar = this.getViewSite().getActionBars();
-      actionbar.updateActionBars();
-
-      // FIXME - wont update commands of view
-      actionbar.getToolBarManager().update( true );
     }
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partActivated( final IWorkbenchPart part )
+  public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
@@ -188,7 +178,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partBroughtToTop( final IWorkbenchPart part )
+  public void partBroughtToTop( IWorkbenchPart part )
   {
     // nada
   }
@@ -196,7 +186,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partClosed( final IWorkbenchPart part )
+  public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
@@ -205,7 +195,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partDeactivated( final IWorkbenchPart part )
+  public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
@@ -214,7 +204,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   /**
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partOpened( final IWorkbenchPart part )
+  public void partOpened( IWorkbenchPart part )
   {
     // Siehe partActivated...
   }

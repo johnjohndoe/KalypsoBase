@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,83 +36,61 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.kalypso.commons.io.AbstractCSV;
-import org.kalypso.commons.io.CSV;
-import org.kalypso.commons.io.RegexCSV;
-import org.kalypso.commons.parser.IParser;
-import org.kalypso.commons.parser.ParserException;
-import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.AxisType.ValueLink;
+import org.kalypso.util.io.CSV;
+import org.kalypso.util.io.ITabledValues;
+import org.kalypso.util.io.RegexCSV;
+import org.kalypso.util.parser.IParser;
+import org.kalypso.util.parser.ParserException;
+import org.kalypso.zml.AxisType.ValueLinkType;
 
 /**
  * @author schlienger
  */
 public class ZmlLinkValues implements IZmlValues
 {
-  /**
-   * value of the href link that specifies that the zml values are stored in the data element
-   */
-  public final static String DATA_REF = "#data"; //$NON-NLS-1$
-
-  private final AbstractCSV m_csv;
+  private final ITabledValues m_csv;
 
   private final IParser m_parser;
 
-  private final Map<Object, Integer> m_helper = new Hashtable<Object, Integer>();
+  private Map m_helper = new Hashtable();
 
   private final int m_column;
 
-  /**
-   * Constructor
-   * 
-   * @param vl
-   *            binding type
-   * @param parser
-   *            configured values parser
-   * @param context
-   *            context into which original file was loaded
-   * @param data
-   *            [optional] contains the values in a block format within CDATA tags if the values are linked
-   *            ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
-   * @throws MalformedURLException
-   * @throws IOException
-   */
-  public ZmlLinkValues( final ValueLink vl, final IParser parser, final URL context, final String data ) throws MalformedURLException, IOException
+  public ZmlLinkValues( final ValueLinkType vl, final IParser parser, final URL context )
+      throws MalformedURLException, IOException
   {
     m_parser = parser;
+
     // index begins with 0 internally
     m_column = vl.getColumn() - 1;
-    // stream is closed in either CSV() or RegexCsv()
-    final Reader reader;
-    // if the Href is not specified, is empty, or contains "#data" we
-    // use the data element provided.
-    if( vl.getHref() == null || vl.getHref().length() == 0 || vl.getHref().equalsIgnoreCase( DATA_REF ) )
-      reader = new StringReader( data );
+
+    final URL url = new UrlUtilities().resolveURL( context, vl.getHref() );
+
+    if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
+    {
+      // stream is closed in CSV()
+      m_csv = new CSV( new InputStreamReader( url.openStream() ), vl.getSeparator(), vl.getLine(), true );
+    }
     else
     {
-      final URL url = new UrlUtilities().resolveURL( context, vl.getHref() );
-      reader = new InputStreamReader( url.openStream() );
+      // stream closed in RegexCSV()
+      m_csv = new RegexCSV( new InputStreamReader( url.openStream() ), Pattern.compile( vl
+          .getRegexp() ), vl.getLine(), true );
     }
-    if( vl.getRegexp() == null || vl.getRegexp().length() == 0 )
-      m_csv = new CSV( vl.getSeparator(), vl.getLine(), true );
-    else
-      m_csv = new RegexCSV( Pattern.compile( vl.getRegexp() ), vl.getLine(), true );
-    m_csv.fetch( reader );
   }
 
   /**
@@ -123,11 +101,19 @@ public class ZmlLinkValues implements IZmlValues
     try
     {
       // get item from csv file
-      final String item = m_csv.getItem( index, m_column ).trim();
+      final String item = m_csv.getItem( index, m_column );
+
+      if( item.length() == 0 )
+      {
+        System.out.println( "empty element" );
+      }
+      
       // parse item using axis parser
       final Object obj = m_parser.parse( item );
+
       // tricky: store relation between element and index for future needs
       m_helper.put( obj, new Integer( index ) );
+
       return obj;
     }
     catch( ParserException e )
@@ -137,12 +123,14 @@ public class ZmlLinkValues implements IZmlValues
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
+   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int,
+   *      java.lang.Object)
    */
   public void setElement( int index, Object element ) throws SensorException
   {
     // tricky: set it in our map-helper (Siehe this.indexOf() )
     m_helper.put( element, new Integer( index ) );
+
     try
     {
       // set it in CSV
@@ -157,7 +145,7 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
    */
-  public int getCount( )
+  public int getCount()
   {
     return m_csv.getLines();
   }
@@ -165,20 +153,12 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
    */
-  public int indexOf( final Object obj ) throws SensorException
+  public int indexOf( final Object obj )
   {
-    Integer iobj = m_helper.get( obj );
+    Integer iobj = (Integer)m_helper.get( obj );
     if( iobj == null )
-    {
-      // tricky: go through the items serially to find it
-      // it's not so nice, but it's necessary the way
-      // this class is implemented (the helper is lazy
-      // filled...)
-      for( int i = 0; i < getCount(); i++ )
-        if( getElement( i ).equals( obj ) )
-          return i;
       return -1;
-    }
+
     return iobj.intValue();
   }
 }

@@ -36,13 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.forecast;
 
-import java.net.URL;
-
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -58,19 +55,22 @@ import org.kalypso.zml.filters.ForecastFilterType;
  */
 public class ForecastFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
-      throws SensorException
+  /**
+   * @see org.kalypso.ogc.sensor.filter.IFilterCreator#createFilter(org.kalypso.zml.filters.AbstractFilterType, org.kalypso.ogc.sensor.IObservation)
+   */
+  public IObservationFilter createFilter( AbstractFilterType aft,
+      IObservation baseObs ) throws SensorException
   {
-    if( !( aft instanceof ForecastFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator.0") + ForecastFilterType.class.getName() ); //$NON-NLS-1$
+    if( !(aft instanceof ForecastFilterType) )
+      throw new IllegalArgumentException( "Not a " + ForecastFilterType.class.getName() );
+    
+    final ForecastFilterType ft = (ForecastFilterType) aft;
 
-    final ForecastFilterType ft = (ForecastFilterType)aft;
-
-    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft.getFilter(), baseObs, context );
-
+    final IObservation[] filteredObs = FilterCreatorHelper.resolveFilters( ft.getFilter(), baseObs );
+	
     final ForecastFilter filter = new ForecastFilter();
-    filter.initFilter( filteredObs, filteredObs[0], context );
-
+    filter.initFilter( filteredObs, filteredObs[0] );
+    
     return filter;
   }
 }

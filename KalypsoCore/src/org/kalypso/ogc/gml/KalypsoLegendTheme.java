@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,255 +36,310 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.deegree.graphics.displayelements.DisplayElement;
+import org.deegree.graphics.displayelements.IncompatibleGeometryTypeException;
+import org.deegree.graphics.sld.UserStyle;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.feature.FeatureProperty;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree.model.feature.event.ModellEventListener;
+import org.deegree.model.feature.event.ModellEventProviderAdapter;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Exception;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.deegree_impl.graphics.transformation.WorldToScreenTransform;
+import org.deegree_impl.model.feature.FeatureFactory;
+import org.deegree_impl.model.geometry.GeometryFactory;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
-import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author doemming
+ * @author sbad0205
  */
-public class KalypsoLegendTheme extends AbstractKalypsoTheme
+public class KalypsoLegendTheme implements IKalypsoTheme, ModellEventListener
 {
-  private final IMapModellListener m_modellListener = new MapModellAdapter()
+  private ModellEventProviderAdapter myEventProvider = new ModellEventProviderAdapter();
+
+  private Image m_Image = null;
+
+  private Color backColor = new Color( 240, 240, 240 );
+
+  private int m_styleWidth = 170;
+
+  private int m_styleHeight = 50;
+
+  private Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
+
+  private int m_imageHeight = 0;
+
+  private int m_imageWidth = 0;
+
+  private String m_name;
+
+  private final IMapModell m_mapModell;
+
+  public KalypsoLegendTheme( IMapModell mapModell )
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
-    @Override
-    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
-    {
-      invalidateLegend();
-    }
-
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
-    @Override
-    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
-    {
-      invalidateLegend();
-    }
-
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
-    @Override
-    public void themeOrderChanged( final IMapModell source )
-    {
-      invalidateLegend();
-    }
-
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
-    @Override
-    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
-    {
-      invalidateLegend();
-    }
-
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
-    @Override
-    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
-    {
-      invalidateLegend();
-    }
-  };
-
-  private final Job m_legendJob = new UIJob( "Legende erzeugen" )
-  {
-    /**
-     * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      try
-      {
-        updateLegend( monitor );
-        return Status.OK_STATUS;
-      }
-      catch( final CoreException e )
-      {
-        if( !e.getStatus().matches( IStatus.CANCEL ) )
-          e.printStackTrace();
-
-        return e.getStatus();
-      }
-    }
-  };
-
-  private Image m_image = null;
-
-  /**
-   * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
-   */
-  private org.eclipse.swt.graphics.Image m_legendThemeIcon;
-
-  // TODO: get from properties
-  private final int m_borderWidth = 10;
-
-  // TODO: get from properties
-  // Default: just a shade of gray for a little contrast
-  private final RGB m_backgroundColor = new RGB( 245, 245, 245 );
-
-  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell )
-  {
-    super( name, "legend", mapModell ); //$NON-NLS-1$
-
-    m_legendThemeIcon = null;
-
-    mapModell.addMapModelListener( m_modellListener );
+    m_mapModell = mapModell;
+    m_mapModell.addModellListener( this );
+    m_name = "Legende";
   }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
-    getMapModell().removeMapModelListener( m_modellListener );
-
-    if( m_legendThemeIcon != null )
-      m_legendThemeIcon.dispose();
-
-    super.dispose();
+    m_mapModell.removeModellListener( this );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
-  @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public String getName()
   {
-    if( selected != null && selected )
-      return;
+    return m_name;
+  }
 
-    final int wMax = g.getClipBounds().width;
-    final int hMax = g.getClipBounds().height;
-    if( m_image != null )
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    m_name = name;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paintSelected(java.awt.Graphics,
+   *      org.deegree.graphics.transformation.GeoTransform, double,
+   *      org.deegree.model.geometry.GM_Envelope, int)
+   */
+  public void paintSelected( Graphics g, GeoTransform p, double scale, GM_Envelope bbox,
+      int selectionId )
+  {
+    int w = g.getClipBounds().width;
+    int h = g.getClipBounds().height;
+    if( m_Image == null )
+      updateLegend();
+    if( selectionId < 0 && m_Image != null )
     {
       g.setPaintMode();
-      final int widthIamge = m_image.getWidth( null );
-      final int heightImage = m_image.getHeight( null );
-      g.drawImage( m_image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
+      g.drawImage( m_Image, w - m_imageWidth, h - m_imageHeight, m_imageWidth, m_imageHeight, null );
     }
   }
 
-  protected final void invalidateLegend( )
+  public void addModellListener( final ModellEventListener listener )
   {
-    m_legendJob.cancel();
-
-    m_image = null;
-
-    m_legendJob.schedule( 100 );
+    myEventProvider.addModellListener( listener );
   }
 
-  protected void updateLegend( final IProgressMonitor monitor ) throws CoreException
+  public void fireModellEvent( final ModellEvent event )
   {
-    final IMapModell mapModell = getMapModell();
-    if( mapModell == null )
-      return;
+    myEventProvider.fireModellEvent( event );
+  }
 
-    final IKalypsoTheme[] themes = getLegendThemes( mapModell );
-
-    final Display display = Display.getCurrent();
-    final Insets insets = new Insets( m_borderWidth, m_borderWidth, m_borderWidth, m_borderWidth );
-    final org.eclipse.swt.graphics.Image image = MapUtilities.exportLegends( themes, display, insets, m_backgroundColor, -1, -1, monitor );
-
-    final BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
-    image.dispose();
-    ProgressUtilities.worked( monitor, 0 ); // cancel check
-
-    final Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
-    graphics.setColor( Color.BLACK );
-    graphics.setStroke( new BasicStroke( 2.0f ) );
-    graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
-    graphics.dispose();
-
-    m_image = awtImage;
-
-    fireRepaintRequested( null );
+  public void removeModellListener( ModellEventListener listener )
+  {
+    myEventProvider.removeModellListener( listener );
   }
 
   /**
-   * Returns the themes that are visible in the legend.
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
    */
-  private IKalypsoTheme[] getLegendThemes( final IMapModell mapModell )
+  public void onModellChange( final ModellEvent modellEvent )
   {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>( allThemes.length );
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      if( kalypsoTheme != this && kalypsoTheme.isVisible() && kalypsoTheme.isLoaded() )
-        themes.add( kalypsoTheme );
-    }
 
-    return themes.toArray( new IKalypsoTheme[themes.size()] );
+    if( modellEvent != null && modellEvent.getType() == ModellEvent.LEGEND_UPDATED )
+      return;
+    m_Image = null;
+    //updateLegend();
   }
 
+  private void updateLegend()
+  {
+    List stylesCol = new ArrayList();
+
+    int max = m_mapModell.getThemeSize();
+    for( int i = 0; i < max; i++ )
+    {
+      final IKalypsoTheme theme = m_mapModell.getTheme( i );
+
+      if( m_mapModell.isThemeEnabled( theme ) && theme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
+
+        final UserStyle[] styles = featureTheme.getStyles();
+        final FeatureType ft = featureTheme.getFeatureType();
+
+        for( int n = 0; n < styles.length; n++ )
+        {
+          final UserStyle style = styles[n];
+          final Image styleImage = getLegend( ft, style, m_styleWidth, m_styleHeight );
+          final Graphics g = styleImage.getGraphics();
+          g.setPaintMode();
+          g.setColor( backColor );
+          g.setColor( Color.black );
+
+          if( n == 0 )
+          {
+            g.setFont( m_font );
+            g.setColor( Color.black );
+            final String title = theme.getName();
+            g.drawString( title, 2, m_font.getSize() );
+
+          }
+          stylesCol.add( styleImage );
+        }
+      }
+    }
+    
+    if( stylesCol.isEmpty() )
+      return;
+    
+    // draw bufferedImage...
+    final Image tmpImage = new BufferedImage( m_styleWidth, m_styleHeight * stylesCol.size(),
+        BufferedImage.TYPE_INT_RGB );
+    final Graphics g = tmpImage.getGraphics();
+    g.setPaintMode();
+    g.setColor( backColor );
+    g.fillRect( 0, 0, m_styleWidth, m_styleHeight * stylesCol.size() );
+    
+    for( int i = 0; i < stylesCol.size(); i++ )
+    {
+      final Image styleImage = (Image)stylesCol.get( i );
+      int pos = i;
+      g.drawImage( styleImage, 0, m_styleHeight * pos, m_styleWidth - 1, m_styleHeight - 1, null );
+      g.setColor( Color.black );
+      g.drawRect( 0, m_styleHeight * pos, m_styleWidth - 1, m_styleWidth - 2 );
+    }
+    // rahmen
+    g.setColor( Color.DARK_GRAY );
+    m_imageHeight = m_styleHeight * stylesCol.size();
+    m_imageWidth = m_styleWidth;
+    g.drawRect( 0, 0, m_imageWidth - 1, m_imageHeight - 1 );
+    m_Image = tmpImage;
+    fireModellEvent( new ModellEvent( null, ModellEvent.LEGEND_UPDATED ) );
+  }
+
+  private Image getLegend( FeatureType ft, UserStyle style, int width, int height )
+  {
+    double yborder = m_font.getSize() + 3;
+    double xborder = width / 3;
+    GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
+    GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder,
+        height - yborder );
+    GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
+
+    Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
+    Graphics g = image.getGraphics();
+    g.setColor( backColor );
+    g.setPaintMode();
+    g.fillRect( 0, 0, width, height );
+    Feature feature = createDefaultFeature( ft );
+    try
+    {
+      DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[]
+      { style } );
+      for( int i = 0; i < des.length; i++ )
+      {
+        DisplayElement de = des[i];
+        de.paint( g, transform );
+      }
+    }
+    catch( IncompatibleGeometryTypeException e )
+    {
+      e.printStackTrace();
+    }
+    return image;
+  }
+
+  private Feature createDefaultFeature( FeatureType ft )
+  {
+    FeatureTypeProperty[] propTypes = ft.getProperties();
+    FeatureProperty[] props = createDefaultFeatureProperty( propTypes );
+    Feature feature = FeatureFactory.createFeature( "default", ft, props );
+    return feature;
+  }
+
+  private FeatureProperty[] createDefaultFeatureProperty( FeatureTypeProperty[] propTypes )
+  {
+    List results = new ArrayList();
+    for( int i = 0; i < propTypes.length; i++ )
+    {
+      FeatureTypeProperty ftp = propTypes[i];
+      Object value = ftp.getName();
+      String type = ftp.getType();
+      if( "java.lang.String".equals( type ) )
+        value = ftp.getName();
+      if( "org.deegree.model.geometry.GM_Point".equals( type ) )
+        value = DEFAULT_POINT;
+      if( "org.deegree.model.geometry.GM_LineString".equals( type ) )
+        value = DEFAULT_LINESTRING;
+      if( "org.deegree.model.geometry.GM_Polygon".equals( type ) )
+        value = DEFAULT_POLYGONE;
+      // TODO if type=Feature ... createDeafultFeature
+      results.add( FeatureFactory.createFeatureProperty( ftp.getName(), value ) );
+    }
+    return (FeatureProperty[])results.toArray( new FeatureProperty[results.size()] );
+  }
+
+  private static GM_Object DEFAULT_POINT = GeometryFactory.createGM_Point( 0.5, 0.5, null );
+
+  private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[]
+  {
+      GeometryFactory.createGM_Position( 0.00, 0.3 ),
+      GeometryFactory.createGM_Position( 0.33, 0.7 ),
+      GeometryFactory.createGM_Position( 0.66, 0.3 ),
+      GeometryFactory.createGM_Position( 1.00, 0.7 ), };
+
+  private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
+
+  private static GM_Object DEFAULT_LINESTRING = null;
+
+  private static GM_Object DEFAULT_POLYGONE = null;
+  static
+  {
+    try
+    {
+      DEFAULT_LINESTRING = GeometryFactory.createGM_Curve( DEFAULT_LINEPOSITIONS, null );
+    }
+    catch( GM_Exception e )
+    {
+      DEFAULT_LINESTRING = null;
+      e.printStackTrace();
+    }
+  }
+  static
+  {
+    try
+    {
+      DEFAULT_POLYGONE = GeometryFactory.createGM_Surface( DEFAULT_ENVELOPE, null );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getFullExtent( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
-  @Override
-  protected ImageDescriptor getDefaultIcon( )
-  {
-    if( m_legendThemeIcon == null )
-      m_legendThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/legendTheme.gif" ) ); //$NON-NLS-1$
-
-    return ImageDescriptor.createFromImage( m_legendThemeIcon );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
-   */
-  @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final org.eclipse.swt.graphics.Font font )
+  public GM_Envelope getBoundingBox()
   {
     return null;
   }

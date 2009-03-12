@@ -36,8 +36,8 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 03.08.2004
  *  
@@ -58,8 +58,7 @@ public class FeatureIDData extends AbstractData
     this.featureId = m_featureId;
   }
 
-  @Override
-  public boolean verify( )
+  public boolean verify()
   {
     if( featureId != null )
       return true;

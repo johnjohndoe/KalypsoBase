@@ -36,135 +36,66 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.sensor.ExportUtilities;
-import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ui.metadoc.IExportableTableDocument;
 
 /**
  * ExportableObservationTable
  * 
  * @author schlienger
  */
-public class ExportableObservationTable implements IExportableObject
+public class ExportableObservationTable implements IExportableTableDocument
 {
   private final ObservationTable m_table;
 
-  private final String m_identifierPrefix;
+  private boolean m_onlySelected;
 
-  private final String m_category;
-
-  private final String m_stationIDs;
-
-  private final String m_preferredDocumentName;
-
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final String preferredDocumentName )
+  public ExportableObservationTable( final ObservationTable table )
   {
     m_table = table;
-    m_identifierPrefix = identifierPrefix;
-    m_category = category;
-    m_preferredDocumentName = preferredDocumentName;
-    m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems() );
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
+   * @see org.kalypso.ui.metadoc.IExportableTableDocument#setOnlySelectedRows(boolean)
    */
-  public String getPreferredDocumentName( )
+  public void setOnlySelectedRows( final boolean flag )
   {
-    return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_onlySelected = flag;
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ui.metadoc.IExportableDocument#exportDocument(java.io.OutputStream)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public void exportDocument( final OutputStream outs ) throws Exception
   {
-    monitor.beginTask( Messages.getString( "ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
+    final ITuppleModel values = m_table.m_model
+        .getValues( m_onlySelected ? m_table.getSelectedRows() : null );
 
-    final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
+    final OutputStreamWriter writer = new OutputStreamWriter( outs );
     try
     {
-      // scenario name header
-      final String currentScenarioName = m_table.getCurrentScenarioName();
-      if( !currentScenarioName.equals( "" ) ) //$NON-NLS-1$
-        writeTextLine( writer, currentScenarioName );
-
-      if( m_preferredDocumentName != null && m_preferredDocumentName.length() > 0  ) //$NON-NLS-1$
-        writeTextLine( writer, m_preferredDocumentName );
-
-      monitor.worked( 1 );
-
-      // normal table dump
-      final ObservationTableModel model = m_table.getObservationTableModel();
-      model.dump( ";", writer ); //$NON-NLS-1$
-
-      monitor.worked( 1 );
-
-      return Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "ExportableObservationTable.5" ), e ); //$NON-NLS-1$
+      ObservationUtilities.dump( values, ";", writer );
     }
     finally
     {
       IOUtils.closeQuietly( writer );
-      monitor.done();
     }
   }
 
   /**
-   * Writes one line with only the first item set tu a given text and fill the rest with ';' according to the Number of current columns. 
+   * @see org.kalypso.ui.metadoc.IExportableDocument#getDocumentExtension()
    */
-  private void writeTextLine( final BufferedWriter writer, final String text ) throws IOException
+  public String getDocumentExtension( )
   {
-    writer.write( text );
-    int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
-    for( int i = 0; i < columnCount; i++ )
-      writer.write( ";" ); //$NON-NLS-1$
-    writer.newLine();
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
-   */
-  public String getIdentifier( )
-  {
-    return m_identifierPrefix + getPreferredDocumentName();
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getCategory()
-   */
-  public String getCategory( )
-  {
-    return m_category;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return m_stationIDs;
+    return ".csv";
   }
 }

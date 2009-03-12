@@ -36,15 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
+  
+---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableSorter;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.util.command.ICommand;
 
 /**
  * @author gernot
@@ -76,17 +75,8 @@ public class ChangeSortingCommand implements ICommand
 
     if( m_oldPropertyName != null && m_oldPropertyName.equals( propertyName ) )
     {
-      // falls bereits invers, ausschalten
-      if( m_oldInverse )
-      {
-        m_newPropertyName = null;
-        m_newInverse = false;
-      }
-      else
-      {
-        m_newInverse = true;
-        m_newPropertyName = m_oldPropertyName;
-      }
+      m_newInverse = !m_oldInverse;
+      m_newPropertyName = m_oldPropertyName;
     }
     else
     {
@@ -96,7 +86,7 @@ public class ChangeSortingCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   * @see org.kalypso.util.command.ICommand#isUndoable()
    */
   public boolean isUndoable()
   {
@@ -104,7 +94,7 @@ public class ChangeSortingCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#process()
+   * @see org.kalypso.util.command.ICommand#process()
    */
   public void process() throws Exception
   {
@@ -127,7 +117,7 @@ public class ChangeSortingCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#redo()
+   * @see org.kalypso.util.command.ICommand#redo()
    */
   public void redo() throws Exception
   {
@@ -135,7 +125,7 @@ public class ChangeSortingCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#undo()
+   * @see org.kalypso.util.command.ICommand#undo()
    */
   public void undo() throws Exception
   {
@@ -143,11 +133,11 @@ public class ChangeSortingCommand implements ICommand
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
+   * @see org.kalypso.util.command.ICommand#getDescription()
    */
   public String getDescription()
   {
-    return ( m_newInverse ? Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.0") : Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.1") ) + Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.2") + m_newPropertyName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return ( m_newInverse ? "absteigend" : "aufsteigend" ) + " sortieren nach: " + m_newPropertyName;
   }
 
 }
