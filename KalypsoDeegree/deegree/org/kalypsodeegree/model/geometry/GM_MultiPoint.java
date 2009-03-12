@@ -1,44 +1,52 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
+/*----------------    FILE HEADER  ------------------------------------------
 
-package org.kalypsodeegree.model.geometry;
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ 
+ ---------------------------------------------------------------------------*/
+
+package org.deegree.model.geometry;
 
 /**
  * 
- * The interface defines the access to a aggregations of <tt>GM_Point</tt> objects.
+ * The interface defines the access to a aggregations of <tt>GM_Point</tt>
+ * objects.
  * 
  * <p>
  * -----------------------------------------------------
@@ -62,8 +70,9 @@ public interface GM_MultiPoint extends GM_MultiPrimitive
   public void addPoint( GM_Point gmp );
 
   /**
-   * inserts a GM_Point into the aggregation. all elements with an index equal or larger index will be moved. if index
-   * is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
+   * inserts a GM_Point into the aggregation. all elements with an index equal
+   * or larger index will be moved. if index is larger then getSize() - 1 or
+   * smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
    *          GM_Point to insert.
@@ -73,8 +82,10 @@ public interface GM_MultiPoint extends GM_MultiPrimitive
   public void insertPointAt( GM_Point gmp, int index ) throws GM_Exception;
 
   /**
-   * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be
-   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
+   * sets the submitted GM_Point at the submitted index. the element at the
+   * position <code>index</code> will be removed. if index is larger then
+   * getSize() - 1 or smaller then 0 or gmp equals null an exception will be
+   * thrown.
    * 
    * @param gmp
    *          GM_Point to set.
@@ -91,8 +102,8 @@ public interface GM_MultiPoint extends GM_MultiPrimitive
   public GM_Point removePoint( GM_Point gmp );
 
   /**
-   * removes the GM_Point at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
-   * then 0 an exception will be thrown.
+   * removes the GM_Point at the submitted index from the aggregation. if index
+   * is larger then getSize() - 1 or smaller then 0 an exception will be thrown.
    * 
    * @return the removed GM_Point
    */

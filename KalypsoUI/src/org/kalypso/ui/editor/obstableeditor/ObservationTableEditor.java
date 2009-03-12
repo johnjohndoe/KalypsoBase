@@ -1,97 +1,71 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor;
 
 import java.awt.Frame;
-import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Iterator;
 
-import org.apache.commons.configuration.Configuration;
+import javax.swing.JScrollPane;
+
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
-import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.ogc.sensor.tableview.TableView;
-import org.kalypso.ogc.sensor.tableview.TableViewUtils;
-import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.tableview.ITableViewColumn;
+import org.kalypso.ogc.sensor.tableview.ITableViewTheme;
+import org.kalypso.ogc.sensor.tableview.ObservationTableTemplateFactory;
+import org.kalypso.ogc.sensor.tableview.impl.LinkedTableViewTemplate;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.template.obstableview.Obstableview;
-import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
+import org.kalypso.ogc.sensor.template.ITemplateEventListener;
+import org.kalypso.ogc.sensor.template.TemplateEvent;
+import org.kalypso.ogc.sensor.template.TemplateStorage;
+import org.kalypso.ogc.sensor.zml.ZmlObservation;
+import org.kalypso.template.obstableview.ObstableviewType;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
  * The Observation TableEditor.
  * 
  * @author schlienger
  */
-public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
+public class ObservationTableEditor extends AbstractEditorPart implements
+    ITemplateEventListener
 {
-  protected final ObservationTable m_table;
-  private Composite m_swingContainer;
+  protected final LinkedTableViewTemplate m_template = new LinkedTableViewTemplate();
+
+  protected ObservationTableModel m_model = null;
+
+  protected ObservationTable m_table = null;
+
+  protected ObsTableOutlinePage m_outline = null;
+
+  private boolean m_dirty = false;
 
   /**
-   * The ObservationTable is already created here because of the listening functionality that needs to be set up before
-   * the template gets loaded.
-   * <p>
-   * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
-   * loadIntern are called is not guaranteed to be always the same.
+   * @return Returns the model.
    */
-  public ObservationTableEditor()
+  public ObservationTableModel getModel( )
   {
-    super( new TableView() );
-
-    m_table = new ObservationTable( (TableView)getView() );
+    return m_model;
   }
 
   /**
    * @return Returns the table.
    */
-  public ObservationTable getTable()
+  public ObservationTable getTable( )
   {
     return m_table;
   }
@@ -99,93 +73,203 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
     super.createPartControl( parent );
 
-    m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
-    final Frame vFrame = SWT_AWT.new_Frame( m_swingContainer );
+    m_model = new ObservationTableModel();
+    m_model.setRules( m_template );
 
-    vFrame.add( m_table );
+    m_table = new ObservationTable( m_model );
+    m_template.addTemplateEventListener( m_table );
+
+    // SWT-AWT Brücke für die Darstellung von JFreeChart
+    final Frame vFrame = SWT_AWT.new_Frame( new Composite( parent, SWT.RIGHT
+        | SWT.EMBEDDED ) );
+
+    m_template.addTemplateEventListener( this );
 
     vFrame.setVisible( true );
+    m_table.setVisible( true );
+
+    final JScrollPane pane = new JScrollPane( m_table );
+    //pane.setBorder( BorderFactory.createEmptyBorder() );
+    vFrame.add( pane );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter( Class adapter )
+  {
+    if( adapter == IContentOutlinePage.class )
+    {
+      // lazy loading
+      if( m_outline == null || m_outline.getControl() != null
+          && m_outline.getControl().isDisposed() )
+      {
+        // TODO check if ok to dispose when not null
+        if( m_outline != null )
+          m_outline.dispose();
+
+        m_outline = new ObsTableOutlinePage();
+        m_outline.setTemplate( m_template );
+      }
+
+      return m_outline;
+    }
+    return null;
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public void dispose()
+  public void dispose( )
   {
-    m_table.dispose();
+    if( m_template != null )
+    {
+      m_template.removeTemplateEventListener( this );
+      m_template.removeTemplateEventListener( m_table );
+      m_template.dispose();
+    }
+
+    if( m_outline != null )
+      m_outline.dispose();
 
     super.dispose();
   }
 
   /**
-   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter == IExportableObjectFactory.class )
-      return this;
-
-    return super.getAdapter( adapter );
-  }
-
-  /**
+   * Speichert z.Z. nur die Daten.
+   * 
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( IProgressMonitor monitor,
+      IFileEditorInput input ) throws CoreException
   {
-    final TableView template = (TableView)getView();
-    if( template == null )
-      return;
+    MessageDialog.openConfirm( getSite().getShell(), "Daten speichern?", "Wollen sie auch die grundliegende Daten" );
+    
+    final Collection themes = m_template.getThemes();
 
-    final SetContentHelper helper = new SetContentHelper()
+    for( final Iterator it = themes.iterator(); it.hasNext(); )
     {
-      @Override
-      protected void write( final OutputStreamWriter writer ) throws Throwable
+      final ITableViewTheme theme = (ITableViewTheme) it.next();
+
+      boolean dirty = false;
+
+      for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
       {
-        final Obstableview type = TableViewUtils.buildTableTemplateXML( template );
+        dirty = ((ITableViewColumn) itcol.next()).isDirty();
 
-        TableViewUtils.saveTableTemplateXML( type, writer );
+        // at least one col dirty?
+        if( dirty )
+          break;
       }
-    };
 
-    helper.setFileContents( input.getFile(), false, true, monitor );
+      final IObservation obs = theme.getObservation();
+
+      if( dirty && obs instanceof ZmlObservation )
+      {
+        final String msg = "Sie haben Änderungen in " + obs.getName()
+            + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+
+        final boolean b = MessageDialog.openQuestion( getSite().getShell(),
+            "Änderungen speichern", msg );
+
+        if( b )
+        {
+          for( Iterator itcol = theme.getColumns().iterator(); itcol.hasNext(); )
+            ((ITableViewColumn) itcol.next()).setDirty( false );
+
+          final ITuppleModel values = m_model.getValues( theme.getColumns() );
+
+          try
+          {
+            obs.setValues( values );
+
+            m_template.saveObservation( obs, monitor );
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+            throw new CoreException( new Status( IStatus.ERROR,
+                KalypsoGisPlugin.getId(), 0, "ZML speichern", e ) );
+          }
+        }
+      }
+    }
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
    */
-  @Override
-  public void setFocus()
+  protected void loadInternal( final IProgressMonitor monitor,
+      final IStorageEditorInput input ) throws Exception
   {
-    if( m_swingContainer != null )
-      m_swingContainer.setFocus();
+    monitor.beginTask( "Vorlage Laden", IProgressMonitor.UNKNOWN );
+
+    try
+    {
+      final IStorage storage = input.getStorage();
+
+      if( storage instanceof TemplateStorage )
+      {
+        final TemplateStorage ts = (TemplateStorage) storage;
+        m_template.addObservation( ts.getName(), ts.getContext(), ts.getHref(),
+            "zml", false, null );
+      }
+      else
+      {
+        final ObstableviewType baseTemplate = ObservationTableTemplateFactory
+            .loadTableTemplateXML( storage.getContents() );
+
+        final String strUrl = ResourceUtilities.createURLSpec( input
+            .getStorage().getFullPath() );
+        m_template.setBaseTemplate( baseTemplate, new URL( strUrl ) );
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.ogc.sensor.template.ITemplateEventListener#onTemplateChanged(org.kalypso.ogc.sensor.template.TemplateEvent)
    */
-  public IExportableObject[] createExportableObjects( final Configuration configuration )
+  public void onTemplateChanged( TemplateEvent evt )
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0"), getTitle() ); //$NON-NLS-1$
-    return new IExportableObject[]
-    { exportable };
+    if( evt.isType( TemplateEvent.TYPE_ADD | TemplateEvent.TYPE_REMOVE
+        | TemplateEvent.TYPE_REMOVE_ALL ) )
+    {
+      m_dirty = true;
+
+      getSite().getShell().getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          fireDirty();
+        }
+      } );
+    }
+  }
+
+  protected void resetDirty( )
+  {
+    m_dirty = false;
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#isDirty()
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  public boolean isDirty( )
   {
-    return new IWizardPage[0];
+    return m_dirty;
   }
 }

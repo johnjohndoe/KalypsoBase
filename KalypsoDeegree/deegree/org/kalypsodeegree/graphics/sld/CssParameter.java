@@ -1,45 +1,52 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree.graphics.sld;
+/*----------------    FILE HEADER  ------------------------------------------
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.model.feature.Feature;
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ ---------------------------------------------------------------------------*/
+package org.deegree.graphics.sld;
+
+import org.deegree.model.feature.Feature;
+import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
- * The simple SVG/CSS2 styling parameters are given with the CssParameter element, which is defined as follows:
+ * The simple SVG/CSS2 styling parameters are given with the CssParameter
+ * element, which is defined as follows:
  * 
  * <pre>
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
@@ -50,9 +57,11 @@ import org.kalypsodeegree.model.feature.Feature;
  *  </xs:complexType>
  * </pre>
  * 
- * The parameter values are allowed to be complex expressions for maximum flexibility. The mixed="true" definition means
- * that regular text may be mixed in with various sub-expressions, implying a text-substitution model for parameter
- * values. Numeric and character-string data types are not distinguished, which may cause some complications.
+ * The parameter values are allowed to be complex expressions for maximum
+ * flexibility. The mixed="true" definition means that regular text may be mixed
+ * in with various sub-expressions, implying a text-substitution model for
+ * parameter values. Numeric and character-string data types are not
+ * distinguished, which may cause some complications.
  * <p>
  * </p>
  * Here are some usage examples:
@@ -72,9 +81,10 @@ import org.kalypsodeegree.model.feature.Feature;
  * of state <wfs:PropertyName>/STATE</wfs:PropertyName></Label>
  * </pre>
  * 
- * The allowed SVG/CSS styling parameters for a stroke are: stroke (color), stroke-opacity, stroke-width,
- * stroke-linejoin, stroke-linecap, stroke-dasharray, and stroke-dashoffset. The chosen parameter is given by the name
- * attribute of the CssParameter element.
+ * The allowed SVG/CSS styling parameters for a stroke are: stroke (color),
+ * stroke-opacity, stroke-width, stroke-linejoin, stroke-linecap,
+ * stroke-dasharray, and stroke-dashoffset. The chosen parameter is given by the
+ * name attribute of the CssParameter element.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -119,11 +129,13 @@ public interface CssParameter
   void setValue( ParameterValueType value );
 
   /**
-   * Returns the (evaluated) value of the CssParameter as a simple <tt>String</tt>.
+   * Returns the (evaluated) value of the CssParameter as a simple
+   * <tt>String</tt>.
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the
+   *          underlying 'sld:ParameterValueType'
    * @return the (evaluated) <tt>String</tt> value of the parameter
    * @throws FilterEvaluationException
    *           if the evaluations fails

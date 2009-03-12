@@ -1,58 +1,66 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.graphics.sld;
+/*----------------    FILE HEADER  ------------------------------------------
 
-import org.eclipse.swt.graphics.GC;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.Font;
-import org.kalypsodeegree.graphics.sld.Geometry;
-import org.kalypsodeegree.graphics.sld.Halo;
-import org.kalypsodeegree.graphics.sld.LabelPlacement;
-import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.graphics.sld;
+
+import org.deegree.graphics.sld.Fill;
+import org.deegree.graphics.sld.Font;
+import org.deegree.graphics.sld.Geometry;
+import org.deegree.graphics.sld.Halo;
+import org.deegree.graphics.sld.LabelPlacement;
+import org.deegree.graphics.sld.ParameterValueType;
+import org.deegree.graphics.sld.TextSymbolizer;
+import org.deegree.xml.Marshallable;
+import org.deegree_impl.tools.Debug;
 
 /**
- * Used to render a text label, according to the parameters. A missing Geometry, Label, Font, or LabelPlacement element
- * selects the default value or behavior for the element. The default Label, Font, and LabelPlacement are system-
- * dependent. Multiple Font elements may be used to specify alternate fonts in order of preference in case a map server
- * does not support the first preference. A missing Halo or Fill element means that no halo or fill will be plotted,
- * respectively. The Fill is rendered over top of the Halo, and the Halo includes the interiors of the font glyphs.
+ * Used to render a text label, according to the parameters. A missing Geometry,
+ * Label, Font, or LabelPlacement element selects the default value or behavior
+ * for the element. The default Label, Font, and LabelPlacement are system-
+ * dependent. Multiple Font elements may be used to specify alternate fonts in
+ * order of preference in case a map server does not support the first
+ * preference. A missing Halo or Fill element means that no halo or fill will be
+ * plotted, respectively. The Fill is rendered over top of the Halo, and the
+ * Halo includes the interiors of the font glyphs.
  * <p>
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
@@ -61,22 +69,23 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymbolizer, Marshallable
 {
-  private Fill m_fill = null;
+  private Fill fill = null;
 
-  private Font m_font = null;
+  private Font font = null;
 
-  private Halo m_halo = null;
+  private Halo halo = null;
 
-  private LabelPlacement m_labelPlacement = null;
+  private LabelPlacement labelPlacement = null;
 
-  private ParameterValueType m_label = null;
+  private ParameterValueType label = null;
 
   /**
    * constructor initializing the class with the <TextSymbolizer>
    */
-  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final double min, final double max, final UOM uom )
+  TextSymbolizer_Impl( Geometry geometry, ParameterValueType label, Font font,
+      LabelPlacement labelPlacement, Halo halo, Fill fill, double min, double max )
   {
-    super( geometry, uom );
+    super( geometry );
     setLabel( label );
     setFont( font );
     setLabelPlacement( labelPlacement );
@@ -91,20 +100,20 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the label
    */
-  public ParameterValueType getLabel( )
+  public ParameterValueType getLabel()
   {
-    return m_label;
+    return label;
   }
 
   /**
    * sets the <Label>
    * 
    * @param label
-   *            the label
+   *          the label
    */
-  public void setLabel( final ParameterValueType label )
+  public void setLabel( ParameterValueType label )
   {
-    m_label = label;
+    this.label = label;
   }
 
   /**
@@ -112,93 +121,98 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return the font
    */
-  public Font getFont( )
+  public Font getFont()
   {
-    return m_font;
+    return font;
   }
 
   /**
    * Sets a Font of a certain family, style, and size.
    * 
    * @param font
-   *            the font
+   *          the font
    */
-  public void setFont( final Font font )
+  public void setFont( Font font )
   {
-    m_font = font;
+    this.font = font;
   }
 
   /**
-   * Used to position a label relative to a point or a line string. For a point, you can specify the anchor point of the
-   * label and a linear displacement from the point (so that you can also plot a graphic symbol at the point). For a
-   * line-string placement, you can specify a perpendicular offset (so you can draw a stroke on the line).
+   * Used to position a label relative to a point or a line string. For a point,
+   * you can specify the anchor point of the label and a linear displacement
+   * from the point (so that you can also plot a graphic symbol at the point).
+   * For a line-string placement, you can specify a perpendicular offset (so you
+   * can draw a stroke on the line).
    * <p>
    * </p>
    * MORE PARAMETERS ARE PROBABLY NEEDED HERE.
    * 
    * @return the labelPlacement
    */
-  public LabelPlacement getLabelPlacement( )
+  public LabelPlacement getLabelPlacement()
   {
-    return m_labelPlacement;
+    return labelPlacement;
   }
 
   /**
    * sets the <LabelPlacement>
    * 
    * @param labelPlacement
-   *            the labelPlacement
+   *          the labelPlacement
    */
-  public void setLabelPlacement( final LabelPlacement labelPlacement )
+  public void setLabelPlacement( LabelPlacement labelPlacement )
   {
-    m_labelPlacement = labelPlacement;
+    this.labelPlacement = labelPlacement;
   }
 
   /**
-   * A Halo is an extension (sub-type) of a Fill and is applied to the backgrounds of font glyphs. Either a Radius or a
-   * Block halo type can be used. The radius is computed from the outside edge of the font glyph (or inside of "holes").
-   * The default is a Radius of 1.0 (pixels) but if no Halo is selected in a containing structure, no halo will be
-   * rendered. The default is a solid white (Color "#FFFFFF") opaque halo.
+   * A Halo is an extension (sub-type) of a Fill and is applied to the
+   * backgrounds of font glyphs. Either a Radius or a Block halo type can be
+   * used. The radius is computed from the outside edge of the font glyph (or
+   * inside of "holes"). The default is a Radius of 1.0 (pixels) but if no Halo
+   * is selected in a containing structure, no halo will be rendered. The
+   * default is a solid white (Color "#FFFFFF") opaque halo.
    * 
    * @return the halo
    */
-  public Halo getHalo( )
+  public Halo getHalo()
   {
-    return m_halo;
+    return halo;
   }
 
   /**
    * sets <Halo>
    * 
    * @param halo
-   *            the halo
+   *          the halo
    */
-  public void setHalo( final Halo halo )
+  public void setHalo( Halo halo )
   {
-    m_halo = halo;
+    this.halo = halo;
   }
 
   /**
-   * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
-   * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
-   * 50%-gray (color "#808080") opaque fill.
+   * A Fill allows area geometries to be filled. There are two types of fills:
+   * solid-color and repeated GraphicFill. In general, if a Fill element is
+   * omitted in its containing element, no fill will be rendered. The default is
+   * a solid 50%-gray (color "#808080") opaque fill.
    * 
    * @return the fill
    */
-  public Fill getFill( )
+  public Fill getFill()
   {
-    return m_fill;
+    return fill;
   }
 
   /**
    * sets the <Fill>
    * 
    * @param fill
-   *            the fill
+   *          the fill
    */
-  public void setFill( final Fill fill )
+  public void setFill( Fill fill )
   {
-    m_fill = fill;
+    this.fill = fill;
   }
 
   /**
@@ -206,61 +220,41 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * 
    * @return xml representation of the TextSymbolizer
    */
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
-
-    sb.append( "<TextSymbolizer" );
-
-    final UOM uom = getUom();
-    if( uom != null )
-    {
-      sb.append( " uom=\"" + uom.name() + "\">" );
-    }
-    else
-      sb.append( ">" );
-
-    final Geometry geometry = getGeometry();
+    StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<TextSymbolizer>" );
     if( geometry != null )
     {
-      sb.append( ((Marshallable) geometry).exportAsXML() );
+      sb.append( ( (Marshallable)geometry ).exportAsXML() );
     }
-    if( m_label != null )
+    if( label != null )
     {
       sb.append( "<Label>" );
-      sb.append( ((Marshallable) m_label).exportAsXML() );
+      sb.append( ( (Marshallable)label ).exportAsXML() );
       sb.append( "</Label>" );
     }
-    if( m_font != null )
+    if( font != null )
     {
-      sb.append( ((Marshallable) m_font).exportAsXML() );
+      sb.append( ( (Marshallable)font ).exportAsXML() );
     }
-    if( m_labelPlacement != null )
+    if( labelPlacement != null )
     {
-      sb.append( ((Marshallable) m_labelPlacement).exportAsXML() );
+      sb.append( ( (Marshallable)labelPlacement ).exportAsXML() );
     }
-    if( m_halo != null )
+    if( halo != null )
     {
-      sb.append( ((Marshallable) m_halo).exportAsXML() );
+      sb.append( ( (Marshallable)halo ).exportAsXML() );
     }
-    if( m_fill != null )
+    if( fill != null )
     {
-      sb.append( ((Marshallable) m_fill).exportAsXML() );
+      sb.append( ( (Marshallable)fill ).exportAsXML() );
     }
     sb.append( "</TextSymbolizer>" );
 
     Debug.debugMethodEnd();
     return sb.toString();
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public void paint( final GC gc, final Feature feature )
-  {
   }
 }

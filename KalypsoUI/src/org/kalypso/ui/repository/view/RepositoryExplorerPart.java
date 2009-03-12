@@ -1,86 +1,81 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
-
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
+import org.eclipse.compare.Splitter;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.kalypso.contribs.eclipse.ui.MementoUtils;
-import org.kalypso.ogc.sensor.view.ObservationChooser;
+import org.kalypso.eclipse.ui.MementoUtils;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySourceProvider;
+import org.kalypso.repository.DefaultRepositoryContainer;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IRepositoryContainer;
+import org.kalypso.repository.IRepositoryContainerListener;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.conf.RepositoryConfigItem;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.repository.actions.AddRepositoryAction;
+import org.kalypso.ui.repository.actions.CollapseAllAction;
+import org.kalypso.ui.repository.actions.ConfigurePreviewAction;
+import org.kalypso.ui.repository.actions.CopyLinkAction;
+import org.kalypso.ui.repository.actions.ExpandAllAction;
+import org.kalypso.ui.repository.actions.ReloadAction;
+import org.kalypso.ui.repository.actions.RemoveRepositoryAction;
+import org.kalypso.util.adapter.IAdaptable;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
  * 
  * @author schlienger
  */
-public class RepositoryExplorerPart extends ViewPart implements ISelectionProvider, ISelectionChangedListener
+public class RepositoryExplorerPart extends ViewPart implements IRepositoryContainerListener,
+    ISelectionProvider, ISelectionChangedListener
 {
+  private TreeViewer m_repViewer = null;
+
+  private final DefaultRepositoryContainer m_repContainer;
+
+  private RemoveRepositoryAction m_removeAction = null;
+
+  private ConfigurePreviewAction m_confAction = null;
+
+  private ReloadAction m_reloadAction = null;
+
   private PropertySheetPage m_propsPage = null;
+
+  private CopyLinkAction m_copyLinkAction = null;
 
   private IMemento m_memento = null;
 
   // persistence flags for memento
   private static final String TAG_REPOSITORY = "repository"; //$NON-NLS-1$
-
+  
   private static final String TAG_REPOSITORY_PROPS = "repositoryProperties"; //$NON-NLS-1$
 
   private static final String TAG_EXPANDED = "expanded"; //$NON-NLS-1$
@@ -91,26 +86,20 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
   private static final String TAG_REPOSITORIES = "repositories"; //$NON-NLS-1$
 
-  public static final String ID = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
-
-  private ObservationChooser m_chooser;
-
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter.equals( IPropertySheetPage.class ) )
+    if( adapter == IPropertySheetPage.class )
     {
       // lazy loading
-      if( (m_propsPage == null) || m_propsPage.getControl().isDisposed() )
+      if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
       {
-        // dispose it when not null (not sure if this is ok)
+        // TODO check if this is ok to dispose it when not null
         if( m_propsPage != null )
           m_propsPage.dispose();
-
+        
         // PropertySheetPage erzeugen. Sie wird in das standard PropertySheet
         // von Eclipse dargestellt
         m_propsPage = new PropertySheetPage();
@@ -127,40 +116,80 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       return m_propsPage;
     }
 
-    if( adapter.equals( ObservationChooser.class ) )
-      return m_chooser;
+    return null;
+  }
 
-    return super.getAdapter( adapter );
+  public RepositoryExplorerPart()
+  {
+    m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
+
+    m_repContainer.addRepositoryContainerListener( this );
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
-  @Override
-  public void dispose( )
+  public void dispose()
   {
-    removeSelectionChangedListener( this );
+    m_repContainer.removeRepositoryContainerListener( this );
+
+    if( m_removeAction != null )
+      m_removeAction.dispose();
+
+    if( m_confAction != null )
+      m_confAction.dispose();
+
+    if( m_reloadAction != null )
+      m_reloadAction.dispose();
+
+    if( m_repViewer != null )
+      removeSelectionChangedListener( this );
 
     super.dispose();
+  }
+
+  public TreeViewer getViewer()
+  {
+    return m_repViewer;
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
-  @Override
   public void createPartControl( final Composite parent )
   {
-    m_chooser = new ObservationChooser( parent );
+    final Splitter split = new Splitter( parent, SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL );
+
+    m_repViewer = new TreeViewer( split, SWT.H_SCROLL | SWT.V_SCROLL );
+    m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
+    m_repViewer.setLabelProvider( new LabelProvider() );
+    m_repViewer.setInput( m_repContainer );
+
+    initContextMenu();
+
+    final IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+
+    toolBarManager.add( new AddRepositoryAction( this ) );
+
+    toolBarManager.add( new Separator() );
+
+    m_removeAction = new RemoveRepositoryAction( this );
+    toolBarManager.add( m_removeAction );
+
+    m_confAction = new ConfigurePreviewAction( this );
+    toolBarManager.add( m_confAction );
+
+    m_reloadAction = new ReloadAction( this );
+    toolBarManager.add( m_reloadAction );
+
+    toolBarManager.add( new Separator() );
+
+    toolBarManager.add( new CollapseAllAction( this ) );
+    toolBarManager.add( new ExpandAllAction( this ) );
+
+    getViewSite().getActionBars().updateActionBars();
 
     addSelectionChangedListener( this );
-
-    getSite().setSelectionProvider( m_chooser );
-
-    final MenuManager menuMgr = new MenuManager();
-    final Menu menu = menuMgr.createContextMenu( m_chooser.getViewer().getTree() );
-    m_chooser.getViewer().getTree().setMenu( menu );
-
-    getSite().registerContextMenu( /* "org.kalypso.ogc.sensor.view.observationBrowser", */menuMgr, m_chooser );
 
     if( m_memento != null )
       restoreState( m_memento );
@@ -170,21 +199,153 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
-  @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-
+    
     m_memento = memento;
+  }
+  
+  /**
+   * Initializes and registers the context menu.
+   */
+  private void initContextMenu()
+  {
+    final MenuManager menuMgr = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
+    menuMgr.setRemoveAllWhenShown( true );
+    menuMgr.addMenuListener( new IMenuListener()
+    {
+      public void menuAboutToShow( final IMenuManager manager )
+      {
+        fillContextMenu( manager );
+      }
+    } );
+
+    final Menu menu = menuMgr.createContextMenu( m_repViewer.getTree() );
+    m_repViewer.getTree().setMenu( menu );
+    getSite().registerContextMenu( menuMgr, m_repViewer );
+
+    m_copyLinkAction = new CopyLinkAction( this );
+  }
+
+  /**
+   * Called when the context menu is about to open.
+   * @param menu
+   */
+  protected void fillContextMenu( final IMenuManager menu )
+  {
+    if( isObservationSelected( getViewer().getSelection() ) != null )
+    {
+      menu.add( m_copyLinkAction );
+      menu.add( new Separator() );
+      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+      menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ) );
+    }
+  }
+
+  /**
+   * @param selection
+   * @return checks if given selection is a <code>IRepository</code>. Returns a repository or null if no repository is selected.
+   */
+  public IRepository isRepository( final ISelection selection )
+  {
+    final IStructuredSelection sel = (IStructuredSelection)selection;
+    if( sel.isEmpty() )
+      return null;
+
+    final Object element = sel.getFirstElement();
+    if( !( element instanceof IRepository ) )
+      return null;
+
+    return (IRepository)element;
+  }
+
+  /**
+   * @param selection
+   * @return the IObservation object when the selection is an IAdaptable object
+   * that get deliver an IObservation.
+   */
+  public IObservation isObservationSelected( final ISelection selection )
+  {
+    final IStructuredSelection sel = (IStructuredSelection)selection;
+    if( sel.isEmpty() )
+      return null;
+
+    final Object element = sel.getFirstElement();
+    if( element instanceof IAdaptable )
+    {
+      final IObservation obs = (IObservation)( (IAdaptable)element )
+          .getAdapter( IObservation.class );
+
+      return obs;
+    }
+
+    return null;
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
-  @Override
-  public void setFocus( )
+  public void setFocus()
   {
-    // noch nix
+  // noch nix
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryContainerListener#onRepositoryContainerChanged()
+   */
+  public void onRepositoryContainerChanged()
+  {
+    final Runnable r = new Runnable()
+    {
+      public void run()
+      {
+        getViewer().refresh();
+      }
+    };
+
+    getSite().getShell().getDisplay().asyncExec( r );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_repViewer.addSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  public ISelection getSelection()
+  {
+    return m_repViewer.getSelection();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  {
+    m_repViewer.removeSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  public void setSelection( final ISelection selection )
+  {
+    m_repViewer.setSelection( selection );
+  }
+
+  /**
+   * Returns 
+   * @return the repository container
+   */
+  public IRepositoryContainer getRepositoryContainer()
+  {
+    return m_repContainer;
   }
 
   /**
@@ -192,43 +353,40 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    if( (m_propsPage != null) && !m_propsPage.getControl().isDisposed() )
+    if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
 
   /**
    * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
    */
-  @Override
   public void saveState( final IMemento memento )
   {
-    if( m_chooser == null )
-      return;
-
-    final TreeViewer viewer = m_chooser.getViewer();
+    final TreeViewer viewer = getViewer();
     if( viewer == null )
     {
-      if( m_memento != null ) // Keep the old state;
+      if( m_memento != null ) //Keep the old state;
         memento.putMemento( m_memento );
 
       return;
     }
 
     // save list of repositories
-    final IMemento repsMem = memento.createChild( RepositoryExplorerPart.TAG_REPOSITORIES );
-    final IRepository[] repositories = m_chooser.getRepositoryContainer().getRepositories();
-    for( final IRepository repository : repositories )
+    final IMemento repsMem = memento.createChild( TAG_REPOSITORIES );
+    for( final Iterator it = m_repContainer.getRepositories().iterator(); it.hasNext(); )
     {
-      final IMemento child = repsMem.createChild( RepositoryExplorerPart.TAG_REPOSITORY );
-      child.putTextData( new RepositoryFactoryConfig( repository ).saveState() );
+      final IRepository rep = (IRepository)it.next();
 
+      final IMemento child = repsMem.createChild( TAG_REPOSITORY );
+      child.putTextData( new RepositoryConfigItem( rep.getFactory() ).saveState() );
+      
       // save properties for that repository
-      final IMemento propsMem = child.createChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
+      final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
       try
       {
-        MementoUtils.saveProperties( propsMem, repository.getProperties() );
+        MementoUtils.saveProperties( propsMem, rep.getProperties() );
       }
-      catch( final IOException e )
+      catch( IOException e )
       {
         e.printStackTrace();
       }
@@ -238,55 +396,57 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     final Object expandedElements[] = viewer.getVisibleExpandedElements();
     if( expandedElements.length > 0 )
     {
-      final IMemento expandedMem = memento.createChild( RepositoryExplorerPart.TAG_EXPANDED );
-      for( final Object element : expandedElements )
-        if( element instanceof IRepositoryItem )
+      final IMemento expandedMem = memento.createChild( TAG_EXPANDED );
+      for( int i = 0; i < expandedElements.length; i++ )
+      {
+        if( expandedElements[i] instanceof IRepositoryItem )
         {
-          final IMemento elementMem = expandedMem.createChild( RepositoryExplorerPart.TAG_ELEMENT );
-          final String id = ((IRepositoryItem) element).getIdentifier();
-          elementMem.putString( RepositoryExplorerPart.TAG_IDENFITIER, id );
+          final IMemento elementMem = expandedMem.createChild( TAG_ELEMENT );
+          final String id = ( (IRepositoryItem)expandedElements[i] )
+          .getIdentifier();
+          elementMem.putString( TAG_IDENFITIER, id );
         }
+      }
     }
   }
 
   /**
-   * Restores the state of the receiver to the state described in the specified memento.
+   * Restores the state of the receiver to the state described in the specified
+   * memento.
    * 
    * @param memento
-   *            the memento
+   *          the memento
    */
   private void restoreState( final IMemento memento )
   {
-    if( m_chooser == null )
-      return;
+    final TreeViewer viewer = getViewer();
 
-    final TreeViewer viewer = m_chooser.getViewer();
-
-    final IMemento repsMem = memento.getChild( RepositoryExplorerPart.TAG_REPOSITORIES );
+    final IMemento repsMem = memento.getChild( TAG_REPOSITORIES );
     if( repsMem != null )
     {
-      final IMemento[] repMem = repsMem.getChildren( RepositoryExplorerPart.TAG_REPOSITORY );
-      for( final IMemento element : repMem )
+      final IMemento[] repMem = repsMem.getChildren( TAG_REPOSITORY );
+      for( int i = 0; i < repMem.length; i++ )
       {
-        if( element == null )
+        if( repMem[i] == null )
           continue;
-
+          
         try
         {
-          final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( element.getTextData() );
+          final RepositoryConfigItem item = RepositoryConfigItem.restore( repMem[i].getTextData() );
           if( item != null )
           {
-            // TODO: dirty! always use extension mechanism to instantiate repositories
-            final IRepository rep = item.getFactory( ).createRepository();
-
-            final IMemento propsMem = element.getChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
-            if( propsMem != null )
-              MementoUtils.loadProperties( propsMem, rep.getProperties() );
-
-            m_chooser.getRepositoryContainer().addRepository( rep );
+	          final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
+	          
+	          final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
+	          if( propsMem == null )
+	            rep.setProperties( KalypsoGisPlugin.getDefault().getDefaultRepositoryProperties() );
+	          else
+	            MementoUtils.loadProperties( propsMem, rep.getProperties() );
+	          
+	          m_repContainer.addRepository( rep );
           }
         }
-        catch( final Exception e ) // generic exception caught for simplicity
+        catch( Exception e ) // generic exception caught for simplicity
         {
           // ignored
           e.printStackTrace();
@@ -294,70 +454,30 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       }
     }
 
-    final IMemento childMem = memento.getChild( RepositoryExplorerPart.TAG_EXPANDED );
+    final IMemento childMem = memento.getChild( TAG_EXPANDED );
     if( childMem != null )
     {
-      final List<IRepositoryItem> elements = new ArrayList<IRepositoryItem>();
-      final IMemento[] elementMem = childMem.getChildren( RepositoryExplorerPart.TAG_ELEMENT );
-      for( final IMemento element : elementMem )
+      final ArrayList elements = new ArrayList();
+      final IMemento[] elementMem = childMem.getChildren( TAG_ELEMENT );
+      for( int i = 0; i < elementMem.length; i++ )
+      {
         try
         {
-          // Marc's Note: commented this out because it is too slow...
-          // Also tried to make it faster using m_srv.findItem() in
-          // ObservationServiceRepository but the problem is once
-          // we got an ItemBean, we still need to make an IRepositoryItem
-          // (in fact a ServiceRepositoryItem) using the constructor
-          // but we are not able to set all arguments in findItem
-          // TODO: try to find a better solution
-          // final String id = elementMem[i].getString( TAG_IDENFITIER );
-          // final Object element = m_repContainer.findItem( id );
-          //
-          // if( element != null )
-          // elements.add( element );
-          // else
-          // Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could
-          // not find item " + id );
+          final String id = elementMem[i].getString( TAG_IDENFITIER );
+          final Object element = m_repContainer.findItem( id );
+          
+          if( element != null )
+            elements.add( element );
+          else
+            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could not find item " + id );
         }
-        catch( final NoSuchElementException e )
+        catch( NoSuchElementException e )
         {
           // ignored
         }
-
+      }
+      
       viewer.setExpandedElements( elements.toArray() );
     }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  public ISelection getSelection( )
-  {
-    return m_chooser.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  public void setSelection( final ISelection selection )
-  {
-    m_chooser.setSelection( selection );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    if( m_chooser != null )
-      m_chooser.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    if( m_chooser != null )
-      m_chooser.removeSelectionChangedListener( listener );
   }
 }

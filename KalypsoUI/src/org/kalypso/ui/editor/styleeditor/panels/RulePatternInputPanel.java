@@ -1,43 +1,3 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
- 
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
- 
- ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
  *  
@@ -84,7 +44,8 @@ public class RulePatternInputPanel
 
   private String label = null;
 
-  public RulePatternInputPanel( Composite parent, String m_label, double m_min, double m_max, double m_step )
+  public RulePatternInputPanel( Composite parent, String m_label, double m_min, double m_max,
+      double m_step )
   {
     setLabel( m_label );
     setMin( m_min );
@@ -121,7 +82,7 @@ public class RulePatternInputPanel
     minText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData minTextData = new GridData( 25, 10 );
     minText.setLayoutData( minTextData );
-    minText.setText( "" + min ); //$NON-NLS-1$
+    minText.setText( "" + min );
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -136,7 +97,7 @@ public class RulePatternInputPanel
     maxText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData maxTextData = new GridData( 25, 10 );
     maxText.setLayoutData( maxTextData );
-    maxText.setText( "" + max ); //$NON-NLS-1$
+    maxText.setText( "" + max );
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -151,7 +112,7 @@ public class RulePatternInputPanel
     stepText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData stepTextData = new GridData( 25, 10 );
     stepText.setLayoutData( stepTextData );
-    stepText.setText( "" + step ); //$NON-NLS-1$
+    stepText.setText( "" + step );
 
     Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
@@ -171,29 +132,33 @@ public class RulePatternInputPanel
           // 1. min < max !!!
           if( t_min > t_max )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_MIN_MAX );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_MIN_MAX );
             errorDialog.showError();
           }
           // step>(max-min)
           else if( t_step > ( t_max - t_min ) )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
             errorDialog.showError();
           }
           // step needs to be positive
           else if( t_step <= 0 )
           {
-            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+                .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+                MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
             errorDialog.showError();
           }
           // restrict editor to 35 steps
           else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 35 )
           {
-            new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_REMARK,
-                MessageBundle.STYLE_EDITOR_PATTERN_LIMIT ).showError();
+            new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_REMARK, MessageBundle.STYLE_EDITOR_PATTERN_LIMIT )
+                .showError();
           }
           else
           {
@@ -205,12 +170,13 @@ public class RulePatternInputPanel
         }
         catch( NumberFormatException nfe )
         {
-          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
-              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite()
+              .getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT,
+              MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getMinText().setText( "" + getMin() ); //$NON-NLS-1$
-          getMaxText().setText( "" + getMax() ); //$NON-NLS-1$
-          getStepText().setText( "" + getStep() ); //$NON-NLS-1$
+          getMinText().setText( "" + getMin() );
+          getMaxText().setText( "" + getMax() );
+          getStepText().setText( "" + getStep() );
         }
         catch( Exception ex )
         {
@@ -224,10 +190,7 @@ public class RulePatternInputPanel
       }
 
       public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-
+      {/**/}
     } );
   }
 

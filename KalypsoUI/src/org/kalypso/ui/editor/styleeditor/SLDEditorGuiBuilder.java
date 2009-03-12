@@ -1,293 +1,373 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
-
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 09.07.2004
- *
+ *  
  */
 package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
+import java.util.Date;
+import org.deegree.graphics.sld.FeatureTypeStyle;
+import org.deegree.graphics.sld.Rule;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.sld.UserStyle;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree.model.feature.event.ModellEvent;
+import org.deegree_impl.graphics.sld.StyleFactory;
+import org.deegree_impl.services.wfs.filterencoding.BoundaryExpression;
+import org.deegree_impl.services.wfs.filterencoding.ComplexFilter;
+import org.deegree_impl.services.wfs.filterencoding.PropertyIsBetweenOperation;
+import org.deegree_impl.services.wfs.filterencoding.PropertyName;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.eclipse.swt.widgets.Label;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
+import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
+import org.kalypso.ui.editor.styleeditor.panels.ControlRulePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class SLDEditorGuiBuilder
 {
-  private final Action m_saveAction = new Action( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE )
+  private FeatureType featureType = null;
+
+  private Composite parent = null;
+
+  private ScrolledComposite scrollComposite = null;
+
+  private Label titleLabel = null;
+
+  private int focusedRuleItem = -1;
+
+  private RuleFilterCollection rulePatternCollection = null;
+
+  public SLDEditorGuiBuilder( Composite m_parent )
   {
-    /**
-     * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-     */
-    @Override
-    public void runWithEvent( final Event event )
-    {
-      handleSavePressed( event.display.getActiveShell() );
-    }
-  };
-
-  private final PanelListener m_panelListener = new PanelListener()
-  {
-    public void valueChanged( final PanelEvent event )
-    {
-      handleValueChanged( event.eventType, event.param );
-    }
-  };
-
-  private IFeatureType m_featureType = null;
-
-  private Composite m_parent = null;
-
-  private int m_focusedRuleItem = -1;
-
-  private RuleFilterCollection m_rulePatternCollection = null;
-
-  private final ScrolledForm m_form;
-
-  private KalypsoUserStyle m_userStyle;
-
-  private IKalypsoFeatureTheme m_theme;
-
-  private final FormToolkit m_toolkit;
-
-  public SLDEditorGuiBuilder( final FormToolkit toolkit, final Composite parent )
-  {
-    m_toolkit = toolkit;
-    m_parent = parent;
-
-    m_form = toolkit.createScrolledForm( m_parent );
-    m_form.setText( "Style Editor" );
-    m_form.getBody().setLayout( new GridLayout() );
-
-    final IToolBarManager toolBarManager = m_form.getForm().getToolBarManager();
-    createActions( toolBarManager );
-    toolBarManager.update( true );
-
-    setStyle( null, null );
+    this.parent = m_parent;
+    buildSWTGui( null, null );
   }
 
-  private void createActions( final IToolBarManager toolBarManager )
+  public void buildSWTGui( final KalypsoUserStyle userStyle, IKalypsoFeatureTheme theme )
   {
-    m_saveAction.setToolTipText( MessageBundle.STYLE_EDITOR_SAVE_STYLE );
-
-    toolBarManager.add( m_saveAction );
+    buildSWTGui( userStyle, theme, -1 );
   }
 
-  protected void handleSavePressed( final Shell shell )
+  public void buildSWTGui( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme,
+      final int index )
   {
-    SaveStyleAction.saveUserStyle( m_userStyle, shell );
-  }
-
-  public Composite getControl( )
-  {
-    return m_form;
-  }
-
-  public void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
-  {
-    setStyle( userStyle, theme, -1 );
-  }
-
-  public void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
-  {
-    // TODO: missing level: FeatureTypeStyle between UserStyle and Rule! Must also be added to outline
-
-    m_theme = theme;
-    m_userStyle = userStyle;
-
     if( index != -1 )
-      m_focusedRuleItem = index;
+      focusedRuleItem = index;
+    if( scrollComposite != null )
+      scrollComposite.dispose();
 
-    // get IFeatureType from layer
+    // get FeatureType from layer
     if( theme != null )
-      m_featureType = theme.getFeatureType();
+      featureType = theme.getFeatureType();
 
-    /* Rebuild the ui */
-    final Composite mainComposite = m_form.getBody();
-    final Control[] bodyChildren = mainComposite.getChildren();
-    for( final Control control : bodyChildren )
-      control.dispose();
-
-    /* Configure actions */
-    m_saveAction.setEnabled( m_userStyle != null );
-
-    /* User-Style */
-    final String formTitle = userStyle == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : userStyle.getTitle();
-    m_form.setText( formTitle );
-
-    updateRuleTabs( userStyle, mainComposite );
-
-    m_form.reflow( true );
-  }
-
-  private void updateRuleTabs( final KalypsoUserStyle userStyle, final Composite mainComposite )
-  {
+    scrollComposite = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+    Composite mainComposite = new Composite( scrollComposite, SWT.NONE );
+    mainComposite.setLayout( new GridLayout() );
+    mainComposite.layout();
+    scrollComposite.setContent( mainComposite );
+    scrollComposite.setSize( parent.getSize() );
+    Label nameLabel = null;
     if( userStyle == null )
+    {
+      nameLabel = new Label( mainComposite, 0 );
+      nameLabel.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
+      mainComposite.pack( true );
       return;
+    }
+
+    titleLabel = new Label( mainComposite, SWT.NULL );
+    titleLabel.setText( MessageBundle.STYLE_EDITOR_EDITOR_TITLE );
+    titleLabel.setFont( new Font( null, "Arial", 12, SWT.BOLD ) );
+    nameLabel = new Label( mainComposite, 0 );
+    nameLabel.setText( MessageBundle.STYLE_EDITOR_STYLE + userStyle.getName() );
+    nameLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
 
     final Rule[] rules = getRules( userStyle );
-    m_rulePatternCollection = new RuleFilterCollection();
+    rulePatternCollection = RuleFilterCollection.getInstance();
     // filter patterns from rules and draw them afterwards
-    for( final Rule element : rules )
-      m_rulePatternCollection.addRule( element );
+    for( int i = 0; i < rules.length; i++ )
+    {
+      rulePatternCollection.addRule( rules[i] );
+    }
 
     // check whether there are featureTypes that have numeric properties to be
     // used by a pattern-filter
-    final List<IPropertyType> numericFeatureTypePropertylist = new ArrayList<IPropertyType>();
-    final IPropertyType[] ftp = getFeatureType().getProperties();
-    for( final IPropertyType propertyType : ftp )
+    final ArrayList numericFeatureTypePropertylist = new ArrayList();
+    FeatureTypeProperty[] ftp = getFeatureType().getProperties();
+    for( int i = 0; i < ftp.length; i++ )
     {
-      if( propertyType instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
-        final Class< ? > valueClass = vpt.getValueClass();
-        if( Number.class.isAssignableFrom( valueClass ) )
-          numericFeatureTypePropertylist.add( propertyType );
-      }
+      if( ftp[i].getType().equalsIgnoreCase( "java.lang.Double" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigInteger" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Byte" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.math.BigDecimal" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Float" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Integer" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Long" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
+      else if( ftp[i].getType().equalsIgnoreCase( "java.lang.Short" ) )
+        numericFeatureTypePropertylist.add( ftp[i] );
     }
+    ControlRulePanel controlRulePanel = new ControlRulePanel( mainComposite, MessageBundle.STYLE_EDITOR_RULE,
+        rulePatternCollection.size(), numericFeatureTypePropertylist.size() );
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( m_toolkit, mainComposite, m_rulePatternCollection, userStyle, m_featureType, numericFeatureTypePropertylist );
-    ruleTabItemBuilder.addPanelListener( m_panelListener );
-    ruleTabItemBuilder.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( mainComposite,
+        rulePatternCollection, userStyle, theme, numericFeatureTypePropertylist );
+
+    controlRulePanel.addPanelListener( new PanelListener()
+    {
+      public void valueChanged( PanelEvent event )
+      {
+        int action = ( (ControlRulePanel)event.getSource() ).getAction();
+        switch( action )
+        {
+        case ControlRulePanel.ADD_RULE:
+        {
+          Symbolizer symbolizers[] = null;
+          Rule rule = StyleFactory.createRule( symbolizers );
+          addRule( rule, userStyle );
+          setFocusedRuleItem( getRulePatternCollection().size() );
+          buildSWTGui( userStyle, theme );
+          userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          break;
+        }
+        case ControlRulePanel.REM_RULE:
+        {
+          int index2 = ruleTabItemBuilder.getSelectedRule();
+          if( index2 > -1 && index2 < getRulePatternCollection().size() )
+          {
+            Object ruleObject = getRulePatternCollection().getFilteredRuleCollection().get( index2 );
+            if( ruleObject instanceof Rule )
+            {
+              removeRule( (Rule)ruleObject, userStyle );
+            }
+            else if( ruleObject instanceof RuleCollection )
+            {
+              RuleCollection ruleCollection = (RuleCollection)ruleObject;
+              for( int i = 0; i < ruleCollection.size(); i++ )
+                removeRule( ruleCollection.get( i ), userStyle );
+            }
+
+            if( index2 >= 0 )
+              setFocusedRuleItem( --index2 );
+            buildSWTGui( userStyle, theme );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          }
+          break;
+        }
+        case ControlRulePanel.BAK_RULE:
+        {
+          int index3 = ruleTabItemBuilder.getSelectedRule();
+          if( index3 > 0 )
+          {
+            ArrayList newOrdered = new ArrayList();
+            for( int i = 0; i < getRulePatternCollection().size(); i++ )
+            {
+              if( i == index3 )
+                newOrdered
+                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+              else if( i == ( index3 - 1 ) )
+                newOrdered
+                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+              else
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
+            }
+            setRules( newOrdered, userStyle );
+            setFocusedRuleItem( index3 - 1 );
+            buildSWTGui( userStyle, theme );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          }
+          break;
+        }
+        case ControlRulePanel.FOR_RULE:
+        {
+          int index4 = ruleTabItemBuilder.getSelectedRule();
+          if( index4 == ( getRulePatternCollection().size() - 1 ) || index4 < 0 )
+          {/**/}
+          else
+          {
+            ArrayList newOrdered = new ArrayList();
+            for( int i = 0; i < getRulePatternCollection().size(); i++ )
+            {
+              if( i == index4 )
+                newOrdered
+                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i + 1 ) );
+              else if( i == ( index4 + 1 ) )
+                newOrdered
+                    .add( getRulePatternCollection().getFilteredRuleCollection().get( i - 1 ) );
+              else
+                newOrdered.add( getRulePatternCollection().getFilteredRuleCollection().get( i ) );
+            }
+            setRules( newOrdered, userStyle );
+            setFocusedRuleItem( index4 + 1 );
+            buildSWTGui( userStyle, theme );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+          }
+          break;
+        }
+        case ControlRulePanel.ADD_PATTERN_RULE:
+        {
+          // create a pattern-filter for this style
+          if( numericFeatureTypePropertylist.size() > 0 )
+          {
+            ArrayList ruleList = new ArrayList();
+            // set by default first featuretypeproperty
+            FeatureTypeProperty prop = (FeatureTypeProperty)numericFeatureTypePropertylist.get( 0 );
+            BoundaryExpression upperBoundary = null;
+            BoundaryExpression lowerBoundary = null;
+            PropertyName propertyName = new PropertyName( prop.getName() );
+            PropertyIsBetweenOperation operation = null;
+
+            String[] geometryObjects = AddSymbolizerPanel.getGeometries( getFeatureType() );
+
+            if( geometryObjects.length > 0 )
+            {
+              Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( geometryObjects[0], "Point",
+                  getFeatureType() );
+              String patternName = "-name-" + new Date().getTime();
+              lowerBoundary = new BoundaryExpression( "0" );
+              upperBoundary = new BoundaryExpression( "1" );
+              operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary,
+                  upperBoundary );
+
+              ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null,
+                  new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo
+                      .getMaxScaleDenominator() ) );
+              userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null,
+                  patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo
+                      .getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
+            }
+            setFocusedRuleItem( getRulePatternCollection().size() );
+            userStyle.fireModellEvent( new ModellEvent( userStyle, ModellEvent.STYLE_CHANGE ) );
+            buildSWTGui( userStyle, theme );
+          }
+          break;
+        }
+        default:
+          break;
+        }
+      }
+    } );
+
+    // ***** Button Composite
+    final Composite buttonComposite = new Composite( mainComposite, SWT.NULL );
+    buttonComposite.setLayout( new GridLayout( 2, true ) );
+
+    // ******* SAVING THE SLD-STYLE
+    final Label saveButton = new Label( buttonComposite, SWT.NULL );
+    saveButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage() );
+    saveButton.setToolTipText( MessageBundle.STYLE_EDITOR_SAVE_STYLE );
+    saveButton.addMouseListener( new MouseListener()
+    {
+      public void mouseDoubleClick( MouseEvent e )
+      {
+        SaveStyleAction.saveUserStyle( userStyle, buttonComposite.getShell() );
+      }
+
+      public void mouseDown( MouseEvent e )
+      {
+        mouseDoubleClick( e );
+      }
+
+      public void mouseUp( MouseEvent e )
+      {/**/}
+    } );
 
     ruleTabItemBuilder.draw();
-    if( m_focusedRuleItem > -1 )
-      ruleTabItemBuilder.setSelectedRule( m_focusedRuleItem );
+    if( focusedRuleItem > -1 )
+      ruleTabItemBuilder.setSelectedRule( focusedRuleItem );
+    mainComposite.pack( true );
   }
 
-  private Rule[] getRules( final UserStyle style )
+  private Rule[] getRules( UserStyle style )
   {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     return fts[0].getRules();
   }
 
-  void setRules( final List< ? > ruleObjects, final UserStyle style )
+  void removeRule( Rule rule, UserStyle style )
   {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    final ArrayList<Rule> ruleInstances = new ArrayList<Rule>();
+    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    fts[0].removeRule( rule );
+  }
+
+  void setRules( ArrayList ruleObjects, UserStyle style )
+  {
+    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    ArrayList ruleInstances = new ArrayList();
     for( int i = 0; i < ruleObjects.size(); i++ )
     {
-      final Object object = ruleObjects.get( i );
-      if( object instanceof Rule )
-        ruleInstances.add( (Rule) object );
-      else if( object instanceof RuleCollection )
+      if( ruleObjects.get( i ) instanceof Rule )
+        ruleInstances.add( ruleObjects.get( i ) );
+      else if( ruleObjects.get( i ) instanceof RuleCollection )
       {
-        final RuleCollection ruleCollection = (RuleCollection) object;
+        RuleCollection ruleCollection = (RuleCollection)ruleObjects.get( i );
         for( int j = 0; j < ruleCollection.size(); j++ )
           ruleInstances.add( ruleCollection.get( j ) );
       }
     }
-    final Rule[] ruleArray = new Rule[ruleInstances.size()];
+    Rule[] ruleArray = new Rule[ruleInstances.size()];
     for( int c = 0; c < ruleInstances.size(); c++ )
-      ruleArray[c] = ruleInstances.get( c );
+      ruleArray[c] = (Rule)ruleInstances.get( c );
     fts[0].setRules( ruleArray );
   }
 
-  void addRule( final Rule rule, final UserStyle style )
+  void addRule( Rule rule, UserStyle style )
   {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
+    FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
     fts[0].addRule( rule );
   }
 
-  public IFeatureType getFeatureType( )
+  public int getFocusedRuleItem()
   {
-    return m_featureType;
+    return focusedRuleItem;
   }
 
-  public void setFocus( )
+  public void setFocusedRuleItem( int m_focusedRuleItem )
   {
-    m_form.setFocus();
+    this.focusedRuleItem = m_focusedRuleItem;
   }
 
-  protected void handleValueChanged( final EventType eventType, final Object param )
+  public RuleFilterCollection getRulePatternCollection()
   {
-    switch( eventType )
-    {
-      case RULE_ADDED:
-        break;
-
-      case RULE_REMOVED:
-        break;
-
-      case RULE_BACKWARD:
-        break;
-
-      case RULE_FORWARD:
-        break;
-
-      case PATTERN_ADDED:
-        break;
-    }
-
-    if( param instanceof Integer )
-      this.m_focusedRuleItem = ((Integer) param);
-    m_userStyle.fireStyleChanged();
-    setStyle( m_userStyle, m_theme );
+    return rulePatternCollection;
   }
 
+  public void setRulePatternCollection( RuleFilterCollection m_rulePatternCollection )
+  {
+    this.rulePatternCollection = m_rulePatternCollection;
+  }
+
+  public FeatureType getFeatureType()
+  {
+    return featureType;
+  }
+
+  public void setFeatureType( FeatureType m_featureType )
+  {
+    this.featureType = m_featureType;
+  }
 }

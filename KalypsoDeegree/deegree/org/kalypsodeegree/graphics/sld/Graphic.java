@@ -1,61 +1,69 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree.graphics.sld;
+/*----------------    FILE HEADER  ------------------------------------------
 
-import java.awt.Graphics2D;
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ ---------------------------------------------------------------------------*/
+package org.deegree.graphics.sld;
+
 import java.awt.image.BufferedImage;
 
-import org.eclipse.swt.graphics.GC;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+import org.deegree.model.feature.Feature;
+import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
- * A Graphic is a "graphic symbol" with an inherent shape, color, and size. Graphics can either be referenced from an
- * external URL in a common format (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs may be
- * referenced with the semantic that they all provide the same graphic in different formats. The "hot spot" to use for
- * rendering at a point or the start and finish handle points to use for rendering a graphic along a line must either be
- * inherent in the external format or are system- dependent. The default size of an image format (such as GIF) is the
- * inherent size of the image. The default size of a format without an inherent size is 16 pixels in height and the
- * corresponding aspect in width. If a size is specified, the height of the graphic will be scaled to that size and the
- * corresponding aspect will be used for the width. The default if neither an ExternalURL nor a Mark is specified is to
- * use the default Mark with a size of 6 pixels. The size is in pixels and the rotation is in degrees clockwise, with 0
- * (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the Size specified here
- * will be used for the final rendering. Allowed CssParameters are "opacity", "size", and "rotation".
+ * A Graphic is a "graphic symbol" with an inherent shape, color, and size.
+ * Graphics can either be referenced from an external URL in a common format
+ * (such as GIF or SVG) or may be derived from a Mark. Multiple external URLs
+ * may be referenced with the semantic that they all provide the same graphic in
+ * different formats. The "hot spot" to use for rendering at a point or the
+ * start and finish handle points to use for rendering a graphic along a line
+ * must either be inherent in the external format or are system- dependent. The
+ * default size of an image format (such as GIF) is the inherent size of the
+ * image. The default size of a format without an inherent size is 16 pixels in
+ * height and the corresponding aspect in width. If a size is specified, the
+ * height of the graphic will be scaled to that size and the corresponding
+ * aspect will be used for the width. The default if neither an ExternalURL nor
+ * a Mark is specified is to use the default Mark with a size of 6 pixels. The
+ * size is in pixels and the rotation is in degrees clockwise, with 0 (default)
+ * meaning no rotation. In the case that a Graphic is derived from a font-glyph
+ * Mark, the Size specified here will be used for the final rendering. Allowed
+ * CssParameters are "opacity", "size", and "rotation".
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -64,6 +72,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public interface Graphic
 {
+
   // default values
   public static final double OPACITY_DEFAULT = 1.0;
 
@@ -72,37 +81,34 @@ public interface Graphic
   public static final double ROTATION_DEFAULT = 0.0;
 
   /**
-   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and
-   * 'Rotation' parameters.
+   * Returns a <tt>BufferedImage</tt> representing this object. The image
+   * respects the 'Opacity', 'Size' and 'Rotation' parameters.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
-  BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
+  BufferedImage getAsImage( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * Paints this object into an awt graphics context.
+   * Sets a <tt>BufferedImage</tt> representing this object. The image
+   * respects the 'Opacity', 'Size' and 'Rotation' parameters.
    * <p>
-   * The graphics must be correctly rotated and centered onto the target position.
-   * </p>
    * 
-   * @throws FilterEvaluationException
-   *             if the evaluation fails
+   * @param bufferedImage
+   *          BufferedImage to be set
    */
-  public void paintAwt( final Graphics2D g, final int size, final Feature feature ) throws FilterEvaluationException;
-
-  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
+  void setAsImage( BufferedImage bufferedImage );
 
   /**
-   * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
-   * -instances.
+   * Returns an object-array that enables the access to the stored
+   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
    * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
-  public Object[] getMarksAndExtGraphics( );
+  public Object[] getMarksAndExtGraphics();
 
   /**
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
@@ -113,8 +119,8 @@ public interface Graphic
   public void setMarksAndExtGraphics( Object[] object );
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
-   * <tt>Mark</tt> -instances.
+   * Adds an Object to an object-array that enables the access to the stored
+   * <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -122,8 +128,8 @@ public interface Graphic
   public void addMarksAndExtGraphic( Object object );
 
   /**
-   * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
-   * <tt>Mark</tt> -instances.
+   * Removes an Object from an object-array that enables the access to the
+   * stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -135,10 +141,11 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the
+   *          underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
@@ -147,50 +154,48 @@ public interface Graphic
    * <p>
    * 
    * @param opacity
-   *            Opacity to be set for the graphic
+   *          Opacity to be set for the graphic
    */
   void setOpacity( double opacity );
 
   /**
-   * The Size element gives the absolute size of the graphic in pixels encoded as a floating-point number. This element
-   * is also used in other contexts than graphic size and pixel units are still used even for font size. The default
-   * size for an object is context-dependent. Negative values are not allowed.
+   * The Size element gives the absolute size of the graphic in pixels encoded
+   * as a floating-point number. This element is also used in other contexts
+   * than graphic size and pixel units are still used even for font size. The
+   * default size for an object is context-dependent. Negative values are not
+   * allowed.
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the
+   *          underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   double getSize( Feature feature ) throws FilterEvaluationException;
-
-  ParameterValueType getSizeParameter( );
-
-  /**
-   * Returns the size in pixel, any default behaviours are applied.
-   */
-  public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
   /**
    * @see #getSize(Feature)
    *      <p>
    * @param size
-   *            size to be set for the graphic
+   *          size to be set for the graphic
    */
   void setSize( double size );
 
   /**
-   * The Rotation element gives the rotation of a graphic in the clockwise direction about its center point in radian,
-   * encoded as a floating- point number. Negative values mean counter-clockwise rotation. The default value is 0.0 (no
-   * rotation).
+   * The Rotation element gives the rotation of a graphic in the clockwise
+   * direction about its center point in radian, encoded as a floating- point
+   * number. Negative values mean counter-clockwise rotation. The default value
+   * is 0.0 (no rotation).
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the
+   *          underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   double getRotation( Feature feature ) throws FilterEvaluationException;
 
@@ -198,8 +203,7 @@ public interface Graphic
    * @see #getRotation(Feature)
    *      <p>
    * @param rotation
-   *            rotation to be set for the graphic
+   *          rotation to be set for the graphic
    */
   void setRotation( double rotation );
-
 }

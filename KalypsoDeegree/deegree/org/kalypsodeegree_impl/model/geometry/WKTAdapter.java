@@ -1,59 +1,68 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.model.geometry;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.model.geometry;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree_impl.tools.Debug;
-import org.kalypsodeegree_impl.tools.StringExtend;
+import org.deegree.model.geometry.GM_Curve;
+import org.deegree.model.geometry.GM_Exception;
+import org.deegree.model.geometry.GM_LineString;
+import org.deegree.model.geometry.GM_MultiCurve;
+import org.deegree.model.geometry.GM_MultiPoint;
+import org.deegree.model.geometry.GM_MultiSurface;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
+import org.deegree.model.geometry.GM_Position;
+import org.deegree.model.geometry.GM_Ring;
+import org.deegree.model.geometry.GM_Surface;
+import org.deegree.model.geometry.GM_SurfaceBoundary;
+import org.deegree_impl.tools.Debug;
+import org.deegree_impl.tools.StringExtend;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Adapter class for exporting deegree geometries to WKT and to wrap WKT code geometries to deegree geometries.
+ * Adapter class for exporting deegree geometries to WKT and to wrap WKT code
+ * geometries to deegree geometries.
  * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -61,20 +70,22 @@ import org.kalypsodeegree_impl.tools.StringExtend;
 public class WKTAdapter
 {
 
-  // private static DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-  // private static DecimalFormat frm = null;
-  // static {
-  // dfs.setDecimalSeparator( '.' );
-  // frm = new DecimalFormat( "#.#########", dfs );
-  // }
+  //    private static DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+  //    private static DecimalFormat frm = null;
+  //    static {
+  //        dfs.setDecimalSeparator( '.' );
+  //        frm = new DecimalFormat( "#.#########", dfs );
+  //    }
 
   /**
+   * 
+   * 
    * @param wkt
    * @return the corresponding <tt>GM_Object</tt>
    * @throws GM_Exception
-   *             if type unsupported or conversion failed
+   *           if type unsupported or conversion failed
    */
-  public static GM_Object wrap( String wkt, String crs ) throws GM_Exception
+  public static GM_Object wrap( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrap(String)" );
 
@@ -83,7 +94,7 @@ public class WKTAdapter
     if( wkt == null )
     {
       return null;
-      // throw new GM_Exception( "can't create a geometry from a null-string" );
+      //throw new GM_Exception( "can't create a geometry from a null-string" );
     }
     else if( wkt.startsWith( "POINT" ) )
     {
@@ -114,6 +125,12 @@ public class WKTAdapter
     return geo;
   }
 
+  /**
+   * @param geom
+   *          geometry
+   * 
+   * @return
+   */
   public static StringBuffer export( GM_Object geom ) throws GM_Exception
   {
 
@@ -122,27 +139,27 @@ public class WKTAdapter
     StringBuffer sb = null;
     if( geom instanceof GM_Point )
     {
-      sb = export( (GM_Point) geom );
+      sb = export( (GM_Point)geom );
     }
     else if( geom instanceof GM_Curve )
     {
-      sb = export( (GM_Curve) geom );
+      sb = export( (GM_Curve)geom );
     }
     else if( geom instanceof GM_Surface )
     {
-      sb = export( (GM_Surface) geom );
+      sb = export( (GM_Surface)geom );
     }
     else if( geom instanceof GM_MultiPoint )
     {
-      sb = export( (GM_MultiPoint) geom );
+      sb = export( (GM_MultiPoint)geom );
     }
     else if( geom instanceof GM_MultiCurve )
     {
-      sb = export( (GM_MultiCurve) geom );
+      sb = export( (GM_MultiCurve)geom );
     }
     else if( geom instanceof GM_MultiSurface )
     {
-      sb = export( (GM_MultiSurface) geom );
+      sb = export( (GM_MultiSurface)geom );
     }
 
     Debug.debugMethodEnd();
@@ -150,6 +167,12 @@ public class WKTAdapter
     return sb;
   }
 
+  /**
+   * @param point
+   *          point geometry
+   * 
+   * @return
+   */
   private static StringBuffer export( GM_Point point )
   {
 
@@ -171,7 +194,12 @@ public class WKTAdapter
   }
 
   /**
-   * @throws GM_Exception
+   * 
+   * @param cur
+   *          curve geometry
+   * 
+   * @return @throws
+   *         GM_Exception
    */
   private static StringBuffer export( GM_Curve cur ) throws GM_Exception
   {
@@ -205,6 +233,13 @@ public class WKTAdapter
     return sb;
   }
 
+  /**
+   * 
+   * 
+   * @param sur
+   * 
+   * @return
+   */
   private static StringBuffer export( GM_Surface sur )
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_Surface)" );
@@ -232,7 +267,7 @@ public class WKTAdapter
       sb.append( positions[j] + " " );
     }
     sb.append( positions[positions.length - 1] + ")" );
-    // interior rings
+    //interior rings
     if( inter != null )
     {
       for( int j = 0; j < inter.length; j++ )
@@ -263,6 +298,10 @@ public class WKTAdapter
     return sb;
   }
 
+  /**
+   * @param mp
+   * @return
+   */
   private static StringBuffer export( GM_MultiPoint mp )
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_MultiPoint)" );
@@ -294,7 +333,12 @@ public class WKTAdapter
   }
 
   /**
-   * @throws GM_Exception
+   * 
+   * 
+   * @param mc
+   * 
+   * @return @throws
+   *         GM_Exception
    */
   private static StringBuffer export( GM_MultiCurve mc ) throws GM_Exception
   {
@@ -318,7 +362,15 @@ public class WKTAdapter
     return sb;
   }
 
-  private static StringBuffer export( GM_MultiSurface ms )
+  /**
+   * 
+   * 
+   * @param ms
+   * 
+   * @return @throws
+   *         GM_Exception
+   */
+  private static StringBuffer export( GM_MultiSurface ms ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_MultiSurface)" );
 
@@ -344,9 +396,9 @@ public class WKTAdapter
    * creates a GM_Point from a WKT.
    * 
    * @param wkt
-   *            a Point WKT
+   *          a Point WKT
    */
-  public static GM_Point wrapPoint( String wkt, String crs )
+  public static GM_Point wrapPoint( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapPoint" );
 
@@ -363,9 +415,9 @@ public class WKTAdapter
    * creates a GM_Curve from a WKT.
    * 
    * @param wkt
-   *            linestring a WKT
+   *          linestring a WKT
    */
-  public static GM_Curve wrapCurve( String wkt, String crs ) throws GM_Exception
+  public static GM_Curve wrapCurve( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapCurve" );
 
@@ -388,22 +440,22 @@ public class WKTAdapter
    * creates a GM_Surface
    * 
    * @param wkt
-   *            polygon WKT
+   *          polygon WKT
    */
-  public static GM_Surface wrapSurface( String wkt, String crs ) throws GM_Exception
+  public static GM_Surface wrapSurface( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapSurface" );
 
     wkt = wkt.trim();
 
     GM_Position[] ext = null;
-    ArrayList<GM_Position[]> inn = new ArrayList<GM_Position[]>();
+    ArrayList inn = new ArrayList();
     if( wkt.indexOf( "((" ) > 0 )
     {
       wkt = wkt.substring( 9, wkt.length() - 1 );
       int pos = wkt.indexOf( ")" );
       String tmp = wkt.substring( 0, pos );
-      // external ring
+      //external ring
       String[] points = StringExtend.toArray( tmp, ",", false );
       ext = new GM_Position[points.length];
       for( int i = 0; i < points.length; i++ )
@@ -418,7 +470,7 @@ public class WKTAdapter
         {
           pos = wkt.indexOf( ")" );
           tmp = wkt.substring( 0, pos );
-          // internal ring(s)
+          //internal ring(s)
           points = StringExtend.toArray( tmp, ",", false );
           GM_Position[] intern = new GM_Position[points.length];
           for( int i = 0; i < points.length; i++ )
@@ -441,9 +493,10 @@ public class WKTAdapter
     GM_Position[][] inner = null;
     if( inn.size() > 0 )
     {
-      inner = inn.toArray( new GM_Position[inn.size()][] );
+      inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
     }
-    GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
+    GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner,
+        new GM_SurfaceInterpolation_Impl(), crs );
 
     Debug.debugMethodEnd();
     return sur;
@@ -453,9 +506,10 @@ public class WKTAdapter
    * creates a GM_MultiPoint from a WKT
    * 
    * @param wkt
-   *            multipoint WKT
+   *          multipoint WKT
    */
-  public static GM_MultiPoint wrapMultiPoint( String wkt, String crs )
+  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiPoint" );
 
@@ -484,13 +538,14 @@ public class WKTAdapter
    * creates a GM_MultiCurve from a WKT
    * 
    * @param wkt
-   *            a WKT
+   *          a WKT
    */
-  public static GM_MultiCurve wrapMultiCurve( String wkt, String crs ) throws GM_Exception
+  public static GM_MultiCurve wrapMultiCurve( String wkt, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiCurve" );
 
-    ArrayList<GM_Curve> crvs = new ArrayList<GM_Curve>();
+    ArrayList crvs = new ArrayList();
 
     wkt = wkt.trim();
     int pos = wkt.indexOf( ")" );
@@ -526,7 +581,7 @@ public class WKTAdapter
       }
     }
 
-    GM_Curve[] curves = crvs.toArray( new GM_Curve[crvs.size()] );
+    GM_Curve[] curves = (GM_Curve[])crvs.toArray( new GM_Curve[crvs.size()] );
     GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
 
     Debug.debugMethodEnd();
@@ -537,23 +592,24 @@ public class WKTAdapter
    * creates a GM_MultiSurface from a WKT
    * 
    * @param wkt
-   *            a WKT
+   *          a WKT
    */
-  public static GM_MultiSurface wrapMultiSurface( String wkt, String crs ) throws GM_Exception
+  public static GM_MultiSurface wrapMultiSurface( String wkt, CS_CoordinateSystem crs )
+      throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiSurface" );
 
-    ArrayList<GM_Surface> srfcs = new ArrayList<GM_Surface>();
+    ArrayList srfcs = new ArrayList();
 
     wkt = wkt.substring( 13 );
     // for each polygon
     while( wkt.indexOf( "((" ) > -1 )
     {
       GM_Position[] ext = null;
-      ArrayList<GM_Position[]> inn = new ArrayList<GM_Position[]>();
+      ArrayList inn = new ArrayList();
       int pos1 = wkt.indexOf( "))" );
       String tmp = wkt.substring( 2, pos1 + 1 );
-      // exterior ring
+      //  exterior ring
       int pos = tmp.indexOf( ")" );
       String tmp2 = tmp.substring( 0, pos );
       String[] points = StringExtend.toArray( tmp2, ",", false );
@@ -592,14 +648,15 @@ public class WKTAdapter
       GM_Position[][] inner = null;
       if( inn.size() > 0 )
       {
-        inner = inn.toArray( new GM_Position[inn.size()][] );
+        inner = (GM_Position[][])inn.toArray( new GM_Position[inn.size()][] );
       }
-      GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner, new GM_SurfaceInterpolation_Impl(), crs );
+      GM_Surface sur = GeometryFactory.createGM_Surface( ext, inner,
+          new GM_SurfaceInterpolation_Impl(), crs );
       srfcs.add( sur );
       wkt = wkt.substring( pos1 + 3 );
     }
-    GM_Surface[] surfaces = srfcs.toArray( new GM_Surface[srfcs.size()] );
-    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces, crs );
+    GM_Surface[] surfaces = (GM_Surface[])srfcs.toArray( new GM_Surface[srfcs.size()] );
+    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces );
     Debug.debugMethodEnd();
     return ms;
   }

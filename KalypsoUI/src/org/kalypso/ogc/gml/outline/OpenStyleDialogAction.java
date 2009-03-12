@@ -1,152 +1,83 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
-
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.ogc.gml.FeatureTypeStyleTreeObject;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.eclipse.ui.internal.Workbench;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.RuleTreeObject;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
-public class OpenStyleDialogAction extends MapModellViewActionDelegate
+public class OpenStyleDialogAction extends AbstractOutlineAction
 {
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
-   *      org.eclipse.swt.widgets.Event)
-   */
-  @Override
-  public void runWithEvent( final IAction action, final Event event )
+  public OpenStyleDialogAction( final String text, final ImageDescriptor image,
+      final String tooltipText, final GisMapOutlineViewer outlineViewer )
   {
-    final IMapModellView viewer = getView();
-    if( viewer == null )
-      return;
+    super( text, image, tooltipText, outlineViewer, null );
 
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+    refresh();
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#run()
+   */
+  public void run()
+  {
+    StyleEditorViewPart part = null;
+    IWorkbenchWindow window = Workbench.getInstance().getActiveWorkbenchWindow();    
+    Object o = ( (IStructuredSelection)getOutlineviewer().getSelection() ).getFirstElement();
 
     try
     {
-      final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
+      part = (StyleEditorViewPart)window.getActivePage().showView(
+          "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+
       if( part != null )
-        // ARG! The style view should find its own selection provider...!
-        part.setSelectionChangedProvider( viewer );
+        part.setSelectionChangedProvider( getOutlineviewer() );
 
       // if UserStyle selected path that on to styleeditor
-      if( o instanceof UserStyleTreeObject )
+      if( o instanceof ThemeStyleTreeObject )
       {
-        final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
+        final IKalypsoTheme theme = ( (ThemeStyleTreeObject)o ).getTheme();                   
+
         if( part != null && theme instanceof IKalypsoFeatureTheme )
-        {
-          final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
-          part.setStyle( kalypsoStyle, (IKalypsoFeatureTheme) theme );
-          return;
+        {                 
+          KalypsoUserStyle kalypsoStyle = ( (ThemeStyleTreeObject)o ).getStyle();
+          part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme)theme );
         }
         else
-        {
-          part.setStyle( null, null );
-          return;
-        }
+          part.initStyleEditor( null, null );
       }
-
-      if( o instanceof IKalypsoTheme )
-      {
-        if( !(o instanceof IKalypsoFeatureTheme) )
-        {
-          part.setStyle( null, null );
-          return;
-        }
-
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
-        final Object[] children = theme.getChildren( theme );
-        if( !(children instanceof UserStyleTreeObject[]) || children.length == 0 )
-        {
-          part.setStyle( null, null );
-          return;
-        }
-
-        /* TODO: It always edits the first of a theme (perhaps the style editor could edit all of them simultaniously?). */
-        final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) children[0]).getStyle();
-        part.setStyle( kalypsoStyle, theme );
-        return;
-      }
-
-      part.setStyle( null, null );
-      return;
+      else if( o instanceof IKalypsoTheme )
+        part.initStyleEditor( null, null );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
-    super.selectionChanged( action, selection );
+    refresh();
+  }
 
+  protected void refresh()
+  {
     boolean bEnable = false;
-    if( selection instanceof IStructuredSelection )
-    {
-      final IStructuredSelection s = (IStructuredSelection) selection;
-      final Object firstElement = s.getFirstElement();
-      // TODO: introduce common interface to identify selectable elements
-      if( firstElement instanceof UserStyleTreeObject || firstElement instanceof IKalypsoTheme || firstElement instanceof FeatureTypeStyleTreeObject || firstElement instanceof RuleTreeObject )
-        bEnable = true;
-      action.setEnabled( bEnable );
-    }
+
+    final IStructuredSelection s = (IStructuredSelection)getOutlineviewer().getSelection();
+
+    if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+      bEnable = true;    
+    setEnabled( bEnable );
   }
 }

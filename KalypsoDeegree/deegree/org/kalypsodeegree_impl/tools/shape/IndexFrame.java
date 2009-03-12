@@ -1,40 +1,22 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
+/*
+ * Coyright 2003 IDgis BV
  * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package org.kalypsodeegree_impl.tools.shape;
+package org.deegree_impl.tools.shape;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -53,16 +35,16 @@ import javax.swing.JProgressBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
-import org.kalypsodeegree_impl.io.rtree.HyperPoint;
-import org.kalypsodeegree_impl.io.rtree.RTree;
-import org.kalypsodeegree_impl.io.shpapi.DBaseIndex;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.geometry.GM_Envelope;
+import org.deegree.model.geometry.GM_Object;
+import org.deegree.model.geometry.GM_Point;
+import org.deegree_impl.io.rtree.HyperBoundingBox;
+import org.deegree_impl.io.rtree.HyperPoint;
+import org.deegree_impl.io.rtree.RTree;
+import org.deegree_impl.io.shpapi.DBaseIndex;
+import org.deegree_impl.io.shpapi.ShapeFile;
+import org.deegree_impl.model.geometry.GeometryFactory;
 
 public class IndexFrame extends JFrame implements ActionListener, ChangeListener
 {
@@ -97,8 +79,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       this.frame = frame;
     }
 
-    @Override
-    public void run( )
+    public void run()
     {
       Container container = getContentPane();
       container.removeAll();
@@ -134,8 +115,11 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           if( checkboxes[i].isSelected() && !hasIndex[i] )
           {
-            index[i] = DBaseIndex.createIndex( fileName + "$" + properties[i], properties[i], lengths[i], uniqueBoxes[i].isSelected(), (dataTypes[i].equalsIgnoreCase( "N" )
-                || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i].equalsIgnoreCase( "F" )) );
+            index[i] = DBaseIndex
+                .createIndex( fileName + "$" + properties[i], properties[i], lengths[i],
+                    uniqueBoxes[i].isSelected(), ( dataTypes[i].equalsIgnoreCase( "N" )
+                        || dataTypes[i].equalsIgnoreCase( "I" ) || dataTypes[i]
+                        .equalsIgnoreCase( "F" ) ) );
             indexes = true;
           }
           else
@@ -146,7 +130,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
         {
           for( int i = 1; i < features + 1; i++ )
           {
-            Feature feature = shapeFile.getFeatureByRecNo( null, null, i );
+            Feature feature = shapeFile.getFeatureByRecNo( i );
 
             if( geometry )
             {
@@ -156,24 +140,26 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
                 System.out.println( "no geometries at recno" + i );
               }
               GM_Envelope envelope = null;
-              // TODO: deal with more than one geometry; handle geometry=null
+              //TODO: deal with more than one geometry; handle geometry=null
               // (allowed in shapefile)
               envelope = feature.getGeometryProperties()[0].getEnvelope();
               if( envelope == null )
               { // assume a Point-geometry
-                // System.out.println("geo-class: " +
+                //System.out.println("geo-class: " +
                 // geometries[0].getClass().getName());
-                GM_Point pnt = (GM_Point) geometries[0];
-                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(), pnt.getY(), pnt.getCoordinateSystem() );
+                GM_Point pnt = (GM_Point)geometries[0];
+                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(),
+                    pnt.getY() );
               }
-              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin().getAsArray() ), new HyperPoint( envelope.getMax().getAsArray() ) );
+              HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin()
+                  .getAsArray() ), new HyperPoint( envelope.getMax().getAsArray() ) );
               rtree.insert( new Integer( i ), box );
             }
 
             for( int j = 0; j < index.length; j++ )
             {
               if( index[j] != null )
-                index[j].addKey( (Comparable) feature.getProperty( properties[j] ), i );
+                index[j].addKey( (Comparable)feature.getProperty( properties[j] ), i );
             }
 
             progressBar.setValue( i );
@@ -242,7 +228,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       }
     }
 
-    public void stopIndexing( )
+    public void stopIndexing()
     {
       synchronized( this )
       {
@@ -285,7 +271,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
       checkboxes[i] = new JCheckBox( properties[i] );
       checkboxes[i].setSelected( hasIndex[i] );
       panel.add( checkboxes[i] );
-      uniqueBoxes[i] = (JCheckBox) panel.add( new JCheckBox( "" ) );
+      uniqueBoxes[i] = (JCheckBox)panel.add( new JCheckBox( "" ) );
       if( hasIndex[i] )
       {
         uniqueBoxes[i].setSelected( shapeFile.isUnique( properties[i] ) );
@@ -312,7 +298,8 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
     {
       if( indexing != null )
       {
-        if( JOptionPane.showConfirmDialog( this, "Cancel indexing?", "Question", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
+        if( JOptionPane.showConfirmDialog( this, "Cancel indexing?", "Question",
+            JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
           indexing.stopIndexing();
       }
     }
@@ -341,7 +328,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
 
   public void stateChanged( ChangeEvent e )
   {
-    JCheckBox checkbox = (JCheckBox) e.getSource();
+    JCheckBox checkbox = (JCheckBox)e.getSource();
 
     for( int i = 0; i < checkboxes.length; i++ )
     {

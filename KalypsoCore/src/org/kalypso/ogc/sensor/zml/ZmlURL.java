@@ -1,118 +1,37 @@
-/*
- * --------------- Kalypso-Header --------------------------------------------
- * 
- * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
- * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
- * Germany http://www.tuhh.de/wb
- * 
- * and
- * 
- * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
- * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * 
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * Contact:
- * 
- * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
- * ---------------------------------------------------------------------------
- */
 package org.kalypso.ogc.sensor.zml;
 
 import java.net.URL;
-import java.util.Calendar;
+import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.ogc.sensor.request.XMLStringUtilities;
-import org.kalypso.zml.request.Request;
+import org.kalypso.util.parser.ParserException;
+import org.kalypso.util.runtime.args.DateRangeArgument;
+import org.kalypso.util.xml.XmlTypes;
 
 /**
- * Provides utility methods for manipulating the URLs designed to be used as Zml-Identifiers between kalypso client and
- * server.
- * <p>
- * This utility class is not intended to be instanciated. Use its static methods.
+ * ZmlUrlParser
  * 
- * @author schlienger (18.05.2005)
+ * @author schlienger
  */
-public final class ZmlURL
+public class ZmlURL
 {
-  private ZmlURL( )
+  private final static String TAG_FROM1 = "<from>";
+
+  private final static String TAG_FROM2 = "</from>";
+
+  private final static String TAG_TO1 = "<to>";
+
+  private final static String TAG_TO2 = "</to>";
+
+  private ZmlURL()
   {
-    // not intended to be instanciated
+    // do not instanciate
   }
 
   /**
-   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
-   * way.
-   */
-  public static boolean isUseAsContext( final URL zmlUrl )
-  {
-    return isUseAsContext( zmlUrl.toExternalForm() );
-  }
-
-  /**
-   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
-   * way.
-   */
-  public static boolean isUseAsContext( final String href )
-  {
-    final String test = href.toLowerCase();
-    return test.indexOf( ZmlURLConstants.FRAGMENT_USEASCONTEXT ) != -1;
-  }
-
-  /**
-   * Return true if the given id represents a server-side url. A server-side url begins with the server-specific
-   * scheme-name.
+   * Returns only the identifier part of the zml url. The URL may contain a
+   * query part which will be ignored by this convenience method.
    * 
-   * @param href
-   *          string representation of the zml url
-   * @return true if server side
-   * @see ZmlURLConstants#SCHEME_OCS
-   */
-  public static boolean isServerSide( final String href )
-  {
-    return href.startsWith( ZmlURLConstants.SCHEME_OCS );
-  }
-
-  /**
-   * Add the kalypso-ocs-scheme part to the id (if not already present)
-   */
-  public static String addServerSideId( final String href )
-  {
-    String ssid = href;
-    if( !isServerSide( ssid ) )
-      ssid = ZmlURLConstants.SCHEME_OCS + ":" + ssid; //$NON-NLS-1$
-
-    return ssid;
-  }
-
-  /**
-   * Remove the kalypso-ocs-scheme part
-   */
-  public static String removeServerSideId( final String href )
-  {
-    final String id = href.replaceFirst( ZmlURLConstants.SCHEME_OCS + ":", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return id;
-  }
-
-  /**
-   * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
-   * convenience method.
-   * 
+   * @param url
    * @return only identifier part
    */
   public static String getIdentifierPart( final URL url )
@@ -121,14 +40,15 @@ public final class ZmlURL
   }
 
   /**
-   * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
-   * convenience method.
+   * Returns only the identifier part of the zml url. The URL may contain a
+   * query part which will be ignored by this convenience method.
    * 
+   * @param strUrl
    * @return only identifier part
    */
   public static String getIdentifierPart( final String strUrl )
   {
-    final int ix = strUrl.indexOf( '?' );
+    int ix = strUrl.indexOf( '?' );
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 
@@ -137,6 +57,9 @@ public final class ZmlURL
 
   /**
    * Returns the scheme part of the given url
+   * 
+   * @param url
+   * @return scheme
    */
   public static String getSchemePart( final URL url )
   {
@@ -145,13 +68,13 @@ public final class ZmlURL
 
   /**
    * Returns the scheme part of the given url
+   * 
+   * @param strUrl
+   * @return scheme
    */
   public static String getSchemePart( final String strUrl )
   {
-    // TODO test if this is correct since only the first ':' found
-    // will be returned here. But the url might contain something like
-    // foo:bar://stuff hence results might not be correct!!!
-    final int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
+    int ix = strUrl.indexOf( ":" );
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 
@@ -159,142 +82,25 @@ public final class ZmlURL
   }
 
   /**
-   * Insert the filter and/or the request found in the query-part and return the result.
+   * Inserts the date range or replaces the one if existing. The date range is
+   * inserted in the from-to specification in the query part of the url.
    * 
-   * @param href
-   *          the zml url to update
-   * @param queryPart
-   *          May contain a filter spec (embodied within %lt;filter/&gt; tags) and may also contain a request spec
-   *          (embodied within %lt;request/&gt; tags). If <code>null</code>, simply <code>href</code> is returned.
+   * @param str
+   * @param dra
+   * @return string containing the given date range
    */
-  public static String insertQueryPart( final String href, final String queryPart )
+  public static String insertDateRange( final String str, final DateRangeArgument dra )
   {
-    if( queryPart == null )
-      return href;
+    // first replace the date range spec (does nothing if not present)
+    String tmpUrl = str.replaceFirst( TAG_FROM1 + ".*" + TAG_FROM2, "" );
+    tmpUrl = tmpUrl.replaceFirst( TAG_TO1 + ".*" + TAG_TO2, "" );
 
-    String newHref = href;
+    String[] strs = tmpUrl.split( "\\?", 2 );
 
-    final int fp1 = queryPart.indexOf( ZmlURLConstants.TAG_FILTER1 );
-    final int fp2 = queryPart.indexOf( ZmlURLConstants.TAG_FILTER2 );
-    if( fp1 != -1 && fp2 != -1 )
-    {
-      final String filter = queryPart.substring( fp1, fp2 + ZmlURLConstants.TAG_FILTER2.length() );
-      newHref = insertFilter( newHref, filter );
-    }
-
-    final String request = XMLStringUtilities.getXMLPart( queryPart, ZmlURLConstants.TAG_REQUEST );
-    if( request != null )
-    {
-      newHref = insertRequest( newHref, request );
-    }
-    return newHref;
-  }
-
-  /**
-   * Insert the filter spec into the zml url. Return the newly build url string.
-   * <p>
-   * The filter may or may not contain the %lt;filter/&gt; tags, this is automatically handled by this method.
-   * 
-   * @param href
-   *          the zml url to update
-   * @param filter
-   *          the xml oriented filter specification
-   */
-  public static String insertFilter( final String href, String filter )
-  {
-    if( filter == null || filter.length() == 0 )
-      return href;
-
-    // first remove the existing filter spec (does nothing if not present)
-    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1 + ".*" + ZmlURLConstants.TAG_FILTER2, "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    filter = filter.replaceAll( "^\\?", "" ); // remove beginning "?" //$NON-NLS-1$ //$NON-NLS-2$
-    filter = filter.replaceAll( "^" + ZmlURLConstants.TAG_FILTER1, "" ); // remove beginning "<filter>" //$NON-NLS-1$ //$NON-NLS-2$
-    filter = filter.replaceAll( ZmlURLConstants.TAG_FILTER2 + "$", "" ); // remove ending "</filter>" //$NON-NLS-1$ //$NON-NLS-2$
-
-    final String[] strs = tmp.split( "\\?", 2 ); //$NON-NLS-1$
-    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      tmp = "?" + strs[0] + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2; //$NON-NLS-1$
+    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
+      tmpUrl = "?" + strs[0] + buildDateRangeSpec( dra );
     else
-      tmp = strs[0] + '?' + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2;
-
-    if( strs.length >= 2 )
-      tmp += strs[1];
-
-    return tmp;
-  }
-
-  /**
-   * Insert the request spec into the zml url. Return the newly build url string.
-   * 
-   * @param href
-   *          the zml url to update
-   * @param request
-   *          the xml request specification
-   */
-  public static String insertRequest( final String href, final IRequest request ) throws SensorException
-  {
-    try
-    {
-      Request requestType = RequestFactory.parseRequest( href );
-      if( requestType == null )
-        requestType = RequestFactory.OF.createRequest();
-      // the original request parameters have higher priority
-      if( requestType.getName() == null )
-        requestType.setName( request.getName() );
-      if( requestType.getAxes() == null )
-        requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) ); //$NON-NLS-1$
-      if( requestType.getStatusAxes() == null )
-        requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) ); //$NON-NLS-1$
-
-      if( request.getDateRange() != null )
-      {
-        final Calendar from = Calendar.getInstance();
-        from.setTime( request.getDateRange().getFrom() );
-        requestType.setDateFrom( from );
-
-        final Calendar to = Calendar.getInstance();
-        to.setTime( request.getDateRange().getTo() );
-        requestType.setDateTo( to );
-      }
-
-      final String xmlStr = RequestFactory.buildXmlString( requestType, false );
-
-      return insertRequest( href, xmlStr );
-    }
-    catch( final Exception e )
-    {
-      throw new SensorException( e );
-    }
-  }
-
-  /**
-   * Insert the request spec into the zml url. Return the newly build url string.
-   * <p>
-   * The request must be contained within the %lt;request/&gt; tags.
-   * 
-   * @param href
-   *          the zml url to update
-   * @param request
-   *          the xml oriented request specification
-   */
-  public static String insertRequest( final String href, final String request )
-  {
-    // first remove the existing request (does nothing if not present)
-    final String requestPart = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
-    String tmpUrl;
-    if( requestPart != null )
-      tmpUrl = href.replace( requestPart, "" ); //$NON-NLS-1$
-    else
-      tmpUrl = href;
-
-    final String[] strs = tmpUrl.split( "\\?", 2 ); //$NON-NLS-1$
-    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      tmpUrl = "?" + strs[0]; //$NON-NLS-1$
-    else
-      tmpUrl = strs[0] + '?';
-
-    tmpUrl += request;
+      tmpUrl = strs[0] + '?' + buildDateRangeSpec( dra );
 
     if( strs.length >= 2 )
       tmpUrl += strs[1];
@@ -303,13 +109,102 @@ public final class ZmlURL
   }
 
   /**
-   * Return true if the href represents the "empty-id" (which is either "kalypso-ocs://LEER" or "kalypso-ocs://DUMMY")
+   * Builds the String representation of the given date range. Constructs a
+   * simple XML representation in the format:
    * 
-   * @return true if the given href contains "LEER" or "DUMMY"
+   * <pre>
+   * 
+   *   	&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;
+   *  
+   * </pre>
+   * 
+   * @param dra
+   * @return string
    */
-  public static boolean isEmpty( final String href )
+  public static String buildDateRangeSpec( final DateRangeArgument dra )
   {
-    final String id = getIdentifierPart( href );
-    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final StringBuffer bf = new StringBuffer();
+
+    bf.append( TAG_FROM1 ).append( XmlTypes.PDATE.toString( dra.getFrom() ) ).append( TAG_FROM2 );
+    bf.append( TAG_TO1 ).append( XmlTypes.PDATE.toString( dra.getTo() ) ).append( TAG_TO2 );
+
+    // TODO prüfen ob in Ordnung dass die < und > Zeichen mit Entities ersetzt
+    // werden...
+    return bf.toString();//.replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;"
+    // );
+  }
+
+  /**
+   * Checks if the string contains the from-to specification and eventually
+   * creates the corresponding DateRangeArgument.
+   * 
+   * <pre>
+   * 
+   *       The format of the from-to specification should be as follows:
+   *       
+   *       ...&lt;from&gt;yyyy-MM-ddTHH:mm:ss&lt;from&gt;&lt;to&gt;yyyy-MM-ddTHH:mm:ss&lt;/to&gt;...
+   *  
+   * </pre>
+   * 
+   * @param str
+   * @return DateRangeArgument
+   */
+  public static DateRangeArgument checkDateRange( final String str )
+  {
+    String from = null;
+
+    int f1 = str.indexOf( TAG_FROM1 );
+    if( f1 != -1 )
+    {
+      int f2 = str.indexOf( TAG_FROM2 );
+
+      if( f2 != -1 )
+        from = str.substring( f1 + TAG_FROM1.length(), f2 );
+    }
+
+    String to = null;
+
+    int t1 = str.indexOf( TAG_TO1 );
+    if( t1 != -1 )
+    {
+      int t2 = str.indexOf( TAG_TO2 );
+
+      if( t2 != -1 )
+        to = str.substring( t1 + TAG_TO1.length(), t2 );
+    }
+
+    Date dFrom = null;
+    Date dTo = null;
+
+    if( from != null )
+    {
+      try
+      {
+        dFrom = (Date)XmlTypes.PDATE.parse( from );
+      }
+      catch( ParserException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    if( to != null )
+    {
+      try
+      {
+        dTo = (Date)XmlTypes.PDATE.parse( to );
+      }
+      catch( ParserException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    // no date found, return null
+    if( dFrom == null && dTo == null )
+      return null;
+
+    // at least from, to or both found, return new arg
+    return new DateRangeArgument( dFrom, dTo );
   }
 }

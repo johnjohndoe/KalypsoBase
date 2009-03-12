@@ -1,237 +1,209 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
-
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
+import org.deegree.model.feature.event.ModellEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.internal.util.Util;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.util.command.ICommand;
+import org.kalypso.util.command.ICommandTarget;
 
 /**
- * @author Gernot Belger
+ * @author belger
  */
-@SuppressWarnings("restriction")
-public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
+public class GisMapOutlineViewer implements ISelectionProvider, IMapModellView, SelectionListener, ICommandTarget
 {
-  private final ITreeContentProvider m_contentProvider;
+  protected StructuredViewer m_viewer;
 
-  private final GisMapOutlineLabelProvider m_labelProvider;
+  private final MapModellTreeContentProvider m_contentProvider = new MapModellTreeContentProvider();
 
-  private CheckboxTreeViewer m_viewer;
+  private final MapModellLabelProvider m_labelProvider = new MapModellLabelProvider();
 
-  protected IMapModell m_mapModel;
+  private IMapModell m_mapModel;
 
-  private ICommandTarget m_commandTarget;
+  private final ICommandTarget m_commandTarget;
 
-  /**
-   * The constructor.
-   *
-   * @param commandTarget
-   *          The command target.
-   * @param mapModel
-   *          The map modell.
-   * @param showStyle
-   *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
-   *          styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
-   */
-  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel, final boolean showStyle )
+  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
   {
-    // TODO: temporary and only for debug purposes
-    // Change rendering to bold-font (or what else?); put flag into user preferences?
-    // get type of rendering from map-file (and also flag?)
-    // TODO: if committed to true, please set to false
-    final boolean showActive = true;
-
-    m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
-    m_contentProvider = new GisMapOutlineContentProvider( m_labelProvider );
-    setMapModel( mapModel );
+    setMapModell( mapModel );
     m_commandTarget = commandTarget;
   }
 
-  public void dispose( )
+  public void dispose()
   {
+    m_contentProvider.dispose();
+    m_labelProvider.dispose();
   }
 
   public void createControl( final Composite parent )
   {
-    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
-    m_viewer = viewer;
-    viewer.setContentProvider( m_contentProvider );
-    viewer.setLabelProvider( m_labelProvider );
+    final TableTree tree = new TableTree( parent, SWT.SINGLE | SWT.CHECK );
+    tree.addSelectionListener( this );
 
-    final GisMapOutlineLabelProvider labelProvider = m_labelProvider;
-    m_viewer.addCheckStateListener( new ICheckStateListener()
-    {
-      public void checkStateChanged( final CheckStateChangedEvent event )
-      {
-        final Object data = event.getElement();
-
-        // Prevent deselction of gray-checked elements; they are here interpreted as disabled
-        if( labelProvider.isGrayed( data ) && !event.getChecked() )
-        {
-          viewer.setChecked( data, true );
-          return;
-        }
-
-        if( data instanceof IKalypsoTheme )
-        {
-          final IKalypsoTheme theme = (IKalypsoTheme) data;
-          final ICommand command = new EnableThemeCommand( theme, event.getChecked() );
-          postCommand( command, null );
-        }
-      }
-    } );
-
-    final Tree tree = m_viewer.getTree();
-    tree.addMouseMoveListener( new MouseMoveListener()
-    {
-      public void mouseMove( final MouseEvent e )
-      {
-        final TreeItem item = tree.getItem( new Point( e.x, e.y ) );
-        final String text;
-        if( item == null )
-          text = null; // remove tooltip
-        else
-        {
-          final Object data = item.getData();
-          final ITooltipProvider ttProvider = (ITooltipProvider) Util.getAdapter( data, ITooltipProvider.class );
-          text = ttProvider == null ? null : ttProvider.getTooltip( data );
-        }
-        tree.setToolTipText( text );
-      }
-    } );
-
-    /* Allow the tree item to draw themselves. */
-    tree.addListener( SWT.EraseItem, new Listener()
-    {
-      public void handleEvent( final Event event )
-      {
-        final Composite c = (Composite) event.widget;
-
-        if( (event.detail & SWT.SELECTED) == 0 )
-          return; /* item not selected */
-
-        final Color leftColor = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
-        final Color rightColor = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
-        final Color fontColor = c.getDisplay().getSystemColor( SWT.COLOR_BLACK );
-
-        final GC gc = event.gc;
-        final int clientWidth = event.width;
-
-        final Color oldForeground = gc.getForeground();
-        final Color oldBackground = gc.getBackground();
-        gc.setForeground( leftColor );
-        gc.setBackground( rightColor );
-        gc.fillGradientRectangle( 0, event.y, clientWidth, event.height, false );
-        gc.setForeground( oldForeground );
-        gc.setBackground( oldBackground );
-        event.detail &= ~SWT.SELECTED;
-
-        gc.setForeground( fontColor );
-      }
-    } );
+    m_viewer = new TableTreeViewer( tree );
+    m_viewer.setContentProvider( m_contentProvider );
+    m_viewer.setLabelProvider( m_labelProvider );
 
     m_viewer.setInput( m_mapModel );
+    m_viewer.refresh();
+    
+    // Refresh check state
+    onModellChange( null );
   }
 
   /**
-   * @return control
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
-  public Control getControl( )
+  public Control getControl()
   {
     return m_viewer.getControl();
   }
 
   /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
+   */
+  public IMapModell getMapModell()
+  {
+    return m_mapModel;
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapModel( final IMapModell model )
+  public void setMapModell( final IMapModell modell )
   {
-    m_mapModel = model;
+    if( m_mapModel != null )
+      m_mapModel.removeModellListener( this );
 
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
+    m_mapModel = modell;
+    
+    m_labelProvider.setMapModell( modell );
+
+    if( m_mapModel != null )
+      m_mapModel.addModellListener( this );
+
+    if( m_viewer != null && m_viewer.getContentProvider() != null )
     {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
+      m_viewer.getControl().getDisplay().syncExec( new Runnable()
       {
-        public void run( )
+        public void run()
         {
-          if( !viewer.getControl().isDisposed() )
-            viewer.setInput( model );
+          m_viewer.setInput( modell );
+        }
+      } );
+    }
+
+    onModellChange( null );
+  }
+
+  /**
+   * @see org.deegree.model.feature.event.ModellEventListener#onModellChange(org.deegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    // den Checkstate setzen!
+    if( m_viewer != null )
+    {
+      final IMapModell mm = getMapModell();
+      if( mm == null )
+        return;
+
+      final StructuredViewer viewer = m_viewer;
+      final TableTree tt = (TableTree)m_viewer.getControl();
+      if( tt.isDisposed() )
+        return;
+
+      final TableTreeItem[] items = tt.getItems();
+
+      tt.getDisplay().asyncExec( new Runnable()
+      {
+        public void run()
+        {
+          try
+          {
+            for( int i = 0; i < items.length; i++ )
+            {
+              final TableTreeItem item = items[i];
+
+              if( !item.isDisposed() )
+                item.setChecked( mm.isThemeEnabled( (IKalypsoTheme)item.getData() ) );
+            }
+
+            // und die ganze view refreshen!
+            viewer.refresh();
+          }
+          catch( final RuntimeException e )
+          {
+            e.printStackTrace();
+          }
         }
       } );
     }
   }
 
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetSelected( final SelectionEvent e )
+  {
+    final TableTreeItem ti = (TableTreeItem)e.item;
+    final Object data = ti.getData();
+//    if( data instanceof IKalypsoTheme )
+//    {
+//      if( m_mapModel.getActiveTheme() != (IKalypsoTheme)data )
+//      {
+//        m_commandTarget.postCommand( new ActivateThemeCommand( m_mapModel, (IKalypsoTheme)data ),
+//            null );
+//        m_mapModel.activateTheme( (IKalypsoTheme)data );
+//        // todo: maybe create MultiCommand (eg. activate and enable )
+//      }
+//    }
+
+    if( ( e.detail & SWT.CHECK ) != 0 )
+    {
+      if( data instanceof IKalypsoTheme )
+      {
+        final ICommand command = new EnableThemeCommand( m_mapModel, (IKalypsoTheme)data, ti
+            .getChecked() );
+        m_commandTarget.postCommand( command, null );
+      }
+    }
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  public void widgetDefaultSelected( SelectionEvent e )
+  {
+  //
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IInputProvider#getInput()
+   */
+  public Object getInput()
+  {
+    return null;
+  }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
     m_viewer.addSelectionChangedListener( listener );
   }
@@ -239,18 +211,15 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection( )
+  public ISelection getSelection()
   {
-    if( m_viewer == null )
-      return null;
-
     return m_viewer.getSelection();
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
     m_viewer.removeSelectionChangedListener( listener );
   }
@@ -258,51 +227,46 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( final ISelection selection )
+  public void setSelection( ISelection selection )
   {
     m_viewer.setSelection( selection );
   }
 
-  public IStructuredContentProvider getContentProvider( )
+  public IStructuredContentProvider getContentProvider()
   {
-    return (IStructuredContentProvider) m_viewer.getContentProvider();
+    return (IStructuredContentProvider)m_viewer.getContentProvider();
   }
 
   /**
-   * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
-   *
+   * Adds a listener for double-clicks in this viewer. Has no effect if an
+   * identical listener is already registered.
+   * 
    * @param listener
    *          a double-click listener
    */
-  public void addDoubleClickListener( final IDoubleClickListener listener )
+  public void addDoubleClickListener( IDoubleClickListener listener )
   {
     m_viewer.addDoubleClickListener( listener );
   }
 
   /**
-   * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
-   *
+   * Removes the given double-click listener from this viewer. Has no affect if
+   * an identical listener is not registered.
+   * 
    * @param listener
    *          a double-click listener
    */
-  public void removeDoubleClickListener( final IDoubleClickListener listener )
+  public void removeDoubleClickListener( IDoubleClickListener listener )
   {
-    if( m_viewer != null )
-      m_viewer.removeDoubleClickListener( listener );
+    m_viewer.removeDoubleClickListener( listener );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.util.command.ICommandTarget#postCommand(org.kalypso.util.command.ICommand, java.lang.Runnable)
    */
-  public void postCommand( final ICommand command, final Runnable runnable )
+  public void postCommand( ICommand command, Runnable runnable )
   {
-    if( m_commandTarget != null )
-      m_commandTarget.postCommand( command, runnable );
+    m_commandTarget.postCommand( command, runnable );
   }
 
-  public void setCommandTarget( final JobExclusiveCommandTarget commandTarget )
-  {
-    m_commandTarget = commandTarget;
-  }
 }

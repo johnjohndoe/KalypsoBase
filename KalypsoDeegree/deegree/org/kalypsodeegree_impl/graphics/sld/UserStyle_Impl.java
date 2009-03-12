@@ -1,54 +1,62 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.graphics.sld;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.graphics.sld;
 
 import java.util.ArrayList;
 
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
+import org.deegree.graphics.sld.FeatureTypeStyle;
+import org.deegree.graphics.sld.UserStyle;
+import org.deegree.xml.Marshallable;
+import org.deegree_impl.tools.Debug;
 
 /**
- * A user-defined allows map styling to be defined externally from a system and to be passed around in an interoperable
- * format.
+ * A user-defined allows map styling to be defined externally from a system and
+ * to be passed around in an interoperable format.
  * <p>
  * </p>
- * A UserStyle is at the same semantic level as a NamedStyle used in the context of a WMS. In a sense, a named style can
- * be thought of as a reference to a hidden UserStyle that is stored inside of a map server.
+ * A UserStyle is at the same semantic level as a NamedStyle used in the context
+ * of a WMS. In a sense, a named style can be thought of as a reference to a
+ * hidden UserStyle that is stored inside of a map server.
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -69,7 +77,8 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   /**
    * constructor initializing the class with the <UserStyle>
    */
-  public UserStyle_Impl( String name, String title, String abstract_, boolean default_, FeatureTypeStyle[] featureTypeStyles )
+  public UserStyle_Impl( String name, String title, String abstract_, boolean default_,
+      FeatureTypeStyle[] featureTypeStyles )
   {
     super( name );
 
@@ -82,11 +91,12 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   }
 
   /**
-   * The Title is a human-readable short description for the style that might be displayed in a GUI pick list.
+   * The Title is a human-readable short description for the style that might be
+   * displayed in a GUI pick list.
    * 
    * @return the title of the User-Style
    */
-  public String getTitle( )
+  public String getTitle()
   {
     return title;
   }
@@ -95,7 +105,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * sets the <Title>
    * 
    * @param title
-   *            the title of the User-Style
+   *          the title of the User-Style
    */
   public void setTitle( String title )
   {
@@ -107,7 +117,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return the abstract of the User-Style
    */
-  public String getAbstract( )
+  public String getAbstract()
   {
     return abstract_;
   }
@@ -116,7 +126,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * sets the <Abstract>
    * 
    * @param abstract_
-   *            the abstract of the User-Style
+   *          the abstract of the User-Style
    */
   public void setAbstract( String abstract_ )
   {
@@ -124,12 +134,13 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   }
 
   /**
-   * The IsDefault element identifies whether a style is the default style of a layer, for use in SLD library mode when
-   * rendering or for storing inside of a map server. The default value is <tt>false</tt>.
+   * The IsDefault element identifies whether a style is the default style of a
+   * layer, for use in SLD library mode when rendering or for storing inside of
+   * a map server. The default value is <tt>false</tt>.
    * 
    * @return true if the style ist the default style
    */
-  public boolean isDefault( )
+  public boolean isDefault()
   {
     return default_;
   }
@@ -145,43 +156,34 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   }
 
   /**
-   * A UserStyle can contain one or more FeatureTypeStyles which allow the rendering of features of specific types.
+   * A UserStyle can contain one or more FeatureTypeStyles which allow the
+   * rendering of features of specific types.
    * <p>
    * </p>
-   * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer.
+   * The FeatureTypeStyle defines the styling that is to be applied to a single
+   * feature type of a layer.
    * <p>
    * </p>
-   * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
-   * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
-   * more generally, such as in WFS and GML, so this explicit separation is important.
+   * The FeatureTypeStyle element identifies that explicit separation in SLD
+   * between the handling of layers and the handling of features of specific
+   * feature types. The layer concept is unique to WMS and SLD, but features are
+   * used more generally, such as in WFS and GML, so this explicit separation is
+   * important.
    * 
    * @return the FeatureTypeStyles of a User-Style
    */
-  public FeatureTypeStyle[] getFeatureTypeStyles( )
+  public FeatureTypeStyle[] getFeatureTypeStyles()
   {
     FeatureTypeStyle[] ft = new FeatureTypeStyle[featureTypeStyles.size()];
 
-    return (FeatureTypeStyle[]) featureTypeStyles.toArray( ft );
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
-   */
-  public FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName )
-  {
-    for( int i = 0; i < featureTypeStyles.size(); i++ )
-    {
-      if( featureTypeStyles.get( i ) instanceof FeatureTypeStyle && ((FeatureTypeStyle) featureTypeStyles.get( i )).getName().equals( featureTypeStyleName ) )
-        return (FeatureTypeStyle) featureTypeStyles.get( i );
-    }
-    return null;
+    return (FeatureTypeStyle[])featureTypeStyles.toArray( ft );
   }
 
   /**
    * sets the <FeatureTypeStyle>
    * 
    * @param featureTypeStyles
-   *            the FeatureTypeStyles of a User-Style
+   *          the FeatureTypeStyles of a User-Style
    */
   public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
   {
@@ -200,7 +202,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * Adds a <FeatureTypeStyle>
    * 
    * @param featureTypeStyle
-   *            a FeatureTypeStyle to add
+   *          a FeatureTypeStyle to add
    */
   public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
   {
@@ -223,7 +225,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return xml representation of the UserStyle
    */
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
@@ -247,7 +249,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
     }
     for( int i = 0; i < featureTypeStyles.size(); i++ )
     {
-      sb.append( ((Marshallable) featureTypeStyles.get( i )).exportAsXML() );
+      sb.append( ( (Marshallable)featureTypeStyles.get( i ) ).exportAsXML() );
     }
     sb.append( "</UserStyle>" );
 

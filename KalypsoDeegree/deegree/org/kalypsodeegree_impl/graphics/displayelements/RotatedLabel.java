@@ -1,39 +1,45 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.graphics.displayelements;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/   
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.graphics.displayelements;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -45,16 +51,16 @@ import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.displayelements.Label;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.GraphicFill;
-import org.kalypsodeegree.graphics.sld.Halo;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+import org.deegree.graphics.displayelements.Label;
+import org.deegree.graphics.sld.Fill;
+import org.deegree.graphics.sld.GraphicFill;
+import org.deegree.graphics.sld.Halo;
+import org.deegree.model.feature.Feature;
+import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
 
 /**
- * This is a rotated label with style information and screen coordinates, ready to be rendered to the view.
+ * This is a rotated label with style information and screen coordinates, ready
+ * to be rendered to the view.
  * <p>
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -65,40 +71,41 @@ class RotatedLabel implements Label
 
   private String caption;
 
-  private int[] m_xpoints;
+  private int[] xpoints;
 
-  private int[] m_ypoints;
+  private int[] ypoints;
 
-  private double m_rotation;
+  private double rotation;
 
   // width and height of the caption
-  private int m_w, m_h;
+  private int w, h;
 
-  private Color m_color;
+  private Color color;
 
-  private Font m_font;
+  private Font font;
 
   private int descent, ascent;
 
-  private Halo m_halo;
+  private Halo halo;
 
   private Feature feature;
 
-  RotatedLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature, Halo halo, int x, int y,
-      int w, int h, double rotation, double anchorPoint[], double[] displacement )
+  RotatedLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature,
+      Halo halo, int x, int y, int w, int h, double rotation, double anchorPoint[],
+      double[] displacement )
   {
 
     this.caption = caption;
-    this.m_font = font;
-    this.m_color = color;
+    this.font = font;
+    this.color = color;
     this.descent = (int)metrics.getDescent();
     this.ascent = (int)metrics.getAscent();
     this.feature = feature;
-    this.m_halo = halo;
-    this.m_rotation = rotation;
+    this.halo = halo;
+    this.rotation = rotation;
 
-    this.m_w = w;
-    this.m_h = h;
+    this.w = w;
+    this.h = h;
 
     // vertices of label boundary
     int[] xpoints = new int[4];
@@ -113,18 +120,18 @@ class RotatedLabel implements Label
     ypoints[3] = y - h;
 
     // get rotated + translated points
-    this.m_xpoints = new int[4];
-    this.m_ypoints = new int[4];
+    this.xpoints = new int[4];
+    this.ypoints = new int[4];
     int tx = xpoints[0];
     int ty = ypoints[0];
 
     // transform all vertices of the boundary
     for( int i = 0; i < 4; i++ )
     {
-      int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h,
-          displacement[0], displacement[1] );
-      this.m_xpoints[i] = point[0];
-      this.m_ypoints[i] = point[1];
+      int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0],
+          anchorPoint[1], w, h, displacement[0], displacement[1] );
+      this.xpoints[i] = point[0];
+      this.ypoints[i] = point[1];
     }
   }
 
@@ -135,13 +142,13 @@ class RotatedLabel implements Label
 
   public double getRotation()
   {
-    return m_rotation;
+    return rotation;
   }
 
   public void paintBoundaries( Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
-    g.fillPolygon( m_xpoints, m_ypoints, m_xpoints.length );
+    g.fillPolygon( xpoints, ypoints, xpoints.length );
     g.setColor( Color.BLACK );
 
     // get the current transform
@@ -151,7 +158,7 @@ class RotatedLabel implements Label
     AffineTransform transform = new AffineTransform();
 
     // render the text
-    transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
+    transform.rotate( rotation, xpoints[0], ypoints[0] );
     g.setTransform( transform );
     //g.drawString( caption, xpoints [0], ypoints [0] - descent);
 
@@ -160,7 +167,8 @@ class RotatedLabel implements Label
   }
 
   /**
-   * Renders the label (including halo) to the submitted <tt>Graphics2D</tt> context.
+   * Renders the label (including halo) to the submitted <tt>Graphics2D</tt>
+   * context.
    * <p>
    * 
    * @param g
@@ -174,15 +182,15 @@ class RotatedLabel implements Label
 
     // perform transformation
     AffineTransform transform = new AffineTransform();
-    transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
+    transform.rotate( rotation, xpoints[0], ypoints[0] );
     g.setTransform( transform );
 
     // render the halo (only if specified)
-    if( m_halo != null )
+    if( halo != null )
     {
       try
       {
-        paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - descent );
+        paintHalo( g, halo, xpoints[0], ypoints[0] - descent );
       }
       catch( FilterEvaluationException e )
       {
@@ -191,9 +199,9 @@ class RotatedLabel implements Label
     }
 
     // render the text
-    setColor( g, m_color, 1.0 );
-    g.setFont( m_font );
-    g.drawString( caption, m_xpoints[0], m_ypoints[0] - descent );
+    setColor( g, color, 1.0 );
+    g.setFont( font );
+    g.drawString( caption, xpoints[0], ypoints[0] - descent );
 
     // restore original transform
     g.setTransform( saveAT );
@@ -217,6 +225,7 @@ class RotatedLabel implements Label
    */
   private void paintHalo( Graphics2D g, Halo halo, int x, int y ) throws FilterEvaluationException
   {
+
     int radius = (int)halo.getRadius( feature );
 
     // only draw filled rectangle or circle, if Fill-Element is given
@@ -228,7 +237,7 @@ class RotatedLabel implements Label
 
       if( gFill != null )
       {
-        BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
+        BufferedImage texture = gFill.getGraphic().getAsImage( feature );
         Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
         g.setPaint( new TexturePaint( texture, anchor ) );
       }
@@ -247,16 +256,17 @@ class RotatedLabel implements Label
     // radius specified -> draw circle
     if( radius > 0 )
     {
-      g.fillOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
+      g.fillOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1,
+          radius << 1 );
     }
     // radius unspecified -> draw rectangle
     else
     {
-      g.fillRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
+      g.fillRect( x - 1, y - ascent - 1, w + 2, h + 2 );
     }
 
     // only stroke outline, if Stroke-Element is given
-    org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
+    org.deegree.graphics.sld.Stroke stroke = halo.getStroke();
 
     if( stroke != null )
     {
@@ -284,10 +294,10 @@ class RotatedLabel implements Label
         }
         else
         {
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash,
-              stroke.getDashOffset( feature ) );
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 1.0f, dash,
-              1.0f );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke
+              .getLineJoin( feature ), 10.0f, dash, stroke.getDashOffset( feature ) );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke
+              .getLineJoin( feature ), 1.0f, dash, 1.0f );
         }
 
         g.setStroke( bs );
@@ -295,11 +305,12 @@ class RotatedLabel implements Label
         // radius specified -> draw circle
         if( radius > 0 )
         {
-          g.drawOval( ( x + ( m_w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1, radius << 1 );
+          g.drawOval( ( x + ( w >> 1 ) ) - radius, y - ( ascent >> 1 ) - radius, radius << 1,
+              radius << 1 );
         }// radius unspecified -> draw rectangle
         else
         {
-          g.drawRect( x - 1, y - ascent - 1, m_w + 2, m_h + 2 );
+          g.drawRect( x - 1, y - ascent - 1, w + 2, h + 2 );
         }
       }
     }
@@ -307,32 +318,32 @@ class RotatedLabel implements Label
 
   public int getX()
   {
-    return m_xpoints[0];
+    return xpoints[0];
   }
 
   public int getY()
   {
-    return m_ypoints[0];
+    return ypoints[0];
   }
 
   public int getMaxX()
   {
-    return m_xpoints[1];
+    return xpoints[1];
   }
 
   public int getMaxY()
   {
-    return m_ypoints[1];
+    return ypoints[1];
   }
 
   public int getMinX()
   {
-    return m_xpoints[3];
+    return xpoints[3];
   }
 
   public int getMinY()
   {
-    return m_ypoints[3];
+    return ypoints[3];
   }
 
   /**

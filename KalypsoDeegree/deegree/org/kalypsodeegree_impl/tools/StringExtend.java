@@ -1,45 +1,53 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.tools;
+/*----------------    FILE HEADER  ------------------------------------------
+
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.tools;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * this is a collection of some methods that extends the functionallity of the sun-java string class.
+ * this is a collection of some methods that extends the functionallity of the
+ * sun-java string class.
  */
 public class StringExtend
 {
@@ -53,8 +61,8 @@ public class StringExtend
    * @param to
    *          is the string which will used to replace
    * @param all
-   *          if it's true all occurences of the string to be replaced will be replaced. else only the first occurence
-   *          will be replaced.
+   *          if it's true all occurences of the string to be replaced will be
+   *          replaced. else only the first occurence will be replaced.
    */
   public static String replace( String target, String from, String to, boolean all )
   {
@@ -115,8 +123,9 @@ public class StringExtend
    * @param delimiter
    *          delimiter that marks the end of a token
    * @param deleteDoubles
-   *          if it's true all string that are already within the resulting array will be deleted, so that there will
-   *          only be one copy of them.
+   *          if it's true all string that are already within the resulting
+   *          array will be deleted, so that there will only be one copy of
+   *          them.
    */
   public static String[] toArray( String s, String delimiter, boolean deleteDoubles )
   {
@@ -161,7 +170,8 @@ public class StringExtend
   }
 
   /**
-   * transforms a string array to one string. the array fields are seperated by the submitted delimiter:
+   * transforms a string array to one string. the array fields are seperated by
+   * the submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -185,7 +195,8 @@ public class StringExtend
   }
 
   /**
-   * transforms a double array to one string. the array fields are seperated by the submitted delimiter:
+   * transforms a double array to one string. the array fields are seperated by
+   * the submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -209,7 +220,8 @@ public class StringExtend
   }
 
   /**
-   * transforms a int array to one string. the array fields are seperated by the submitted delimiter:
+   * transforms a int array to one string. the array fields are seperated by the
+   * submitted delimiter:
    * 
    * @param s
    *          stringarray to transform
@@ -346,6 +358,11 @@ public class StringExtend
 
   /**
    * countString count the occurrences of token into target
+   * 
+   * @param target
+   * @param token
+   * 
+   * @return
    */
   public static int countString( String target, String token )
   {
@@ -362,7 +379,14 @@ public class StringExtend
   }
 
   /**
-   * Extract all the string that begin with "start" and end with "end" and store it into an array of String
+   * Extract all the string that begin with "start" and end with "end" and store
+   * it into an array of String
+   * 
+   * @param target
+   * @param startString
+   * @param end
+   * 
+   * @return
    */
   public static String[] extractString( String target, String startString, String end )
   {
@@ -386,10 +410,19 @@ public class StringExtend
   }
 
   /**
-   * extract a string contained between startDel and endDel, you can remove t he delimiters if set true the parameters
-   * delStart and delEnd
+   * extract a string contained between startDel and endDel, you can remove t he
+   * delimiters if set true the parameters delStart and delEnd
+   * 
+   * @param target
+   * @param startDel
+   * @param endDel
+   * @param delStart
+   * @param delEnd
+   * 
+   * @return
    */
-  public static String extractArray( String target, String startDel, String endDel, boolean delStart, boolean delEnd )
+  public static String extractArray( String target, String startDel, String endDel,
+      boolean delStart, boolean delEnd )
   {
     int start = target.indexOf( startDel );
 
@@ -422,7 +455,13 @@ public class StringExtend
   }
 
   /**
-   * convert the array of string like [(x1,y1),(x2,y2)...] into an array of double [x1,y1,x2,y2...]
+   * convert the array of string like [(x1,y1),(x2,y2)...] into an array of
+   * double [x1,y1,x2,y2...]
+   * 
+   * @param s
+   * @param delimiter
+   * 
+   * @return
    */
   public static double[] toArrayDouble( String s, String delimiter )
   {
@@ -478,7 +517,8 @@ public class StringExtend
   }
 
   /**
-   * gets the stacktrace array from the passed Excption and transforms it into a String
+   * gets the stacktrace array from the passed Excption and transforms it into a
+   * String
    */
   public static String stackTraceToString( Exception e )
   {

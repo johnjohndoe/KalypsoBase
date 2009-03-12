@@ -1,187 +1,134 @@
-/*--------------- Kalypso-Header --------------------------------------------------------------------
-
- This file is part of kalypso.
- Copyright (C) 2004, 2005 by:
-
- Technical University Hamburg-Harburg (TUHH)
- Institute of River and coastal engineering
- Denickestr. 22
- 21073 Hamburg, Germany
- http://www.tuhh.de/wb
-
- and
-
- Bjoernsen Consulting Engineers (BCE)
- Maria Trost 3
- 56070 Koblenz, Germany
- http://www.bjoernsen.de
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
- Contact:
-
- E-Mail:
- belger@bjoernsen.de
- schlienger@bjoernsen.de
- v.doemming@tuhh.de
-
- ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
- *
+ *  
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
+import org.deegree.graphics.sld.Graphic;
+import org.deegree.graphics.sld.Mark;
+import org.deegree.graphics.sld.Symbolizer;
+import org.deegree.graphics.sld.TextSymbolizer;
+import org.deegree.model.feature.FeatureType;
+import org.deegree.model.feature.FeatureTypeProperty;
+import org.deegree_impl.graphics.sld.StyleFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.TextSymbolizerLayout;
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class AddSymbolizerPanel
 {
 
-  private final Composite m_composite;
+  private Composite composite = null;
 
-  private final IFeatureType m_featureType;
+  private FeatureType featureType = null;
 
-  private Combo m_symbolizerCombo = null;
+  private Combo symbolizerCombo = null;
 
-  private Combo m_geometryCombo = null;
+  private Combo geometryCombo = null;
 
-  private final EventListenerList m_listenerList = new EventListenerList();
+  private int selectionIndex = 0;
 
-  private final String m_label;
+  private EventListenerList listenerList = new EventListenerList();
 
-  private final boolean m_isSimpleRule;
+  private String label = null;
 
-  public AddSymbolizerPanel( final Composite parent, final String label, final IFeatureType featureType )
+  private boolean isSimpleRule = true;
+
+  public AddSymbolizerPanel( Composite parent, String m_label, FeatureType m_featureType )
   {
-    m_label = label;
-    m_featureType = featureType;
-    m_composite = new Composite( parent, SWT.NULL );
-    m_isSimpleRule = true;
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    setLabel( m_label );
+    setFeatureType( m_featureType );
+    composite = new Composite( parent, SWT.NULL );
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 230;
-    compositeData.horizontalSpan = ((GridLayout) parent.getLayout()).numColumns;
-    m_composite.setLayoutData( compositeData );
-    m_composite.setLayout( compositeLayout );
+    composite.setLayoutData( compositeData );
+    composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
     compositeLayout.marginHeight = 0;
     compositeLayout.spacing = 0;
-    m_composite.layout();
+    composite.layout();
     init();
   }
 
-  public AddSymbolizerPanel( final Composite parent, final String label, final IFeatureType featureType, final boolean isSimpleRule )
+  public AddSymbolizerPanel( Composite parent, String m_label, FeatureType m_featureType,
+      boolean m_isSimpleRule )
   {
-    m_label = label;
-    m_featureType = featureType;
-    m_isSimpleRule = isSimpleRule;
-    m_composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    setLabel( m_label );
+    setFeatureType( m_featureType );
+    this.isSimpleRule = m_isSimpleRule;
+    composite = new Composite( parent, SWT.NULL );
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 230;
-    m_composite.setLayoutData( compositeData );
-    m_composite.setLayout( compositeLayout );
+    composite.setLayoutData( compositeData );
+    composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
     compositeLayout.marginHeight = 0;
     compositeLayout.spacing = 0;
-    m_composite.layout();
+    composite.layout();
     init();
   }
 
-  public void addPanelListener( final PanelListener pl )
+  public void addPanelListener( PanelListener pl )
   {
-    m_listenerList.add( PanelListener.class, pl );
+    listenerList.add( PanelListener.class, pl );
   }
 
-  private void init( )
+  private void init()
   {
     // Symbolizer Combo
-    m_symbolizerCombo = new Combo( m_composite, SWT.NULL );
-    final FormData symbolizerComboData = new FormData();
+    symbolizerCombo = new Combo( composite, SWT.NULL );
+    FormData symbolizerComboData = new FormData();
     symbolizerComboData.height = 21;
     symbolizerComboData.width = 30;
     symbolizerComboData.left = new FormAttachment( 295, 1000, 0 );
     symbolizerComboData.top = new FormAttachment( 100, 1000, 0 );
-    m_symbolizerCombo.setLayoutData( symbolizerComboData );
-
+    symbolizerCombo.setLayoutData( symbolizerComboData );
+    String items[] = getItemsByFeatureType( featureType );
+    if( items != null && items.length > 0 )
+    {
+      symbolizerCombo.setItems( items );
+      symbolizerCombo.select( 0 );
+    }
     // Geometry-Selection Combo
-    m_geometryCombo = new Combo( m_composite, SWT.NULL );
-    final FormData geometryComboData = new FormData();
+    geometryCombo = new Combo( composite, SWT.NULL );
+    FormData geometryComboData = new FormData();
     geometryComboData.height = 21;
     geometryComboData.width = 35;
     geometryComboData.left = new FormAttachment( 560, 1000, 0 );
     geometryComboData.top = new FormAttachment( 100, 1000, 0 );
-    m_geometryCombo.setLayoutData( geometryComboData );
-    m_geometryCombo.addSelectionListener( new SelectionListener()
+    geometryCombo.setLayoutData( geometryComboData );
+    String[] geometryItems = getGeometries( featureType );
+    if( geometryItems != null && geometryItems.length > 0 )
     {
-      public void widgetSelected( final SelectionEvent e )
-      {
-        updateSymbolizerCombo();
-      }
-
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        updateSymbolizerCombo();
-      }
-    } );
-
-    final List<String> geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
-    if( geometryItems != null && geometryItems.size() > 0 )
-    {
-      m_geometryCombo.setItems( geometryItems.toArray( new String[geometryItems.size()] ) );
-      m_geometryCombo.select( 0 );
+      geometryCombo.setItems( geometryItems );
+      geometryCombo.select( 0 );
     }
 
     // Symbolizer Add-Button
-    final Label symbolizerAddButton = new Label( m_composite, SWT.PUSH | SWT.CENTER );
+    Label symbolizerAddButton = new Label( composite, SWT.PUSH | SWT.CENTER );
     symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    final FormData symbolizerAddButtonData = new FormData();
+    FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
     symbolizerAddButtonData.width = 30;
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
@@ -190,201 +137,241 @@ public class AddSymbolizerPanel
     symbolizerAddButton.setToolTipText( MessageBundle.STYLE_EDITOR_ADD );
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( final MouseEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
+        setSelection( getSymbolizerCombo().getSelectionIndex() );
         fire();
       }
 
-      public void mouseDown( final MouseEvent e )
+      public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( final MouseEvent e )
-      {
-        // nothing
-      }
-
+      public void mouseUp( MouseEvent e )
+      {/**/}
     } );
 
     // ***** Label
-    final Label symbolizerLabel = new Label( m_composite, SWT.NULL );
-    final FormData symbolizerLabelData = new FormData();
+    Label symbolizerLabel = new Label( composite, SWT.NULL );
+    FormData symbolizerLabelData = new FormData();
     symbolizerLabelData.height = 15;
     symbolizerLabelData.width = 242;
     symbolizerLabelData.left = new FormAttachment( 0, 1000, 0 );
     symbolizerLabelData.top = new FormAttachment( 100, 1000, 0 );
     symbolizerLabel.setLayoutData( symbolizerLabelData );
-    symbolizerLabel.setText( m_label );
-
-    updateSymbolizerCombo();
+    symbolizerLabel.setText( label );
   }
 
-  protected void updateSymbolizerCombo( )
+  public Symbolizer getSelection()
   {
-    final int selectionIndex = m_geometryCombo.getSelectionIndex();
-    if( selectionIndex == -1 )
-      return;
-    final String propName = m_geometryCombo.getItem( selectionIndex );
-    final String items[] = getSymbolizerTypesByFeatureProperty( new PropertyName( propName ) );
-    if( items != null && items.length > 0 )
+    String geometryPropertyName = geometryCombo.getItem( geometryCombo.getSelectionIndex() );
+    String symbolizerString = getItemsByFeatureType( featureType )[selectionIndex];
+    return getSymbolizer( geometryPropertyName, symbolizerString, featureType );
+  }
+
+  public static Symbolizer getSymbolizer( String geometryPropertyName, String symbolizerString,
+      FeatureType featureType )
+  {
+    if( symbolizerString.equals( "Point" ) )
     {
-      m_symbolizerCombo.setItems( items );
-      m_symbolizerCombo.select( 0 );
-    }
-  }
-
-  public Symbolizer getSelection( )
-  {
-    final String geometryPropertyName = m_geometryCombo.getItem( m_geometryCombo.getSelectionIndex() );
-    final int selectionIndex = m_symbolizerCombo.getSelectionIndex();
-    final String symbolizerString = m_symbolizerCombo.getItem( selectionIndex );
-    // String symbolizerString =
-    // getSymbolizerTypesByFeatureProperty()[m_selectionIndex];
-    return getSymbolizer( new PropertyName( geometryPropertyName ), symbolizerString, m_featureType );
-  }
-
-  public static Symbolizer getSymbolizer( final PropertyName geometryPropertyName, final String symbolizerString, final IFeatureType featureType )
-  {
-    final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
-
-    if( symbolizerString.equals( "Point" ) ) //$NON-NLS-1$
-    {
-      final Mark mark = StyleFactory.createMark( "square" ); //$NON-NLS-1$
-      final Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
+      Mark mark = StyleFactory.createMark( "square" );
+      Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
       return StyleFactory.createPointSymbolizer( graphic, geometryPropertyName );
     }
-    else if( symbolizerString.equals( "Line" ) ) //$NON-NLS-1$
+    else if( symbolizerString.equals( "Line" ) )
     {
       return StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), geometryPropertyName );
     }
-    else if( symbolizerString.equals( "Text" ) ) //$NON-NLS-1$
+    else if( symbolizerString.equals( "Text" ) )
     {
-
-      final TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
+      TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName,
+          null, null );
       textSymbolizer.setFill( null );
       textSymbolizer.getHalo().getFill().setOpacity( 0.3 );
       textSymbolizer.setLabel( null );
       textSymbolizer.getFont().setColor( Color.BLACK );
       // check which geometry-type
       // if line than label_placement - line_placement
-      if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_LINESTRING )
-        StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "above" ) ); //$NON-NLS-1$
+      if( TextSymbolizerLayout.getFeatureTypeGeometryType( featureType ) == TextSymbolizerLayout.GM_LINESTRING )
+        StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "above" ) );
       // else label_placement - point_placement
       else
         StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
       return textSymbolizer;
     }
-    else if( symbolizerString.equals( "Polygon" ) ) //$NON-NLS-1$
-      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(), geometryPropertyName );
+    else if( symbolizerString.equals( "Polygon" ) )
+      return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory
+          .createFill(), geometryPropertyName );
     return null;
   }
 
-  protected void fire( )
+  public void setSelection( int index )
   {
-    final Object[] listeners = m_listenerList.getListenerList();
+    this.selectionIndex = index;
+  }
+
+  protected void fire()
+  {
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public static List<String> queryGeometriesPropertyNames( final IPropertyType[] ftp, List<String> list )
+  public static String[] getGeometries( FeatureType featureType )
   {
-    if( list == null )
-      list = new ArrayList<String>();
-
-    for( final IPropertyType element : ftp )
+    ArrayList geometryItems = new ArrayList();
+    FeatureTypeProperty[] ftp = featureType.getProperties();
+    for( int i = 0; i < ftp.length; i++ )
     {
-      if( GeometryUtilities.isGeometry( element ) )
-        list.add( element.getName() );
+      String type = ftp[i].getType();
+      if( type.startsWith( "org.deegree.model.geometry." ) && !type.endsWith( "GM_Envelope" ) )
+        geometryItems.add( ftp[i].getName() );
     }
-    return list;
+    String returnItems[] = new String[geometryItems.size()];
+    for( int j = 0; j < returnItems.length; j++ )
+      returnItems[j] = (String)geometryItems.get( j );
+    return returnItems;
   }
 
-  private String[] getSymbolizerTypesByFeatureProperty( final PropertyName propName )
+  private String[] getItemsByFeatureType( FeatureType m_featureType )
   {
-
-    final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( m_featureType, propName );
-
     String items[] = null;
     // in case of Pattern-Rule it does not make sense to have a pattern for
     // textsymbolizer
-
-    final int featureTypeGeometryType = TextSymbolizerLayout.getFeatureTypeGeometryType( ftp );
-    if( featureTypeGeometryType == TextSymbolizerLayout.GM_POINT || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOINT )
+    if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POINT )
     {
-      if( m_isSimpleRule )
+      if( isSimpleRule )
       {
         items = new String[2];
-        items[0] = "Point"; //$NON-NLS-1$
-        items[1] = "Text"; //$NON-NLS-1$
+        items[0] = "Point";
+        items[1] = "Text";
       }
       else
       {
         items = new String[1];
-        items[0] = "Point"; //$NON-NLS-1$
+        items[0] = "Point";
       }
     }
-    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_LINESTRING || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTILINESTRING )
+    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_LINESTRING )
     {
-      if( m_isSimpleRule )
+      if( isSimpleRule )
       {
         items = new String[3];
-        items[0] = "Line"; //$NON-NLS-1$
-        items[1] = "Text"; //$NON-NLS-1$
-        items[2] = "Point"; //$NON-NLS-1$
+        items[0] = "Line";
+        items[1] = "Text";
+        items[2] = "Point";
       }
       else
       {
         items = new String[2];
-        items[0] = "Line"; //$NON-NLS-1$
-        items[1] = "Point"; //$NON-NLS-1$
+        items[0] = "Line";
+        items[1] = "Point";
       }
     }
-    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_POLYGON || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOLYGON )
+    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_POLYGON )
     {
-      if( m_isSimpleRule )
+      if( isSimpleRule )
       {
         items = new String[3];
-        items[0] = "Polygon"; //$NON-NLS-1$
-        items[1] = "Text"; //$NON-NLS-1$
-        items[2] = "Point"; //$NON-NLS-1$
+        items[0] = "Polygon";
+        items[1] = "Text";
+        items[2] = "Point";
       }
       else
       {
         items = new String[2];
-        items[0] = "Polygon"; //$NON-NLS-1$
-        items[1] = "Point"; //$NON-NLS-1$
+        items[0] = "Polygon";
+        items[1] = "Point";
       }
     }
-    else if( featureTypeGeometryType == TextSymbolizerLayout.GM_OBJECT )
+    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_MULTIPOINT )
     {
-      if( m_isSimpleRule )
+      if( isSimpleRule )
       {
-        items = new String[4];
-        items[0] = "Text"; //$NON-NLS-1$
-        items[1] = "Point"; //$NON-NLS-1$
-        items[2] = "Line"; //$NON-NLS-1$
-        items[3] = "Polygon"; //$NON-NLS-1$
+        items = new String[2];
+        items[0] = "Point";
+        items[1] = "Text";
       }
       else
       {
+        items = new String[1];
+        items[0] = "Point";
+      }
+    }
+    else if( TextSymbolizerLayout.getFeatureTypeGeometryType( m_featureType ) == TextSymbolizerLayout.GM_OBJECT ) //multilinestring,
+    // multipolygon
+    {
+      if( isSimpleRule )
+      {
         items = new String[3];
-        items[0] = "Point"; //$NON-NLS-1$
-        items[1] = "Line"; //$NON-NLS-1$
-        items[2] = "Polygon"; //$NON-NLS-1$
+        items[0] = "Polygon";
+        items[1] = "Text";
+        items[2] = "Point";
+      }
+      else
+      {
+        items = new String[2];
+        items[0] = "Polygon";
+        items[1] = "Point";
       }
     }
     return items;
   }
 
-  public Combo getSymbolizerCombo( )
+  public FeatureType getFeatureType()
   {
-    return m_symbolizerCombo;
+    return featureType;
+  }
+
+  public void setFeatureType( FeatureType m_featureType )
+  {
+    this.featureType = m_featureType;
+  }
+
+  public Combo getGeometryCombo()
+  {
+    return geometryCombo;
+  }
+
+  public void setGeometryCombo( Combo m_geometryCombo )
+  {
+    this.geometryCombo = m_geometryCombo;
+  }
+
+  public String getLabel()
+  {
+    return label;
+  }
+
+  public void setLabel( String m_label )
+  {
+    this.label = m_label;
+  }
+
+  public int getSelectionIndex()
+  {
+    return selectionIndex;
+  }
+
+  public void setSelectionIndex( int m_selectionIndex )
+  {
+    this.selectionIndex = m_selectionIndex;
+  }
+
+  public Combo getSymbolizerCombo()
+  {
+    return symbolizerCombo;
+  }
+
+  public void setSymbolizerCombo( Combo m_symbolizerCombo )
+  {
+    this.symbolizerCombo = m_symbolizerCombo;
   }
 }

@@ -1,47 +1,55 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
+/*----------------    FILE HEADER  ------------------------------------------
+ 
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ Contact:
+ 
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+ 
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+ 
+ 
+ ---------------------------------------------------------------------------*/
 
-package org.kalypsodeegree_impl.io.shpapi;
+package org.deegree_impl.io.shpapi;
 
-import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.deegree.model.geometry.ByteUtils;
+import org.deegree.model.geometry.GM_Curve;
+import org.deegree.model.geometry.GM_LineString;
 
 /**
  * Class representig a two dimensional ESRI PolyLine <BR>
+ * 
  * <B>Last changes <B>: <BR>
  * 12.01.2000 ap: constructor re-declared <BR>
  * 25.01.2000 ap: public variables numRings and numPoints declared <BR>
@@ -50,13 +58,15 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
  * 14.08.2000 ap: method writeSHPPolyline(..) added <BR>
  * 14.08.2000 ap: method size() added <BR>
  * 16.08.2000 ap: constructor SHPPolyLine(GM_Point[][] gm_points) modified <BR>
+ * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
+ *  
  */
 
-public class SHPPolyLine implements ISHPGeometry
+public class SHPPolyLine extends SHPGeometry
 {
 
   public int numParts;
@@ -65,23 +75,24 @@ public class SHPPolyLine implements ISHPGeometry
 
   public SHPPoint[][] points = null;
 
-  private final SHPEnvelope m_envelope;
-
   /**
    * constructor: gets a stream <BR>
    */
   public SHPPolyLine( byte[] recBuf )
   {
 
+    // constructor invocation
+    super( recBuf );
+
     int pointsStart = 0;
     int sumPoints = 0;
 
-    m_envelope = ShapeUtils.readBox( recBuf, 4 );
+    envelope = ShapeUtils.readBox( recBuf, 4 );
 
-    numParts = ByteUtils.readLEInt( recBuf, 36 );
-    numPoints = ByteUtils.readLEInt( recBuf, 40 );
+    numParts = ByteUtils.readLEInt( recBuffer, 36 );
+    numPoints = ByteUtils.readLEInt( recBuffer, 40 );
 
-    pointsStart = ShapeConst.PARTS_START + (numParts * 4);
+    pointsStart = ShapeConst.PARTS_START + ( numParts * 4 );
 
     points = new SHPPoint[numParts][];
 
@@ -94,19 +105,20 @@ public class SHPPolyLine implements ISHPGeometry
       int lnumPoints = 0;
 
       // get number of first point of current part out of ESRI shape Record:
-      firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
+      firstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START + ( j * 4 ) );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      offset = pointsStart + (firstPointNo * 16);
+      offset = pointsStart + ( firstPointNo * 16 );
 
       // get number of first point of next part ...
       if( j < numParts - 1 )
       {
         // ... usually out of ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + ((j + 1) * 4) );
+        nextFirstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START
+            + ( ( j + 1 ) * 4 ) );
       }
-      // ... for the last part as total number of points
+      //... for the last part as total number of points
       else if( j == numParts - 1 )
       {
         nextFirstPointNo = numPoints;
@@ -123,22 +135,25 @@ public class SHPPolyLine implements ISHPGeometry
       // create the points of the j-th part from the buffer
       for( int i = 0; i < lnumPoints; i++ )
       {
-        points[j][i] = new SHPPoint( recBuf, offset + (i * 16) );
+        points[j][i] = new SHPPoint( recBuf, offset + ( i * 16 ) );
       }
+
     }
+
   }
 
   /**
    * constructor: recieves a matrix of GM_Points <BR>
    */
-  public SHPPolyLine( GM_Curve[] curves )
+  public SHPPolyLine( GM_Curve[] curve )
   {
-    double xmin = curves[0].getEnvelope().getMin().getX();
-    double xmax = curves[0].getEnvelope().getMax().getX();
-    double ymin = curves[0].getEnvelope().getMin().getY();
-    double ymax = curves[0].getEnvelope().getMax().getY();
 
-    numParts = curves.length;
+    double xmin = curve[0].getEnvelope().getMin().getX();
+    double xmax = curve[0].getEnvelope().getMax().getX();
+    double ymin = curve[0].getEnvelope().getMin().getY();
+    double ymax = curve[0].getEnvelope().getMax().getY();
+
+    numParts = curve.length;
 
     numPoints = 0;
 
@@ -150,7 +165,7 @@ public class SHPPolyLine implements ISHPGeometry
       for( int i = 0; i < numParts; i++ )
       {
 
-        GM_LineString ls = curves[i].getAsLineString();
+        GM_LineString ls = curve[i].getAsLineString();
 
         numPoints += ls.getNumberOfPoints();
 
@@ -159,21 +174,21 @@ public class SHPPolyLine implements ISHPGeometry
         for( int j = 0; j < ls.getNumberOfPoints(); j++ )
         {
           points[i][j] = new SHPPoint( ls.getPositionAt( j ) );
-          if( points[i][j].getX() > xmax )
+          if( points[i][j].x > xmax )
           {
-            xmax = points[i][j].getX();
+            xmax = points[i][j].x;
           }
-          else if( points[i][j].getX() < xmin )
+          else if( points[i][j].x < xmin )
           {
-            xmin = points[i][j].getX();
+            xmin = points[i][j].x;
           }
-          if( points[i][j].getY() > ymax )
+          if( points[i][j].y > ymax )
           {
-            ymax = points[i][j].getY();
+            ymax = points[i][j].y;
           }
-          else if( points[i][j].getY() < ymin )
+          else if( points[i][j].y < ymin )
           {
-            ymin = points[i][j].getY();
+            ymin = points[i][j].y;
           }
         }
 
@@ -184,31 +199,31 @@ public class SHPPolyLine implements ISHPGeometry
       System.out.println( "SHPPolyLine:: " + e );
     }
 
-    m_envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
+    envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
   }
 
   /**
    * method: writeSHPPolyLine(byte[] bytearray, int start) <BR>
    */
-  public byte[] writeShape( )
+  public void writeSHPPolyLine( byte[] bytearray, int start )
   {
-    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
-    final byte[] bytearray = new byte[offset + size()];
 
-    double xmin = points[0][0].getX();
-    double xmax = points[0][0].getX();
-    double ymin = points[0][0].getY();
-    double ymax = points[0][0].getY();
+    int offset = start;
+
+    double xmin = points[0][0].x;
+    double xmax = points[0][0].x;
+    double ymin = points[0][0].y;
+    double ymax = points[0][0].y;
 
     // write shape type identifier ( 3 = polyline )
-    ByteUtils.writeLEInt( bytearray, offset, ShapeConst.SHAPE_TYPE_POLYLINE );
+    ByteUtils.writeLEInt( bytearray, offset, 3 );
 
     offset += 4;
     // save offset of the bounding box
     int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += ( 4 * 8 );
 
     // write numparts
     ByteUtils.writeLEInt( bytearray, offset, numParts );
@@ -221,7 +236,7 @@ public class SHPPolyLine implements ISHPGeometry
     int tmp2 = offset;
 
     // increment offset with numParts
-    offset += (4 * numParts);
+    offset += ( 4 * numParts );
 
     int count = 0;
     for( int i = 0; i < points.length; i++ )
@@ -238,30 +253,30 @@ public class SHPPolyLine implements ISHPGeometry
         count++;
 
         // calculate bounding box
-        if( points[i][j].getX() > xmax )
+        if( points[i][j].x > xmax )
         {
-          xmax = points[i][j].getX();
+          xmax = points[i][j].x;
         }
-        else if( points[i][j].getX() < xmin )
+        else if( points[i][j].x < xmin )
         {
-          xmin = points[i][j].getX();
+          xmin = points[i][j].x;
         }
 
-        if( points[i][j].getY() > ymax )
+        if( points[i][j].y > ymax )
         {
-          ymax = points[i][j].getY();
+          ymax = points[i][j].y;
         }
-        else if( points[i][j].getY() < ymin )
+        else if( points[i][j].y < ymin )
         {
-          ymin = points[i][j].getY();
+          ymin = points[i][j].y;
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, points[i][j].getX() );
+        ByteUtils.writeLEDouble( bytearray, offset, points[i][j].x );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, points[i][j].getY() );
+        ByteUtils.writeLEDouble( bytearray, offset, points[i][j].y );
         offset += 8;
 
       }
@@ -280,21 +295,14 @@ public class SHPPolyLine implements ISHPGeometry
     offset += 8;
     ByteUtils.writeLEDouble( bytearray, offset, ymax );
 
-    return bytearray;
-
   }
 
   /**
    * returns the polyline shape size in bytes <BR>
    */
-  public int size( )
+  public int size()
   {
     return 44 + numParts * 4 + numPoints * 16;
-  }
-
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
   }
 
 } // end of class PolyLine

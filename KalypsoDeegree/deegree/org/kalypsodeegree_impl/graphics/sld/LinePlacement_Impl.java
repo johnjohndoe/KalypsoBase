@@ -1,57 +1,64 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.graphics.sld;
+/*----------------    FILE HEADER  ------------------------------------------
+ 
+ This file is part of deegree.
+ Copyright (C) 2001 by:
+ EXSE, Department of Geography, University of Bonn
+ http://www.giub.uni-bonn.de/exse/
+ lat/lon Fitzke/Fretter/Poth GbR
+ http://www.lat-lon.de
 
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.sld.LinePlacement;
-import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Contact:
+
+ Andreas Poth
+ lat/lon Fitzke/Fretter/Poth GbR
+ Meckenheimer Allee 176
+ 53115 Bonn
+ Germany
+ E-Mail: poth@lat-lon.de
+
+ Jens Fitzke
+ Department of Geography
+ University of Bonn
+ Meckenheimer Allee 166
+ 53115 Bonn
+ Germany
+ E-Mail: jens.fitzke@uni-bonn.de
+
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.graphics.sld;
+
+import org.deegree.graphics.sld.LinePlacement;
+import org.deegree.graphics.sld.ParameterValueType;
+import org.deegree.model.feature.Feature;
+import org.deegree.services.wfs.filterencoding.FilterEvaluationException;
+import org.deegree.xml.Marshallable;
+import org.deegree_impl.tools.Debug;
 
 /**
  * Incarnation of an sld:LinePlacement-element.
  * <p>
  * Contains some deegree-specific extensions:
  * <ul>
- * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also be set to one of the special values
- * 'center', 'above', 'below', 'auto'
+ * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also
+ * be set to one of the special values 'center', 'above', 'below', 'auto'
  * <li>Gap: defines the distance between two captions on the line string
- * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of
- * labels above and below the line string)
+ * <li>LineWidth: provides the thickness of the styled line (needed as
+ * information for the correct positioning of labels above and below the line
+ * string)
  * </ul>
  * <p>
  * 
@@ -75,16 +82,18 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * The PerpendicularOffset element of a LinePlacement gives the perpendicular distance away from a line to draw a
-   * label. The distance is in pixels and is positive to the left-hand side of the line string. Negative numbers mean
+   * The PerpendicularOffset element of a LinePlacement gives the perpendicular
+   * distance away from a line to draw a label. The distance is in pixels and is
+   * positive to the left-hand side of the line string. Negative numbers mean
    * right. The default offset is 0.
    * <p>
-   * deegree-specific extension: if the element has one of the values: 'center', 'above', 'below', 'auto', the return
-   * value is invalid
+   * deegree-specific extension: if the element has one of the values: 'center',
+   * 'above', 'below', 'auto', the return value is invalid
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the
+   *          underlying 'sld:ParameterValueType'
    * @return the offset (only valid if type is TYPE_ABSOLUTE)
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -107,7 +116,8 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
         catch( NumberFormatException e )
         {
           throw new FilterEvaluationException( "Element 'PerpendicularOffset' "
-              + "must be equal to 'center', 'above', 'below' or 'auto' or it " + "must denote a valid double value!" );
+              + "must be equal to 'center', 'above', 'below' or 'auto' or it "
+              + "must denote a valid double value!" );
         }
 
       }
@@ -116,7 +126,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.LinePlacement_Impl#getPerpendicularOffset(Feature)
+   * @see org.deegree_impl.graphics.sld.LinePlacement_Impl#getPerpendicularOffset(Feature)
    *      <p>
    * @param perpendicularOffset
    */
@@ -127,10 +137,13 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Returns the placement type (one of the constants defined in <tt>LinePlacement</tt>).
+   * Returns the placement type (one of the constants defined in
+   * <tt>LinePlacement</tt>).
    * <p>
    * 
-   * @throws FilterEvaluationException
+   * @param feature
+   * @return @throws
+   *         FilterEvaluationException
    */
   public int getPlacementType( Feature feature ) throws FilterEvaluationException
   {
@@ -160,7 +173,8 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Sets the placement type (one of the constants defined in <tt>LinePlacement</tt>).
+   * Sets the placement type (one of the constants defined in
+   * <tt>LinePlacement</tt>).
    * <p>
    * 
    * @param placementType
@@ -190,11 +204,13 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
-   * below the line string).
+   * Provides the thickness of the styled line (needed as information for the
+   * correct positioning of labels above and below the line string).
    * <p>
    * 
-   * @throws FilterEvaluationException
+   * @param feature
+   * @return @throws
+   *         FilterEvaluationException
    */
   public double getLineWidth( Feature feature ) throws FilterEvaluationException
   {
@@ -208,8 +224,8 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
-   * below the line string).
+   * Provides the thickness of the styled line (needed as information for the
+   * correct positioning of labels above and below the line string).
    * <p>
    * 
    * @param lineWidth
@@ -222,10 +238,13 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Defines the distance between two captions on the line string. One unit is the width of the label caption.
+   * Defines the distance between two captions on the line string. One unit is
+   * the width of the label caption.
    * <p>
    * 
-   * @throws FilterEvaluationException
+   * @param feature
+   * @return @throws
+   *         FilterEvaluationException
    */
   public int getGap( Feature feature ) throws FilterEvaluationException
   {
@@ -239,7 +258,8 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   }
 
   /**
-   * Defines the distance between two captions on the line string. One unit is the width of the label caption.
+   * Defines the distance between two captions on the line string. One unit is
+   * the width of the label caption.
    * <p>
    * 
    * @param gap
