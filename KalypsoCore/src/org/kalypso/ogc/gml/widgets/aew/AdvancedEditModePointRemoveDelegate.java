@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.widgets.aew;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,7 +104,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
-  private IAdvancedEditWidgetResult m_lastPossibleVertexPoint;
+  private IAdvancedEditWidgetResult[] m_lastPossibleVertexPoint;
 
   public AdvancedEditModePointRemoveDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
@@ -142,10 +143,13 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       }
       else
       {
-        m_lastPossibleVertexPoint = new AdvancedEditWidgetResult( underlying.getFeature(), findVertexPoint( underlying ) );
-        if( m_lastPossibleVertexPoint.getGeometry() != null )
+        final AdvancedEditWidgetResult vertexPoint = new AdvancedEditWidgetResult( underlying.getFeature(), findVertexPoint( underlying ) );
+        m_lastPossibleVertexPoint = findVertexPoints( mapGeometries, vertexPoint );
+
+        if( !ArrayUtils.isEmpty( m_lastPossibleVertexPoint ) )
         {
-          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint.getGeometry() }, REMOVABLE_VERTEX_POINT );
+          // drawing of one point is enough
+          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint[0].getGeometry() }, REMOVABLE_VERTEX_POINT );
         }
       }
 
@@ -155,6 +159,31 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
+  }
+
+  private IAdvancedEditWidgetResult[] findVertexPoints( final Map<Geometry, Feature> map, final AdvancedEditWidgetResult vertexPoint )
+  {
+    if( vertexPoint.getGeometry() == null )
+      return new IAdvancedEditWidgetResult[] {};
+
+    final List<IAdvancedEditWidgetResult> results = new ArrayList<IAdvancedEditWidgetResult>();
+
+    final Set<Entry<Geometry, Feature>> entries = map.entrySet();
+    for( final Entry<Geometry, Feature> entry : entries )
+    {
+      final Geometry geometry = entry.getKey();
+      if( geometry instanceof Polygon )
+      {
+        final Polygon polygon = (Polygon) geometry;
+        final LineString ring = polygon.getExteriorRing();
+        if( ring.contains( vertexPoint.getGeometry() ) )
+        {
+          results.add( new AdvancedEditWidgetResult( entry.getValue(), vertexPoint.getGeometry() ) );
+        }
+      }
+    }
+
+    return results.toArray( new IAdvancedEditWidgetResult[] {} );
   }
 
   private Point findVertexPoint( final IAdvancedEditWidgetGeometry underlying )
@@ -238,15 +267,25 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
   @Override
   public void leftReleased( final java.awt.Point p )
   {
-    if( m_lastPossibleVertexPoint != null && m_lastPossibleVertexPoint.getGeometry() != null )
+    if( ArrayUtils.isEmpty( m_lastPossibleVertexPoint ) )
+      return;
+
+    final Set<FeatureChange> changes = new HashSet<FeatureChange>();
+
+    for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoint )
     {
-      final Geometry geometry = m_provider.resolveJtsGeometry( m_lastPossibleVertexPoint.getFeature() );
+      if( result.getGeometry() == null )
+      {
+        continue;
+      }
+
+      final Geometry geometry = m_provider.resolveJtsGeometry( result.getFeature() );
       if( geometry instanceof Polygon )
       {
         try
         {
           final Polygon polygon = (Polygon) geometry;
-          final Point pDelete = (Point) m_lastPossibleVertexPoint.getGeometry();
+          final Point pDelete = (Point) result.getGeometry();
           final Coordinate delete = pDelete.getCoordinate();
 
           final List<Coordinate> myCoordinates = new ArrayList<Coordinate>();
@@ -255,9 +294,9 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
           final Coordinate[] coordinates = ring.getCoordinates();
           if( coordinates.length < 4 )
             return;
-          
+
           boolean closeRing = false;
-          for(int i = 0 ; i < coordinates.length; i++)
+          for( int i = 0; i < coordinates.length; i++ )
           {
             final Coordinate coordinate = coordinates[i];
             if( i == 0 && coordinate.equals( delete ) )
@@ -272,24 +311,36 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
 
             myCoordinates.add( coordinate );
           }
-          
+
           if( closeRing )
           {
             myCoordinates.add( myCoordinates.get( 0 ) );
           }
-          
+
           final GeometryFactory factory = new GeometryFactory( polygon.getPrecisionModel(), polygon.getSRID() );
           final LinearRing updatedRing = factory.createLinearRing( myCoordinates.toArray( new Coordinate[] {} ) );
           final Polygon updated = factory.createPolygon( updatedRing, new LinearRing[] {} );
 
-          final FeatureChange[] changes = m_provider.getAsFeatureChanges( new AdvancedEditWidgetResult( m_lastPossibleVertexPoint.getFeature(), updated ) );
-          m_provider.post( changes );
+          final FeatureChange[] myChanges = m_provider.getAsFeatureChanges( new AdvancedEditWidgetResult( result.getFeature(), updated ) );
+          for( final FeatureChange change : myChanges )
+          {
+            changes.add( change );
+          }
         }
         catch( final Exception e )
         {
           KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         }
       }
+    }
+
+    try
+    {
+      m_provider.post( changes.toArray( new FeatureChange[] {} ) );
+    }
+    catch( final Exception e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
