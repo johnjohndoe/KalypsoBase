@@ -159,13 +159,13 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
     final LineString ring = polygon.getExteriorRing();
     final double range = getRange();
 
-    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_LINE, range / 8 );
+    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_LINE, range / 32 );
 
     return snapped;
   }
 
   private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
-  {
+  {  
     final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
     for( final Entry<Geometry, Feature> entry : entries )
     {

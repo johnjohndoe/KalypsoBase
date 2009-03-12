@@ -203,7 +203,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
       switchMode();
     }
 
-    super.keyPressed( e );
+    super.keyReleased( e );
   }
 
   private void switchMode( )
