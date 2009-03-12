@@ -165,4 +165,13 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     return mySnapPoints.toArray( new IAdvancedEditWidgetSnappedPoint[] {} );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#getToolTip()
+   */
+  @Override
+  public String getToolTip( )
+  {
+    return "Editiermodus: Einzelnes verschieben";
+  }
+
 }

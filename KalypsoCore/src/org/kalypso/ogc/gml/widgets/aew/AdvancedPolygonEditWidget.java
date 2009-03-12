@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -61,24 +62,21 @@ import com.vividsolutions.jts.geom.Point;
  * @author Dirk Kuch
  */
 public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget implements IAdvancedEditWidget
-{ 
+{
   private enum EDIT_MODE
   {
-    eInsertPoint,
+    eMulti,
     eSingle,
-    eMulti;
+    ePointInsert,
+    ePointRemove;
   }
 
   private boolean m_leftMouseButtonPressed = false;
-  
+
   private EDIT_MODE m_mode = EDIT_MODE.eMulti;
 
-  private final AdvancedEditModeMultiDelegate m_delegateMulti;
+  Map<EDIT_MODE, IAdvancedEditWidgetDelegate> m_delegates = new HashMap<EDIT_MODE, IAdvancedEditWidgetDelegate>();
 
-  private final AdvancedEditModeSingleDelegate m_delegateSingle;
-  
-  private final AdvancedEditModePointsDelegate m_delegatePoints;
-  
   private Point m_originPoint = null;
 
   private IAdvancedEditWidgetSnappedPoint[] m_snappedPointsAtOrigin = null;
@@ -86,13 +84,20 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   private final IAdvancedEditWidgetDataProvider m_provider;
 
   public AdvancedPolygonEditWidget( final IAdvancedEditWidgetDataProvider provider )
-  { 
+  {
     super( "Editiere städtebauliche Elemente" );
     m_provider = provider;
 
-    m_delegateMulti = new AdvancedEditModeMultiDelegate( this, provider );
-    m_delegateSingle = new AdvancedEditModeSingleDelegate( this, provider );
-    m_delegatePoints = new AdvancedEditModePointsDelegate( this, provider );
+    m_delegates.put( EDIT_MODE.eMulti, new AdvancedEditModeMultiDelegate( this, provider ) );
+    m_delegates.put( EDIT_MODE.eSingle, new AdvancedEditModeSingleDelegate( this, provider ) );
+    m_delegates.put( EDIT_MODE.ePointInsert, new AdvancedEditModePointInsertDelegate( this, provider ) );
+    m_delegates.put( EDIT_MODE.ePointRemove, new AdvancedEditModePointRemoveDelegate( this, provider ) );
+
+  }
+
+  private IAdvancedEditWidgetDelegate getCurrentDelegate( )
+  {
+    return m_delegates.get( m_mode );
   }
 
   /**
@@ -103,20 +108,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   {
     paintToolTip( g );
 
-    if( EDIT_MODE.eMulti.equals( m_mode ) )
-    {
-      m_delegateMulti.paint( g );
-    }
-    else if( EDIT_MODE.eSingle.equals( m_mode ) )
-    {
-      m_delegateSingle.paint( g );
-    }
-    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
-    {
-      m_delegatePoints.paint( g );
-    }
-    
-    
+    getCurrentDelegate().paint( g );
   }
 
   /**
@@ -130,7 +122,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
       return;
 
     m_leftMouseButtonPressed = true;
-    
+
     try
     {
       m_originPoint = (Point) JTSAdapter.export( gmp );
@@ -141,17 +133,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
       // highlight detected feature points
       final Map<Geometry, Feature> mapGeometries = m_provider.resolveJtsGeometries( features );
-
-      if( EDIT_MODE.eMulti.equals( m_mode ) )
-      {
-        m_snappedPointsAtOrigin = m_delegateMulti.resolveSnapPoints( mapGeometries );
-      }
-      else if( EDIT_MODE.eSingle.equals( m_mode ) ) 
-      {
-        m_snappedPointsAtOrigin = m_delegateSingle.resolveSnapPoints( mapGeometries );
-      } 
-       
-      
+      m_snappedPointsAtOrigin = resolveSnapPoints( mapGeometries );
     }
     catch( final GM_Exception e )
     {
@@ -166,7 +148,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   public void leftReleased( final java.awt.Point p )
   {
     m_leftMouseButtonPressed = false;
-    
+
     m_originPoint = null;
     m_snappedPointsAtOrigin = null;
   }
@@ -177,14 +159,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public String getToolTip( )
   {
-    if( EDIT_MODE.eMulti.equals( m_mode ) )
-      return "Editiermodus: Gemeinsames verschieben";
-    else if( EDIT_MODE.eSingle.equals( m_mode ) )
-      return "Editiermodus: Einzelnes verschieben";
-    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
-      return "Editiermodus: Punkte einfügen / entfernen";
-    
-    return null;
+    return getCurrentDelegate().getToolTip();
   }
 
   /**
@@ -213,7 +188,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   {
     return getMapPanel();
   }
-  
+
   /**
    * Escape Key pressed? -> reset / deactivate widget
    * 
@@ -239,13 +214,17 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     }
     else if( EDIT_MODE.eSingle.equals( m_mode ) )
     {
-      m_mode = EDIT_MODE.eInsertPoint;
+      m_mode = EDIT_MODE.ePointInsert;
     }
-    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
+    else if( EDIT_MODE.ePointInsert.equals( m_mode ) )
+    {
+      m_mode = EDIT_MODE.ePointRemove;
+    }
+    else if( EDIT_MODE.ePointRemove.equals( m_mode ) )
     {
       m_mode = EDIT_MODE.eMulti;
     }
-     
+
     getMapPanel().repaintMap();
   }
 
@@ -256,5 +235,10 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   public boolean isLeftMouseButtonPressed( )
   {
     return m_leftMouseButtonPressed;
+  }
+
+  public IAdvancedEditWidgetSnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
+  {
+    return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getOriginPoint(), getCurrentDelegate().getRange() );
   }
 }

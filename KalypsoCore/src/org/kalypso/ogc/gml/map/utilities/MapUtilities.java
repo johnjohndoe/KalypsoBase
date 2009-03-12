@@ -137,61 +137,44 @@ public class MapUtilities
     final Geometry geometryJTS = JTSAdapter.export( geometry );
     final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
-    /* Buffer the point. */
-    final Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
+    final double buffer = MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx );
+    final com.vividsolutions.jts.geom.Point snapPoint = snap( geometryJTS, pointJTS, type, buffer );
+    if( snapPoint != null )
+    {
+      final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+      myPoint.setCoordinateSystem( point.getCoordinateSystem() );
 
+      return myPoint;
+    }
+
+    return null;
+  }
+
+  public static com.vividsolutions.jts.geom.Point snap( final Geometry geometryJTS, final com.vividsolutions.jts.geom.Point pointJTS, final SNAP_TYPE type, final double buffer )
+  {
+    /* Buffer the point. */
+    final Geometry pointBuffer = pointJTS.buffer( buffer );
     if( !pointBuffer.intersects( geometryJTS ) )
       return null;
 
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
-      if( snapPoint != null )
-      {
-        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
-        /**
-         * has no crs! see
-         *
-         * @link{JTSAdapter
-         */
-        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
-
-        return myPoint;
-      }
+     return snapPoint;
     }
     else if( geometryJTS instanceof LineString )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
-      if( snapPoint != null )
-      {
-        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
-        /**
-         * has no crs! see
-         *
-         * @link{JTSAdapter
-         */
-        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
-
-        return myPoint;
-      }
+      
+      return snapPoint;
     }
     else if( geometryJTS instanceof Polygon )
     {
       final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
-      if( snapPoint != null )
-      {
-        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
-        /**
-         * has no crs! see
-         *
-         * @link{JTSAdapter
-         */
-        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
-
-        return myPoint;
-      }
+     
+      return snapPoint;
     }
-
+    
     return null;
   }
 
@@ -451,7 +434,9 @@ public class MapUtilities
         /* Get the legend. */
         final Image legend = theme.getLegendGraphic( font );
         if( legend != null )
+        {
           legends.add( legend );
+        }
       }
       catch( final CoreException e )
       {

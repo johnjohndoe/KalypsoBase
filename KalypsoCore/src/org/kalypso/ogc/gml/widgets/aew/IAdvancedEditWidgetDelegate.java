@@ -98,4 +98,10 @@ public interface IAdvancedEditWidgetDelegate
   
   
   public void paint( final Graphics g );
+
+
+  public String getToolTip( );
+
+
+  public double getRange( );
 }
