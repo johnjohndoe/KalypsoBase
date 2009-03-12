@@ -164,7 +164,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
     final LineString ring = polygon.getExteriorRing();
     final double range = getRange();
 
-    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_POINT, range / 8 );
+    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_POINT, range / 32 );
 
     return snapped;
   }
