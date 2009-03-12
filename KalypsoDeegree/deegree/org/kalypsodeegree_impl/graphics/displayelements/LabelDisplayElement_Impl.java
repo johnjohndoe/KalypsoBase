@@ -1,39 +1,46 @@
-/** This file is part of kalypso/deegree.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * history:
- * 
- * Files in this package are originally taken from deegree and modified here
- * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
- * (e.g. OGC-web services), you should consider the latest version of deegree,
- * see http://www.deegree.org .
- *
- * all modifications are licensed as deegree, 
- * original copyright:
- *
- * Copyright (C) 2001 by:
- * EXSE, Department of Geography, University of Bonn
- * http://www.giub.uni-bonn.de/exse/
- * lat/lon GmbH
- * http://www.lat-lon.de
- */
-package org.kalypsodeegree_impl.graphics.displayelements;
+/*----------------    FILE HEADER  ------------------------------------------
+
+This file is part of deegree.
+Copyright (C) 2001 by:
+EXSE, Department of Geography, University of Bonn
+http://www.giub.uni-bonn.de/exse/
+lat/lon Fitzke/Fretter/Poth GbR
+http://www.lat-lon.de
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Contact:
+
+Andreas Poth
+lat/lon Fitzke/Fretter/Poth GbR
+Meckenheimer Allee 176
+53115 Bonn
+Germany
+E-Mail: poth@lat-lon.de
+
+Jens Fitzke
+Department of Geography
+University of Bonn
+Meckenheimer Allee 166
+53115 Bonn
+Germany
+E-Mail: jens.fitzke@uni-bonn.de
+
+                 
+ ---------------------------------------------------------------------------*/
+package org.deegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,172 +48,146 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypsodeegree.graphics.displayelements.Label;
-import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
-import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import org.deegree.graphics.displayelements.Label;
+import org.deegree.graphics.displayelements.LabelDisplayElement;
+import org.deegree.graphics.sld.ParameterValueType;
+import org.deegree.graphics.sld.TextSymbolizer;
+import org.deegree.graphics.transformation.GeoTransform;
+import org.deegree.model.feature.Feature;
+import org.deegree.model.geometry.GM_Object;
 
 /**
- * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt> (geometry), a <tt>ParameterValueType</tt>
- * (caption) and a <tt>TextSymbolizer</tt> (style).
+ * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt> (geometry), a
+ * <tt>ParameterValueType</tt> (caption) and a <tt>TextSymbolizer</tt> (style).
  * <p>
- * The graphical (say: screen) representations of this <tt>DisplayElement</tt> are <tt>Label</tt> -instances. These
- * are generated either when the <tt>paint</tt> -method is called or assigned externally using the <tt>setLabels</tt>-
- * or <tt>addLabels</tt> -methods.
+ * The graphical (say: screen) representations of this <tt>DisplayElement</tt>
+ * are <tt>Label</tt>-instances. These are generated either when the
+ * <tt>paint</tt>-method is called or assigned externally using the
+ * <tt>setLabels</tt>- or <tt>addLabels</tt>-methods.  
  * <p>
- * 
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
- * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth</a>
+ * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
  * @version $Revision$ $Date$
  */
-public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements LabelDisplayElement, Serializable
-{
+public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl 
+	implements LabelDisplayElement, Serializable {
 
-  /** Use serialVersionUID for interoperability. */
-  private final static long serialVersionUID = -7870967255670858503L;
+    /** Use serialVersionUID for interoperability. */
+    private final static long serialVersionUID = -7870967255670858503L;
 
-  private ParameterValueType m_label = null;
-
-  // null means that the labels have to be created inside the paint-method
-  // (and have not been set externally)
-  private ArrayList<Label> m_labels = null;
-
-  /**
-   * Creates a new LabelDisplayElement_Impl object.
-   * <p>
-   * 
-   * @param feature
-   *            associated <tt>Feature</tt>
-   * @param geometry
-   *            associated <tt>GM_Object</tt>
-   * @param symbolizer
-   *            associated <tt>TextSymbolizer</tt>
-   */
-  LabelDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final TextSymbolizer symbolizer )
-  {
-    super( feature, geometry, symbolizer );
-    setLabel( symbolizer.getLabel() );
-  }
-
-  /**
-   * Sets the caption of the label.
-   */
-  public void setLabel( final ParameterValueType label )
-  {
-    this.m_label = label;
-  }
-
-  /**
-   * Returns the caption of the label as <tt>ParameterValueType<tt>.
-   */
-  public ParameterValueType getLabel( )
-  {
-    return m_label;
-  }
-
-  /**
-   * Renders the <tt>DisplayElement</tt> to the submitted graphic context. If the <tt>Label</tt> -represenations
-   * have been assigned externally, these labels are used, else <tt>Label</tt> -instances are created automatically
-   * using the <tt>LabelFactory</tt>.
-   * <p>
-   * 
-   * @param g
-   *            <tt>Graphics</tt> context to be used
-   * @param projection
-   *            <tt>GeoTransform</tt> to be used
-   */
-  @Override
-  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
-  {
-    if( m_label == null )
-      return;
-    final Graphics2D g2D = (Graphics2D) g;
-
-    if( m_labels == null )
-    {
-      try
-      {
-        setLabels( LabelFactory.createLabels( this, projection, g2D ) );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+    private ParameterValueType label = null;
+    
+	// null means that the labels have to be created inside the paint-method
+	// (and have not been set externally)
+	private ArrayList labels = null;
+    
+    /**
+     * Creates a new LabelDisplayElement_Impl object.
+     * <p>
+     * @param feature associated <tt>Feature</tt>
+     * @param geometry associated <tt>GM_Object</tt>
+     * @param symbolizer associated <tt>TextSymbolizer</tt>
+     */
+    LabelDisplayElement_Impl( Feature feature, GM_Object geometry, TextSymbolizer symbolizer ) {
+        super( feature, geometry, symbolizer );
+        setLabel( symbolizer.getLabel() );
     }
 
-    // paint all labels
-    if( m_labels != null )
-    {
-      final Iterator<Label> it = m_labels.iterator();
-      while( it.hasNext() )
-      {
-        it.next().paint( g2D );
-      }
+    /**
+     * Sets the caption of the label.
+     */
+    public void setLabel( ParameterValueType label ) {
+        this.label = label;
     }
-    // mark the labels as unset (for the next paint-call)
-    m_labels = null;
-  }
 
-  /**
-   * Returns whether the <tt>DisplayElement</tt> should be painted at the current scale or not.
-   */
-  @Override
-  public boolean doesScaleConstraintApply( final double scale )
-  {
-    final Symbolizer symbolizer = getSymbolizer();
-    return (symbolizer.getMinScaleDenominator() <= scale) && (symbolizer.getMaxScaleDenominator() > scale);
-  }
-
-  /**
-   * Removes all <tt>Label<tt> representations for this
-   * <tt>LabelDisplayElement</tt>.
-   */
-  public void clearLabels( )
-  {
-    m_labels = null;
-  }
-
-  /**
-   * Adds a <tt>Label<tt> representation that is to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  public void addLabel( final Label label )
-  {
-    if( m_labels == null )
-    {
-      m_labels = new ArrayList<Label>( 100 );
+    /**
+     * Returns the caption of the label as <tt>ParameterValueType<tt>.
+     */
+    public ParameterValueType getLabel() {
+        return label;
     }
-    m_labels.add( label );
-  }
+	
+    /**
+     * Renders the <tt>DisplayElement</tt> to the submitted graphic context.
+     * If the <tt>Label</tt>-represenations have been assigned externally,
+     * these labels are used, else <tt>Label</tt>-instances are created
+     * automatically using the <tt>LabelFactory</tt>.
+     * <p>
+     * @param g <tt>Graphics</tt> context to be used
+     * @param projection <tt>GeoTransform</tt> to be used
+     */
+    public void paint( Graphics g, GeoTransform projection ) {
 
-  /**
-   * Adds <tt>Label<tt> representations that are to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  public void addLabels( final Label[] labels )
-  {
-    if( m_labels == null )
-      m_labels = new ArrayList<Label>( 100 );
+    	if (label == null) return;
+    	Graphics2D g2D = (Graphics2D) g;
 
-    for( final Label element : labels )
-      m_labels.add( element );
-  }
+		if (labels == null) {
+			try {
+				setLabels ( LabelFactory.createLabels (this, projection, g2D) );
+			} catch (Exception e) {
+				e.printStackTrace ();
+			}
+		}
 
-  /**
-   * Sets the <tt>Label<tt> representations that are to be considered when
-   * the <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  public void setLabels( final Label[] labels )
-  {
-    m_labels = new ArrayList<Label>( 100 );
-    for( final Label element : labels )
-    {
-      this.m_labels.add( element );
+		// paint all labels
+		Iterator it = labels.iterator ();
+		while (it.hasNext ()) {
+			((Label) it.next ()).paint (g2D);
+		}
+
+		// mark the labels as unset (for the next paint-call)
+		labels = null;
     }
-  }
+
+    /**
+     * Returns whether the <tt>DisplayElement</tt> should be painted at the
+     * current scale or not.
+     */
+    public boolean doesScaleConstraintApply( double scale ) {
+        return ( symbolizer.getMinScaleDenominator() <= scale ) && 
+               ( symbolizer.getMaxScaleDenominator() > scale );
+    }
+
+	/**
+	 * Removes all <tt>Label<tt> representations for this
+	 * <tt>LabelDisplayElement</tt>.
+	 */
+	public void clearLabels () {
+		labels = null;
+	}
+
+	/**
+	 * Adds a <tt>Label<tt> representation that is to be considered when the
+	 * <tt>LabelDisplayElement</tt> is painted to the view.
+	 */
+	public void addLabel (Label label) {
+		if (labels == null) {
+			labels = new ArrayList (100);
+		}
+		labels.add (label);
+	}
+
+	/**
+	 * Adds <tt>Label<tt> representations that are to be considered when the
+	 * <tt>LabelDisplayElement</tt> is painted to the view.
+	 */
+	public void addLabels (Label [] labels) {
+		if (this.labels == null) {
+			this.labels = new ArrayList (100);
+		}
+		for (int i = 0; i < labels.length; i++) {
+			this.labels.add (labels [i]);
+		}
+	}
+
+	/**
+	 * Sets the <tt>Label<tt> representations that are to be considered when
+	 * the <tt>LabelDisplayElement</tt> is painted to the view.
+	 */
+	public void setLabels (Label [] labels) {
+		this.labels = new ArrayList (100);
+		for (int i = 0; i < labels.length; i++) {
+			this.labels.add (labels [i]);
+		}		    
+	}
 }
