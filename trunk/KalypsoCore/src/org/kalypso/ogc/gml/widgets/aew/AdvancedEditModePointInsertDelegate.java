@@ -42,6 +42,9 @@ package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -50,7 +53,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
@@ -60,8 +65,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -92,7 +100,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
-  private IAdvancedEditWidgetResult m_lastPossibleVertexPoint;
+  private IAdvancedEditWidgetResult[] m_lastPossibleVertexPoints;
 
   public AdvancedEditModePointInsertDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
@@ -127,15 +135,26 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       final IAdvancedEditWidgetGeometry underlying = findUnderlyingGeometry( mapGeometries, jtsPoint );
       if( underlying == null )
       {
-        m_lastPossibleVertexPoint = null;
+        m_lastPossibleVertexPoints = null;
       }
       else
       {
-        m_lastPossibleVertexPoint = new AdvancedEditWidgetResult( underlying.getFeature(), findPossibleVertexPointOnEdge( underlying ) );
-        if( m_lastPossibleVertexPoint.getGeometry() != null )
+        final AdvancedEditWidgetResult possible = new AdvancedEditWidgetResult( underlying.getFeature(), findPossibleVertexPointOnEdge( underlying ) );
+        m_lastPossibleVertexPoints = findPossibleVertexPointsOnEdges( mapGeometries, possible );
+
+        if( !ArrayUtils.isEmpty( m_lastPossibleVertexPoints ) )
         {
-          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint.getGeometry() }, POSSIBLE_VERTEX_POINT );
+          // drawing of one point is enough
+          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoints[0].getGeometry() }, POSSIBLE_VERTEX_POINT );
         }
+
+// /* debug */
+// for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoints )
+// {
+// final Polygon geometry = (Polygon) m_provider.resolveJtsGeometry( result.getFeature());
+// GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, geometry, new Color( 255, 255, 255 ), new Color( 0xa3, 0xc3,
+        // 0xc9, 0x80 ) );
+// }
       }
 
     }
@@ -144,6 +163,42 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
+  }
+
+  private IAdvancedEditWidgetResult[] findPossibleVertexPointsOnEdges( final Map<Geometry, Feature> map, final IAdvancedEditWidgetResult possible )
+  {
+    if( !(possible.getGeometry() instanceof Point) )
+      return new IAdvancedEditWidgetResult[] {};
+
+    final Point snapped = (Point) possible.getGeometry();
+
+    final Set<IAdvancedEditWidgetResult> results = new HashSet<IAdvancedEditWidgetResult>();
+
+    final Set<Entry<Geometry, Feature>> entries = map.entrySet();
+    for( final Entry<Geometry, Feature> entry : entries )
+    {
+      final Geometry geometry = entry.getKey();
+      if( !(geometry instanceof Polygon) )
+      {
+        continue;
+      }
+
+      final double range = getRange();
+
+      final Polygon polygon = (Polygon) geometry;
+      final LineString ring = polygon.getExteriorRing();
+
+      final Point resnapped = MapUtilities.snap( ring, snapped, SNAP_TYPE.SNAP_TO_LINE, range / 32 );
+      if( resnapped != null )
+      {
+        // System.out.println( String.format( "distance %f", resnapped.distance( snapped ) ) );
+        
+        // add old snap point!
+        results.add( new AdvancedEditWidgetResult( entry.getValue(), snapped ) );
+      }
+    }
+
+    return results.toArray( new IAdvancedEditWidgetResult[] {} );
   }
 
   private Point findPossibleVertexPointOnEdge( final IAdvancedEditWidgetGeometry underlying )
@@ -165,7 +220,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   }
 
   private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
-  {  
+  {
     final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
     for( final Entry<Geometry, Feature> entry : entries )
     {
@@ -227,7 +282,65 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   @Override
   public void leftReleased( final java.awt.Point p )
   {
-    throw new NotImplementedException();
+    if( ArrayUtils.isEmpty( m_lastPossibleVertexPoints ) )
+      return;
+
+    final Set<FeatureChange> changes = new HashSet<FeatureChange>();
+
+    for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoints )
+    {
+      if( result.getGeometry() == null )
+      {
+        continue;
+      }
+
+      final Geometry geometry = m_provider.resolveJtsGeometry( result.getFeature() );
+      if( geometry instanceof Polygon )
+      {
+        try
+        {
+          final Polygon polygon = (Polygon) geometry;
+          final LineString ring = polygon.getExteriorRing();
+
+          final Point add = (Point) result.getGeometry();
+          final List<Point> points = new ArrayList<Point>();
+          points.add( add );
+
+          final GeometryFactory factory = new GeometryFactory( polygon.getPrecisionModel(), polygon.getSRID() );
+
+          Coordinate[] coordinates = ring.getCoordinates();
+          /* linear ring is closed | line string is not */
+// coordinates = (Coordinate[]) ArrayUtils.remove( coordinates, coordinates.length - 1 );
+          final LineString lineString = factory.createLineString( coordinates );
+
+          final LineString resultLineString = JTSUtilities.addPointsToLine( lineString, points );
+          coordinates = resultLineString.getCoordinates();
+// coordinates = (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] ); // close linear ring
+
+          final LinearRing updatedRing = factory.createLinearRing( coordinates );
+          final Polygon updated = factory.createPolygon( updatedRing, new LinearRing[] {} );
+
+          final FeatureChange[] myChanges = m_provider.getAsFeatureChanges( new AdvancedEditWidgetResult( result.getFeature(), updated ) );
+          for( final FeatureChange change : myChanges )
+          {
+            changes.add( change );
+          }
+        }
+        catch( final Exception e )
+        {
+          KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+    }
+
+    try
+    {
+      m_provider.post( changes.toArray( new FeatureChange[] {} ) );
+    }
+    catch( final Exception e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
 }
