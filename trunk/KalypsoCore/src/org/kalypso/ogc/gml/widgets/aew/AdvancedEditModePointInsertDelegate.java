@@ -92,7 +92,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
-  private Point m_lastPossibleVertexPoint;
+  private IAdvancedEditWidgetResult m_lastPossibleVertexPoint;
 
   public AdvancedEditModePointInsertDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
@@ -131,10 +131,10 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       }
       else
       {
-        m_lastPossibleVertexPoint = findPossibleVertexPointOnEdge( underlying );
-        if( m_lastPossibleVertexPoint != null )
+        m_lastPossibleVertexPoint = new AdvancedEditWidgetResult( underlying.getFeature(), findPossibleVertexPointOnEdge( underlying ) );
+        if( m_lastPossibleVertexPoint.getGeometry() != null )
         {
-          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint }, POSSIBLE_VERTEX_POINT );
+          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint.getGeometry() }, POSSIBLE_VERTEX_POINT );
         }
       }
 
@@ -219,6 +219,15 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   public String getToolTip( )
   {
     return "Editiermodus: Punkte einfügen";
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#leftReleased(java.awt.Point)
+   */
+  @Override
+  public void leftReleased( final java.awt.Point p )
+  {
+    throw new NotImplementedException();
   }
 
 }

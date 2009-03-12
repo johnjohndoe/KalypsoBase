@@ -174,4 +174,5 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     return "Editiermodus: Einzelnes verschieben";
   }
 
+
 }

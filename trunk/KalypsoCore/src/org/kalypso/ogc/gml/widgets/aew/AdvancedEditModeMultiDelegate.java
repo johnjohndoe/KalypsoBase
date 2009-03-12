@@ -80,7 +80,6 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     try
     {
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
-
       final IAdvancedEditWidgetSnappedPoint[] snappedPoints;
 
       if( getWidget().isLeftMouseButtonPressed() )
@@ -175,5 +174,6 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
   {
     return "Editiermodus: Gemeinsames verschieben";
   }
+
 
 }

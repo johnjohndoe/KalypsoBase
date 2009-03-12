@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -51,6 +53,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
@@ -60,8 +63,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -77,7 +83,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
     Color cVertex = new Color( 0xec, 0x44, 0x4a );
 
     Color cWhite = new Color( 0xFF, 0xFF, 0xFF );
-    
+
     final int size = 14;
 
     @Override
@@ -88,7 +94,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
       g.setColor( cWhite );
       g.fillOval( point.x - size / 2 + 3, point.y - size / 2 + 3, size - 6, size - 6 );
-      
+
       g.setColor( original );
     }
   };
@@ -97,7 +103,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
-  private Point m_lastPossibleVertexPoint;
+  private IAdvancedEditWidgetResult m_lastPossibleVertexPoint;
 
   public AdvancedEditModePointRemoveDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
@@ -136,10 +142,10 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       }
       else
       {
-        m_lastPossibleVertexPoint = findVertexPoint( underlying );
-        if( m_lastPossibleVertexPoint != null )
+        m_lastPossibleVertexPoint = new AdvancedEditWidgetResult( underlying.getFeature(), findVertexPoint( underlying ) );
+        if( m_lastPossibleVertexPoint.getGeometry() != null )
         {
-          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint }, REMOVABLE_VERTEX_POINT );
+          GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoint.getGeometry() }, REMOVABLE_VERTEX_POINT );
         }
       }
 
@@ -224,6 +230,67 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
   public String getToolTip( )
   {
     return "Editiermodus: Punkte entfernen";
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#leftReleased(java.awt.Point)
+   */
+  @Override
+  public void leftReleased( final java.awt.Point p )
+  {
+    if( m_lastPossibleVertexPoint != null && m_lastPossibleVertexPoint.getGeometry() != null )
+    {
+      final Geometry geometry = m_provider.resolveJtsGeometry( m_lastPossibleVertexPoint.getFeature() );
+      if( geometry instanceof Polygon )
+      {
+        try
+        {
+          final Polygon polygon = (Polygon) geometry;
+          final Point pDelete = (Point) m_lastPossibleVertexPoint.getGeometry();
+          final Coordinate delete = pDelete.getCoordinate();
+
+          final List<Coordinate> myCoordinates = new ArrayList<Coordinate>();
+
+          final LineString ring = polygon.getExteriorRing();
+          final Coordinate[] coordinates = ring.getCoordinates();
+          if( coordinates.length < 4 )
+            return;
+          
+          boolean closeRing = false;
+          for(int i = 0 ; i < coordinates.length; i++)
+          {
+            final Coordinate coordinate = coordinates[i];
+            if( i == 0 && coordinate.equals( delete ) )
+            {
+              closeRing = true;
+              continue;
+            }
+            else if( coordinate.equals( delete ) )
+            {
+              continue;
+            }
+
+            myCoordinates.add( coordinate );
+          }
+          
+          if( closeRing )
+          {
+            myCoordinates.add( myCoordinates.get( 0 ) );
+          }
+          
+          final GeometryFactory factory = new GeometryFactory( polygon.getPrecisionModel(), polygon.getSRID() );
+          final LinearRing updatedRing = factory.createLinearRing( myCoordinates.toArray( new Coordinate[] {} ) );
+          final Polygon updated = factory.createPolygon( updatedRing, new LinearRing[] {} );
+
+          final FeatureChange[] changes = m_provider.getAsFeatureChanges( new AdvancedEditWidgetResult( m_lastPossibleVertexPoint.getFeature(), updated ) );
+          m_provider.post( changes );
+        }
+        catch( final Exception e )
+        {
+          KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+    }
   }
 
 }

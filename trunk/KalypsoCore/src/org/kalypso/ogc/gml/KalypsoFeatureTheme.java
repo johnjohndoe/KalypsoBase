@@ -151,7 +151,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Set<KalypsoUserStyle> set = m_styleMap.keySet();
     final KalypsoUserStyle[] styles = set.toArray( new KalypsoUserStyle[set.size()] );
     for( final KalypsoUserStyle element : styles )
+    {
       removeStyle( element );
+    }
 
     if( m_workspace != null )
     {
@@ -160,7 +162,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     if( m_featureThemeIcon != null )
+    {
       m_featureThemeIcon.dispose();
+    }
 
     super.dispose();
   }
@@ -228,7 +232,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     paint( scale, bbox, selected, monitor, paintDelegate );
 
     if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
+    {
       m_featureList.paint( g, p );
+    }
   }
 
   /**
@@ -245,7 +251,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final KalypsoUserStyle style : m_styleMap.keySet() )
     {
       if( style.isUsedForSelection() )
+      {
         hasSelectionStyle = true;
+      }
     }
 
     if( hasSelectionStyle )
@@ -281,9 +289,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final Entry<KalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
     {
       if( entry.getKey().isUsedForSelection() )
+      {
         selectionStyles.add( entry.getValue() );
+      }
       else
+      {
         normalStyles.add( entry.getValue() );
+      }
     }
 
     /* If no selection style is present, we will paint with old HighlightGraphics stuff, so return normal styles. */
@@ -340,11 +352,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
         // Optimise: i think it is faster to restyle all than to find and
         // exchange so many display elements
+        // FIXME: we should always check if we are responsible for thechanged features
         if( features.length > m_featureList.size() / 5 )
+        {
           setDirty();
+        }
         else
+        {
           for( final Feature feature : features )
+          {
             restyleFeature( feature );
+          }
+        }
       }
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
       {
@@ -371,21 +390,23 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
     }
     else
+    {
       // unknown event, set dirty
       // TODO : if the event-hierarchy is implemented correctly the else-part can be removed
       setDirty();
+    }
   }
 
   private void restyleFeature( final Feature feature )
   {
     // my feature ?
     // FIXME: SLOW!! This is a major performance bug
-    if( !m_featureList.contains( feature ) )
-      return;
-
-    // TODO: invalidation should made via the screen-rectangle of this feature
-    // depending on the styled geometry
-    fireRepaintRequested( feature.getEnvelope() );
+    if( m_featureList.contains( feature ) || m_featureList.contains( feature.getId() ) )
+    {
+      // TODO: invalidation should made via the screen-rectangle of this feature
+      // depending on the styled geometry
+      fireRepaintRequested( feature.getEnvelope() );
+    }
   }
 
   /**
@@ -423,7 +444,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final Feature feature = displayElement.getFeature();
         final GM_Envelope envelope = feature.getEnvelope();
         if( envelope != null && env.intersects( envelope ) )
+        {
           features.add( feature );
+        }
       }
     };
 
@@ -433,7 +456,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       final KalypsoUserStyle style = entry.getKey();
       if( style.isUsedForSelection() )
+      {
         continue;
+      }
 
       final UserStylePainter stylePainter = entry.getValue();
 
@@ -470,7 +495,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       e.printStackTrace();
     }
     if( runnable != null )
+    {
       runnable.run();
+    }
   }
 
   /**
@@ -496,7 +523,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_featureThemeIcon == null )
+    {
       m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) ); //$NON-NLS-1$
+    }
 
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
@@ -521,7 +550,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // We do not show selection-styles
       // TODO: optinally...
       if( !kus.isUsedForSelection() )
+      {
         treeObjects.add( new UserStyleTreeObject( this, kus ) );
+      }
     }
 
     return treeObjects.toArray( new UserStyleTreeObject[treeObjects.size()] );
