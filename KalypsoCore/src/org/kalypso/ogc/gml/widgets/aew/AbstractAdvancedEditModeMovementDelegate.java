@@ -47,7 +47,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.widgets.aew.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,7 +63,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvancedEditWidgetDelegate
 {
@@ -73,12 +78,20 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
+  private IAdvancedEditWidgetResult[] m_results;
+
   public AbstractAdvancedEditModeMovementDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
     m_widget = widget;
     m_provider = provider;
   }
 
+  protected IAdvancedEditWidgetResult[] getResults( )
+  {
+    return m_results;
+  }
+  
+  
   protected IAdvancedEditWidget getWidget( )
   {
     return m_widget;
@@ -91,7 +104,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 
   protected void displayUpdateGeometry( final Graphics g, final Map<Feature, IAdvancedEditWidgetSnappedPoint[]> map, final Point vector )
   {
-    final Set<Polygon> results = new HashSet<Polygon>();
+    final Set<IAdvancedEditWidgetResult> results = new HashSet<IAdvancedEditWidgetResult>();
 
     final Set<Entry<Feature, IAdvancedEditWidgetSnappedPoint[]>> entries = map.entrySet();
     for( final Entry<Feature, IAdvancedEditWidgetSnappedPoint[]> entry : entries )
@@ -112,7 +125,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
         final Point moved = point.getMovedPoint( vector );
 
         final Polygon result = AdvancedEditWidgetHelper.resolveResultPolygon( polygon, indexCurrent, moved );
-        results.add( result );
+        results.add( new AdvancedEditWidgetResult( feature, result ) );
       }
       else if( geometry instanceof Polygon && points.length > 1 )
       {
@@ -128,24 +141,30 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
         final int indexNext = AdvancedEditWidgetHelper.resolveNeighbor( ring, ring.getPointN( indexLast ), indexLast, DIRECTION.eForward );
 
         final Polygon result = AdvancedEditWidgetHelper.resolveResultPolygon( polygon, indexPrevious, indexNext, vector );
-        results.add( result );
+        results.add( new AdvancedEditWidgetResult( feature, result ) );
       }
       else
         throw new NotImplementedException();
     }
 
-    final Polygon[] polygons = results.toArray( new Polygon[] {} );
-    final boolean valid = validResults( polygons );
+    m_results = results.toArray( new IAdvancedEditWidgetResult[] {} );
+    final boolean valid = validResults( m_results );
 
     final Color fillColor = valid ? POLYGON_FILL_VALID : POLYGON_FILL_INVALID;
-    GeometryPainter.drawPolygons( m_widget.getIMapPanel(), g, polygons, POLYGON_BORDER, fillColor );
-
+    for( final IAdvancedEditWidgetResult result : m_results )
+    {
+      GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, (Polygon) result.getGeometry(), POLYGON_BORDER, fillColor );
+    }
   }
 
-  private boolean validResults( final Polygon[] polygons )
+  protected boolean validResults( final IAdvancedEditWidgetResult[] polygons )
   {
-    for( final Polygon polygon : polygons )
+    if( ArrayUtils.isEmpty( polygons ) )
+      return false;
+    
+    for( final IAdvancedEditWidgetResult result : polygons )
     {
+      final Polygon polygon = (Polygon) result.getGeometry();
       if( !polygon.isSimple() )
         return false;
 
@@ -181,5 +200,42 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 
     return range;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#leftReleased(java.awt.Point)
+   */
+  @Override
+  public void leftReleased( final java.awt.Point point )
+  {
+    if( validResults( m_results ) )
+    {
+      final Set<FeatureChange> changes = new HashSet<FeatureChange>();
+      for( final IAdvancedEditWidgetResult result : m_results )
+      {
+        try
+        {
+        final FeatureChange[] myChanges = m_provider.getAsFeatureChanges( result );
+        for( final FeatureChange change : myChanges )
+        {
+          changes.add( change );
+        }
+        }
+        catch( final CoreException e )
+        {
+          KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+
+      try
+      {
+        m_provider.post( changes.toArray( new FeatureChange[] {} ) );
+      }
+      catch( final Exception e )
+      {
+        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+  }
+
 
 }

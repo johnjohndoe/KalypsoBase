@@ -40,33 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets.aew;
 
-import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedEditWidgetDataProvider
+public interface IAdvancedEditWidgetResult
 {
 
-  /**
-   * @return features in range of point
-   */
-  Feature[] query( GM_Point point, double range ) throws GM_Exception;
+  Feature getFeature( );
 
-  Map<Geometry, Feature> resolveJtsGeometries( Feature[] features );
-
-  Geometry resolveJtsGeometry( Feature feature );
-
-  FeatureChange[] getAsFeatureChanges( IAdvancedEditWidgetResult result ) throws CoreException; 
- 
-  void post( FeatureChange[] array ) throws Exception;
-
+  Geometry getGeometry( );
 }

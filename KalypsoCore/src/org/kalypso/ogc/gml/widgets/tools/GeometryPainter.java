@@ -182,7 +182,7 @@ public class GeometryPainter
     }
   }
 
-  private static void drawPolygon( final IMapPanel mapPanel, final Graphics g, final Polygon polygon, final Color border, final Color fill )
+  public static void drawPolygon( final IMapPanel mapPanel, final Graphics g, final Polygon polygon, final Color border, final Color fill )
   {
     final LineString ring = polygon.getExteriorRing();
     int[] x = new int[] {};

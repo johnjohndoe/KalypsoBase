@@ -147,6 +147,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public void leftReleased( final java.awt.Point p )
   {
+    getCurrentDelegate().leftReleased( p );
+    
     m_leftMouseButtonPressed = false;
 
     m_originPoint = null;
@@ -159,7 +161,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public String getToolTip( )
   {
-    return getCurrentDelegate().getToolTip();
+    return String.format( "%s <SPACE>", getCurrentDelegate().getToolTip() );
   }
 
   /**

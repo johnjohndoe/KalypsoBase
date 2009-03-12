@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import org.kalypso.ogc.gml.widgets.tools.IPointHighLighter;
 
@@ -99,9 +100,9 @@ public interface IAdvancedEditWidgetDelegate
   
   public void paint( final Graphics g );
 
-
   public String getToolTip( );
 
-
   public double getRange( );
+
+  public void leftReleased( Point p );
 }
