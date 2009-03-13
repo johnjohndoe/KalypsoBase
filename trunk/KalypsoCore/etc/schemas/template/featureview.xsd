@@ -108,7 +108,7 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="fv:compositeType">
-					<xs:attribute name="text" type="xs:string" use="required" />
+					<xs:attribute name="text" type="xs:string" use="optional" />
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

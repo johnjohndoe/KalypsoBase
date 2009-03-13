@@ -125,7 +125,7 @@ public class AnnotationUtilities
   /**
    * Create an IAnnotation from an xsd-annotation element.
    * <p>
-   * All inner elements from the dcoument element are regarded as annotations.
+   * All inner elements from the document element are regarded as annotations.
    * </p>
    *
    * @param createDefaultAnnotation
