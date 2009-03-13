@@ -94,13 +94,11 @@ public class GeometryPainter
         KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-
   }
 
   private static Point[] findPointsInRange( final Geometry[] geometries, final Point base, final double radius )
   {
     final Set<Point> points = new HashSet<Point>();
-
     for( final Geometry geometry : geometries )
     {
       if( geometry instanceof Polygon )
@@ -133,6 +131,24 @@ public class GeometryPainter
         else if( point.distance( base ) <= radius )
         {
           points.add( point );
+        }
+      }
+      else if( geometry instanceof LineString )
+      {
+        final LineString lineString = (LineString) geometry;
+
+        for( int i = 0; i < lineString.getNumPoints(); i++ )
+        {
+          final Point point = lineString.getPointN( i );
+
+          if( base == null )
+          {
+            points.add( point );
+          }
+          else if( point.distance( base ) <= radius )
+          {
+            points.add( point );
+          }
         }
       }
       else

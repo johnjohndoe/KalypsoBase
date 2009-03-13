@@ -153,6 +153,7 @@ public final class KeyInfo extends Job implements ILoaderListener
         }
         else
         {
+          // TODO: better would be to cancel any old job and always start a new one
           if( getState() == Job.NONE )
           {
             schedule();
