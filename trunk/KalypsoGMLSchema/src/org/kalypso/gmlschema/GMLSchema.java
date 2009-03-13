@@ -215,7 +215,9 @@ public class GMLSchema implements IGMLSchema
         {
           final URL schemaLocationURL;
           if( schemaLocation == null )
+          {
             schemaLocationURL = null;
+          }
           else
           {
             // this may throw an MalformedURLException, but this is ok
@@ -223,12 +225,18 @@ public class GMLSchema implements IGMLSchema
             schemaLocationURL = m_urlResolver.resolveURL( m_context, schemaLocation );
           }
 
-          // always try to load with schemaLocation if present
           final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          final GMLSchema gmlSchema = schemaCatalog.getSchema( namespaceToImport, getGMLVersion(), schemaLocationURL );
-
+          GMLSchema gmlSchema = schemaCatalog.getSchema( namespaceToImport, getGMLVersion(), null );
+          if( gmlSchema == null )
+          {
+            gmlSchema = GMLSchemaFactory.createGMLSchema( getGMLVersion(), schemaLocationURL );
+          // TODO: handle schema from location separately
+          }
+          
           if( gmlSchema != null )
+          {
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
+          }
           else
             throw new GMLSchemaException( "Could not import schema: " + namespaceToImport + " with schemalocation: " + schemaLocation );
         }
@@ -253,7 +261,9 @@ public class GMLSchema implements IGMLSchema
     {
       /* unpack exception if inside InvocationTargetException */
       if( e instanceof InvocationTargetException )
+      {
         e = ((InvocationTargetException) e).getTargetException();
+      }
 
       if( e instanceof GMLSchemaException )
         throw (GMLSchemaException) e;
@@ -270,7 +280,6 @@ public class GMLSchema implements IGMLSchema
     final GMLSchema gmlschema = getGMLSchemaForNamespaceURI( namespaceURI );
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
-    {
       // TODO: move to caller
 // if( Debug.traceSchemaParsing() )
 // {
@@ -279,7 +288,6 @@ public class GMLSchema implements IGMLSchema
 // KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
 // }
       return null;
-    }
     return gmlschema.resolveElementReference( qName );
   }
 
@@ -374,7 +382,9 @@ public class GMLSchema implements IGMLSchema
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
       final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, getGMLVersion() );
       if( schema != null )
+      {
         m_additionalSchemas.put( namespaceURI, schema );
+      }
 
       // REAMRK: we load schemas here, which are not known as imported schemes
       // They are probably used by the gml instance via substitution
@@ -556,9 +566,13 @@ public class GMLSchema implements IGMLSchema
     {
       schemasToIgnore.add( this );
       for( final GMLSchema schema : getImports() )
+      {
         schema.innerAccept( visitor, schemasToIgnore );
+      }
       for( final GMLSchema schema : getAdditionalSchemas() )
+      {
         schema.innerAccept( visitor, schemasToIgnore );
+      }
     }
   }
 
