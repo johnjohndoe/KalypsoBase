@@ -107,6 +107,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   private final String m_featurePath;
 
   /**
+   * (Crude) hack: remember that we only have a (syntetic) list of only one feature.<br>
+   * Fixes the problem, that single features do not correctly get updated.
+   */
+  private boolean m_isSingleFeature = false;
+
+  /**
    * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
    */
   private Image m_featureThemeIcon;
@@ -133,6 +139,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_featureList = new SplitSort( parent, singleFeature.getParentRelation() );
       m_featureList.add( singleFeature );
       m_featureType = singleFeature.getFeatureType();
+      m_isSingleFeature = true;
     }
     else
     {
@@ -346,6 +353,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
+        // HACK: for sinlge-feature lists (see flag), we must invalidate the list ourselfs.
+        if( m_isSingleFeature )
+        {
+          // TODO: we do not know which one of the changed features is the right one... (se FIXME below)
+          // S owe just invalidate all features i nthis list
+          for( final Feature feature : features )
+          {
+            m_featureList.invalidate( feature );
+          }
+        }
+
+        
         // TODO: BOTH ways (if and else) are mayor performance bugs.
         // we MUST first determine if we have to restyle at all that is, if this modell event
         // did change any features belonging to me
