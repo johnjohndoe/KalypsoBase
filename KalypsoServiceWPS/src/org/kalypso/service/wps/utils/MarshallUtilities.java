@@ -112,9 +112,10 @@ public class MarshallUtilities
       default:
         throw new JAXBException( "Unsupported WPS version " + wpsVersion );
     }
+    
     /* Create the marshaller. */
-
     final StringWriter sw = new StringWriter();
+    
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
