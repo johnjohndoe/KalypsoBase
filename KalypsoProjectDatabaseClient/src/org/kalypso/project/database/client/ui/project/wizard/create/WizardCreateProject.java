@@ -60,7 +60,7 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Wizard to create a new local Planer Client Project
+ * Wizard for creating a new local Planer Client Project
  * 
  * @author Dirk Kuch
  */
@@ -102,9 +102,7 @@ public class WizardCreateProject extends NewProjectWizard
     // bad hack
     final boolean finish = super.performFinish();
     if( !finish )
-    {
       return false;
-    }
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {
@@ -116,7 +114,6 @@ public class WizardCreateProject extends NewProjectWizard
         KalypsoGisPlugin.getDefault();
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
-        description.setName( description.getComment() );
 
         final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
