@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.om.table.command;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
@@ -64,8 +63,6 @@ public class ChangeValueSelectedRowsHandler extends AbstractHandler
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.ChangeValueSelectedRowsHandler.0") ); //$NON-NLS-1$
-
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
    //TODO show dialog
     return null;

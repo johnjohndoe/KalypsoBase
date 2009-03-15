@@ -43,12 +43,9 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -76,7 +73,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 @SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 {
-  private final ITreeContentProvider m_contentProvider;
+  private final GisMapOutlineContentProvider m_contentProvider;
 
   private final GisMapOutlineLabelProvider m_labelProvider;
 
@@ -87,25 +84,13 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   private ICommandTarget m_commandTarget;
 
   /**
-   * The constructor.
-   *
-   * @param commandTarget
-   *          The command target.
-   * @param mapModel
-   *          The map modell.
    * @param showStyle
    *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
-   *          styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
+   *          styles of a theme, this is not necessary, because their level will be displayed in the outline then.
    */
-  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel, final boolean showStyle )
+  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
   {
-    // TODO: temporary and only for debug purposes
-    // Change rendering to bold-font (or what else?); put flag into user preferences?
-    // get type of rendering from map-file (and also flag?)
-    // TODO: if committed to true, please set to false
-    final boolean showActive = true;
-
-    m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
+    m_labelProvider = new GisMapOutlineLabelProvider();
     m_contentProvider = new GisMapOutlineContentProvider( m_labelProvider );
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
@@ -113,6 +98,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
   public void dispose( )
   {
+    m_contentProvider.dispose();
   }
 
   public void createControl( final Composite parent )
@@ -129,7 +115,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
       {
         final Object data = event.getElement();
 
-        // Prevent deselction of gray-checked elements; they are here interpreted as disabled
+        // Prevent de-selection of gray-checked elements; they are here interpreted as disabled
         if( labelProvider.isGrayed( data ) && !event.getChecked() )
         {
           viewer.setChecked( data, true );
@@ -263,34 +249,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
     m_viewer.setSelection( selection );
   }
 
-  public IStructuredContentProvider getContentProvider( )
-  {
-    return (IStructuredContentProvider) m_viewer.getContentProvider();
-  }
-
-  /**
-   * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
-   *
-   * @param listener
-   *          a double-click listener
-   */
-  public void addDoubleClickListener( final IDoubleClickListener listener )
-  {
-    m_viewer.addDoubleClickListener( listener );
-  }
-
-  /**
-   * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
-   *
-   * @param listener
-   *          a double-click listener
-   */
-  public void removeDoubleClickListener( final IDoubleClickListener listener )
-  {
-    if( m_viewer != null )
-      m_viewer.removeDoubleClickListener( listener );
-  }
-
   /**
    * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
    *      java.lang.Runnable)
@@ -304,5 +262,29 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   public void setCommandTarget( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
+  }
+
+  public void expandTree( )
+  {
+    m_viewer.expandAll();
+  }
+
+  public void collapseTree( )
+  {
+    m_viewer.collapseAll();
+  }
+
+  /**
+   * @return <code>true</code> if the viewer is compact view state.
+   * @see #setCompact(boolean)
+   */
+  public boolean isCompact( )
+  {
+    return m_contentProvider.isCompact();
+  }
+
+  public void setCompact( final boolean compact )
+  {
+    m_contentProvider.setCompact( compact );
   }
 }

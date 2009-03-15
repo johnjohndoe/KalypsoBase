@@ -74,7 +74,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -577,13 +576,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
       return this;
-
-    if( IContentOutlinePage.class.equals( adapter ) )
-    {
-      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
-      page.setMapPanel( getMapPanel() );
-      return page;
-    }
 
     if( adapter == IFile.class )
     {

@@ -21,23 +21,7 @@
             class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution"
             name="GML Style Catalog"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-            <objectContribution
-                  adaptable="false"
-                  id="org.kalypso.gml.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.intersectWithDgm"
-                  objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-               <filter
-                     name="featureThemeQname"
-                     value="org.kalypso.gml.processes.mesh#Triangle"/>
-               <action
-                     class="org.kalypso.gml.ui.actions.FloodDepthThemeAction"
-                     id="org.kalypsogml.ui.floodDepthThemeAction"
-                     label="mit DGM verschneiden"
-                     style="push"
-                     tooltip="trägt das selektierte Thema gegen ein Geländemodell ab"/>
-            </objectContribution>
-   </extension>
+   
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -110,7 +94,7 @@
 				<and>
 					<reference definitionId="mapContext" />
 					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.activeThemeQName" value="{http://www.opengis.net/gml}_Coverage" />
+						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 					</with>
 				</and>
 			</enabledWhen>
@@ -159,7 +143,7 @@
 						</with>
 						<reference definitionId="mapContext" />
 						<with variable="activeMapPanel">
-							<test property="org.kalypso.ui.activeThemeQName" value="{http://www.opengis.net/gml}_Coverage" />
+							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
 				</visibleWhen>

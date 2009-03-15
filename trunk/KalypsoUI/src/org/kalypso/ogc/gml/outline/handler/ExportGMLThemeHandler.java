@@ -52,30 +52,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
 {
-  private static final String SETTINGS_LAST_DIR = "lastDir"; //$NON-NLS-1$
-
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
@@ -100,20 +94,16 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     }
 
     /* ask user for file */
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" ); //$NON-NLS-1$
-    final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
-    final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
-    fileDialog.setFilterExtensions( new String[] { "*.gml" } ); //$NON-NLS-1$
-    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6") } ); //$NON-NLS-1$
-    fileDialog.setText( title );
-    if( lastDirPath != null )
-    {
-      fileDialog.setFilterPath( lastDirPath );
-      fileDialog.setFileName( theme.getLabel() );
-    }
-    else
-      fileDialog.setFileName( theme.getLabel() );
-    final String result = fileDialog.open();
+    final String fileName = theme.getLabel();
+    final String[] filterExtensions = new String[] { "*.gml" }; //$NON-NLS-1$
+    final String[] filterNames = new String[] { Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ) }; //$NON-NLS-1$
+
+    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gmlExport", filterExtensions, filterNames );
+    if( file == null )
+      return null;
+
+    final String result = file.getAbsolutePath();
+
     final File gmlFile;
     final File xsdFile;
     if( result == null )
@@ -128,11 +118,8 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
       xsdFile = new File( FileUtilities.setSuffix( result, ".xsd" ) ); //$NON-NLS-1$
     }
 
-    dialogSettings.put( SETTINGS_LAST_DIR, gmlFile.getParent() );
-
     final Job job = new Job( title + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {

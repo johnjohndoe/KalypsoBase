@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd" />
 	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd" />
 	<extension-point id="componentUiHandlerProvider" name="componentUiHandlerProvider" schema="schema/componentUiHandlerProvider.exsd" />
 	<extension-point id="themeFactory" name="themeFactory" schema="schema/themeFactory.exsd" />
 	<extension-point id="modelAdapter" name="modelAdapter" schema="schema/modelAdapter.exsd" />
 	<extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd" />
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
-		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer">
-		</initializer>
+		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
 	</extension>
 	<extension id="preferencePages" name="preferencePages" point="org.eclipse.ui.preferencePages">
-		<page class="org.kalypso.ui.preferences.KalypsoPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage">
-		</page>
-		<page category="org.kalypso.ui.preferences.KalypsoPreferencePage" class="org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage" id="org.kalypso.ui.preferncePages.Screenshot" name="%page.name.0">
-		</page>
+		<page class="org.kalypso.ui.preferences.KalypsoPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
+		<page category="org.kalypso.ui.preferences.KalypsoPreferencePage" class="org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage" id="org.kalypso.ui.preferncePages.Screenshot" name="%page.name.0"/>
 	</extension>
 	<extension id="editors" name="editors" point="org.eclipse.ui.editors">
-		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true" contributorClass="org.kalypso.ui.editor.mapeditor.GisMapEditorContributor" name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt">
+		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt">
 		</editor>
 		<editor default="true" name="%org.kalypso.ui.editor.gistableeditor.GisTableEditor" icon="icons/kalypso_gtt.gif" extensions="gtt" class="org.kalypso.ui.editor.gistableeditor.GisTableEditor" contributorClass="org.kalypso.ui.editor.gistableeditor.GisTableEditorActionBarContributor" id="org.kalypso.ui.editor.gistableeditor.GisTableEditor">
 		</editor>
@@ -39,24 +35,17 @@
 	</extension>
 	<extension id="views" name="views" point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
-		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart">
-		</view>
-		<view name="%org.kalypso.ogc.sensor.view.DiagramViewPart" icon="icons/kalypso_odt.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.DiagramViewPart" id="org.kalypso.ogc.sensor.view.DiagramViewPart">
-		</view>
-		<view name="%org.kalypso.ogc.sensor.view.TableViewPart" icon="icons/kalypso_ott.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.TableViewPart" id="org.kalypso.ogc.sensor.view.TableViewPart">
-		</view>
-		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/full/elcl16/kde_filter.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor">
-		</view>
+		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
+		<view name="%org.kalypso.ogc.sensor.view.DiagramViewPart" icon="icons/kalypso_odt.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.DiagramViewPart" id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
+		<view name="%org.kalypso.ogc.sensor.view.TableViewPart" icon="icons/kalypso_ott.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.TableViewPart" id="org.kalypso.ogc.sensor.view.TableViewPart"/>
+		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/full/elcl16/kde_filter.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
 		<view allowMultiple="false" icon="icons/kalypso16.gif" class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView" category="org.kalypso.ui.kalypso" name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" name="%org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapView" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.mapView" name="%view.name.0" saveMapOnClose="true" reloadMapOnOpen="false" />
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.GisMapOutlineView" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
+		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.MapOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2">
-		</view>
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.simple.SimpleMapOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.simpleMapOutline" name="Simple Map Outline">
-		</view>
+		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
 	</extension>
 	<extension id="editorActions" name="editorActions" point="org.eclipse.ui.editorActions">
 		<editorContribution targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor" id="org.kalypso.ui.editor.gistableeditor.GisTableActionDelegate">
@@ -166,18 +155,6 @@
 		<objectContribution adaptable="false" objectClass="org.eclipse.core.resources.IFile" id="org.kalypso.objectclass.zmlFile">
 			<action enablesFor="1" label="%org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.label" icon="icons/util/filter.gif" class="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution" menubarPath="extensions" id="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution" />
 		</objectContribution>
-		<objectContribution adaptable="false" objectClass="org.kalypso.ogc.gml.UserStyleTreeObject" id="org.kalypso.objectclass.style.save">
-			<action label="%org.kalypso.ogc.gml.outline.SaveStyleAction2.label" tooltip="%org.kalypso.ogc.gml.outline.SaveStyleAction2.tooltip" icon="icons/map/save_edit.gif" class="org.kalypso.ogc.gml.outline.SaveStyleAction2" menubarPath="org.kalypso.objectclass.style.menu/styleops" id="org.kalypso.ogc.gml.outline.SaveStyleAction2" />
-			<menu label="%menu.label.2" id="org.kalypso.objectclass.style.menu">
-				<separator name="styleops" />
-			</menu>
-		</objectContribution>
-		<objectContribution adaptable="false" objectClass="org.kalypso.ogc.gml.RuleTreeObject" id="org.kalypso.objectclass.style.remove">
-			<action label="%org.kalypso.ogc.gml.outline.RemoveRuleAction2.label" tooltip="%org.kalypso.ogc.gml.outline.RemoveRuleAction2.tooltip" icon="icons/full/elcl16/remove.gif" class="org.kalypso.ogc.gml.outline.RemoveRuleAction" menubarPath="org.kalypso.objectclass.style.menu/styleops" id="org.kalypso.ogc.gml.outline.RemoveRuleAction2" />
-			<menu label="%org.kalypso.objectclass.style.menu.label" id="org.kalypso.objectclass.style.menu">
-				<separator name="styleops" />
-			</menu>
-		</objectContribution>
 		<objectContribution adaptable="false" id="org.kalypso.objectclass.observationfeature" objectClass="org.kalypsodeegree.model.feature.Feature">
 			<filter name="featureTypeStrict" value="http://www.opengis.net/om#Observation" />
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction" enablesFor="1" icon="icons/observation/zml-icon.gif" id="org.kalypso.ogc.gml.om.EditObservationAction" label="%org.kalypso.ogc.gml.om.EditObservationAction.label" style="push" tooltip="%org.kalypso.ogc.gml.om.EditObservationAction.tooltip" />
@@ -193,20 +170,6 @@
 			<action class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" icon="icons/feature/gis_feature_down.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" label="%action.label.21" menubarPath="featureListMenu" tooltip="%action.tooltip.2" />
 			<action class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" icon="icons/feature/gis_feature_up.gif" id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" label="%action.label.22" menubarPath="featureListMenu" tooltip="%action.tooltip.3" />
 			<action class="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" icon="icons/feature/gis_feature_duplicate.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" label="%action.label.23" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.4" />
-		</objectContribution>
-		<objectContribution id="org.kalypso.objectclass.theme" objectClass="org.kalypso.ogc.gml.IKalypsoTheme">
-			<action class="org.kalypso.ui.actions.OpenPropertyViewThemeAction" icon="icons/full/elcl16/showThemeProps.gif" id="org.kalypso.ui.actions.OpenPropertyViewThemeAction" label="%action.label.24" style="push" tooltip="%action.tooltip.5">
-			</action>
-			<action class="org.kalypso.ui.actions.OpenPropertyDialogAction" icon="icons/full/elcl16/showThemeProps.gif" id="org.kalypso.ui.actions.OpenPropertyDialogAction" label="%action.label.25" tooltip="%action.tooltip.6">
-			</action>
-		</objectContribution>
-		<objectContribution id="org.kalypso.objectclass.featureTheme" objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-			<action class="org.kalypso.ui.actions.ExportGml2ShapeThemeAction" icon="icons/full/obj16/exportGml2Shp.gif" id="org.kalypso.ui.actions.ExportGml2ShapeThemeAction" label="%action.label.26" menubarPath="exports" style="push" tooltip="%action.tooltip.7">
-			</action>
-		</objectContribution>
-		<objectContribution id="org.kalypso.objectclass.IKalypsoTheme" objectClass="org.kalypso.ogc.gml.IKalypsoTheme">
-			<action class="org.kalypso.ui.actions.ExportLegendAction" icon="icons/full/obj16/exportGml2Shp.gif" id="org.kalypso.ui.actions.ExportLegendAction" label="%action.label.27" menubarPath="exports" style="push" tooltip="%action.tooltip.8">
-			</action>
 		</objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters" point="org.eclipse.ui.ide.resourceFilters">
@@ -234,18 +197,7 @@
 		<antTask eclipseRuntime="true" class="org.kalypso.ant.ChangeGmlTask" library="lib/kalypsoAnt.jar" name="kalypso.changeGml" />
 	</extension>
 	<extension id="repository.factories" name="repository.factories" point="org.kalypso.repository.factories">
-		<!-- TODO: Marc: Remove 'class' Attribut because of compilation-problems under linux
-			check if still everything works -->
-		<repository factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory" name="%org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory">
-		</repository>
-	</extension>
-	<extension id="org.kalypso.ui.mapview.action" name="mapviewoutline" point="org.kalypso.ui.mapviewaction">
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip" icon="icons/full/elcl16/impl_co.gif" class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer" />
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.ActivateThemeAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.ActivateThemeAction.tooltip" icon="icons/full/elcl16/newpack_wiz.gif" class="org.kalypso.ogc.gml.outline.ActivateThemeAction" />
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.MoveThemeDownAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction.tooltip" icon="icons/full/elcl16/next_nav.gif" class="org.kalypso.ogc.gml.outline.MoveThemeDownAction" />
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.tooltip" icon="icons/full/elcl16/prev_nav.gif" class="org.kalypso.ogc.gml.outline.MoveThemeUpAction" />
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip" icon="icons/full/elcl16/remove.gif" class="org.kalypso.ogc.gml.outline.RemoveThemeAction" />
-		<MapviewAction title="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.tooltip" icon="icons/util/update.gif" class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction" />
+		<repository factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory" name="%org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"/>
 	</extension>
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
@@ -254,31 +206,11 @@
 		<factory adaptableType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
-		<factory adaptableType="org.kalypso.ogc.gml.outline.GisMapOutlineView" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
-			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
-			</adapter>
-		</factory>
-		<factory adaptableType="org.eclipse.ui.views.contentoutline.ContentOutline" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
-			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
-			</adapter>
-		</factory>
-		<factory adaptableType="org.kalypso.ogc.gml.IKalypsoTheme" class="org.kalypso.ui.views.properties.ThemePropertyAdapterFactory">
-			<adapter type="org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor">
-			</adapter>
-			<adapter type="org.eclipse.ui.views.properties.IPropertySource">
-			</adapter>
-			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter2">
-			</adapter>
-		</factory>
 		<factory adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
-			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
-			</adapter>
 			<adapter type="org.kalypso.ogc.gml.map.IMapPanel">
 			</adapter>
 		</factory>
 		<factory adaptableType="org.kalypso.ui.views.map.MapView" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
-			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
-			</adapter>
 			<adapter type="org.kalypso.ogc.gml.map.IMapPanel">
 			</adapter>
 		</factory>
@@ -345,7 +277,7 @@
 			<commandParameter id="org.kalypso.gis.newFeature.type" name="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.parameterType" optional="false" />
 		</command>
 	</extension>
-	
+		
 	<!-- Generic command category. Used for the 'GenericCommandActionDelegate'; do not delete -->
 	<extension point="org.eclipse.ui.commands">
 		<category id="org.kalypso.ui.commands.default" name="Generic Default Category" description="Used for dynamic command created by the 'GenericCommandActionDelegate'" />
@@ -353,21 +285,26 @@
 
 	<!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
-		<category id="org.kalypso.ui.views.outline.category" name="org.kalypso.ui.views.outline.category.name" description="org.kalypso.ui.views.outline.category.description" />
-		<command categoryId="org.kalypso.ui.views.outline.category" defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler" id="org.kalypso.ui.views.outline.ShapeExport" name="%command.name.12" />
-		<command categoryId="org.kalypso.ui.views.outline.category" defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler" id="org.kalypso.ui.views.outline.GMLExport" name="%command.name.15" />
-		<command categoryId="org.kalypso.ui.views.outline.category" defaultHandler="org.kalypso.ogc.gml.outline.handler.LegendExportHandler" id="org.kalypso.ui.views.outline.LegendExport" name="%command.name.16" />
+		<category id="org.kalypso.ui.map.outline.category" description="%org.kalypso.ui.views.outline.category.description"  name="%org.kalypso.ui.views.outline.category.name" />
+
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ToggleCompactOutline" name="Compact" description="Hide elements for a more compact outline"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.CollapseOutline" name="Collapse All" description="Collapse all Outline Elements"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ExpandOutline" name="Expand All" description="Expand all Outline Elements"/>
+
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" name="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label"  description="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ActivateTheme" name="%org.kalypso.ogc.gml.outline.ActivateThemeAction.label"  description="%org.kalypso.ogc.gml.outline.ActivateThemeAction.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.MoveThemeDown" name="%org.kalypso.ogc.gml.outline.MoveThemeDownAction.label"  description="%org.kalypso.ogc.gml.outline.MoveThemeDownAction.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.MoveThemeUp" name="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.label"  description="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveTheme" name="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label"  description="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenStyleDialog" name="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.label"  description="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.tooltip"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ThemeProperties" name="%action.label.25" description="%action.tooltip.6"/>
+
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.ShapeExport" name="%command.name.12" description="%command.tooltip.2" />
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.GMLExport" name="%command.name.15" description="%command.tooltip.3"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.LegendExport" name="%command.name.16" description="%command.tooltip.4"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.SldExport" name="SLD..." description="Export styling of selected layer as SLD-File"/>
 	</extension>
-	<extension point="org.eclipse.ui.viewActions">
-		<viewContribution id="org.kalypso.ui.views.outline.actions" targetID="org.kalypso.ui.views.outline">
-			<action class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer" enablesFor="1" icon="icons/full/elcl16/impl_co.gif" id="org.kalypso.ui.views.outline.org.kalypso.ogc.gml.outline.ZoomToSelectedLayer" label="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.label" style="push" toolbarPath="outline/tools" tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip" />
-			<action class="org.kalypso.ogc.gml.outline.MoveThemeUpAction" icon="icons/full/elcl16/prev_nav.gif" id="org.kalypso.ui.views.outline.moveThemeUp" label="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.label" style="push" toolbarPath="outline/tools" tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction2.tooltip" />
-			<action class="org.kalypso.ogc.gml.outline.MoveThemeDownAction" icon="icons/full/elcl16/next_nav.gif" id="org.kalypso.ui.views.outline.moveThemeDown" label="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.label" style="push" toolbarPath="outline/tools" tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip" />
-			<action class="org.kalypso.ogc.gml.outline.RemoveThemeAction" icon="icons/full/elcl16/remove.gif" id="org.kalypso.ui.views.outline.removeTheme" label="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label" style="push" toolbarPath="outline/tools" tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip">
-			</action>
-			<menu id="org.kalypso.ui.views.outline.actions.tools" label="%menu.label.3" path="outline/tools" />
-		</viewContribution>
-	</extension>
+	
 	<extension point="org.eclipse.ui.bindings">
 		<key commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+-" />
 		<key commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1++" />
@@ -381,44 +318,13 @@
 		<key commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+F" />
 		<key commandId="org.kalypso.ogc.gml.map.FullExtentCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M" />
 	</extension>
-	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-		<propertyContributor contributorId="org.kalypso.ui.ContentOutlinePropertyContributor">
-			<propertyCategory category="outline" />
-		</propertyContributor>
-	</extension>
-	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-		<propertyContributor contributorId="org.kalypso.ui.ThemePropertyContributor">
-			<propertyCategory category="theme" />
-		</propertyContributor>
-	</extension>
-	<extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
-		<propertyTabs contributorId="org.kalypso.ui.ThemePropertyContributor">
-			<propertyTab category="theme" id="org.kalypso.ui.propertyTabs.ThemeGenerelTab" indented="false" label="Generel">
-			</propertyTab>
-			<propertyTab afterTab="org.kalypso.ui.propertyTabs.ThemeGenerelTab" category="theme" id="org.kalypso.ui.propertyTabs.ThemeAdvancedTab" indented="false" label="Advanced">
-			</propertyTab>
-		</propertyTabs>
-	</extension>
-	<extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
-		<propertySections contributorId="org.kalypso.ui.ThemePropertyContributor">
-			<propertySection class="org.kalypso.ui.views.properties.NamePropertySection" id="org.kalypso.ui.propertySections.themes.NameSection" tab="org.kalypso.ui.propertyTabs.ThemeGenerelTab">
-				<input type="org.kalypso.ogc.gml.IKalypsoTheme">
-				</input>
-			</propertySection>
-			<propertySection class="org.eclipse.ui.views.properties.tabbed.AdvancedPropertySection" id="org.kalypso.ui.propertySections.themes.AdvancedSection" tab="org.kalypso.ui.propertyTabs.ThemeAdvancedTab">
-				<input type="org.kalypso.ogc.gml.IKalypsoTheme">
-				</input>
-			</propertySection>
-		</propertySections>
-	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
         class="org.kalypso.ui.views.properties.ThemePropertyPage"
         id="org.kalypso.ui.views.properties.ThemePropertyPage"
         name="%org.kalypso.ui.views.properties.ThemePropertyPage.name">
 			<enabledWhen>
-				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
-				</instanceof>
+				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
 			</enabledWhen>
 		</page>
 		<page
@@ -426,8 +332,7 @@
         id="org.kalypso.ui.views.properties.LegendPropertyPage"
         name="%org.kalypso.ui.views.properties.LegendPropertyPage.name">
 			<enabledWhen>
-				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
-				</instanceof>
+				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
 			</enabledWhen>
 		</page>
   <page
@@ -478,6 +383,7 @@
 			</dynamic>
 			<separator name="mapExport" visible="true" />
 			<command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push" tooltip="%org.kalypso.ogc.gml.map.Screenshot.description" />
+			<command commandId="org.eclipse.ui.file.print" style="push" tooltip="Print" />
 			<command commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" label="%command.label.1" style="push" tooltip="%command.tooltip.1" />
 			<!--  TODO: does not really belong here, as it introduces a hidden dependency to a non-dependent plug-in (KML-Export) -->
 			<command commandId="org.kalypso.kml.export.command" label="kml Export" style="push" tooltip="kml Export"/>
@@ -568,40 +474,81 @@
 			<separator name="additions" visible="true">
 			</separator>
 		</menuContribution>
-		<menuContribution locationURI="menu:org.kalypso.ui.views.outline?after=outlineExport">
-			<command commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportGml2Shp.gif" label="%command.label.2" style="push" tooltip="%command.tooltip.2">
-				<visibleWhen checkEnabled="false">
-					<with variable="selection">
-						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
-						</iterate>
-					</with>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml2Shp.gif" label="%command.label.3" style="push" tooltip="%command.tooltip.3">
-				<visibleWhen checkEnabled="false">
-					<with variable="selection">
-						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
-						</iterate>
-					</with>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportGml2Shp.gif" label="%command.label.4" style="push" tooltip="%command.tooltip.4">
-				<visibleWhen checkEnabled="false">
-					<with variable="selection">
-						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
-						</iterate>
-					</with>
-				</visibleWhen>
-			</command>
+	</extension>		
+	
+	<!-- Map-Editor-Outline: standard tool/menu -->
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="toolbar:org.kalypso.map.outline.GisMapEditor">
+			<separator name="outline" visible="false"/>
+			<command commandId="org.kalypso.ui.map.outline.command.ExpandOutline" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.CollapseOutline" style="push"/>
+		
+			<separator name="theme" visible="true"/>
+			<command commandId="org.kalypso.ui.map.outline.command.RemoveTheme" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.ActivateTheme" style="push"/>
+
+			<separator name="navigation" visible="true"/>
+			<command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
+			
+			<separator name="style" visible="true"/>
+			<command commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" style="push"/>
+			
+			<separator name="additions" visible="true"/>
 		</menuContribution>
-		<menuContribution locationURI="menu:org.kalypso.ui.views.outline">
-			<separator name="outlineExport" visible="true">
-			</separator>
+
+		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor">
+			<command commandId="org.kalypso.ui.map.outline.command.ThemeProperties" style="push"/>
+			<menu label="Export" mnemonic="e" id="org.kalypso.map.outline.GisMapEditor.export">
+				<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
+				<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
+				<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
+				<command commandId="org.kalypso.ui.views.outline.SldExport" style="push"/>
+			</menu>
+			<separator name="additions" visible="false"/>
+		</menuContribution>
+
+		<menuContribution locationURI="menu:org.kalypso.map.outline.GisMapEditor">
+			<menu label="View" mnemonic="v" id="org.kalypso.map.outline.GisMapEditor.menu.view">
+				<separator name="outline" visible="false"/>
+				<command commandId="org.kalypso.ui.map.outline.command.ToggleCompactOutline" style="toggle"/>
+				<separator name="additions" visible="false"/>
+			</menu>
+			<separator name="additions" visible="false"/>
 		</menuContribution>
 	</extension>
+	
+	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView.outline">
+			<separator name="theme" visible="true"/>
+			<command commandId="org.kalypso.ui.map.outline.command.RemoveTheme" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" style="push"/>
+			<separator name="navigation" visible="true"/>
+			<command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
+			<separator name="style" visible="true"/>
+			<separator name="additions" visible="true"/>
+		</menuContribution>
+
+		<menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline">
+			<!-- Properties not allowed until they recognize how to handle non-editable themes
+			<command commandId="org.kalypso.ui.map.outline.command.ThemeProperties" style="push"/>
+			-->
+			<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
+			<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
+			<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
+			<separator name="additions" visible="false"/>
+		</menuContribution>
+
+		<!-- Noting in view-menu yet, uncomment if necessary -->
+		<!--menuContribution locationURI="menu:org.kalypso.ui.views.mapView.outline">
+			<separator name="additions" visible="false"/>
+		</menuContribution-->
+	</extension>
+	
+	<!-- Map -->
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" icon="icons/map/zoomoutstatic.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" icon="icons/map/zoominstatic.gif" />
@@ -620,7 +567,35 @@
 		<image commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" icon="icons/map/show_outline.gif" />
 		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" icon="icons/map/nextFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" icon="icons/map/prevFeature.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" icon="icons/map/select_feature.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.SaveThemeCommand" disabledIcon="icons/map/save_edit_disabled.gif" icon="icons/feature/save_GML.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.UndoCommand" disabledIcon="icons/map/undo_edit_disabled.gif" icon="icons/map/undo_edit.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.RedoCommand" disabledIcon="icons/map/redo_edit_disabled.gif" icon="icons/map/redo_edit.gif" />
 	</extension>
+		
+	<!-- Map-Outline -->
+	<extension point="org.eclipse.ui.commandImages">
+		<!--image commandId="org.kalypso.ui.map.outline.command.ToggleCompactOutline" icon="" /-->
+		<image commandId="org.kalypso.ui.map.outline.command.CollapseOutline" icon="icons/map/outline_collapse_all.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.ExpandOutline" icon="icons/map/outline_expand_all.gif" />
+
+		<image commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" icon="icons/full/elcl16/impl_co.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.ActivateTheme" icon="icons/full/elcl16/newpack_wiz.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" icon="icons/full/elcl16/next_nav.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" icon="icons/full/elcl16/prev_nav.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.RemoveTheme" icon="icons/full/elcl16/remove.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" icon="icons/util/update.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.ThemeProperties" icon="icons/full/elcl16/showThemeProps.gif" />
+
+		<image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+	</extension>
+	
 	<extension id="org.kalypso.ui.repositoryContainerCommands" name="Repository Container Commands" point="org.eclipse.ui.commands">
 		<category id="org.kalypo.ui.commandCategory.repositoryContainer" name="%category.name.6"/>
 		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler" description="%command.description.13" id="org.kalypso.ui.command.repositoryAdd" name="%command.name.17"/>
@@ -949,15 +924,8 @@
 			</toolbar>
 		</menuContribution>
 	</extension>
-	<extension point="org.eclipse.ui.commandImages">
-		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" icon="icons/map/select_feature.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.SaveThemeCommand" disabledIcon="icons/map/save_edit_disabled.gif" icon="icons/feature/save_GML.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.UndoCommand" disabledIcon="icons/map/undo_edit_disabled.gif" icon="icons/map/undo_edit.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.RedoCommand" disabledIcon="icons/map/redo_edit_disabled.gif" icon="icons/map/redo_edit.gif" />
-	</extension>
+	
+	<!-- Map -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler" commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler" commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"/>
@@ -1051,6 +1019,80 @@
 		<handler class="org.kalypso.ogc.gml.map.handlers.RedoHandler" commandId="org.kalypso.ogc.gml.map.RedoCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.PrintMapHandler" commandId="org.eclipse.ui.file.print"/>
 	</extension>
+
+	<!-- Map-Outline -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.ToggleCompactOutline" class="org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler" />
+		<handler commandId="org.kalypso.ui.map.outline.command.CollapseOutline" class="org.kalypso.ogc.gml.outline.handler.CollapseOutlineHandler" />
+		<handler commandId="org.kalypso.ui.map.outline.command.ExpandOutline" class="org.kalypso.ogc.gml.outline.handler.ExpandOutlineHandler" />
+	
+		<handler commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" class="org.kalypso.ogc.gml.outline.handler.ZoomToSelectedThemeHandler">
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.ActivateTheme" class="org.kalypso.ogc.gml.outline.handler.ActivateThemeHandler">
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneThemeSelected"/>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" class="org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler">
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" class="org.kalypso.ogc.gml.outline.handler.MoveThemeUpHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.RemoveTheme" class="org.kalypso.ogc.gml.outline.handler.RemoveThemeHandler" >
+			<enabledWhen>
+				<with variable="selection">
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.property" args="deleteable" value="true"/>
+					</iterate>
+				</with>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" class="org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.map.outline.command.ThemeProperties" class="org.kalypso.ogc.gml.outline.handler.ThemePropertiesHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneThemeSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.views.outline.ShapeExport" class="org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.views.outline.GMLExport" class="org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.views.outline.LegendExport" class="org.kalypso.ogc.gml.outline.handler.LegendExportHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.views.outline.SldExport" class="org.kalypso.ogc.gml.outline.handler.SldExportHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.someFeatureThemesSelected"/>
+			</enabledWhen>
+		</handler>
+	</extension>
+	
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ogc.gml.map.GISEditorIsActive">
 			<with variable="activeEditorId">
@@ -1083,6 +1125,40 @@
 				</or>
 			</iterate>
 		</definition>
+		<definition id="org.kalypso.ui.definition.someThemesSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+				</iterate>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.definition.oneThemeSelected">
+			<with variable="selection">
+		      <and>
+				<count value="1"/>
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+				</iterate>
+		      </and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.definition.someFeatureThemesSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
+				</iterate>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.definition.oneFeatureThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
 	</extension>
 	<extension point="org.kalypso.core.poolLoader">
 		<loader class="org.kalypso.ogc.sensor.loaders.ZmlLoader" type="zml" />
@@ -1090,7 +1166,8 @@
 		<loader class="org.kalypso.ogc.gml.loader.WfsLoader" type="wfs" />
 	</extension>
 	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui" properties="activeThemeNotNull,activeThemeQName,activeThemeHasExtent,activeThemeIsFeatureTheme" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 	</extension>
    <extension
@@ -1176,6 +1253,10 @@
       <activityPatternBinding
             activityId="org.kalypso.ui.activities.baseActivity"
             pattern="org\.eclipse\.team\.ui/org.*">
+      </activityPatternBinding> 
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.team\.ui/*">
       </activityPatternBinding> 
       <activityPatternBinding
             activityId="org.kalypso.ui.activities.baseActivity"

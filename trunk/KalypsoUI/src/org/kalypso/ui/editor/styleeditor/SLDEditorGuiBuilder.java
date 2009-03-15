@@ -55,7 +55,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -63,7 +62,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.outline.SaveStyleAction;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -87,7 +85,7 @@ public class SLDEditorGuiBuilder
     @Override
     public void runWithEvent( final Event event )
     {
-      handleSavePressed( event.display.getActiveShell() );
+      // TODO
     }
   };
 
@@ -136,11 +134,6 @@ public class SLDEditorGuiBuilder
     m_saveAction.setToolTipText( MessageBundle.STYLE_EDITOR_SAVE_STYLE );
 
     toolBarManager.add( m_saveAction );
-  }
-
-  protected void handleSavePressed( final Shell shell )
-  {
-    SaveStyleAction.saveUserStyle( m_userStyle, shell );
   }
 
   public Composite getControl( )

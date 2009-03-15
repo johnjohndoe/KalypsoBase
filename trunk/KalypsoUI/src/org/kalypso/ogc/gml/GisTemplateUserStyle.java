@@ -51,6 +51,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
+import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
@@ -63,7 +64,7 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * Wrapped UserStyle to provide fireModellEvent Method
- * 
+ *
  * @author doemming
  */
 public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IWorkbenchAdapter
@@ -71,6 +72,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   private final PoolableObjectType m_styleKey;
 
   private boolean m_loaded = false;
+
+  private boolean m_dirty;
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName, final boolean usedForSelection )
   {
@@ -122,6 +125,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       }
 
       fireStyleChanged();
+      setDirty( false );
     }
   }
 
@@ -135,6 +139,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ) ); //$NON-NLS-1$
 
       fireStyleChanged();
+      setDirty( false );
     }
   }
 
@@ -183,7 +188,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
    */
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
-    // TODO change label according to dirty
+    setDirty( isDirty );
   }
 
   /**
@@ -194,10 +199,13 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     final String label = super.getLabel( o );
 
-    if( isLoaded() )
-      return label;
+    if( !isLoaded() )
+      return label + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.5" ); //$NON-NLS-1$
 
-    return label + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.5" ); //$NON-NLS-1$
+    if( m_dirty )
+      return label + "*"; //$NON-NLS-1$
+
+    return label;
   }
 
   public void save( final IProgressMonitor monitor ) throws CoreException
@@ -211,6 +219,32 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     catch( final LoaderException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.KalypsoUserStyle#fireStyleChanged()
+   */
+  @Override
+  public void fireStyleChanged( )
+  {
+    super.fireStyleChanged();
+
+    setDirty( true );
+  }
+
+  private void setDirty( final boolean isDirty )
+  {
+    if( m_dirty == isDirty )
+      return;
+
+    m_dirty = isDirty;
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    if( m_styleKey != null )
+    {
+      final KeyInfo info = pool.getInfoForKey( m_styleKey );
+      info.setDirty( isDirty );
     }
   }
 }

@@ -42,12 +42,8 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.ui.internal.util.Util;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ICheckStateProvider;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
 
 /**
  * The this label provider modifies some labels for handling themes, that have only one style.
@@ -57,13 +53,11 @@ import org.kalypso.ogc.gml.UserStyleTreeObject;
 @SuppressWarnings("restriction")
 public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 {
-  /**
-   * If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple styles of a
-   * theme, this is not neccessary, because their level will be displayed in the outline then.
-   */
-  private final boolean m_showStyle;
-
-  private final boolean m_showActive;
+// /**
+// * If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple styles of a
+// * theme, this is not neccessary, because their level will be displayed in the outline then.
+// */
+// private final boolean m_showStyle;
 
   /**
    * The constructor.
@@ -72,10 +66,9 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
    *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
    *          styles of a theme, this is not necessary, because their level will be displayed in the outline then.
    */
-  public GisMapOutlineLabelProvider( final boolean showStyle, final boolean showActive )
+  public GisMapOutlineLabelProvider( /* final boolean showStyle */)
   {
-    m_showStyle = showStyle;
-    m_showActive = showActive;
+// m_showStyle = showStyle;
   }
 
   public void elementsChanged( final Object... elements )
@@ -89,36 +82,33 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
   @Override
   protected String decorateText( final String input, final Object element )
   {
-    if( element instanceof IWorkbenchAdapter && element instanceof IKalypsoTheme )
-    {
-      final IWorkbenchAdapter adapter = (IWorkbenchAdapter) element;
-      final IKalypsoTheme theme = (IKalypsoTheme) element;
-
-      final boolean isActive = theme.getMapModell().isThemeActivated( theme );
-      final String isActiveMsg = isActive && m_showActive ? "# " : "";
-
-      /* Standard behaviour, if the style name for a single style of a theme should not be added. */
-      if( m_showStyle == false )
-        return isActiveMsg + input;
-
-      final Object[] children = adapter.getChildren( element );
-      if( !(children instanceof UserStyleTreeObject[]) )
-        return isActiveMsg + input;
-
-      if( children != null && (children.length == 0 || children.length > 1) )
-        return isActiveMsg + input;
-
-      final UserStyleTreeObject style = (UserStyleTreeObject) children[0];
-      final String label = style.getLabel( style );
-
-      if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )
-        return isActiveMsg + input;
-
-      if( label.trim().equals( "" ) ) //$NON-NLS-1$
-        return isActiveMsg + input;
-
-      return isActiveMsg + input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
+// if( element instanceof IWorkbenchAdapter && element instanceof IKalypsoTheme )
+// {
+// final IWorkbenchAdapter adapter = (IWorkbenchAdapter) element;
+//
+// /* Standard behaviour, if the style name for a single style of a theme should not be added. */
+// if( m_showStyle == false )
+// return input;
+//
+// final Object[] children = adapter.getChildren( element );
+// if( !(children instanceof UserStyleTreeObject[]) )
+// return input;
+//
+// if( children != null && children.length != 1 )
+// return input;
+//
+// final UserStyleTreeObject style = (UserStyleTreeObject) children[0];
+// final String label = style.getLabel( style );
+//
+// // GRRRRR!
+// if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )
+// return input;
+//
+//      if( label.trim().equals( "" ) ) //$NON-NLS-1$
+// return input;
+//
+//      return input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+// }
 
     return input;
   }

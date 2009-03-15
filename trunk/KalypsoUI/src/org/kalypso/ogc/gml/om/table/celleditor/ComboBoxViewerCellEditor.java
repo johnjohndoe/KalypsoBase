@@ -85,7 +85,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     m_viewer.getCombo().addKeyListener( new KeyAdapter()
     {
       // hook key pressed - see PR 14201
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent e )
       {
@@ -119,7 +119,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addFocusListener( new FocusAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void focusLost( final FocusEvent e )
       {
@@ -132,7 +131,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addListener( SWT.MouseDown, new Listener()
     {
-      public void handleEvent( Event event )
+      public void handleEvent( final Event event )
       {
         event.time += 100000;
       }
@@ -217,7 +216,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     final Combo combo = m_viewer.getCombo();
     combo.setFocus();
 
-    Event event = new Event();
+    final Event event = new Event();
     event.count = 1;
     event.type = SWT.MouseDown;
     event.button = 1;

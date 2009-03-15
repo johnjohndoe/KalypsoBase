@@ -68,14 +68,13 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object[] getElements( final Object inputElement )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) inputElement;
 
     final List<ColorMapEntry> colorMapEntries = new LinkedList<ColorMapEntry>();
 
-    for( ColorMapEntry entry : symb.getColorMap().values() )
+    for( final ColorMapEntry entry : symb.getColorMap().values() )
     {
       colorMapEntries.add( entry );
     }

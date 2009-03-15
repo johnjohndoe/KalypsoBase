@@ -54,7 +54,7 @@ import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.model.AdaptableList;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
@@ -63,12 +63,15 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 @SuppressWarnings("restriction")
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 {
-  protected IMapModellView m_outline;
+  protected GisMapOutlinePage m_outline;
 
-  public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, final IStructuredSelection selection, final AdaptableList wizardElts, final String message, final IMapModellView outlineview )
+  protected ISelection m_selection;
+
+  public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, final IStructuredSelection selection, final AdaptableList wizardElts, final String message, final GisMapOutlinePage outlineview )
   {
     super( aWorkbench, selection, wizardElts, message, null );
     m_outline = outlineview;
+    m_selection = selection;
   }
 
   /**
@@ -98,10 +101,9 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 
       private IKalypsoLayerModell findMapModell( )
       {
-        final ISelection selection = m_outline.getSelection();
-        if( selection instanceof StructuredSelection )
+        if( m_selection instanceof StructuredSelection )
         {
-          final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+          final Object firstElement = ((IStructuredSelection) m_selection).getFirstElement();
           if( firstElement instanceof IKalypsoLayerModell )
             return (IKalypsoLayerModell) firstElement;
 

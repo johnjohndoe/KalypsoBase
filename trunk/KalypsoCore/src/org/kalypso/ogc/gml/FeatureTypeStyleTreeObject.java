@@ -78,21 +78,6 @@ public class FeatureTypeStyleTreeObject implements IWorkbenchAdapter, ITooltipPr
     return m_fts;
   }
 
-// @Override
-// public String toString( )
-// {
-// if( m_style == null )
-// {
-//      return "<no styles set>"; //$NON-NLS-1$
-// }
-//
-// if( m_style.getName() != null )
-// {
-// return m_style.getName();
-// }
-// return m_style.toString();
-// }
-
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */

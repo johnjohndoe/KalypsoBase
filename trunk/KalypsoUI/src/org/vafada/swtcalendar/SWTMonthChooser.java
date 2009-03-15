@@ -34,11 +34,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class SWTMonthChooser extends Composite {
-    private SWTDayChooser dayChooser;
-    private Combo comboBox;
+    private final Combo comboBox;
     private Locale locale;
 
-    public SWTMonthChooser(Composite parent) {
+    public SWTMonthChooser(final Composite parent) {
         super(parent, SWT.NONE);
 
         locale = Locale.getDefault();
@@ -52,16 +51,16 @@ public class SWTMonthChooser extends Composite {
     }
 
     private void initNames() {
-        DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
-        String[] monthNames = dateFormatSymbols.getMonths();
+        final DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
+        final String[] monthNames = dateFormatSymbols.getMonths();
 
         int month = comboBox.getSelectionIndex();
         if (comboBox.getItemCount() > 0) {
             comboBox.removeAll();
         }
 
-        for (int i = 0; i < monthNames.length; i++) {
-            String name = monthNames[i];
+        for( final String name : monthNames )
+        {
             if (name.length() > 0) {
                 comboBox.add(name);
             }
@@ -76,15 +75,15 @@ public class SWTMonthChooser extends Composite {
         comboBox.select(month);
     }
 
-    public void addSelectionListener(SelectionListener listener) {
+    public void addSelectionListener(final SelectionListener listener) {
         comboBox.addSelectionListener(listener);
     }
 
-    public void removeSelectionListener(SelectionListener listener) {
+    public void removeSelectionListener(final SelectionListener listener) {
         comboBox.removeSelectionListener(listener);
     }
 
-    public void setMonth(int newMonth) {
+    public void setMonth(final int newMonth) {
         comboBox.select(newMonth);
     }
 
@@ -92,7 +91,7 @@ public class SWTMonthChooser extends Composite {
         return comboBox.getSelectionIndex();
     }
 
-    public void setLocale(Locale locale) {
+    public void setLocale(final Locale locale) {
         this.locale = locale;
         initNames();
     }
@@ -100,7 +99,8 @@ public class SWTMonthChooser extends Composite {
     /* (non-Javadoc)
      * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
      */
-    public void setFont(Font font) {
+    @Override
+    public void setFont(final Font font) {
         super.setFont(font);
         comboBox.setFont(getFont());
     }

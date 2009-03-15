@@ -40,24 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
-import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.RuleTreeObject;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
@@ -69,9 +62,26 @@ import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
  */
 public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
 {
+  private final ITreeViewerListener m_treeListener = new ITreeViewerListener()
+  {
+    /**
+     * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
+     */
+    public void treeCollapsed( final TreeExpansionEvent event )
+    {
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
+     */
+    public void treeExpanded( final TreeExpansionEvent event )
+    {
+      resetCheckState( event.getElement() );
+    }
+  };
+
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
-
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
@@ -106,22 +116,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
-      final TreeViewer viewer = getViewer();
-      if( viewer != null && !viewer.getControl().isDisposed() )
-      {
-        viewer.getControl().getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            if( !viewer.getControl().isDisposed() )
-            {
-              viewer.refresh();
-              if( viewer instanceof CheckboxTreeViewer )
-                resetCheckState( theme );
-            }
-          }
-        } );
-      }
+      refreshViewer( theme );
     }
 
     /**
@@ -130,8 +125,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
-      final Viewer viewer = getViewer();
-      ViewerUtilities.refresh( viewer, true );
+      refreshViewer( null );
     }
 
     /**
@@ -183,27 +177,15 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-      final TreeViewer viewer = getViewer();
-      ViewerUtilities.refresh( viewer, theme, true );
-
-      if( viewer != null && !viewer.getControl().isDisposed() )
-      {
-        viewer.getControl().getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            if( !viewer.getControl().isDisposed() )
-              viewer.refresh( theme );
-          }
-        } );
-      }
+      refreshViewer( theme );
     }
-
   };
 
   private TreeViewer m_viewer;
 
   private final GisMapOutlineLabelProvider m_labelProvider;
+
+  private boolean m_isCompact = true;
 
   public GisMapOutlineContentProvider( final GisMapOutlineLabelProvider labelProvider )
   {
@@ -226,6 +208,14 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
   @Override
   public Object[] getChildren( final Object element )
   {
+    final Object[] childrenReverse = getChildrenReverse( element ).clone();
+    if( !(element instanceof IMapModell) )
+      ArrayUtils.reverse( childrenReverse );
+    return childrenReverse;
+  }
+
+  private Object[] getChildrenReverse( final Object element )
+  {
     /* A moment please, if the theme is configured, not to show its children, then ignore them. */
     // TODO: should configurable for every level
     if( element instanceof AbstractKalypsoTheme )
@@ -235,24 +225,10 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
         return new Object[] {};
     }
 
-    // FIXME: remove mode 2 (if mode 1 is thoroughly tested); make 1 or 2 a theme-property or at least a flag in this
-    // content provider
-    final int compactifyMode = 1;
-    switch( compactifyMode )
-    {
-      case 0: // none
-        return super.getChildren( element );
+    if( m_isCompact )
+      return compactChildren( element );
 
-      case 1: // total
-        return compactChildren( element );
-
-      case 2: // old modus
-        return compactChildrenOld( element );
-
-      default:
-        throw new NotImplementedException();
-    }
-
+    return super.getChildren( element );
   }
 
   private Object[] compactChildren( final Object element )
@@ -268,85 +244,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     if( children == null || children.length != 1 )
       return children;
 
-    return getChildren( children[0] );
-  }
-
-  private Object[] compactChildrenOld( final Object element )
-  {
-    final Object[] children = super.getChildren( element );
-
-    /* If no children are there, return the result. */
-    if( children == null || children.length == 0 )
-      return children;
-
-    /* If more then one child are there, return the result. */
-    if( children.length > 1 )
-      return children;
-
-    /* Now there is only one child. If it is not a style or a rule, return the result. */
-    if( !(children instanceof UserStyleTreeObject[]) && !(children instanceof RuleTreeObject[]) )
-      return children;
-
-    /* It has to be a IWorkbenchAdapter. */
-    final IWorkbenchAdapter child = (IWorkbenchAdapter) children[0];
-
-    /* Get the children of the child. */
-    final Object[] children2 = super.getChildren( child );
-
-    /* If there are more then one as a result, return them instead. */
-    if( children == null )
-      return new Object[] {};
-
-    if( children2.length == 1 )
-    {
-      final Object subchild = children2[0];
-      if( subchild instanceof IWorkbenchAdapter )
-        return ((IWorkbenchAdapter) subchild).getChildren( subchild );
-    }
-    else if( children2.length > 1 )
-    {
-      if( areRuleTreeObjects( children2 ) )
-        return getUniqueRuleLabels( children2 );
-      else
-        return children2;
-    }
-
-    /* Otherwise ignore it. */
-    return new Object[] {};
-  }
-
-  private Object[] getUniqueRuleLabels( final Object[] children )
-  {
-    // sort out obsolete rule labels
-    final List<Object> rules = new ArrayList<Object>();
-    final Set<String> rulenames = new HashSet<String>();
-
-    for( final Object object : children )
-    {
-      final RuleTreeObject rule = (RuleTreeObject) object;
-
-      final String name = rule.getRule().getName();
-      if( rulenames.contains( name ) )
-      {
-        continue;
-      }
-
-      rulenames.add( name );
-      rules.add( rule );
-    }
-
-    return rules.toArray();
-  }
-
-  private boolean areRuleTreeObjects( final Object[] children )
-  {
-    for( final Object object : children )
-    {
-      if( !(object instanceof RuleTreeObject) )
-        return false;
-    }
-
-    return true;
+    return getChildrenReverse( children[0] );
   }
 
   /**
@@ -391,23 +289,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     if( newInput instanceof IMapModell )
       ((IMapModell) newInput).addMapModelListener( m_modelListener );
 
-    m_viewer.addTreeListener( new ITreeViewerListener()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
-       */
-      public void treeCollapsed( final TreeExpansionEvent event )
-      {
-      }
-
-      /**
-       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
-       */
-      public void treeExpanded( final TreeExpansionEvent event )
-      {
-        resetCheckState( newInput );
-      }
-    } );
+    m_viewer.addTreeListener( m_treeListener );
 
     // Reset check state later, else it will not work, as no children have been created yet
     m_viewer.getControl().getDisplay().asyncExec( new Runnable()
@@ -437,6 +319,46 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     final Object[] children = getChildren( object );
     for( final Object child : children )
       resetCheckState( child );
+  }
+
+  protected void refreshViewer( final Object element )
+  {
+    final TreeViewer viewer = getViewer();
+    final Control control = viewer.getControl();
+    if( viewer == null || control.isDisposed() )
+      return;
+
+    control.getDisplay().asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        if( control.isDisposed() )
+          return;
+
+        if( element == null )
+          viewer.refresh();
+        else
+          viewer.refresh( element );
+
+        if( element instanceof IKalypsoTheme && viewer instanceof CheckboxTreeViewer )
+          resetCheckState( element );
+      }
+    } );
+  }
+
+  public boolean isCompact( )
+  {
+    return m_isCompact;
+  }
+
+  public void setCompact( final boolean compact )
+  {
+    if( compact == m_isCompact )
+      return;
+
+    m_isCompact = compact;
+
+    refreshViewer( null );
   }
 
 }

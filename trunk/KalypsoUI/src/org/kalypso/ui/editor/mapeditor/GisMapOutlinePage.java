@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,61 +36,60 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.part.IPageBookViewPage;
+import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.part.Page;
+import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.services.IServiceScopes;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
-import org.kalypso.ogc.gml.mapmodel.IMapModellViewListener;
-import org.kalypso.ogc.gml.outline.AbstractOutlineAction;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
-import org.kalypso.ogc.gml.outline.PluginMapOutlineAction;
+import org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * OutlinePage für das MapView-Template
- * 
- * @author gernot
+ *
+ * @author Gernot Belger
  */
-public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListener, IMapModellView
+public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPageBookViewPage, ICommandTarget
 {
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  private final GisMapOutlineViewer m_modellView;
+  private final GisMapOutlineViewer m_outlineViewer;
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -107,161 +106,176 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   private IMapPanel m_panel = null;
 
-  private List<PluginMapOutlineAction> m_actionDelegates = null;
+  /**
+   * Set of URIs to populate this pages action bars with. The following convention applies:
+   * <ul>
+   * <li>URIs starting with 'toolbar' are applied to the toolbar manager</li>
+   * <li>URIs starting with 'menu' are applied to the menu manager</li>
+   * <li>URIs starting with 'popup' are applied to the context menu manager</li>
+   * </ul>
+   * All other entries are ignored.
+   */
+  private final Set<String> m_actionURIs = new HashSet<String>();
 
-  private final Set<IMapModellViewListener> m_mapModellViewListeners = new HashSet<IMapModellViewListener>();
-
-  public GisMapOutlineViewer getModellView( )
-  {
-    return m_modellView;
-  }
+  /** Menu-Manager for context menu */
+  private MenuManager m_popupMgr;
 
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
-    m_modellView = new GisMapOutlineViewer( m_commandTarget, null, true );
+    m_outlineViewer = new GisMapOutlineViewer( m_commandTarget, null );
+  }
+
+  /**
+   * Add a new entry to this pages action bar URIs. See {@link #m_actionURIs}.<br/>
+   * Entries that already have been added are ignored.
+   */
+  public void addActionURI( final String uri )
+  {
+    m_actionURIs.add( uri );
+  }
+
+  /**
+   * Removes an entry to this pages action bar URIs. See {@link #m_actionURIs}.<br/>
+   * Entries that where not previously added are ignored.
+   */
+  public void removeActionURI( final String uri )
+  {
+    m_actionURIs.remove( uri );
+  }
+
+  public GisMapOutlineViewer getOutlineViewer( )
+  {
+    return m_outlineViewer;
   }
 
   /**
    * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
    */
+  @Override
   public void createControl( final Composite parent )
   {
     if( parent.isDisposed() )
+      System.out.println( Messages.getString( "org.kalypso.ui.editor.mapeditor.GisMapOutlinePage.0" ) ); //$NON-NLS-1$
+
+    m_outlineViewer.createControl( parent );
+
+    final IPageSite site = getSite();
+    final IActionBars actionBars = site.getActionBars();
+
+    // TODO: probably does not work any more...
+    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
+    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
+
+    m_popupMgr = new MenuManager( "#MapOutlineContextMenu" );
+
+    final Menu menu = m_popupMgr.createContextMenu( m_outlineViewer.getControl() );
+    m_outlineViewer.getControl().setMenu( menu );
+
+
+    // Refresh updateable element later, else they won't find this page
+    final UIJob job = new UIJob( "Update outline action bars" )
     {
-      System.out.println( Messages.getString("org.kalypso.ui.editor.mapeditor.GisMapOutlinePage.0") ); //$NON-NLS-1$
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        populateActionBars();
+        setCompact( true );
+        return Status.OK_STATUS;
+      }
+    };
+
+    job.setSystem( true );
+    job.schedule();
+  }
+
+  /**
+   * Populates this pages action bars with items from the given menu-contributions.
+   */
+  protected void populateActionBars( )
+  {
+    releaseActionBars();
+
+    final IPageSite site = getSite();
+    if( site == null )
+      return;
+
+    final IActionBars actionBars = site.getActionBars();
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    final IMenuManager menuManager = actionBars.getMenuManager();
+
+    for( final String uri : m_actionURIs )
+    {
+      if( uri.startsWith( "toolbar" ) )
+        ContributionUtils.populateContributionManager( site, toolBarManager, uri );
+      else if( uri.startsWith( "menu" ) )
+        ContributionUtils.populateContributionManager( site, menuManager, uri );
+      else if( uri.startsWith( "popup" ) )
+      {
+        if( m_popupMgr != null )
+          ContributionUtils.populateContributionManager( site, m_popupMgr, uri );
+      }
+      else
+        System.out.println( String.format( "Unable to add uri '%s' to outline action bars. Unknown prefix.", uri ) );
     }
-    m_modellView.createControl( parent );
 
-    m_modellView.addDoubleClickListener( this );
+    actionBars.updateActionBars();
+  }
 
-    m_actionDelegates = GisMapOutlinePageExtension.getRegisteredMapOutlineActions( this );
+  /**
+   * Releases any previously populated action bars of this page.
+   */
+  private void releaseActionBars( )
+  {
+    final IPageSite site = getSite();
+    if( site == null )
+      return;
+
+    final IActionBars actionBars = site.getActionBars();
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    final IMenuManager menuManager = actionBars.getMenuManager();
+    ContributionUtils.releaseContributions( site, toolBarManager );
+    ContributionUtils.releaseContributions( site, menuManager );
+    if( m_popupMgr != null )
+      ContributionUtils.releaseContributions( site, m_popupMgr );
   }
 
   /**
    * @see org.eclipse.ui.part.IPage#dispose()
    */
+  @Override
   public void dispose( )
   {
-    if( m_modellView != null )
-    {
-      m_modellView.removeDoubleClickListener( this );
-      m_modellView.dispose();
-    }
+    super.dispose();
 
-    for( final AbstractOutlineAction action : m_actionDelegates )
-      action.dispose();
+    releaseActionBars();
+
+    if( m_outlineViewer != null )
+      m_outlineViewer.dispose();
   }
 
   /**
    * @see org.eclipse.ui.part.IPage#getControl()
    */
+  @Override
   public Control getControl( )
   {
-    return m_modellView.getControl();
-  }
-
-  /**
-   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
-   */
-  public void setActionBars( final IActionBars actionBars )
-  {
-    actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
-    actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
-
-    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    for( final AbstractOutlineAction action : m_actionDelegates )
-    {
-      toolBarManager.add( action );
-    }
-
-    actionBars.updateActionBars();
-
-    final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" ); //$NON-NLS-1$
-    menuMgr.setRemoveAllWhenShown( true );
-    menuMgr.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        manager.add( new Separator() );
-        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-      }
-    } );
-
-    final Menu menu = menuMgr.createContextMenu( m_modellView.getControl() );
-
-    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    // final IViewPart outlineView = page.findView( IPageLayout.ID_OUTLINE );
-    // if( outlineView != null )
-    // outlineView.getSite().registerContextMenu(
-    // menuMgr, m_modellView );
-
-    // TODO: das nimmt nicht die outline view sondern irgendeine aktive
-    // besser wäre wie im kommentar oben, aber die outline-view ist noch gar nicht da
-    // was tun?
-    if( page != null )
-    {
-      final IWorkbenchPart activePart = page.getActivePart();
-      activePart.getSite().registerContextMenu( menuMgr, m_modellView );
-    }
-    m_modellView.getControl().setMenu( menu );
+    return m_outlineViewer.getControl();
   }
 
   /**
    * @see org.eclipse.ui.part.IPage#setFocus()
    */
+  @Override
   public void setFocus( )
   {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
+    // TODO: remove, style editor must pull information instead
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
 
     if( part != null )
-      part.setSelectionChangedProvider( this );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_modellView.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  public ISelection getSelection( )
-  {
-    return m_modellView.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_modellView.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  public void setSelection( final ISelection selection )
-  {
-    m_modellView.setSelection( selection );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
-   */
-  public void doubleClick( final DoubleClickEvent event )
-  {
-    /*
-     * final IStructuredSelection sel = (IStructuredSelection)event.getSelection(); if( !sel.isEmpty() )
-     * m_gisEditor.postCommand( new EditPropertiesCommand( getControl().getShell(), (LayerType)sel.getFirstElement() ) );
-     */
+      part.setSelectionChangedProvider( m_outlineViewer );
   }
 
   /**
@@ -277,8 +291,6 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
    */
   public void setMapPanel( final IMapPanel panel )
   {
-    final IMapPanel oldPanel = m_panel;
-
     if( m_panel != null )
       m_panel.removeMapPanelListener( m_mapPanelListener );
 
@@ -287,10 +299,8 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     if( m_panel != null )
     {
       m_panel.addMapPanelListener( m_mapPanelListener );
-      m_modellView.setMapModel( m_panel.getMapModell() );
+      m_outlineViewer.setMapModel( m_panel.getMapModell() );
     }
-
-    fireMapModellViewChanged( oldPanel, panel );
   }
 
   /**
@@ -306,40 +316,78 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
   protected void handleMapModelChanged( final IMapModell newModel )
   {
-    if( m_modellView != null )
-      m_modellView.setMapModel( newModel );
+    if( m_outlineViewer != null )
+      m_outlineViewer.setMapModel( newModel );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#addMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
    */
-  public void addMapModellViewListener( final IMapModellViewListener l )
+  @Override
+  public void init( final IPageSite site )
   {
-    m_mapModellViewListeners.add( l );
+    super.init( site );
+
+    site.setSelectionProvider( m_outlineViewer );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#removeMapModellViewListener(org.kalypso.ogc.gml.mapmodel.IMapModellViewListener)
+   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeMapModellViewListener( final IMapModellViewListener l )
+  @Override
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    m_mapModellViewListeners.remove( l );
+    getSite().getSelectionProvider().addSelectionChangedListener( listener );
   }
 
-  private void fireMapModellViewChanged( final IMapPanel oldPanel, final IMapPanel newPanel )
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
+  @Override
+  public ISelection getSelection( )
   {
-    final IMapModellViewListener[] listeners = m_mapModellViewListeners.toArray( new IMapModellViewListener[m_mapModellViewListeners.size()] );
-    for( final IMapModellViewListener l : listeners )
-    {
-      final ISafeRunnable code = new SafeRunnable()
-      {
-        public void run( ) throws Exception
-        {
-          l.onMapPanelChanged( GisMapOutlinePage.this, oldPanel, newPanel );
-        }
-      };
-
-      SafeRunner.run( code );
-    }
+    return getSite().getSelectionProvider().getSelection();
   }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
+  @Override
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
+  {
+    getSite().getSelectionProvider().removeSelectionChangedListener( listener );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( final ISelection selection )
+  {
+    getSite().getSelectionProvider().getSelection();
+  }
+
+  /**
+   * @return <code>true</code> if the viewer is compact view state.
+   * @see #setCompact(boolean)
+   */
+  public boolean isCompact( )
+  {
+    return m_outlineViewer.isCompact();
+  }
+
+  public void setCompact( final boolean compact )
+  {
+    m_outlineViewer.setCompact( compact );
+
+    final IPageSite site = getSite();
+    if( site == null )
+      return;
+
+    final ICommandService commandService = (ICommandService) site.getService( ICommandService.class );
+    final Map<String, Object> filter = new HashMap<String, Object>();
+    filter.put( IServiceScopes.WINDOW_SCOPE, getSite().getPage().getWorkbenchWindow() );
+    commandService.refreshElements( ToggleCompactOutlineHandler.CMD_ID, filter );
+  }
+
 }

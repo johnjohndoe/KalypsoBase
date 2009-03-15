@@ -84,7 +84,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   public static final String PARAM_SELECT_BUTTONS = "showSelectButtons"; //$NON-NLS-1$

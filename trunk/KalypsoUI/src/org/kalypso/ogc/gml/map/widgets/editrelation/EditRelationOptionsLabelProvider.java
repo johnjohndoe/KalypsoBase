@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -50,7 +49,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class EditRelationOptionsLabelProvider extends LabelProvider

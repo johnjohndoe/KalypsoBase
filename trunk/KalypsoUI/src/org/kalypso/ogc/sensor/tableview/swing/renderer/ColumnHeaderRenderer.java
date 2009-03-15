@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
 import java.awt.Component;
 import java.awt.Insets;
-import java.awt.event.MouseEvent;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -74,7 +73,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   private int m_pressedColumn = -1;
 
   /** The three buttons that are used to render the table header cells. */
-  private JButton m_normalButton;
+  private final JButton m_normalButton;
 
   /**
    * Creates a new button renderer.
@@ -95,7 +94,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
   /**
    * Sets the pressed column.
-   * 
+   *
    * @param column
    *          the column.
    */
@@ -191,7 +190,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     return null;
   }
 
-  public void openDialog( final Object element, final MouseEvent e )
+  public void openDialog( final Object element )
   {
     if( !( element instanceof TableViewColumn ) )
       return;

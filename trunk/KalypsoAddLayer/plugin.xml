@@ -2,19 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
-     <extension-point id="WMSImageProvider" name="WMSImageProvider" schema="schema/WMSImageProvider.exsd"/>
-   <extension
-         id="mapviewaction"
-         name="mapviewaction"
-         point="org.kalypso.ui.mapviewaction">
-      <MapviewAction
-            title="AddLayer"
-            enabled="true"
-            icon="icon/add_row.gif"
-            class="org.kalypso.ui.view.action.AddThemeAction"
-            tooltip="Thema zu Karte hinzufügen"/>
-   </extension>
+   <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
+   <extension-point id="WMSImageProvider" name="WMSImageProvider" schema="schema/WMSImageProvider.exsd"/>
+
    <extension
          id="addLayerWizard"
          name="dataimport"
@@ -122,4 +112,24 @@
             id="org.kalypso.ui.gazetter.view.GazetterView"
             name="GazetterView"/>
    </extension>
+
+	<!-- Commands for the map outline -->
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddTheme" name="Add Layer"  description="Add new Layer to Map"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.commandImages">
+		<image commandId="org.kalypso.ui.map.outline.command.AddTheme" icon="icon/add_row.gif" />
+	</extension>
+
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.AddTheme" class="org.kalypso.ui.view.action.AddThemeHandler"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.menus">
+   		<menuContribution locationURI="toolbar:org.kalypso.map.outline.GisMapEditor?after=theme">
+			<command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push"/>
+		</menuContribution>
+	</extension>
+   
 </plugin>
