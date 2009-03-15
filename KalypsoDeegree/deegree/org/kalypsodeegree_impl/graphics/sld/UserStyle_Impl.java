@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -52,28 +53,23 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
 public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallable
 {
-  private ArrayList featureTypeStyles = null;
+  private final List<FeatureTypeStyle> m_featureTypeStyles = new ArrayList<FeatureTypeStyle>();
 
-  private String abstract_ = null;
+  private String m_abstract_ = null;
 
-  private String title = null;
+  private String m_title = null;
 
-  private boolean default_ = false;
+  private boolean m_default_ = false;
 
-  /**
-   * constructor initializing the class with the <UserStyle>
-   */
-  public UserStyle_Impl( String name, String title, String abstract_, boolean default_, FeatureTypeStyle[] featureTypeStyles )
+  /* default */UserStyle_Impl( final String name, final String title, final String abstract_, final boolean default_, final FeatureTypeStyle[] featureTypeStyles )
   {
     super( name );
-
-    this.featureTypeStyles = new ArrayList();
 
     setTitle( title );
     setAbstract( abstract_ );
@@ -83,65 +79,65 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * The Title is a human-readable short description for the style that might be displayed in a GUI pick list.
-   * 
+   *
    * @return the title of the User-Style
    */
   public String getTitle( )
   {
-    return title;
+    return m_title;
   }
 
   /**
    * sets the <Title>
-   * 
+   *
    * @param title
    *            the title of the User-Style
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
-    this.title = title;
+    this.m_title = title;
   }
 
   /**
    * the Abstract is a more exact description that may be a few paragraphs long.
-   * 
+   *
    * @return the abstract of the User-Style
    */
   public String getAbstract( )
   {
-    return abstract_;
+    return m_abstract_;
   }
 
   /**
    * sets the <Abstract>
-   * 
+   *
    * @param abstract_
    *            the abstract of the User-Style
    */
-  public void setAbstract( String abstract_ )
+  public void setAbstract( final String abstract_ )
   {
-    this.abstract_ = abstract_;
+    this.m_abstract_ = abstract_;
   }
 
   /**
    * The IsDefault element identifies whether a style is the default style of a layer, for use in SLD library mode when
    * rendering or for storing inside of a map server. The default value is <tt>false</tt>.
-   * 
+   *
    * @return true if the style ist the default style
    */
   public boolean isDefault( )
   {
-    return default_;
+    return m_default_;
   }
 
   /**
    * sets the <Default>
-   * 
+   *
    * @param default_
    */
-  public void setDefault( boolean default_ )
+  public void setDefault( final boolean default_ )
   {
-    this.default_ = default_;
+    this.m_default_ = default_;
   }
 
   /**
@@ -154,100 +150,101 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
    * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
    * more generally, such as in WFS and GML, so this explicit separation is important.
-   * 
+   *
    * @return the FeatureTypeStyles of a User-Style
    */
   public FeatureTypeStyle[] getFeatureTypeStyles( )
   {
-    FeatureTypeStyle[] ft = new FeatureTypeStyle[featureTypeStyles.size()];
+    final FeatureTypeStyle[] ft = new FeatureTypeStyle[m_featureTypeStyles.size()];
 
-    return (FeatureTypeStyle[]) featureTypeStyles.toArray( ft );
+    return m_featureTypeStyles.toArray( ft );
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
    */
-  public FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName )
+  public FeatureTypeStyle getFeatureTypeStyle( final String featureTypeStyleName )
   {
-    for( int i = 0; i < featureTypeStyles.size(); i++ )
+    for( int i = 0; i < m_featureTypeStyles.size(); i++ )
     {
-      if( featureTypeStyles.get( i ) instanceof FeatureTypeStyle && ((FeatureTypeStyle) featureTypeStyles.get( i )).getName().equals( featureTypeStyleName ) )
-        return (FeatureTypeStyle) featureTypeStyles.get( i );
+      if( m_featureTypeStyles.get( i ) != null && (m_featureTypeStyles.get( i )).getName().equals( featureTypeStyleName ) )
+        return m_featureTypeStyles.get( i );
     }
     return null;
   }
 
   /**
    * sets the <FeatureTypeStyle>
-   * 
+   *
    * @param featureTypeStyles
    *            the FeatureTypeStyles of a User-Style
    */
-  public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
+  public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
-    this.featureTypeStyles.clear();
+    this.m_featureTypeStyles.clear();
 
     if( featureTypeStyles != null )
     {
-      for( int i = 0; i < featureTypeStyles.length; i++ )
+      for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
       {
-        addFeatureTypeStyle( featureTypeStyles[i] );
+        addFeatureTypeStyle( featureTypeStyle );
       }
     }
   }
 
   /**
    * Adds a <FeatureTypeStyle>
-   * 
+   *
    * @param featureTypeStyle
    *            a FeatureTypeStyle to add
    */
-  public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  public void addFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
-    featureTypeStyles.add( featureTypeStyle );
+    m_featureTypeStyles.add( featureTypeStyle );
   }
 
   /**
    * Removes a <FeatureTypeStyle>
    */
-  public void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
+  public void removeFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
   {
-    if( featureTypeStyles.indexOf( featureTypeStyle ) != -1 )
+    if( m_featureTypeStyles.indexOf( featureTypeStyle ) != -1 )
     {
-      featureTypeStyles.remove( featureTypeStyles.indexOf( featureTypeStyle ) );
+      m_featureTypeStyles.remove( m_featureTypeStyles.indexOf( featureTypeStyle ) );
     }
   }
 
   /**
    * exports the content of the UserStyle as XML formated String
-   * 
+   *
    * @return xml representation of the UserStyle
    */
   public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 100 );
+    final StringBuffer sb = new StringBuffer( 100 );
     sb.append( "<UserStyle>" );
+    final String name = getName();
     if( name != null && !name.equals( "" ) )
     {
       sb.append( "<Name>" ).append( name ).append( "</Name>" );
     }
-    if( title != null && !title.equals( "" ) )
+    if( m_title != null && !m_title.equals( "" ) )
     {
-      sb.append( "<Title>" ).append( title ).append( "</Title>" );
+      sb.append( "<Title>" ).append( m_title ).append( "</Title>" );
     }
-    if( abstract_ != null && !abstract_.equals( "" ) )
+    if( m_abstract_ != null && !m_abstract_.equals( "" ) )
     {
-      sb.append( "<Abstract>" ).append( abstract_ ).append( "</Abstract>" );
+      sb.append( "<Abstract>" ).append( m_abstract_ ).append( "</Abstract>" );
     }
-    if( default_ )
+    if( m_default_ )
     {
       sb.append( "<IsDefault>" ).append( 1 ).append( "</IsDefault>" );
     }
-    for( int i = 0; i < featureTypeStyles.size(); i++ )
+    for( int i = 0; i < m_featureTypeStyles.size(); i++ )
     {
-      sb.append( ((Marshallable) featureTypeStyles.get( i )).exportAsXML() );
+      sb.append( ((Marshallable) m_featureTypeStyles.get( i )).exportAsXML() );
     }
     sb.append( "</UserStyle>" );
 

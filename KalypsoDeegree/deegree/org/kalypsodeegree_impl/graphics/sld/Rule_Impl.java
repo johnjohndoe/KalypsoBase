@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -86,20 +86,12 @@ public class Rule_Impl implements Rule, Marshallable
 
   private double m_minScaleDenominator = 0;
 
-  /**
-   * default constructor
-   */
-  public Rule_Impl( )
-  {
-    m_symbolizers = new ArrayList<Symbolizer>();
-  }
-
-  /**
+   /**
    * constructor initializing the class with the <Rule>
    */
   public Rule_Impl( final Symbolizer[] symbolizers, final String name, final String title, final String abstract_, final LegendGraphic legendGraphic, final Filter filter, final boolean elseFilter, final double minScaleDenominator, final double maxScaleDenominator )
   {
-    this();
+    m_symbolizers = new ArrayList<Symbolizer>();
     setSymbolizers( symbolizers );
     setName( name );
     setTitle( title );
@@ -113,7 +105,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the name of the rule. this for machine interpreting.
-   * 
+   *
    * @return the name of the rule
    */
   public String getName( )
@@ -123,7 +115,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the name of the rule. this for machine interpreting.
-   * 
+   *
    * @param name
    *            the name of the rule
    */
@@ -134,7 +126,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the human readable title of the rule
-   * 
+   *
    * @return the title of the rule
    */
   public String getTitle( )
@@ -144,7 +136,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the human readable title of the rule
-   * 
+   *
    * @param title
    *            the title of the rule
    */
@@ -155,7 +147,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the human readable abstract of the rule
-   * 
+   *
    * @return the abstract of the rule
    */
   public String getAbstract( )
@@ -165,7 +157,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the human readable abstract of the rule
-   * 
+   *
    * @param abstract_
    *            the abstract of the rule
    */
@@ -176,7 +168,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * The LegendGraphic element gives an optional explicit Graphic symbol to be displayed in a legend for this rule.
-   * 
+   *
    * @return the legendGraphic of the rule
    */
   public LegendGraphic getLegendGraphic( )
@@ -186,7 +178,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the LegendGraphic element
-   * 
+   *
    * @param legendGraphic
    *            the legendGraphic of the rule
    */
@@ -198,7 +190,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * The Filter element has a relatively straightforward meaning. The syntax of the Filter element is defined in the WFS
    * specification and allows both attribute (property) and spatial filtering.
-   * 
+   *
    * @return the filter element
    */
   public Filter getFilter( )
@@ -208,7 +200,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <Filter>
-   * 
+   *
    * @param filter
    *            the filter element
    */
@@ -220,7 +212,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * The ElseFilter allows rules to be specified that are activated for features are not selected by any other rule in a
    * feature-type style.
-   * 
+   *
    * @return true if the rule has an elseFilter
    */
   public boolean hasElseFilter( )
@@ -230,7 +222,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <ElseFilter>
-   * 
+   *
    * @param elseFilter
    *            an elseFilter
    */
@@ -243,7 +235,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
    * which the rule should be applied. The MinScaleDenominator and MaxScaleDenominator elements, as their names suggest,
    * are simply the minimum and maximum ranges of scale (denominators) of maps for which a rule should apply.
-   * 
+   *
    * @return the MinScaleDenominator for the rule
    */
   public double getMinScaleDenominator( )
@@ -253,7 +245,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <MinScaleDenominator>
-   * 
+   *
    * @param minScaleDenominator
    *            the MinScaleDenominator for the rule
    */
@@ -266,7 +258,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
    * which the rule should be applied. The MinScaleDenominator and MaxScaleDenominator elements, as their names suggest,
    * are simply the minimum and maximum ranges of scale (denominators) of maps for which a rule should apply.
-   * 
+   *
    * @return the MaxScaleDenominator for the rule
    */
   public double getMaxScaleDenominator( )
@@ -276,7 +268,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <MaxScaleDenominator>
-   * 
+   *
    * @param maxScaleDenominator
    *            the MaxScaleDenominator for the rule
    */
@@ -296,7 +288,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The Symbolizers will be returned in the sequece of their occurence with in the rule definition. Its the users
    * function to determine what type of Symbolizer(s) are returned. This can be done for example by using the
    * <tt>instanceof</tt> operator of Java.
-   * 
+   *
    * @return the Symbolizer for the rule
    */
   public Symbolizer[] getSymbolizers( )
@@ -306,7 +298,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <Symbolizer>
-   * 
+   *
    * @param symbolizers
    *            symbolizers for the rule
    */
@@ -325,7 +317,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * adds a <Symbolizer>
-   * 
+   *
    * @param symbolizer
    *            symbolizer to add
    */
@@ -337,7 +329,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * Removes a <Symbolizer>from a set of Symbolizers.
-   * 
+   *
    * @param symbolizer
    *            symbolizer to remove
    */
@@ -352,7 +344,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * exports the content of the Rule as XML formated String
-   * 
+   *
    * @return xml representation of the Rule
    */
   public String exportAsXML( )
