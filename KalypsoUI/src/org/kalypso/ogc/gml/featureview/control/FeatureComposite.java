@@ -166,7 +166,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * Constructs the FeatureComposite.
-   * 
+   *
    * @param feature
    *            If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
    * @param selectionManager
@@ -517,8 +517,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-      final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-
       final Object objFormat = editorType.getFormat();
       String format = null;
       if( objFormat instanceof String )
@@ -526,7 +524,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       else if( objFormat instanceof Node )
         format = XMLTools.getStringValue( ((Node) objFormat) );
 
-      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format, plugin.createFeatureTypeCellEditorFactory(), this, m_selectionManager );
+      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
       tfc.setEditable( editorType.isEditable() );
@@ -978,7 +976,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * This function sets, if the green hook on a ok validated feature should be displayed. The default is false. This
    * flag has only an effect, if the validator label is activated.
-   * 
+   *
    * @param showOk
    *            The flag, indicating, if the green hook should be displayed.
    */
@@ -989,7 +987,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * This function returns the flag for displaying the green hook on a ok validated feature.
-   * 
+   *
    * @return The flag, indicating, if the green hook should be displayed.
    */
   public boolean isShowOk( )

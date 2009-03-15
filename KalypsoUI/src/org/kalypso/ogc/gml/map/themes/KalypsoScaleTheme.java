@@ -80,7 +80,6 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     super( name, type, mapModel );
 
     configureProperties( layerType );
-
   }
 
   public void configureProperties( final StyledLayerType mapLayerType )
@@ -154,6 +153,8 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     final double subDistance = roundedDistance / NUMBER_SUBS;
 
     /* Determine the width for a sub rectangle. */
+    // TODO: width is very small (0 or 1) if scale is too small! Is is possible to avoid determination of width
+    // depending on geo-coordinates?
     final int width = (int) p.getDestX( offsetX + subDistance ) - offset_x;
 
     /* Calculate the values for each sub rectangle. */

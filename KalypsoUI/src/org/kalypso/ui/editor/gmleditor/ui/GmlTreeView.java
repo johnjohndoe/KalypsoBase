@@ -40,6 +40,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.ConstantLabelProvider;
 import org.kalypso.contribs.java.util.Arrays;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
@@ -126,7 +127,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
 
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
   private final GMLLabelProvider m_labelProvider = new GMLLabelProvider();
 
@@ -232,7 +233,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       for( int i = 0; i < toAdd.length; i++ )
       {
         final Feature feature = features[i];
-        final Feature parent = feature.getParent();
+        final Feature parent = feature.getOwner();
         final IRelationType parentProperty = m_contentProvider.getParentFeatureProperty( feature );
 
         toAdd[i] = new EasyFeatureWrapper( workspace, feature, parent, parentProperty );
@@ -302,7 +303,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  @SuppressWarnings("unchecked")
   public void onModellChange( final ModellEvent modellEvent )
   {
     fireModellEvent( modellEvent );
@@ -313,7 +313,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     try
     {
       if( m_workspace != null )
-        KalypsoGisPlugin.getDefault().getPool().saveObject( m_workspace, monitor );
+        m_pool.saveObject( m_workspace, monitor );
     }
     catch( final Exception e )
     {
@@ -561,7 +561,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     public Feature getParentFeature( final Feature feature )
     {
-      return feature.getParent();
+      return feature.getOwner();
     }
 
     public IRelationType getParentFeatureProperty( final Feature feature )

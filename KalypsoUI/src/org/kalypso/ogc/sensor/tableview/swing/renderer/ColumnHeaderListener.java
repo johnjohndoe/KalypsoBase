@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 /**
  * Captures mouse clicks on a table header, with the intention of triggering a click. Adapted from code by jcommons
  * posted on http://www.jfree.org/jcommon/.
- * 
+ *
  * @author Gernot Belger
  */
 public class ColumnHeaderListener extends MouseAdapter
@@ -63,10 +63,11 @@ public class ColumnHeaderListener extends MouseAdapter
   /**
    * Handle a mouse press event - if the user is NOT resizing a column and NOT dragging a column then give visual
    * feedback that the column header has been pressed.
-   * 
+   *
    * @param e
    *          the mouse event.
    */
+  @Override
   public void mousePressed( final MouseEvent e )
   {
     if( e.getButton() != MouseEvent.BUTTON1 )
@@ -95,15 +96,16 @@ public class ColumnHeaderListener extends MouseAdapter
 
   /**
    * This event is ignored (not required).
-   * 
+   *
    * @param e
    *          the mouse event.
    */
+  @Override
   public void mouseClicked( final MouseEvent e )
   {
     if( e.getButton() != MouseEvent.BUTTON1 )
       return;
-    
+
     // not required
     final TableColumn column = findColumn( e );
     if( column == null )
@@ -111,15 +113,16 @@ public class ColumnHeaderListener extends MouseAdapter
 
     final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer)column.getHeaderRenderer();
     final TableViewColumn tvc = (TableViewColumn)column.getHeaderValue();
-    renderer.openDialog( tvc, e );
+    renderer.openDialog( tvc );
   }
 
   /**
    * When the user releases the mouse button, we attempt to sort the table.
-   * 
+   *
    * @param e
    *          the mouse event.
    */
+  @Override
   public void mouseReleased( final MouseEvent e )
   {
     final JTableHeader header = (JTableHeader)e.getComponent();
@@ -139,6 +142,7 @@ public class ColumnHeaderListener extends MouseAdapter
   /**
    * @see java.awt.event.MouseAdapter#mouseEntered(java.awt.event.MouseEvent)
    */
+  @Override
   public void mouseEntered( final MouseEvent evt )
   {
     final TableColumn column = findColumn( evt );

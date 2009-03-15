@@ -56,7 +56,7 @@ import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 /**
  * Cached GMLSchemata zweistufig. Zuerst wird das eigentliche Schema (aus einer URL) lokal in einem File-Cache
  * gespeichert und dann zusätzlich noch im Speicher gehalten.
- * 
+ *
  * @author schlienger
  */
 public class GMLSchemaCache
@@ -91,12 +91,15 @@ public class GMLSchemaCache
 
   /**
    * Lädt das Schmea aus dieser URL und nimmt diese id für den cache
-   * 
+   *
    * @param namespace
    *          ID für den Cache, wenn null, wird die id anhand des geladenen schemas ermittelt
    */
   public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
   {
+    if( schemaURL == null )
+      throw new InvocationTargetException( new GMLSchemaException( "Unable to load schema, unknown namespace: " + namespace ) );
+
     Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL );
 
     Assert.isNotNull( namespace );
@@ -148,9 +151,6 @@ public class GMLSchemaCache
         return sw.getSchema();
       }
     }
-
-    if( schemaURL == null )
-      throw new InvocationTargetException( new GMLSchemaException( "Unable to load schema, unknown namespace: " + namespace ) );
 
     try
     {
@@ -242,7 +242,7 @@ public class GMLSchemaCache
 
   /**
    * Clears the cache. Schematas will be reloaded after this operation.
-   * 
+   *
    * @param onlyMemoryCache
    *          If true, only the memory cache is cleared. Else, file and memory cache are cleared.
    */

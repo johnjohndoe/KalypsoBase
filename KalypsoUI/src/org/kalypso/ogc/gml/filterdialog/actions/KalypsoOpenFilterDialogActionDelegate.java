@@ -18,13 +18,13 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -111,7 +111,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( part != null )
     {
       final IWorkbenchPart workbenchPart = part.getPart();
-      final IMapModellView page = workbenchPart == null ? null : (IMapModellView) workbenchPart.getAdapter( IMapModellView.class );
+      final GisMapOutlinePage page = workbenchPart == null ? null : (GisMapOutlinePage) workbenchPart.getAdapter( GisMapOutlinePage.class );
       if( page != null )
       {
         m_ftSelection = null;

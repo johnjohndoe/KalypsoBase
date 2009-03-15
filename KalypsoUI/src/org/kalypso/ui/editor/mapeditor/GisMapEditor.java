@@ -52,29 +52,18 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * <p>
  * Eclipse-Editor zum editieren der GML-Gis-Templates.
  * </p>
- * 
+ *
  * @author belger, Stefan Kurzbach
  */
 public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( IContentOutlinePage.class.equals( adapter ) )
-    {
-      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
-      page.setMapPanel( getMapPanel() );
-      return page;
-    }
+  private static final String OUTLINE_URI_TOOLBAR = "toolbar:org.kalypso.map.outline.GisMapEditor";
 
-    return super.getAdapter( adapter );
-  }
+  private static final String OUTLINE_URI_MENU = "menu:org.kalypso.map.outline.GisMapEditor";
+
+  private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor";
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -97,7 +86,7 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       }
     }
   }
-  
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
@@ -107,5 +96,23 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
     super.init( site, input );
 
     initMapPanel( site );
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
+      page.addActionURI( OUTLINE_URI_TOOLBAR );
+      page.addActionURI( OUTLINE_URI_MENU );
+      page.addActionURI( OUTLINE_URI_POPUP );
+
+      page.setMapPanel( getMapPanel() );
+      return page;
+    }
+
+    return super.getAdapter( adapter );
   }
 }

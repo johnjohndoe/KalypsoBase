@@ -58,16 +58,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.model.IWorkbenchAdapter2;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -89,7 +94,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Gernot Belger
  */
-public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
+public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme, IWorkbenchAdapter2
 {
   private static interface IListenerRunnable
   {
@@ -828,6 +833,47 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public boolean isGrayed( )
   {
     return false;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getBackground(java.lang.Object)
+   */
+  @Override
+  public RGB getBackground( final Object element )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getForeground(java.lang.Object)
+   */
+  @Override
+  public RGB getForeground( final Object element )
+  {
+    return null;
+  }
+
+  /**
+   * Not loaded themes are shown with italic font.
+   * 
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getFont(java.lang.Object)
+   */
+  @Override
+  public FontData getFont( final Object element )
+  {
+    final FontData standardFont = JFaceResources.getDialogFont().getFontData()[0];
+
+    FontDescriptor fontDesc = FontDescriptor.createFrom( standardFont );
+
+    if( !isLoaded() )
+      fontDesc = fontDesc.setStyle( SWT.ITALIC );
+
+    // falls aktiviert
+    final IMapModell mapModell = getMapModell();
+    if( mapModell != null && mapModell.getActiveTheme() == this )
+      fontDesc = fontDesc.setStyle( SWT.BOLD );
+
+    return fontDesc.getFontData()[0];
   }
 
 }

@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
- * 
+ *
  * @author Dirk Kuch
  */
 public class ToolTipRenderer
@@ -83,7 +83,6 @@ public class ToolTipRenderer
     return maxRect;
   }
 
-  @SuppressWarnings("deprecation") //$NON-NLS-1$
   public void paint( final Graphics g )
   {
     if( m_tooltip == null )
@@ -106,6 +105,7 @@ public class ToolTipRenderer
     g.setColor( m_borderColor );
     g.drawRect( 5, 5, textboxWidth, textboxHeight );
 
+    g.setColor( m_textColor );
     int baseLineY = 22;
     for( final String row : tooltip )
     {

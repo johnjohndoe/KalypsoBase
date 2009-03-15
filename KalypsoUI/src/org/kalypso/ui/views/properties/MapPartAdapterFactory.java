@@ -41,9 +41,6 @@
 package org.kalypso.ui.views.properties;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
@@ -53,32 +50,21 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  * Some adapterTypes (like {@link MapPanel}) are exposed via this factory (instead of directly using
  * {@link AbstractMapPart#getAdapter(Class)}, because the expression frameworks 'adapt'-element does only recognise
  * types handled via adapter factories.
- * 
+ *
  * @author Gernot Belger
  */
 public class MapPartAdapterFactory implements IAdapterFactory
 {
-  private static final String CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ContentOutlinePropertyContributor"; //$NON-NLS-1$
-
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( !(adaptableObject instanceof AbstractMapPart) )
       return null;
 
     final AbstractMapPart mapPart = (AbstractMapPart) adaptableObject;
-
-    if( adapterType == IPropertySheetPage.class )
-      return new TabbedPropertySheetPage( new ITabbedPropertySheetPageContributor()
-      {
-        public String getContributorId( )
-        {
-          return MapPartAdapterFactory.CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR;
-        }
-      } );
 
     if( adapterType == IMapPanel.class )
       return mapPart.getMapPanel();
@@ -89,10 +75,10 @@ public class MapPartAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public Class[] getAdapterList( )
   {
-    return new Class[] { IPropertySheetPage.class, IMapPanel.class };
+    return new Class[] { IMapPanel.class };
   }
 
 }

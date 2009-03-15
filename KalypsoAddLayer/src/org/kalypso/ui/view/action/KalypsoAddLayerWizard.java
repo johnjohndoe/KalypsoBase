@@ -40,14 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.view.action;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 import org.eclipse.ui.model.AdaptableList;
-import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * This class extends the ImportWizard. This enables to call the import wizard from any action. Entry point to kalypso
@@ -56,16 +57,19 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
 @SuppressWarnings("restriction")
 public class KalypsoAddLayerWizard extends Wizard
 {
-  private final IMapModellView m_outlineviewer;
+  private final GisMapOutlinePage m_outlineviewer;
 
   private IWorkbench m_workbench;
+
+  private final IStructuredSelection m_selection;
 
   /**
    * Returns the import wizards that are available for invocation.
    */
-  public KalypsoAddLayerWizard( final IMapModellView outlineviewer )
+  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection )
   {
     m_outlineviewer = outlineviewer;
+    m_selection = selection;
     setWindowTitle( "Thema hinzufügen" ); //$NON-NLS-1$
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
     setNeedsProgressMonitor( true );
@@ -78,7 +82,7 @@ public class KalypsoAddLayerWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, null, getAvailableImportWizards(), "Themenarten:", m_outlineviewer );
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableImportWizards(), "Themenarten:", m_outlineviewer );
     page.setDescription( "Wählen Sie aus, welches Art Thema Sie hinzufügen möchten." );
     addPage( page );
   }
@@ -98,11 +102,6 @@ public class KalypsoAddLayerWizard extends Wizard
     final String pluginId = KalypsoAddLayerPlugin.getId();
     final String plugInpointId = KalypsoAddLayerPlugin.PL_IMPORT;
     return new WizardsRegistryReader( pluginId, plugInpointId ).getWizardElements();
-  }
-
-  public IMapModellView getOutlineViewer( )
-  {
-    return m_outlineviewer;
   }
 
   @Override

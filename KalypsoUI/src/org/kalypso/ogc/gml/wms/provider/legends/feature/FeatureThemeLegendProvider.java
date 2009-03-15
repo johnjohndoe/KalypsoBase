@@ -172,7 +172,7 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
   private ArrayList<LegendElement> collectElements( final Font font )
   {
     /* The label provider. */
-    final GisMapOutlineLabelProvider labelProvider = new GisMapOutlineLabelProvider( false, false );
+    final GisMapOutlineLabelProvider labelProvider = new GisMapOutlineLabelProvider();
 
     /* Memory for the elements. */
     final ArrayList<LegendElement> elements = new ArrayList<LegendElement>();

@@ -43,7 +43,6 @@ package org.kalypso.ui.repository.view;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
@@ -98,7 +97,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked") 
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -298,31 +297,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     if( childMem != null )
     {
       final List<IRepositoryItem> elements = new ArrayList<IRepositoryItem>();
-      final IMemento[] elementMem = childMem.getChildren( RepositoryExplorerPart.TAG_ELEMENT );
-      for( final IMemento element : elementMem )
-        try
-        {
-          // Marc's Note: commented this out because it is too slow...
-          // Also tried to make it faster using m_srv.findItem() in
-          // ObservationServiceRepository but the problem is once
-          // we got an ItemBean, we still need to make an IRepositoryItem
-          // (in fact a ServiceRepositoryItem) using the constructor
-          // but we are not able to set all arguments in findItem
-          // TODO: try to find a better solution
-          // final String id = elementMem[i].getString( TAG_IDENFITIER );
-          // final Object element = m_repContainer.findItem( id );
-          //
-          // if( element != null )
-          // elements.add( element );
-          // else
-          // Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could
-          // not find item " + id );
-        }
-        catch( final NoSuchElementException e )
-        {
-          // ignored
-        }
-
       viewer.setExpandedElements( elements.toArray() );
     }
   }

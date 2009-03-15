@@ -55,6 +55,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public class GeoTransformUtils
 {
+  /** Conctant for LatLon-Coordinate System: 'ESPG:4326' */
+  public static String EPSG_LATLON = "EPSG:4326";
+
   private GeoTransformUtils( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class" );

@@ -92,8 +92,6 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( final PanelEvent event )
       {
-        final int mode = ((ModeSelectionComboPanel) event.getSource()).getSelection();
-// rasterSymbolizer.setMode( mode );
         userStyle.fireStyleChanged();
       }
     } );

@@ -58,9 +58,9 @@ public class TupleResultFeatureControlWrapper
 
   private Control m_tblControl;
 
-  public TupleResultFeatureControlWrapper( final Feature observation, final IComponentUiHandlerProvider handlerProvider, final Boolean toolbar, final Boolean recordsFixed )
+  public TupleResultFeatureControlWrapper( final Feature observation, final IComponentUiHandlerProvider handlerProvider, final Boolean toolbar )
   {
-    m_control = new TupleResultFeatureControl( observation, null, handlerProvider, toolbar, recordsFixed );
+    m_control = new TupleResultFeatureControl( observation, null, handlerProvider, toolbar );
     if( toolbar )
     {
       m_control.addToolbarItem( "org.kalypso.ui.tupleResult.addRowCommand", SWT.PUSH ); //$NON-NLS-1$
@@ -73,7 +73,7 @@ public class TupleResultFeatureControlWrapper
 
   public TupleResultFeatureControlWrapper( final Feature observation, final IComponentUiHandlerProvider handlerProvider )
   {
-    this( observation, handlerProvider, true, false );
+    this( observation, handlerProvider, true );
   }
 
   public void draw( final Composite composite, final GridData gridData )

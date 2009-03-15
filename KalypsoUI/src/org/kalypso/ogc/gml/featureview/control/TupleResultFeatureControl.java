@@ -129,18 +129,15 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private IExecutionListener m_executionListener;
 
-  private final boolean m_recordsFixed;
-
   private ExcelTableCursor m_cursor;
 
   private ControlEditor m_controlEditor;
 
-  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar, final boolean recordsFixed )
+  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar )
   {
     super( feature, ftp );
 
     m_handlerProvider = handlerProvider;
-    m_recordsFixed = recordsFixed;
 
     if( showToolbar )
       m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
@@ -177,14 +174,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_viewer = new TupleResultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
 
     // dem Editor beibringen, nur dann eine Zelle zu editieren, wenn der EditMode aktiviert ist
-    ColumnViewerEditorActivationStrategy eas = new ColumnViewerEditorActivationStrategy( m_viewer )
+    final ColumnViewerEditorActivationStrategy eas = new ColumnViewerEditorActivationStrategy( m_viewer )
     {
 
       /**
        * @see org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy#isEditorActivationEvent(org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent)
        */
       @Override
-      protected boolean isEditorActivationEvent( ColumnViewerEditorActivationEvent event )
+      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
       {
         if( !isEditMode() )
           return false;
@@ -476,9 +473,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   {
     final IComponentUiHandlerProvider provider = createHandler( editorType );
     final Toolbar toolbar = editorType.getToolbar();
-    final Boolean recordsFixed = editorType.isRecordsFixed();
-    final boolean areRecordsFixed = recordsFixed == null ? false : recordsFixed.booleanValue();
-    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null, areRecordsFixed );
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null );
 
     if( toolbar == null )
       return tfc;

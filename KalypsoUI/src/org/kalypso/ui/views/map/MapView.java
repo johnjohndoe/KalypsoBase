@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
@@ -52,9 +52,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * <p>
@@ -63,7 +65,7 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  * <p>
  * Shows a map of all themes. The sources of the themes can be edited.
  * </p>
- * 
+ *
  * @author Stefan Kurzbach
  * @author Gernot Belger
  */
@@ -174,4 +176,29 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     super.startLoadJob( storage );
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
+
+      // Add id's for which menu/toolbar/popup-items are registered under
+      // REMARK: We are using the id under which this view was registered under in the plugin.xml
+      // The same view may have been registered under different view-id's. In order to have different
+      // actions, re-register this view under another id and add items view the org.eclipse.ui.menus extension.point.
+      final String baseUri = getSite().getId() + ".outline";
+      page.addActionURI( "toolbar:" + baseUri );
+      page.addActionURI( "menu:" + baseUri );
+      page.addActionURI( "popup:" + baseUri );
+      page.setMapPanel( getMapPanel() );
+
+      return page;
+    }
+
+    return super.getAdapter( adapter );
+  }
+
 }

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.deegree;
 
@@ -52,6 +52,8 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.framework.xml.XMLFragment;
+import org.deegree.model.spatialschema.Envelope;
+import org.deegree.model.spatialschema.Position;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.LayerBoundingBox;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
@@ -70,12 +72,13 @@ import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.graphics.transformation.GeoTransformUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class provides functions for dealing with the WMS client from degree.
- * 
+ *
  * @author Holger Albert
  */
 public class DeegreeWMSUtilities
@@ -89,11 +92,11 @@ public class DeegreeWMSUtilities
 
   /**
    * This function should load the capabilites for the given service.
-   * 
+   *
    * @param loader
-   *            This loader will load the capabilities.
+   *          This loader will load the capabilities.
    * @param monitor
-   *            A progress monitor.
+   *          A progress monitor.
    */
   public static WMSCapabilities loadCapabilities( final ICapabilitiesLoader loader, final IProgressMonitor monitor ) throws CoreException
   {
@@ -117,7 +120,7 @@ public class DeegreeWMSUtilities
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
-        throw new Exception( Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0") ); //$NON-NLS-1$
+        throw new Exception( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ) ); //$NON-NLS-1$
 
       return capabilities;
     }
@@ -133,15 +136,15 @@ public class DeegreeWMSUtilities
 
   /**
    * This function creates the get feature info request.
-   * 
+   *
    * @param capabilities
-   *            The wms capabilities.
+   *          The wms capabilities.
    * @param layers
-   *            The layers.
+   *          The layers.
    * @param pointOfInterest
-   *            The point of interest.
+   *          The point of interest.
    * @param format
-   *            The format.
+   *          The format.
    * @return The get feature info request.
    */
   public static HashMap<String, String> createGetFeatureinfoRequest( final WMSCapabilities capabilities, final String layers, final Point pointOfInterest, final String format ) throws CoreException
@@ -168,25 +171,25 @@ public class DeegreeWMSUtilities
 
   /**
    * This function creates the get map request.
-   * 
+   *
    * @param capabilities
-   *            The wms capabilities.
+   *          The wms capabilities.
    * @param negotiatedSRS
-   *            The negotiated srs.
+   *          The negotiated srs.
    * @param themeName
-   *            The theme name.
+   *          The theme name.
    * @param layers
-   *            The layers.
+   *          The layers.
    * @param styles
-   *            The styles.
+   *          The styles.
    * @param width
-   *            The requested width.
+   *          The requested width.
    * @param height
-   *            The requested height.
+   *          The requested height.
    * @param requestedEnvLocalSRS
-   *            The requested envelope in the local coordinate system.
+   *          The requested envelope in the local coordinate system.
    * @param localSRS
-   *            The local coordinate system.
+   *          The local coordinate system.
    * @return The get map request.
    */
   public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String[] layers, final String[] styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS ) throws CoreException
@@ -235,7 +238,7 @@ public class DeegreeWMSUtilities
     catch( final Exception ex )
     {
       /* Create the error status. */
-      final IStatus status = StatusUtilities.statusFromThrowable( ex, Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.35") ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( ex, Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.35" ) ); //$NON-NLS-1$
 
       throw new CoreException( status );
     }
@@ -243,11 +246,11 @@ public class DeegreeWMSUtilities
 
   /**
    * This function prepares the request parameter.
-   * 
+   *
    * @param capabilities
-   *            The wms capabilities.
+   *          The wms capabilities.
    * @param name
-   *            The name of the operation.
+   *          The name of the operation.
    * @return The request parameter.
    */
   private static HashMap<String, String> prepareRequestParameters( final WMSCapabilities capabilities, final String operationName ) throws CoreException
@@ -304,20 +307,20 @@ public class DeegreeWMSUtilities
 
   /**
    * Tries to find the operation.
-   * 
+   *
    * @param capabilities
-   *            The wms capabilities.
+   *          The wms capabilities.
    * @param name
-   *            The name of the operation.
+   *          The name of the operation.
    * @return The operation.
    * @throws CoreException
-   *             If this service does not supports this operation.
+   *           If this service does not supports this operation.
    */
   private static Operation checkOperation( final WMSCapabilities capabilities, final String name ) throws CoreException
   {
     final Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44") + name ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44" ) + name ) ); //$NON-NLS-1$
 
     return operation;
   }
@@ -326,13 +329,13 @@ public class DeegreeWMSUtilities
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   * 
+   *
    * @param localCRS
-   *            The local spatial reference system.
+   *          The local spatial reference system.
    * @param capabilities
-   *            The capabilites document of the web map service.
+   *          The capabilites document of the web map service.
    * @param layerNames
-   *            The layers that have to be matched to the local srs.
+   *          The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
   public static String[] negotiateCRS( final String localCRS, final WMSCapabilities capabilities, final String[] layerNames )
@@ -350,13 +353,13 @@ public class DeegreeWMSUtilities
 
   /**
    * This method tries to match the local coordinate system to a given layer selection.
-   * 
+   *
    * @param topLayer
-   *            The top layer of the layer structur of a web map service.
+   *          The top layer of the layer structur of a web map service.
    * @param layerSelection
-   *            Layers to be matched.
+   *          Layers to be matched.
    * @param localCRS
-   *            The local coordinate system.
+   *          The local coordinate system.
    * @return Null, if one element of the layers to be matched is not available in the local coordinate system, otherwise
    *         it returns the local crs.
    */
@@ -382,13 +385,13 @@ public class DeegreeWMSUtilities
    * This method collects all layers (or the specified layers) from the top layer of a WMSCapabilites document. If the
    * parameter layerSeletion is empty or null the method collects all layers, otherwise returns all layers with the same
    * name as in the layerSelection.
-   * 
+   *
    * @param collector
-   *            The set that collects the layers found.
+   *          The set that collects the layers found.
    * @param layer
-   *            the top layer of the wms capabilites document.
+   *          the top layer of the wms capabilites document.
    * @param layerSelection
-   *            An array of layer names to search for.
+   *          An array of layer names to search for.
    */
   private static void collect( final Set<Layer> collector, final Layer layer, final String[] layerSelection )
   {
@@ -409,11 +412,11 @@ public class DeegreeWMSUtilities
 
   /**
    * This method checks an array of Strings for a given String to match.
-   * 
+   *
    * @param array
-   *            Strings to check for a match.
+   *          Strings to check for a match.
    * @param toMatch
-   *            The string to match.
+   *          The string to match.
    * @return True, if the String is the array, false otherwise.
    */
   private static boolean contains( final String[] array, final String toMatch )
@@ -428,7 +431,9 @@ public class DeegreeWMSUtilities
    * This method gets the max bounding box of a wms layer.
    * 
    * @param layers
-   *            The layers in the map in an array.
+   *          The layers in the map in an array.
+   * @param srs
+   *          The coordinate system the returned envelope will be in.
    * @return The max bounding box of a wms layer.
    */
   public static GM_Envelope getMaxExtent( final String[] layers, final WMSCapabilities capabilites, final String srs ) throws Exception
@@ -443,44 +448,51 @@ public class DeegreeWMSUtilities
     GM_Envelope resultEnvelope = null;
     for( final Layer layer : layerCollector )
     {
-      final LayerBoundingBox[] bbox = layer.getBoundingBoxes();
-      for( final LayerBoundingBox env : bbox )
+      final GM_Envelope layerEnv = findEnvelope( layer, srs );
+      if( layerEnv != null )
       {
-        final GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY(), env.getSRS() );
-        GM_Envelope kalypsoEnvTransformed = null;
-
-        final boolean transformNeeded = !env.getSRS().equals( srs );
-        if( transformNeeded )
-          kalypsoEnvTransformed = geoTransformer.transformEnvelope( kalypsoEnv, env.getSRS() );
-        else
-          kalypsoEnvTransformed = kalypsoEnv;
-
-        /* Merge into result envelope */
-        resultEnvelope = resultEnvelope == null ? kalypsoEnv : resultEnvelope.getMerged( kalypsoEnvTransformed );
+        final GM_Envelope envTransformed = geoTransformer.transformEnvelope( layerEnv );
+        resultEnvelope = resultEnvelope == null ? envTransformed : resultEnvelope.getMerged( envTransformed );
       }
     }
 
     if( resultEnvelope != null )
       return resultEnvelope;
 
-    /* Use env from toplayer. */
-    if( topLayer.getLatLonBoundingBox() == null )
+    final GM_Envelope topEnvelope = findEnvelope( topLayer, srs );
+    return geoTransformer.transformEnvelope( topEnvelope );
+  }
+
+  private static GM_Envelope findEnvelope( final Layer layer, final String srs )
+  {
+    final LayerBoundingBox[] boundingBoxes = layer.getBoundingBoxes();
+    for( final LayerBoundingBox bbox : boundingBoxes )
+    {
+      if( srs.equals( bbox.getSRS() ) )
+      {
+        final Position min = bbox.getMin();
+        final Position max = bbox.getMax();
+        return GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY(), srs );
+      }
+    }
+
+    final Envelope latLonBoundingBox = layer.getLatLonBoundingBox();
+    if( latLonBoundingBox == null )
       return null;
 
-    /* Convert top layer env to request srs. */
-    final GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY(), topLayer.getLatLonBoundingBox().getCoordinateSystem().getIdentifier() );
-    final String latlonSRS = "EPSG:4326"; //$NON-NLS-1$
+    final Position min = latLonBoundingBox.getMin();
+    final Position max = latLonBoundingBox.getMax();
 
-    return geoTransformer.transformEnvelope( envLatLon, latlonSRS );
+    return GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY(), GeoTransformUtils.EPSG_LATLON );
   }
 
   /**
    * This method collects all layers from a capabilites document.
-   * 
+   *
    * @param capabilites
-   *            WMS capabilites document.
+   *          WMS capabilites document.
    * @param set
-   *            The Set, where the layers are collected in.
+   *          The Set, where the layers are collected in.
    */
   public static void getAllLayers( final WMSCapabilities capabilites, final Set<Layer> set )
   {
@@ -497,13 +509,13 @@ public class DeegreeWMSUtilities
 
   /**
    * This function returns an transformed envelope.
-   * 
+   *
    * @param serverEnv
-   *            The server envelope.
+   *          The server envelope.
    * @param serverCRS
-   *            The server coordinate system.
+   *          The server coordinate system.
    * @param local
-   *            The local coordinate system.
+   *          The local coordinate system.
    * @return The transformed envelope.
    */
   public static GM_Envelope getTransformedEnvelope( final GM_Envelope serverEnv, final String serverCRS, final String local )
@@ -524,9 +536,9 @@ public class DeegreeWMSUtilities
 
   /**
    * This function converts an envelope to a string representation.
-   * 
+   *
    * @param envelope
-   *            The envelope.
+   *          The envelope.
    * @return The string representation of the envelope.
    */
   public static String env2bboxString( final GM_Envelope env )

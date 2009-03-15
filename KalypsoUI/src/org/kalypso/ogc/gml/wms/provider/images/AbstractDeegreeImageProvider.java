@@ -70,13 +70,12 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
-import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * The base implementation of the deegree WMS client.
- * 
+ *
  * @author Holger Albert
  */
 public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider, IKalypsoLegendProvider
@@ -123,7 +122,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * The constructor.
-   * 
+   *
    * @param loader
    *          The loader for loading the capabilities.
    */
@@ -209,7 +208,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function creates the remote service and returns it.
-   * 
+   *
    * @param capabilities
    *          The capabilites for the remote service.
    * @return The remote service.
@@ -218,7 +217,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function parses a String into an URL to the WMS service.
-   * 
+   *
    * @param service
    *          The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
@@ -239,7 +238,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   * 
+   *
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -271,10 +270,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       if( m_wms == null || m_layers == null )
         return null;
 
-      final GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers, (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
-      final GeoTransformer gt = new GeoTransformer( m_localSRS );
-
-      return gt.transformEnvelope( maxEnvRemoteSRS, m_negotiatedSRS );
+      return DeegreeWMSUtilities.getMaxExtent( m_layers, (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
     }
     catch( final Exception ex )
     {
