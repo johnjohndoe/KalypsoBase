@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -55,15 +56,15 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
 public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 {
-  private ArrayList m_rules = null;
+  private final List<Rule> m_rules = new ArrayList<Rule>();
 
-  private ArrayList m_semanticTypeIdentifier = null;
+  private final List<String> m_semanticTypeIdentifier = new ArrayList<String>();
 
   private String m_abstract = null;
 
@@ -74,20 +75,10 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   private String m_title = null;
 
   /**
-   * default constructor
+   * constructor initialising the class with the <FeatureTypeStyle>
    */
-  public FeatureTypeStyle_Impl( )
+  FeatureTypeStyle_Impl( final String name, final String title, final String abstract_, final QName featureTypeQName, final String[] semanticTypeIdentifier, final Rule[] rules )
   {
-    m_semanticTypeIdentifier = new ArrayList();
-    m_rules = new ArrayList();
-  }
-
-  /**
-   * constructor initializing the class with the <FeatureTypeStyle>
-   */
-  FeatureTypeStyle_Impl( String name, String title, String abstract_, QName featureTypeQName, String[] semanticTypeIdentifier, Rule[] rules )
-  {
-    this();
     setName( name );
     setTitle( title );
     setAbstract( abstract_ );
@@ -99,7 +90,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library.
-   * 
+   *
    * @return name
    */
   public String getName( )
@@ -110,18 +101,18 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library. Sets the <Name>o
-   * 
+   *
    * @param name
    *            the name
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.m_name = name;
   }
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return the title of the FeatureTypeStyle
    */
   public String getTitle( )
@@ -131,18 +122,18 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the <Title>
-   * 
+   *
    * @param title
    *            the title of the FeatureTypeStyle
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
     this.m_title = title;
   }
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return an abstract of the FeatureTypeStyle
    */
   public String getAbstract( )
@@ -152,18 +143,18 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets <Abstract>
-   * 
+   *
    * @param abstract_
    *            an abstract of the FeatureTypeStyle
    */
-  public void setAbstract( String abstract_ )
+  public void setAbstract( final String abstract_ )
   {
     this.m_abstract = abstract_;
   }
 
   /**
    * returns the name of the affected feature type
-   * 
+   *
    * @return the name of the FeatureTypeStyle as String
    */
   public QName getFeatureTypeName( )
@@ -173,11 +164,11 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the name of the affected feature type
-   * 
+   *
    * @param featureTypeName
    *            the name of the FeatureTypeStyle
    */
-  public void setFeatureTypeName( QName featureTypeQName )
+  public void setFeatureTypeName( final QName featureTypeQName )
   {
     m_featureTypeName = featureTypeQName;
   }
@@ -189,51 +180,51 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * generic:line, generic:polygon, generic:point, generic:text, generic:raster, and generic:any are reserved to
    * indicate that a FeatureTypeStyle may be used with any feature type with the corresponding default geometry type
    * (i.e., no feature properties are referenced in the feature-type style).
-   * 
+   *
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
   public String[] getSemanticTypeIdentifier( )
   {
-    return (String[]) m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
+    return m_semanticTypeIdentifier.toArray( new String[m_semanticTypeIdentifier.size()] );
   }
 
   /**
    * Sets the SemanticTypeIdentifiers.
-   * 
+   *
    * @param semanticTypeIdentifiers
    *            SemanticTypeIdentifiers for the FeatureTypeStyle
    */
-  public void setSemanticTypeIdentifier( String[] semanticTypeIdentifiers )
+  public void setSemanticTypeIdentifier( final String[] semanticTypeIdentifiers )
   {
     m_semanticTypeIdentifier.clear();
 
     if( semanticTypeIdentifiers != null )
     {
-      for( int i = 0; i < semanticTypeIdentifiers.length; i++ )
+      for( final String semanticTypeIdentifier : semanticTypeIdentifiers )
       {
-        m_semanticTypeIdentifier.add( semanticTypeIdentifiers[i] );
+        m_semanticTypeIdentifier.add( semanticTypeIdentifier );
       }
     }
   }
 
   /**
    * adds the <SemanticTypeIdentifier>
-   * 
+   *
    * @param semanticTypeIdentifier
    *            SemanticTypeIdentifier to add
    */
-  public void addSemanticTypeIdentifier( String semanticTypeIdentifier )
+  public void addSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
     this.m_semanticTypeIdentifier.add( semanticTypeIdentifier );
   }
 
   /**
    * Removes an <SemanticTypeIdentifier>.
-   * 
+   *
    * @param semanticTypeIdentifier
    *            SemanticTypeIdentifier to remove
    */
-  public void removeSemanticTypeIdentifier( String semanticTypeIdentifier )
+  public void removeSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
     this.m_semanticTypeIdentifier.remove( this.m_semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
   }
@@ -241,76 +232,76 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * Rules are used to group rendering instructions by feature-property conditions and map scales. Rule definitions are
    * placed immediately inside of feature-style definitions.
-   * 
+   *
    * @return the rules of the FeatureTypeStyle as Array
    */
   public Rule[] getRules( )
   {
-    return (Rule[]) m_rules.toArray( new Rule[m_rules.size()] );
+    return m_rules.toArray( new Rule[m_rules.size()] );
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getRule(java.lang.String)
    */
-  public Rule getRule( String ruleName )
+  public Rule getRule( final String ruleName )
   {
     for( int i = 0; i < m_rules.size(); i++ )
     {
-      if( m_rules.get( i ) instanceof Rule && ((Rule) m_rules.get( i )).getName().equals( ruleName ) )
-        return (Rule) m_rules.get( i );
+      if( m_rules.get( i ) != null && m_rules.get( i ).getName().equals( ruleName ) )
+        return m_rules.get( i );
     }
     return null;
   }
 
   /**
    * sets the <Rules>
-   * 
+   *
    * @param rules
    *            the rules of the FeatureTypeStyle as Array
    */
-  public void setRules( Rule[] rules )
+  public void setRules( final Rule[] rules )
   {
     this.m_rules.clear();
 
     if( rules != null )
     {
-      for( int i = 0; i < rules.length; i++ )
+      for( final Rule rule : rules )
       {
-        this.m_rules.add( rules[i] );
+        this.m_rules.add( rule );
       }
     }
   }
 
   /**
    * adds the <Rules>
-   * 
+   *
    * @param rule
    *            a rule
    */
-  public void addRule( Rule rule )
+  public void addRule( final Rule rule )
   {
     m_rules.add( rule );
   }
 
   /**
    * removes a rule
-   * 
+   *
    * @param rule
    *            a rule
    */
-  public void removeRule( Rule rule )
+  public void removeRule( final Rule rule )
   {
     m_rules.remove( m_rules.indexOf( rule ) );
   }
 
   /**
    * exports the content of the FeatureTypeStyle as XML formated String
-   * 
+   *
    * @return xml representation of the FeatureTypeStyle
    */
   public String exportAsXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<FeatureTypeStyle xmlns=\"" + NS.SLD + "\" xmlns:ogc=\"" + NS.OGC + "\">" );
     if( m_name != null && !m_name.equals( "" ) )
     {

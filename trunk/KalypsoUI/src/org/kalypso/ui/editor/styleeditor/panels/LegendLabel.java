@@ -52,12 +52,12 @@ import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendElementCollection;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree_impl.graphics.legend.LegendElementCollection_Impl;
 import org.kalypsodeegree_impl.graphics.legend.LegendFactory;
-import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
-import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
@@ -89,12 +89,10 @@ public class LegendLabel
       if( m_ruleIndex != -1 && m_ruleIndex < m_userStyle.getFeatureTypeStyles()[0].getRules().length )
       {
         // NECESSARY IF TO SHOW STYLE OF ONLY ONE RULE
-        final FeatureTypeStyle_Impl fts = new FeatureTypeStyle_Impl();
         final Rule rule = m_userStyle.getFeatureTypeStyles()[0].getRules()[m_ruleIndex];
-        final Rule m_rules[] = { rule };
-        fts.setRules( m_rules );
-        final FeatureTypeStyle_Impl[] ftStyles = { fts };
-        final UserStyle ruleStyle = new UserStyle_Impl( null, null, null, true, ftStyles );
+        final FeatureTypeStyle fts = StyleFactory.createFeatureTypeStyle( rule );
+        final FeatureTypeStyle[] ftStyles = { fts };
+        final UserStyle ruleStyle = StyleFactory.createUserStyle( null, null, null, true, ftStyles );
         le = factory.createLegendElement( ruleStyle, 40, 20, "" ); //$NON-NLS-1$
         // This is necessary, as I don't want title of the filter to appear in
         // the label but only

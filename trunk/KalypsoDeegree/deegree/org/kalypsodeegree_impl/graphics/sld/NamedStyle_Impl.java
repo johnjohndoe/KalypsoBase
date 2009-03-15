@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -44,7 +44,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -52,26 +52,26 @@ class NamedStyle_Impl extends Style_Impl implements NamedStyle, Marshallable
 {
   /**
    * Creates a new NamedStyle_Impl object.
-   * 
+   *
    * @param name
    */
-  NamedStyle_Impl( String name )
+  NamedStyle_Impl( final String name )
   {
     super( name );
   }
 
   /**
    * exports the content of the NamedStyle as XML formated String
-   * 
+   *
    * @return xml representation of the NamedStyle
    */
   public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 100 );
+    final StringBuffer sb = new StringBuffer( 100 );
     sb.append( "<NamedStyle>" );
-    sb.append( "<Name>" ).append( name ).append( "</Name>" );
+    sb.append( "<Name>" ).append( getName() ).append( "</Name>" );
     sb.append( "</NamedStyle>" );
 
     Debug.debugMethodEnd();

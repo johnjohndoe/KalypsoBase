@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,48 +38,48 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Style;
 
 /**
- * 
+ *
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
 class Style_Impl implements Style
 {
-  protected String name = null;
+  private String m_name = null;
 
   /**
    * Creates a new Style_Impl object.
-   * 
+   *
    * @param name
    */
-  Style_Impl( String name )
+  Style_Impl( final String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
   /**
    * The given Name is equivalent to the name of a WMS named style and is used to reference the style externally when an
    * SLD is used in library mode and identifies the named style to redefine when an SLD is inserted into a WMS.
-   * 
+   *
    * @return the name
    */
   public String getName()
   {
-    return name;
+    return m_name;
   }
 
   /**
    * Sets the name attribute's value of the Style.
-   * 
+   *
    * @param name
    *          the name of the style
    *          <p>
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 }
