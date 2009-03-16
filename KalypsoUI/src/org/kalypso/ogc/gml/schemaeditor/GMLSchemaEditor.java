@@ -225,4 +225,9 @@ public class GMLSchemaEditor extends EditorPart
 
     throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3" ) ); //$NON-NLS-1$
   }
+
+  public IGMLSchema getSchema( )
+  {
+    return (IGMLSchema) getViewer().getInput();
+  }
 }
