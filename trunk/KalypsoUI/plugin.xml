@@ -20,7 +20,7 @@
 		</editor>
 		<editor default="true" name="%org.kalypso.ui.editor.featureeditor.FeatureEditor" icon="icons/kalypso_gtt.gif" extensions="gft" class="org.kalypso.ui.editor.featureeditor.FeatureEditor" id="org.kalypso.ui.editor.featureeditor.FeatureEditor">
 		</editor>
-		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" contributorClass="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditorActionBarContributor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
+		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
 		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor" default="true" extensions="gmv" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.ui.GmlEditor">
 		</editor>
 		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt">
@@ -778,6 +778,32 @@
 		<typeHandler factory="org.kalypso.ui.KalypsoGuiTypeHandlerFactory">
 		</typeHandler>
 	</extension>
+	
+	<!-- Schema-Editor -->
+	<extension point="org.eclipse.ui.commands">
+		<category description="Schema Editor Commands" id="org.kalypso.ui.category.schemaEditor" name="Schema Editor"/>
+		<command categoryId="org.kalypso.ui.category.schemaEditor" id="org.kalypso.ogc.gml.schemaeditor.ExportI18nProperties" name="Export I18N"/>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler class="org.kalypso.ogc.gml.schemaeditor.ExportI18nPropertiesHandler" commandId="org.kalypso.ogc.gml.schemaeditor.ExportI18nProperties"/>
+	</extension>	
+	<extension point="org.eclipse.ui.commandImages">
+		<image commandId="org.kalypso.ogc.gml.schemaeditor.ExportI18nProperties" icon="icons/schemaeditor/exportI18n.gif"/>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+			<toolbar id="org.kalypso.ui.menus.schemaEditorToolbar">
+				<command commandId="org.kalypso.ogc.gml.schemaeditor.ExportI18nProperties" style="push">
+					<visibleWhen checkEnabled="false">
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
+						</with>
+					</visibleWhen>
+				</command>
+			</toolbar>
+		</menuContribution>
+	</extension>
+	
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
 			<toolbar id="org.kalypso.ui.menus.mapToolbar">
