@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.calculation.chain.ModelConnectorUrlCatalog"
+            id="org.kalypso.calculation.chain.ModelConnectorUrlCatalog">
+      </catalog>
+   </extension>
+
+</plugin>
