@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database.internal;
 
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
+import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.IProjectHandler;
 
 /**
  * @author Dirk Kuch

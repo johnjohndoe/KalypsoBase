@@ -11,11 +11,13 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
+import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
 
 /**
  * @author Dirk Kuch
  */
-public class LocalWorkspaceModel
+public class LocalWorkspaceModel implements ILocalWorkspaceModel
 {
 
   // TODO add IPreferenceChangeListener for nature preferences
@@ -111,11 +113,29 @@ public class LocalWorkspaceModel
     for( final ILocalProject local : m_projects )
     {
       if( project.equals( local.getProject() ) )
-      {
         return local;
-      }
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.local.ILocalWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.IProjectDatabaseFilter)
+   */
+  @Override
+  public ILocalProject[] getProjects( final IProjectDatabaseFilter filter )
+  {
+    final Set<ILocalProject> myProjects = new HashSet<ILocalProject>();
+    
+    final ILocalProject[] projects = getProjects();
+    for( final ILocalProject project : projects )
+    {
+      if( filter.select( project ) )
+      {
+        myProjects.add( project );
+      }
+    }
+
+    return myProjects.toArray( new ILocalProject[] {} );
   }
 }

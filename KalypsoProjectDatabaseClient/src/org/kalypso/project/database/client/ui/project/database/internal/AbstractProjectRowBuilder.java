@@ -45,8 +45,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
 
 /**
  * @author kuch

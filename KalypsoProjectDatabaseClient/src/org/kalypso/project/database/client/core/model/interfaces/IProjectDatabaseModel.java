@@ -42,9 +42,9 @@ package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.afgui.extension.IProjectDatabaseFilter;
-import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.IProjectHandler;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
@@ -66,6 +66,8 @@ public interface IProjectDatabaseModel
 
   public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter );
 
+  public ILocalWorkspaceModel getLocalWorkspaceModel( );
+  
   /**
    * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
    */

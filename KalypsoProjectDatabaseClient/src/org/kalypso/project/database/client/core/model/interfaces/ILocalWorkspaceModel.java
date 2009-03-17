@@ -41,23 +41,16 @@
 package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.extension.IProjectHandler;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject extends IProjectHandler
+public interface ILocalWorkspaceModel
 {
-  IProject getProject( );
-
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
-
-  public boolean isModified( ) throws CoreException;
-
-  void dispose( );
-
-  LocalWorkspaceModel getLocalWorkspaceModel( );
+  ILocalProject getProject( final IProject project );
+  
+  ILocalProject[] getProjects( );
+  
+  ILocalProject[] getProjects( IProjectDatabaseFilter filter );
 }

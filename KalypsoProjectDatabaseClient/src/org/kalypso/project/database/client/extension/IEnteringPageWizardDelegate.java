@@ -38,26 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model.interfaces;
+package org.kalypso.project.database.client.extension;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.extension.IProjectHandler;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.wizards.INewProjectWizard;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject extends IProjectHandler
+public interface IEnteringPageWizardDelegate
 {
-  IProject getProject( );
+  Image getImage( );
 
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
+  INewProjectWizard getWizard( );
 
-  public boolean isModified( ) throws CoreException;
-
-  void dispose( );
-
-  LocalWorkspaceModel getLocalWorkspaceModel( );
+  String getRemoteCommitType( );
 }

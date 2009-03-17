@@ -38,26 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model.interfaces;
+package org.kalypso.project.database.client.extension;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.extension.IProjectHandler;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import java.util.Properties;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject extends IProjectHandler
+public class SzenarioProjectOpenAction implements IKalypsoProjectOpenAction
 {
-  IProject getProject( );
 
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
+  /**
+   * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
+   */
+  @Override
+  public IStatus open( final Properties properties )
+  {
+    final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
+    action.run( null, properties );
 
-  public boolean isModified( ) throws CoreException;
+    return Status.OK_STATUS;
+  }
 
-  void dispose( );
-
-  LocalWorkspaceModel getLocalWorkspaceModel( );
 }
