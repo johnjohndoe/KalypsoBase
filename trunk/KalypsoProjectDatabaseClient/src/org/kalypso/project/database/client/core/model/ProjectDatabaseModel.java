@@ -47,10 +47,9 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.afgui.extension.IProjectDatabaseFilter;
-import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
@@ -60,6 +59,8 @@ import org.kalypso.project.database.client.core.model.remote.RemoteProjectHandle
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.transcendence.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.IProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -290,5 +291,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#getLocalWorkspaceModel()
+   */
+  @Override
+  public ILocalWorkspaceModel getLocalWorkspaceModel( )
+  {
+    return m_local;
   }
 }

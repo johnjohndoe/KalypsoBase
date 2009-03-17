@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.IProjectHandler;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**

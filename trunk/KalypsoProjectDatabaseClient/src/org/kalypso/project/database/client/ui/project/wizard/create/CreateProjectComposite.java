@@ -56,12 +56,12 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.extension.IEnteringPageWizardDelegate;
-import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.extension.IEnteringPageWizardDelegate;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoProjectDatabaseClient Plug-in
-Bundle-SymbolicName: org.kalypso.project.database.client
+Bundle-SymbolicName: org.kalypso.project.database.client;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.project.database.client.KalypsoProjectDatabaseClient
 Require-Bundle: org.kalypso.afgui;bundle-version="0.0.0";visibility:=reexport,
@@ -18,6 +18,7 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core,
  org.kalypso.project.database.client.core.model.interfaces,
  org.kalypso.project.database.client.core.utils,
+ org.kalypso.project.database.client.extension,
  org.kalypso.project.database.client.ui.project.database,
  org.kalypso.project.database.client.ui.project.status,
  org.kalypso.project.database.client.ui.project.wizard.create,

@@ -49,8 +49,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
 
 /**
  * Composite for calling the new project wizard
