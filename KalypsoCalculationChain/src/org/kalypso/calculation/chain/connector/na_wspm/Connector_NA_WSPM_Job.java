@@ -80,8 +80,8 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
             wspmObservation = ObservationFeatureFactory.toObservation( wspmObservationFeature );
             wspmRunoffEventTupleResult = wspmObservation.getResult();
           }
-            wspmRunoffEventTupleResult.clear();
-          
+          wspmRunoffEventTupleResult.clear();
+
           int stationComp = -1;
           int abflussComp = -1;
           final IComponent[] wspmRunoffEventTupleResultComponents = wspmRunoffEventTupleResult.getComponents();

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
-public class ModelConnectorUrlCatalog extends AbstractUrlCatalog 
+public class ModelConnectorUrlCatalog extends AbstractUrlCatalog
 {
 
   public static String NS_CCHAIN = "org.kalypso.calculation.chain"; //$NON-NLS-1$
@@ -34,7 +34,6 @@ public class ModelConnectorUrlCatalog extends AbstractUrlCatalog
     }
   }
 
-  
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
