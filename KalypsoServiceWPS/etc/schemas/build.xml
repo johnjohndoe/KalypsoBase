@@ -7,9 +7,11 @@
 	<property name="project" value="${workspace}/KalypsoServiceWPS" />
 	<patternset id="binding.schemata">
 		<include name="etc/schemas/ows/1.0.0/*.xsd" />
+		<include name="etc/schemas/ows/1.1.0/*.xsd" />		
 		<include name="etc/schemas/wps/0.4.0/*.xsd" />
-		<include name="etc/binding/ows/1.1.0/*.xsd" />
-	</patternset>
+		<include name="etc/schemas/wps/1.0.0/*.xsd" />
+	</patternset>	
+	<property name="xjc-args" value="-nv" />
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />
 	
 </project>
