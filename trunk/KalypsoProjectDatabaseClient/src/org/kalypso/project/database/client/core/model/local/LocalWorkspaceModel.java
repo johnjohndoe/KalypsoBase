@@ -126,7 +126,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
   public ILocalProject[] getProjects( final IProjectDatabaseFilter filter )
   {
     final Set<ILocalProject> myProjects = new HashSet<ILocalProject>();
-    
+
     final ILocalProject[] projects = getProjects();
     for( final ILocalProject project : projects )
     {
@@ -137,5 +137,45 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     }
 
     return myProjects.toArray( new ILocalProject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel#getProject(java.lang.String)
+   */
+  @Override
+  public ILocalProject getProject( final String projectReference )
+  {
+    if( projectReference == null || "".equals( projectReference.trim() ) )
+      return null;
+
+    final ILocalProject[] projects = getProjects();
+    return resolveProject( projects, projectReference );
+  }
+
+  private ILocalProject resolveProject( final ILocalProject[] projects, final String projectReference )
+  {
+    for( final ILocalProject project : projects )
+    {
+      if( project.getName().equals( projectReference ) )
+        return project;
+      
+      final String path = project.getProject().getFullPath().toString();
+      if( path.equals( projectReference ) )
+        return project;
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel#getProject(org.kalypso.project.database.client.extension.IProjectDatabaseFilter,
+   *      java.lang.String)
+   */
+  @Override
+  public ILocalProject getProject( final IProjectDatabaseFilter filter, final String projectReference )
+  {
+    final ILocalProject[] projects = getProjects( filter );
+
+    return resolveProject( projects, projectReference );
   }
 }
