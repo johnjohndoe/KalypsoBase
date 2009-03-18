@@ -15,7 +15,7 @@ For conditions, see OGC Software Notice http://www.opengeospatial.org/ogc/softwa
 	<include schemaLocation="common/ProcessBriefType.xsd"/>
 	<import namespace="http://www.opengis.net/ows/1.1" schemaLocation="../../ows/1.1.0/owsAll.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../xlink/1.0.0/xlinks.xsd"/>
-	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="../../xml/xml.xsd"/>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->
