@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -56,20 +57,38 @@ import org.eclipse.ui.ISources;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
 
 /**
  * @author kimwerner
  */
 public class ExportI18nPropertiesHandler extends AbstractHandler
 {
+
+  private Formatter m_formatter = null;
+
+  private void formatInternal( final String prefix, final String kind, final String key, final String val )
+  {
+    if( val == null || key == null )
+      return;
+    if( val.equals( key ) )
+      return;
+    if( key != "" )
+      m_formatter.format( "%s_%s_%s=%s%n", prefix, key, kind, val );
+  }
+
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
   public Object execute( ExecutionEvent event ) throws ExecutionException
   {
+
     try
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -78,12 +97,22 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
       final IGMLSchema schema = editor.getSchema();
 
-      FileDialog dlg = new FileDialog(editor.getEditorSite().getShell());
-      
-      dlg.open();
+      FileDialog dlg = new FileDialog( editor.getEditorSite().getShell() );
 
-      
-      Formatter formatter = new Formatter( new File( dlg.getFileName() ) );
+      dlg.setFilterExtensions( new String[] { "*.properties", "*.*" } );
+      dlg.setFilterNames( new String[] { "Property Files", "all Files" } );
+      dlg.setOverwrite( true );
+      final String[] url = schema.getContext().getFile().split( "\\/" );
+
+      dlg.setFileName(url[url.length-1].split("\\.")[0] );
+
+      dlg.open();
+      String fName = dlg.getFileName();
+      if( fName == null )
+        return null;
+      if( !fName.contains( "." ) )
+        fName = fName + ".properties";
+      m_formatter = new Formatter( new File( dlg.getFilterPath() + "\\" + fName ) );
 
       final NSPrefixProvider nsMapper = NSUtilities.getNSProvider();
 
@@ -94,27 +123,63 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
       {
         QName ftName = featureType.getQName();
         String ftNamespaceURI = ftName.getNamespaceURI();
-
+        String ftLocalPart = ftName.getLocalPart();
         String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
         prefixMap.put( ftNamespaceURI, ftPrefix );
 
-        formatter.format( "%s_%s=%n", ftPrefix, ftName.getLocalPart() );
+        IAnnotation ftAnno = featureType.getAnnotation();
+        String ftLabel = ftAnno.getLabel();
+        String ftDescripion = ftAnno.getDescription();
+
+        formatInternal( ftPrefix, "label", ftLocalPart, ftLabel );
+        formatInternal( ftPrefix, "description", ftLocalPart, ftDescripion );
 
         final IPropertyType[] properties = featureType.getProperties();
         for( IPropertyType propertyType : properties )
         {
           QName ptName = propertyType.getQName();
 
-          // TODO: write annotation
-// propertyType.getAnnotation();
+          IAnnotation pAnno = propertyType.getAnnotation();
 
-          formatter.format( "%s_%s_%s_%s=%n", ftPrefix, ftName.getLocalPart(), ptName.getNamespaceURI(), ptName.getLocalPart() );
+          String pLabel = pAnno.getLabel();
+          String pTooltip = pAnno.getTooltip();
+          String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptName.getNamespaceURI();
+
+          formatInternal( prefix, "label", ptName.getLocalPart(), pLabel );
+
+          formatInternal( prefix, "tooltip", ptName.getLocalPart(), pTooltip );
+
+          if( propertyType instanceof IValuePropertyType )
+          {
+            final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+            final IRestriction[] restrictions = vpt.getRestriction();
+            for( IRestriction restriction : restrictions )
+            {
+              if( restriction instanceof EnumerationRestriction )
+              {
+                final EnumerationRestriction enumRest = (EnumerationRestriction) restriction;
+                final Map<Object, IAnnotation> map = enumRest.getMapping();
+                for( final Object obj : map.keySet() )
+                {
+                  String key = obj.toString();
+                  IAnnotation anno = map.get( obj );
+                  String aLabel = anno.getLabel();
+                  String aTooltip = anno.getTooltip();
+                  formatInternal( ftPrefix, "label", key, aLabel );
+                  formatInternal( ftPrefix, "tooltip", key, aTooltip );
+
+                }
+
+              }
+            }
+          }
         }
+
       }
 
       // TODO: write prefix map
 
-      formatter.close();
+      m_formatter.close();
 
       return null;
     }
@@ -125,5 +190,4 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
       throw new ExecutionException( "Failed to export schema", e );
     }
   }
-
 }
