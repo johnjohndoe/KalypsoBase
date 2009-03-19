@@ -9,7 +9,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.chain.AbstractInternalStatusJob;
-import org.kalypso.calculation.chain.binding.IKalypsoModelConnector.MODELSPEC_CONNECTOR_WSPM_FM;
+import org.kalypso.calculation.chain.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;

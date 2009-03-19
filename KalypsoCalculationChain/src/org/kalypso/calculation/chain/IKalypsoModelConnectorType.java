@@ -51,4 +51,6 @@ public interface IKalypsoModelConnectorType
     RM_Model,
     RM_InputRasterFolder;
   }
+  
+
 }

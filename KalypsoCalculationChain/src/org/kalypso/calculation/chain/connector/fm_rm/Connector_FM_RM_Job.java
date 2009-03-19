@@ -7,7 +7,7 @@ import ogc31.www.opengis.net.gml.FileType;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.calculation.chain.AbstractInternalStatusJob;
-import org.kalypso.calculation.chain.binding.IKalypsoModelConnector.MODELSPEC_CONNECTOR_FM_RM;
+import org.kalypso.calculation.chain.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_FM_RM;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
