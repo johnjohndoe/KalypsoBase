@@ -3,9 +3,9 @@ package org.kalypso.calculation.chain.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.calculation.chain.ModelConnectorUrlCatalog;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
-public interface ICalculationChainMemberEntry extends IFeatureWrapper2
+public interface ICalculationChainMemberEntry extends Feature
 {
   public final static QName QNAME = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "Entry" );
 

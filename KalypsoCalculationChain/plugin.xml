@@ -42,4 +42,19 @@
          </adapter>
       </factory>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.calculation.chain.binding.CalculationChain"
+            qname="{org.kalypso.calculation.chain}CalculationChain">
+      </feature>
+         <feature
+            class="org.kalypso.calculation.chain.binding.CalculationChainMember"
+            qname="{org.kalypso.calculation.chain}Calculation">
+      </feature>
+         <feature
+            class="org.kalypso.calculation.chain.binding.CalculationChainMemberEntry"
+            qname="{org.kalypso.calculation.chain}Entry">
+      </feature>
+   </extension>
 </plugin>

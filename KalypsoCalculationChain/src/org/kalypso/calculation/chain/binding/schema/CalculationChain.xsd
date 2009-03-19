@@ -103,6 +103,7 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="calculationFolder" type="string" />
 					<element name="useAntLauncher" type="boolean" default="false">
 						<annotation>
 							<documentation xml:lang="en">
