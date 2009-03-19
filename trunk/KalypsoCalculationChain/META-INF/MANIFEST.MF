@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.model.flood;bundle-version="1.0.0",
  org.kalypso.risk;bundle-version="1.0.0",
  org.kalypso.NACalcJob;bundle-version="1.0.2",
- org.kalypso.model.wspm.core;bundle-version="0.0.1"
+ org.kalypso.model.wspm.core;bundle-version="0.0.1",
+ org.kalypso.afgui;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.calculation.chain
+Export-Package: org.kalypso.calculation.chain,
+ org.kalypso.calculation.chain.binding

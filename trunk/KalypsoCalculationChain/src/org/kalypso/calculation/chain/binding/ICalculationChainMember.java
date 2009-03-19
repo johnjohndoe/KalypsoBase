@@ -2,11 +2,12 @@ package org.kalypso.calculation.chain.binding;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.resources.IContainer;
 import org.kalypso.calculation.chain.ModelConnectorUrlCatalog;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
-public interface ICalculationChainMember extends IFeatureWrapper2, Comparable<ICalculationChainMember>
+public interface ICalculationChainMember extends Feature, Comparable<ICalculationChainMember>
 {
   public final static QName QNAME = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "Calculation" );
 
@@ -14,15 +15,17 @@ public interface ICalculationChainMember extends IFeatureWrapper2, Comparable<IC
 
   public final static QName QNAME_PROP_ORDINAL_NUMBER = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "ordinalNumber" );
 
+  public final static QName QNAME_PROP_CALCULATION_CASE_FOLDER = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "calculationFolder" );
+
   public final static QName QNAME_PROP_USE_ANT_LAUNCHER = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "useAntLauncher" );
 
   public final static QName QNAME_PROP_INPUTS = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "input" );
 
   public final static QName QNAME_PROP_OUTPUTS = new QName( ModelConnectorUrlCatalog.NS_CCHAIN, "output" );
 
-  public FeatureWrapperCollection<ICalculationChainMemberEntry> getInputs( );
+  public FeatureBindingCollection<ICalculationChainMemberEntry> getInputs( );
 
-  public FeatureWrapperCollection<ICalculationChainMemberEntry> getOutputs( );
+  public FeatureBindingCollection<ICalculationChainMemberEntry> getOutputs( );
 
   public void addInput( final ICalculationChainMemberEntry entry );
 
@@ -39,4 +42,8 @@ public interface ICalculationChainMember extends IFeatureWrapper2, Comparable<IC
   public boolean getUseAntLauncher( );
 
   public void setUseAntLauncher( final boolean value );
+  
+  public IContainer getCalculationCaseFolder( );
+
+  public void setCalculationCaseFolder( IContainer container );
 }
