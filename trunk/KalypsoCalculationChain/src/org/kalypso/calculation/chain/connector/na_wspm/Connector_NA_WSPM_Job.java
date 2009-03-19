@@ -11,7 +11,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.calculation.chain.AbstractInternalStatusJob;
-import org.kalypso.calculation.chain.binding.IKalypsoModelConnector.MODELSPEC_CONNECTOR_NA_WSPM;
+import org.kalypso.calculation.chain.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;

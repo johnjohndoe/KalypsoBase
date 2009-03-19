@@ -15,8 +15,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.calculation.chain.CalculationChainMemberJobSpecification;
 import org.kalypso.calculation.chain.CalculationChainRunnable;
-import org.kalypso.calculation.chain.ModelConnectorUrlCatalog.MODEL_CONNECTOR_TYPEID;
-import org.kalypso.calculation.chain.binding.IKalypsoModelConnector.MODELSPEC_CONNECTOR_NA_WSPM;
+import org.kalypso.calculation.chain.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
+import org.kalypso.calculation.chain.IKalypsoModelConnectorType.MODEL_CONNECTOR_TYPEID;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
 public class JUnitTest_CalculationChain extends TestCase
