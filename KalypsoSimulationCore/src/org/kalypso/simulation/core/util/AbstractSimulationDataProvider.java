@@ -52,6 +52,7 @@ import java.util.NoSuchElementException;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -85,7 +86,9 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
   {
     final Map<String, String> index = new HashMap<String, String>( input.length );
     for( final SimulationDataPath bean : input )
+    {
       index.put( bean.getId(), bean.getPath() );
+    }
 
     return index;
   }
@@ -111,8 +114,9 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
     {
       try
       {
+        
         final URI baseURL = getBaseURL().toURI();
-        final URI relativeURI = baseURL.resolve( path );
+        final URI relativeURI = baseURL.resolve( URIUtil.encodePath( path ) );
         
         // try to silently convert the URI to a URL
         try
