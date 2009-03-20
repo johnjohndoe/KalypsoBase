@@ -58,10 +58,12 @@ public class MinMaxSurfacePatchVisitor<P extends GM_SurfacePatch> implements ISu
     for( final GM_Position position : exteriorRing )
     {
       final double[] asArray = position.getAsArray();
-      // REMARK: ignores positions without z-value
+      // REMARK: ignores positions without z-value and with NaN values
       if( asArray.length > 2 )
       {
         final double z = asArray[2];
+        if( Double.isNaN( z ) )
+          return true;
         m_min = Math.min( m_min, z );
         m_max = Math.max( m_max, z );
       }
