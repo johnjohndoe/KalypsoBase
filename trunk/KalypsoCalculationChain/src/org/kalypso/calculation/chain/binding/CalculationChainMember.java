@@ -1,9 +1,17 @@
 package org.kalypso.calculation.chain.binding;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -80,17 +88,27 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
   }
 
   @Override
-  public IContainer getCalculationCaseFolder( )
+  public IContainer getCalculationCaseFolder( ) throws URIException, MalformedURLException
   {
     final Object property = getProperty( QNAME_PROP_CALCULATION_CASE_FOLDER );
     if( property instanceof String )
     {
-      final String url = (String) property;
-      final Path path = new Path( url );
-      IFolder folder;
+      final String encodedUrl = (String) property;
+
+      IPath path;
+      if( encodedUrl.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+      {
+        path = ResourceUtilities.findPathFromURL( new URL( encodedUrl ) );
+      }
+      else
+      {
+// String url = URIUtil.decode( encodedUrl );
+        path = new Path( encodedUrl );
+      }
+
       try
       {
-        folder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
+        final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
         if( !folder.exists() )
           throw new IllegalStateException();
 
@@ -98,21 +116,31 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
       }
       catch( final IllegalArgumentException e )
       {
-        return ResourcesPlugin.getWorkspace().getRoot().getProject( url );
+        
+        return ResourcesPlugin.getWorkspace().getRoot().getProject( path.toString() );
       }
-
     }
 
     return null;
   }
 
   @Override
-  public void setCalculationCaseFolder( final IContainer container )
+  public void setCalculationCaseFolder( final IContainer container ) throws URIException
   {
     final String portableString = container.getFullPath().toPortableString();
-// final String url = String.format( "platform:/resource/%s", portableString );
+    final String path;
+    if( !portableString.startsWith( "platform:/resource/" ) )
+    {
+      path = String.format( "platform:/resource/%s", portableString );
+    }
+    else
+    {
+      path = portableString;
+    }
 
-    setProperty( QNAME_PROP_CALCULATION_CASE_FOLDER, portableString );
+    final String encodedPath = URIUtil.encodePath( path );
+
+    setProperty( QNAME_PROP_CALCULATION_CASE_FOLDER, encodedPath );
   }
 
 }
