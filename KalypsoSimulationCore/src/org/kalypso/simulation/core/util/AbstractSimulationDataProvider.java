@@ -45,16 +45,18 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
@@ -66,8 +68,6 @@ import org.kalypso.simulation.core.simspec.DataType;
  */
 public abstract class AbstractSimulationDataProvider implements ISimulationDataProvider
 {
-  private final UrlUtilities m_urlUtitilies = new UrlUtilities();
-
   private final Map<String, String> m_idhash;
 
   private static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
@@ -114,10 +114,9 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
     {
       try
       {
-        
         final URI baseURL = getBaseURL().toURI();
         final URI relativeURI = baseURL.resolve( URIUtil.encodePath( path ) );
-        
+
         // try to silently convert the URI to a URL
         try
         {
@@ -139,22 +138,24 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
         throw new SimulationException( "URI input does not contain a valid URI.", e );
       }
     }
-    else if( type.getNamespaceURI().equals( NS.XSD_SCHEMA ) )
+    else
     {
-      final String localPart = type.getLocalPart();
-      // TODO: maybe better to use type registry to parse the values
-      // draw back: this would introduce a dependency on KalypsoGMLSchema
-      if( "string".equals( localPart ) )
-        return DatatypeConverter.parseString( path );
-      else if( "int".equals( localPart ) )
-        return DatatypeConverter.parseInt( path );
-      else if( "double".equals( localPart ) )
-        return DatatypeConverter.parseDouble( path );
-      else if( "boolean".equals( localPart ) )
-        return DatatypeConverter.parseBoolean( path );
+      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+      if( handler != null )
+      {
+        try
+        {
+          return handler.parseType( path );
+        }
+        catch( final ParseException e )
+        {
+          throw new SimulationException( "Could not parse " + path + " as an object of type " + type, e );
+        }
+      }
     }
 
-    throw new SimulationException( "Unbekannter Typ für 'path':" + type, null );
+    throw new SimulationException( "Unknown type " + type, null );
   }
 
   /**
