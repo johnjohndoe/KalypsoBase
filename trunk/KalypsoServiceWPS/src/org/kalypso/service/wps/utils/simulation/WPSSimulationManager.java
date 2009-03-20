@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
-import net.opengeospatial.wps.Execute;
-import net.opengeospatial.wps.ProcessDescriptionType;
-
 import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.Activator;
-import org.kalypso.service.wps.server.operations.DescribeProcessOperation;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.simulation.core.SimulationException;
@@ -122,17 +118,12 @@ public class WPSSimulationManager
   {
     try
     {
-      /* Get the process description. */
-      final String typeID = executeMediator.getProcessId();
-      final ProcessDescriptionType processDescription = DescribeProcessOperation.buildProcessDescriptionType( typeID );
-
       /* Start the job. */
-      //TODO version 1.0
-      final Execute executeV04 = executeMediator.getV04();
-      final WPSSimulationInfo info = m_service.startJob( executeV04, processDescription );
+      final WPSSimulationInfo info = m_service.startJob( executeMediator );
 
       /* This thread will check for the status of the other one. */
-      final WPSSimulationHandler handler = new WPSSimulationHandler( m_service, executeV04, info.getId() );
+      // TODO version 1.0
+      final WPSSimulationHandler handler = new WPSSimulationHandler( m_service, executeMediator, info.getId() );
       handler.start();
 
       return info;

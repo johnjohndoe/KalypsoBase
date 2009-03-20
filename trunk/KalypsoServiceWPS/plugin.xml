@@ -23,6 +23,10 @@
             simulationClass="org.kalypso.service.calcjobs.sendmail.SendMailJob"
             typeID="SendMailV1.0">
       </simulation>
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.complex.ComplexJob"
+            typeID="org.kalypso.service.wps.complexJob">
+      </simulation>
    </extension>
 
 </plugin>

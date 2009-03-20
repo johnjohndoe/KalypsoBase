@@ -41,14 +41,18 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.namespace.QName;
 
 import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.wps.ComplexValueType;
@@ -57,8 +61,14 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
+import org.xml.sax.InputSource;
 
 /**
  * A DataProvider for simulations running in the WPS service.
@@ -67,15 +77,12 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class WPSSimulationDataProvider implements ISimulationDataProvider
 {
+  public static final String TYPE_GML = "text/gml";
+
   /**
    * Contains the id of the inputs as key and the input itself as value.
    */
   private final Map<String, Object> m_inputList;
-
-  /**
-   * The temporary directory.
-   */
-  private final File m_tmpDir;
 
   /**
    * The constructor.
@@ -83,10 +90,9 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
    * @param execute
    *          The execute request.
    */
-  public WPSSimulationDataProvider( final Map<String, Object> inputList, final File tmpDir )
+  public WPSSimulationDataProvider( final Map<String, Object> inputList )
   {
     m_inputList = inputList;
-    m_tmpDir = tmpDir;
   }
 
   /**
@@ -113,27 +119,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
 
     if( input instanceof ComplexValueType )
     {
-      final ComplexValueType complexValue = (ComplexValueType) input;
-
-      final List<Object> content = complexValue.getContent();
-      if( content.size() == 0 )
-      {
-        return null;
-      }
-
-      final String hexString = (String) content.get( 0 );
-
-      try
-      {
-        final byte[] bytes = DatatypeConverter.parseHexBinary( hexString );
-        final File file = FileUtilities.createNewUniqueFile( "complexValue_", m_tmpDir );
-        FileUtils.writeByteArrayToFile( file, bytes );
-        return file.toURI();
-      }
-      catch( final Exception e )
-      {
-        throw new SimulationException( "Problem converting complex-valued input from hexadecimal binary to file.", e );
-      }
+      return parseComplexValue( (ComplexValueType) input );
     }
     else if( input instanceof LiteralValueType )
     {
@@ -141,28 +127,17 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       final String dataType = literalValue.getDataType();
       final String value = literalValue.getValue();
 
-      // TODO Inspect further. Perhaps use QName(XS, "string") and so on. Don't forget the WPSSimulationResultEater
-      // and the SimulationJob, if you change this.
-      // maybe dataType is xs:...
-      // TODO: consider unit of measure (uom)
-      if( dataType.endsWith( "string" ) )
+      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final QName type = new QName( NS.XSD_SCHEMA, dataType );
+      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+      try
       {
-        return DatatypeConverter.parseString( value );
+        return handler.parseType( value );
       }
-      else if( dataType.endsWith( "int" ) )
+      catch( final ParseException e )
       {
-        return DatatypeConverter.parseInt( value );
+        throw new SimulationException( "Could not parse " + value + " as an object of type " + type, e );
       }
-      else if( dataType.endsWith( "double" ) )
-      {
-        return DatatypeConverter.parseDouble( value );
-      }
-      else if( dataType.endsWith( "boolean" ) )
-      {
-        return DatatypeConverter.parseBoolean( value );
-      }
-
-      throw new SimulationException( "Invalid type for literal value: " + dataType );
     }
     else if( input instanceof ComplexValueReference )
     {
@@ -192,6 +167,48 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       /* BoundingBoxType. */
       final BoundingBoxType boundingBox = (BoundingBoxType) input;
       return boundingBox;
+    }
+  }
+
+  public static Object parseComplexValue( final ComplexValueType complexValue ) throws SimulationException
+  {
+    final String mimeType = complexValue.getFormat();
+    final List<Object> content = complexValue.getContent();
+    if( content.size() == 0 )
+    {
+      return null;
+    }
+
+    final String textContent = (String) content.get( 0 );
+    // distinguish by mime type, default to binary
+    if( TYPE_GML.equals( mimeType ) )
+    {
+      final InputSource inputSource = new InputSource( new StringReader( textContent ) );
+      try
+      {
+        final URL schemaLocationHint = new URL( complexValue.getSchema() );
+        return GmlSerializer.createGMLWorkspace( inputSource, schemaLocationHint, null, null );
+      }
+      catch( final Exception e )
+      {
+        throw new SimulationException( "Problem parsing gml input from string.", e );
+      }
+    }
+    else
+    {
+      try
+      {
+        // parse as hexBinary
+        // TODO: why not base64 encoded byte[]?
+        final byte[] bytes = DatatypeConverter.parseHexBinary( textContent );
+        final File file = FileUtilities.createNewUniqueFile( "complexValue_", FileUtilities.TMP_DIR );
+        FileUtils.writeByteArrayToFile( file, bytes );
+        return file.toURI();
+      }
+      catch( final IOException e )
+      {
+        throw new SimulationException( "Problem converting complex-valued input from hexadecimal binary to file.", e );
+      }
     }
   }
 

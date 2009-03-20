@@ -48,50 +48,21 @@ import net.opengeospatial.wps.IOValueType;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.SimulationInfo;
 
 /**
  * Contains the the actual data of a simulation.
  * 
  * @author Gernot Belger (original), Holger Albert (changes)
  */
-public class WPSSimulationInfo implements Serializable, ISimulationMonitor
+public class WPSSimulationInfo extends SimulationInfo implements Serializable, ISimulationMonitor
 {
-  /**
-   * Status of the job.
-   */
-  private ISimulationConstants.STATE m_state = ISimulationConstants.STATE.UNKNOWN;
-
-  /**
-   * Progress of the job, between 0 to 100. -1 means: unknown
-   */
-  private int m_progress = -1;
-
-  /**
-   * Description of the job state, if it is an error: the error message.
-   */
-  private String m_message = "Warte auf Ausführung...";
-
   /**
    * The result eater that knows about the current results
    */
   private final WPSSimulationResultEater m_resultEeater;
 
-  /**
-   * Is displayed from the client after calculation. It is usefull, to give the user the hint to log files, if an error
-   * has occured.
-   */
-  private String m_finishText = "";
-
-  /**
-   * State.
-   */
-  private int m_status = 0; // = IStatus.OK;
-
   private final long m_threadId;
-
-  private final String m_type;
-
-  private final String m_description;
 
   /**
    * The construtor.
@@ -99,10 +70,9 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
   public WPSSimulationInfo( )
   {
     // nur für wscompile
+    super();
     m_resultEeater = null;
     m_threadId = -1;
-    m_type = null;
-    m_description = null;
   }
 
   /**
@@ -110,100 +80,19 @@ public class WPSSimulationInfo implements Serializable, ISimulationMonitor
    */
   public WPSSimulationInfo( final long threadId, final String type, final String description, final ISimulationConstants.STATE state, final int progress, final WPSSimulationResultEater eater )
   {
+    super( "use threadId instead", description, type, state, progress, "not finished yet" );
     m_threadId = threadId;
-    m_type = type;
-    m_description = description;
-    m_state = state;
-    m_progress = progress;
     m_resultEeater = eater;
   }
 
-  public String getDescription( )
-  {
-    return m_description;
-  }
-
+  @Override
   public String getId( )
   {
     return Long.toString( m_threadId );
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
-   */
-  public int getProgress( )
-  {
-    return m_progress;
-  }
-
-  public ISimulationConstants.STATE getState( )
-  {
-    return m_state;
-  }
-
-  public String getMessage( )
-  {
-    return m_message;
-  }
-
-  public void setProgress( final int i )
-  {
-    m_progress = i;
-  }
-
-  public void setState( final ISimulationConstants.STATE state )
-  {
-    m_state = state;
-  }
-
-  public void setMessage( final String message )
-  {
-    m_message = message;
-  }
-
   public final List<IOValueType> getCurrentResults( ) throws SimulationException
   {
     return m_resultEeater.getCurrentResults();
-  }
-
-  public final String getType( )
-  {
-    return m_type;
-  }
-
-  public void cancel( )
-  {
-    m_state = ISimulationConstants.STATE.CANCELED;
-  }
-
-  public boolean isCanceled( )
-  {
-    return m_state == ISimulationConstants.STATE.CANCELED;
-  }
-
-  public String getFinishText( )
-  {
-    return m_finishText;
-  }
-
-  public void setFinishText( String finishText )
-  {
-    m_finishText = finishText;
-  }
-
-  public void setFinishInfo( final int status, final String text )
-  {
-    setFinishStatus( status );
-    setFinishText( text );
-  }
-
-  public void setFinishStatus( final int status )
-  {
-    m_status = status;
-  }
-
-  public int getFinishStatus( )
-  {
-    return m_status;
   }
 }

@@ -41,6 +41,7 @@
 package org.kalypso.service.wps.client;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -62,6 +63,7 @@ import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
+import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
@@ -75,17 +77,22 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.ogc.exception.OWSException;
-import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.client.exceptions.WPSException;
-import org.kalypso.service.wps.server.operations.DescribeProcessOperation;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
+import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationManager;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This class manages the connect between the client and the server.<br>
@@ -172,21 +179,17 @@ public class NonBlockingWPSRequest
     {
       /* Get the process description. */
       final ProcessDescriptionType processDescription = getProcessDescription( monitor );
-
       /* Get the input data. */
       m_dataInputs = createDataInputs( processDescription, inputs );
 
       /* Get the output data. */
       m_outputDefinitions = createOutputDefinitions( processDescription, outputs );
-
-      return Status.OK_STATUS;
     }
-    catch( final Exception e )
+    catch( final CoreException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      Activator.getDefault().getLog().log( status );
-      return status;
+      return e.getStatus();
     }
+    return Status.OK_STATUS;
   }
 
   private void initProcessDescription( IProgressMonitor monitor ) throws CoreException
@@ -197,35 +200,25 @@ public class NonBlockingWPSRequest
     monitor = SubMonitor.convert( monitor, "Frage nach der Prozess-Beschreibung ...", 300 );
     Debug.println( "Asking for a process description ..." );
 
-    try
+    // decide between local and remote invocation
+    if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
     {
-      // decide between local and remote invocation
-      if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
-      {
-        m_processDescription = DescribeProcessOperation.buildProcessDescriptionType( m_identifier );
-      }
-      else
-      {
-        final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
-        if( processDescriptionList.size() != 1 )
-        {
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned more than one process description.", null ) );
-        }
-
-        /* Monitor. */
-        monitor.worked( 300 );
-
-        /* We will always take the first one. */
-        m_processDescription = processDescriptionList.get( 0 );
-      }
+      final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( WPS_VERSION.V040 );
+      m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( m_identifier );
     }
-    catch( final CoreException e )
+    else
     {
-      throw e;
-    }
-    catch( final Exception e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
+      if( processDescriptionList.size() != 1 )
+      {
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned more than one process description.", null ) );
+      }
+
+      /* Monitor. */
+      monitor.worked( 300 );
+
+      /* We will always take the first one. */
+      m_processDescription = processDescriptionList.get( 0 );
     }
   }
 
@@ -338,7 +331,7 @@ public class NonBlockingWPSRequest
     return Status.OK_STATUS;
   }
 
-  private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws WPSException
+  private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws CoreException
   {
     /* The storage for the input values. */
     final List<IOValueType> inputValues = new LinkedList<IOValueType>();
@@ -366,49 +359,44 @@ public class NonBlockingWPSRequest
       if( inputDescription.getMinimumOccurs().intValue() == 1 )
       {
         /* Ooops, it is a mandatory one, but it is missing in our model data. */
-        throw new WPSException( "The data input " + inputId + " is mandatory. Check your input data." );
+        throw new CoreException( StatusUtilities.createErrorStatus( "The data input %s is mandatory. Check your input data.", inputId ) );
       }
     }
 
     return WPS040ObjectFactoryUtilities.buildDataInputsType( inputValues );
   }
 
-  private IOValueType createDataInput( final InputDescriptionType inputDescription, final Object inputValue )
+  private IOValueType createDataInput( final InputDescriptionType inputDescription, final Object inputValue ) throws CoreException
   {
     final CodeType identifier = inputDescription.getIdentifier();
     final String inputId = identifier.getValue();
+    final String title = inputDescription.getTitle();
+    final String abstrakt = inputDescription.getAbstract();
 
     /* Supported complex data type. */
     final SupportedComplexDataType complexData = inputDescription.getComplexData();
+    final LiteralInputType literalInput = inputDescription.getLiteralData();
+    final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
+    
     if( complexData != null )
     {
-      if( inputValue instanceof URI )
-      {
-        /* Build the complex value reference. */
-        final URI uri = (URI) inputValue;
-        final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
-        final ComplexValueReference valueReference = WPS040ObjectFactoryUtilities.buildComplexValueReference( uri.toASCIIString(), null, null, null );
-        final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueReference );
-
-        /* Add the input. */
-        return ioValue;
-      }
-
-      // REMARK: hack/convention: the input must now be the raw input for the anyType element
-      final List<Object> value = new ArrayList<Object>( 1 );
-      value.add( inputValue );
-
-      /* Build the complex value. */
-      final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
-      final ComplexValueType valueType = WPS040ObjectFactoryUtilities.buildComplexValueType( null, null, null, value );
-      final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), valueType );
+      // TODO: we ignore this information at the time, but it should be checked if we can actually send this kind of data
+      // final String defaultEncoding = complexData.getDefaultEncoding();
+      // final String defaultFormat = complexData.getDefaultFormat();
+      // final String defaultSchema = complexData.getDefaultSchema();
+      // final List<ComplexDataType> supportedComplexData = complexData.getSupportedComplexData();
+      // for( ComplexDataType complexDataType : supportedComplexData )
+      // {
+      // final String encoding = complexDataType.getEncoding();
+      // final String format = complexDataType.getFormat();
+      // final String schema = complexDataType.getSchema();
+      // }
+      final IOValueType ioValue = getInputValue( inputValue, inputId, title, abstrakt );
 
       /* Add the input. */
       return ioValue;
     }
 
-    /* Literal input type */
-    final LiteralInputType literalInput = inputDescription.getLiteralData();
     if( literalInput != null )
     {
       /* Build the literal value type. */
@@ -418,7 +406,7 @@ public class NonBlockingWPSRequest
       final String value = marshalLiteral( inputValue, inputType );
 
       final LiteralValueType literalValue = WPS040ObjectFactoryUtilities.buildLiteralValueType( value, inputType, null );
-      final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, inputDescription.getTitle(), inputDescription.getAbstract(), literalValue );
+      final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, title, abstrakt, literalValue );
 
       /* Add the input. */
       return ioValue;
@@ -427,6 +415,80 @@ public class NonBlockingWPSRequest
     /* Supported CRSs type. */
     // TODO: support SupportedCRSsType
     throw new UnsupportedOperationException();
+  }
+
+  private IOValueType getInputValue( final Object inputValue, final String inputId, final String title, final String abstrakt ) throws CoreException
+  {
+    final Object valueType;
+    final String format;
+    final String encoding;
+    final String schema;
+    final Object valueString;
+    /* Build the complex value reference. */
+    if( inputValue instanceof URI )
+    {
+      // this way we can probably not check the format, encoding and schema of the input
+      final URI uri = (URI) inputValue;
+      format = null;
+      encoding = null;
+      schema = null;
+      valueType = WPS040ObjectFactoryUtilities.buildComplexValueReference( uri.toASCIIString(), format, encoding, schema );
+    }
+    /* Build the complex value. */
+    else
+    {
+      // TODO: support other complex types, e.g. regular XML, geometries, ...
+      if( inputValue instanceof GMLWorkspace )
+      {
+        final GMLWorkspace gmlWorkspace = (GMLWorkspace) inputValue;
+        final IGMLSchema gmlSchema = gmlWorkspace.getGMLSchema();
+        final String schemaLocationString = gmlSchema.getContext().toString();
+
+        format = WPSSimulationDataProvider.TYPE_GML;
+        encoding = "UTF-8";
+        schema = schemaLocationString;
+
+        // enforce the schemaLocation
+        // TODO: copy the schema to a place where the server can find it
+        gmlWorkspace.setSchemaLocation( schemaLocationString );
+        valueString = getGML( gmlWorkspace );
+      }
+      else
+      {
+        // do not know, maybe it can be marshalled by the binding framework?
+        // TODO: this will probably throw an exception later, maybe throw it now?
+        format = null;
+        encoding = null;
+        schema = null;
+        valueString = inputValue;
+      }
+
+      // REMARK: hack/convention: the input must now be the raw input for the anyType element
+      final List<Object> value = new ArrayList<Object>( 1 );
+      value.add( valueString );
+      valueType = WPS040ObjectFactoryUtilities.buildComplexValueType( format, encoding, schema, value );
+    }
+    
+    final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
+    final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, title, abstrakt, valueType );
+    return ioValue;
+  }
+
+  private Object getGML( final GMLWorkspace gmlWorkspace ) throws CoreException
+  {
+    final Object valueString;
+    // 0.5 MB text file default buffer
+    final StringWriter stringWriter = new StringWriter( 512 * 1024 );
+    try
+    {
+      GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true );
+    }
+    catch( final GmlSerializeException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    valueString = stringWriter.toString();
+    return valueString;
   }
 
   private String marshalLiteral( final Object literalValue, @SuppressWarnings("unused") final String inputType )

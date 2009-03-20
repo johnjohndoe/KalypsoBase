@@ -48,11 +48,18 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import net.opengeospatial.ows.AnyValue;
+import net.opengeospatial.ows.DomainMetadataType;
 import net.opengeospatial.ows.MetadataType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.simspec.DataType;
@@ -64,9 +71,14 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.wps._1_0.ProcessDescriptions, net.opengeospatial.wps.ProcessDescriptions>
 {
 
-  public ProcessDescriptionMediator( final Object collegue )
+  public ProcessDescriptionMediator( final String version )
   {
-    super( collegue );
+    super( version );
+  }
+
+  public ProcessDescriptionMediator( final WPS_VERSION version )
+  {
+    super( version );
   }
 
   /**
@@ -119,10 +131,10 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData;
+    Modelspec modelSpec;
     try
     {
-      modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
+      modelSpec = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
     }
     catch( final JAXBException e )
     {
@@ -130,13 +142,13 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
     }
 
     /* Build all content for the process description. */
-    final String identifier = modelData.getTypeID();
+    final String identifier = modelSpec.getTypeID();
 
     switch( getVersion() )
     {
       case V040:
         /* Get the input from the model spec. */
-        final List<DataType> input = modelData.getInput();
+        final List<DataType> input = modelSpec.getInput();
 
         /* Build the data inputs. */
         final List<Object> inputDescriptions = new ArrayList<Object>( input.size() );
@@ -148,7 +160,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         }
 
         /* Get the output from the model spec. */
-        final List<DataType> output = modelData.getOutput();
+        final List<DataType> output = modelSpec.getOutput();
 
         /* Build the output descriptions. */
         final List<Object> outputDescriptions = new ArrayList<Object>( output.size() );
@@ -198,11 +210,15 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final String outputTitle = data.getId();
         final String outputAbstrakt = data.getDescription();
 
-        net.opengeospatial.wps.OutputDescriptionType outputDescription = null;
-        if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
+        final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+        final QName type = data.getType();
+        final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+        final Object outputFormChoice;
+        if( !type.equals( WPSUtilities.QNAME_ANY_URI ) && handler instanceof ISimpleMarshallingTypeHandler )
         {
           /* Literal. */
-          outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, WPS040ObjectFactoryUtilities.buildLiteralOutputType( WPS040ObjectFactoryUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null ) );
+          final DomainMetadataType buildDomainMetadataType = WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null );
+          outputFormChoice = WPS040ObjectFactoryUtilities.buildLiteralOutputType( buildDomainMetadataType, null );
         }
         else
         {
@@ -211,10 +227,9 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
           complexDatas.add( complexData );
 
-          final net.opengeospatial.wps.SupportedComplexDataType outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
-          outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
+          outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         }
-        return outputDescription;
+        return WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
     }
     return null;
   }
@@ -224,23 +239,25 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
    */
   private Object getInputDescription( final DataType data )
   {
+    final net.opengeospatial.ows.CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+    final String inputTitle = data.getId();
+    final String inputAbstrakt = data.getDescription();
+    final int minOccurs = data.isOptional() ? 0 : 1;
+
+    final QName type = data.getType();
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+
     switch( getVersion() )
     {
       case V040:
-        final net.opengeospatial.ows.CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
-        final String inputTitle = data.getId();
-        final String inputAbstrakt = data.getDescription();
-
-        net.opengeospatial.wps.InputDescriptionType inputDescription = null;
-        final QName type = data.getType();
-        if( !type.equals( WPSUtilities.QNAME_ANY_URI ) )
+        final Object inputFormChoice;
+        if( !type.equals( WPSUtilities.QNAME_ANY_URI ) && handler instanceof ISimpleMarshallingTypeHandler )
         {
           /* Literal. */
-          final net.opengeospatial.wps.LiteralInputType inputFormChoice = WPS040ObjectFactoryUtilities.buildLiteralInputType( WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null ), null, WPS040ObjectFactoryUtilities.buildAnyValue(), null );
-          if( data.isOptional() )
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-          else
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
+          final DomainMetadataType metaData = WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null );
+          final AnyValue anyValue = WPS040ObjectFactoryUtilities.buildAnyValue();
+          inputFormChoice = WPS040ObjectFactoryUtilities.buildLiteralInputType( metaData, null, anyValue, null );
         }
         else
         {
@@ -248,14 +265,9 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" );
           final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
           complexDatas.add( complexData );
-
-          final net.opengeospatial.wps.SupportedComplexDataType inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
-          if( data.isOptional() )
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-          else
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
+          inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         }
-        return inputDescription;
+        return WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, minOccurs );
     }
     return null;
   }

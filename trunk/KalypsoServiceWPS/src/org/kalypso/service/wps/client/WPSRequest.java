@@ -213,10 +213,10 @@ public class WPSRequest
       monitor.setTaskName( "Warte auf Prozess " + title );
 
       manager = VFSUtilities.getNewManager();
+      // TODO: at least put parsing of status file in a separate method to reduce the size of this one;
+      // maybe use same method to handle first status?
       while( run )
       {
-        // TODO: at least put parsing of status file in a separate method to reduce the size of this one;
-        // maybe use same method to handle first status?
         statusFile = VFSUtilities.checkProxyFor( statusLocation, manager );
         if( statusFile.exists() )
         {
@@ -268,23 +268,6 @@ public class WPSRequest
             return Status.CANCEL_STATUS;
           }
 
-          try
-          {
-            Thread.sleep( 1000 );
-            executed += 1000;
-          }
-          catch( final InterruptedException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
-
-          /* If the timeout is reached. */
-          if( executed >= m_timeout )
-          {
-            Debug.println( "Timeout reached ..." );
-            return StatusUtilities.createErrorStatus( "Timeout reached ..." );
-          }
-
           /* Get the process outputs every time. */
           final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
 
@@ -294,9 +277,21 @@ public class WPSRequest
             collectOutput( processOutputs );
           }
         }
-        else
+        try
         {
-          Debug.println( "Not started yet ..." );
+          Thread.sleep( 2000 );
+          executed += 2000;
+        }
+        catch( final InterruptedException e )
+        {
+          return StatusUtilities.statusFromThrowable( e );
+        }
+
+        /* If the timeout is reached. */
+        if( executed >= m_timeout )
+        {
+          Debug.println( "Timeout reached ..." );
+          return StatusUtilities.createErrorStatus( "Timeout reached ..." );
         }
       }
 
@@ -362,10 +357,12 @@ public class WPSRequest
       {
         inputStream = content.getInputStream();
         final String xml = MarshallUtilities.fromInputStream( inputStream );
-        final Object object = MarshallUtilities.unmarshall( xml );
-        executeState = (JAXBElement<ExecuteResponseType>) object;
-
-        success = true;
+        if( xml != null && !"".equals( xml ) )
+        {
+          final Object object = MarshallUtilities.unmarshall( xml );
+          executeState = (JAXBElement<ExecuteResponseType>) object;
+          success = true;
+        }
       }
       catch( final Exception e )
       {

@@ -489,19 +489,18 @@ public class SimulationDelegate
           /* Get the protocol if it is one. */
           final String protocol = SimulationUtilities.getProtocol( inputPath );
 
+          /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
+          /* which is not allowed to be copied or it is a complex value type (file-protocol). */
           if( "file".equals( protocol ) )
           {
+            // TODO: Why do we need this?
             final URL localFileUrl = new URL( inputPath );
             final byte[] bytes = UrlUtilities.toByteArray( localFileUrl );
             final String hexString = DatatypeConverter.printHexBinary( bytes );
             wpsInputs.put( identifier.getValue(), hexString );
-
             continue;
           }
-
-          /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
-          /* which is not allowed to be copied or it is a complex value type (file-protocol). */
-          if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) )
+          else if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) )
           {
             /* If protocol is null or protocol is "project", it is a local file resource. */
             /*

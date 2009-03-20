@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.server.operations;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -48,7 +49,9 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.CodeType;
+import net.opengeospatial.ows.DomainMetadataType;
 import net.opengeospatial.wps.ComplexDataType;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.LiteralInputType;
@@ -58,6 +61,16 @@ import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.Debug;
@@ -66,6 +79,7 @@ import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.DescribeProcessMediator;
 import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.simspec.DataType;
@@ -78,11 +92,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
  */
 public class DescribeProcessOperation implements IOperation
 {
-  /**
-   * The describe process request. If this variable is set, the describe process request came via xml. Otherwise it was
-   * only a get.
-   */
-  private Object m_describeProcessRequest = null;
+  private String m_version = null;
 
   /**
    * The constructor.
@@ -101,12 +111,11 @@ public class DescribeProcessOperation implements IOperation
       /* Start the operation. */
       Debug.println( "Operation \"DescribeProcess\" started." );
 
-
       /* Get the identifiers out of the request. */
       final List<String> identifiers = getIdentifier( request );
 
       /* Build the process descriptions response. */
-      final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( m_describeProcessRequest );
+      final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( m_version );
       final Object processDescriptionsResponse = processDescriptionMediator.getProcessDescriptions( identifiers );
 
       /* Marshall it into one XML string. */
@@ -138,20 +147,14 @@ public class DescribeProcessOperation implements IOperation
     {
       try
       {
-        /* POST with XML. */
         final String xml = request.getBody();
-
-        /* Check if ALL parameter are available. */
-        m_describeProcessRequest = MarshallUtilities.unmarshall( xml );
-
-        final DescribeProcessMediator describeProcessMediator = new DescribeProcessMediator( m_describeProcessRequest );
-
-        /* Need the XML attribute service. */
+        final Object describeProcessRequest = MarshallUtilities.unmarshall( xml );
+        final DescribeProcessMediator describeProcessMediator = new DescribeProcessMediator( describeProcessRequest );
         simulationTypes = describeProcessMediator.getProcessIdentifiers();
       }
       catch( final JAXBException e )
       {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
       }
     }
     else
@@ -163,6 +166,8 @@ public class DescribeProcessOperation implements IOperation
       final String parameterValue = request.getParameterValue( "Identifier" );
       if( parameterValue != null )
         simulationTypes.add( parameterValue );
+
+      m_version = request.getParameterValue( "Version" );
     }
 
     if( simulationTypes.size() == 0 )
@@ -184,110 +189,148 @@ public class DescribeProcessOperation implements IOperation
    * @return The process description.
    * @deprecated Use {@link ProcessDescriptionMediator#getProcessDescription(String)} instead
    */
-  public static ProcessDescriptionType buildProcessDescriptionType( final String typeID ) throws OWSException
+  @Deprecated
+  public static ProcessDescriptionType buildProcessDescriptionType( final String typeID ) throws CoreException
   {
+    /* Get the Simulation.. */
+    final ISimulation simulation = WPSUtilities.getSimulation( typeID );
+
+    // TODO At the moment only literals and references are supported from our model spec.
+    // The spec must be changed, in order to enable bounding boxes and complex values.
+    // If this is done, the two new cases must be covered here as well.
+
+    /* Get the specification for that simulation. */
+    final URL spezifikation = simulation.getSpezifikation();
+    Modelspec modelData;
     try
     {
-      /* Get the Simulation.. */
-      final ISimulation simulation = WPSUtilities.getSimulation( typeID );
-
-      // TODO At the moment only literals and references are supported from our model spec.
-      // The spec must be changed, in order to enable bounding boxes and complex values.
-      // If this is done, the two new cases must be covered here as well.
-
-      /* Get the specification for that simulation. */
-      final URL spezifikation = simulation.getSpezifikation();
-      final Modelspec modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
-
-      /* Build all content for the process description. */
-      final String identifier = modelData.getTypeID();
-      final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier );
-      final String title = identifier;
-
-      /* Get the input from the model spec. */
-      final List<DataType> input = modelData.getInput();
-
-      /* Build the data inputs. */
-      final List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
-      for( int j = 0; j < input.size(); j++ )
-      {
-        final DataType data = input.get( j );
-        final CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
-        final String inputTitle = data.getId();
-        final String inputAbstrakt = data.getDescription();
-
-        InputDescriptionType inputDescription = null;
-        final QName type = data.getType();
-        if( !type.equals( WPSUtilities.QNAME_ANY_URI ) )
-        {
-          /* Literal. */
-          final LiteralInputType inputFormChoice = WPS040ObjectFactoryUtilities.buildLiteralInputType( WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null ), null, WPS040ObjectFactoryUtilities.buildAnyValue(), null );
-          if( data.isOptional() )
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-          else
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
-        }
-        else
-        {
-          /* Reference. */
-          final ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" );
-          final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
-          complexDatas.add( complexData );
-
-          final SupportedComplexDataType inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
-          if( data.isOptional() )
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 0 );
-          else
-            inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, 1 );
-        }
-
-        /* Füge die neue Beschreibung hinzu. */
-        inputDescriptions.add( inputDescription );
-      }
-
-      final DataInputs dataInputs = WPS040ObjectFactoryUtilities.buildDataInputs( inputDescriptions );
-
-      /* Get the output from the model spec. */
-      final List<DataType> output = modelData.getOutput();
-
-      /* Build the output descriptions. */
-      final List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
-      for( int j = 0; j < output.size(); j++ )
-      {
-        final DataType data = output.get( j );
-
-        final CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
-        final String outputTitle = data.getId();
-        final String outputAbstrakt = data.getDescription();
-
-        OutputDescriptionType outputDescription = null;
-        if( !data.getType().equals( WPSUtilities.QNAME_ANY_URI ) )
-        {
-          /* Literal. */
-          outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, WPS040ObjectFactoryUtilities.buildLiteralOutputType( WPS040ObjectFactoryUtilities.buildDomainMetadataType( data.getType().getLocalPart(), null ), null ) );
-        }
-        else
-        {
-          /* Reference. */
-          final ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" );
-          final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
-          complexDatas.add( complexData );
-
-          final SupportedComplexDataType outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
-          outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
-        }
-
-        /* Füge die neue Beschreibung hinzu. */
-        outputDescriptions.add( outputDescription );
-      }
-
-      final ProcessOutputs processOutputs = WPS040ObjectFactoryUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
-
-      return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
+      modelData = (Modelspec) KalypsoSimulationCoreJaxb.JC.createUnmarshaller().unmarshal( spezifikation );
     }
-    catch( final Exception e )
+    catch( final JAXBException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "Problem building process description for " + typeID );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
+
+    /* Build all content for the process description. */
+    final String identifier = modelData.getTypeID();
+    final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier );
+    final String title = identifier;
+
+    /* Get the input from the model spec. */
+    final List<DataType> input = modelData.getInput();
+
+    /* Build the data inputs. */
+    final List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
+    final String gmlVersion = "3.1.1";
+    for( int j = 0; j < input.size(); j++ )
+    {
+      final DataType data = input.get( j );
+      final CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+      final String inputTitle = data.getId();
+      final String inputAbstrakt = data.getDescription();
+      final int minOccurs = data.isOptional() ? 0 : 1;
+
+      InputDescriptionType inputDescription = null;
+      final QName type = data.getType();
+      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+      final Object inputFormChoice;
+      if( !type.equals( WPSUtilities.QNAME_ANY_URI ) && handler instanceof ISimpleMarshallingTypeHandler )
+      {
+        inputFormChoice = getLiteralData( type );
+      }
+      else
+      {
+        inputFormChoice = getComplexData( gmlVersion, type );
+      }
+      inputDescription = WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, minOccurs );
+
+      /* Füge die neue Beschreibung hinzu. */
+      inputDescriptions.add( inputDescription );
+    }
+
+    final DataInputs dataInputs = WPS040ObjectFactoryUtilities.buildDataInputs( inputDescriptions );
+
+    /* Get the output from the model spec. */
+    final List<DataType> output = modelData.getOutput();
+
+    /* Build the output descriptions. */
+    final List<OutputDescriptionType> outputDescriptions = new LinkedList<OutputDescriptionType>();
+    for( int j = 0; j < output.size(); j++ )
+    {
+      final DataType data = output.get( j );
+
+      final CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+      final String outputTitle = data.getId();
+      final String outputAbstrakt = data.getDescription();
+
+      OutputDescriptionType outputDescription = null;
+      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final QName type = data.getType();
+      final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( type );
+      if( !type.equals( WPSUtilities.QNAME_ANY_URI ) && handler instanceof ISimpleMarshallingTypeHandler )
+      {
+        /* Literal. */
+        outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, WPS040ObjectFactoryUtilities.buildLiteralOutputType( WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null ), null ) );
+      }
+      else
+      {
+        final SupportedComplexDataType outputFormChoice = getComplexData( gmlVersion, type );
+        outputDescription = WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
+      }
+      /* Füge die neue Beschreibung hinzu. */
+      outputDescriptions.add( outputDescription );
+    }
+
+    final ProcessOutputs processOutputs = WPS040ObjectFactoryUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
+
+    return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
+  }
+
+  private static LiteralInputType getLiteralData( final QName type )
+  {
+    final DomainMetadataType buildDomainMetadataType = WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null );
+    final AnyValue buildAnyValue = WPS040ObjectFactoryUtilities.buildAnyValue();
+    return WPS040ObjectFactoryUtilities.buildLiteralInputType( buildDomainMetadataType, null, buildAnyValue, null );
+  }
+
+  private static SupportedComplexDataType getComplexData( final String gmlVersion, final QName type )
+  {
+    final String format = mimeTypeFromDataType( gmlVersion, type );
+    final String schema = format == null ? null : schemaLocationFromDataType( gmlVersion, type );
+    final ComplexDataType complexData1 = WPS040ObjectFactoryUtilities.buildComplexDataType( format, "", schema );
+    final ComplexDataType complexData = complexData1;
+    final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
+    complexDatas.add( complexData );
+    final SupportedComplexDataType outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
+    return outputFormChoice;
+  }
+
+  private static String schemaLocationFromDataType( final String gmlVersion, final QName type )
+  {
+    String schema;
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final GMLSchema gmlSchema = schemaCatalog.getSchema( type.getNamespaceURI(), gmlVersion );
+      final URL context = gmlSchema.getContext();
+      schema = context.toString();
+    }
+    catch( final InvocationTargetException e )
+    {
+      // gobble
+      schema = null;
+    }
+    return schema;
+  }
+
+  private static String mimeTypeFromDataType( final String gmlVersion, final QName type )
+  {
+    String format = "";
+    if( GMLSchemaUtilities.isKnownType( type, gmlVersion ) )
+    {
+      format = WPSSimulationDataProvider.TYPE_GML;
+    }
+    return format;
   }
 }

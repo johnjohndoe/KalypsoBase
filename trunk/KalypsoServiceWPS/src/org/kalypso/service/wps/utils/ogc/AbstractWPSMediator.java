@@ -44,6 +44,7 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.AssertionFailedException;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -55,25 +56,45 @@ public class AbstractWPSMediator<V10 extends Object, V04 extends Object>
 {
   private final WPS_VERSION m_version;
 
-  private final Object m_collegue;
+  private Object m_collegue;
+
+  /**
+   * Creates a mediator for the collegue with given WPS version.
+   */
+  public AbstractWPSMediator( final WPS_VERSION version )
+  {
+    org.eclipse.core.runtime.Assert.isNotNull( version );
+    m_version = version;
+  }
+
+  /**
+   * Creates a mediator for the collegue. Checks the version string to determine the WPS version. Must be either 0.4.0
+   * or 1.0.0
+   */
+  public AbstractWPSMediator( final String version )
+  {
+    this( WPSUtilities.WPS_VERSION.getValue( version ) );
+  }
 
   /**
    * Creates a mediator for the collegue. Checks the package identifier to determine the version.
    */
   public AbstractWPSMediator( final Object collegue )
   {
-    m_collegue = collegue;
     final String className = collegue.getClass().getName();
-    if( className.startsWith( "net.opengeospatial.wps" ) )
+    if( className.startsWith( "net.opengeospatial.wps" ) ) //$NON-NLS-1$
     {
       m_version = WPSUtilities.WPS_VERSION.V040;
     }
-    else if( className.startsWith( "net.opengis.wps._1_0" ) )
+    else if( className.startsWith( "net.opengis.wps._1_0" ) ) //$NON-NLS-1$
     {
       m_version = WPSUtilities.WPS_VERSION.V100;
     }
     else
-      throw new IllegalArgumentException( "Unknown execute request parameter of type " + className );
+    {
+      throw new AssertionFailedException( "Could not determine version from collegue class: " + className ); //$NON-NLS-1$
+    }
+    m_collegue = collegue;
   }
 
   /**
@@ -87,6 +108,7 @@ public class AbstractWPSMediator<V10 extends Object, V04 extends Object>
   /**
    * Returns the collegue as version 1.0.0
    */
+  @SuppressWarnings("unchecked")
   public V10 getV10( )
   {
     return (V10) m_collegue;
@@ -95,6 +117,7 @@ public class AbstractWPSMediator<V10 extends Object, V04 extends Object>
   /**
    * Returns the collegue as version 0.4.0
    */
+  @SuppressWarnings("unchecked")
   public V04 getV04( )
   {
     return (V04) m_collegue;
