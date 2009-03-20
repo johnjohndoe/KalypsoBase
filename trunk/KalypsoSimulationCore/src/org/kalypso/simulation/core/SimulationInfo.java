@@ -42,7 +42,6 @@ package org.kalypso.simulation.core;
 
 import java.io.Serializable;
 
-
 /**
  * <p>
  * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
@@ -75,11 +74,6 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   private String m_message = "Warte auf Ausführung...";
 
   /**
-   * IDs der aktuellen Ergebnisse
-   */
-  private String[] m_currentResults = new String[0];
-
-  /**
    * Wird vom Client nach erfolgter Berechnung dargestellt. Dient dazu, dem Benutzer ggfls. Hinweise auf Logdateien im
    * Fehlerfall o.ä. zu geben.
    */
@@ -87,13 +81,14 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
 
   private int m_status = 0; // = IStatus.OK;
 
-  public SimulationInfo()
+  private Throwable m_exception = null;
+
+  public SimulationInfo( )
   {
-  // nur für wscompile
+    // nur für wscompile
   }
 
-  public SimulationInfo( final String id, final String description, final String type, final ISimulationConstants.STATE state,
-      final int progress, final String finishText )
+  public SimulationInfo( final String id, final String description, final String type, final ISimulationConstants.STATE state, final int progress, final String finishText )
   {
     m_id = id;
     m_description = description;
@@ -103,12 +98,12 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     m_finishText = finishText;
   }
 
-  public String getDescription()
+  public String getDescription( )
   {
     return m_description;
   }
 
-  public String getId()
+  public String getId( )
   {
     return m_id;
   }
@@ -116,12 +111,12 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
    */
-  public int getProgress()
+  public int getProgress( )
   {
     return m_progress;
   }
 
-  public ISimulationConstants.STATE getState()
+  public ISimulationConstants.STATE getState( )
   {
     return m_state;
   }
@@ -129,7 +124,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
    */
-  public String getMessage()
+  public String getMessage( )
   {
     return m_message;
   }
@@ -162,17 +157,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     m_message = message;
   }
 
-  public final String[] getCurrentResults()
-  {
-    return m_currentResults;
-  }
-
-  public final void setCurrentResults( String[] currentResults )
-  {
-    m_currentResults = currentResults;
-  }
-
-  public final String getType()
+  public final String getType( )
   {
     return m_type;
   }
@@ -185,7 +170,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
    */
-  public void cancel()
+  public void cancel( )
   {
     m_state = ISimulationConstants.STATE.CANCELED;
   }
@@ -193,12 +178,12 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
    */
-  public boolean isCanceled()
+  public boolean isCanceled( )
   {
     return m_state == ISimulationConstants.STATE.CANCELED;
   }
 
-  public String getFinishText()
+  public String getFinishText( )
   {
     return m_finishText;
   }
@@ -222,11 +207,18 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     m_status = status;
   }
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcMonitor#getFinishStatus()
-   */
-  public int getFinishStatus()
+  public int getFinishStatus( )
   {
     return m_status;
+  }
+
+  public void setException( final Throwable exception )
+  {
+    m_exception = exception;
+  }
+
+  public Throwable getException( )
+  {
+    return m_exception;
   }
 }

@@ -66,7 +66,7 @@ public class SimulationThread extends Thread
     if( !DO_DEBUG_TRACE )
       LOGGER.setUseParentHandlers( false );
   }
-  
+
   private final ISimulation m_job;
 
   private final SimulationInfo m_jobBean;
@@ -105,8 +105,8 @@ public class SimulationThread extends Thread
 
   public SimulationInfo getJobBean( )
   {
-    m_jobBean.setCurrentResults( m_resultPacker.getCurrentResults() );
-
+    // do not set current results, nobody is interested in them anyway
+// m_jobBean.setCurrentResults( m_resultPacker.getCurrentResults() );
     return m_jobBean;
   }
 
@@ -139,17 +139,18 @@ public class SimulationThread extends Thread
     }
     catch( final Throwable t )
     {
-      LOGGER.warning( "JOB exited with exception: " + jobID );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID );
       t.printStackTrace();
 
-      m_jobBean.setMessage( t.getLocalizedMessage() );
+      m_jobBean.setMessage( "Simulation aborted with exception." );
+      m_jobBean.setException( t );
       m_jobBean.setState( ISimulationConstants.STATE.ERROR );
     }
   }
 
-  public void transferCurrentResults(final File targetFolder ) throws SimulationException
+  public void transferCurrentResults( final File targetFolder ) throws SimulationException
   {
-    m_resultPacker.transferCurrentResults(targetFolder);
+    m_resultPacker.transferCurrentResults( targetFolder );
   }
 
   public String[] getCurrentResults( )
