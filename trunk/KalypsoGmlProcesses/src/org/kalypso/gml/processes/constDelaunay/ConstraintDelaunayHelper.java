@@ -482,7 +482,7 @@ public class ConstraintDelaunayHelper
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
-  private static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
