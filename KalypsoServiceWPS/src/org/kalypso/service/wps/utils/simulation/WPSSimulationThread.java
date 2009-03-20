@@ -132,27 +132,27 @@ public class WPSSimulationThread extends Thread
    */
   public WPSSimulationThread( final ISimulation job, final Execute execute, final ProcessDescriptionType processDescription, final String resultSpace ) throws SimulationException
   {
-    super( "WPS-SimulationThread (" + processDescription.getIdentifier().getValue() + ")");
+    super( "WPS-SimulationThread (" + processDescription.getIdentifier().getValue() + ")" );
     m_job = job;
-    
+
     // TODO: should this temp dir not be inside the general wps tmp-dir?
     final long threadId = getId();
     final String jobId = execute.getIdentifier().getValue();
-    
+
     m_tmpDir = FileUtilities.createNewTempDir( "CalcJob-" + threadId );
     m_tmpDir.deleteOnExit();
 
     final Map<String, Object> inputList = index( execute );
-    m_inputData = new WPSSimulationDataProvider( inputList, m_tmpDir );
+    m_inputData = new WPSSimulationDataProvider( inputList );
     m_resultEater = new WPSSimulationResultEater( processDescription, execute, m_tmpDir, resultSpace );
-    
+
     final String description = processDescription.getAbstract();
     m_jobInfo = new WPSSimulationInfo( threadId, jobId, description, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
 
     /* Check, if the required input is available. */
     checkInput( execute, processDescription );
   }
-  
+
   /**
    * Indexes the input values with their id.
    * 
@@ -317,8 +317,9 @@ public class WPSSimulationThread extends Thread
     }
     catch( final Throwable t )
     {
-      LOGGER.warning( "JOB exited with exception: " + jobID );
-      m_jobInfo.setFinishText( t.getLocalizedMessage() );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID );
+      m_jobInfo.setFinishText( "Simulation aborted with exception." );
+      m_jobInfo.setException( t );
       m_jobInfo.setState( ISimulationConstants.STATE.ERROR );
     }
   }

@@ -42,6 +42,7 @@ package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -74,11 +75,14 @@ import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Manages the results for the client. Understands only Files at the moment.
@@ -208,8 +212,34 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       }
       else
       {
+        String schema = null;
+        String format = null;
+        Object complexResult;
+        if( result instanceof GMLWorkspace )
+        {
+          // 0.5 MB text file default buffer
+          final StringWriter stringWriter = new StringWriter( 512 * 1024 );
+          final GMLWorkspace gmlWorkspace = (GMLWorkspace) result;
+          try
+          {
+            format = WPSSimulationDataProvider.TYPE_GML;
+            final String schemaLocationString = gmlWorkspace.getGMLSchema().getContext().toString();
+            gmlWorkspace.setSchemaLocation( schemaLocationString );
+            schema = schemaLocationString;
+            GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true );
+            complexResult = stringWriter.toString();
+          }
+          catch( final GmlSerializeException e )
+          {
+            throw new SimulationException( "Problem serializing gml output.", e );
+          }
+        }
+        else
+        {
+          complexResult = result;
+        }
         // REMARK: hack/convention: the result must now be the raw input for the anyType element
-        valueFormChoice = addComplexValueType( result );
+        valueFormChoice = addComplexValueType( complexResult, format, schema );
       }
     }
     else if( literalOutput != null )
@@ -341,14 +371,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          An object, which should be added.
    * @return A ComplexValueType with the given file.
    */
-  private ComplexValueType addComplexValueType( Object result )
+  private ComplexValueType addComplexValueType( Object result, String format, String schema )
   {
     // REMARK: hack/convention: the input must now be the raw input for the anyType element
     List<Object> value = new ArrayList<Object>( 1 );
     value.add( result );
 
     /* Build the complex value. */
-    return WPS040ObjectFactoryUtilities.buildComplexValueType( null, null, null, value );
+    return WPS040ObjectFactoryUtilities.buildComplexValueType( format, null, schema, value );
   }
 
   /**

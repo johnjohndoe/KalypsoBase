@@ -71,6 +71,7 @@ import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulation;
@@ -278,10 +279,14 @@ public class WPSUtilities
    */
   public static String createErrorString( ExceptionReport exceptionReport )
   {
-    List<ExceptionType> exceptions = exceptionReport.getException();
+    final List<ExceptionType> exceptions = exceptionReport.getException();
     String messages = "";
-    for( ExceptionType exception : exceptions )
-      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exception.getExceptionText() + "\nLocator: " + exception.getLocator();
+    for( final ExceptionType exception : exceptions )
+    {
+      final List<String> exceptionList = exception.getExceptionText();
+      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" );
+      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exceptionText + "\nLocator: " + exception.getLocator();
+    }
 
     return messages;
   }
@@ -298,6 +303,8 @@ public class WPSUtilities
     /* Get the simulation. */
     Debug.println( "Searching for simulation \"" + simulationType + "\" ..." );
     final ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( simulationType );
+    if( simulation == null )
+      throw new CoreException( StatusUtilities.createErrorStatus( "No simulation found with id %s.", simulationType ) );
     return simulation;
   }
 

@@ -58,10 +58,14 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
+import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
+import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.SimulationException;
@@ -250,13 +254,27 @@ public class WPSQueuedSimulationService
     }
   }
 
-  public WPSSimulationInfo startJob( final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
+  public WPSSimulationInfo startJob( final ExecuteMediator executeMediator ) throws SimulationException
   {
-    final String typeID = execute.getIdentifier().getValue();
+    final Execute executeV04 = executeMediator.getV04();
+    final String typeID = executeV04.getIdentifier().getValue();
     if( typeID == null || typeID.length() == 0 )
     {
       Debug.println( "Missing parameter Identifier!" );
       throw new SimulationException( "Process identifier is missing!" );
+    }
+
+    Object processDescription;
+    try
+    {
+      /* Get the process description. */
+      final WPS_VERSION version = executeMediator.getVersion();
+      final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( version );
+      processDescription = processDescriptionMediator.getProcessDescription( typeID );
+    }
+    catch( final CoreException e )
+    {
+      throw new SimulationException( "Could not get process description!" );
     }
 
     WPSSimulationThread cjt = null;
@@ -265,11 +283,12 @@ public class WPSQueuedSimulationService
       final ISimulation job = m_calcJobFactory.createJob( typeID );
 
       /* Need the description and the result directory. */
-      m_descriptions.put( typeID, processDescription );
+      final ProcessDescriptionType processDescriptionV04 = (ProcessDescriptionType) processDescription;
+      m_descriptions.put( typeID, processDescriptionV04 );
 
-      cjt = new WPSSimulationThread( job, execute, processDescription, m_resultSpace );
-      
-      final String threadId = Long.toString( cjt.getId());
+      cjt = new WPSSimulationThread( job, executeV04, processDescriptionV04, m_resultSpace );
+
+      final String threadId = Long.toString( cjt.getId() );
       m_threads.put( threadId, cjt );
 
       LOGGER.info( "Job waiting for scheduling: " + threadId );
