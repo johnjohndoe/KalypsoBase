@@ -55,6 +55,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -136,7 +137,9 @@ public class CalcJobHandler
         }
 
         if( bStop )
+        {
           break;
+        }
 
         try
         {
@@ -158,7 +161,9 @@ public class CalcJobHandler
         // ab hier bei cancel nicht mehr zurückkehren, sondern
         // erstmal den Job-Canceln und warten bis er zurückkehrt
         if( monitor.isCanceled() )
+        {
           m_calcService.cancelJob( m_jobID );
+        }
       }
 
       calcMonitor.done();
@@ -171,13 +176,13 @@ public class CalcJobHandler
         case FINISHED:
           final IProject project = calcCaseFolder.getProject();
 
-          // Ergebniss abholen
-          m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
-
           // clear results as defined in modelspec
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
+          // Ergebniss abholen
+          m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
           project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+
           final String finishText = jobBean.getFinishText();
           final String message = finishText == null ? "" : finishText;
           return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null );
@@ -215,7 +220,9 @@ public class CalcJobHandler
             m_calcService.disposeJob( m_jobID );
 
             if( m_zipFile != null )
+            {
               m_zipFile.delete();
+            }
           }
         }
       }
@@ -246,7 +253,9 @@ public class CalcJobHandler
         final String path = clearType.getPath();
         final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project.findMember( path );
         if( resource != null )
+        {
           resource.delete( false, new SubProgressMonitor( monitor, 1 ) );
+        }
       }
     }
     finally
@@ -314,7 +323,9 @@ public class CalcJobHandler
     final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
     final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
     for( final SimulationDescription desc : inputDescription )
+    {
       inputdescriptionMap.put( desc.getId(), desc );
+    }
 
     ZipResourceVisitor zipper = null;
     try
@@ -335,12 +346,17 @@ public class CalcJobHandler
           // if the type is a uri, put the content as file into the zip
 
           // alles relativ zum Projekt auflösen!
-          final IResource inputResource;
+          IResource inputResource;
           if( inputPath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
           {
             final IContainer baseresource = project.getWorkspace().getRoot();
             final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
             inputResource = baseresource.findMember( path );
+            if( inputResource == null )
+            {
+              inputResource = baseresource.findMember( URIUtil.decode( path ) );
+            }
+            
           }
           else
           {
@@ -350,7 +366,9 @@ public class CalcJobHandler
           if( inputResource == null )
           {
             if( input.isOptional() )
+            {
               continue;
+            }
 
             throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
           }
@@ -360,15 +378,19 @@ public class CalcJobHandler
 
           /* Create zipper very lazy, in order to prevent exception because zip stream is empty */
           if( zipper == null )
+          {
             zipper = new ZipResourceVisitor( zipFile, PATH_TYPE.PLATFORM_RELATIVE );
+          }
 
           inputResource.accept( zipper );
 // beanValue = projectRelativePath.toString();
           beanValue = platformRelativePath.toString();
         }
         else
+        {
           // just put the value into the bean
           beanValue = inputPath;
+        }
 
         final SimulationDataPath calcJobDataBean = new SimulationDataPath( inputId, beanValue );
         inputBeanList.add( calcJobDataBean );
