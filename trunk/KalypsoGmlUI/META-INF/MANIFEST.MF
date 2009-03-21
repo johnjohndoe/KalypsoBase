@@ -15,4 +15,5 @@ Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.jface,
  org.kalypso.gml.ui.map,
  org.kalypso.gml.ui.wizard.grid
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

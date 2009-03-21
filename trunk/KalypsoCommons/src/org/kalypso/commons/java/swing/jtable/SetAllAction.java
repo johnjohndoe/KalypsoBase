@@ -6,17 +6,18 @@ import javax.swing.JTable;
 
 /**
  * SetAllAction
- * 
+ *
  * @author schlienger
  */
 public class SetAllAction extends AbstractObservationTableAction
 {
-  public SetAllAction( JTable table )
+  public SetAllAction( final JTable table )
   {
     super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
   }
 
-  public void internalActionPerformed( ActionEvent e )
+  @Override
+  public void internalActionPerformed( final ActionEvent e )
   {
     final JTable table = getTable();
     final int col = table.getSelectedColumn();

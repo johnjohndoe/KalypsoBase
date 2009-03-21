@@ -46,12 +46,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import net.opengeospatial.wps.Capabilities;
-import net.opengeospatial.wps.ComplexValueType;
-import net.opengeospatial.wps.ExecuteResponseType;
-import net.opengeospatial.wps.IOValueType;
-import net.opengeospatial.wps.LiteralValueType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengis.ows._1.AddressType;
 import net.opengis.ows._1.AllowedValues;
 import net.opengis.ows._1.AnyValue;
@@ -64,7 +58,6 @@ import net.opengis.ows._1.DomainType;
 import net.opengis.ows._1.ExceptionReport;
 import net.opengis.ows._1.ExceptionType;
 import net.opengis.ows._1.HTTP;
-import net.opengis.ows._1.KeywordsType;
 import net.opengis.ows._1.LanguageStringType;
 import net.opengis.ows._1.MetadataType;
 import net.opengis.ows._1.NoValues;
@@ -74,7 +67,6 @@ import net.opengis.ows._1.OperationsMetadata;
 import net.opengis.ows._1.RangeType;
 import net.opengis.ows._1.RequestMethodType;
 import net.opengis.ows._1.ResponsiblePartySubsetType;
-import net.opengis.ows._1.ServiceIdentification;
 import net.opengis.ows._1.ServiceProvider;
 import net.opengis.ows._1.TelephoneType;
 import net.opengis.ows._1.ValueType;
@@ -91,9 +83,6 @@ import net.opengis.wps._1_0.InputDescriptionType;
 import net.opengis.wps._1_0.InputReferenceType;
 import net.opengis.wps._1_0.InputType;
 import net.opengis.wps._1_0.LiteralDataType;
-import net.opengis.wps._1_0.LiteralInputType;
-import net.opengis.wps._1_0.LiteralOutputType;
-import net.opengis.wps._1_0.OutputDefinitionType;
 import net.opengis.wps._1_0.OutputDefinitionsType;
 import net.opengis.wps._1_0.OutputDescriptionType;
 import net.opengis.wps._1_0.ProcessBriefType;
@@ -105,9 +94,7 @@ import net.opengis.wps._1_0.ProcessStartedType;
 import net.opengis.wps._1_0.ResponseDocumentType;
 import net.opengis.wps._1_0.ResponseFormType;
 import net.opengis.wps._1_0.StatusType;
-import net.opengis.wps._1_0.SupportedCRSsType;
 import net.opengis.wps._1_0.SupportedComplexDataType;
-import net.opengis.wps._1_0.SupportedUOMsType;
 import net.opengis.wps._1_0.ProcessDescriptionType.DataInputs;
 import net.opengis.wps._1_0.ProcessDescriptionType.ProcessOutputs;
 
@@ -148,10 +135,10 @@ public class WPS100ObjectFactoryUtilities
    *          [optional]
    * @param value
    */
-  public static CodeType buildCodeType( String codeSpace, String value )
+  public static CodeType buildCodeType( final String codeSpace, final String value )
   {
     /* Create the instance via the factory. */
-    CodeType code = OWS_1_0_0_OF.createCodeType();
+    final CodeType code = OWS_1_0_0_OF.createCodeType();
 
     /* Attributes. */
     if( codeSpace != null )
@@ -187,10 +174,10 @@ public class WPS100ObjectFactoryUtilities
    *          (e.g., encoded using GML 2.2 Application Schema). This reference should be included for XML encoded
    *          complex resources to facilitate validation.
    */
-  public static InputReferenceType buildComplexValueReference( String reference, String format, String encoding, String schema )
+  public static InputReferenceType buildComplexValueReference( final String reference, final String format, final String encoding, final String schema )
   {
     /* Create the instance via the factory. */
-    InputReferenceType complexValueReference = WPS_1_0_0_OF.createInputReferenceType();
+    final InputReferenceType complexValueReference = WPS_1_0_0_OF.createInputReferenceType();
 
     /* Attributes. */
     complexValueReference.setHref( reference );
@@ -228,10 +215,10 @@ public class WPS100ObjectFactoryUtilities
    *          complex resources to facilitate validation.
    * @param value
    */
-  public static ComplexDataType buildComplexValueType( String format, String encoding, String schema, List<Object> value )
+  public static ComplexDataType buildComplexValueType( final String format, final String encoding, final String schema, final List<Object> value )
   {
     /* Create the instance via the factory. */
-    ComplexDataType complexValue = WPS_1_0_0_OF.createComplexDataType();
+    final ComplexDataType complexValue = WPS_1_0_0_OF.createComplexDataType();
 
     /* Attributes. */
     if( format != null )
@@ -265,10 +252,10 @@ public class WPS100ObjectFactoryUtilities
    *          referenced for any numerical value that has units (e.g., "meters", but not a more complete reference
    *          system). Shall be a UOM identified in the Process description for this input or output.
    */
-  public static LiteralDataType buildLiteralValueType( String value, String dataType, String uom )
+  public static LiteralDataType buildLiteralValueType( final String value, final String dataType, final String uom )
   {
     /* Create the instance via the factory. */
-    LiteralDataType literalValue = WPS_1_0_0_OF.createLiteralDataType();
+    final LiteralDataType literalValue = WPS_1_0_0_OF.createLiteralDataType();
 
     /* Values. */
     literalValue.setValue( value );
@@ -309,10 +296,10 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] The number of dimensions in this CRS (the length of a coordinate sequence in this use of the
    *          PositionType). This number is specified by the CRS definition, but can also be specified here.
    */
-  public static BoundingBoxType buildBoundingBoxType( List<Double> lowerCorner, List<Double> upperCorner, String crs, BigInteger dimensions )
+  public static BoundingBoxType buildBoundingBoxType( final List<Double> lowerCorner, final List<Double> upperCorner, final String crs, final BigInteger dimensions )
   {
     /* Create the instance via the factory. */
-    BoundingBoxType boundingBox = OWS_1_0_0_OF.createBoundingBoxType();
+    final BoundingBoxType boundingBox = OWS_1_0_0_OF.createBoundingBoxType();
 
     /* Elements. */
     boundingBox.getLowerCorner().addAll( lowerCorner );
@@ -349,10 +336,10 @@ public class WPS100ObjectFactoryUtilities
    *          <li>DataType</li>
    *          </ol>
    */
-  public static InputType buildIOValueType( CodeType identifier, LanguageStringType title, LanguageStringType abstrakt, Object valueFormChoice )
+  public static InputType buildIOValueType( final CodeType identifier, final LanguageStringType title, final LanguageStringType abstrakt, final Object valueFormChoice )
   {
     /* Create the instance via the factory. */
-    InputType ioValue = WPS_1_0_0_OF.createInputType();
+    final InputType ioValue = WPS_1_0_0_OF.createInputType();
 
     /* Elements. */
     ioValue.setIdentifier( identifier );
@@ -381,7 +368,7 @@ public class WPS100ObjectFactoryUtilities
   public static DataInputsType buildDataInputsType( final List<InputType> ioValues )
   {
     /* Create the instance via the factory. */
-    DataInputsType dataInputs = WPS_1_0_0_OF.createDataInputsType();
+    final DataInputsType dataInputs = WPS_1_0_0_OF.createDataInputsType();
 
     dataInputs.getInput().addAll( ioValues );
 
@@ -421,18 +408,18 @@ public class WPS100ObjectFactoryUtilities
    *          (e.g., encoded using GML 2.2 Application Schema). This reference should be included for XML encoded
    *          complex resources to facilitate validation.
    */
-  public static OutputDescriptionType buildOutputDefinitionType( CodeType identifier, LanguageStringType title, LanguageStringType abstrakt, String format, String encoding, String schema )
+  public static OutputDescriptionType buildOutputDefinitionType( final CodeType identifier, final LanguageStringType title, final LanguageStringType abstrakt, final String format, final String encoding, final String schema )
   {
     /* Create the instance via the factory. */
-    OutputDescriptionType outputDefinition = WPS_1_0_0_OF.createOutputDescriptionType();
+    final OutputDescriptionType outputDefinition = WPS_1_0_0_OF.createOutputDescriptionType();
 
     /* Elements. */
     outputDefinition.setIdentifier( identifier );
     outputDefinition.setTitle( title );
     outputDefinition.setAbstract( abstrakt );
 
-    ComplexDataCombinationsType complexDataCombinations = WPS_1_0_0_OF.createComplexDataCombinationsType();
-    ComplexDataDescriptionType complexDataDescription = WPS_1_0_0_OF.createComplexDataDescriptionType();
+    final ComplexDataCombinationsType complexDataCombinations = WPS_1_0_0_OF.createComplexDataCombinationsType();
+    final ComplexDataDescriptionType complexDataDescription = WPS_1_0_0_OF.createComplexDataDescriptionType();
     
     /* Attributes. */
     if( encoding != null )
@@ -444,7 +431,7 @@ public class WPS100ObjectFactoryUtilities
     if( schema != null )
       complexDataDescription.setSchema( schema );
     
-    SupportedComplexDataType complexOutput = WPS_1_0_0_OF.createSupportedComplexDataType();
+    final SupportedComplexDataType complexOutput = WPS_1_0_0_OF.createSupportedComplexDataType();
     complexOutput.setSupported( complexDataCombinations );
     outputDefinition.setComplexOutput( complexOutput );
 
@@ -462,10 +449,10 @@ public class WPS100ObjectFactoryUtilities
    *          default, and/or for each Output that the client wishes to customize the descriptive information about the
    *          output.
    */
-  public static OutputDefinitionsType buildOutputDefinitionsType( Collection<DocumentOutputDefinitionType> outputDefinition )
+  public static OutputDefinitionsType buildOutputDefinitionsType( final Collection<DocumentOutputDefinitionType> outputDefinition )
   {
     /* Create the instance via the factory. */
-    OutputDefinitionsType outputDefinitions = WPS_1_0_0_OF.createOutputDefinitionsType();
+    final OutputDefinitionsType outputDefinitions = WPS_1_0_0_OF.createOutputDefinitionsType();
 
     outputDefinitions.getOutput().addAll( outputDefinition );
 
@@ -504,10 +491,10 @@ public class WPS100ObjectFactoryUtilities
    *          corresponding "statusSupported" parameter is included and is "true" in the ProcessDescription for this
    *          process.
    */
-  public static Execute buildExecute( CodeType identifier, DataInputsType dataInputs, Collection<DocumentOutputDefinitionType> outputDefinitions, Boolean store, Boolean status )
+  public static Execute buildExecute( final CodeType identifier, final DataInputsType dataInputs, final Collection<DocumentOutputDefinitionType> outputDefinitions, final Boolean store, final Boolean status )
   {
     /* Create the instance via the factory. */
-    Execute execute = WPS_1_0_0_OF.createExecute();
+    final Execute execute = WPS_1_0_0_OF.createExecute();
 
     /* Attributes. */
     execute.setService( WPSUtilities.SERVICE );
@@ -545,10 +532,10 @@ public class WPS100ObjectFactoryUtilities
    *          Identifiers are unordered, but the WPS shall return the descriptions in the order in which they were
    *          requested.
    */
-  public static DescribeProcess buildDescribeProcess( List<CodeType> identifier )
+  public static DescribeProcess buildDescribeProcess( final List<CodeType> identifier )
   {
     /* Create the instance via the factory. */
-    DescribeProcess describeProcess = WPS_1_0_0_OF.createDescribeProcess();
+    final DescribeProcess describeProcess = WPS_1_0_0_OF.createDescribeProcess();
 
     /* Attributes. */
     describeProcess.setService( WPSUtilities.SERVICE );
@@ -604,10 +591,10 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] Optional reference to the aspect of the element which includes this "metadata" element that
    *          this metadata provides more information about.
    */
-  public static MetadataType buildMetaDataType( Object abstractMetaData, String href, String role, String arcrole, String title, String show, String actuate, String about )
+  public static MetadataType buildMetaDataType( final Object abstractMetaData, final String href, final String role, final String arcrole, final String title, final String show, final String actuate, final String about )
   {
     /* Create the instance via the factory. */
-    MetadataType metadata = OWS_1_0_0_OF.createMetadataType();
+    final MetadataType metadata = OWS_1_0_0_OF.createMetadataType();
 
     /* Elements. */
     metadata.setAbstractMetaData( abstractMetaData );
@@ -662,10 +649,10 @@ public class WPS100ObjectFactoryUtilities
    *          default) XML Schema Document supported for this Input/Output, or Schema does not apply to this
    *          Input/Output.
    */
-  public static ComplexDataType buildComplexDataType( String format, String encoding, String schema )
+  public static ComplexDataType buildComplexDataType( final String format, final String encoding, final String schema )
   {
     /* Create the instance via the factory. */
-    ComplexDataType complexData = WPS_1_0_0_OF.createComplexDataType();
+    final ComplexDataType complexData = WPS_1_0_0_OF.createComplexDataType();
 
     /* Elements. */
     complexData.setMimeType( format );
@@ -745,10 +732,10 @@ public class WPS100ObjectFactoryUtilities
    *          electronically retrieved. Alternately, this attribute can reference a URN for well-known metadata. For
    *          example, such a URN could be a URN defined in the "ogc" URN namespace.
    */
-  public static DomainMetadataType buildDomainMetadataType( String value, String reference )
+  public static DomainMetadataType buildDomainMetadataType( final String value, final String reference )
   {
     /* Create the instance via the factory. */
-    DomainMetadataType domainMetadata = OWS_1_0_0_OF.createDomainMetadataType();
+    final DomainMetadataType domainMetadata = OWS_1_0_0_OF.createDomainMetadataType();
 
     /* Attributes. */
     if( reference != null )
@@ -799,10 +786,10 @@ public class WPS100ObjectFactoryUtilities
    *          <li>RangeType</li>
    *          </ol>
    */
-  public static AllowedValues buildAllowedValues( List<Object> values )
+  public static AllowedValues buildAllowedValues( final List<Object> values )
   {
     /* Create the instance via the factory. */
-    AllowedValues allowedValues = OWS_1_0_0_OF.createAllowedValues();
+    final AllowedValues allowedValues = OWS_1_0_0_OF.createAllowedValues();
 
     allowedValues.getValueOrRange().addAll( values );
 
@@ -816,7 +803,7 @@ public class WPS100ObjectFactoryUtilities
   public static AnyValue buildAnyValue( )
   {
     /* Create the instance via the factory. */
-    AnyValue anyValue = OWS_1_0_0_OF.createAnyValue();
+    final AnyValue anyValue = OWS_1_0_0_OF.createAnyValue();
 
     return anyValue;
   }
@@ -836,10 +823,10 @@ public class WPS100ObjectFactoryUtilities
    *          retrieved. Alternately, this attribute can reference a URN for well-known metadata. For example, such a
    *          URN could be a URN defined in the "ogc" URN namespace.
    */
-  public static ValuesReference buildValuesReference( String value, String reference )
+  public static ValuesReference buildValuesReference( final String value, final String reference )
   {
     /* Create the instance via the factory. */
-    ValuesReference valuesReference = OWS_1_0_0_OF.createValuesReference();
+    final ValuesReference valuesReference = OWS_1_0_0_OF.createValuesReference();
 
     /* Attributes. */
     valuesReference.setReference( reference );
@@ -858,10 +845,10 @@ public class WPS100ObjectFactoryUtilities
    * 
    * @param val
    */
-  public static ValueType buildValueType( String val )
+  public static ValueType buildValueType( final String val )
   {
     /* Create the instance via the factory. */
-    ValueType value = OWS_1_0_0_OF.createValueType();
+    final ValueType value = OWS_1_0_0_OF.createValueType();
 
     /* Values. */
     value.setValue( val );
@@ -885,10 +872,10 @@ public class WPS100ObjectFactoryUtilities
    * @param rangeClosure
    *          [optional] Shall be included unless the default value applies.
    */
-  public static RangeType buildRangeType( ValueType minimumValue, ValueType maximumValue, ValueType spacing, List<String> rangeClosure )
+  public static RangeType buildRangeType( final ValueType minimumValue, final ValueType maximumValue, final ValueType spacing, final List<String> rangeClosure )
   {
     /* Create the instance via the factory. */
-    RangeType range = OWS_1_0_0_OF.createRangeType();
+    final RangeType range = OWS_1_0_0_OF.createRangeType();
 
     /* Elements. */
     range.setMinimumValue( minimumValue );
@@ -1041,10 +1028,10 @@ public class WPS100ObjectFactoryUtilities
    *          no process inputs may be identified when all the inputs are predetermined fixed resources. In this case,
    *          those resources shall be identified in the ows:Abstract element that describes the process.
    */
-  public static DataInputs buildDataInputs( List<InputDescriptionType> inputDescriptions )
+  public static DataInputs buildDataInputs( final List<InputDescriptionType> inputDescriptions )
   {
     /* Create the instance via the factory. */
-    DataInputs dataInputs = WPS_1_0_0_OF.createProcessDescriptionTypeDataInputs();
+    final DataInputs dataInputs = WPS_1_0_0_OF.createProcessDescriptionTypeDataInputs();
 
     dataInputs.getInput().addAll( inputDescriptions );
 
@@ -1128,10 +1115,10 @@ public class WPS100ObjectFactoryUtilities
    *          Unordered list of one or more descriptions of all the outputs that can result from executing this process.
    *          At least one output is required from each process.
    */
-  public static ProcessOutputs buildProcessDescriptionTypeProcessOutputs( List<OutputDescriptionType> outputDescriptions )
+  public static ProcessOutputs buildProcessDescriptionTypeProcessOutputs( final List<OutputDescriptionType> outputDescriptions )
   {
     /* Create the instance via the factory. */
-    ProcessOutputs processOutputs = WPS_1_0_0_OF.createProcessDescriptionTypeProcessOutputs();
+    final ProcessOutputs processOutputs = WPS_1_0_0_OF.createProcessDescriptionTypeProcessOutputs();
 
     processOutputs.getOutput().addAll( outputDescriptions );
 
@@ -1221,10 +1208,10 @@ public class WPS100ObjectFactoryUtilities
    *          Ordered list of one or more full Process descriptions, listed in the order in which they were requested in
    *          the DescribeProcess operation request.
    */
-  public static ProcessDescriptions buildProcessDescriptions( List<ProcessDescriptionType> processDescription )
+  public static ProcessDescriptions buildProcessDescriptions( final List<ProcessDescriptionType> processDescription )
   {
     /* Create the instance via the factory. */
-    ProcessDescriptions processDescriptions = WPS_1_0_0_OF.createProcessDescriptions();
+    final ProcessDescriptions processDescriptions = WPS_1_0_0_OF.createProcessDescriptions();
 
     processDescriptions.getProcessDescription().addAll( processDescription );
 
@@ -1247,10 +1234,10 @@ public class WPS100ObjectFactoryUtilities
    *          execute for a long time (i.e. more than a few minutes). This percentage is expected to be accurate to
    *          within ten percent.
    */
-  public static ProcessStartedType buildProcessStartedType( String value, int percentCompleted )
+  public static ProcessStartedType buildProcessStartedType( final String value, final int percentCompleted )
   {
     /* Create the instance via the factory. */
-    ProcessStartedType processStarted = WPS_1_0_0_OF.createProcessStartedType();
+    final ProcessStartedType processStarted = WPS_1_0_0_OF.createProcessStartedType();
 
     /* Values. */
     processStarted.setValue( value );
@@ -1282,10 +1269,10 @@ public class WPS100ObjectFactoryUtilities
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  public static ExceptionType buildExceptionType( List<String> exceptionText, String exceptionCode, String locator )
+  public static ExceptionType buildExceptionType( final List<String> exceptionText, final String exceptionCode, final String locator )
   {
     /* Create the instance via the factory. */
-    ExceptionType exception = OWS_1_0_0_OF.createExceptionType();
+    final ExceptionType exception = OWS_1_0_0_OF.createExceptionType();
 
     exception.getExceptionText().addAll( exceptionText );
 
@@ -1345,10 +1332,10 @@ public class WPS100ObjectFactoryUtilities
    *          Report message returned to the client that requested any OWS operation when the server detects an error
    *          while processing that operation request.
    */
-  public static ProcessFailedType buildProcessFailedType( ExceptionReport exceptionReport )
+  public static ProcessFailedType buildProcessFailedType( final ExceptionReport exceptionReport )
   {
     /* Create the instance via the factory. */
-    ProcessFailedType processFailed = WPS_1_0_0_OF.createProcessFailedType();
+    final ProcessFailedType processFailed = WPS_1_0_0_OF.createProcessFailedType();
 
     /* Elements. */
     processFailed.setExceptionReport( exceptionReport );
@@ -1392,10 +1379,10 @@ public class WPS100ObjectFactoryUtilities
    *          If you want to set a ProcessSucceeded, set this flag to false.<br>
    *          In both other cases, this flag will not be evaluated.
    */
-  public static StatusType buildStatusType( Object value, boolean accepted )
+  public static StatusType buildStatusType( final Object value, final boolean accepted )
   {
     /* Create the instance via the factory. */
-    StatusType status = WPS_1_0_0_OF.createStatusType();
+    final StatusType status = WPS_1_0_0_OF.createStatusType();
 
     if( value instanceof String )
     {
@@ -1620,10 +1607,10 @@ public class WPS100ObjectFactoryUtilities
    * @param facsimile
    *          [optional] Telephone number of a facsimile machine for the responsible organization or individual.
    */
-  public static TelephoneType buildTelephoneType( List<String> voices, List<String> facsimiles )
+  public static TelephoneType buildTelephoneType( final List<String> voices, final List<String> facsimiles )
   {
     /* Create the instance via the factory. */
-    TelephoneType telephone = OWS_1_0_0_OF.createTelephoneType();
+    final TelephoneType telephone = OWS_1_0_0_OF.createTelephoneType();
 
     /* Elements. */
     if( voices != null )
@@ -1653,10 +1640,10 @@ public class WPS100ObjectFactoryUtilities
    * @param electronicMailAddress
    *          [optional] Address of the electronic mailbox of the responsible organization or individual.
    */
-  public static AddressType buildAddressType( List<String> deliveryPoints, String city, String administrativeArea, String postalCode, String country, List<String> electronicMailAddresses )
+  public static AddressType buildAddressType( final List<String> deliveryPoints, final String city, final String administrativeArea, final String postalCode, final String country, final List<String> electronicMailAddresses )
   {
     /* Create the instance via the factory. */
-    AddressType address = OWS_1_0_0_OF.createAddressType();
+    final AddressType address = OWS_1_0_0_OF.createAddressType();
 
     /* Elements. */
     if( deliveryPoints != null )
@@ -1714,10 +1701,10 @@ public class WPS100ObjectFactoryUtilities
    *          <li>none - behavior is unconstrained</li>
    *          </ol>
    */
-  public static OnlineResourceType buildOnlineResourceType( String href, String role, String arcrole, String title, String show, String actuate )
+  public static OnlineResourceType buildOnlineResourceType( final String href, final String role, final String arcrole, final String title, final String show, final String actuate )
   {
     /* Create the instance via the factory. */
-    OnlineResourceType onlineResource = OWS_1_0_0_OF.createOnlineResourceType();
+    final OnlineResourceType onlineResource = OWS_1_0_0_OF.createOnlineResourceType();
 
     /* Attributes. */
     onlineResource.setType( "simple" );
@@ -1764,10 +1751,10 @@ public class WPS100ObjectFactoryUtilities
    * @param contactInstructions
    *          [optional] Supplemental instructions on how or when to contact the individual or organization.
    */
-  public static ContactType buildContactType( TelephoneType phone, AddressType address, OnlineResourceType onlineResource, String hoursOfService, String contactInstructions )
+  public static ContactType buildContactType( final TelephoneType phone, final AddressType address, final OnlineResourceType onlineResource, final String hoursOfService, final String contactInstructions )
   {
     /* Create the instance via the factory. */
-    ContactType contact = OWS_1_0_0_OF.createContactType();
+    final ContactType contact = OWS_1_0_0_OF.createContactType();
 
     /* Elements. */
     if( phone != null )
@@ -1803,10 +1790,10 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] Function performed by the responsible party. Possible values of this Role shall include the
    *          values and the meanings listed in Subclause B.5.5 of ISO 19115:2003.
    */
-  public static ResponsiblePartySubsetType buildResponsiblePartySubsetType( String individualName, String positionName, ContactType contactInfo, CodeType role )
+  public static ResponsiblePartySubsetType buildResponsiblePartySubsetType( final String individualName, final String positionName, final ContactType contactInfo, final CodeType role )
   {
     /* Create the instance via the factory. */
-    ResponsiblePartySubsetType responsiblePartySubset = OWS_1_0_0_OF.createResponsiblePartySubsetType();
+    final ResponsiblePartySubsetType responsiblePartySubset = OWS_1_0_0_OF.createResponsiblePartySubsetType();
 
     /* Elements. */
     if( individualName != null )
@@ -1837,10 +1824,10 @@ public class WPS100ObjectFactoryUtilities
    *          Information for contacting the service provider. The OnlineResource element within this ServiceContact
    *          element should not be used to reference a web site of the service provider.
    */
-  public static ServiceProvider buildServiceProvider( String providerName, OnlineResourceType providerSite, ResponsiblePartySubsetType serviceContact )
+  public static ServiceProvider buildServiceProvider( final String providerName, final OnlineResourceType providerSite, final ResponsiblePartySubsetType serviceContact )
   {
     /* Create the instance via the factory. */
-    ServiceProvider serviceProvider = OWS_1_0_0_OF.createServiceProvider();
+    final ServiceProvider serviceProvider = OWS_1_0_0_OF.createServiceProvider();
 
     /* Elements. */
     serviceProvider.setProviderName( providerName );
@@ -1895,10 +1882,10 @@ public class WPS100ObjectFactoryUtilities
    *          shall override the other one for this operation. The list of required and optional constraints for this
    *          request method for this operation shall be specified in the Implementation Specification for this service.
    */
-  public static RequestMethodType buildRequestMethodType( String href, String role, String arcrole, String title, String show, String actuate, List<DomainType> constraints )
+  public static RequestMethodType buildRequestMethodType( final String href, final String role, final String arcrole, final String title, final String show, final String actuate, final List<DomainType> constraints )
   {
     /* Create the instance via the factory. */
-    RequestMethodType requestMethod = OWS_1_0_0_OF.createRequestMethodType();
+    final RequestMethodType requestMethod = OWS_1_0_0_OF.createRequestMethodType();
 
     /* Attributes. */
     requestMethod.setType( "simple" );
@@ -1938,10 +1925,10 @@ public class WPS100ObjectFactoryUtilities
    *          OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to
    *          contain this URL. The other attributes in the xlink:simpleLink attribute group should not be used.
    */
-  public static JAXBElement<RequestMethodType> buildHTTPGet( RequestMethodType requestMethod )
+  public static JAXBElement<RequestMethodType> buildHTTPGet( final RequestMethodType requestMethod )
   {
     /* Create the instance via the factory. */
-    JAXBElement<RequestMethodType> HTTPGet = OWS_1_0_0_OF.createHTTPGet( requestMethod );
+    final JAXBElement<RequestMethodType> HTTPGet = OWS_1_0_0_OF.createHTTPGet( requestMethod );
 
     return HTTPGet;
   }
@@ -1956,10 +1943,10 @@ public class WPS100ObjectFactoryUtilities
    *          OnlineResourceType, the xlink:href attribute in the xlink:simpleLink attribute group shall be used to
    *          contain this URL. The other attributes in the xlink:simpleLink attribute group should not be used.
    */
-  public static JAXBElement<RequestMethodType> buildHTTPPost( RequestMethodType requestMethod )
+  public static JAXBElement<RequestMethodType> buildHTTPPost( final RequestMethodType requestMethod )
   {
     /* Create the instance via the factory. */
-    JAXBElement<RequestMethodType> HTTPPost = OWS_1_0_0_OF.createHTTPPost( requestMethod );
+    final JAXBElement<RequestMethodType> HTTPPost = OWS_1_0_0_OF.createHTTPPost( requestMethod );
 
     return HTTPPost;
   }
@@ -1973,10 +1960,10 @@ public class WPS100ObjectFactoryUtilities
    * 
    * @param requestMethods
    */
-  public static HTTP buildHTTP( List<JAXBElement<RequestMethodType>> requestMethods )
+  public static HTTP buildHTTP( final List<JAXBElement<RequestMethodType>> requestMethods )
   {
     /* Create the instance via the factory. */
-    HTTP http = OWS_1_0_0_OF.createHTTP();
+    final HTTP http = OWS_1_0_0_OF.createHTTP();
 
     /* Elements. */
     http.getGetOrPost().addAll( requestMethods );
@@ -1995,10 +1982,10 @@ public class WPS100ObjectFactoryUtilities
    *          Post is included in this element. More than one Get and/or Post is allowed to support including
    *          alternative URLs for uses such as load balancing or backup.
    */
-  public static DCP buildDCP( HTTP http )
+  public static DCP buildDCP( final HTTP http )
   {
     /* Create the instance via the factory. */
-    DCP dcp = OWS_1_0_0_OF.createDCP();
+    final DCP dcp = OWS_1_0_0_OF.createDCP();
 
     /* Elements. */
     dcp.setHTTP( http );
@@ -2014,7 +2001,7 @@ public class WPS100ObjectFactoryUtilities
   public static NoValues buildNoValues( )
   {
     /* Create the instance via the factory. */
-    NoValues noValues = OWS_1_0_0_OF.createNoValues();
+    final NoValues noValues = OWS_1_0_0_OF.createNoValues();
 
     return noValues;
   }
@@ -2049,10 +2036,10 @@ public class WPS100ObjectFactoryUtilities
    * @param name
    *          Name or identifier of this quantity.
    */
-  public static DomainType buildDomainType( Object possibleValues, DomainMetadataType meaning, DomainMetadataType dataType, DomainMetadataType valuesUnit, boolean reference, List<MetadataType> metadata, String name )
+  public static DomainType buildDomainType( final Object possibleValues, final DomainMetadataType meaning, final DomainMetadataType dataType, final DomainMetadataType valuesUnit, final boolean reference, final List<MetadataType> metadata, final String name )
   {
     /* Create the instance via the factory. */
-    DomainType domain = OWS_1_0_0_OF.createDomainType();
+    final DomainType domain = OWS_1_0_0_OF.createDomainType();
 
     /* Elements. */
     if( possibleValues != null )
@@ -2119,10 +2106,10 @@ public class WPS100ObjectFactoryUtilities
    *          Name or identifier of this operation (request) (for example, GetCapabilities). The list of required and
    *          optional operations implemented shall be specified in the Implementation Specification for this service.
    */
-  public static Operation buildOperation( List<DCP> dcps, List<DomainType> parameter, List<DomainType> constraints, List<MetadataType> metadata, String name )
+  public static Operation buildOperation( final List<DCP> dcps, final List<DomainType> parameter, final List<DomainType> constraints, final List<MetadataType> metadata, final String name )
   {
     /* Create the instance via the factory. */
-    Operation operation = OWS_1_0_0_OF.createOperation();
+    final Operation operation = OWS_1_0_0_OF.createOperation();
 
     /* Elements. */
     operation.getDCP().addAll( dcps );
@@ -2165,10 +2152,10 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] Individual software vendors and servers can use this element to provide metadata about any
    *          additional server abilities.
    */
-  public static OperationsMetadata buildOperationsMetadata( List<Operation> operations, List<DomainType> parameters, List<DomainType> constraints, Object extendedCapabilities )
+  public static OperationsMetadata buildOperationsMetadata( final List<Operation> operations, final List<DomainType> parameters, final List<DomainType> constraints, final Object extendedCapabilities )
   {
     /* Create the instance via the factory. */
-    OperationsMetadata operationsMetadata = OWS_1_0_0_OF.createOperationsMetadata();
+    final OperationsMetadata operationsMetadata = OWS_1_0_0_OF.createOperationsMetadata();
 
     operationsMetadata.getOperation().addAll( operations );
 
@@ -2237,10 +2224,10 @@ public class WPS100ObjectFactoryUtilities
    * @param processBriefs
    *          Unordered list of one or more brief descriptions of all the processes offered by this WPS server.
    */
-  public static ProcessOfferings buildProcessOfferings( List<ProcessBriefType> processBriefs )
+  public static ProcessOfferings buildProcessOfferings( final List<ProcessBriefType> processBriefs )
   {
     /* Create the instance via the factory. */
-    ProcessOfferings processOfferings = WPS_1_0_0_OF.createProcessOfferings();
+    final ProcessOfferings processOfferings = WPS_1_0_0_OF.createProcessOfferings();
 
     processOfferings.getProcess().addAll( processBriefs );
 

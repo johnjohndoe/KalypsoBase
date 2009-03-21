@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.swe;
 
@@ -63,18 +63,17 @@ import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.RegExpRestriction;
 import org.kalypso.gmlschema.types.SimpleDOMTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xerces.internal.dom.AttrNSImpl;
-
 /**
  * TODO: using the class RepresantationType is not nice. We should rather create 4 differetn type handlers for the 4
  * choices and return the read object respectively.
- * 
+ *
  * @author Marc Schlienger
  */
 public class RepresentationTypeHandler extends SimpleDOMTypeHandler
@@ -204,9 +203,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
             for( int a = 0; a < attributes.getLength(); a++ )
             {
               final Node n = attributes.item( a );
-              if( n instanceof AttrNSImpl )
+              if( n instanceof Attr )
               {
-                final AttrNSImpl attribute = (AttrNSImpl) n;
+                final Attr attribute = (Attr) n;
                 final String value = attribute.getValue();
                 sPatterns.add( value );
               }
@@ -231,9 +230,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
             for( int a = 0; a < attributes.getLength(); a++ )
             {
               final Node n = attributes.item( a );
-              if( n instanceof AttrNSImpl )
+              if( n instanceof Attr )
               {
-                final AttrNSImpl attribute = (AttrNSImpl) n;
+                final Attr attribute = (Attr) n;
                 final String value = attribute.getValue();
                 myRestrictions.add( new MinInclusiveRestriction( new Double( value ) ) );
               }
@@ -245,9 +244,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
             for( int a = 0; a < attributes.getLength(); a++ )
             {
               final Node n = attributes.item( a );
-              if( n instanceof AttrNSImpl )
+              if( n instanceof Attr )
               {
-                final AttrNSImpl attribute = (AttrNSImpl) n;
+                final Attr attribute = (Attr) n;
                 final String value = attribute.getValue();
                 myRestrictions.add( new MaxInclusiveRestriction( new Double( value ) ) );
               }
@@ -259,9 +258,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
             for( int a = 0; a < attributes.getLength(); a++ )
             {
               final Node n = attributes.item( a );
-              if( n instanceof AttrNSImpl )
+              if( n instanceof Attr )
               {
-                final AttrNSImpl attribute = (AttrNSImpl) n;
+                final Attr attribute = (Attr) n;
                 final String value = attribute.getValue();
                 myRestrictions.add( new FractionDigitRestriction( new Integer( value ) ) );
               }

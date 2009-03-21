@@ -45,12 +45,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
  * AbstractCSV
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractCSV implements ITabledValues
@@ -68,7 +67,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Constructor
-   * 
+   *
    * @param ignoreEmptyLines
    *          when true, empty lines are not stored in this object
    * @param startLine
@@ -82,7 +81,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Sets the string that delimits the commented lines
-   * 
+   *
    * @param str
    */
   public void setCommentedLineBeginString( final String str )
@@ -94,7 +93,7 @@ public abstract class AbstractCSV implements ITabledValues
    * @param separator
    *          The separator to set.
    */
-  public void setSeparator( String separator )
+  public void setSeparator( final String separator )
   {
     m_separator = separator;
   }
@@ -126,14 +125,14 @@ public abstract class AbstractCSV implements ITabledValues
   /**
    * @see org.kalypso.commons.io.ITabledValues#setItem(int, int, java.lang.String)
    */
-  public void setItem( final int row, final int col, String element )
+  public void setItem( final int row, final int col, final String element )
   {
     m_lines.get( row )[col] = element;
   }
 
   /**
    * Fetch the CSV-Values from the reader. Caller should take care of closing the reader.
-   * 
+   *
    * @param reader
    */
   public void fetch( final Reader reader ) throws IOException
@@ -172,19 +171,17 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Saves the contents in the given Writer
-   * 
+   *
    * @param writer
-   * 
+   *
    * @throws IOException
    */
   public void save( final Writer writer ) throws IOException
   {
     final BufferedWriter bw = new BufferedWriter( writer );
 
-    for( Iterator iter = m_lines.iterator(); iter.hasNext(); )
+    for( final String[] items : m_lines )
     {
-      String[] items = (String[])iter.next();
-
       for( int i = 0; i < items.length; i++ )
       {
         bw.write( items[i] );

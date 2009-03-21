@@ -392,7 +392,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   * 
+   *
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -587,9 +587,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   * 
+   *
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IObservation.class && adaptableObject instanceof Feature )
@@ -601,6 +602,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
+  @SuppressWarnings("unchecked")
   public Class[] getAdapterList( )
   {
     return new Class[] { IObservation.class };
@@ -617,7 +619,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
 
-    final List componentList = (List) recordDefinition.getProperty( componentRelation );
+    final List<Feature> componentList = (List<Feature>) recordDefinition.getProperty( componentRelation );
     componentList.add( itemDef );
 
     return new FeatureComponent( itemDef );

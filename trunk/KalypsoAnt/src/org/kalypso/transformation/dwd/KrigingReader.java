@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.transformation.dwd;
 
@@ -46,7 +46,6 @@ import java.io.Reader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -91,7 +90,7 @@ public class KrigingReader
 
   private final String m_crs;
 
-  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider, String crs ) throws IOException
+  public KrigingReader( final Logger logger, final Reader reader, final SourceObservationProvider srcObservationProvider, final String crs ) throws IOException
   {
     m_logger = logger;
     m_srcObservationProvider = srcObservationProvider;
@@ -104,13 +103,13 @@ public class KrigingReader
   {
     m_logger.info( "creatFilter for " + feature.getId() );
     final GM_Object geom = (GM_Object) feature.getProperty( geoPropName );
-    final List elements = getKrigingElementsFor( geom );
+    final List<KrigingElement> elements = getKrigingElementsFor( geom );
     if( elements.isEmpty() )
       throw new InvalidParameterException( "Raster ist zu grob, Keine zuordnung fuer " + feature.getId() + " gefunden.\n" );
     return createFilter( elements );
   }
 
-  private AbstractFilterType createFilter( List krigingElements )
+  private AbstractFilterType createFilter( final List<KrigingElement> krigingElements )
   {
     if( krigingElements.size() < m_min )
       m_min = krigingElements.size();
@@ -119,21 +118,19 @@ public class KrigingReader
     final HashMap<String, KrigingRelation> map = new HashMap<String, KrigingRelation>();
     final double n = krigingElements.size();
     // loop elements
-    for( Iterator iter = krigingElements.iterator(); iter.hasNext(); )
+    for( final KrigingElement ke : krigingElements )
     {
-      KrigingElement ke = (KrigingElement) iter.next();
-      KrigingRelation[] relations = ke.getRelations();
+      final KrigingRelation[] relations = ke.getRelations();
       // loop relations
-      for( int i = 0; i < relations.length; i++ )
+      for( final KrigingRelation relation : relations )
       {
-        KrigingRelation relation = relations[i];
         final String id = relation.getId();
         final double factor = relation.getFactor() / n;
         if( !map.containsKey( id ) )
           map.put( id, new KrigingRelation( factor, id ) );
         else
         {
-          KrigingRelation rel = map.get( id );
+          final KrigingRelation rel = map.get( id );
           rel.setFactor( rel.getFactor() + factor );
         }
       }
@@ -143,11 +140,11 @@ public class KrigingReader
     final NOperationFilterType nOperationFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
     nOperationFilter.setOperator( "+" );
     final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
-    for( Iterator iter = map.values().iterator(); iter.hasNext(); )
+    for( final Object element : map.values() )
     {
       final OperationFilterType filter = FilterFactory.OF_FILTER.createOperationFilterType();
       filterList.add( FilterFactory.OF_FILTER.createFilter( filter ) );
-      final KrigingRelation rel = (KrigingRelation) iter.next();
+      final KrigingRelation rel = (KrigingRelation) element;
       filter.setOperator( "*" );
       filter.setOperand( Double.toString( rel.getFactor() ) );
       final ZmlFilterType zmlLink = FilterFactory.OF_FILTER.createZmlFilterType();
@@ -166,16 +163,16 @@ public class KrigingReader
   private List<KrigingElement> getKrigingElementsFor( final GM_Object geom )
   {
     final List<KrigingElement> result = new ArrayList<KrigingElement>();
-    for( final Iterator iter = m_krigingElements.iterator(); iter.hasNext(); )
+    for( final Object element : m_krigingElements )
     {
-      final KrigingElement ke = (KrigingElement) iter.next();
+      final KrigingElement ke = (KrigingElement) element;
       if( geom.contains( ke.getCenterPoint() ) )
         result.add( ke );
     }
     return result;
   }
 
-  public List<KrigingElement> parse( Reader reader )
+  public List<KrigingElement> parse( final Reader reader )
   {
     final List<KrigingElement> result = new ArrayList<KrigingElement>();
     try
@@ -188,12 +185,12 @@ public class KrigingReader
       KrigingElement e = null;
       while( (line = lineReader.readLine()) != null )
       {
-        Matcher m1 = BLOCK.matcher( line );
-        Matcher m2 = RELATION.matcher( line );
+        final Matcher m1 = BLOCK.matcher( line );
+        final Matcher m2 = RELATION.matcher( line );
         if( m1.matches() )
         {
-          double x = Double.parseDouble( m1.group( 1 ) );
-          double y = Double.parseDouble( m1.group( 2 ) );
+          final double x = Double.parseDouble( m1.group( 1 ) );
+          final double y = Double.parseDouble( m1.group( 2 ) );
           e = new KrigingElement( GeometryFactory.createGM_Point( x, y, m_crs ) );
           result.add( e );
         }
@@ -207,18 +204,18 @@ public class KrigingReader
       }
       lineReader.close();
     }
-    catch( NumberFormatException e1 )
+    catch( final NumberFormatException e1 )
     {
       e1.printStackTrace();
     }
-    catch( IOException e1 )
+    catch( final IOException e1 )
     {
       e1.printStackTrace();
     }
     return result;
   }
 
-  public VirtualRepositoryType createRepositoryConf( Feature[] features, String geoPropName )
+  public VirtualRepositoryType createRepositoryConf( final Feature[] features, final String geoPropName )
   {
     final VirtualRepositoryType repository = vRepFac.createVirtualRepositoryType();
     final LevelType level = vRepFac.createLevelType();
@@ -226,9 +223,8 @@ public class KrigingReader
     level.setName( "WeisseElster - Gebietsniederschlaege" );
     repository.getLevel().add( level );
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       final ItemType item = vRepFac.createItemType();
       item.setId( feature.getId() );
       item.setName( "Niederschlag - " + feature.getId() );

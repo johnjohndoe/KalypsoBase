@@ -55,8 +55,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -110,7 +108,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- * 
+ *
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -159,7 +157,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   * 
+   *
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -217,41 +215,6 @@ public final class GmlSerializer
       // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       // TODO put new QName( NS.OM, "result" ) here instead inside the GMLSaxFactory
       // Problem: must now know the prefix of NS.OM
-      transformer.transform( source, result );
-    }
-    catch( final Exception e )
-    {
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
-   */
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
-  {
-    try
-    {
-      final XMLReader reader = new GMLWorkspaceReader();
-      reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
-      reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
-
-      final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
-      inputSource.setEncoding( charsetEncoding );
-
-      final Source source = new SAXSource( reader, inputSource );
-
-      // TODO: change to stream instead of writer
-      final StreamResult result = new StreamResult( writer );
-
-      final TransformerFactory tFac = TransformerFactory.newInstance();
-      final Transformer transformer = tFac.newTransformer();
-      transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
-      transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-      transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" );
-      transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
-      // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       transformer.transform( source, result );
     }
     catch( final Exception e )
@@ -496,7 +459,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   * 
+   *
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -513,7 +476,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   * 
+   *
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -540,7 +503,6 @@ public final class GmlSerializer
   /**
    * serializes a workspace into a zipfile
    */
-  // TODO: grrr, do not use fixed CP1252 here!!! And do not use writers as well
   public static void serializeWorkspaceToZipFile( final File gmlZipResultFile, final GMLWorkspace resultWorkspace, final String zipEntryName ) throws FileNotFoundException
   {
     final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( gmlZipResultFile ) ) );
@@ -548,9 +510,8 @@ public final class GmlSerializer
     {
       final ZipEntry newEntry = new ZipEntry( zipEntryName );
       zos.putNextEntry( newEntry );
-      final OutputStreamWriter gmlWriter = new OutputStreamWriter( zos, "CP1252" );
 
-      serializeWorkspace( gmlWriter, resultWorkspace, "CP1252", new HashMap<String, String>() );
+      serializeWorkspace( zos, resultWorkspace, "CP1252" );
 
       zos.closeEntry();
       zos.close();

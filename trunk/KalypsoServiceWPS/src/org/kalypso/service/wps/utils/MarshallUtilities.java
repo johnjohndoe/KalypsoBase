@@ -60,7 +60,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
-import org.kalypso.service.wps.utils.ogc.OGCNamespacePrefixMapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -72,8 +71,6 @@ import org.xml.sax.InputSource;
  */
 public class MarshallUtilities
 {
-  private static final OGCNamespacePrefixMapper NAMESPACE_PREFIX_MAPPER = new OGCNamespacePrefixMapper();
-
   /**
    * Context for marshalling and unmarshalling.
    */

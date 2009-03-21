@@ -47,7 +47,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   private final RGB m_backgroundRGB;
 
-  public ChartComposite( final Composite parent, final int style, IChartModel model, RGB backgroundRGB )
+  public ChartComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_REDRAW_RESIZE );
     m_model = model;
@@ -65,8 +65,9 @@ public class ChartComposite extends Canvas implements IChartView
     return m_model;
   }
 
-  public void setChartModel( IChartModel model )
+  public void setChartModel( final IChartModel model )
   {
+    final RGB backgroundRGB = m_backgroundRGB;
     m_mapperListener = new AbstractMapperRegistryEventListener()
     {
       /**
@@ -81,7 +82,7 @@ public class ChartComposite extends Canvas implements IChartView
           final IAxis axis = (IAxis) mapper;
           final Composite parent = m_axisPlaces.get( axis.getPosition() );
           final AxisCanvas component = new AxisCanvas( axis, parent, SWT.DOUBLE_BUFFERED );
-          component.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB ) );
+          component.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
           m_model.getMapperRegistry().setComponent( axis, component );
           layout();
         }
@@ -92,7 +93,6 @@ public class ChartComposite extends Canvas implements IChartView
        *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be
        *      checked in the future)
        */
-      @SuppressWarnings("unchecked")
       @Override
       public void onMapperRemoved( final IMapper mapper )
       {
@@ -103,23 +103,22 @@ public class ChartComposite extends Canvas implements IChartView
       /**
        * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
        */
-      @SuppressWarnings("unchecked")
       @Override
-      public void onMapperRangeChanged( IMapper mapper )
+      public void onMapperRangeChanged( final IMapper mapper )
       {
 
         layout();
         if( mapper instanceof IAxis )
         {
-          IAxis axis = (IAxis) mapper;
+          final IAxis axis = (IAxis) mapper;
 
-          List<IChartLayer> layerList = getChartModel().getAxis2Layers().get( axis );
+          final List<IChartLayer> layerList = getChartModel().getAxis2Layers().get( axis );
           if (layerList!=null)
           {
-            IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
+            final IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
             m_plot.invalidate( changedLayers );
           }
-          AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
+          final AxisCanvas ac = (AxisCanvas) m_model.getMapperRegistry().getComponent( axis );
           ac.layout();
         }
         redraw();
@@ -158,7 +157,7 @@ public class ChartComposite extends Canvas implements IChartView
    */
   private final void createControl( final Composite parent )
   {
-    Color bgColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB );
+    final Color bgColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), m_backgroundRGB );
 
     final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.horizontalSpacing = 0;
@@ -254,7 +253,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   * 
+   *
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
@@ -293,7 +292,7 @@ public class ChartComposite extends Canvas implements IChartView
   /**
    * resizes the chart according to a given plot size;
    */
-  public void setPlotSize( int width, int height )
+  public void setPlotSize( final int width, final int height )
   {
     final Composite l = m_axisPlaces.get( POSITION.LEFT );
     final Composite r = m_axisPlaces.get( POSITION.RIGHT );
@@ -327,7 +326,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   }
 
-  public void setHideUnusedAxes( boolean hide )
+  public void setHideUnusedAxes( final boolean hide )
   {
     m_model.setHideUnusedAxes( hide );
     redraw();

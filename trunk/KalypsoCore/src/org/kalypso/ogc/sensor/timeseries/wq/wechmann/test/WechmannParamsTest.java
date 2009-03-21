@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann.test;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
 
 /**
@@ -50,7 +49,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannParams;
  */
 public class WechmannParamsTest extends TestCase
 {
-  public void testWechmannParams() throws WQException
+  public void testWechmannParams( )
   {
     final WechmannParams wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
 

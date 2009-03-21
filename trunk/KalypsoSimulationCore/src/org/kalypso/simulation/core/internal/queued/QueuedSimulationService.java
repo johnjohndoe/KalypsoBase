@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.internal.queued;
 
@@ -71,7 +71,7 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
  * in one fifo-queue. Support parallel processing of jobs.
- * 
+ *
  * @author Belger
  */
 public class QueuedSimulationService implements ISimulationService
@@ -131,9 +131,9 @@ public class QueuedSimulationService implements ISimulationService
       final SimulationInfo[] jobBeans = new SimulationInfo[m_threads.size()];
       int count = 0;
 
-      for( final Iterator jIt = m_threads.iterator(); jIt.hasNext(); count++ )
+      for( final Iterator<SimulationThread> jIt = m_threads.iterator(); jIt.hasNext(); count++ )
       {
-        final SimulationThread cjt = (SimulationThread) jIt.next();
+        final SimulationThread cjt = jIt.next();
         jobBeans[count] = cjt.getJobBean();
       }
 
@@ -340,7 +340,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören und
    * insbesondere alle Dateien löschen
-   * 
+   *
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -465,11 +465,11 @@ public class QueuedSimulationService implements ISimulationService
    */
   public String[] getSupportedSchemata( )
   {
-    final Map catalog = m_catalog.getCatalog();
+    final Map<String, URL> catalog = m_catalog.getCatalog();
     final String[] namespaces = new String[catalog.size()];
     int count = 0;
-    for( final Iterator mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
-      namespaces[count++] = (String) mapIt.next();
+    for( final String string : catalog.keySet() )
+      namespaces[count++] = string;
 
     return namespaces;
   }

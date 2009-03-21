@@ -51,7 +51,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Type handler for list-simple types.
- * 
+ *
  * @author Gernot Belger
  */
 public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List< ? >>
@@ -117,7 +117,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
     if( objectToClone == null )
       return null;
 
-    final List<Object> list = (List<Object>) objectToClone;
+    final List< ? > list = (List< ? >) objectToClone;
     final List<Object> clonedList = new ArrayList<Object>( list.size() );
 
     for( final Object object : list )

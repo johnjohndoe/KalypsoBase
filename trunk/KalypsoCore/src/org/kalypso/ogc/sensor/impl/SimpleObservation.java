@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -59,7 +58,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
- * 
+ *
  * @author schlienger
  */
 public class SimpleObservation implements IObservation
@@ -191,10 +190,8 @@ public class SimpleObservation implements IObservation
     final IAxis[] otherAxes = values.getAxisList();
     final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( m_axes.length );
 
-    for( int i = 0; i < m_axes.length; i++ )
+    for( final IAxis myA : m_axes )
     {
-      final IAxis myA = m_axes[i];
-
       try
       {
         final IAxis A = ObservationUtilities.findAxisByName( otherAxes, myA.getName() );
@@ -214,10 +211,10 @@ public class SimpleObservation implements IObservation
       // check presence of values if associated axes are keys
       int ixPresent = -1;
 
-      for( int j = 0; j < keys.length; j++ )
+      for( final IAxis key : keys )
       {
-        final Object obj = values.getElement( i, map.get( keys[j] ) );
-        final int ix = m_tupples.indexOf( obj, keys[j] );
+        final Object obj = values.getElement( i, map.get( key ) );
+        final int ix = m_tupples.indexOf( obj, key );
 
         if( (ix >= 0) && (ixPresent != -1) )
         {
@@ -231,11 +228,10 @@ public class SimpleObservation implements IObservation
       // replace if values of keys already exist
       if( ixPresent != -1 )
       {
-        final Set kset = map.keySet();
+        final Set<IAxis> kset = map.keySet();
 
-        for( final Iterator it = kset.iterator(); it.hasNext(); )
+        for( final IAxis myA : kset )
         {
-          final IAxis myA = (IAxis) it.next();
           final IAxis oA = map.get( myA );
 
           final Object obj = values.getElement( i, oA );
@@ -244,16 +240,14 @@ public class SimpleObservation implements IObservation
       }
       else
       {
-        final Set kset = map.keySet();
+        final Set<IAxis> kset = map.keySet();
 
         final Object[] tupple = new Object[kset.size()];
 
         final SimpleTuppleModel stm = prepareForAdding();
 
-        for( final Iterator it = kset.iterator(); it.hasNext(); )
+        for( final IAxis myA : kset )
         {
-          final IAxis myA = (IAxis) it.next();
-
           final Object obj = values.getElement( i, map.get( myA ) );
           tupple[stm.getPositionFor( myA )] = obj;
         }
@@ -268,7 +262,7 @@ public class SimpleObservation implements IObservation
   /**
    * Helper: since we are adding tupples to our model, we need a way to be sure that this is possible. For now, we
    * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
-   * 
+   *
    * @return a SimpleTuppleModel
    * @throws SensorException
    */
@@ -331,7 +325,7 @@ public class SimpleObservation implements IObservation
 
   /**
    * Sets the href
-   * 
+   *
    * @param href
    *            localisation of the observation when it comes from a zml file for instance.
    */

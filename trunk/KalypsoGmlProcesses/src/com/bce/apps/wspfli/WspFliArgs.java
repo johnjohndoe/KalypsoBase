@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  * Liest die Argumente der Anwendung ein und parst sie
- * 
+ *
  * @author belger
  */
 public class WspFliArgs
@@ -25,6 +25,7 @@ public class WspFliArgs
 
   public final Boolean bDoVolumeCalculation;
 
+  @SuppressWarnings("hiding")
   public WspFliArgs( final File dgmFile, final File wspFile, final String shapeBase, final Double rasterSize, final Boolean bIso, final double[] grenzen, final boolean bFlitTi, final Boolean bDoVolumeCalculation )
   {
     this.dgmFile = dgmFile;

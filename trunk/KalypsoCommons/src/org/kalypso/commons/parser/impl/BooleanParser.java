@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,16 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.parser.impl;
 
 import org.kalypso.commons.parser.AbstractParser;
-import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Integer, Long, und Short Objekte.
- * 
+ *
  * @author schlienger
  */
 public class BooleanParser extends AbstractParser
@@ -72,7 +71,7 @@ public class BooleanParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
-  public Class getObjectClass()
+  public Class<Boolean> getObjectClass( )
   {
     return Boolean.class;
   }
@@ -89,7 +88,7 @@ public class BooleanParser extends AbstractParser
    * @throws ParserException
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
-  public Object parse( final String text ) throws ParserException
+  public Object parse( final String text )
   {
     return Boolean.valueOf( text );
   }
@@ -97,7 +96,8 @@ public class BooleanParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
-  public String toStringInternal( Object obj )
+  @Override
+  public String toStringInternal( final Object obj )
   {
     return ((Boolean)obj).toString();
   }
@@ -105,14 +105,14 @@ public class BooleanParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object value1, Object value2 )
+  public int compare( final Object value1, final Object value2 )
   {
     if( value1.equals(value2) )
         return 0;
-    
+
     if( value1.equals(Boolean.FALSE ) )
         return 1;
-    
+
     return -1;
   }
 }

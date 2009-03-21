@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- * 	   Sebastian Davids <sdavids@gmx.de> - Fix for bug 90273 - [Dialogs] 
+ * 	   Sebastian Davids <sdavids@gmx.de> - Fix for bug 90273 - [Dialogs]
  * 			ListSelectionDialog dialog alignment
  *******************************************************************************/
 package org.kalypso.contribs.eclipse.ui.dialogs;
@@ -68,7 +68,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Creates a tree selection dialog.
-   * 
+   *
    * @param parentShell
    *            the parent shell
    * @param input
@@ -102,7 +102,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Add the selection and deselection buttons to the dialog.
-   * 
+   *
    * @param composite
    *            org.eclipse.swt.widgets.Composite
    */
@@ -118,12 +118,13 @@ public class TreeSelectionDialog extends SelectionDialog
 
     final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 
+    final Object inputElement = m_inputElement;
     SelectionListener listener = new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        m_treeViewer.setAllChecked( true );
+        m_treeViewer.setSubtreeChecked( inputElement, true );
       }
     };
     selectButton.addSelectionListener( listener );
@@ -135,7 +136,7 @@ public class TreeSelectionDialog extends SelectionDialog
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_treeViewer.setAllChecked( false );
+        m_treeViewer.setSubtreeChecked( inputElement, false );
       }
     };
     deselectButton.addSelectionListener( listener );
@@ -208,7 +209,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Returns the viewer used to show the list.
-   * 
+   *
    * @return the viewer, or <code>null</code> if not yet created
    */
   protected CheckboxTreeViewer getViewer( )

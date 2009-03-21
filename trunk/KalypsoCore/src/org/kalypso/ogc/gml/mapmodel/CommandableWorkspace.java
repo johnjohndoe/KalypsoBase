@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
- * 
+ *
  * @author belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager
@@ -150,7 +150,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace.accept( fv, ft, depth );
   }
 
-  public void accept( final FeatureVisitor fv, final List features, final int depth )
+  public void accept( final FeatureVisitor fv, final List< ? > features, final int depth )
   {
     m_workspace.accept( fv, features, depth );
   }

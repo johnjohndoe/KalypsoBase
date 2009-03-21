@@ -10,7 +10,6 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 
-import com.google.earth.kml.FolderType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.StyleType;
 
@@ -44,12 +43,6 @@ public class GoogleEarthExportUtils
 // throw (new NotImplementedException());
   }
 
-  /**
-   * @param folderType
-   */
-  public static void removeEmtpyFolders( final FolderType folderType )
-  {
-    // TODO:
-  }
+
 
 }

@@ -18,7 +18,7 @@ import org.kalypso.gml.processes.i18n.Messages;
 
 /**
  * Eine alternative zum javax.swing.ProgressMonitor
- * 
+ *
  * @author belger
  */
 public class ProgressMonitor implements Progressable
@@ -27,17 +27,17 @@ public class ProgressMonitor implements Progressable
 
   private JDialog m_dialog;
 
-  private JProgressBar m_progressBar = new JProgressBar();
+  private final JProgressBar m_progressBar = new JProgressBar();
 
-  private JLabel m_noteField = new JLabel();
+  private final JLabel m_noteField = new JLabel();
 
-  private JOptionPane m_optionPane;
+  private final JOptionPane m_optionPane;
 
   private static final String CANCEL = Messages.getString("com.bce.util.progressbar.ProgressMonitor.0"); //$NON-NLS-1$
 
   /**
    * -
-   * 
+   *
    * @param parent -
    * @param title -
    */
@@ -51,7 +51,7 @@ public class ProgressMonitor implements Progressable
 
   /**
    * -
-   * 
+   *
    * @param parentComponent -
    * @param title -
    * @param op -
@@ -59,9 +59,9 @@ public class ProgressMonitor implements Progressable
    */
   public JDialog createDialog( final Component parentComponent, final String title, final JOptionPane op )
   {
-    Frame frame = JOptionPane.getFrameForComponent( parentComponent );
+    final Frame frame = JOptionPane.getFrameForComponent( parentComponent );
     final JDialog dialog = new JDialog( frame, title, false );
-    Container contentPane = dialog.getContentPane();
+    final Container contentPane = dialog.getContentPane();
 
     contentPane.setLayout( new BorderLayout() );
     contentPane.add( m_optionPane, BorderLayout.CENTER );
@@ -71,14 +71,15 @@ public class ProgressMonitor implements Progressable
     {
       boolean gotFocus = false;
 
+      @SuppressWarnings("synthetic-access")
       @Override
-      public void windowClosing( WindowEvent we )
+      public void windowClosing( final WindowEvent we )
       {
         op.setValue( CANCEL );
       }
 
       @Override
-      public void windowActivated( WindowEvent we )
+      public void windowActivated( final WindowEvent we )
       {
         // Once window gets focus, set initial focus
         if( !gotFocus )
@@ -91,7 +92,7 @@ public class ProgressMonitor implements Progressable
 
     m_optionPane.addPropertyChangeListener( new PropertyChangeListener()
     {
-      public void propertyChange( PropertyChangeEvent event )
+      public void propertyChange( final PropertyChangeEvent event )
       {
         if( dialog.isVisible() && event.getSource() == op && (event.getPropertyName().equals( JOptionPane.VALUE_PROPERTY ) || event.getPropertyName().equals( JOptionPane.INPUT_VALUE_PROPERTY )) )
           cancel();
@@ -123,7 +124,7 @@ public class ProgressMonitor implements Progressable
   /**
    * @see com.bce.util.progressbar.Progressable#setCurrent(int)
    */
-  public void setCurrent( int current )
+  public void setCurrent( final int current )
   {
     m_progressBar.setValue( current );
   }

@@ -41,8 +41,8 @@
 package org.kalypso.ui.wizard.wfs;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -69,6 +69,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -83,6 +84,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
@@ -387,7 +389,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return true;
   }
 
-  Filter getFilter( final WFSFeatureType layer ) throws GM_Exception
+  Filter getFilter( ) throws GM_Exception
   {
     // TODO check checkboxes, maybe no filter at all is wanted
     final int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
@@ -459,12 +461,17 @@ public class ImportWfsFilterWizardPage extends WizardPage
       if( firstElement instanceof Feature && firstElement != null )
       {
         final Feature feature = (Feature) firstElement;
-        final Object[] properties = feature.getProperties();
-        final ArrayList<Object> list = new ArrayList<Object>();
-        for( final Object prop : properties )
+        final IFeatureType featureType = feature.getFeatureType();
+        final IPropertyType[] properties = featureType.getProperties();
+        final List<Object> list = new ArrayList<Object>();
+        for( final IPropertyType pt : properties )
         {
-          if( prop != null )
-            list.add( prop );
+          if( pt instanceof IValuePropertyType )
+          {
+            final Object object = feature.getProperty( pt );
+            if( object != null )
+              list.add( object );
+          }
         }
         return list.toArray();
       }
@@ -472,7 +479,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return new Object[0];
   }
 
-  GM_Surface getBBoxFromActiveMap( )
+  GM_Surface<GM_SurfacePatch> getBBoxFromActiveMap( )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // if this Wizard is activated we assume there is always a map (GisMapEditor) open.
@@ -483,6 +490,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       final IMapPanel mapPanel = gisMapEditor.getMapPanel();
       final GM_Envelope boundingBox = mapPanel.getBoundingBox();
       if( boundingBox != null )
+      {
         try
         {
           return GeometryFactory.createGM_Surface( boundingBox, mapPanel.getMapModell().getCoordinatesSystem() );
@@ -492,6 +500,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
           ex.printStackTrace();
           setPageComplete( validate() );
         }
+      }
     }
     return null;
   }

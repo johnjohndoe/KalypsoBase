@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoAnt
 Bundle-SymbolicName: org.kalypso.ant
 Bundle-Version: 1.0.0
-Bundle-Localization: plugin
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.deegree,
@@ -14,3 +13,4 @@ Require-Bundle: org.kalypso.contribs.java,
 Export-Package: org.kalypso.ant,
  org.kalypso.transformation,
  org.kalypso.transformation.dwd
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
 // import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -55,8 +54,6 @@ import org.kalypso.gmlschema.xml.DateWithoutTime;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 import org.kalypsodeegree.model.feature.Feature;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author belger
@@ -90,9 +87,8 @@ public class CalendarFeatureDialog implements IFeatureDialog
       Date newDate = dialog.getDate();
       if( m_ftp.getValueClass() == DateWithoutTime.class )
         newDate = new DateWithoutTime( newDate );
-      final GregorianCalendar cal = new GregorianCalendar();
-      cal.setTime( newDate );
-      m_change = new FeatureChange( m_feature, m_ftp, new XMLGregorianCalendarImpl( cal ) );
+
+      m_change = new FeatureChange( m_feature, m_ftp, DateUtilities.toXMLGregorianCalendar( newDate ) );
     }
 
     return open;
@@ -104,7 +100,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
     final XMLGregorianCalendar calendar = getCalendar();
     if( calendar == null )
       return new Date();
-    
+
     return DateUtilities.toDate( calendar );
   }
 

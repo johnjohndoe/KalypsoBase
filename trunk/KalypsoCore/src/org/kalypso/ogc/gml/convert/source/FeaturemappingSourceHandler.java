@@ -35,10 +35,10 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
   private final IUrlResolver m_resolver;
 
-  private final Map m_externData;
+  private final Map< ? , ? > m_externData;
 
   public FeaturemappingSourceHandler( final IUrlResolver resolver, final URL context,
-      final FeaturemappingSourceType source, final Map externData )
+      final FeaturemappingSourceType source, final Map< ? , ? > externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -76,12 +76,9 @@ public class FeaturemappingSourceHandler implements ISourceHandler
 
       final Properties properties = new Properties();
 
-      final List mapList = mapping.getMap();
-      for( final Iterator mapIt = mapList.iterator(); mapIt.hasNext(); )
-      {
-        final MappingType.Map map = (MappingType.Map)mapIt.next();
+      final List<MappingType.Map> mapList = mapping.getMap();
+      for( final org.kalypso.gml.util.MappingType.Map map : mapList )
         properties.setProperty( map.getFrom(), map.getTo() );
-      }
 
       final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, properties );
       fromFeatures.accept( visitor );

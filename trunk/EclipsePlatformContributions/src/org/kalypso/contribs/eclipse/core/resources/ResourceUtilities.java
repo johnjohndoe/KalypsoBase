@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * ResourceUtilities
  * <p>
- * 
+ *
  * @author schlienger (14.06.2005)
  */
 @SuppressWarnings("restriction")
@@ -61,7 +61,7 @@ public class ResourceUtilities
 
   /**
    * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
-   * 
+   *
    * @see PlatformURLResourceConnection
    */
   public static IFile findFileFromURL( final URL u )
@@ -108,7 +108,7 @@ public class ResourceUtilities
 
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
-   * 
+   *
    * @return A Java-File representing the resource.
    */
   public static File makeFileFromPath( final IPath resource )
@@ -125,7 +125,7 @@ public class ResourceUtilities
     final File rootFile = rootLocation.toFile();
     return new File( rootFile, resource.toString() );
   }
-  
+
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
@@ -162,7 +162,7 @@ public class ResourceUtilities
       URL url = null;
       try
       {
-        url = root.getLocation().toFile().toURL();
+        url = root.getLocation().toFile().toURI().toURL();
       }
       catch( final MalformedURLException e )
       {
@@ -201,7 +201,7 @@ public class ResourceUtilities
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
-   * 
+   *
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
    * @param resource
    * @return platform URL
@@ -219,7 +219,7 @@ public class ResourceUtilities
 
   /**
    * Creates the string representation of an URL given an IPath.
-   * 
+   *
    * @param path
    * @return platform URL
    */
@@ -230,7 +230,7 @@ public class ResourceUtilities
 
   /**
    * Tries to get the parent project of this container.
-   * 
+   *
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
@@ -249,7 +249,7 @@ public class ResourceUtilities
    * This function tries to construct an Eclipse-File from a path with a relative path to the workspace.<br/> <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
-   * 
+   *
    * @param path
    *            The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
@@ -280,7 +280,7 @@ public class ResourceUtilities
 
   /**
    * Returns all children of the given container.
-   * 
+   *
    * @param depth
    *            See {@link org.eclipse.core.resources.IResource}
    */
@@ -295,7 +295,7 @@ public class ResourceUtilities
    * Returns all children of the given container.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *            See {@link org.eclipse.core.resources.IResource}
    */
@@ -318,7 +318,7 @@ public class ResourceUtilities
    * returned.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *            See {@link org.eclipse.core.resources.IResource}
    * @param extension

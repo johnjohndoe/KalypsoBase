@@ -2,7 +2,7 @@ package com.bce.apps.wspfli;
 
 /**
  * Item für die GrenzenCombo
- * 
+ *
  * @author belger
  */
 public class GrenzenItem
@@ -11,6 +11,7 @@ public class GrenzenItem
 
   public final double[] grenzen;
 
+  @SuppressWarnings("hiding")
   public GrenzenItem( final String name, final double[] grenzen )
   {
     this.name = name;

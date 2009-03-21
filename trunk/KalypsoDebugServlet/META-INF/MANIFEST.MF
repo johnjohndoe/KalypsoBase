@@ -5,11 +5,11 @@ Bundle-SymbolicName: org.kalypso.debug.servlet;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-ClassPath: org.kalypso.debug.servlet/
 Bundle-Vendor: kalypso.org
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry,
  org.kalypso.commons
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet,
  javax.servlet.http
 Bundle-Activator: org.kalypso.debug.servlet.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

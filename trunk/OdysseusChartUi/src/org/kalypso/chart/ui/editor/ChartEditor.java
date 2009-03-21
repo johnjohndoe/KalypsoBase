@@ -318,9 +318,8 @@ public class ChartEditor extends EditorPart implements IChartPart
             /**
              * @see org.kalypso.chart.framework.model.event.impl.AbstractMapperRegistryEventListener#onMapperRangeChanged(org.kalypso.chart.framework.model.mapper.IMapper)
              */
-            @SuppressWarnings("unchecked")
             @Override
-            public void onMapperRangeChanged( IMapper mapper )
+            public void onMapperRangeChanged( final IMapper mapper )
             {
               setDirty( true );
             }
@@ -333,7 +332,7 @@ public class ChartEditor extends EditorPart implements IChartPart
              * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(org.kalypso.chart.framework.model.layer.IChartLayer)
              */
             @Override
-            public void onLayerVisibilityChanged( IChartLayer layer )
+            public void onLayerVisibilityChanged( final IChartLayer layer )
             {
               setDirty( true );
             }
@@ -342,7 +341,7 @@ public class ChartEditor extends EditorPart implements IChartPart
              * @see org.kalypso.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(org.kalypso.chart.framework.model.layer.IChartLayer)
              */
             @Override
-            public void onLayerMoved( IChartLayer layer )
+            public void onLayerMoved( final IChartLayer layer )
             {
               setDirty( true );
             }
@@ -365,7 +364,7 @@ public class ChartEditor extends EditorPart implements IChartPart
           try
           {
             m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-            IExtensionLoader cel = ChartExtensionLoader.getInstance();
+            final IExtensionLoader cel = ChartExtensionLoader.getInstance();
             ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), cel, context );
           }
           // TODO: provide message to user instead of eating the exceptions.
@@ -405,25 +404,25 @@ public class ChartEditor extends EditorPart implements IChartPart
 
               if( axisType.isSetDateRange() )
               {
-                AxisDateRangeType range = axisType.getDateRange();
+                final AxisDateRangeType range = axisType.getDateRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
               }
               else if( axisType.isSetDurationRange() )
               {
-                AxisDurationRangeType range = axisType.getDurationRange();
+                final AxisDurationRangeType range = axisType.getDurationRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
               }
               else if( axisType.isSetStringRange() )
               {
-                AxisStringRangeType range = axisType.getStringRange();
+                final AxisStringRangeType range = axisType.getStringRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
               }
               else if( axisType.isSetNumberRange() )
               {
-                AxisNumberRangeType range = axisType.getNumberRange();
+                final AxisNumberRangeType range = axisType.getNumberRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
               }

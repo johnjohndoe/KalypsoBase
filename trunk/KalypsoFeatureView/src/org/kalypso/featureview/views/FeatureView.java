@@ -130,7 +130,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * ISelectionProvider</li>
  * <li></li>
  * </ul>
- * 
+ *
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
  */
 public class FeatureView extends ViewPart implements ModellEventListener
@@ -369,7 +369,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     if( focusedFeature != null )
       return focusedFeature;
 
-    for( final Iterator sIt = featureSel.iterator(); sIt.hasNext(); )
+    for( final Iterator< ? > sIt = featureSel.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )

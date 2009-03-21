@@ -36,3 +36,4 @@ Export-Package: org.kalypso.services.observation,
  org.kalypso.services.observation.sei
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

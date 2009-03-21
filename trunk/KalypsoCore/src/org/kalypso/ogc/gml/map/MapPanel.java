@@ -169,16 +169,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypsodeegree.model.geometry.GM_Envelope)
-     */
-    @Override
-    public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
-    {
-      invalidateMap();
-    }
-
-    /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */

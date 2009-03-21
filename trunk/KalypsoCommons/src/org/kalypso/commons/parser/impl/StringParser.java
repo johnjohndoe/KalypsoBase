@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.parser.impl;
 
@@ -44,7 +44,7 @@ import org.kalypso.commons.parser.AbstractParser;
 
 /**
  * StringParser
- * 
+ *
  * @author schlienger
  */
 public class StringParser extends AbstractParser
@@ -53,7 +53,7 @@ public class StringParser extends AbstractParser
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
   @Override
-  public String toStringInternal( Object obj )
+  public String toStringInternal( final Object obj )
   {
     return obj.toString();
   }
@@ -61,7 +61,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
-  public Class getObjectClass()
+  public Class<String> getObjectClass( )
   {
     return String.class;
   }
@@ -77,7 +77,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
-  public Object parse( String text )
+  public Object parse( final String text )
   {
     return text;
   }
@@ -86,7 +86,7 @@ public class StringParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.String, java.lang.String)
    */
   @Override
-  public int compare( String value1, String value2 )
+  public int compare( final String value1, final String value2 )
   {
     if( value1.compareTo( value2 ) == 0 )
       return 0;
@@ -100,7 +100,7 @@ public class StringParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object value1, Object value2 )
+  public int compare( final Object value1, final Object value2 )
   {
     return compare( value1.toString(), value2.toString() );
   }

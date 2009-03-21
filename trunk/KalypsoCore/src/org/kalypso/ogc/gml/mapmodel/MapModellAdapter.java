@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Default implementation of {@link IMapModellListener}. All methods are empty.
@@ -50,14 +49,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class MapModellAdapter implements IMapModellListener
 {
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellListener#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
-  {
-  }
-
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellListener#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
    *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)

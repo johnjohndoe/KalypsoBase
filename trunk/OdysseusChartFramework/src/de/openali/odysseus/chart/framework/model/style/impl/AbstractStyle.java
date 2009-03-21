@@ -7,68 +7,69 @@ import de.openali.odysseus.chart.framework.model.style.IStyle;
 
 public abstract class AbstractStyle implements IStyle
 {
+  private int m_alpha;
 
-	private int m_alpha;
-	private boolean m_isVisible;
-	private String m_title;
-	private final Map<String, Object> m_data = new HashMap<String, Object>();
+  private boolean m_isVisible;
 
-	/**
-	 * 
-	 * @param alpha
-	 *            0 <= alpha <= 255
-	 */
-	public void setAlpha(int alpha)
-	{
-		if (alpha < 0 || alpha > 255)
-		{
-			m_alpha = 255;
-		}
-		else
-		{
-			m_alpha = alpha;
-		}
-	}
+  private String m_title;
 
-	public int getAlpha()
-	{
-		return m_alpha;
-	}
+  private final Map<String, Object> m_data = new HashMap<String, Object>();
 
-	public void setVisible(boolean isVisible)
-	{
-		m_isVisible = isVisible;
-	}
+  /**
+   * @param alpha
+   *          0 <= alpha <= 255
+   */
+  public void setAlpha( final int alpha )
+  {
+    if( alpha < 0 || alpha > 255 )
+    {
+      m_alpha = 255;
+    }
+    else
+    {
+      m_alpha = alpha;
+    }
+  }
 
-	public boolean isVisible()
-	{
-		return m_isVisible;
-	}
+  public int getAlpha( )
+  {
+    return m_alpha;
+  }
 
-	public void setTitle(String title)
-	{
-		m_title = title;
-	}
+  public void setVisible( final boolean isVisible )
+  {
+    m_isVisible = isVisible;
+  }
 
-	public String getTitle()
-	{
-		return m_title;
-	}
+  public boolean isVisible( )
+  {
+    return m_isVisible;
+  }
 
-	/**
-	 * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-	 */
-	public void setData(String id, Object data)
-	{
-		m_data.put(id, data);
-	}
+  public void setTitle( final String title )
+  {
+    m_title = title;
+  }
 
-	/**
-	 * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-	 */
-	public Object getData(String id)
-	{
-		return m_data.get(id);
-	}
+  public String getTitle( )
+  {
+    return m_title;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
+  public void setData( final String id, final Object data )
+  {
+    m_data.put( id, data );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
+   */
+  public Object getData( final String id )
+  {
+    return m_data.get( id );
+  }
 
 }

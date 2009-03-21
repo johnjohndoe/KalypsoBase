@@ -7,7 +7,7 @@ import java.io.InterruptedIOException;
 
 /**
  * Variant of the ProgressMonitorInputStream for Progressables
- * 
+ *
  * @author belger
  */
 public class ProgressableInputStream extends FilterInputStream
@@ -18,13 +18,13 @@ public class ProgressableInputStream extends FilterInputStream
 
   private final Progressable m_p;
 
-  public ProgressableInputStream( final InputStream in, final Progressable p )
+  public ProgressableInputStream( final InputStream is, final Progressable p )
   {
-    super( in );
+    super( is );
 
     try
     {
-      size = in.available();
+      size = is.available();
     }
     catch( final IOException ioe )
     {
@@ -46,7 +46,7 @@ public class ProgressableInputStream extends FilterInputStream
   @Override
   public int read( ) throws IOException
   {
-    int c = in.read();
+    final int c = in.read();
     if( c >= 0 )
       m_p.setCurrent( ++nread );
 
@@ -57,7 +57,7 @@ public class ProgressableInputStream extends FilterInputStream
   }
 
   @Override
-  public int read( byte b[] ) throws IOException
+  public int read( final byte b[] ) throws IOException
   {
     final int nr = in.read( b );
     if( nr > 0 )
@@ -69,7 +69,7 @@ public class ProgressableInputStream extends FilterInputStream
   }
 
   @Override
-  public int read( byte b[], int off, int len ) throws IOException
+  public int read( final byte b[], final int off, final int len ) throws IOException
   {
     final int nr = in.read( b, off, len );
     if( nr > 0 )
@@ -81,7 +81,7 @@ public class ProgressableInputStream extends FilterInputStream
   }
 
   @Override
-  public long skip( long n ) throws IOException
+  public long skip( final long n ) throws IOException
   {
     final long nr = in.skip( n );
     if( nr > 0 )

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -57,7 +57,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * ValueFilter
- * 
+ *
  * @author schlienger
  */
 public class ValueFilter extends AbstractObservationFilter
@@ -71,10 +71,10 @@ public class ValueFilter extends AbstractObservationFilter
 
     m_axisMap.clear();
 
-    final Iterator it = ((List) conf).iterator();
+    final Iterator<IValueComp> it = ((List<IValueComp>) conf).iterator();
     while( it.hasNext() )
     {
-      final IValueComp vc = (IValueComp) it.next();
+      final IValueComp vc = it.next();
 
       m_axisMap.put( vc.getAxis(), vc );
     }
@@ -97,14 +97,14 @@ public class ValueFilter extends AbstractObservationFilter
 
       boolean add = true;
 
-      for( int j = 0; j < axes.length; j++ )
+      for( final IAxis axe : axes )
       {
-        final IValueComp comp = m_axisMap.get( axes[j] );
+        final IValueComp comp = m_axisMap.get( axe );
 
-        final Object elt = values.getElement( i, axes[j] );
+        final Object elt = values.getElement( i, axe );
 
         if( comp == null || comp.validates( elt ) )
-          tupple.add( newValues.getPositionFor( axes[j] ), elt );
+          tupple.add( newValues.getPositionFor( axe ), elt );
         else
         {
           add = false;

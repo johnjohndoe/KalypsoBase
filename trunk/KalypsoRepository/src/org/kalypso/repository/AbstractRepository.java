@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -52,7 +51,7 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractRepository implements IRepository
@@ -130,9 +129,9 @@ public abstract class AbstractRepository implements IRepository
    */
   public void fireRepositoryStructureChanged( )
   {
-    for( final Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    for( final Object element2 : m_listeners )
     {
-      final IRepositoryListener element = (IRepositoryListener) iter.next();
+      final IRepositoryListener element = (IRepositoryListener) element2;
 
       element.onRepositoryStructureChanged();
     }
@@ -165,7 +164,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * This default implementation uses recursion to find an item with the requested id. Subclasses may use this method if
    * they want to implement findItem using recursion.
-   * 
+   *
    * @return item if found, else null
    */
   protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
@@ -177,9 +176,9 @@ public abstract class AbstractRepository implements IRepository
     if( items == null )
       return null;
 
-    for( int i = 0; i < items.length; i++ )
+    for( final IRepositoryItem item3 : items )
     {
-      final IRepositoryItem item2 = findItemRecursive( items[i], id );
+      final IRepositoryItem item2 = findItemRecursive( item3, id );
 
       if( item2 != null )
         return item2;
@@ -204,6 +203,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * This default implementation always returns null.
    */
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class anotherClass )
   {
     return null;
@@ -261,8 +261,8 @@ public abstract class AbstractRepository implements IRepository
     if( items == null )
       return;
 
-    for( int i = 0; i < items.length; i++ )
-      dumpRecursive( writer, items[i], recIndent, monitor );
+    for( final IRepositoryItem item2 : items )
+      dumpRecursive( writer, item2, recIndent, monitor );
 
     monitor.worked( 1 );
   }

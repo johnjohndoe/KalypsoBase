@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -96,9 +96,9 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   private final int m_defaultStatus;
 
-  public IntervallTupplemodel( int mode, int calendarField, int amount, final int startCalendarValue,
-      final String startCalendarField, final ITuppleModel srcModel, Date from, Date to, double defaultValue,
-      int defaultStatus )
+  public IntervallTupplemodel( final int mode, final int calendarField, final int amount, final int startCalendarValue,
+      final String startCalendarField, final ITuppleModel srcModel, final Date from, final Date to, final double defaultValue,
+      final int defaultStatus )
   {
     super( srcModel.getAxisList() );
     m_mode = mode;
@@ -113,15 +113,14 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     m_dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
     m_statusAxis = KalypsoStatusUtils.findStatusAxes( axisList );
     final List<IAxis> valueAxis = new ArrayList<IAxis>();
-    for( int i = 0; i < axisList.length; i++ )
+    for( final IAxis axis : axisList )
     {
-      IAxis axis = axisList[i];
       boolean isValueAxis = true;
       if( axis == m_dateAxis )
         isValueAxis = false;
-      for( int j = 0; j < m_statusAxis.length; j++ )
+      for( final IAxis axi : m_statusAxis )
       {
-        if( axis == m_statusAxis[j] )
+        if( axis == axi )
           isValueAxis = false;
       }
       if( isValueAxis )
@@ -133,7 +132,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     {
       range = m_srcModel.getRangeFor( m_dateAxis );
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       // nothing
     }
@@ -156,7 +155,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     {
       initModell();
     }
-    catch( SensorException e1 )
+    catch( final SensorException e1 )
     {
       e1.printStackTrace();
     }
@@ -185,11 +184,11 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     // create empty model
     final IAxis[] axisList = getAxisList();
     final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendarField, m_amount );
-    int rows = iterator.size() - 1;
+    final int rows = iterator.size() - 1;
     m_intervallModel = new SimpleTuppleModel( axisList, new Object[rows][axisList.length] );
 
     // initialize target
-    Calendar targetCal_last = (Calendar)iterator.next(); // TODO hasnext ?
+    Calendar targetCal_last = iterator.next(); // TODO hasnext ?
     int targetRow = 0;
     Intervall targetIntervall = null;
 
@@ -199,7 +198,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     // initialize values
     final Calendar firstSrcCal;
     // check if source timeseries is empty
-    int srcMaxRows = m_srcModel.getCount();
+    final int srcMaxRows = m_srcModel.getCount();
     if( srcMaxRows != 0 ) // not empty
       firstSrcCal = getDefaultCalendar( (Date)m_srcModel.getElement( 0, m_dateAxis ) );
     else
@@ -208,7 +207,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
     // initialize source
     Calendar srcCal_last = targetCal_last;
-    
+
     // BUGFIX: handle case when source start before from
     // Before this fix, this lead to a endless loop
     if( firstSrcCal.before( srcCal_last ) )
@@ -301,7 +300,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
           todo = TODO_FINISHED;
           continue;
         }
-        final Calendar cal = (Calendar)iterator.next();
+        final Calendar cal = iterator.next();
         if( targetCal_last.before( cal ) )
           targetIntervall = new Intervall( targetCal_last, cal, newStatus, newValues );
         else
@@ -321,7 +320,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
         continue;
       }
       // compute intersection intervall
-      int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
+      final int matrix = srcIntervall.calcIntersectionMatrix( targetIntervall );
       Intervall intersection = null;
       if( matrix != Intervall.STATUS_INTERSECTION_NONE_BEFORE && matrix != Intervall.STATUS_INTERSECTION_NONE_AFTER )
         intersection = srcIntervall.getIntersection( targetIntervall, m_mode );
@@ -388,18 +387,18 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     return m_intervallModel.toString();
   }
 
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     return m_intervallModel.getElement( index, axis );
   }
 
-  public void setElement( int index, Object element, IAxis axis )
+  public void setElement( final int index, final Object element, final IAxis axis )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0") ); //$NON-NLS-1$
     // TODO support it
   }
 
-  public int indexOf( Object element, IAxis axis ) throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )

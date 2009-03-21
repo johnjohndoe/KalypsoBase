@@ -51,7 +51,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * Date utilities.
- * 
+ *
  * @author schlienger
  */
 public final class DateUtilities
@@ -117,5 +117,10 @@ public final class DateUtilities
     calendar.setTime( date );
 
     return DATATYPE_FACTORY.newXMLGregorianCalendar( calendar );
+  }
+
+  public static Object toXMLGregorianCalendar( final GregorianCalendar dateTime )
+  {
+    return DATATYPE_FACTORY.newXMLGregorianCalendar( dateTime );
   }
 }

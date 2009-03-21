@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Sammelt LineStrings und kombiniert Sie als Polygone
- * 
+ *
  * @author belger
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
@@ -236,6 +236,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
     public final double max;
 
+    @SuppressWarnings("hiding")
     public Interval( final double min, final double max )
     {
       this.min = min;

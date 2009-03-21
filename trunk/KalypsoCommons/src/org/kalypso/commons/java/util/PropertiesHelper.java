@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.util;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -64,11 +63,11 @@ public class PropertiesHelper
     if( source != null )
     {
       final String[] strings = source.split( "" + separator );
-      for( int i = 0; i < strings.length; i++ )
+      for( final String string : strings )
       {
-        int pos = strings[i].indexOf( ENTRY_SEPARATOR );
+        final int pos = string.indexOf( ENTRY_SEPARATOR );
         if( pos > 0 )
-          props.put( strings[i].substring( 0, pos ), strings[i].substring( pos + 1 ) );
+          props.put( string.substring( 0, pos ), string.substring( pos + 1 ) );
       }
     }
     return props;
@@ -77,15 +76,11 @@ public class PropertiesHelper
   /**
    * @return a string representation of the content of the given map
    */
-  public static String format( final Map source, final char separator )
+  public static String format( final Properties source, final char separator )
   {
     final StringBuffer sb = new StringBuffer();
-    for( final Iterator pIt = source.entrySet().iterator(); pIt.hasNext(); )
-    {
-      final Map.Entry entry = (Entry) pIt.next();
-
+    for( final Entry<Object, Object> entry : source.entrySet() )
       sb.append( "" + entry.getKey() + ENTRY_SEPARATOR + entry.getValue() + separator );
-    }
 
     return sb.toString();
   }
@@ -97,9 +92,8 @@ public class PropertiesHelper
   {
     final Properties newProps = new Properties();
 
-    for( Iterator sourceIt = sourceProps.entrySet().iterator(); sourceIt.hasNext(); )
+    for( final Map.Entry<Object, Object> sourceEntry : sourceProps.entrySet() )
     {
-      final Map.Entry sourceEntry = (Entry) sourceIt.next();
       final String sourceKey = sourceEntry.getKey().toString();
       final String sourceValue = sourceEntry.getValue().toString();
 
@@ -115,9 +109,9 @@ public class PropertiesHelper
     String result = "" + separator;
     final Set<Object> keySet = properties.keySet();
     int size = keySet.size();
-    for( Object key : keySet )
+    for( final Object key : keySet )
     {
-      Object value = properties.get( key );
+      final Object value = properties.get( key );
       if( value != null )
       {
         if( size > 1 )

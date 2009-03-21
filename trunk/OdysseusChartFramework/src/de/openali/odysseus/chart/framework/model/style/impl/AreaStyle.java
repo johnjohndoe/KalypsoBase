@@ -8,12 +8,11 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 public class AreaStyle extends AbstractStyle implements IAreaStyle
 {
-
   private ILineStyle m_stroke;
 
   private IFill m_fill;
 
-  public AreaStyle( IFill fill, int alpha, ILineStyle stroke, boolean isVisible )
+  public AreaStyle( final IFill fill, final int alpha, final ILineStyle stroke, final boolean isVisible )
   {
     setFill( fill );
     setAlpha( alpha );
@@ -38,29 +37,24 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
    * de.openali.odysseus.chart.framework.impl.model.style.IAreaStyle#setOutline(de.openali.odysseus.chart.framework.
    * impl.model.style.ILineStyle)
    */
-  public void setStroke( ILineStyle stroke )
+  public void setStroke( final ILineStyle stroke )
   {
     m_stroke = stroke;
   }
 
-  public void apply( GC gc )
+  public void apply( final GC gc )
   {
     if( m_stroke != null )
       m_stroke.apply( gc );
 
-    int alpha = getAlpha();
+    final int alpha = getAlpha();
     gc.setAlpha( alpha );
 
     if( (m_fill != null) )
       m_fill.apply( gc );
   }
 
-  public void dispose( )
-  {
-
-  }
-
-  public void setFill( IFill fill )
+  public void setFill( final IFill fill )
   {
     m_fill = fill;
   }

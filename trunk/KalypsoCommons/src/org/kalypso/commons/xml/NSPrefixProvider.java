@@ -79,7 +79,6 @@ public class NSPrefixProvider
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSVIEW, "obsv" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_TEMPLATES, "templ" );
       // THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_RRM, "rrm" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
       THE_NS_MAPPER.getPreferredPrefix( NS.ADV_NAS, "adv" );
       THE_NS_MAPPER.getPreferredPrefix( NS.CATALOG, "catalog" );

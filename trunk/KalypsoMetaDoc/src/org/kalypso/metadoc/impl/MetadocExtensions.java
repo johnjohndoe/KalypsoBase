@@ -61,7 +61,7 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 
 /**
  * Handles the extension points of this plugin.
- * 
+ *
  * @author schlienger
  */
 public class MetadocExtensions
@@ -70,9 +70,9 @@ public class MetadocExtensions
 
   private static final String EXPORTERS_EXTENSION_POINT = "org.kalypso.metadoc.exporter";
 
-  private static Map m_exporters = null;
+  private static Map<String, IConfigurationElement> m_exporters = null;
 
-  private static Map m_targets = null;
+  private static Map<String, IConfigurationElement> m_targets = null;
 
   private MetadocExtensions( )
   {
@@ -86,10 +86,8 @@ public class MetadocExtensions
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( TARGETS_EXTENSION_POINT );
     final Vector<IExportTarget> items = new Vector<IExportTarget>();
     final List<IStatus> stati = new ArrayList<IStatus>();
-    for( int i = 0; i < elements.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      IConfigurationElement element = elements[i];
-
       try
       {
         final IExportTarget target = (IExportTarget) element.createExecutableExtension( "class" );
@@ -116,22 +114,20 @@ public class MetadocExtensions
     if( m_exporters == null )
       m_exporters = retrieveExporterInHash( EXPORTERS_EXTENSION_POINT );
 
-    final IConfigurationElement element = (IConfigurationElement) m_exporters.get( id );
+    final IConfigurationElement element = m_exporters.get( id );
     return (IExporter) element.createExecutableExtension( "class" );
   }
 
   /**
    * Lazy loading of the exporters into map (exporter-id --&gt; conf-element)
    */
-  private static Map retrieveExporterInHash( final String extensionPointId )
+  private static Map<String, IConfigurationElement> retrieveExporterInHash( final String extensionPointId )
   {
-    final HashMap<String, IConfigurationElement> map = new HashMap<String, IConfigurationElement>();
+    final Map<String, IConfigurationElement> map = new HashMap<String, IConfigurationElement>();
 
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( extensionPointId );
-    for( int i = 0; i < elements.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      final IConfigurationElement element = elements[i];
-
       map.put( element.getAttribute( "id" ), element );
     }
 
@@ -154,13 +150,12 @@ public class MetadocExtensions
 
     final Vector<IConfigurationElement> items = new Vector<IConfigurationElement>();
 
-    for( int i = 0; i < extensions.length; i++ )
+    for( final IExtension extension : extensions )
     {
-      final IExtension extension = extensions[i];
       final IConfigurationElement[] elements = extension.getConfigurationElements();
 
-      for( int j = 0; j < elements.length; j++ )
-        items.add( elements[j] );
+      for( final IConfigurationElement element : elements )
+        items.add( element );
     }
 
     return items.toArray( new IConfigurationElement[items.size()] );
@@ -174,7 +169,7 @@ public class MetadocExtensions
     if( m_targets == null )
       m_targets = retrieveExporterInHash( TARGETS_EXTENSION_POINT );
 
-    final IConfigurationElement element = (IConfigurationElement) m_targets.get( id );
+    final IConfigurationElement element = m_targets.get( id );
     return (IExportTarget) element.createExecutableExtension( "class" );
   }
 }

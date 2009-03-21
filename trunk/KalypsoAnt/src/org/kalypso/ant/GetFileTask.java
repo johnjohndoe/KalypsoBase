@@ -61,11 +61,11 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
 /**
  * Loads (ant-)properties from a gml.
- * 
+ *
  * <pre>
  *  <kalypso.getFileTask sourceDir="C:\MyDataDir" targetFile="C:\MyFiles\data.file" resultProperty="getFileResult"/>
  * </pre>
- * 
+ *
  * @author Gernot Belger
  */
 public class GetFileTask extends Task
@@ -81,7 +81,7 @@ public class GetFileTask extends Task
       return m_description;
     }
 
-    public void setDescription( String description )
+    public void setDescription( final String description )
     {
       m_description = description;
     }
@@ -91,7 +91,7 @@ public class GetFileTask extends Task
       return m_pattern;
     }
 
-    public void setPattern( String pattern )
+    public void setPattern( final String pattern )
     {
       m_pattern = pattern;
     }
@@ -99,12 +99,12 @@ public class GetFileTask extends Task
 
   private final PropertyAdder m_propertyAdder = new PropertyAdder( this );
 
-  private final List m_filters = new LinkedList();
+  private final List<FileFilter> m_filters = new LinkedList<FileFilter>();
 
   /** Initial directory for the file open dialog. */
   private File m_sourceDir;
 
-  /** Destination where to copy the coosen file */
+  /** Destination where to copy the chosen file */
   private File m_targetFile;
 
   private String m_resultProperty;
@@ -134,7 +134,7 @@ public class GetFileTask extends Task
     return m_resultProperty;
   }
 
-  public void setResultProperty( String resultProperty )
+  public void setResultProperty( final String resultProperty )
   {
     m_resultProperty = resultProperty;
   }
@@ -149,6 +149,7 @@ public class GetFileTask extends Task
   /**
    * @see org.apache.tools.ant.Task#execute()
    */
+  @Override
   public void execute() throws BuildException
   {
     final Project antProject = getProject();
@@ -179,7 +180,7 @@ public class GetFileTask extends Task
     }
 
     // Ask user for file
-    
+
     /* Use array in order to be able to return value from runnable */
     final File[] resultFile = new File[1];
     final Display display = PlatformUI.getWorkbench().getDisplay();
@@ -216,20 +217,20 @@ public class GetFileTask extends Task
 
     logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Quelle: " + resultFile[0].getAbsolutePath() );
     logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Ziel: " + m_targetFile );
-    
+
     // evtl. ergebnis property setzen
     if( m_resultProperty != null )
       m_propertyAdder.addProperty( m_resultProperty, "true", null );
   }
 
-  protected File askForFile( Display display )
+  protected File askForFile( final Display display )
   {
     final Shell shell = findShell( display );
 
     final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
     if( m_sourceDir != null )
       dialog.setFilterPath( m_sourceDir.getAbsolutePath() );
-    
+
     final String resultPath = dialog.open();
     if( resultPath == null )
       return null;
@@ -240,13 +241,12 @@ public class GetFileTask extends Task
   private Shell findShell( final Display display )
   {
     final String shellTitle = JFaceResources.getString("ProgressMonitorDialog.title");
-    
+
     final Shell[] shells = display.getShells();
     // HACK: we are looking for a progress monitor here...
     // Hopefully thing work also for the next eclipse versions...
-    for( int i = 0; i < shells.length; i++ )
+    for( final Shell shell : shells )
     {
-      final Shell shell = shells[i];
       if( shell.getText().equals(shellTitle))
         return shell;
     }

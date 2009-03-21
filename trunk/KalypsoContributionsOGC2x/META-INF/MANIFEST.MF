@@ -4,11 +4,11 @@ Bundle-Name: KalypsoOGCContributions 2x Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc2x;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons;bundle-version="0.0.1"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: ogc2.www.opengis.net.gml,
  ogc2.www.opengis.net.ogc,
  ogc2.www.opengis.net.ows,
  ogc2.www.opengis.net.sld,
  org.kalypso.contribs.ogc2x
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

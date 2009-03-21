@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -56,7 +56,7 @@ import org.kalypso.repository.RepositoryException;
 
 /**
  * ZmlFilter
- * 
+ *
  * @author schlienger
  */
 public final class ZmlFilter extends AbstractObservationFilter
@@ -65,7 +65,7 @@ public final class ZmlFilter extends AbstractObservationFilter
    * TRICKY: allows us to override the default behaviour of URL resolving by directly looking for the href as an
    * identifier within the list of repositories
    */
-  private static List REPS = null;
+  private static List<IRepository> REPS = null;
 
   /**
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
@@ -93,11 +93,10 @@ public final class ZmlFilter extends AbstractObservationFilter
         // only take id part since href can contain additional query stuff
         final String id = ZmlURL.getIdentifierPart( href );
 
-        final Iterator it = REPS.iterator();
-
+        final Iterator<IRepository> it = REPS.iterator();
         while( it.hasNext() )
         {
-          final IRepository rep = (IRepository) it.next();
+          final IRepository rep = it.next();
 
           try
           {
@@ -110,7 +109,7 @@ public final class ZmlFilter extends AbstractObservationFilter
               return;
             }
           }
-          catch( RepositoryException ignored )
+          catch( final RepositoryException ignored )
           {
             // ignored
           }
@@ -126,7 +125,7 @@ public final class ZmlFilter extends AbstractObservationFilter
         // override observation from abstract filter (super type)
         setObservation( observation );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         throw new SensorException( e );
       }
@@ -138,11 +137,11 @@ public final class ZmlFilter extends AbstractObservationFilter
    * convenience for the server-side of Kalypso.
    * <p>
    * If the zml if found in one of the repositories, then there's no need to use the ZmlFactory.
-   * 
+   *
    * @param repositories
    *          [nullable]
    */
-  public static void configureFor( final List repositories )
+  public static void configureFor( final List<IRepository> repositories )
   {
     REPS = repositories;
   }

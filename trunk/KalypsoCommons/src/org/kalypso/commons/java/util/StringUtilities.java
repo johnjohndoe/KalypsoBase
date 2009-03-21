@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,22 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.util;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Utilities around the String class.
- * 
+ *
  * @author schlienger
  */
 public final class StringUtilities
@@ -80,7 +78,7 @@ public final class StringUtilities
    * <p>
    * with R, G, B being the Red, Green, Blue components of the color and expressed as integers in the range (0 - 255).
    * with A optional, being the alpha composite value in the range (0 - 255).
-   * 
+   *
    * @param s
    * @throws IllegalArgumentException
    *             if s is null
@@ -105,7 +103,7 @@ public final class StringUtilities
    * Converts a Color into a String.
    * <p>
    * String will have same format as specified in {@link StringUtilities#stringToColor(String)}
-   * 
+   *
    * @param c
    * @throws IllegalArgumentException
    *             if color is null
@@ -128,21 +126,21 @@ public final class StringUtilities
 
   /**
    * Converts a String to a Font.
-   * 
+   *
    * <pre>
-   * 
-   *  
-   *   
-   *    
-   *     
+   *
+   *
+   *
+   *
+   *
    *         FontName;FontStyle;FontSize
-   *      
-   *     
-   *    
-   *   
-   *  
+   *
+   *
+   *
+   *
+   *
    * </pre>
-   * 
+   *
    * @param s
    * @throws IllegalArgumentException
    *             if s is null
@@ -164,7 +162,7 @@ public final class StringUtilities
 
   /**
    * Converts a font to a string. Format is defined in {@link StringUtilities#stringToFont(String)}
-   * 
+   *
    * @param f
    * @throws IllegalArgumentException
    *             if f is null
@@ -183,7 +181,7 @@ public final class StringUtilities
 
   /**
    * Replacement per Pattern-Matching
-   * 
+   *
    * @param sourceValue
    * @param replaceProperties
    * @return string
@@ -192,9 +190,8 @@ public final class StringUtilities
   {
     String newString = sourceValue;
 
-    for( final Iterator<Entry<Object, Object>> replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
+    for( final Map.Entry<Object, Object> entry : replaceProperties.entrySet() )
     {
-      final Entry<Object, Object> entry = replaceIt.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 
@@ -207,7 +204,7 @@ public final class StringUtilities
   /**
    * Spans a string onto lines, thus it inserts NEWLINE chars at lineLength + 1 for each line. It firsts removes all
    * existing NEWLINE chars.
-   * 
+   *
    * @param str
    *            the string to span
    * @param lineLength

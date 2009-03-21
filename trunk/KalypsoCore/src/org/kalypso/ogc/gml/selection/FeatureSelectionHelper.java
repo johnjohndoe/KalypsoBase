@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Helper methods for Feature-selection.
- * 
+ *
  * @author belger
  */
 public class FeatureSelectionHelper
@@ -72,13 +72,13 @@ public class FeatureSelectionHelper
    * GMLEditorContentProvider2 is defined in the KalypsoUI plugin and this helper lives in KalypsoCore. adding the
    * linked Element Support would add a new dependency. do we still need the LinkedFeatureElement2 object or can we
    * model it differnetly since the GMLWorkspace api changed considerably?
-   * 
+   *
    * @param filterWorkspace
    *          if null, all features are returned
    */
   public static Feature[] getFeatures( final IFeatureSelection selection, final GMLWorkspace filterWorkspace )
   {
-    final List list = selection.toList();
+    final List< ? > list = selection.toList();
     final ArrayList<Feature> features = new ArrayList<Feature>( list.size() );
     for( final Object element : list )
     {
@@ -120,13 +120,12 @@ public class FeatureSelectionHelper
     return features[0];
   }
 
-  public static Feature[] getAllFeaturesWithGeometry( IFeatureSelection selection )
+  public static Feature[] getAllFeaturesWithGeometry( final IFeatureSelection selection )
   {
     final Feature[] features = getFeatures( selection );
     final ArrayList<Feature> result = new ArrayList<Feature>();
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       final GM_Object[] geometryProperties = feature.getGeometryProperties();
       if( geometryProperties.length > 0 )
         result.add( feature );
@@ -134,15 +133,15 @@ public class FeatureSelectionHelper
     return result.toArray( new Feature[result.size()] );
   }
 
-  public static Feature[] getAllFeaturesOfType( IFeatureSelection selection, QName substitueeName )
+  public static Feature[] getAllFeaturesOfType( final IFeatureSelection selection, final QName substitueeName )
   {
     final EasyFeatureWrapper[] features = selection.getAllFeatures();
 
     final List<Feature> resFeatures = new ArrayList<Feature>();
 
-    for( int i = 0; i < features.length; i++ )
+    for( final EasyFeatureWrapper feature2 : features )
     {
-      final Feature feature = features[i].getFeature();
+      final Feature feature = feature2.getFeature();
 
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), substitueeName ) )
         resFeatures.add( feature );
@@ -165,19 +164,17 @@ public class FeatureSelectionHelper
     // wird verwendt um zu prüfen ob das Feature schon im ersten EasyFeatureWrapper[] array vorkommt
     final HashSet<Feature> features = new HashSet<Feature>();
     final HashSet<EasyFeatureWrapper> res = new HashSet<EasyFeatureWrapper>();
-    for( int i = 0; i < one.length; i++ )
+    for( final EasyFeatureWrapper wrapper : one )
     {
-      final EasyFeatureWrapper wrapper = one[i];
-      boolean b = features.add( wrapper.getFeature() );
+      final boolean b = features.add( wrapper.getFeature() );
       if( b )
       {
         res.add( wrapper );
       }
     }
-    for( int i = 0; i < two.length; i++ )
+    for( final EasyFeatureWrapper wrapper : two )
     {
-      final EasyFeatureWrapper wrapper = two[i];
-      boolean b = features.add( wrapper.getFeature() );
+      final boolean b = features.add( wrapper.getFeature() );
       if( b )
       {
         res.add( wrapper );

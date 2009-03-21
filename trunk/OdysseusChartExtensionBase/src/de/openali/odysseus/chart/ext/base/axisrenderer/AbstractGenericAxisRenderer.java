@@ -45,7 +45,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   private ILineStyle m_tickLineStyle;
 
-  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, ILineStyle axisLineStyle, ITextStyle labelStyle, ILineStyle tickLineStyle, ITextStyle tickLabelStyle )
+  public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle )
   {
     m_id = id;
     m_tickLength = tickLength;
@@ -60,7 +60,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
 
-  protected Point getTextExtent( GC gc, final String value, ITextStyle style )
+  protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
   {
     style.apply( gc );
     final Point point = gc.textExtent( value );
@@ -70,7 +70,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   /**
    * draws a given text at the position using special fontData
    */
-  protected void drawText( GC gc, String text, int x, int y, ITextStyle style )
+  protected void drawText( final GC gc, final String text, final int x, final int y, final ITextStyle style )
   {
     style.apply( gc );
     // BUG in SWT (linux): Wenn Font-Größe geändert wird, besitzt der Hintergrund immer noch die Größe
@@ -99,21 +99,21 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_tickLabelInsets;
   }
 
-  public void setTickMapElement( IAxis axis, Number[] ticks )
+  public void setTickMapElement( final IAxis axis, final Number[] ticks )
   {
     m_tickMap.put( axis, ticks );
   }
 
-  protected Number[] getTickMapElement( IAxis axis )
+  protected Number[] getTickMapElement( final IAxis axis )
   {
-    Number[] tickMap = m_tickMap.get( axis );
+    final Number[] tickMap = m_tickMap.get( axis );
     return tickMap;
   }
 
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
-  public void setData( String id, Object data )
+  public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
@@ -121,7 +121,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
-  public Object getData( String id )
+  public Object getData( final String id )
   {
     return m_data.get( id );
   }
@@ -131,8 +131,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_id;
   }
 
-  @SuppressWarnings("unchecked")
-  public void invalidateTicks( IAxis axis )
+  public void invalidateTicks( final IAxis axis )
   {
     m_tickMap.put( axis, null );
   }

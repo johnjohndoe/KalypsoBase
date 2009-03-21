@@ -10,10 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainValueFileData;
 import de.openali.odysseus.chart.ext.base.layer.DefaultLineLayer;
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -31,7 +29,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
     return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
@@ -39,7 +37,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public AbstractDomainValueFileData getDataContainer( ) throws ConfigurationException
+  public AbstractDomainValueFileData getDataContainer( )
   {
     final AbstractDomainValueFileData data = new AbstractDomainValueFileData()
     {
@@ -51,18 +49,18 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
         try
         {
 
-          InputStream is = getInputURL().openStream();
-          InputStreamReader isr = new InputStreamReader( is );
+          final InputStream is = getInputURL().openStream();
+          final InputStreamReader isr = new InputStreamReader( is );
 
-          BufferedReader br = new BufferedReader( isr );
+          final BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
-          List<Object> domainValues = new ArrayList<Object>();
-          List<Object> targetValues = new ArrayList<Object>();
+          final List<Object> domainValues = new ArrayList<Object>();
+          final List<Object> targetValues = new ArrayList<Object>();
 
           while( (s = br.readLine()) != null )
           {
-            String[] cols = s.split( "  *" );
+            final String[] cols = s.split( "  *" );
             // YearString
             if( cols.length >= 2 )
             {
@@ -79,7 +77,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
                   targetValues.add( targetVal );
                 }
               }
-              catch( NumberFormatException e )
+              catch( final NumberFormatException e )
               {
                 Logger.logWarning( Logger.TOPIC_LOG_DATA, getInputURL().toString() + ": Line " + count + " could not be parsed: \n" + s );
                 e.printStackTrace();
@@ -95,12 +93,12 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
           setDomainValues( domainValues );
           setTargetValues( targetValues );
         }
-        catch( FileNotFoundException e )
+        catch( final FileNotFoundException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -125,7 +123,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
     {
       data.setInputURL( new URL( url ) );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

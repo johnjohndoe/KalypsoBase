@@ -3,7 +3,6 @@ package org.kalypso.kml.export;
 import java.io.File;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -29,7 +28,7 @@ public class KMLExportCommandHandler implements IHandler
   {
   }
 
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 

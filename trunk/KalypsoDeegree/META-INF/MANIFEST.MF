@@ -161,3 +161,4 @@ Export-Package: com.sun.media.jai.codec,
  org.libtiff.jai.operator,
  org.libtiff.jai.util,
  org.openjump.core.graph.delauneySimplexInsert
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

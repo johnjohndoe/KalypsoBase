@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.figure.impl;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
@@ -60,7 +58,7 @@ public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
   /**
    * 
    */
-  public void setRectangle( Rectangle rect )
+  public void setRectangle( final Rectangle rect )
   {
     m_rect = rect;
   }
@@ -69,7 +67,7 @@ public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
    * @see de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure#paintFigure(org.eclipse.swt.graphics.GC)
    */
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
     gc.drawRectangle( m_rect );
     gc.fillRectangle( m_rect );

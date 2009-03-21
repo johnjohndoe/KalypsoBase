@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor;
 
 /**
  * TODO: please comment
- * 
+ *
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
@@ -124,7 +124,7 @@ public class ModifyFeatureCommand implements ICommand
               continue;
             if( linkPT.isList() )
             {
-              final List list = (List) value;
+              final List< ? > list = (List< ? >) value;
               while( !list.isEmpty() )
               {
                 // TODO is nicht schön... mit der liste

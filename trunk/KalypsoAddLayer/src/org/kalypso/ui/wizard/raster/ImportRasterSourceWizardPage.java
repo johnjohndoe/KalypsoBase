@@ -210,12 +210,12 @@ public class ImportRasterSourceWizardPage extends WizardPage
           try
           {
             final IPath basePath = m_project.getLocation();
-            final String styleURLAsString = basePath.toFile().toURL() + stylePath.removeFirstSegments( 1 ).toString();
+            final String styleURLAsString = basePath.toFile().toURI().toURL() + stylePath.removeFirstSegments( 1 ).toString();
             final URL styleURL = new URL( styleURLAsString );
             reader = new InputStreamReader( (styleURL).openStream() );
             final IUrlResolver2 resolver = new IUrlResolver2()
             {
-              public URL resolveURL( String href ) throws MalformedURLException
+              public URL resolveURL( final String href ) throws MalformedURLException
               {
                 return UrlResolverSingleton.resolveUrl( styleURL, href );
               }

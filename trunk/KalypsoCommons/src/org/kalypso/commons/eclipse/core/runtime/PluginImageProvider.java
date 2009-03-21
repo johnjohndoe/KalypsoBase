@@ -66,7 +66,7 @@ import org.kalypso.contribs.java.io.StreamUtilities;
  * <p>
  * This class is not intended to be sub-classed. Each UI-plug-in should have one instance.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class PluginImageProvider
@@ -103,7 +103,7 @@ public class PluginImageProvider
 
   /**
    * Utility method for image re-use Plug-in.
-   * 
+   *
    * @param key
    * @return
    */
@@ -136,7 +136,7 @@ public class PluginImageProvider
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path.
-   * 
+   *
    * @param path
    *            the path
    * @return the image descriptor
@@ -218,7 +218,7 @@ public class PluginImageProvider
 
   /**
    * Copies a resource-file into the tmp-directory and returns a (file-)url to it.
-   * 
+   *
    * @param clazz
    *            The class to which the resource path will be resolved
    * @param path
@@ -240,14 +240,14 @@ public class PluginImageProvider
       final File classDir = new File( imageDir, "resources" );
       final File imageFile = new File( classDir, path );
       if( imageFile.exists() )
-        return imageFile.toURL();
+        return imageFile.toURI().toURL();
 
       imageFile.getParentFile().mkdirs();
 
       final InputStream is = url.openStream();
       final FileOutputStream os = new FileOutputStream( imageFile );
       StreamUtilities.streamCopy( is, os );
-      return imageFile.toURL();
+      return imageFile.toURI().toURL();
     }
     catch( final IOException e )
     {

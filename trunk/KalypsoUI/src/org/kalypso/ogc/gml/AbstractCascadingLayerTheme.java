@@ -73,16 +73,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypsodeegree.model.geometry.GM_Envelope)
-     */
-    @Override
-    public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
-    {
-      doFireRepaintRequested( bbox );
-    }
-
-    /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
      */

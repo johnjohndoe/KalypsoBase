@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * {@link IGeoGrid} implementation based on {@link org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage}s.<br>
  * This implementation analyzes the wrapped coverage and generates a suitable grid, to which all calls are delegated.
- * 
+ *
  * @author Gernot Belger
  */
 public class RectifiedGridCoverageGeoGrid implements IGeoGrid
@@ -234,7 +234,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   public void setMax( final BigDecimal maxValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
-    if( grid == null )
+    if( grid != null )
       grid.setMax( maxValue );
   }
 
@@ -244,7 +244,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   public void setMin( final BigDecimal minValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
-    if( grid == null )
+    if( grid != null )
       grid.setMin( minValue );
   }
 

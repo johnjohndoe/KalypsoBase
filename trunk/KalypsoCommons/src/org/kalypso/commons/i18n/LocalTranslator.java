@@ -91,7 +91,6 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
    */
-  @SuppressWarnings("unchecked")
   public void configure( final URL context, final List<Element> configuration )
   {
     m_context = context;

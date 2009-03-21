@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.constDelaunay;
 
@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Helper class for tringle.exe<BR>
  * for more information goto: http://www.cs.cmu.edu/~quake/triangle.html
- * 
+ *
  * @author Thomas Jung
  */
 public class ConstraintDelaunayHelper
@@ -88,7 +88,7 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static String writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
@@ -166,7 +166,7 @@ public class ConstraintDelaunayHelper
     writer.println( " 0" ); // Border Markers 0 //$NON-NLS-1$
 
     // Following lines: <vertex #> <x> <y> [attributes] [boundary marker]
-    int segmentIndex = 1;
+    final int segmentIndex = 1;
     // we reuse pointindex and iterate through the segments in the same way as before
     pointIndex = 1;
     writeElements( breaklines, writer, pointIndex, segmentIndex );
@@ -240,10 +240,10 @@ public class ConstraintDelaunayHelper
     writer.println();
 
     // nodes
-    List<TriangleVertex> nodeList = data.getNodeList();
+    final List<TriangleVertex> nodeList = data.getNodeList();
     for( int i = 0; i < nodeList.size(); i++ )
     {
-      TriangleVertex triangleVertex = nodeList.get( i );
+      final TriangleVertex triangleVertex = nodeList.get( i );
       writer.print( i + " " + triangleVertex.getLine() ); //$NON-NLS-1$
       writer.println();
     }
@@ -253,16 +253,16 @@ public class ConstraintDelaunayHelper
     writer.println();
 
     // segments
-    List<TriangleSegment> segmentList = data.getSegmentList();
+    final List<TriangleSegment> segmentList = data.getSegmentList();
     for( int i = 0; i < segmentList.size(); i++ )
     {
-      TriangleSegment segment = segmentList.get( i );
+      final TriangleSegment segment = segmentList.get( i );
       writer.print( i + " " + segment.getLine() ); //$NON-NLS-1$
       writer.println();
 
     }
 
-    List<TriangleHole> holeList = data.getHoleList();
+    final List<TriangleHole> holeList = data.getHoleList();
     if( holeList != null && holeList.size() > 0 )
     {
 
@@ -273,7 +273,7 @@ public class ConstraintDelaunayHelper
       // holes
       for( int i = 0; i < holeList.size(); i++ )
       {
-        TriangleHole hole = holeList.get( i );
+        final TriangleHole hole = holeList.get( i );
         writer.print( i + " " + hole.getLine() ); //$NON-NLS-1$
         writer.println();
       }
@@ -292,7 +292,6 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a polyfile of polygons for the console program Triangle.exe
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static IStatus writePolyFileForPolygon( final OutputStream polyStream, final GM_Position[] posArray )
   {
     final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
@@ -337,10 +336,9 @@ public class ConstraintDelaunayHelper
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public static final List<GM_Surface> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
+  public static final List<GM_Surface<GM_SurfacePatch>> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
-    List<GM_Surface> surfaces = new ArrayList<GM_Surface>();
+    final List<GM_Surface<GM_SurfacePatch>> surfaces = new ArrayList<GM_Surface<GM_SurfacePatch>>();
 
     eleReader.readLine(); // ignore first line
     while( eleReader.ready() )
@@ -360,7 +358,7 @@ public class ConstraintDelaunayHelper
 
       final GM_Position[] triangle = new GM_Position[] { points[p1], points[p2], points[p3], points[p1] };
 
-      final GM_Surface surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
+      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
 
       surfaces.add( surface );
 
@@ -461,19 +459,19 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, String crs ) throws GM_Exception
+  @SuppressWarnings("unchecked")
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
-    GM_Object[] objects = polygonSurface.getAll();
-    for( GM_Object object : objects )
+    final GM_Object[] objects = polygonSurface.getAll();
+    for( final GM_Object object : objects )
     {
       if( object instanceof GM_Surface )
       {
-        GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-        GM_Triangle[] triangles = convertToTriangles( surface, crs );
-        for( GM_Triangle triangle : triangles )
+        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
+        final GM_Triangle[] triangles = convertToTriangles( surface, crs );
+        for( final GM_Triangle triangle : triangles )
         {
           triangleList.add( triangle );
         }
@@ -486,14 +484,14 @@ public class ConstraintDelaunayHelper
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
-    for( GM_SurfacePatch surfacePatch : surface )
+    for( final GM_SurfacePatch surfacePatch : surface )
     {
-      GM_Position[] exterior = surfacePatch.getExteriorRing();
-      GM_Position[][] interior = surfacePatch.getInteriorRings();
-      GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
+      final GM_Position[] exterior = surfacePatch.getExteriorRing();
+      final GM_Position[][] interior = surfacePatch.getInteriorRings();
+      final GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
       if( triangles != null )
       {
-        for( GM_Triangle triangle : triangles )
+        for( final GM_Triangle triangle : triangles )
         {
           triangleList.add( triangle );
         }
@@ -506,7 +504,7 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( GM_Position[] exterior, GM_Position[][] interior, String crs ) throws GM_Exception
+  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -523,7 +521,7 @@ public class ConstraintDelaunayHelper
     }
     else
     {
-      GM_Triangle[] tri = new GM_Triangle[1];
+      final GM_Triangle[] tri = new GM_Triangle[1];
       tri[0] = GeometryFactory.createGM_Triangle( exterior[0], exterior[1], exterior[2], crs );
       return tri;
     }
@@ -533,13 +531,13 @@ public class ConstraintDelaunayHelper
    * checks if the positions are defining closed polygons and returns the valid positions. Non-closing arrays will be
    * ignored.
    */
-  public static GM_Position[][] getClosedPolygons( GM_Position[][] rings )
+  public static GM_Position[][] getClosedPolygons( final GM_Position[][] rings )
   {
     // check the rings. If there are non-valid rings, ignore them.
     final List<GM_Position[]> ringList = new LinkedList<GM_Position[]>();
     if( rings != null )
     {
-      for( GM_Position[] inRing : rings )
+      for( final GM_Position[] inRing : rings )
       {
         if( checkForPolygon( inRing ) == true )
           ringList.add( inRing );
@@ -554,7 +552,7 @@ public class ConstraintDelaunayHelper
   /**
    * checks if the given positions are defining a closed polygon.
    */
-  public static boolean checkForPolygon( GM_Position[] ring )
+  public static boolean checkForPolygon( final GM_Position[] ring )
   {
     // check the ring.
     if( ring != null )
@@ -571,7 +569,7 @@ public class ConstraintDelaunayHelper
     return false;
   }
 
-  public static GM_Triangle[] triangulatePolygon( GM_Position[] exterior, GM_Position[][] interiorPolygons, final String crs )
+  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Position[][] interiorPolygons, final String crs )
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -583,21 +581,21 @@ public class ConstraintDelaunayHelper
     final List<TriangleSegment> segmentList = new LinkedList<TriangleSegment>();
 
     // handle the points
-    for( GM_Position pos : exterior )
+    for( final GM_Position pos : exterior )
     {
-      TriangleVertex vertex = new TriangleVertex( pos, true, pos.getZ() );
+      final TriangleVertex vertex = new TriangleVertex( pos, true, pos.getZ() );
       nodeList.add( vertex );
     }
 
     // handle the polygon
     for( int i = 0; i < exterior.length - 1; i++ )
     {
-      TriangleSegment segment = new TriangleSegment( i, i + 1, true );
+      final TriangleSegment segment = new TriangleSegment( i, i + 1, true );
       segmentList.add( segment );
     }
 
     // collect the data
-    TrianglePolyFileData trianglePolyFileData = new TrianglePolyFileData( nodeList, segmentList, null );
+    final TrianglePolyFileData trianglePolyFileData = new TrianglePolyFileData( nodeList, segmentList, null );
 
     try
     {
@@ -609,7 +607,7 @@ public class ConstraintDelaunayHelper
       BufferedOutputStream strmPolyInput = null;
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
 
-      IStatus writeStatus = writePolyFile( strmPolyInput, trianglePolyFileData );
+      final IStatus writeStatus = writePolyFile( strmPolyInput, trianglePolyFileData );
 // IStatus writeStatus = writePolyFileForPolygon( strmPolyInput, exterior );
       strmPolyInput.close();
 
@@ -643,7 +641,7 @@ public class ConstraintDelaunayHelper
 
       final GM_Position[] points = parseTriangleNodeOutput( nodeReader );
 
-      final List<GM_Surface> elements = parseTriangleElementOutput( eleReader, crs, points );
+      final List<GM_Surface<GM_SurfacePatch>> elements = parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
       {
@@ -655,7 +653,7 @@ public class ConstraintDelaunayHelper
       }
       return triangles.toArray( new GM_Triangle[triangles.size()] );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return null;

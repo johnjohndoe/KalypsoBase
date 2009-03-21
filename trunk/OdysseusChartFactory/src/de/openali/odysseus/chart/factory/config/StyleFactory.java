@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
@@ -84,34 +84,34 @@ public class StyleFactory
 {
   public static String STYLE_KEY = "de.openali.odysseus.chart.factory.style";
 
-  public static Map<String, IStyle> createStyleMap( Styles styles, URL context )
+  public static Map<String, IStyle> createStyleMap( final Styles styles, final URL context )
   {
-    Map<String, IStyle> styleMap = new HashMap<String, IStyle>();
+    final Map<String, IStyle> styleMap = new HashMap<String, IStyle>();
 
     // Styles erzeugen
     if( styles != null )
     {
-      for( AreaStyleType ast : styles.getAreaStyleArray() )
+      for( final AreaStyleType ast : styles.getAreaStyleArray() )
       {
-        IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
+        final IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
         as.setData( STYLE_KEY, ast );
         styleMap.put( ast.getRole(), as );
       }
-      for( LineStyleType lst : styles.getLineStyleArray() )
+      for( final LineStyleType lst : styles.getLineStyleArray() )
       {
-        ILineStyle as = StyleFactory.createLineStyle( lst );
+        final ILineStyle as = StyleFactory.createLineStyle( lst );
         as.setData( STYLE_KEY, lst );
         styleMap.put( lst.getRole(), as );
       }
-      for( PointStyleType pst : styles.getPointStyleArray() )
+      for( final PointStyleType pst : styles.getPointStyleArray() )
       {
-        IPointStyle ps = StyleFactory.createPointStyle( pst, context );
+        final IPointStyle ps = StyleFactory.createPointStyle( pst, context );
         ps.setData( STYLE_KEY, pst );
         styleMap.put( pst.getRole(), ps );
       }
-      for( TextStyleType tst : styles.getTextStyleArray() )
+      for( final TextStyleType tst : styles.getTextStyleArray() )
       {
-        ITextStyle ps = StyleFactory.createTextStyle( tst );
+        final ITextStyle ps = StyleFactory.createTextStyle( tst );
         ps.setData( STYLE_KEY, tst );
         styleMap.put( tst.getRole(), ps );
       }
@@ -121,7 +121,7 @@ public class StyleFactory
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
   {
-    IPointStyle style = StyleUtils.getDefaultPointStyle();
+    final IPointStyle style = StyleUtils.getDefaultPointStyle();
 
     style.setTitle( pst.getTitle() );
 
@@ -142,12 +142,12 @@ public class StyleFactory
       style.setHeight( pst.getHeight() );
 
     // fill color
-    ColorFillType fillColor = pst.getFillColor();
+    final ColorFillType fillColor = pst.getFillColor();
     if( fillColor != null )
     {
       if( fillColor.isSetIsVisible() )
         style.setFillVisible( fillColor.getIsVisible() );
-      byte[] color = fillColor.getColor();
+      final byte[] color = fillColor.getColor();
       if( color != null )
         style.setInlineColor( colorByteToRGB( color ) );
     }
@@ -156,21 +156,21 @@ public class StyleFactory
 
     if( pst.isSetPolygonMarker() )
     {
-      PolygonMarkerType polygonMarker = pst.getPolygonMarker();
-      PointType[] configPointArray = polygonMarker.getPointArray();
+      final PolygonMarkerType polygonMarker = pst.getPolygonMarker();
+      final PointType[] configPointArray = polygonMarker.getPointArray();
 
-      Point[] pointArray = new Point[configPointArray.length];
+      final Point[] pointArray = new Point[configPointArray.length];
       for( int i = 0; i < pointArray.length; i++ )
       {
-        PointType configPoint = configPointArray[i];
+        final PointType configPoint = configPointArray[i];
         pointArray[i] = new Point( configPoint.getX(), configPoint.getY() );
       }
       style.setMarker( new PolygonMarker( pointArray ) );
     }
     else if( pst.isSetImageMarker() )
     {
-      ImageMarkerType imageMarker = pst.getImageMarker();
-      String imgPath = imageMarker.getImageFile();
+      final ImageMarkerType imageMarker = pst.getImageMarker();
+      final String imgPath = imageMarker.getImageFile();
       // ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, -1, -1 );
       ImageDescriptor id;
       try
@@ -178,7 +178,7 @@ public class StyleFactory
         id = ImageDescriptor.createFromURL( new URL( context, imgPath ) );
         style.setMarker( new ImageMarker( id ) );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
         style.setMarker( new OvalMarker() );
@@ -187,10 +187,10 @@ public class StyleFactory
     else if( pst.isSetOvalMarker() )
       style.setMarker( new OvalMarker() );
 
-    StrokeType strokeStyle = pst.getStroke();
+    final StrokeType strokeStyle = pst.getStroke();
     if( strokeStyle != null )
     {
-      ILineStyle ls = StyleUtils.getDefaultLineStyle();
+      final ILineStyle ls = StyleUtils.getDefaultLineStyle();
       setStrokeAttributes( ls, strokeStyle );
       style.setStroke( ls );
     }
@@ -199,18 +199,18 @@ public class StyleFactory
   }
 
   @SuppressWarnings("unchecked")
-  public static ILineStyle createLineStyle( LineStyleType lst )
+  public static ILineStyle createLineStyle( final LineStyleType lst )
   {
-    ILineStyle style = StyleUtils.getDefaultLineStyle();
+    final ILineStyle style = StyleUtils.getDefaultLineStyle();
 
-    String title = lst.getTitle();
+    final String title = lst.getTitle();
 
     style.setTitle( title );
 
     // visible
     if( lst.isSetIsVisible() )
     {
-      boolean isVisible = lst.getIsVisible();
+      final boolean isVisible = lst.getIsVisible();
       style.setVisible( isVisible );
     }
 
@@ -228,11 +228,11 @@ public class StyleFactory
 
     if( lst.isSetDashArray1() )
     {
-      List dashArray1 = lst.getDashArray1();
+      final List dashArray1 = lst.getDashArray1();
       dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {
-        Object elt = dashArray1.get( i );
+        final Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
           dashArray[i] = ((Number) elt).floatValue();
       }
@@ -254,13 +254,13 @@ public class StyleFactory
    * other
    */
   @SuppressWarnings("unchecked")
-  public static void setStrokeAttributes( ILineStyle style, StrokeType st )
+  public static void setStrokeAttributes( final ILineStyle style, final StrokeType st )
   {
 
     // visible
     if( st.isSetIsVisible() )
     {
-      boolean isVisible = st.getIsVisible();
+      final boolean isVisible = st.getIsVisible();
       style.setVisible( isVisible );
     }
 
@@ -278,11 +278,11 @@ public class StyleFactory
 
     if( st.isSetDashArray1() )
     {
-      List dashArray1 = st.getDashArray1();
+      final List dashArray1 = st.getDashArray1();
       dashArray = new float[dashArray1.size()];
       for( int i = 0; i < dashArray.length; i++ )
       {
-        Object elt = dashArray1.get( i );
+        final Object elt = dashArray1.get( i );
         if( elt instanceof Integer )
           dashArray[i] = ((Number) elt).floatValue();
       }
@@ -296,56 +296,47 @@ public class StyleFactory
       style.setColor( colorByteToRGB( st.getLineColor() ) );
   }
 
-  public static IAreaStyle createAreaStyle( AreaStyleType ast, URL context )
+  public static IAreaStyle createAreaStyle( final AreaStyleType ast, final URL context )
   {
-    IAreaStyle style = StyleUtils.getDefaultAreaStyle();
+    final IAreaStyle style = StyleUtils.getDefaultAreaStyle();
 
     style.setTitle( ast.getTitle() );
     // visible
     if( ast.isSetIsVisible() )
     {
-      boolean isVisible = ast.getIsVisible();
+      final boolean isVisible = ast.getIsVisible();
       style.setVisible( isVisible );
     }
 
     // alpha
     if( ast.isSetAlpha() )
     {
-      int alpha = byteToInt( ast.getAlpha()[0] );
+      final int alpha = byteToInt( ast.getAlpha()[0] );
       style.setAlpha( alpha );
     }
 
     if( ast.isSetFill() )
     {
-      FillType fill = ast.getFill();
+      final FillType fill = ast.getFill();
       if( fill.getColorFill() != null )
       {
-        ColorFillType cft = fill.getColorFill();
-        ColorFill colorFill = new ColorFill( colorByteToRGB( cft.getColor() ) );
+        final ColorFillType cft = fill.getColorFill();
+        final ColorFill colorFill = new ColorFill( colorByteToRGB( cft.getColor() ) );
         style.setFill( colorFill );
       }
       else if( fill.getImageFill() != null )
       {
-        ImageFillType ift = fill.getImageFill();
-        String imgPath = ift.getImageFile();
+        final ImageFillType ift = fill.getImageFill();
+        final String imgPath = ift.getImageFile();
 
-        int width = -1;
-        int height = -1;
-        if( ift.isSetWidth() )
-          width = ift.getWidth();
-        if( ift.isSetHeight() )
-          height = ift.getHeight();
-        // ImageData id = ChartFactoryUtilities.loadImageData( context, imgPath, width, height );
-
-        ImageDescriptor id;
         try
         {
-          id = ImageDescriptor.createFromURL( new URL( context, imgPath ) );
+          final ImageDescriptor id = ImageDescriptor.createFromURL( new URL( context, imgPath ) );
           // style.setMarker( new ImageMarker( id ) );
-          ImageFill imageFill = new ImageFill( id );
+          final ImageFill imageFill = new ImageFill( id );
           style.setFill( imageFill );
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
           Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
           style.setFill( new ColorFill( new RGB( 255, 0, 0 ) ) );
@@ -358,7 +349,7 @@ public class StyleFactory
     // outline
     if( ast.isSetStroke() )
     {
-      ILineStyle ls = StyleUtils.getDefaultLineStyle();
+      final ILineStyle ls = StyleUtils.getDefaultLineStyle();
       setStrokeAttributes( ls, ast.getStroke() );
       style.setStroke( ls );
     }
@@ -366,22 +357,22 @@ public class StyleFactory
     return style;
   }
 
-  public static ITextStyle createTextStyle( TextStyleType tst )
+  public static ITextStyle createTextStyle( final TextStyleType tst )
   {
-    ITextStyle style = StyleUtils.getDefaultTextStyle();
+    final ITextStyle style = StyleUtils.getDefaultTextStyle();
 
     style.setTitle( tst.getTitle() );
     // visible
     if( tst.isSetIsVisible() )
     {
-      boolean isVisible = tst.getIsVisible();
+      final boolean isVisible = tst.getIsVisible();
       style.setVisible( isVisible );
     }
 
     // alpha
     if( tst.isSetAlpha() )
     {
-      int alpha = byteToInt( tst.getAlpha()[0] );
+      final int alpha = byteToInt( tst.getAlpha()[0] );
       style.setAlpha( alpha );
     }
 
@@ -405,7 +396,7 @@ public class StyleFactory
     // font style
     if( tst.isSetFontStyle() )
     {
-      de.openali.odysseus.chartconfig.x020.FontStyleType.Enum configfontStyle = tst.getFontStyle();
+      final de.openali.odysseus.chartconfig.x020.FontStyleType.Enum configfontStyle = tst.getFontStyle();
       if( configfontStyle.toString().equals( FONTSTYLE.ITALIC.toString() ) )
         style.setFontStyle( FONTSTYLE.ITALIC );
       else if( configfontStyle.toString().equals( FONTSTYLE.NORMAL.toString() ) )
@@ -419,7 +410,7 @@ public class StyleFactory
     // font weight
     if( tst.isSetFontWeight() )
     {
-      de.openali.odysseus.chartconfig.x020.FontWeightType.Enum fontWeight = tst.getFontWeight();
+      final de.openali.odysseus.chartconfig.x020.FontWeightType.Enum fontWeight = tst.getFontWeight();
       if( fontWeight.toString().equals( FONTWEIGHT.BOLD.toString() ) )
         style.setWeight( FONTWEIGHT.BOLD );
       if( fontWeight.toString().equals( FONTWEIGHT.NORMAL.toString() ) )
@@ -437,7 +428,7 @@ public class StyleFactory
    * @param b
    *          a byte value
    */
-  private static int byteToInt( byte b )
+  private static int byteToInt( final byte b )
   {
     return b & 0xff;
   }
@@ -446,11 +437,11 @@ public class StyleFactory
    * @param color
    *          3 byte array
    */
-  private static RGB colorByteToRGB( byte[] color )
+  private static RGB colorByteToRGB( final byte[] color )
   {
-    int red = byteToInt( color[0] );
-    int green = byteToInt( color[1] );
-    int blue = byteToInt( color[2] );
+    final int red = byteToInt( color[0] );
+    final int green = byteToInt( color[1] );
+    final int blue = byteToInt( color[2] );
     return new RGB( red, green, blue );
   }
 

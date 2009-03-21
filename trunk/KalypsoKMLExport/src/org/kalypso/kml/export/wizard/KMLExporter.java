@@ -30,7 +30,6 @@ import org.kalypso.kml.export.KMLThemeVisitor;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.FolderUtil;
-import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.kml.export.utils.PlacemarkUtil;
 import org.kalypso.kml.export.utils.StyleTypeFactory;
@@ -118,7 +117,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   public IStatus execute( final IProgressMonitor monitor )
@@ -160,7 +159,8 @@ public class KMLExporter implements ICoreRunnableWithProgress
       final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( googleEarthFactory );
       styleFactory.addStylesToDocument( documentType, googleEarthFactory );
 
-      GoogleEarthExportUtils.removeEmtpyFolders( folderType );
+      // TODO;
+// GoogleEarthExportUtils.removeEmtpyFolders( folderType );
       documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
 
       PlacemarkUtil.addAdditional( folderType, m_provider, googleEarthFactory );

@@ -6,17 +6,18 @@ import javax.swing.JTable;
 
 /**
  * SetAllAction
- * 
+ *
  * @author schlienger
  */
 public class SetTopAction extends AbstractObservationTableAction
 {
-  public SetTopAction( JTable table )
+  public SetTopAction( final JTable table )
   {
     super( table, "Werte oberhalb setzen", "Führt den selektierten Wert für alle vorhergehenden fort" );
   }
 
-  public void internalActionPerformed( ActionEvent e )
+  @Override
+  public void internalActionPerformed( final ActionEvent e )
   {
     final JTable table = getTable();
     final int col = table.getSelectedColumn();

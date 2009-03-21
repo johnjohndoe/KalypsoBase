@@ -42,7 +42,6 @@ package org.kalypso.observation.util.export;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +61,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Exports an IObservation<TupleResult> to an CSV-Spreadsheet
- * 
+ *
  * @author Dirk Kuch
  */
 public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
@@ -72,7 +71,7 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
 
   private final IFile m_file;
 
-  public ObservationSpreadsheetExporter( IObservation<TupleResult> observation, IFile file )
+  public ObservationSpreadsheetExporter( final IObservation<TupleResult> observation, final IFile file )
   {
     m_observation = observation;
     m_file = file;
@@ -81,21 +80,21 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
-      FileWriter fileWriter = new FileWriter( m_file.getLocation().toFile() );
+      final FileWriter fileWriter = new FileWriter( m_file.getLocation().toFile() );
 
-      CSVWriter writer = new CSVWriter( fileWriter, ';', '"' );
+      final CSVWriter writer = new CSVWriter( fileWriter, ';', '"' );
 
-      TupleResult result = m_observation.getResult();
+      final TupleResult result = m_observation.getResult();
 
       /* header */
-      IComponent[] components = result.getComponents();
-      List<String> values = new ArrayList<String>();
+      final IComponent[] components = result.getComponents();
+      final List<String> values = new ArrayList<String>();
 
-      for( IComponent component : components )
+      for( final IComponent component : components )
       {
         values.add( component.getName() );
       }
@@ -103,13 +102,13 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
       writer.writeNext( values.toArray( new String[] {} ) );
 
       /* values */
-      for( IRecord record : result )
+      for( final IRecord record : result )
       {
 
         values.clear();
         for( int i = 0; i < components.length; i++ )
         {
-          Object value = record.getValue( i );
+          final Object value = record.getValue( i );
           values.add( value.toString() );
         }
 
@@ -119,7 +118,7 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
       writer.close();
       fileWriter.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
 

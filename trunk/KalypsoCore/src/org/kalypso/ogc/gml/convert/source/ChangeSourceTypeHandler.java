@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.convert.source;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -72,12 +71,12 @@ public class ChangeSourceTypeHandler implements ISourceHandler
 
   private final URL m_context;
 
-  private final Map m_externData;
+  private final Map< ? , ? > m_externData;
 
   private final DisposeHelper m_disposer = new DisposeHelper();
 
   public ChangeSourceTypeHandler( final IUrlResolver resolver, final URL context, final ChangeSourceType type,
-      final Map externData )
+      final Map< ? , ? > externData )
   {
     m_resolver = resolver;
     m_context = context;
@@ -104,19 +103,19 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     }
   }
 
-  private void applyVisitors( final GMLWorkspace inputGML, final List propertyList ) throws ClassUtilityException,
+  private void applyVisitors( final GMLWorkspace inputGML, final List<Visitor> propertyList ) throws ClassUtilityException,
       GmlConvertException
   {
-    for( final Iterator iter = propertyList.iterator(); iter.hasNext(); )
+    for( final Visitor visitor2 : propertyList )
     {
-      final ChangeSourceType.Visitor visitorType = (Visitor)iter.next();
+      final ChangeSourceType.Visitor visitorType = visitor2;
       final String featurePath = visitorType.getFeaturePath();
       final Properties arguments = createArguments( visitorType.getArgument() );
 
       final String visitorClass = visitorType.getVisitorclass();
       final String visitorID = visitorType.getVisitorid();
       final FeatureVisitor visitor = createVisitor( visitorClass, visitorID, arguments );
-      
+
       // HACK: bit of a hack in order to allow visitors to be disposed, if they have such a method.
       m_disposer.addDisposeCandidate( visitor );
       inputGML.accept( visitor, featurePath, FeatureVisitor.DEPTH_INFINITE );
@@ -152,15 +151,12 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.2") ); //$NON-NLS-1$
   }
 
-  private Properties createArguments( final List argumentList )
+  private Properties createArguments( final List<Argument> argumentList )
   {
     final Properties map = new Properties();
 
-    for( final Iterator iter = argumentList.iterator(); iter.hasNext(); )
-    {
-      final ChangeSourceType.Visitor.Argument aType = (Argument)iter.next();
+    for( final Argument aType : argumentList )
       map.setProperty( aType.getName(), aType.getValue() );
-    }
 
     return map;
   }

@@ -6,7 +6,8 @@ Bundle-Version: 0.2.0
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  de.openali.odysseus.chart.framework;visibility:=reexport,
- org.kalypso.commons;visibility:=reexport
+ org.kalypso.commons;visibility:=reexport,
+ org.junit4;bundle-version="4.3.1";resolution:=optional
 Export-Package: de.openali.odysseus.chart.factory.config;
   uses:="de.openali.odysseus.chart.framework.model,
    de.openali.odysseus.chart.factory.config.parameters,
@@ -54,3 +55,4 @@ Export-Package: de.openali.odysseus.chart.factory.config;
    org.apache.xmlbeans,
    de.openali.odysseus.chartconfig.x020.ParameterMapType"
 Bundle-Vendor: kalypso.sourceforge.net
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

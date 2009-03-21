@@ -733,25 +733,24 @@ public class GeometryUtilities
     return reqEnvelope;
   }
 
-  @SuppressWarnings( { "unchecked" })
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+    final List< ? > foundElements = modelList.query( reqEnvelope, null );
 
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    for( final Feature feature : foundElements )
+    for( final Object feature : foundElements )
     {
-      final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
+      final GM_Object geom = (GM_Object) ((Feature) feature).getProperty( geoQName );
 
       if( geom != null )
       {
         final double curDist = point.distance( geom );
         if( min > curDist && curDist <= grabDistance )
         {
-          nearest = feature;
+          nearest = (Feature) feature;
           min = curDist;
         }
       }
@@ -766,7 +765,6 @@ public class GeometryUtilities
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
-  @SuppressWarnings("unchecked")
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName, final QName[] allowedQNames )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
@@ -806,7 +804,6 @@ public class GeometryUtilities
    * @param allowedQNames
    *            Only features that substitute one of these qnames are considered.
    */
-  @SuppressWarnings("unchecked")
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList[] modelLists, final QName geoQName, final QName[] allowedQNames )
   {
     Feature nearest = null;
@@ -817,12 +814,13 @@ public class GeometryUtilities
         continue;
 
       final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-      final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+      final List<Object> foundElements = modelList.query( reqEnvelope, null );
 
       double min = Double.MAX_VALUE;
 
-      for( final Feature feature : foundElements )
+      for( final Object element : foundElements )
       {
+        final Feature feature = (Feature) element;
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
         {
           final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
