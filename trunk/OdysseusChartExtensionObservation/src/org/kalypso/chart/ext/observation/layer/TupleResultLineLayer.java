@@ -20,10 +20,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-
   private TupleResultDomainValueData m_data;
 
-  public TupleResultLineLayer( TupleResultDomainValueData data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public TupleResultLineLayer( final TupleResultDomainValueData data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = data;
@@ -56,27 +55,27 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( m_data == null )
       return;
-    
+
     final List<Point> path = new ArrayList<Point>();
 
     m_data.open();
 
     final TupleResult result = m_data.getTupleResult();
 
-    Object[] domainValues = m_data.getDomainValues();
-    Object[] targetValues = m_data.getTargetValues();
+    final Object[] domainValues = m_data.getDomainValues();
+    final Object[] targetValues = m_data.getTargetValues();
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {
-      IAxis domainAxis = getDomainAxis();
-      IAxis targetAxis = getTargetAxis();
-      IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
-      IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
+      final IAxis domainAxis = getDomainAxis();
+      final IAxis targetAxis = getTargetAxis();
+      final IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
+      final IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
 
       if( dopDomain == null || dopTarget == null )
         return;
 
-      for( int i = 0; i < result.size(); i++ )
+      for( int i = 0; i < domainValues.length; i++ )
       {
         final Object domainValue = domainValues[i];
         final Object targetValue = targetValues[i];
@@ -85,7 +84,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
         // in that case
         if( domainValue != null && targetValue != null )
         {
-          Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
+          final Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
           path.add( screen );
         }
       }
@@ -102,15 +101,15 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( m_data == null )
       return null;
-    
-    IDataRange dataRange = m_data.getDomainRange();
-    Object min = dataRange.getMin();
-    Object max = dataRange.getMax();
+
+    final IDataRange dataRange = m_data.getDomainRange();
+    final Object min = dataRange.getMin();
+    final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
-    
-    IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
+
+    final IDataOperator dop = getDomainAxis().getDataOperator( min.getClass() );
+    final IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
 
@@ -121,19 +120,19 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( m_data == null )
       return null;
-    
-    IDataRange dataRange = m_data.getTargetRange();
-    Object min = dataRange.getMin();
-    Object max = dataRange.getMax();
+
+    final IDataRange dataRange = m_data.getTargetRange();
+    final Object min = dataRange.getMin();
+    final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
 
-    IDataOperator dop = getTargetAxis().getDataOperator( max.getClass() );
-    IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
+    final IDataOperator dop = getTargetAxis().getDataOperator( max.getClass() );
+    final IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
 
-  protected void setData( TupleResultDomainValueData data )
+  protected void setData( final TupleResultDomainValueData data )
   {
     m_data = data;
   }
