@@ -774,6 +774,25 @@
 		<image commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" icon="icons/util/down.gif">
 		</image>
 	</extension>
+
+	<!-- TupleResult-FeatureControl: standard tollbars -->
+	<extension point="org.eclipse.ui.menus">
+		<!-- Standard Add/Remove Rows -->
+		<menuContribution locationURI="toolbar:org.kalypso.ui.tupleResult.menus.standardEdit">
+			<command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
+			<command commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" style="push"/>
+			<separator name="row" visible="true"/>
+			<command commandId="org.kalypso.ui.tupleResult.addRowCommand" style="push"/>
+			<command commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" style="push"/>
+			<separator name="additions" visible="true"/>
+		</menuContribution>
+
+		<!-- Standard Only-Copy -->
+		<menuContribution locationURI="toolbar:org.kalypso.ui.tupleResult.menus.standardReadOnly">
+			<command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
+		</menuContribution>
+	</extension>
+
 	<extension point="org.kalypso.ui.typeHandlers">
 		<typeHandler factory="org.kalypso.ui.KalypsoGuiTypeHandlerFactory">
 		</typeHandler>

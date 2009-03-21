@@ -41,10 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -70,11 +67,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
@@ -96,6 +96,7 @@ import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.TupleResult.Toolbar;
+import org.kalypso.template.featureview.TupleResult.Toolbar.MenuContribution;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -109,8 +110,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
 
   private final ToolBarManager m_toolbar;
-
-  private final Set<String> m_commands = new HashSet<String>();
 
   private final IComponentUiHandlerProvider m_handlerProvider;
 
@@ -151,10 +150,19 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     if( m_toolbar != null )
     {
-      m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) ); //$NON-NLS-1$
+      final CommandContributionItemParameter commandParams = new CommandContributionItemParameter( serviceLocator, commandId + "_item", commandId, style );//$NON-NLS-1$
+      m_toolbar.add( new CommandContributionItem( commandParams ) );
       m_toolbar.update( true );
     }
-    m_commands.add( commandId );
+  }
+
+  public void addToolbarItems( final String uri )
+  {
+    final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+    final IMenuService service = (IMenuService) serviceLocator.getService( IMenuService.class );
+
+    if( m_toolbar != null )
+      service.populateContributionManager( m_toolbar, "toolbar:" + uri );
   }
 
   /**
@@ -212,7 +220,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     updateControl();
 
     if( m_toolbar != null )
-      hookExecutionListener( m_commands, m_viewer, m_toolbar );
+      hookExecutionListener( m_viewer, m_toolbar );
 
     if( isEditMode() )
     {
@@ -230,7 +238,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     return composite;
   }
 
-  private void hookExecutionListener( final Set<String> commands, final TableViewer tableViewer, final ToolBarManager toolBar )
+  private void hookExecutionListener( final TableViewer tableViewer, final ToolBarManager toolBar )
   {
     final IWorkbench serviceLocator = PlatformUI.getWorkbench();
     final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
@@ -239,21 +247,32 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_executionListener = new IExecutionListener()
     {
+      /** Checks if the event was triggered by my tool-bar. */
+      private boolean isThisToolbar( final ExecutionEvent event )
+      {
+        final Object trigger = event.getTrigger();
+        if( !(trigger instanceof Event) )
+          return false;
+
+        final Event eventTrigger = (Event) trigger;
+        final Widget widget = eventTrigger.widget;
+        if( !(widget instanceof ToolItem) )
+          return false;
+
+        final ToolItem toolItem = (ToolItem) widget;
+        final ToolBar parentToolbar = toolItem.getParent();
+        final ToolBar managerToolbar = toolBar.getControl();
+        return parentToolbar == managerToolbar;
+      }
+
       public void notHandled( final String commandId, final NotHandledException exception )
       {
       }
 
       public void preExecute( final String commandId, final ExecutionEvent event )
       {
-        if( !commands.contains( commandId ) )
-          return;
-
-        final Event trigger = (Event) event.getTrigger();
-        final ToolItem toolItem = (ToolItem) trigger.widget;
-        final ToolBar parentToolbar = toolItem.getParent();
-        final ToolBar managerToolbar = toolBar.getControl();
-
-        if( commands.contains( commandId ) && (parentToolbar == managerToolbar) )
+        final boolean isThisToolbar = isThisToolbar( event );
+        if( isThisToolbar )
         {
           final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
           context.addVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME, tableViewer );
@@ -263,9 +282,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
       public void postExecuteFailure( final String commandId, final ExecutionException exception )
       {
-        if( !commands.contains( commandId ) )
-          return;
-
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
@@ -281,9 +297,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
       public void postExecuteSuccess( final String commandId, final Object returnValue )
       {
-        if( !commands.contains( commandId ) )
-          return;
-
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
@@ -299,11 +312,17 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   @Override
   public void dispose( )
   {
+    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
     if( m_executionListener != null )
     {
-      final IWorkbench serviceLocator = PlatformUI.getWorkbench();
       final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
       cmdService.removeExecutionListener( m_executionListener );
+    }
+
+    if( m_toolbar != null )
+    {
+      final IMenuService service = (IMenuService) serviceLocator.getService( IMenuService.class );
+      service.releaseContributions( m_toolbar );
     }
 
     m_tupleResultContentProvider.dispose();
@@ -486,23 +505,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       tfc.addToolbarItem( commandId, style );
     }
 
-    if( toolbar.isAddStandardItems() )
-    {
-      if( toolbar.isBtnAddRow() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.addRowCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnDeleteSelectedRows() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnCopyToClipboard() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnPasteFromClipboard() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnInterpolateRows() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.interpolateSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnMoveRowsUp() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
-      if( toolbar.isBtnMoveRowsDown() )
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
-    }
+    final List<MenuContribution> contributionUris = toolbar.getMenuContribution();
+    for( final MenuContribution contribution : contributionUris )
+      tfc.addToolbarItems( contribution.getUri() );
 
     return tfc;
   }
