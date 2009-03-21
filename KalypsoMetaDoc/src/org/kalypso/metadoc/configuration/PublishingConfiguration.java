@@ -52,7 +52,7 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * Default implementation of the IPublishingConfiguration interface
- * 
+ *
  * @author schlienger
  */
 public class PublishingConfiguration implements IPublishingConfiguration
@@ -70,11 +70,11 @@ public class PublishingConfiguration implements IPublishingConfiguration
   private void fireConfigurationChanged( final String key )
   {
     final IConfigurationListener[] listeners = m_listeners.toArray( new IConfigurationListener[m_listeners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
+    for( final IConfigurationListener listener : listeners )
     {
       try
       {
-        listeners[i].configurationChanged( this, key );
+        listener.configurationChanged( this, key );
       }
       catch( final Throwable t )
       {
@@ -99,7 +99,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     m_listeners.remove( listener );
   }
 
-  public void addProperty( final String key, Object arg1 )
+  public void addProperty( final String key, final Object arg1 )
   {
     m_conf.addProperty( key, arg1 );
 
@@ -120,183 +120,184 @@ public class PublishingConfiguration implements IPublishingConfiguration
     fireConfigurationChanged( key );
   }
 
-  public boolean containsKey( String arg0 )
+  public boolean containsKey( final String arg0 )
   {
     return m_conf.containsKey( arg0 );
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return m_conf.equals( obj );
   }
 
-  public BigDecimal getBigDecimal( String arg0 )
+  public BigDecimal getBigDecimal( final String arg0 )
   {
     return m_conf.getBigDecimal( arg0 );
   }
 
-  public BigDecimal getBigDecimal( String arg0, BigDecimal arg1 )
+  public BigDecimal getBigDecimal( final String arg0, final BigDecimal arg1 )
   {
     return m_conf.getBigDecimal( arg0, arg1 );
   }
 
-  public BigInteger getBigInteger( String arg0 )
+  public BigInteger getBigInteger( final String arg0 )
   {
     return m_conf.getBigInteger( arg0 );
   }
 
-  public BigInteger getBigInteger( String arg0, BigInteger arg1 )
+  public BigInteger getBigInteger( final String arg0, final BigInteger arg1 )
   {
     return m_conf.getBigInteger( arg0, arg1 );
   }
 
-  public boolean getBoolean( String arg0 )
+  public boolean getBoolean( final String arg0 )
   {
     return m_conf.getBoolean( arg0 );
   }
 
-  public boolean getBoolean( String arg0, boolean arg1 )
+  public boolean getBoolean( final String arg0, final boolean arg1 )
   {
     return m_conf.getBoolean( arg0, arg1 );
   }
 
-  public Boolean getBoolean( String arg0, Boolean arg1 ) throws NoClassDefFoundError
+  public Boolean getBoolean( final String arg0, final Boolean arg1 ) throws NoClassDefFoundError
   {
     return m_conf.getBoolean( arg0, arg1 );
   }
 
-  public byte getByte( String arg0 )
+  public byte getByte( final String arg0 )
   {
     return m_conf.getByte( arg0 );
   }
 
-  public byte getByte( String arg0, byte arg1 )
+  public byte getByte( final String arg0, final byte arg1 )
   {
     return m_conf.getByte( arg0, arg1 );
   }
 
-  public Byte getByte( String arg0, Byte arg1 )
+  public Byte getByte( final String arg0, final Byte arg1 )
   {
     return m_conf.getByte( arg0, arg1 );
   }
 
-  public double getDouble( String arg0 )
+  public double getDouble( final String arg0 )
   {
     return m_conf.getDouble( arg0 );
   }
 
-  public double getDouble( String arg0, double arg1 )
+  public double getDouble( final String arg0, final double arg1 )
   {
     return m_conf.getDouble( arg0, arg1 );
   }
 
-  public Double getDouble( String arg0, Double arg1 )
+  public Double getDouble( final String arg0, final Double arg1 )
   {
     return m_conf.getDouble( arg0, arg1 );
   }
 
-  public float getFloat( String arg0 )
+  public float getFloat( final String arg0 )
   {
     return m_conf.getFloat( arg0 );
   }
 
-  public float getFloat( String arg0, float arg1 )
+  public float getFloat( final String arg0, final float arg1 )
   {
     return m_conf.getFloat( arg0, arg1 );
   }
 
-  public Float getFloat( String arg0, Float arg1 )
+  public Float getFloat( final String arg0, final Float arg1 )
   {
     return m_conf.getFloat( arg0, arg1 );
   }
 
-  public int getInt( String arg0 )
+  public int getInt( final String arg0 )
   {
     return m_conf.getInt( arg0 );
   }
 
-  public int getInt( String arg0, int arg1 )
+  public int getInt( final String arg0, final int arg1 )
   {
     return m_conf.getInt( arg0, arg1 );
   }
 
-  public Integer getInteger( String arg0, Integer arg1 )
+  public Integer getInteger( final String arg0, final Integer arg1 )
   {
     return m_conf.getInteger( arg0, arg1 );
   }
 
-  public Iterator getKeys( )
+  public Iterator< ? > getKeys( )
   {
     return m_conf.getKeys();
   }
 
-  public Iterator getKeys( String arg0 )
+  public Iterator< ? > getKeys( final String arg0 )
   {
     return m_conf.getKeys( arg0 );
   }
 
-  public List getList( String arg0 )
+  public List< ? > getList( final String arg0 )
   {
     return m_conf.getList( arg0 );
   }
 
-  public List getList( String arg0, List arg1 )
+  @SuppressWarnings("unchecked")
+  public List< ? > getList( final String arg0, final List arg1 )
   {
     return m_conf.getList( arg0, arg1 );
   }
 
-  public long getLong( String arg0 )
+  public long getLong( final String arg0 )
   {
     return m_conf.getLong( arg0 );
   }
 
-  public Long getLong( String arg0, Long arg1 )
+  public Long getLong( final String arg0, final Long arg1 )
   {
     return m_conf.getLong( arg0, arg1 );
   }
 
-  public long getLong( String arg0, long arg1 )
+  public long getLong( final String arg0, final long arg1 )
   {
     return m_conf.getLong( arg0, arg1 );
   }
 
-  public Properties getProperties( String arg0 )
+  public Properties getProperties( final String arg0 )
   {
     return m_conf.getProperties( arg0 );
   }
 
-  public Object getProperty( String arg0 )
+  public Object getProperty( final String arg0 )
   {
     return m_conf.getProperty( arg0 );
   }
 
-  public short getShort( String arg0 )
+  public short getShort( final String arg0 )
   {
     return m_conf.getShort( arg0 );
   }
 
-  public Short getShort( String arg0, Short arg1 )
+  public Short getShort( final String arg0, final Short arg1 )
   {
     return m_conf.getShort( arg0, arg1 );
   }
 
-  public short getShort( String arg0, short arg1 )
+  public short getShort( final String arg0, final short arg1 )
   {
     return m_conf.getShort( arg0, arg1 );
   }
 
-  public String getString( String arg0 )
+  public String getString( final String arg0 )
   {
     return m_conf.getString( arg0 );
   }
 
-  public String getString( String arg0, String arg1 )
+  public String getString( final String arg0, final String arg1 )
   {
     return m_conf.getString( arg0, arg1 );
   }
 
-  public String[] getStringArray( String arg0 )
+  public String[] getStringArray( final String arg0 )
   {
     return m_conf.getStringArray( arg0 );
   }
@@ -312,7 +313,7 @@ public class PublishingConfiguration implements IPublishingConfiguration
     return m_conf.isEmpty();
   }
 
-  public void setProperty( final String key, Object arg1 )
+  public void setProperty( final String key, final Object arg1 )
   {
     m_conf.setProperty( key, arg1 );
 

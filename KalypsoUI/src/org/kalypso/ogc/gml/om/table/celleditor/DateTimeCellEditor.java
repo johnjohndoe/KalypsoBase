@@ -46,12 +46,11 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
  * Date Time Cell Editor for XMLGregorianCalendar Observation Components
- * 
+ *
  * @author Dirk Kuch
  */
 public class DateTimeCellEditor extends CellEditor
@@ -96,7 +95,7 @@ public class DateTimeCellEditor extends CellEditor
   @Override
   protected Object doGetValue( )
   {
-    return new XMLGregorianCalendarImpl( m_dialog.getDateTime() );
+    return DateUtilities.toXMLGregorianCalendar( m_dialog.getDateTime() );
   }
 
   /**

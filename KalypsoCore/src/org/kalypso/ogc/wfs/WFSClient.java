@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -384,29 +383,11 @@ public class WFSClient
     InputStream inputStream = null;
     try
     {
-// /* First, get schema */
-// final URL schemaLocation = operationDescribeFeatureType( name );
-// // HACK: force schema into schema-catalog-cache; it would be better just to make it known to the catalog and load
-// // it
-// // on demand
-// // for in order to do this the IUrlCatalog stuff should be refactored
-// final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-// schemaCatalog.getSchema( name.getNamespaceURI(), "3.1.1", schemaLocation );
-
       /* Create getFeature URL */
       final WFSFeatureType featureType = getFeatureType( name );
-// final URL getUrl = findPostOperationURL( WFSClient.OPERATION_GET_FEATURE );
-// if( getUrl == null )
-// {
-// final String msg = String.format( "WFS does not support HTTP-GET for '%s'", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE
-      // );
-// throw new IllegalStateException( msg );
-// }
-
       final QualifiedName qname = featureType.getName();
 
       final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
-// }
 
       params.put( URL_PARAM_SERVICE, "WFS" );
       params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
@@ -418,10 +399,6 @@ public class WFSClient
       /* Post the request */
       final URL url = getGetUrl( name, params );
       final GetMethod getMethod = new GetMethod( url.toURI().toString() );
-
-// final PostMethod postMethod = new PostMethod( getUrl.toURI().toString() );
-// final RequestEntity requestEntity = new StringRequestEntity( sb.toString(), "text/xml", "UTF-8" );
-// postMethod.setRequestEntity( requestEntity );
 
       final int statusCode = m_httpClient.executeMethod( getMethod );
       if( statusCode != 200 )
@@ -440,13 +417,6 @@ public class WFSClient
       inputStream.close();
       return workspace;
     }
-// catch( final InvocationTargetException e )
-// {
-// final Throwable targetException = e.getTargetException();
-// final String message = String.format( "Failed to load schema for type %s", name );
-// final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, targetException );
-// throw new CoreException( status );
-// }
     catch( final URISyntaxException e )
     {
       final String message = Messages.format( "org.kalypso.ogc.wfs.WFSClient.1", e.getInput() );
@@ -502,52 +472,6 @@ public class WFSClient
     params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, typenameValue );
 
     return UrlUtilities.addQuery( describeUrl, params );
-  }
-
-  /**
-   * This function writes a GetFeature request XML into a given {@link Formatter}.<br>
-   */
-  private void formatGetFeatureRequestPOST( final Formatter formater, final QName ftQName, final String filter, final Integer maxFeatures )
-  {
-    formater.format( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>%n" ); //$NON-NLS-1$
-    formater.format( "<wfs:GetFeature outputFormat=\"%s\"", OUTPUT_FORMAT ); //$NON-NLS-1$
-
-    final String version = m_wfsCapabilities.getVersion();
-    if( version != null && version.length() > 0 )
-    {
-      formater.format( " version=\"" + version + "\" " ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-//    formater.format( " xmlns:gml=\"http://www.opengis.net/gml\" " ); //$NON-NLS-1$
-    formater.format( " xmlns:wfs=\"http://www.opengis.net/wfs\"" ); //$NON-NLS-1$
-//    formater.format( " xmlns:ogc=\"http://www.opengis.net/ogc\"" ); //$NON-NLS-1$
-    if( maxFeatures != null )
-    {
-      formater.format( " maxFeatures=\"%d\"", maxFeatures ); //$NON-NLS-1$
-    }
-    formater.format( " >%n" ); //$NON-NLS-1$
-
-    final String namespaceURI = ftQName.getNamespaceURI();
-    final String localPart = ftQName.getLocalPart();
-    if( version == null )
-    {
-      formater.format( "<wfs:Query typeName=\"%s\">%n", localPart ); //$NON-NLS-1$
-    }
-    else if( namespaceURI != null && namespaceURI.length() > 0 )
-    {
-      formater.format( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-    else
-    {
-      formater.format( "<wfs:Query typeName=\"%s\">%n", localPart ); //$NON-NLS-1$
-    }
-
-    if( filter != null && filter.length() > 0 )
-    {
-      formater.format( "%s%n", filter ); //$NON-NLS-1$
-    }
-
-    formater.format( "</wfs:Query>%n" ); //$NON-NLS-1$
-    formater.format( "</wfs:GetFeature>%n" ); //$NON-NLS-1$
   }
 
   public IFeatureType getFeatureType( final WFSFeatureType type ) throws CoreException

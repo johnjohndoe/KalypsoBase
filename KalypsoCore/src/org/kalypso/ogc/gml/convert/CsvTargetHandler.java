@@ -51,11 +51,11 @@ public class CsvTargetHandler implements ITargetHandler
       final String delemiter = m_target.getDelemiter();
       final boolean writeHeader = m_target.isWriteHeader();
       final String featurePath = m_target.getFeaturePath();
-      final List columnList = m_target.getColumn();
+      final List<Column> columnList = m_target.getColumn();
       final Map<String, String> properties = new LinkedHashMap<String, String>();
-      for( final Iterator colIt = columnList.iterator(); colIt.hasNext(); )
+      for( final Iterator<Column> colIt = columnList.iterator(); colIt.hasNext(); )
       {
-        final Column column = (Column) colIt.next();
+        final Column column = colIt.next();
         final String property = column.getValue();
         final String def = column.getDefault();
         final String label = column.getLabel() == null ? property : column.getLabel();

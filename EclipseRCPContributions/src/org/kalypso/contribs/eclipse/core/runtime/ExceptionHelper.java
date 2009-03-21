@@ -53,12 +53,12 @@ import org.eclipse.core.runtime.Status;
  */
 public class ExceptionHelper
 {
-  public static CoreException getCoreException( final int status, final Class c, final String message )
+  public static CoreException getCoreException( final int status, final Class< ? > c, final String message )
   {
     return new CoreException( new Status( status, c.getName(), message ) );
   }
 
-  public static IStatus getMultiState( final Class myclass, final String message, final IStatus[] states )
+  public static IStatus getMultiState( final Class< ? > myclass, final String message, final IStatus[] states )
   {
     int statusCode = 0;
 

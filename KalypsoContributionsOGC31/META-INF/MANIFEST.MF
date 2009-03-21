@@ -4,10 +4,9 @@ Bundle-Name: KalypsoOGCContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons;bundle-version="0.0.1"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: au.csiro.seegrid.xml.st,
  ogc31.org.w3.smil20,
  ogc31.www.isotc211.org.gco,
@@ -23,3 +22,4 @@ Export-Package: au.csiro.seegrid.xml.st,
  org.kalypso.contribs.ogc31.test,
  org.w3._2001.smil20.language
 Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

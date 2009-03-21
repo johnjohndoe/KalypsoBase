@@ -168,6 +168,8 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public void clickPopup( final Point p )
   {
     // not implemented by default
@@ -223,6 +225,8 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public void rightClicked( final Point p )
   {
     // not implemented by default
@@ -231,6 +235,8 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public void rightPressed( final Point p )
   {
     // not implemented by default
@@ -239,6 +245,8 @@ public abstract class AbstractWidget implements IWidget
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public void rightReleased( final Point p )
   {
     // not implemented by default
@@ -246,7 +254,7 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * TODO: give World2Screen Transformation into paint method
-   * 
+   *
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   public void paint( final Graphics g )

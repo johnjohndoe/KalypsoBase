@@ -1,35 +1,35 @@
 /*
  * --------------- Kalypso-Header
  * --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal
  * engineering Denickestr. 22 21073 Hamburg, Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany
  * http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.ui.wizard.image;
@@ -72,7 +72,7 @@ import org.kalypso.transformation.ui.CRSSelectionPanel;
  * ImportImageWizardPage
  * <p>
  * created by
- * 
+ *
  * @author kuepfer (21.05.2005)
  */
 public class ImportImageWizardPage extends WizardPage implements SelectionListener, KeyListener
@@ -111,7 +111,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   private CRSSelectionPanel m_crsPanel;
 
-  public ImportImageWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportImageWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
   }
@@ -119,7 +119,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     m_topComposite = new Composite( parent, SWT.NONE );
     m_topComposite.setFont( parent.getFont() );
@@ -133,7 +133,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     m_group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_group.setText( "Bild-Datei" );
 
-    Label sourceFileLabel = new Label( m_group, SWT.NONE );
+    final Label sourceFileLabel = new Label( m_group, SWT.NONE );
     sourceFileLabel.setText( "Quelle : " );
 
     m_sourceFileText = new Text( m_group, SWT.BORDER );
@@ -154,7 +154,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
        * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
        */
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         setPageComplete( validate() );
       }
@@ -168,49 +168,49 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     setControl( m_topComposite );
   }
 
-  private void createWorldFilePanel( Composite composite )
+  private void createWorldFilePanel( final Composite composite )
   {
     m_worldFileGroup = new Group( composite, SWT.NONE );
     m_worldFileGroup.setText( "World file:" );
     m_worldFileGroup.setLayout( new GridLayout( 2, false ) );
     m_worldFileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    Label dx = new Label( m_worldFileGroup, SWT.NONE );
+    final Label dx = new Label( m_worldFileGroup, SWT.NONE );
     dx.setText( "Pixel (dx):" );
     m_textDx = new Text( m_worldFileGroup, SWT.BORDER );
     m_textDx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDx.setEditable( false );
     m_textDx.addKeyListener( this );
 
-    Label phix = new Label( m_worldFileGroup, SWT.NONE );
+    final Label phix = new Label( m_worldFileGroup, SWT.NONE );
     phix.setText( "phi X:" );
     m_textPhix = new Text( m_worldFileGroup, SWT.BORDER );
     m_textPhix.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhix.setEditable( false );
     m_textPhix.addKeyListener( this );
 
-    Label phiy = new Label( m_worldFileGroup, SWT.NONE );
+    final Label phiy = new Label( m_worldFileGroup, SWT.NONE );
     phiy.setText( "phi Y:" );
     m_textPhiy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textPhiy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhiy.setEditable( false );
     m_textPhiy.addKeyListener( this );
 
-    Label dy = new Label( m_worldFileGroup, SWT.NONE );
+    final Label dy = new Label( m_worldFileGroup, SWT.NONE );
     dy.setText( "Pixel (dy):" );
     m_textDy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textDy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDy.setEditable( false );
     m_textDy.addKeyListener( this );
 
-    Label ulcx = new Label( m_worldFileGroup, SWT.NONE );
+    final Label ulcx = new Label( m_worldFileGroup, SWT.NONE );
     ulcx.setText( "Obere linke Ecke (X):" );
     m_textULCx = new Text( m_worldFileGroup, SWT.BORDER );
     m_textULCx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textULCx.setEditable( false );
     m_textULCx.addKeyListener( this );
 
-    Label ulcy = new Label( m_worldFileGroup, SWT.NONE );
+    final Label ulcy = new Label( m_worldFileGroup, SWT.NONE );
     ulcy.setText( "Obere linke Ecke (Y):" );
     m_textULCy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textULCy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -224,7 +224,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetSelected( SelectionEvent e )
+  public void widgetSelected( final SelectionEvent e )
   {
     Button b;
     if( e.widget instanceof Button )
@@ -232,14 +232,14 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       b = (Button) e.widget;
       if( b.equals( m_browseButton ) )
       {
-        KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "tiff", "tif", "jpg", "TIFF", "TIF", "JPG", "png", "PNG", } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "tiff", "tif", "jpg", "TIFF", "TIF", "JPG", "png", "PNG", } );
         // "gif",
         // "GIF"} );
         dialog.open();
-        Object[] result = dialog.getResult();
+        final Object[] result = dialog.getResult();
         if( result != null )
         {
-          Path resultPath = (Path) result[0];
+          final Path resultPath = (Path) result[0];
           m_sourceFileText.setText( resultPath.toString() );
           m_relativeSourcePath = resultPath;
         }
@@ -280,10 +280,10 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     // }
     try
     {
-      URL worldFile = m_project.getLocation().append( path ).toFile().toURL();
-      InputStream is = worldFile.openStream();
+      final URL worldFile = m_project.getLocation().append( path ).toFile().toURI().toURL();
+      final InputStream is = worldFile.openStream();
 
-      BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+      final BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
       m_worldFileGroup.setVisible( true );
       m_textDx.setText( br.readLine().trim() );
       m_textPhix.setText( br.readLine().trim() );
@@ -311,7 +311,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       // setPageComplete( false );
       // }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       m_worldFileGroup.setVisible( true );
       m_textDx.setEditable( true );
@@ -340,7 +340,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       Double.parseDouble( m_textULCx.getText().trim() );
       Double.parseDouble( m_textULCy.getText().trim() );
     }
-    catch( NumberFormatException e )
+    catch( final NumberFormatException e )
     {
       setErrorMessage( "Bitte geben sie alle Zahlen unten ein." );
       return false;
@@ -350,21 +350,20 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     {
       try
       {
-        IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
+        final IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
 
         String str = "";
-        Control[] array = m_worldFileGroup.getChildren();
-        for( int i = 0; i < array.length; i++ )
+        final Control[] array = m_worldFileGroup.getChildren();
+        for( final Control combo : array )
         {
-          Control combo = array[i];
           if( combo instanceof Text )
             str = str + (((Text) combo).getText().trim() + "\n");
         }
 
-        ByteArrayInputStream bis = new ByteArrayInputStream( str.getBytes() );
+        final ByteArrayInputStream bis = new ByteArrayInputStream( str.getBytes() );
         worldfile.create( bis, false, null );
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
         setErrorMessage( "Error while writing world file" );
@@ -389,18 +388,18 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
     // nothing to do
 
   }
 
-  KalypsoResourceSelectionDialog createResourceDialog( String[] fileResourceExtensions )
+  KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
     return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
   }
 
-  public void setProjectSelection( IProject project )
+  public void setProjectSelection( final IProject project )
   {
     m_project = project;
   }
@@ -408,7 +407,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     // do nothing
   }
@@ -416,7 +415,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   /**
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( (e.widget == m_textDx || e.widget == m_textDy || e.widget == m_textPhix || e.widget == m_textPhiy || e.widget == m_textULCx || e.widget == m_textULCy) && e.character == SWT.CR )
     {
@@ -427,7 +426,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   public URL getURL( ) throws MalformedURLException
   {
-    return m_project.getLocation().append( m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile().toURL();
+    return m_project.getLocation().append( m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile().toURI().toURL();
   }
 
   public String getFileType( )

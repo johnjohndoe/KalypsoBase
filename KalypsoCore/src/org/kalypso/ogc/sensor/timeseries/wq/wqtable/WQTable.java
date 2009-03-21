@@ -12,7 +12,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
  * WQTable
- * 
+ *
  * @author schlienger
  */
 public class WQTable
@@ -31,7 +31,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -42,7 +42,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -55,7 +55,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -66,7 +66,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -79,7 +79,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -90,7 +90,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -103,7 +103,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -117,30 +117,30 @@ public class WQTable
     m_qSortedPairs = new TreeSet<WQPair>( WQPairComparator.Q_COMPARATOR );
     m_wSortedPairs = new TreeSet<WQPair>( WQPairComparator.W_COMPARATOR );
 
-    for( int i = 0; i < wqpairs.length; i++ )
+    for( final WQPair wqpair : wqpairs )
     {
-      m_qSortedPairs.add( wqpairs[i] );
-      m_wSortedPairs.add( wqpairs[i] );
+      m_qSortedPairs.add( wqpair );
+      m_wSortedPairs.add( wqpair );
     }
   }
 
-  public double getWFor( double q ) throws WQException
+  public double getWFor( final double q ) throws WQException
   {
     final WQPair p = new WQPair( 0, q );
-    final SortedSet headSet = m_qSortedPairs.headSet( p );
-    final SortedSet tailSet = m_qSortedPairs.tailSet( p );
+    final SortedSet<WQPair> headSet = m_qSortedPairs.headSet( p );
+    final SortedSet<WQPair> tailSet = m_qSortedPairs.tailSet( p );
 
     if( headSet.isEmpty() || tailSet.isEmpty() )
       throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
 
-    final WQPair p1 = (WQPair)headSet.last();
-    final WQPair p2 = (WQPair)tailSet.first();
+    final WQPair p1 = headSet.last();
+    final WQPair p2 = tailSet.first();
 
     try
     {
       EQ.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
-    catch( SameXValuesException e )
+    catch( final SameXValuesException e )
     {
       throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.1") + q, e ); //$NON-NLS-1$
     }
@@ -148,23 +148,23 @@ public class WQTable
     return EQ.computeX( q );
   }
 
-  public double getQFor( double w ) throws WQException
+  public double getQFor( final double w ) throws WQException
   {
     final WQPair p = new WQPair( w, 0 );
-    final SortedSet headSet = m_wSortedPairs.headSet( p );
-    final SortedSet tailSet = m_wSortedPairs.tailSet( p );
+    final SortedSet<WQPair> headSet = m_wSortedPairs.headSet( p );
+    final SortedSet<WQPair> tailSet = m_wSortedPairs.tailSet( p );
 
     if( headSet.isEmpty() || tailSet.isEmpty() )
       throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
 
-    final WQPair p1 = (WQPair)headSet.last();
-    final WQPair p2 = (WQPair)tailSet.first();
+    final WQPair p1 = headSet.last();
+    final WQPair p2 = tailSet.first();
 
     try
     {
       EQ.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
-    catch( SameXValuesException e )
+    catch( final SameXValuesException e )
     {
       throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.2") + w, e ); //$NON-NLS-1$
     }
@@ -182,7 +182,7 @@ public class WQTable
     return m_offset;
   }
 
-  public void setOffset( int offset )
+  public void setOffset( final int offset )
   {
     m_offset = offset;
   }

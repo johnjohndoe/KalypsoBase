@@ -2,7 +2,6 @@ package de.openali.odysseus.chart.ext.base.layer.provider;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,10 +11,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueFileData;
 import de.openali.odysseus.chart.ext.base.layer.DefaultBarLayer;
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -34,24 +31,23 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  @SuppressWarnings( { "unused", "unchecked" })
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
     return new DefaultBarLayer( getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
   }
 
-  private Calendar createDate( String s )
+  private Calendar createDate( final String s )
   {
     // Datum zerpflücken (Bsp: 0510190530)
     // TODO: Auslagern in Toolbox-ähnliche Klasse
-    int year = 2000 + Integer.parseInt( s.substring( 0, 2 ) );
-    int month = Integer.parseInt( s.substring( 2, 4 ) ) - 1;
-    int day = Integer.parseInt( s.substring( 4, 6 ) );
-    int hour = Integer.parseInt( s.substring( 6, 8 ) );
-    int minute = Integer.parseInt( s.substring( 8, 10 ) );
+    final int year = 2000 + Integer.parseInt( s.substring( 0, 2 ) );
+    final int month = Integer.parseInt( s.substring( 2, 4 ) ) - 1;
+    final int day = Integer.parseInt( s.substring( 4, 6 ) );
+    final int hour = Integer.parseInt( s.substring( 6, 8 ) );
+    final int minute = Integer.parseInt( s.substring( 8, 10 ) );
 
     // echte Daten aus EiongabeDatei
-    Calendar calData = Calendar.getInstance();
+    final Calendar calData = Calendar.getInstance();
     calData.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
     calData.set( Calendar.YEAR, year );
     calData.set( Calendar.MONTH, month );
@@ -63,7 +59,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
     return calData;
   }
 
-  private Number createNumber( String s )
+  private Number createNumber( final String s )
   {
     return Double.parseDouble( s );
   }
@@ -71,7 +67,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  protected AbstractDomainIntervalValueFileData getDataContainer( ) throws ConfigurationException
+  protected AbstractDomainIntervalValueFileData getDataContainer( )
   {
     final AbstractDomainIntervalValueFileData data = new AbstractDomainIntervalValueFileData()
     {
@@ -81,36 +77,32 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
       public boolean openData( )
       {
         // TODO: umschreiben, damit auch urls verwendet werden können
-        FileReader fr;
         try
         {
-          URL url = getInputURL();
-          InputStream is = url.openStream();
-          InputStreamReader isr = new InputStreamReader( is );
+          final URL url = getInputURL();
+          final InputStream is = url.openStream();
+          final InputStreamReader isr = new InputStreamReader( is );
 
-          List<Object> domainValues = new ArrayList<Object>();
-          List<Object> domainIntervalStartValues = new ArrayList<Object>();
-          List<Object> domainIntervalEndValues = new ArrayList<Object>();
-          List<Object> targetValues = new ArrayList<Object>();
+          final List<Object> domainValues = new ArrayList<Object>();
+          final List<Object> domainIntervalStartValues = new ArrayList<Object>();
+          final List<Object> domainIntervalEndValues = new ArrayList<Object>();
+          final List<Object> targetValues = new ArrayList<Object>();
 
-          BufferedReader br = new BufferedReader( isr );
+          final BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
           String domType = null;
-          String targetType = null;
 
           while( (s = br.readLine()) != null && s.trim() != "" )
           {
-            String[] cols = s.split( "  *" );
+            final String[] cols = s.split( "  *" );
             // erste Zeile: Überschrift
             if( count == 0 )
             {
               domType = cols[0];
-              targetType = cols[1];
             }
             else
             {
-
               if( cols.length >= 2 )
               {
                 Object domStart = null;
@@ -118,16 +110,16 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
                 Object domVal = null;
                 if( domType.equals( "DATE" ) )
                 {
-                  Calendar calVal = createDate( cols[0] );
+                  final Calendar calVal = createDate( cols[0] );
 
                   // Startwert für Interval
-                  Calendar calStart = (Calendar) calVal.clone();
+                  final Calendar calStart = (Calendar) calVal.clone();
                   calStart.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
                   calStart.set( Calendar.MINUTE, 0 );
                   calStart.set( Calendar.HOUR_OF_DAY, 0 );
 
                   // Endwert für Interval
-                  Calendar calEnd = (Calendar) calStart.clone();
+                  final Calendar calEnd = (Calendar) calStart.clone();
                   calEnd.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
                   // wichtig, damit die Zeiten richtig sind
 
@@ -140,7 +132,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
                 }
                 else
                 {
-                  Number numVal = createNumber( cols[0] );
+                  final Number numVal = createNumber( cols[0] );
                   domVal = numVal;
                   domStart = new Double( numVal.doubleValue() - 0.5 );
                   domEnd = new Double( numVal.doubleValue() + 0.5 );
@@ -164,17 +156,17 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
           isr.close();
           is.close();
         }
-        catch( FileNotFoundException e )
+        catch( final FileNotFoundException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( NumberFormatException e )
+        catch( final NumberFormatException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -186,9 +178,9 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
 
       public IDataRange getDomainRange( )
       {
-        Object[] domainStart = getDomainDataIntervalStart();
-        Object[] domainEnd = getDomainDataIntervalEnd();
-        Object[] merged = new Object[domainStart.length + domainEnd.length];
+        final Object[] domainStart = getDomainDataIntervalStart();
+        final Object[] domainEnd = getDomainDataIntervalEnd();
+        final Object[] merged = new Object[domainStart.length + domainEnd.length];
         for( int i = 0; i < domainStart.length; i++ )
         {
           merged[i] = domainStart[i];
@@ -204,7 +196,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
 
     };
 
-    URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
+    final URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
     data.setInputURL( url );
 
     return data;

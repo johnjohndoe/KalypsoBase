@@ -44,7 +44,6 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -58,7 +57,6 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -76,7 +74,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Ein Task, welcher anhand von Thiessen Polygonen und Einzugsgebieten die Gewichtungsfaktoren ermittelt.
- * 
+ *
  * @author Gernot Belger
  */
 public class ThiessenWeightTask extends Task
@@ -105,32 +103,32 @@ public class ThiessenWeightTask extends Task
 
   private String m_ombrometerReferencePropertyPath;
 
-  public void setAreaFeaturePath( String areaFeaturePath )
+  public void setAreaFeaturePath( final String areaFeaturePath )
   {
     m_areaFeaturePath = areaFeaturePath;
   }
 
-  public void setAreaPropertyPath( String areaPropertyPath )
+  public void setAreaPropertyPath( final String areaPropertyPath )
   {
     m_areaPropertyPath = areaPropertyPath;
   }
 
-  public void setGmlURL( URL gmlURL )
+  public void setGmlURL( final URL gmlURL )
   {
     m_gmlURL = gmlURL;
   }
 
-  public void setThiessenFeaturePath( String thiessenFeaturePath )
+  public void setThiessenFeaturePath( final String thiessenFeaturePath )
   {
     m_thiessenFeaturePath = thiessenFeaturePath;
   }
 
-  public void setThiessenPropertyPath( String thiessenPropertyPath )
+  public void setThiessenPropertyPath( final String thiessenPropertyPath )
   {
     m_thiessenPropertyPath = thiessenPropertyPath;
   }
 
-  public void setWeightPropertyPath( String weightPropertyPath )
+  public void setWeightPropertyPath( final String weightPropertyPath )
   {
     m_weightPropertyPath = weightPropertyPath;
   }
@@ -140,20 +138,20 @@ public class ThiessenWeightTask extends Task
     m_fractionDigits = fractionDigits;
   }
 
-  public void setOmbrometerReferencePropertyPath( String ombrometerReferencePropertyPath )
+  public void setOmbrometerReferencePropertyPath( final String ombrometerReferencePropertyPath )
   {
     m_ombrometerReferencePropertyPath = ombrometerReferencePropertyPath;
   }
-  
+
   @Override
   public void execute() throws BuildException
   {
     try
     {
       final Project antProject = getProject();
-      ILogger logger = new ILogger()
+      final ILogger logger = new ILogger()
       {
-        public void log( Level level, int msgCode, String message )
+        public void log( final Level level, final int msgCode, final String message )
         {
           final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
           if( antProject == null )
@@ -192,9 +190,8 @@ public class ThiessenWeightTask extends Task
 
       logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Zurodnungsfaktoren werden ermittelt..." );
 
-      for( int i = 0; i < areaFeatures.length; i++ )
+      for( final Feature areaFeature : areaFeatures )
       {
-        final Feature areaFeature = areaFeatures[i];
         calculateWeights( areaFeature, thiessenFeatures, rainfallWeightFT, logger );
       }
 
@@ -207,7 +204,7 @@ public class ThiessenWeightTask extends Task
         writer = new BufferedWriter( osw );
 
         GmlSerializer.serializeWorkspace( writer, workspace, osw.getEncoding() );
- 
+
         writer.close();
       }
       finally
@@ -235,9 +232,8 @@ public class ThiessenWeightTask extends Task
     final GM_Object areaGeom = (GM_Object)areaFeature.getProperty( m_areaPropertyPath );
     final Polygon areaPolygon = areaGeom == null ? null : (Polygon)JTSAdapter.export( areaGeom );
 
-    for( int i = 0; i < thiessenFeatures.length; i++ )
+    for( final Feature thiessenFeature : thiessenFeatures )
     {
-      final Feature thiessenFeature = thiessenFeatures[i];
       final IPropertyType thiessenPT = thiessenFeature.getFeatureType().getProperty( m_thiessenPropertyPath );
       if( thiessenPT == null )
         throw new BuildException( "Keine Property mit gefunden mit Namen: " + m_thiessenPropertyPath );
@@ -289,7 +285,7 @@ public class ThiessenWeightTask extends Task
     final double subArea = geometry.getArea();
 
     final double weight = subArea / totalArea;
-    
+
     return new BigDecimal( weight ).setScale( m_fractionDigits, BigDecimal.ROUND_HALF_UP );
   }
 }

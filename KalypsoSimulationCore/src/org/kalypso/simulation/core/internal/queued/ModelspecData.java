@@ -43,7 +43,6 @@ package org.kalypso.simulation.core.internal.queued;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -98,14 +97,13 @@ public class ModelspecData
 
   /**
    * Prüft, ob für alle benötigten ID eine eingabe da ist.
-   * 
+   *
    * @throws CalcJobServiceException
    */
   public void checkInput( final ISimulationDataProvider data ) throws SimulationException
   {
-    for( final Iterator iIt = m_inputHash.values().iterator(); iIt.hasNext(); )
+    for( final DataType input : m_inputHash.values() )
     {
-      final DataType input = (DataType) iIt.next();
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )

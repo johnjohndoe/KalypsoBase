@@ -56,7 +56,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
 /**
  * Der Controller für die MapView
- * 
+ *
  * @author vdoemming
  */
 public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMoveListener, MouseWheelListener, KeyListener
@@ -204,26 +204,12 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     if( actualWidget == null )
       return;
 
-    // TODO: popup trigger not supported in SWT; we must rewrite the popup code
-    // (was never good anyway)
-    // if( e.isPopupTrigger() )
-    // actualWidget.clickPopup( point );
-    // else
-
     final Point point = new Point( e.x, e.y );
 
     switch( e.button )
     {
       case 1:
         actualWidget.leftPressed( point );
-        break;
-
-      case 2:
-// actualWidget.middlePressed( point );
-        break;
-
-      case 3:
-        actualWidget.rightPressed( point );
         break;
 
       default:
@@ -249,22 +235,10 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
     final Point point = new Point( e.x, e.y );
 
-    // REMARK: pop-up trigger not supported in SWT; we should rewrite the popup code, it was never good anyway
-    if( mouseWasDown && e.count == 1 && e.button == 3 )
-      actualWidget.clickPopup( point );
-
     switch( e.button )
     {
       case 1:
         actualWidget.leftReleased( point );
-        break;
-
-      case 2:
-// actualWidget.middleReleased( point );
-        break;
-
-      case 3:
-        actualWidget.rightReleased( point );
         break;
 
       default:
@@ -284,14 +258,8 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
           actualWidget.doubleClickedLeft( point );
         break;
 
-      case 2:
-// actualWidget.middleClicked( point );
-        break;
-
       case 3:
-        if( e.count == 1 )
-          actualWidget.rightClicked( point );
-        else if( e.count == 2 )
+        if( e.count == 2 )
           actualWidget.doubleClickedRight( point );
         break;
 

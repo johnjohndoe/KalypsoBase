@@ -70,8 +70,8 @@ public class GmlConvertFactoryTest extends TestCase
   private void doGmc( final String filename, final File dir ) throws IOException, JAXBException, GmlConvertException
   {
     final File file = new File( dir, filename );
-    final URL url = file.toURL();
-    assertTrue( Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10"), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap() ).isOK() ); //$NON-NLS-1$
+    final URL url = file.toURI().toURL();
+    assertTrue( Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10" ), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap<Object, Object>() ).isOK() ); //$NON-NLS-1$
   }
 
 }

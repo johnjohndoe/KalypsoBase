@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
@@ -45,7 +45,7 @@ import org.kalypso.ogc.sensor.IAxis;
 
 /**
  * Default implementation of the IAxis interface. This class is immutable.
- * 
+ *
  * @author schlienger
  */
 public final class DefaultAxis extends AbstractAxis implements IAxis
@@ -65,7 +65,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * Constructor. Calls the full constructor with the persistable argument set to true.
    */
-  public DefaultAxis( final String label, final String type, final String unit, final Class dataClass,
+  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass,
       final boolean isKey )
   {
     this( label, type, unit, dataClass, isKey, true );
@@ -73,7 +73,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
 
   /**
    * Constructor
-   * 
+   *
    * @param label
    *          label of the axis
    * @param type
@@ -87,12 +87,12 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
    * @param persistable
    *          true if the axis should be persisted once observation is saved
    */
-  public DefaultAxis( final String label, final String type, final String unit, final Class dataClass,
+  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass,
       final boolean isKey, final boolean persistable )
   {
     if( dataClass == null )
       throw new IllegalArgumentException(Messages.getString("org.kalypso.ogc.sensor.impl.DefaultAxis.0")); //$NON-NLS-1$
-    
+
     m_label = label;
     m_type = type;
     m_unit = unit;

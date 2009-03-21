@@ -42,7 +42,6 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument.Restriction;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 

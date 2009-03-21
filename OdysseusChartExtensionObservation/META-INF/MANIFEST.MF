@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ChartObservationExtensions Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.observation;singleton:=true
 Bundle-Version: 0.2.0
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.core,
  de.openali.odysseus.chart.ext.base;bundle-version="0.2.0";visibility:=reexport
 Export-Package: org.kalypso.chart.ext.observation.data,
@@ -12,3 +11,4 @@ Export-Package: org.kalypso.chart.ext.observation.data,
  org.kalypso.chart.ext.observation.mapper,
  org.kalypso.chart.ext.observation.mapper.provider
 Bundle-Vendor: kalypso.sourceforge.net
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

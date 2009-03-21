@@ -21,10 +21,9 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
  */
 public class ColoredTestBarLayer extends AbstractBarLayer
 {
-
   private final AbstractDomainIntervalValueData m_data;
 
-  public ColoredTestBarLayer( AbstractDomainIntervalValueData data, IAreaStyle areaStyle )
+  public ColoredTestBarLayer( final AbstractDomainIntervalValueData data, final IAreaStyle areaStyle )
   {
     super( areaStyle );
     m_data = data;
@@ -35,14 +34,14 @@ public class ColoredTestBarLayer extends AbstractBarLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @SuppressWarnings("unchecked")
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
-    AbstractDomainIntervalValueData dataContainer = getDataContainer();
+    final AbstractDomainIntervalValueData dataContainer = getDataContainer();
 
     if( dataContainer != null )
     {
 
-      PolygonFigure pf = getPolygonFigure();
+      final PolygonFigure pf = getPolygonFigure();
 
       dataContainer.open();
 
@@ -52,12 +51,12 @@ public class ColoredTestBarLayer extends AbstractBarLayer
 
       final ArrayList<Point> path = new ArrayList<Point>();
 
-      IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
-      IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
+      final IDataOperator dopDomain = getCoordinateMapper().getDomainAxis().getDataOperator( domainStartComponent[0].getClass() );
+      final IDataOperator dopTarget = getCoordinateMapper().getTargetAxis().getDataOperator( targetComponent[0].getClass() );
 
-      RGBMapper rm = getRGBMapper();
+      final RGBMapper rm = getRGBMapper();
 
-      ICoordinateMapper cm = getCoordinateMapper();
+      final ICoordinateMapper cm = getCoordinateMapper();
 
       for( int i = 0; i < domainStartComponent.length; i++ )
       {
@@ -67,10 +66,10 @@ public class ColoredTestBarLayer extends AbstractBarLayer
         final Object endValue = domainEndComponent[i];
         final Object targetValue = targetComponent[i];
 
-        Point p1 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), 0 );
-        Point p2 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), dopTarget.logicalToNumeric( targetValue ) );
-        Point p3 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), dopTarget.logicalToNumeric( targetValue ) );
-        Point p4 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), 0 );
+        final Point p1 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), 0 );
+        final Point p2 = cm.numericToScreen( dopDomain.logicalToNumeric( startValue ), dopTarget.logicalToNumeric( targetValue ) );
+        final Point p3 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), dopTarget.logicalToNumeric( targetValue ) );
+        final Point p4 = cm.numericToScreen( dopDomain.logicalToNumeric( endValue ), 0 );
 
         path.add( p1 );
         path.add( p2 );
@@ -79,8 +78,8 @@ public class ColoredTestBarLayer extends AbstractBarLayer
 
         pf.setPoints( path.toArray( new Point[] {} ) );
 
-        IAreaStyle style = pf.getStyle();
-        ColorFill cf = new ColorFill( rm.numericToScreen( i ) );
+        final IAreaStyle style = pf.getStyle();
+        final ColorFill cf = new ColorFill( rm.numericToScreen( i ) );
         style.setFill( cf );
 
         pf.paint( gc );
@@ -96,8 +95,8 @@ public class ColoredTestBarLayer extends AbstractBarLayer
   public IDataRange<Number> getTargetRange( )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
-    IDataRange targetRange = getDataContainer().getTargetRange();
-    IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
+    final IDataRange targetRange = getDataContainer().getTargetRange();
+    final IDataOperator dop = getTargetAxis().getDataOperator( getTargetAxis().getDataClass() );
     return new DataRange<Number>( 0, dop.logicalToNumeric( targetRange.getMax() ) );
   }
 

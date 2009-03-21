@@ -29,6 +29,7 @@ public class RingTreeElement
 
   private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
 
+  @SuppressWarnings("hiding")
   public RingTreeElement( final LinearRing lr, final int index, final Coordinate innerCrd )
   {
     this.linearRing = lr;

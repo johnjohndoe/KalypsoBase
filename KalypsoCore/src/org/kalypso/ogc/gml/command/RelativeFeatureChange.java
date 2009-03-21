@@ -60,9 +60,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class RelativeFeatureChange extends FeatureChange
 {
 
-  private double m_operand;
+  private final double m_operand;
 
-  private String m_operator;
+  private final String m_operator;
 
   /**
    * Creates a new RelativeFeatureChange that operates on a given feature and changes the given property to a new value.
@@ -137,7 +137,6 @@ public class RelativeFeatureChange extends FeatureChange
    * Calculates the result either by treating both arguments as a primitive double value or as a
    * {@link java.math.BigDecimal}. The result will be of the same type as the first operand.
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private <T extends Number> Number calculate( final T firstOperand, final double secondOperand, final String bigTypesMethodName )
   {
     final Number result;
@@ -152,7 +151,7 @@ public class RelativeFeatureChange extends FeatureChange
         // call specified method (add, subtract, multiply, divide) on BigDecimal
         bigDecimalResult = (BigDecimal) BigDecimal.class.getMethod( bigTypesMethodName, BigDecimal.class ).invoke( typedFirstOperand, typedSecondOperand );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.13") + secondOperand + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.14") + bigTypesMethodName + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.15") + firstOperand, e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
@@ -193,19 +192,19 @@ public class RelativeFeatureChange extends FeatureChange
       {
         result = stringConstructor.newInstance( "" + doubleValue ); //$NON-NLS-1$
       }
-      catch( InvocationTargetException e )
+      catch( final InvocationTargetException e )
       {
         result = stringConstructor.newInstance( "" + (long) doubleValue ); //$NON-NLS-1$
       }
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
       // the underlying constructor has probably thrown a NumberFormatException
       final NumberFormatException newException = new NumberFormatException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.18") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.19") + type.getClass().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
       newException.initCause( e );
       throw newException;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.20") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.21") + type.getClass().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -216,8 +215,7 @@ public class RelativeFeatureChange extends FeatureChange
    * checks if the property type is a {@link org.kalypso.gmlschema.property.IValuePropertyType} and can be cast as
    * {@link Number}
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public static boolean isNumeric( IPropertyType propertyType )
+  public static boolean isNumeric( final IPropertyType propertyType )
   {
     return propertyType instanceof IValuePropertyType && Number.class.isAssignableFrom( ((IValuePropertyType) propertyType).getValueClass() );
   }

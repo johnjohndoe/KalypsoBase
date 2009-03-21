@@ -62,8 +62,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
-
 /**
  * @author Adreas von Dömming
  */
@@ -79,7 +77,7 @@ public class AnnotationUtilities
     for( int i = 0; i < listAnnontation.getLength(); i++ )
     {
       final Node item = listAnnontation.item( i );
-      if( item instanceof ElementNSImpl )
+      if( item instanceof org.w3c.dom.Element )
       {
         final NodeList languageNodes = item.getChildNodes();
 
@@ -87,7 +85,7 @@ public class AnnotationUtilities
         {
           final Node itmLang = languageNodes.item( ln );
 
-          if( itmLang instanceof ElementNSImpl )
+          if( itmLang instanceof org.w3c.dom.Element )
           {
             final DefaultAnnotation annotation = computeDefaultAnnontation( key, itmLang );
             if( AnnotationUtilities.isCurrentLang( annotation.getLang() ) )

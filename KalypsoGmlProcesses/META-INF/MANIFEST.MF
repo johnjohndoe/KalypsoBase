@@ -7,13 +7,12 @@ Bundle-ClassPath: lib/jargs.jar,
  .
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,
  org.junit;resolution:=optional,
  org.kalypso.contribs.ogc31
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: com.bce.apps.wspfli,
  com.bce.ext.jargs,
  com.bce.ext.jts,
@@ -34,3 +33,4 @@ Export-Package: com.bce.apps.wspfli,
  org.kalypso.gml.processes.raster2vector,
  org.kalypso.gml.processes.raster2vector.collector,
  org.kalypso.gml.processes.schemata
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -40,6 +40,7 @@ public class RingTreeElement
 
   private final String m_id;
 
+  @SuppressWarnings("hiding")
   public RingTreeElement( final LinearRing lr, final Polygon polygon, final double lineValue, final Coordinate innerCrd, final String id )
   {
     linearRing = lr;
@@ -179,7 +180,6 @@ public class RingTreeElement
 
       case 2:
         final int first = intervalSet.first();
-        final int last = intervalSet.last();
 
 /* removed because of assertion failed - 100 classes */
 // Assert.isTrue( last - first == 2 );

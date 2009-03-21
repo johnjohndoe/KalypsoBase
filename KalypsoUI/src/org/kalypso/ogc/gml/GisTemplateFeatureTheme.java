@@ -451,7 +451,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     final FeatureTypeStyle fts;
     if( usedForSelection )
-      fts = styleCatalog.getSelected( resolver, featureType );
+      fts = null; // TODO: get from catalog
     else
       fts = styleCatalog.getDefault( resolver, featureType );
 

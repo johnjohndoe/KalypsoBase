@@ -32,21 +32,15 @@ public class TupleResultTooltipLineLayer extends TupleResultLineLayer implements
 
   private final IComponent[] m_tooltipComponents;
 
-  private final String m_targetComponentId;
-
-  private final String m_domainComponentId;
-
-  public TupleResultTooltipLineLayer( TupleResultDomainValueData data, TupleResult result, ILineStyle lineStyle, IPointStyle pointStyle, String[] tooltipComponentIds )
+  public TupleResultTooltipLineLayer( final TupleResultDomainValueData data, final TupleResult result, final ILineStyle lineStyle, final IPointStyle pointStyle, final String[] tooltipComponentIds )
   {
     super( data, lineStyle, pointStyle );
     m_result = result;
-    m_domainComponentId = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultLengthSectionObservationDefs#STATION";
-    m_targetComponentId = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultLengthSectionObservationDefs#WATERLEVEL";
 
-    IComponent[] components = m_result.getComponents();
-    List<IComponent> myComponents = new ArrayList<IComponent>();
+    final IComponent[] components = m_result.getComponents();
+    final List<IComponent> myComponents = new ArrayList<IComponent>();
 
-    for( IComponent component : components )
+    for( final IComponent component : components )
     {
       if( ArrayUtils.contains( tooltipComponentIds, component.getId() ) )
         myComponents.add( component );
@@ -58,29 +52,29 @@ public class TupleResultTooltipLineLayer extends TupleResultLineLayer implements
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
-    int tolerance = 5;
+    final int tolerance = 5;
     // Punkt finden
-    IAxis domainAxis = getDomainAxis();
+    final IAxis domainAxis = getDomainAxis();
     String tooltip = "";
 
     if( domainAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) )
     {
-      double p = domainAxis.screenToNumeric( pos.x ).doubleValue();
-      double domMin = domainAxis.screenToNumeric( pos.x - tolerance ).doubleValue();
-      double domMax = domainAxis.screenToNumeric( pos.x + tolerance ).doubleValue();
+      final double p = domainAxis.screenToNumeric( pos.x ).doubleValue();
+      final double domMin = domainAxis.screenToNumeric( pos.x - tolerance ).doubleValue();
+      final double domMax = domainAxis.screenToNumeric( pos.x + tolerance ).doubleValue();
 
-      double distance = Double.MAX_VALUE;
+      final double distance = Double.MAX_VALUE;
       IRecord myRecord = null;
 
-      for( IRecord record : m_result )
+      for( final IRecord record : m_result )
       {
-        double station = Double.valueOf( record.getValue( 0 ).toString() ); // station
+        final double station = Double.valueOf( record.getValue( 0 ).toString() ); // station
 
         if( domMin <= station && station <= domMax )
         {
-          double d = station - p;
+          final double d = station - p;
 
           if( d < distance )
             myRecord = record;
@@ -92,17 +86,17 @@ public class TupleResultTooltipLineLayer extends TupleResultLineLayer implements
 
       int count = m_tooltipComponents.length;
 
-      for( IComponent component : m_tooltipComponents )
+      for( final IComponent component : m_tooltipComponents )
       {
         count--;
-        Object value = myRecord.getValue( component );
+        final Object value = myRecord.getValue( component );
 
         if( value == null )
           continue;
         else if( value instanceof BigDecimal )
         {
-          BigDecimal decimal = (BigDecimal) value;
-          double doubleValue = decimal.doubleValue();
+          final BigDecimal decimal = (BigDecimal) value;
+          final double doubleValue = decimal.doubleValue();
 
           tooltip += String.format( "%s: %.2f", component.getName(), doubleValue );
         }

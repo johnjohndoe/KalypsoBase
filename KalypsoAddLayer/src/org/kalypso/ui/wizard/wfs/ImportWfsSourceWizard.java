@@ -101,7 +101,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
         for( final WFSFeatureType featureType : layers )
         {
           final Filter complexFilter = m_importWFSPage.getFilter( featureType );
-          final Filter simpleFilter = m_filterWFSPage.getFilter( featureType );
+          final Filter simpleFilter = m_filterWFSPage.getFilter();
           final Filter mergedFilter = FilterUtilites.mergeFilters( complexFilter, simpleFilter );
 
           final String xml;

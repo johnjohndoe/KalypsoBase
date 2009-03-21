@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -242,12 +241,12 @@ public class CalcJobHandler
     {
       final IProject project = calcCaseFolder.getProject();
 
-      final List clearList = m_modelspec.getClearAfterCalc();
+      final List<ClearAfterCalc> clearList = m_modelspec.getClearAfterCalc();
       monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() );
 
-      for( final Iterator clearIt = clearList.iterator(); clearIt.hasNext(); )
+      for( final ClearAfterCalc clearAfterCalc : clearList )
       {
-        final Modeldata.ClearAfterCalc clearType = (ClearAfterCalc) clearIt.next();
+        final Modeldata.ClearAfterCalc clearType = clearAfterCalc;
 
         final boolean relToCalc = clearType.isRelativeToCalcCase();
         final String path = clearType.getPath();
@@ -356,7 +355,7 @@ public class CalcJobHandler
             {
               inputResource = baseresource.findMember( URIUtil.decode( path ) );
             }
-            
+
           }
           else
           {

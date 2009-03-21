@@ -1,3 +1,43 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ *
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ *
+ *  and
+ *
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contact:
+ *
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
@@ -23,63 +63,21 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
-/*----------------    FILE HEADER KALYPSO ------------------------------------------
- *
- *  This file is part of kalypso.
- *  Copyright (C) 2004 by:
- * 
- *  Technical University Hamburg-Harburg (TUHH)
- *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
- *  21073 Hamburg, Germany
- *  http://www.tuhh.de/wb
- * 
- *  and
- *  
- *  Bjoernsen Consulting Engineers (BCE)
- *  Maria Trost 3
- *  56070 Koblenz, Germany
- *  http://www.bjoernsen.de
- * 
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- * 
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- * 
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- *  Contact:
- * 
- *  E-Mail:
- *  belger@bjoernsen.de
- *  schlienger@bjoernsen.de
- *  v.doemming@tuhh.de
- *   
- *  ---------------------------------------------------------------------------*/
-
+/**
+ * @author doemming
+ */
 public class ImportObservationAxisMappingWizardPage extends WizardPage implements FocusListener,
     ISelectionChangedListener
 {
   private Composite m_topLevel;
 
-  private final List m_widgetLines = new ArrayList();
+  private final List<WidgetLine> m_widgetLines = new ArrayList<WidgetLine>();
 
   private INativeObservationAdapter m_nativeAdapter;
 
   private File m_fileTarget;
 
-  /*
-   * 
-   * @author doemming
-   */
-  public ImportObservationAxisMappingWizardPage( String pageName )
+  public ImportObservationAxisMappingWizardPage( final String pageName )
   {
     super( pageName );
     setTitle( pageName );
@@ -89,23 +87,23 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
     m_topLevel = new Composite( parent, SWT.NONE );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
     gridLayout.makeColumnsEqualWidth = true;
     m_topLevel.setLayout( gridLayout );
 
-    Label labelSource = new Label( m_topLevel, SWT.NONE );
+    final Label labelSource = new Label( m_topLevel, SWT.NONE );
     labelSource.setText( "Quelle" );
     GridData data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
     labelSource.setLayoutData( data );
 
-    Label labelTarget = new Label( m_topLevel, SWT.NONE );
+    final Label labelTarget = new Label( m_topLevel, SWT.NONE );
     labelTarget.setText( "Ziel" );
     data = new GridData();
     data.horizontalAlignment = GridData.CENTER;
@@ -125,29 +123,29 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   /**
    * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusGained( FocusEvent e )
+  public void focusGained( final FocusEvent e )
   {
-  //    
+  //
   }
 
   /**
    * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusLost( FocusEvent e )
+  public void focusLost( final FocusEvent e )
   {
-  //    
+  //
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection eventSelection = event.getSelection();
     if( !( eventSelection instanceof ObservationImportSelection ) )
       return;
     final ObservationImportSelection selection = (ObservationImportSelection)eventSelection;
-    INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
+    final INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
     if( nativeAdapter != m_nativeAdapter )
       m_nativeAdapter = nativeAdapter;
 
@@ -160,9 +158,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       try
       {
 
-        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURL() ).getAxisList() );
+        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURI().toURL() ).getAxisList() );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         MessageDialog.openInformation( getShell(), "Fehler beim laden der Zieldatei-Datei",
             "Uebernahme der Axen aus bestehender Ziel-Datei nicht moeglich" );
@@ -174,16 +172,15 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     validate();
   }
 
-  private IAxis[] createMappedAxis( IAxis[] axisSrc, IAxis[] axisTarget )
+  private IAxis[] createMappedAxis( final IAxis[] axisSrc, final IAxis[] axisTarget )
   {
-    List result = new ArrayList();
-    for( int i_src = 0; i_src < axisSrc.length; i_src++ )
+    final List<IAxis> result = new ArrayList<IAxis>();
+    for( final IAxis src : axisSrc )
     {
-      IAxis src = axisSrc[i_src];
       boolean mapped = false;
       for( int i_target = 0; i_target < axisTarget.length; i_target++ )
       {
-        IAxis target = axisTarget[i_target];
+        final IAxis target = axisTarget[i_target];
         if( target != null && target.getType().equals( src.getType() ) )
         {
           axisTarget[i_target] = null;
@@ -196,18 +193,17 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
         result.add( null );
     }
     // add others last
-    for( int i = 0; i < axisTarget.length; i++ )
+    for( final IAxis axis : axisTarget )
     {
-      IAxis axis = axisTarget[i];
       if( axis != null )
         result.add( axis );
     }
-    return (IAxis[])result.toArray( new IAxis[result.size()] );
+    return result.toArray( new IAxis[result.size()] );
   }
 
   /**
    * @throws SensorException
-   *  
+   *
    */
   public IObservation getTargetObservation( final URL url ) throws SensorException
   {
@@ -215,9 +211,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     return observation;
   }
 
-  private void updateAxisWidgets( IAxis[] axisLeft, IAxis[] axisRight )
+  private void updateAxisWidgets( final IAxis[] axisLeft, final IAxis[] axisRight )
   {
-    int maxLines = axisLeft.length > axisRight.length ? axisLeft.length : axisRight.length;
+    final int maxLines = axisLeft.length > axisRight.length ? axisLeft.length : axisRight.length;
     // apply count of widgets
     while( !( maxLines == m_widgetLines.size() ) )
     {
@@ -229,8 +225,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       if( maxLines < m_widgetLines.size() )
       {
         // remove widgets
-        int last = m_widgetLines.size() - 1;
-        WidgetLine wLine = (WidgetLine)m_widgetLines.get( last );
+        final int last = m_widgetLines.size() - 1;
+        final WidgetLine wLine = m_widgetLines.get( last );
         wLine.getLeft().dispose();
         wLine.getRight().dispose();
         m_widgetLines.remove( last );
@@ -239,9 +235,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     // update widgets
     for( int i = 0; i < axisRight.length; i++ )
     {
-      WidgetLine wLine = (WidgetLine)m_widgetLines.get( i );
-      AxisWidget leftAxisWidget = wLine.getLeft();
-      AxisWidget rightAxisWidget = wLine.getRight();
+      final WidgetLine wLine = m_widgetLines.get( i );
+      final AxisWidget leftAxisWidget = wLine.getLeft();
+      final AxisWidget rightAxisWidget = wLine.getRight();
       if( i < axisLeft.length )
         leftAxisWidget.setAxis( axisLeft[i] );
       else
@@ -268,10 +264,10 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     private final AxisWidget m_right;
 
     /*
-     * 
+     *
      * @author doemming
      */
-    public WidgetLine( Composite parent )
+    public WidgetLine( final Composite parent )
     {
       m_left = new AxisWidget( parent, SWT.NONE );
       m_right = new AxisWidget( parent, SWT.NONE );
@@ -301,30 +297,30 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   public IAxis[] getAxisMappingSrc()
   {
-    List result = new ArrayList();
+    final List<IAxis> result = new ArrayList<IAxis>();
     for( int i = 0; i < m_widgetLines.size(); i++ )
     {
-      WidgetLine wl = (WidgetLine)m_widgetLines.get( i );
-      IAxis axisTarget = wl.getRight().getAxis();
+      final WidgetLine wl = m_widgetLines.get( i );
+      final IAxis axisTarget = wl.getRight().getAxis();
       if( axisTarget != null )
       {
-        IAxis axisSrc = wl.getLeft().getAxis();
+        final IAxis axisSrc = wl.getLeft().getAxis();
         result.add( axisSrc );
       }
     }
-    return ( (IAxis[])result.toArray( new IAxis[result.size()] ) );
+    return result.toArray( new IAxis[result.size()] );
   }
 
   public IAxis[] getAxisMappingTarget()
   {
-    List result = new ArrayList();
+    final List<IAxis> result = new ArrayList<IAxis>();
     for( int i = 0; i < m_widgetLines.size(); i++ )
     {
-      WidgetLine wl = (WidgetLine)m_widgetLines.get( i );
-      IAxis axisTarget = wl.getRight().getAxis();
+      final WidgetLine wl = m_widgetLines.get( i );
+      final IAxis axisTarget = wl.getRight().getAxis();
       if( axisTarget != null )
         result.add( axisTarget );
     }
-    return ( (IAxis[])result.toArray( new IAxis[result.size()] ) );
+    return result.toArray( new IAxis[result.size()] );
   }
 }

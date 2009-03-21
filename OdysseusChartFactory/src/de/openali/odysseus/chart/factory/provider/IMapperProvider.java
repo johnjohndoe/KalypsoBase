@@ -15,7 +15,6 @@ public interface IMapperProvider
   /**
    * @return axis created by the MapperProvider
    */
-  @SuppressWarnings("unchecked")
   public IRetinalMapper getMapper( ) throws ConfigurationException;
 
   public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context );

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.io;
 
@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
@@ -74,7 +72,7 @@ public class ReaderUtilities
 
   /**
    * Kopiert den Inhalt eines Readers in einen Writer. Beide werden nach Ende der Operation geschlossen.
-   * 
+   *
    * @param r
    * @param w
    * @throws IOException
@@ -103,20 +101,19 @@ public class ReaderUtilities
    * <p>
    * Performance schlecht: nur für Reader mit wenig Inhalt verwenden
    * </p>
-   * 
+   *
    * @param r
    * @param replaceProps
    * @return string with replaced substrings
-   * 
+   *
    * @throws IOException
    */
   public static final String readAndReplace( final Reader r, final Properties replaceProps ) throws IOException
   {
     String content = ReaderUtilities.readStringFromReader( r );
 
-    for( final Iterator iter = replaceProps.entrySet().iterator(); iter.hasNext(); )
+    for( final Entry<Object, Object> entry : replaceProps.entrySet() )
     {
-      final Map.Entry entry = (Entry)iter.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 
@@ -139,16 +136,15 @@ public class ReaderUtilities
    * <p>
    * A token example: %1% (begin and end token are the same i.e. %, the name is 1)
    */
-  public static Reader createTokenReplaceReader( Reader reader, Properties token2value, char beginToken, char endToken )
+  public static Reader createTokenReplaceReader( final Reader reader, final Properties token2value, final char beginToken, final char endToken )
   {
     final ReplaceTokens rtr = new ReplaceTokens( reader );
 
     rtr.setBeginToken( beginToken );
     rtr.setEndToken( endToken );
 
-    for( final Iterator iter = token2value.entrySet().iterator(); iter.hasNext(); )
+    for( final Entry<Object, Object> entry : token2value.entrySet() )
     {
-      final Map.Entry entry = (Entry)iter.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 

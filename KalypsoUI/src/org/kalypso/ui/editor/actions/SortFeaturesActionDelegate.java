@@ -198,7 +198,6 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
     return (IPropertyType) result[0];
   }
 
-  @SuppressWarnings("unchecked")
   private void sort( final FeatureList list, final IPropertyType propertyToSort )
   {
     if( !(propertyToSort instanceof IValuePropertyType) )
@@ -207,7 +206,7 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
     // TODO: undoable!
 
     final Comparator<Object> featureComparator = new FeatureComparator( list.getParentFeature(), propertyToSort );
-    Collections.sort( (List<Object>) list, featureComparator );
+    Collections.sort( list, featureComparator );
 
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();

@@ -85,14 +85,14 @@ public class ChartConfigurationSaver
     chartType.setDescription( model.getDescription() );
     chartType.setTitle( model.getTitle() );
 
-    Layers layers = chartType.addNewLayers();
+    final Layers layers = chartType.addNewLayers();
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
 
-    Mappers mappers = chartType.addNewMappers();
+    final Mappers mappers = chartType.addNewMappers();
     mappers.setAxisArray( extractAxes( model.getMapperRegistry() ).values().toArray( new AxisType[] {} ) );
     mappers.setMapperArray( extractMappers( model.getMapperRegistry() ).values().toArray( new MapperType[] {} ) );
 
-    Renderers renderers = chartType.addNewRenderers();
+    final Renderers renderers = chartType.addNewRenderers();
     renderers.setAxisRendererArray( extractAxisRenderers( model.getMapperRegistry() ).values().toArray( new AxisRendererType[] {} ) );
     return ccd;
   }
@@ -106,16 +106,16 @@ public class ChartConfigurationSaver
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      AxisType at = (AxisType) axis.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final AxisType at = (AxisType) axis.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
       if( at != null )
       {
 
         // only set new range
         if( at.isSetDateRange() )
         {
-          IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
-          AxisDateRangeType configRange = at.getDateRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
+          final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
+          final AxisDateRangeType configRange = at.getDateRange();
+          final IDataRange<Number> numericRange = axis.getNumericRange();
           configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
           configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
         }
@@ -125,15 +125,15 @@ public class ChartConfigurationSaver
         }
         else if( at.isSetNumberRange() )
         {
-          AxisNumberRangeType configRange = at.getNumberRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
+          final AxisNumberRangeType configRange = at.getNumberRange();
+          final IDataRange<Number> numericRange = axis.getNumericRange();
           configRange.setMinValue( numericRange.getMin().doubleValue() );
           configRange.setMaxValue( numericRange.getMax().doubleValue() );
         }
         else if( at.isSetStringRange() )
         {
-          AxisStringRangeType configRange = at.getStringRange();
-          IDataRange<Number> numericRange = axis.getNumericRange();
+          final AxisStringRangeType configRange = at.getStringRange();
+          final IDataRange<Number> numericRange = axis.getNumericRange();
           configRange.setMinValue( numericRange.getMin().doubleValue() );
           configRange.setMaxValue( numericRange.getMax().doubleValue() );
         }
@@ -156,7 +156,7 @@ public class ChartConfigurationSaver
       final IAxisRenderer renderer = registry.getRenderer( axis );
       if( renderer != null )
       {
-        AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+        final AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
         if( art != null )
         {
           // everything stays as it was
@@ -170,14 +170,13 @@ public class ChartConfigurationSaver
   /**
    * saves mappers without applying any changes
    */
-  @SuppressWarnings("unchecked")
   private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
     final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
-      MapperType mt = (MapperType) mapper.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final MapperType mt = (MapperType) mapper.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
       if( mt != null )
       {
         // everything stays as it was
@@ -195,7 +194,7 @@ public class ChartConfigurationSaver
     final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
     for( final IChartLayer layer : manager.getLayers() )
     {
-      LayerType lt = (LayerType) layer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final LayerType lt = (LayerType) layer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
       if( lt != null )
       {
         // set layer visibility

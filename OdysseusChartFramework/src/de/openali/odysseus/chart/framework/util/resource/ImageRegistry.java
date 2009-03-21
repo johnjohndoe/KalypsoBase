@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.resource;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
@@ -52,9 +49,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ImageRegistry extends AbstractResourceRegistryFactory<ImageDescriptor, Image>
 {
-
-  private final Map<ImageDescriptor, Image> m_imageMap = new HashMap<ImageDescriptor, Image>();
-
   /**
    * Registry and factory object which can be used to load images from urls and store them; the images must not be
    * disposed by the caller
@@ -80,7 +74,7 @@ public class ImageRegistry extends AbstractResourceRegistryFactory<ImageDescript
    *      java.lang.Object)
    */
   @Override
-  protected Image createResource( Device dev, ImageDescriptor descriptor )
+  protected Image createResource( final Device dev, final ImageDescriptor descriptor )
   {
     return descriptor.createImage( dev );
   }
@@ -89,7 +83,7 @@ public class ImageRegistry extends AbstractResourceRegistryFactory<ImageDescript
    * @see de.openali.odysseus.chart.framework.util.resource.AbstractResourceRegistry#disposeValue(java.lang.Object)
    */
   @Override
-  protected void disposeResource( Image value )
+  protected void disposeResource( final Image value )
   {
     value.dispose();
 

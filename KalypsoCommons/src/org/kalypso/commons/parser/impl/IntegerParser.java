@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.parser.impl;
 
@@ -48,7 +48,7 @@ import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Integer, Long, und Short Objekte.
- * 
+ *
  * @author schlienger
  */
 public class IntegerParser extends AbstractParser
@@ -69,7 +69,7 @@ public class IntegerParser extends AbstractParser
    * @param format
    *          hat keine Bedeutung für Integers
    */
-  public IntegerParser( String format )
+  public IntegerParser( final String format )
   {
     m_format = format;
 
@@ -79,7 +79,7 @@ public class IntegerParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
-  public Class getObjectClass()
+  public Class<Integer> getObjectClass( )
   {
     return Integer.class;
   }
@@ -96,13 +96,13 @@ public class IntegerParser extends AbstractParser
    * @throws ParserException
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
-  public Object parse( String text ) throws ParserException
+  public Object parse( final String text ) throws ParserException
   {
     try
     {
       return m_nf.parse( text );
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       throw new ParserException( e );
     }
@@ -112,7 +112,7 @@ public class IntegerParser extends AbstractParser
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
   @Override
-  public String toStringInternal( Object obj )
+  public String toStringInternal( final Object obj )
   {
     return m_nf.format( obj );
   }
@@ -120,10 +120,10 @@ public class IntegerParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object value1, Object value2 )
+  public int compare( final Object value1, final Object value2 )
   {
-    int n1 = ( (Number)value1 ).intValue();
-    int n2 = ( (Number)value2 ).intValue();
+    final int n1 = ( (Number)value1 ).intValue();
+    final int n2 = ( (Number)value2 ).intValue();
 
     if( n1 < n2 )
       return -1;

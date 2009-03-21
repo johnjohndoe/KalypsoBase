@@ -14,14 +14,11 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class HeadlessChart
 {
-
 	private final Shell m_shell;
 
 	private final ChartComposite m_chart;
 
-	private final boolean m_isDisposed = false;
-
-	public HeadlessChart( IChartModel chartModel, RGB bgRGB )
+	public HeadlessChart( final IChartModel chartModel, final RGB bgRGB )
 	{
 		final Display d = DisplayHelper.getInstance().getDisplay();
 		m_shell = new Shell(d);

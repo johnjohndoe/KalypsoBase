@@ -42,4 +42,5 @@ Export-Package: org.kalypso.gmlschema,
  org.shiftone.cache.util,
  org.shiftone.cache.util.reaper
 Bundle-Activator: org.kalypso.gmlschema.KalypsoGMLSchemaPlugin
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -47,16 +47,16 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Dieser Source-Handler holt den Workspace über eine ID aus der externen-data-map.
- * 
+ *
  * @author belger
  */
 public class RegisterSourceHandler implements ISourceHandler
 {
   private final String m_registeredID;
 
-  private final Map m_externData;
+  private final Map< ? , ? > m_externData;
 
-  public RegisterSourceHandler( final RegisterSourceType type, final Map externData )
+  public RegisterSourceHandler( final RegisterSourceType type, final Map< ? , ? > externData )
   {
     m_externData = externData;
     m_registeredID = type.getRegisteredID();

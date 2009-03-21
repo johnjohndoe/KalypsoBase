@@ -24,8 +24,7 @@ public class GenericAxisLineLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  @SuppressWarnings( { "unused", "unchecked" })
-  public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
     return new GenericAxisLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
@@ -38,7 +37,7 @@ public class GenericAxisLineLayerProvider extends AbstractLayerProvider
     final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "2000", new IntegerParser() );
     final Integer maxVal = getParameterContainer().getParsedParameterValue( "max_val", "1", new IntegerParser() );
 
-    GenericAxisTimeSeriesDataContainer data = new GenericAxisTimeSeriesDataContainer( dataSize, maxVal );
+    final GenericAxisTimeSeriesDataContainer data = new GenericAxisTimeSeriesDataContainer( dataSize, maxVal );
     return data;
   }
 

@@ -128,23 +128,10 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     // status-axis
     if( KalypsoStatusUtils.isStatusAxis( axis ) )
     {
-      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
       if( index >= m_baseModels[0].getCount() )
         return null;
 
       final int value = KalypsoStati.BIT_OK;
-// int value = ((Number) m_baseModels[0].getElement( index, a )).intValue();
-// for( int i = 1; i < m_baseModels.length; i++ )
-// {
-// final ITuppleModel model = m_baseModels[i];
-// if( index >= model.getCount() )
-// continue;
-//
-// final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
-//
-// final int nextValue = ((Number) model.getElement( index, a2 )).intValue();
-// value |= nextValue;
-// }
       return new Integer( value );
     }
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0" ) //$NON-NLS-1$

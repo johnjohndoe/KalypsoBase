@@ -13,11 +13,11 @@ public final class CsvWriterVisitor implements FeatureVisitor
 {
   private final PrintWriter m_writer;
 
-  private final Map m_props;
+  private final Map<String, String> m_props;
 
   private final String m_delemiter;
 
-  public CsvWriterVisitor( final PrintWriter writer, final Map properties, final String delemiter )
+  public CsvWriterVisitor( final PrintWriter writer, final Map<String, String> properties, final String delemiter )
   {
     m_writer = writer;
     m_props = properties;
@@ -29,14 +29,14 @@ public final class CsvWriterVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    for( final Iterator propIt = m_props.entrySet().iterator(); propIt.hasNext(); )
+    for( final Iterator<Entry<String, String>> propIt = m_props.entrySet().iterator(); propIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry)propIt.next();
-      final String prop = (String)entry.getKey();
-      final String def = (String)entry.getValue();
+      final Map.Entry<String, String> entry = propIt.next();
+      final String prop = entry.getKey();
+      final String def = entry.getValue();
 
       final Object property = f.getProperty( prop );
-      
+
       m_writer.print( property == null ? def : propertyToString( property ) );
 
       if( propIt.hasNext() )
@@ -52,7 +52,7 @@ public final class CsvWriterVisitor implements FeatureVisitor
   {
     if( property instanceof Double )
       return String.format( Locale.US, "%f", property ); //$NON-NLS-1$
-      
+
     return property.toString();
   }
 }

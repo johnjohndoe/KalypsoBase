@@ -206,7 +206,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
    */
-  public void setData( String id, Object data )
+  public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
@@ -214,17 +214,17 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
-  public Object getData( String id )
+  public Object getData( final String id )
   {
     return m_data.get( id );
   }
 
-  public void addListener( ILayerEventListener l )
+  public void addListener( final ILayerEventListener l )
   {
     m_handler.addListener( l );
   }
 
-  public void removeListener( ILayerEventListener l )
+  public void removeListener( final ILayerEventListener l )
   {
     m_handler.removeListener( l );
   }
@@ -240,7 +240,7 @@ public class DummyLayer implements IChartLayer
   @Deprecated
   public void drawIcon( final Image img )
   {
-    GC gc = new GC( img );
+    final GC gc = new GC( img );
     gc.setBackground( img.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.fillRectangle( img.getBounds() );
     gc.dispose();
@@ -249,7 +249,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     // TODO Auto-generated method stub
 
@@ -282,7 +282,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#setCoordinateMapper(org.kalypso.chart.framework.model.mapper.ICoordinateMapper)
    */
-  public void setCoordinateMapper( ICoordinateMapper coordinateMapper )
+  public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
@@ -313,12 +313,12 @@ public class DummyLayer implements IChartLayer
    */
   public ILegendEntry[] getLegendEntries( )
   {
-    LegendEntry le = new LegendEntry(this, m_description)
+    final LegendEntry le = new LegendEntry(this, m_description)
     {
 
       
       @Override
-      public void paintSymbol( GC gc, Point size )
+      public void paintSymbol( final GC gc, final Point size )
       {
         //nothing to do
       }
@@ -330,8 +330,7 @@ public class DummyLayer implements IChartLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setMappers(java.util.Map)
    */
-  @SuppressWarnings("unchecked")
-  public void setMappers( @SuppressWarnings("unused") Map<String, IMapper> mapperMap )
+  public void setMappers( @SuppressWarnings("unused") final Map<String, IMapper> mapperMap )
   {
     // nothing to do
 

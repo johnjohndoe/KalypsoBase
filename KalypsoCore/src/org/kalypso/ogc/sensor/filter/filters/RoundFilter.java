@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -101,13 +101,15 @@ public class RoundFilter extends AbstractObservationFilter
     throw new IllegalArgumentException( "Unsupported Rounding-Mode: " + mode );
   }
 
-  public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
+  @Override
+  public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
-    
+
     super.initFilter( dummy, baseObs, context );
   }
 
+  @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     final Date from;
@@ -144,14 +146,14 @@ public class RoundFilter extends AbstractObservationFilter
     }
 
     final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation(m_baseobservation);
-    
+
     final ITuppleModel values = proxiedObservation.getValues( bufferedRequest );
 
     // get all non-virtual Double-Axises
     final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
     if( axis == null )
       throw new SensorException( "No axes of type: " + m_type );
-    
+
       final int valueCount = values.getCount();
       for( int j = 0; j < valueCount; j++ )
       {
@@ -172,7 +174,8 @@ public class RoundFilter extends AbstractObservationFilter
     return simpleTuppleModel;
   }
 
-  public void setValues( ITuppleModel values )
+  @Override
+  public void setValues( final ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstützt ." );
   }

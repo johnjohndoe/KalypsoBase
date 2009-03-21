@@ -43,7 +43,6 @@ package org.kalypso.ant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ import org.apache.tools.ant.Task;
 
 /**
  * This task allows to set mutliple properties depending on the result of comparing two strings.
- * 
+ *
  * @author belger
  */
 public class MultiEqualsTask extends Task
@@ -67,23 +66,23 @@ public class MultiEqualsTask extends Task
     /** Value of the property to set, if the compared string are not equal */
     private String m_valueElse;
 
-    public void setName( String name )
+    public void setName( final String name )
     {
       m_name = name;
     }
 
     /** Value of the property to set, if the compared strings are equal */
-    public void setValueElse( String valueElse )
+    public void setValueElse( final String valueElse )
     {
       m_valueElse = valueElse;
     }
 
     /** Name of the property to set */
-    public void setValueThen( String valueThen )
+    public void setValueThen( final String valueThen )
     {
       m_valueThen = valueThen;
     }
-    
+
     public String getName()
     {
       return m_name;
@@ -101,7 +100,7 @@ public class MultiEqualsTask extends Task
   private String m_arg1;
   private String m_arg2;
 
-  private List<PropertyToSet> m_properties = new ArrayList<PropertyToSet>( 5 );
+  private final List<PropertyToSet> m_properties = new ArrayList<PropertyToSet>( 5 );
 
   /** List of added ant-properties */
   private final Map<String, String> m_addedAttributes = new HashMap<String, String>();
@@ -113,13 +112,13 @@ public class MultiEqualsTask extends Task
   }
 
   /** first string to compare */
-  public void setArg1( String arg1 )
+  public void setArg1( final String arg1 )
   {
     m_arg1 = arg1;
   }
 
   /** Second string to compare */
-  public void setArg2( String arg2 )
+  public void setArg2( final String arg2 )
   {
     m_arg2 = arg2;
   }
@@ -140,10 +139,8 @@ public class MultiEqualsTask extends Task
     final String msg = isEquals ? "Strings are equal" : "Strings are not equal";
     log( msg, Project.MSG_DEBUG );
 
-    for( final Iterator iter = m_properties.iterator(); iter.hasNext(); )
+    for( final PropertyToSet property : m_properties )
     {
-      final PropertyToSet property = (PropertyToSet)iter.next();
-
       final String valueToSet = isEquals ? property.getValueThen() : property.getValueElse();
       addProperty( property.getName(), valueToSet, null );
     }
@@ -151,10 +148,10 @@ public class MultiEqualsTask extends Task
 
   /**
    * Actually add the given property/value to the project after writing a log message.
-   * 
+   *
    * @note: Taken from {@link XmlProperty}in Ant.
    */
-  private void addProperty( String name, String value, String id )
+  private void addProperty( final String name, String value, final String id )
   {
     String msg = name + ":" + value;
     if( id != null )

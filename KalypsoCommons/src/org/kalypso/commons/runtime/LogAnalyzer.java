@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.runtime;
 
@@ -65,7 +65,7 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
  * <p>
  * The log files do now contain log-entries of the form 'LEVEL: message' which are read as IStatus object into a
  * multistatus.
- * 
+ *
  * @author Marc Schlienger
  */
 public class LogAnalyzer
@@ -83,7 +83,7 @@ public class LogAnalyzer
    * <li>The message text of each multi-status will be composed of all its statuses with code
    * {@link LoggerUtilities#CODE_SHOW_MSGBOX}</li>
    * </ul>
-   * 
+   *
    * @return The resulting stati. If problems are encountered while reading the file, instead an error status describing
    *         the io-problems is returned.
    */
@@ -130,12 +130,12 @@ public class LogAnalyzer
    * Reads a reader into an array of statuses.
    * <p>
    * The reader will not be closed.
-   * 
+   *
    * @throws IOException
    */
   public static IStatus[] readerToStatus( final BufferedReader br ) throws IOException
   {
-    final List stati = new ArrayList();
+    final List<IStatus> stati = new ArrayList<IStatus>();
 
     while( br.ready() )
     {
@@ -148,15 +148,15 @@ public class LogAnalyzer
         stati.add( lineStatus );
     }
 
-    return (IStatus[])stati.toArray( new IStatus[stati.size()] );
+    return stati.toArray( new IStatus[stati.size()] );
   }
 
   /** sorts an array of stati according to its {@link LoggerUtilities}-codes. */
   public static IStatus[] groupStati( final IStatus[] stati )
   {
     final GroupStatusStrategry collector = new GroupStatusStrategry();
-    for( int i = 0; i < stati.length; i++ )
-      collector.add( stati[i] );
+    for( final IStatus element : stati )
+      collector.add( element );
 
     return collector.getResult();
   }
@@ -180,12 +180,12 @@ public class LogAnalyzer
 
   /**
    * @see LogAnalyzer#groupStati(IStatus[])
-   * 
+   *
    * @author Belger
    */
   private static final class GroupStatusStrategry
   {
-    private final List m_children = new ArrayList();
+    private final List<IStatus> m_children = new ArrayList<IStatus>();
 
     private final StringBuffer m_message = new StringBuffer();
 
@@ -219,7 +219,7 @@ public class LogAnalyzer
       case LoggerUtilities.CODE_NONE:
       // fall through
       default:
-        // Stati with unknown codes dont get grouped.
+        // Stati with unknown codes don't get grouped.
         break;
       }
     }
@@ -228,7 +228,7 @@ public class LogAnalyzer
     {
       if( !m_children.isEmpty() )
       {
-        final IStatus[] children = (IStatus[])m_children.toArray( new IStatus[m_children.size()] );
+        final IStatus[] children = m_children.toArray( new IStatus[m_children.size()] );
         final String message = m_message.length() == 0 ? "siehe Details" : m_message.toString();
 
         final int code = m_result.getCode();

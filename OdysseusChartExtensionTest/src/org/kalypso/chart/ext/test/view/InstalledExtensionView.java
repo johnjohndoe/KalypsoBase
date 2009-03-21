@@ -41,7 +41,6 @@
 package org.kalypso.chart.ext.test.view;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -67,7 +66,7 @@ public class InstalledExtensionView extends ViewPart
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     m_text = new Text( parent, SWT.MULTI );
 
@@ -80,17 +79,15 @@ public class InstalledExtensionView extends ViewPart
     m_text.setText( out );
   }
 
-  private String getExtensionInfo( String type )
+  private String getExtensionInfo( final String type )
   {
-    String pid = ChartExtensionLoader.PLUGIN_ID + "." + type;
+    final String pid = ChartExtensionLoader.PLUGIN_ID + "." + type;
     String out = "";
     out += type + ": \n";
-    IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor( pid );
-    for( IConfigurationElement ce : ces )
+    final IConfigurationElement[] ces = Platform.getExtensionRegistry().getConfigurationElementsFor( pid );
+    for( final IConfigurationElement ce : ces )
     {
-      IExtension e = ce.getDeclaringExtension();
       out += "\t" + ce.getAttribute( "id" ) + "\n";
-
     }
     out += "------------------------------------\n";
     return out;

@@ -96,7 +96,7 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.commons.tuple.ITupleModel#hasRowKey(R)
    */
-  public boolean hasRowKey( R rowKey )
+  public boolean hasRowKey( final R rowKey )
   {
     return m_model.containsKey( rowKey );
   }
@@ -104,12 +104,11 @@ public class DefaultTupleModel<R extends IRowKey, C extends IColumnKey> extends 
   /**
    * @see org.kalypso.commons.tuple.ITupleModel#hasColumnKey(null)
    */
-  public boolean hasColumnKey( C columnKey )
+  public boolean hasColumnKey( final C columnKey )
   {
     return m_columns.contains( columnKey );
   }
   
-  @SuppressWarnings("unchecked")
   public Object getValue( final R rowKey, final C columnKey )
   {
     final Map<C, Object> row = m_model.get( rowKey );

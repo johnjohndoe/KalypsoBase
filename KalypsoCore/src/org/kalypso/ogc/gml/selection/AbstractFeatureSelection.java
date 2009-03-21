@@ -63,7 +63,7 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
     return m_selection.getFirstElement();
   }
 
-  public final Iterator iterator()
+  public final Iterator< ? > iterator( )
   {
     return m_selection.iterator();
   }
@@ -78,7 +78,7 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
     return m_selection.toArray();
   }
 
-  public final List toList()
+  public final List< ? > toList( )
   {
     return m_selection.toList();
   }

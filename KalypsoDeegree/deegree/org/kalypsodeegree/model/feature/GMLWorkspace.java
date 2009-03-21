@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -78,7 +78,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /**
    * resolves the associationlink to a feature, maxOccurs =1
-   * 
+   *
    * @param srcFeature
    * @param linkPropertyName
    * @param resolveMode
@@ -93,7 +93,7 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /**
    * resolves the associationlink to a feature, maxOccurs >1
-   * 
+   *
    * @param srcFeature
    * @param linkPropertyName
    * @param resolveMode
@@ -116,7 +116,7 @@ public interface GMLWorkspace extends ModellEventProvider
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth );
 
   /** Visit alle features in the given list */
-  public void accept( final FeatureVisitor fv, final List features, final int depth );
+  public void accept( final FeatureVisitor fv, final List< ? > features, final int depth );
 
   /** Visit alle features denoted by this path */
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth );
@@ -148,7 +148,7 @@ public interface GMLWorkspace extends ModellEventProvider
    * <p>
    * Generates a unique id throughout this workspace.
    * </p>
-   * 
+   *
    * @param depth
    *            Number of levels of subfeatures which shall be created. -1 means infinite, 0 means none (only normal
    *            properties are filled with default values).
@@ -158,7 +158,7 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * TODO: commont TODO: we should replace this method by: createAsComposition! First, it is always used as such (that i
    * sfirst created, that this method is called).; Second: a featuree hsould never live without workspace
-   * 
+   *
    * @param pos
    *            Position at which the new element is inserted into the list. If -1, the new element is added to the end
    *            of the list.
@@ -174,7 +174,7 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * removes a related feature from the parent. Works only if the child is linked <br>
    * <i>and the relation is not a composition </i> see also
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */

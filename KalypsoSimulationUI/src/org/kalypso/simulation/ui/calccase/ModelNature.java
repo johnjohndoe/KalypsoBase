@@ -169,7 +169,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * This is the id to use in your own launch files.
    * <p>
    * Example of an launch-file:
-   * 
+   *
    * <pre>
    *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
    *    &lt;launchConfiguration type=&quot;org.eclipse.ant.AntLaunchConfigurationType&quot;&gt;
@@ -347,7 +347,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
-      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap() );
+      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap<Object, Object>() );
       attribute.putAll( userProperties );
       if( antProps != null )
         attribute.putAll( antProps );
@@ -697,7 +697,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   * 
+   *
    * @param cal
    * @return true when time is valid
    */
@@ -799,7 +799,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   * 
+   *
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for

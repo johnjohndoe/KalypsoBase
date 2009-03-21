@@ -9,5 +9,6 @@ Require-Bundle: org.junit4,
 Export-Package: org.kalypso.kml.export.constants,
  org.kalypso.kml.export.interfaces;uses:="org.kalypsodeegree.model.feature"
 Bundle-Localization: plugin
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

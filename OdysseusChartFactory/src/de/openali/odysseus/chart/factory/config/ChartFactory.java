@@ -123,9 +123,6 @@ public class ChartFactory
 
   }
 
-  /**
-   */
-  @SuppressWarnings("unchecked")
   private static void addMapper( final IChartModel model, final MapperType mapperType, final IExtensionLoader extLoader, final URL context )
   {
     if( mapperType != null )
@@ -134,10 +131,10 @@ public class ChartFactory
       if( (mpId != null) && (mpId.length() > 0) )
         try
         {
-          IMapperRegistry mr = model.getMapperRegistry();
+          final IMapperRegistry mr = model.getMapperRegistry();
           final IMapperProvider mp = extLoader.getExtension( IMapperProvider.class, mpId );
-          String mid = mapperType.getId();
-          IParameterContainer pc = createParameterContainer( mid, mapperType.getProvider() );
+          final String mid = mapperType.getId();
+          final IParameterContainer pc = createParameterContainer( mid, mapperType.getProvider() );
           mp.init( model, mid, pc, context );
           final IMapper mapper = mp.getMapper();
           // save provider so it can be used for saving to chartfile
@@ -164,7 +161,7 @@ public class ChartFactory
    */
   public static void addAxis( final IChartModel model, final IReferenceResolver rr, final AxisType axisType, final IExtensionLoader extLoader, final URL context )
   {
-    IMapperRegistry mr = model.getMapperRegistry();
+    final IMapperRegistry mr = model.getMapperRegistry();
     if( axisType != null )
     {
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
@@ -179,10 +176,10 @@ public class ChartFactory
           final IAxisProvider ap = extLoader.getExtension( IAxisProvider.class, apId );
           if( ap != null )
           {
-            String id = axisType.getId();
-            POSITION axisPosition = getAxisPosition( axisType );
-            IParameterContainer pc = createParameterContainer( id, axisType.getProvider() );
-            Class< ? > dataClass = getAxisDataClass( axisType );
+            final String id = axisType.getId();
+            final POSITION axisPosition = getAxisPosition( axisType );
+            final IParameterContainer pc = createParameterContainer( id, axisType.getProvider() );
+            final Class< ? > dataClass = getAxisDataClass( axisType );
             String[] valueList = null;
             if( axisType.isSetStringRange() )
               valueList = axisType.getStringRange().getValueSet().getValueArray();
@@ -216,9 +213,9 @@ public class ChartFactory
                 {
                   final String arpId = rendererType.getProvider().getEpid();
                   final IAxisRendererProvider arp = extLoader.getExtension( IAxisRendererProvider.class, arpId );
-                  String rid = rendererType.getId();
-                  IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
-                  IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
+                  final String rid = rendererType.getId();
+                  final IStyleSet styleSet = createStyleSet( rendererType.getStyles(), context );
+                  final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
                   arp.init( model, rid, rpc, context, styleSet );
                   try
                   {
@@ -228,7 +225,7 @@ public class ChartFactory
                     // save configuration type so it can be used for saving to chartfile
                     axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
                   }
-                  catch( ConfigurationException e )
+                  catch( final ConfigurationException e )
                   {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -251,7 +248,7 @@ public class ChartFactory
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
   }
 
-  public static void addLayer( IChartModel model, IReferenceResolver rr, URL context, LayerType layerType, final IExtensionLoader extLoader )
+  public static void addLayer( final IChartModel model, final IReferenceResolver rr, final URL context, final LayerType layerType, final IExtensionLoader extLoader )
   {
     // Achsen hinzufügen
     final MapperRefs mapper = layerType.getMapperRefs();
@@ -287,22 +284,22 @@ public class ChartFactory
       }
 
       // create styles
-      IStyleSet styleSet = createStyleSet( layerType.getStyles(), context );
+      final IStyleSet styleSet = createStyleSet( layerType.getStyles(), context );
       // create map if mapper roles to ids
-      Map<String, String> mapperMap = createMapperMap( layerType );
+      final Map<String, String> mapperMap = createMapperMap( layerType );
       // create parameter container
-      IParameterContainer parameters = createParameterContainer( layerType.getId(), layerType.getProvider() );
+      final IParameterContainer parameters = createParameterContainer( layerType.getId(), layerType.getProvider() );
 
-      String domainAxisId = layerType.getMapperRefs().getDomainAxisRef().getRef();
-      String targetAxisId = layerType.getMapperRefs().getTargetAxisRef().getRef();
+      final String domainAxisId = layerType.getMapperRefs().getDomainAxisRef().getRef();
+      final String targetAxisId = layerType.getMapperRefs().getTargetAxisRef().getRef();
 
       provider.init( model, layerType.getId(), parameters, context, domainAxisId, targetAxisId, mapperMap, styleSet );
       final IChartLayer icl = provider.getLayer( context );
       if( icl != null )
       {
-        IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
-        IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
-        ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
+        final IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
+        final IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
+        final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
         icl.setCoordinateMapper( cm );
         icl.setId( layerType.getId() );
         icl.setTitle( layerType.getTitle() );
@@ -323,13 +320,13 @@ public class ChartFactory
     {
       e.printStackTrace();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-      IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
-      IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
-      ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
-      IChartLayer icl = new DummyLayer();
+      final IAxis domainAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
+      final IAxis targetAxis = model.getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
+      final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
+      final IChartLayer icl = new DummyLayer();
       icl.setTitle( layerType.getTitle() );
       icl.setCoordinateMapper( cm );
       // saving the provider into the layer so it can be reused to save changed charts
@@ -340,49 +337,49 @@ public class ChartFactory
     }
   }
 
-  private static Map<String, String> createMapperMap( LayerType lt )
+  private static Map<String, String> createMapperMap( final LayerType lt )
   {
-    Map<String, String> mapperMap = new HashMap<String, String>();
-    RoleReferencingType[] mapperRefArray = lt.getMapperRefs().getMapperRefArray();
-    for( RoleReferencingType rrt : mapperRefArray )
+    final Map<String, String> mapperMap = new HashMap<String, String>();
+    final RoleReferencingType[] mapperRefArray = lt.getMapperRefs().getMapperRefArray();
+    for( final RoleReferencingType rrt : mapperRefArray )
       mapperMap.put( rrt.getRole(), rrt.getRef() );
     return mapperMap;
   }
 
-  private static IStyleSet createStyleSet( Styles styles, URL context )
+  private static IStyleSet createStyleSet( final Styles styles, final URL context )
   {
     // Styles erzeugen
-    IStyleSet styleSet = new StyleSet();
+    final IStyleSet styleSet = new StyleSet();
     if( styles != null )
     {
-      AreaStyleType[] asArray = styles.getAreaStyleArray();
-      for( AreaStyleType ast : asArray )
+      final AreaStyleType[] asArray = styles.getAreaStyleArray();
+      for( final AreaStyleType ast : asArray )
       {
-        IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
+        final IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
         // save configuration type so it can be used for saving to chartfile
         as.setData( CONFIGURATION_TYPE_KEY, ast );
         styleSet.addStyle( ast.getRole(), as );
       }
-      PointStyleType[] psArray = styles.getPointStyleArray();
-      for( PointStyleType pst : psArray )
+      final PointStyleType[] psArray = styles.getPointStyleArray();
+      for( final PointStyleType pst : psArray )
       {
-        IPointStyle ps = StyleFactory.createPointStyle( pst, context );
+        final IPointStyle ps = StyleFactory.createPointStyle( pst, context );
         // save configuration type so it can be used for saving to chartfile
         ps.setData( CONFIGURATION_TYPE_KEY, pst );
         styleSet.addStyle( pst.getRole(), ps );
       }
-      LineStyleType[] lsArray = styles.getLineStyleArray();
-      for( LineStyleType lst : lsArray )
+      final LineStyleType[] lsArray = styles.getLineStyleArray();
+      for( final LineStyleType lst : lsArray )
       {
-        ILineStyle ls = StyleFactory.createLineStyle( lst );
+        final ILineStyle ls = StyleFactory.createLineStyle( lst );
         // save configuration type so it can be used for saving to chartfile
         ls.setData( CONFIGURATION_TYPE_KEY, lst );
         styleSet.addStyle( lst.getRole(), ls );
       }
-      TextStyleType[] tsArray = styles.getTextStyleArray();
-      for( TextStyleType tst : tsArray )
+      final TextStyleType[] tsArray = styles.getTextStyleArray();
+      for( final TextStyleType tst : tsArray )
       {
-        ITextStyle ts = StyleFactory.createTextStyle( tst );
+        final ITextStyle ts = StyleFactory.createTextStyle( tst );
         // save configuration type so it can be used for saving to chartfile
         ts.setData( CONFIGURATION_TYPE_KEY, tst );
         styleSet.addStyle( tst.getRole(), ts );
@@ -391,7 +388,7 @@ public class ChartFactory
     return styleSet;
   }
 
-  public static IParameterContainer createParameterContainer( String ownerId, ProviderType pt )
+  public static IParameterContainer createParameterContainer( final String ownerId, final ProviderType pt )
   {
     ParametersType parameters = null;
     if( pt != null )
@@ -400,7 +397,7 @@ public class ChartFactory
     return pc;
   }
 
-  private static DIRECTION getAxisDirection( AxisType at )
+  private static DIRECTION getAxisDirection( final AxisType at )
   {
     final AxisDirectionParser app = new AxisDirectionParser();
     final String position = at.getPosition().toString();
@@ -408,7 +405,7 @@ public class ChartFactory
     return dir;
   }
 
-  private static POSITION getAxisPosition( AxisType at )
+  private static POSITION getAxisPosition( final AxisType at )
   {
     final AxisPositionParser app = new AxisPositionParser();
     final String position = at.getPosition().toString();
@@ -416,12 +413,12 @@ public class ChartFactory
     return pos;
   }
 
-  private static AxisAdjustment getAxisAdjustment( AxisType at )
+  private static AxisAdjustment getAxisAdjustment( final AxisType at )
   {
     AxisAdjustment aa = null;
     if( at.isSetPreferredAdjustment() )
     {
-      PreferredAdjustment pa = at.getPreferredAdjustment();
+      final PreferredAdjustment pa = at.getPreferredAdjustment();
       aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter() );
     }
     else
@@ -432,51 +429,51 @@ public class ChartFactory
   /**
    * creates the axis range from the xml element
    */
-  private static IDataRange<Number> getAxisRange( IAxis axis, AxisType at )
+  private static IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
   {
     Number min = 0;
     Number max = 1;
 
     if( at.isSetDateRange() )
     {
-      AxisDateRangeType range = at.getDateRange();
-      IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
-      Calendar minValue = range.getMinValue();
+      final AxisDateRangeType range = at.getDateRange();
+      final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+      final Calendar minValue = range.getMinValue();
       min = dataOperator.logicalToNumeric( minValue );
-      Calendar maxValue = range.getMaxValue();
+      final Calendar maxValue = range.getMaxValue();
       max = dataOperator.logicalToNumeric( maxValue );
     }
     else if( at.isSetNumberRange() )
     {
-      AxisNumberRangeType range = at.getNumberRange();
+      final AxisNumberRangeType range = at.getNumberRange();
       min = range.getMinValue();
       max = range.getMaxValue();
     }
     else if( at.isSetStringRange() )
     {
-      AxisStringRangeType range = at.getStringRange();
+      final AxisStringRangeType range = at.getStringRange();
       min = range.getMinValue();
       max = range.getMaxValue();
     }
     else if( at.isSetDurationRange() )
     {
-      AxisDurationRangeType range = at.getDurationRange();
-      IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
-      GDuration minDur = range.getMinValue();
-      Calendar now = Calendar.getInstance();
-      Calendar minValue = addDurationToCal( now, minDur );
+      final AxisDurationRangeType range = at.getDurationRange();
+      final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+      final GDuration minDur = range.getMinValue();
+      final Calendar now = Calendar.getInstance();
+      final Calendar minValue = addDurationToCal( now, minDur );
       min = dataOperator.logicalToNumeric( minValue );
-      GDuration maxDur = range.getMaxValue();
-      Calendar maxValue = addDurationToCal( now, maxDur );
+      final GDuration maxDur = range.getMaxValue();
+      final Calendar maxValue = addDurationToCal( now, maxDur );
       max = dataOperator.logicalToNumeric( maxValue );
     }
-    IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
+    final IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
     return range;
   }
 
-  private static Calendar addDurationToCal( Calendar cal, GDuration dur )
+  private static Calendar addDurationToCal( final Calendar cal, final GDuration dur )
   {
-    int sign = dur.getSign();
+    final int sign = dur.getSign();
     cal.add( Calendar.YEAR, sign * dur.getYear() );
     cal.add( Calendar.MONTH, sign * dur.getMonth() );
     cal.add( Calendar.DAY_OF_MONTH, sign * dur.getDay() );
@@ -487,7 +484,7 @@ public class ChartFactory
     return cal;
   }
 
-  public static Class< ? > getAxisDataClass( AxisType at )
+  public static Class< ? > getAxisDataClass( final AxisType at )
   {
     if( at.isSetDateRange() || at.isSetDurationRange() )
       return Calendar.class;

@@ -80,7 +80,6 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
   @SuppressWarnings("unchecked")
   public TupleResultDomainValueData< ? , ? > getDataContainer( ) throws ConfigurationException
   {
-
     final IParameterContainer pc = getParameterContainer();
 
     final String href = pc.getParameterValue( "href", null );
@@ -100,14 +99,11 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
 
       final Object object = GMLXPathUtilities.query( path, workspace );
 
-      final Feature feature;
       if( object == workspace )
       {
-        feature = workspace.getRootFeature();
       }
       else if( object instanceof Feature )
       {
-        feature = (Feature) object;
       }
       else
       {

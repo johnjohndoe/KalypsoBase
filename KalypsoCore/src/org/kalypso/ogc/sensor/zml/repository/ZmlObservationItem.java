@@ -50,7 +50,7 @@ import org.kalypso.repository.file.FileRepository;
 
 /**
  * An IObservation aware FileItem.
- * 
+ *
  * @author schlienger
  */
 public class ZmlObservationItem extends FileItem
@@ -81,6 +81,7 @@ public class ZmlObservationItem extends FileItem
   /**
    * @see org.kalypso.repository.file.FileItem#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class anotherClass )
   {
@@ -100,7 +101,7 @@ public class ZmlObservationItem extends FileItem
 
   /**
    * Helper, lazy loading.
-   * 
+   *
    * @return observation object read from the file
    * @throws SensorException
    */
@@ -112,7 +113,7 @@ public class ZmlObservationItem extends FileItem
       if( m_zml == null && getRep().getFilter().accept( getFile() ) )
       {
         final File f = getFile();
-        m_zml = ZmlFactory.parseXML( f.toURL(), f.getAbsolutePath() );
+        m_zml = ZmlFactory.parseXML( f.toURI().toURL(), f.getAbsolutePath() );
       }
 
       return m_zml;

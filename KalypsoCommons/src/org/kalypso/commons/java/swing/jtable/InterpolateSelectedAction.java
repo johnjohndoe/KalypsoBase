@@ -7,18 +7,19 @@ import javax.swing.JTable;
 
 /**
  * SetAllAction
- * 
+ *
  * @author schlienger
  */
 public class InterpolateSelectedAction extends AbstractObservationTableAction
 {
-  public InterpolateSelectedAction( JTable table )
+  public InterpolateSelectedAction( final JTable table )
   {
     super( table, "Werte interpolieren",
         "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
   }
 
-  public void internalActionPerformed( ActionEvent e )
+  @Override
+  public void internalActionPerformed( final ActionEvent e )
   {
     final JTable table = getTable();
     final int col = table.getSelectedColumn();

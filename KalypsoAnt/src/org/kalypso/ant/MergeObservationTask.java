@@ -61,11 +61,11 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * <li>der Quellwert innerhalb des Zielzeitraums liegt</li>
  * <li></li>
  * </ul>
- * 
+ *
  * <code>
  *   <kalypso.mergeObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" sourceContext="${calc.merge.url}" targetContext="${calc.url}" observationProperty="outObservationLink"/>
  * </code>
- * 
+ *
  * @author belger
  */
 public class MergeObservationTask extends AbstractFeatureVisitorTask
@@ -88,6 +88,7 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)
    */
+  @Override
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger,
       final IProgressMonitor monitor )
   {
@@ -107,6 +108,7 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
    */
+  @Override
   protected void validateInput()
   {
   // nothing to do

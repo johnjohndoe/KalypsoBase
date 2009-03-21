@@ -175,7 +175,7 @@ public class GmlFileImportPage extends WizardPage
         handleTreeSelection( (IStructuredSelection) event.getSelection() );
       }
     } );
-    m_treeViewer.setContentProvider( new GMLContentProvider() );
+    m_treeViewer.setContentProvider( new GMLContentProvider( true ) );
     m_treeViewer.setLabelProvider( new GMLLabelProvider() );
     m_treeViewer.setUseHashlookup( true );
 

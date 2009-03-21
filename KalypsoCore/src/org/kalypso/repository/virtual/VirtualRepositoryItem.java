@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
@@ -53,16 +53,16 @@ import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
  * VirtualRepositoryItem
- * 
+ *
  * @author schlienger
  */
 public class VirtualRepositoryItem implements IRepositoryItem
 {
-  private IRepository m_repository;
+  private final IRepository m_repository;
 
-  private String m_name;
+  private final String m_name;
 
-  private String m_itemId;
+  private final String m_itemId;
 
   private IRepositoryItem m_parent = null;
 
@@ -88,11 +88,11 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Returns
-   * 
+   *
    * <pre>
    * vrep://&lt;item_id&gt;
    * </pre>.
-   * 
+   *
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   public String getIdentifier( )
@@ -139,7 +139,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
-   * 
+   *
    * @param filterType
    */
   public void setFilterType( final AbstractFilterType filterType )
@@ -147,7 +147,8 @@ public class VirtualRepositoryItem implements IRepositoryItem
     m_filterType = filterType;
   }
 
-  public Object getAdapter( Class anotherClass )
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class anotherClass )
   {
     if( m_filterType != null && anotherClass == IObservation.class )
     {

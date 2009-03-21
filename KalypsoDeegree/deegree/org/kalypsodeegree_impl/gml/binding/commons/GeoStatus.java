@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,8 +35,10 @@
  */
 package org.kalypsodeegree_impl.gml.binding.commons;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
@@ -53,11 +55,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 
 /**
  * The feature based implementation of {@link IGeoStatus}.
- * 
+ *
  * @author Thomas Jung
  */
 public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements IGeoStatus
@@ -118,7 +119,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
       // REMARK: Although this property is defined as 'string' we decode is as base64
       final byte[] bytes = Base64.decodeBase64( encodedBytes );
 
-      final ByteInputStream bis = new ByteInputStream( bytes, bytes.length );
+      final InputStream bis = new ByteArrayInputStream( bytes );
       final ObjectInputStream ois = new ObjectInputStream( bis );
       final Throwable t = (Throwable) ois.readObject();
       ois.close();

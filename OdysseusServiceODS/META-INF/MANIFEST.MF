@@ -13,3 +13,4 @@ Export-Package: de.openali.odysseus.service.ods.operation;uses:="de.openali.ows.
    net.opengis.ows"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.openali.odysseus.service.ods.OdysseusServiceODSPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

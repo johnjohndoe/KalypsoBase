@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.opengeospatial.ows.CodeType;
-import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
 import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
@@ -65,7 +64,6 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 

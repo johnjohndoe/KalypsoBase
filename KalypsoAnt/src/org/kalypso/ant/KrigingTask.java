@@ -41,7 +41,7 @@
 package org.kalypso.ant;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.kalypso.commons.bind.JaxbUtilities;
@@ -70,7 +69,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
@@ -79,7 +77,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  * eine andere Property des Features) zu schreiben. <code>
  * TODO
  * </code>
- * 
+ *
  * @author doemming
  */
 
@@ -131,37 +129,37 @@ public class KrigingTask extends Task
    */
   private String m_sourceGMLIDLinkProperty;
 
-  public final void setHrefGeneratesGml( String hrefGeneratesGml )
+  public final void setHrefGeneratesGml( final String hrefGeneratesGml )
   {
     m_hrefGeneratesGml = hrefGeneratesGml;
   }
 
-  public final void setHrefKrigingTXT( String hrefKrigingTXT )
+  public final void setHrefKrigingTXT( final String hrefKrigingTXT )
   {
     m_hrefKrigingTXT = hrefKrigingTXT;
   }
 
-  public final void setModellGML( String modellGML )
+  public final void setModellGML( final String modellGML )
   {
     m_modellGML = modellGML;
   }
 
-  public final void setModellGMLFeaturePath( String modellGMLFeaturePath )
+  public final void setModellGMLFeaturePath( final String modellGMLFeaturePath )
   {
     m_modellGMLFeaturePath = modellGMLFeaturePath;
   }
 
-  public final void setModellGMLpolygonPropname( String modellGMLpolygonPropname )
+  public final void setModellGMLpolygonPropname( final String modellGMLpolygonPropname )
   {
     m_modellGMLpolygonPropname = modellGMLpolygonPropname;
   }
 
-  public final void setEpsg( String epsg )
+  public final void setEpsg( final String epsg )
   {
     m_epsg = epsg;
   }
 
-  public final void setContext( URL context )
+  public final void setContext( final URL context )
   {
     m_context = context;
   }
@@ -175,27 +173,27 @@ public class KrigingTask extends Task
 // m_timeStepMinutes = timeStepMinutes;
   }
 
-  public final void setModellGMLTargetObservationlinkPropname( String modellGMLTargetObservationlinkPropname )
+  public final void setModellGMLTargetObservationlinkPropname( final String modellGMLTargetObservationlinkPropname )
   {
     m_modellGMLTargetObservationlinkPropname = modellGMLTargetObservationlinkPropname;
   }
 
-  public final void setSourceGML( String sourceGML )
+  public final void setSourceGML( final String sourceGML )
   {
     m_sourceGML = sourceGML;
   }
 
-  public final void setSourceGMLFeaturePath( String sourceGMLFeaturePath )
+  public final void setSourceGMLFeaturePath( final String sourceGMLFeaturePath )
   {
     m_sourceGMLFeaturePath = sourceGMLFeaturePath;
   }
 
-  public final void setSourceGMLIDLinkProperty( String sourceGMLIDLinkProperty )
+  public final void setSourceGMLIDLinkProperty( final String sourceGMLIDLinkProperty )
   {
     m_sourceGMLIDLinkProperty = sourceGMLIDLinkProperty;
   }
 
-  public final void setSourceGMLObservationLinkProperty( String sourceGMLObservationLinkProperty )
+  public final void setSourceGMLObservationLinkProperty( final String sourceGMLObservationLinkProperty )
   {
     m_sourceGMLObservationLinkProperty = sourceGMLObservationLinkProperty;
   }
@@ -205,7 +203,7 @@ public class KrigingTask extends Task
   {
     try
     {
-      Logger logger = Logger.getAnonymousLogger();
+      final Logger logger = Logger.getAnonymousLogger();
       logger.info( "load mapping schema NS=" + UrlCatalogUpdateObservationMapping.NS );
 
       final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_context );
@@ -243,7 +241,6 @@ public class KrigingTask extends Task
         throw new Exception( "could not load modell" );
 
       modellWorkspace.accept( new TransformVisitor( targetCRSName ), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      modellWorkspace.accept( new ResortVisitor(), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       if( m_modellGMLFeaturePath == null )
         throw new Exception( "modell feature path not set" );
@@ -259,7 +256,6 @@ public class KrigingTask extends Task
       if( srcModellWorkspace == null )
         throw new Exception( "could not load source modell" );
       srcModellWorkspace.accept( new TransformVisitor( targetCRSName ), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-      srcModellWorkspace.accept( new ResortVisitor(), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Object srcFeatureFromPath = srcModellWorkspace.getFeatureFromPath( m_sourceGMLFeaturePath );
       final Feature[] srcFeatures = FeatureHelper.getFeaturess( srcFeatureFromPath );
       final SourceObservationProvider provider = new SourceObservationProvider( srcFeatures, m_sourceGMLIDLinkProperty, m_sourceGMLObservationLinkProperty );
@@ -267,14 +263,13 @@ public class KrigingTask extends Task
       logger.info( "calculate mapping ..." );
       final Reader inputStreamReader = new InputStreamReader( krigingMapURL.openStream() );
 
-      final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRSName );
+      final KrigingReader kReader = new KrigingReader( Logger.getLogger( Logger.GLOBAL_LOGGER_NAME ), inputStreamReader, provider, targetCRSName );
 
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      for( int i = 0; i < modelFeatures.length; i++ )
+      for( final Feature feature : modelFeatures )
       {
-        final Feature feature = modelFeatures[i];
         final AbstractFilterType inFilter = kReader.createFilter( feature, m_modellGMLpolygonPropname );
 
         final Writer writer = new StringWriter();
@@ -286,9 +281,9 @@ public class KrigingTask extends Task
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, copyLink.getHref() );
       }
       final File result = new File( m_hrefGeneratesGml );
-      final Writer resultWriter = new FileWriter( result );
+      final FileOutputStream resultWriter = new FileOutputStream( result );
       GmlSerializer.serializeWorkspace( resultWriter, resultWorkspace, "UTF-8" );
-      IOUtils.closeQuietly( resultWriter );
+      resultWriter.close();
     }
     catch( final Exception e )
     {

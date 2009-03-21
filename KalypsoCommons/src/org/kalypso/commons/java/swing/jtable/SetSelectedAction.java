@@ -6,17 +6,18 @@ import javax.swing.JTable;
 
 /**
  * SetAllAction
- * 
+ *
  * @author schlienger
  */
 public class SetSelectedAction extends AbstractObservationTableAction
 {
-  public SetSelectedAction( JTable table )
+  public SetSelectedAction( final JTable table )
   {
     super( table, "Selektierte Werte setzen", "Setzt die selektierten Werte auf den aktiven Wert" );
   }
 
-  public void internalActionPerformed( ActionEvent e )
+  @Override
+  public void internalActionPerformed( final ActionEvent e )
   {
     final JTable table = getTable();
     final int col = table.getSelectedColumn();
@@ -24,7 +25,7 @@ public class SetSelectedAction extends AbstractObservationTableAction
     final int[] rows = table.getSelectedRows();
     final Object value = table.getValueAt( row, col );
 
-    for( int i = 0; i < rows.length; i++ )
-      table.setValueAt( value, rows[i], col );
+    for( final int row2 : rows )
+      table.setValueAt( value, row2, col );
   }
 }

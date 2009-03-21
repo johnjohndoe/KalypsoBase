@@ -122,7 +122,6 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     final Job job = new Job( title + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {

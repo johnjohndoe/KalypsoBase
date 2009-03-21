@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ChartBaseExtensions Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
 Bundle-Version: 0.2.0
-Bundle-Localization: plugin
 Export-Package: de.openali.odysseus.chart.ext.base.axis,
  de.openali.odysseus.chart.ext.base.axis.provider,
  de.openali.odysseus.chart.ext.base.axisrenderer,
@@ -14,5 +13,6 @@ Export-Package: de.openali.odysseus.chart.ext.base.axis,
 Require-Bundle: org.kalypso.contribs.java,
  de.openali.odysseus.chart.factory;bundle-version="0.2.0";visibility:=reexport
 Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypso.sourceforge.net
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

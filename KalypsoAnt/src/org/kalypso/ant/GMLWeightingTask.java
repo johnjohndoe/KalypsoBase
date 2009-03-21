@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.ant;
@@ -77,7 +77,7 @@ import org.xml.sax.InputSource;
  * f(i): factor <br>
  * ZMLin(i): input timeseries <br>
  * the parameters are given by a gml model and some configuration strings (featurepath and property names)
- * 
+ *
  * @author doemming
  */
 public class GMLWeightingTask extends Task
@@ -172,9 +172,8 @@ public class GMLWeightingTask extends Task
         throw new BuildException( "Kein(e) Ziel-Feature(s) gefunden für FeaturePath: " + m_featurePathTarget );
 
       // loop all features
-      for( int i = 0; i < targetFeatures.length; i++ )
+      for( final Feature targetFE : targetFeatures )
       {
-        final Feature targetFE = targetFeatures[i];
         // 3. find target
         final TimeseriesLinkType targetLink = (TimeseriesLinkType) targetFE.getProperty( m_propZMLTarget );
         final String targetHref = targetLink.getHref();
@@ -191,10 +190,8 @@ public class GMLWeightingTask extends Task
           throw new BuildException( "Kein(e) Gewichts-Feature(s) gefunden für FeaturePath: " + m_propRelationWeightMember );
 
         // 6. loop weights
-        for( int j = 0; j < weightFEs.length; j++ )
+        for( final Feature weightFE : weightFEs )
         {
-          final Feature weightFE = weightFEs[j];
-
           final double factor = getFactor( weightFE );
           final double offset = getOffset( weightFE );
 
@@ -215,11 +212,8 @@ public class GMLWeightingTask extends Task
           final List<JAXBElement< ? extends AbstractFilterType>> offsetSummands = weightSumFilter.getFilter();
 
           // 8. loop source features
-          for( int k = 0; k < sourceFeatures.length; k++ )
+          for( final Feature sourceFE : sourceFeatures )
           {
-            // 7. resolve feature that has source zml reference
-            final Feature sourceFE = sourceFeatures[k];
-
             if( sourceFE == null )
             {
               logger.log( Level.WARNING, -1, "Linked source feature missing in Feature: " + weightFE.getId() );
@@ -418,7 +412,7 @@ public class GMLWeightingTask extends Task
    * @param modelURL
    *          reference to the model that describes the mapping in a gml structure
    */
-  public final void setModelURL( URL modelURL )
+  public final void setModelURL( final URL modelURL )
   {
     m_modelURL = modelURL;
   }
@@ -427,7 +421,7 @@ public class GMLWeightingTask extends Task
    * @param targetContext
    *          context to use
    */
-  public final void setTargetContext( URL targetContext )
+  public final void setTargetContext( final URL targetContext )
   {
     m_targetContext = targetContext;
   }
@@ -436,7 +430,7 @@ public class GMLWeightingTask extends Task
    * @param featurePathTarget
    *          path to the features that contain the ZML-target properties and the references to weighting features
    */
-  public final void setFeaturePathTarget( String featurePathTarget )
+  public final void setFeaturePathTarget( final String featurePathTarget )
   {
     m_featurePathTarget = featurePathTarget;
   }
@@ -445,7 +439,7 @@ public class GMLWeightingTask extends Task
    * @param propRelationSourceFeature
    *          name of property that links from weighting feature to zml source feature
    */
-  public final void setPropRelationSourceFeature( String propRelationSourceFeature )
+  public final void setPropRelationSourceFeature( final String propRelationSourceFeature )
   {
     m_propRelationSourceFeature = propRelationSourceFeature;
   }
@@ -454,7 +448,7 @@ public class GMLWeightingTask extends Task
    * @param propRelationWeightMember
    *          name of property that links from zml target feature to the list of weighting features
    */
-  public final void setPropRelationWeightMember( String propRelationWeightMember )
+  public final void setPropRelationWeightMember( final String propRelationWeightMember )
   {
     m_propRelationWeightMember = propRelationWeightMember;
   }
@@ -463,7 +457,7 @@ public class GMLWeightingTask extends Task
    * @param propWeight
    *          property name of the weighting property, feature property type must be double
    */
-  public final void setPropWeight( String propWeight )
+  public final void setPropWeight( final String propWeight )
   {
     m_propWeight = propWeight;
   }
@@ -472,7 +466,7 @@ public class GMLWeightingTask extends Task
    * @param propOffset
    *          property name of the offset property, feature property type must be double
    */
-  public void setPropOffset( String propOffset )
+  public void setPropOffset( final String propOffset )
   {
     m_propOffset = propOffset;
   }
@@ -481,7 +475,7 @@ public class GMLWeightingTask extends Task
    * @param propZMLSource
    *          property name of the zml source property, feature property type must be TimeSeriesLink
    */
-  public final void setPropZMLSource( String propZMLSource )
+  public final void setPropZMLSource( final String propZMLSource )
   {
     m_propZMLSource = propZMLSource;
   }
@@ -500,7 +494,7 @@ public class GMLWeightingTask extends Task
    * @param sourceFilter
    *          If non- <code>null</code>, this filter will be applied to every source-zml
    */
-  public void setSourceFilter( String sourceFilter )
+  public void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
@@ -509,7 +503,7 @@ public class GMLWeightingTask extends Task
    * @param propZMLTarget
    *          property name of the zml target property, feature property type must be TimeSeriesLink
    */
-  public final void setPropZMLTarget( String propZMLTarget )
+  public final void setPropZMLTarget( final String propZMLTarget )
   {
     m_propZMLTarget = propZMLTarget;
   }
@@ -519,7 +513,8 @@ public class GMLWeightingTask extends Task
    *          beginning of measure periode
    * @deprecated Use sourceFrom, targetFrom or forecastFrom instead
    */
-  public final void setFrom( long from )
+  @Deprecated
+  public final void setFrom( final long from )
   {
     m_from = from;
   }
@@ -547,7 +542,8 @@ public class GMLWeightingTask extends Task
    *          end of forecast periode
    * @deprecated Use sourceTo, targetTo or forecastTo instead
    */
-  public final void setTo( long to )
+  @Deprecated
+  public final void setTo( final long to )
   {
     m_to = to;
   }

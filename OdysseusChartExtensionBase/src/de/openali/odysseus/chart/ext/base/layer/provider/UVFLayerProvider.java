@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainValueFileData;
 import de.openali.odysseus.chart.ext.base.layer.DefaultLineLayer;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
@@ -22,7 +21,6 @@ import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -35,8 +33,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  @SuppressWarnings( { "unchecked", "unused" })
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  @SuppressWarnings( { "unused" })
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
     return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
@@ -44,17 +42,10 @@ public class UVFLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
    */
-  public AbstractDomainValueFileData<Calendar, Number> getDataContainer( ) throws ConfigurationException
+  public AbstractDomainValueFileData<Calendar, Number> getDataContainer( )
   {
-    final String domainAxisId = getDomainAxisId();
-    final String targetAxisId = getTargetAxisId();
-
-    final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-    final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
-
     final AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
     {
-
       private SimpleDateFormat m_format;
 
       @Override
@@ -65,29 +56,29 @@ public class UVFLayerProvider extends AbstractLayerProvider
         {
           // FileReader fr = new FileReader( getInputURL() );
 
-          URL url = getInputURL();
-          InputStream is = url.openStream();
-          InputStreamReader isr = new InputStreamReader( is );
+          final URL url = getInputURL();
+          final InputStream is = url.openStream();
+          final InputStreamReader isr = new InputStreamReader( is );
 
-          BufferedReader br = new BufferedReader( isr );
+          final BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
-          List<Calendar> domainValues = new ArrayList<Calendar>();
-          List<Number> targetValues = new ArrayList<Number>();
+          final List<Calendar> domainValues = new ArrayList<Calendar>();
+          final List<Number> targetValues = new ArrayList<Number>();
           m_format = new SimpleDateFormat( "yyMMddHHmm" );
 
           while( (s = br.readLine()) != null )
           {
             if( count > 4 )
             {
-              String[] cols = s.split( "  *" );
+              final String[] cols = s.split( "  *" );
               // YearString
               if( cols.length >= 2 )
               {
-                String ys = cols[0];
+                final String ys = cols[0];
 
-                Date date = m_format.parse( ys );
-                Calendar cal = Calendar.getInstance();
+                final Date date = m_format.parse( ys );
+                final Calendar cal = Calendar.getInstance();
                 cal.setTime( date );
 
                 // wichtig, damit die Zeiten richtig sind
@@ -106,15 +97,15 @@ public class UVFLayerProvider extends AbstractLayerProvider
           setDomainValues( domainValues );
           setTargetValues( targetValues );
         }
-        catch( FileNotFoundException e )
+        catch( final FileNotFoundException e )
         {
           e.printStackTrace();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           e.printStackTrace();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -128,9 +119,9 @@ public class UVFLayerProvider extends AbstractLayerProvider
       {
         /**
          * Geht nicht wg. ClassCastException (Generics - Bug):
-         * 
+         *
          * return new ComparableDataRange<GregorianCalendar>( getDomainValues() );
-         * 
+         *
          * SuppressWarnings-Annotation ist wichtig, sonst löscht Eclipse Code-CleanUp den cast
          */
         return (IDataRange<Calendar>) new ComparableDataRange( getDomainValues() );
@@ -148,7 +139,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
 
     };
 
-    URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
+    final URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
     data.setInputURL( url );
     return data;
   }

@@ -308,7 +308,7 @@ public class PageSelectGeodataFile extends WizardPage
     verifier = new GridFileVerifier();
     try
     {
-      if( !verifier.verify( toFile.toURI().toURL() ) )
+      if( !GridFileVerifier.verify( toFile.toURI().toURL() ) )
       {
         setMessage( null );
         setErrorMessage( "Please select a valid geodata file " );
@@ -334,7 +334,7 @@ public class PageSelectGeodataFile extends WizardPage
     {
       try
       {
-        m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURI().toURL(), m_crs );
+        m_rasterReader = GridFileVerifier.getRasterMetaReader( docLocation.toFile().toURI().toURL(), m_crs );
       }
       catch( final MalformedURLException e )
       {

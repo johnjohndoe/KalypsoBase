@@ -24,8 +24,7 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
-  @SuppressWarnings( { "unused", "unchecked" })
-  public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
     return new EditableLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
@@ -38,7 +37,7 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
     final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "2000", new IntegerParser() );
     final Integer maxVal = getParameterContainer().getParsedParameterValue( "max_val", "1", new IntegerParser() );
 
-    EditableTestDataContainer data = new EditableTestDataContainer( dataSize, maxVal );
+    final EditableTestDataContainer data = new EditableTestDataContainer( dataSize, maxVal );
     return data;
   }
 

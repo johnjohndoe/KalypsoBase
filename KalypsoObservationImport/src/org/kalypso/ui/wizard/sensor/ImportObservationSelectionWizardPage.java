@@ -2,50 +2,48 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.compare.internal.ListContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -54,6 +52,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -88,9 +87,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
-  private final List m_adapter;
+  private final List<INativeObservationAdapter> m_adapter;
 
-  final List m_selectionListener = new ArrayList();
+  final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
   private Composite m_topLevel = null;
 
@@ -110,12 +109,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private boolean m_controlFinished = false;
 
-  public ImportObservationSelectionWizardPage( String pageName )
+  public ImportObservationSelectionWizardPage( final String pageName )
   {
     this( pageName, null, null );
   }
 
-  public ImportObservationSelectionWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportObservationSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -126,9 +125,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_adapter = createNativeAdapters();
   }
 
-  private List createNativeAdapters( )
+  private List<INativeObservationAdapter> createNativeAdapters( )
   {
-    final List adapters = new ArrayList();
+    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -138,15 +137,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       return adapters;
 
     final IExtension[] extensions = extensionPoint.getExtensions();
-    for( int i = 0; i < extensions.length; i++ )
+    for( final IExtension extension : extensions )
     {
-      final IExtension extension = extensions[i];
       final IConfigurationElement[] elements = extension.getConfigurationElements();
 
-      for( int j = 0; j < elements.length; j++ )
+      for( final IConfigurationElement element : elements )
       {
-        final IConfigurationElement element = elements[j];
-
         try
         {
           final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" );
@@ -166,15 +162,15 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
     m_topLevel = new Composite( parent, SWT.NONE );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     m_topLevel.setLayout( gridLayout );
 
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     m_topLevel.setLayoutData( data );
@@ -186,42 +182,43 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_controlFinished = true;
   }
 
-  public void createControlSource( Composite parent )
+  public void createControlSource( final Composite parent )
   {
-    Group group = new Group( parent, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
     group.setText( "Quelle" );
 
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     group.setLayoutData( data );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     group.setLayout( gridLayout );
 
     // line 1
-    Label label = new Label( group, SWT.NONE );
+    final Label label = new Label( group, SWT.NONE );
     label.setText( "von " );
 
     m_textFileSource = new Text( group, SWT.BORDER );
     m_textFileSource.setText( DEFAUL_FILE_LABEL );
     m_textFileSource.addFocusListener( this );
 
-    GridData data1 = new GridData();
+    final GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
     data1.grabExcessHorizontalSpace = true;
     m_textFileSource.setLayoutData( data1 );
 
-    Button button = new Button( group, SWT.PUSH );
+    final Button button = new Button( group, SWT.PUSH );
     button.setText( "Auswahl ..." );
-    GridData data2 = new GridData();
+    final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      public void widgetSelected( SelectionEvent e )
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
         m_sourceFile = chooseFile( m_sourceFile );
         validate();
@@ -229,26 +226,26 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     } );
     // line 2
 
-    Label formatLabel = new Label( group, SWT.NONE );
+    final Label formatLabel = new Label( group, SWT.NONE );
     formatLabel.setText( "Format " );
 
     m_formatCombo = new ComboViewer( group, SWT.NONE );
     m_formatCombo.add( m_adapter );
-    final ListContentProvider provider = new ListContentProvider();
+    final ArrayContentProvider provider = new ArrayContentProvider();
     m_formatCombo.setContentProvider( provider );
     m_formatCombo.setLabelProvider( new ILabelProvider()
     {
-      public Image getImage( Object element )
+      public Image getImage( final Object element )
       {
         return null;
       }
 
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         return element.toString();
       }
 
-      public void addListener( ILabelProviderListener listener )
+      public void addListener( final ILabelProviderListener listener )
       {
         // nothing as labelprovider will not change
       }
@@ -258,12 +255,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         // nothing as labelprovider will not change
       }
 
-      public boolean isLabelProperty( Object element, String property )
+      public boolean isLabelProperty( final Object element, final String property )
       {
         return true;
       }
 
-      public void removeListener( ILabelProviderListener listener )
+      public void removeListener( final ILabelProviderListener listener )
       {
         // nothing
       }
@@ -276,46 +273,47 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       m_formatCombo.setSelection( new StructuredSelection( m_adapter.get( 0 ) ) );
   }
 
-  public void createControlTarget( Composite parent )
+  public void createControlTarget( final Composite parent )
   {
-    Group group = new Group( parent, SWT.NONE );
+    final Group group = new Group( parent, SWT.NONE );
     group.setText( "Ziel" );
-    GridLayout gridLayout3 = new GridLayout();
+    final GridLayout gridLayout3 = new GridLayout();
     group.setLayout( gridLayout3 );
-    GridData data4 = new GridData();
+    final GridData data4 = new GridData();
     data4.horizontalAlignment = GridData.FILL;
     data4.grabExcessHorizontalSpace = true;
     group.setLayoutData( data4 );
 
-    Composite top = new Composite( group, SWT.NONE );
-    GridData data = new GridData();
+    final Composite top = new Composite( group, SWT.NONE );
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
     top.setLayoutData( data );
 
-    GridLayout gridLayout = new GridLayout();
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     top.setLayout( gridLayout );
 
-    Label label = new Label( top, SWT.NONE );
+    final Label label = new Label( top, SWT.NONE );
     label.setText( "nach" );
 
     m_textFileTarget = new Text( top, SWT.BORDER );
     m_textFileTarget.setText( DEFAUL_FILE_LABEL );
     m_textFileTarget.addFocusListener( this );
-    GridData data1 = new GridData();
+    final GridData data1 = new GridData();
     data1.horizontalAlignment = GridData.FILL;
     data1.grabExcessHorizontalSpace = true;
     m_textFileTarget.setLayoutData( data1 );
-    Button button = new Button( top, SWT.PUSH );
+    final Button button = new Button( top, SWT.PUSH );
     button.setText( "Auswahl ..." );
-    GridData data2 = new GridData();
+    final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.END;
     button.setLayoutData( data2 );
 
     button.addSelectionListener( new SelectionAdapter()
     {
-      public void widgetSelected( SelectionEvent e )
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
         m_targetFile = chooseFileZML( m_targetFile );
         validate();
@@ -323,13 +321,13 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       }
     } );
 
-    Composite bottom = new Composite( group, SWT.NONE );
-    GridData data3 = new GridData();
+    final Composite bottom = new Composite( group, SWT.NONE );
+    final GridData data3 = new GridData();
     data3.horizontalAlignment = GridData.FILL;
     data3.grabExcessHorizontalSpace = true;
     bottom.setLayoutData( data3 );
 
-    GridLayout gridLayout2 = new GridLayout();
+    final GridLayout gridLayout2 = new GridLayout();
 
     bottom.setLayout( gridLayout2 );
 
@@ -341,23 +339,23 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_buttonAppend.setSelection( true );
   }
 
-  File chooseFile( File selectedFile )
+  File chooseFile( final File selectedFile )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     if( selectedFile != null )
     {
       dialog.setFileName( selectedFile.getName() );
       dialog.setFilterPath( selectedFile.getParent() );
     }
     dialog.open();
-    String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
     return new File( filterPath, fileName );
   }
 
-  File chooseFileZML( File selectedFile )
+  File chooseFileZML( final File selectedFile )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     dialog.setFilterExtensions( new String[] { "*.zml" } );
     if( selectedFile != null )
     {
@@ -365,8 +363,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       dialog.setFilterPath( selectedFile.getParent() );
     }
     dialog.open();
-    String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
     return new File( filterPath, fileName );
   }
 
@@ -378,7 +376,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     setErrorMessage( null );
     setMessage( null );
     setPageComplete( true );
-    StringBuffer error = new StringBuffer();
+    final StringBuffer error = new StringBuffer();
     if( m_sourceFile != null )
       m_textFileSource.setText( m_sourceFile.getName() );
     else
@@ -414,6 +412,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
+  @Override
   public boolean canFlipToNextPage( )
   {
     return isPageComplete();
@@ -422,6 +421,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
+  @Override
   public void dispose( )
   {
     super.dispose();
@@ -435,7 +435,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusGained( FocusEvent e )
+  public void focusGained( final FocusEvent e )
   {
     // nothing
   }
@@ -443,7 +443,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
    */
-  public void focusLost( FocusEvent e )
+  public void focusLost( final FocusEvent e )
   {
     if( m_sourceFile != null && !m_sourceFile.getName().equals( m_textFileSource.getText() ) )
     {
@@ -458,16 +458,16 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private void fireSelectionChanged( )
   {
-    for( Iterator iter = m_selectionListener.iterator(); iter.hasNext(); )
+    for( final Object element : m_selectionListener )
     {
-      ((ISelectionChangedListener) iter.next()).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+      ((ISelectionChangedListener) element).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
     }
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.add( listener );
   }
@@ -492,7 +492,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.remove( listener );
   }
@@ -500,11 +500,11 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     if( selection instanceof ObservationImportSelection )
     {
-      ObservationImportSelection s = ((ObservationImportSelection) selection);
+      final ObservationImportSelection s = ((ObservationImportSelection) selection);
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
@@ -516,7 +516,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     else if( selection instanceof IStructuredSelection )
     {
-      Object firstElement = ((StructuredSelection) selection).getFirstElement();
+      final Object firstElement = ((StructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IFile )
       {
         m_targetFile = ResourceUtilities.makeFileFromPath( ((IFile) firstElement).getFullPath() );
@@ -528,7 +528,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     fireSelectionChanged();
   }

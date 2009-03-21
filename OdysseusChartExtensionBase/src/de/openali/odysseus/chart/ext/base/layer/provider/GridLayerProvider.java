@@ -6,7 +6,6 @@ import de.openali.odysseus.chart.ext.base.layer.GridLayer;
 import de.openali.odysseus.chart.ext.base.layer.GridLayer.GridOrientation;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -24,20 +23,14 @@ public class GridLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
     IChartLayer icl = null;
 
-    ILineStyle gridStyle = getStyleSet().getStyle( "line", ILineStyle.class );
+    final ILineStyle gridStyle = getStyleSet().getStyle( "line", ILineStyle.class );
 
     try
     {
-      final String domainAxisId = getDomainAxisId();
-      final String targetAxisId = getTargetAxisId();
-
-      final IAxis domAxis = getChartModel().getMapperRegistry().getAxis( domainAxisId );
-      final IAxis valAxis = getChartModel().getMapperRegistry().getAxis( targetAxisId );
-
       GridOrientation go;
       final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
 

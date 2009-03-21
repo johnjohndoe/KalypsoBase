@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.parser.impl;
 
@@ -50,7 +50,7 @@ import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Date Objekte.
- * 
+ *
  * @author schlienger
  */
 public class DateParser extends AbstractParser
@@ -85,7 +85,7 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#getObjectClass()
    */
-  public Class getObjectClass()
+  public Class<Date> getObjectClass( )
   {
     return Date.class;
   }
@@ -102,13 +102,13 @@ public class DateParser extends AbstractParser
    * @throws ParserException
    * @see org.kalypso.commons.parser.IParser#parse(java.lang.String)
    */
-  public Object parse( String text ) throws ParserException
+  public Object parse( final String text ) throws ParserException
   {
     try
     {
       return m_df.parse( text );
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       throw new ParserException( e );
     }
@@ -118,7 +118,7 @@ public class DateParser extends AbstractParser
    * @see org.kalypso.commons.parser.AbstractParser#toStringInternal(java.lang.Object)
    */
   @Override
-  public String toStringInternal( Object obj )
+  public String toStringInternal( final Object obj )
   {
     return m_df.format( obj );
   }
@@ -126,10 +126,10 @@ public class DateParser extends AbstractParser
   /**
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( Object value1, Object value2 )
+  public int compare( final Object value1, final Object value2 )
   {
-    Date d1 = (Date)value1;
-    Date d2 = (Date)value2;
+    final Date d1 = (Date)value1;
+    final Date d2 = (Date)value2;
 
     return d1.compareTo( d2 );
   }

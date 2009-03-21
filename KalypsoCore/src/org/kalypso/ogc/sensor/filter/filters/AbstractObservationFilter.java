@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * AbstractObservationFilter
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractObservationFilter implements IObservationFilter
@@ -65,13 +65,15 @@ public abstract class AbstractObservationFilter implements IObservationFilter
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
+  @SuppressWarnings("unused")
+  // exception warning Ignored, else we got errors in implementors
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     m_obs = obs;
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.0") ); //$NON-NLS-1$
@@ -119,7 +121,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.getTarget();
   }
 
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.6") ); //$NON-NLS-1$
@@ -144,7 +146,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.isEditable();
   }
 
-  public void setValues( ITuppleModel values ) throws SensorException
+  public void setValues( final ITuppleModel values ) throws SensorException
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.9") ); //$NON-NLS-1$
@@ -161,7 +163,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.toString();
   }
 
-  public void addListener( IObservationListener listener )
+  public void addListener( final IObservationListener listener )
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.11") ); //$NON-NLS-1$
@@ -169,7 +171,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     m_obs.addListener( listener );
   }
 
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.12") ); //$NON-NLS-1$
@@ -192,7 +194,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 
     m_obs.fireChangedEvent( source );
   }
-  
+
   public String getHref()
   {
     if( m_obs == null )
@@ -200,16 +202,16 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 
     return m_obs.getHref();
   }
-  
+
   protected IObservation getObservation()
   {
     return m_obs;
   }
-  
+
   protected void setObservation( final IObservation observation )
   {
     m_obs = observation;
   }
-  
-  
+
+
 }

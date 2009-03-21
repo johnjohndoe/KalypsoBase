@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,12 +30,9 @@ import de.openali.odysseus.service.ows.extension.IOWSOperation;
 
 public class ODSEnvironment implements IODSEnvironment
 {
-
   private ODSConfigurationLoader m_ocl;
 
   private final Exception m_exception = null;
-
-  private final Map<String, File> m_chartFiles = new HashMap<String, File>();
 
   private File m_configDir;
 
@@ -58,7 +54,7 @@ public class ODSEnvironment implements IODSEnvironment
       m_ocl = new ODSConfigurationLoader( m_configDir, m_configFile );
       createScenes();
     }
-    catch( Throwable t )
+    catch( final Throwable t )
     {
       m_status = new Status( Status.ERROR, "null", t.getLocalizedMessage(), t );
       return;
@@ -95,8 +91,8 @@ public class ODSEnvironment implements IODSEnvironment
 
   public void checkTmpDir( ) throws IOException
   {
-    String pathString = System.getProperty( IODSConstants.ODS_CONFIG_TMPDIR_KEY, IODSConstants.ODS_CONFIG_TMPDIR_DEFAULT );
-    File tmpDir = new File( pathString );
+    final String pathString = System.getProperty( IODSConstants.ODS_CONFIG_TMPDIR_KEY, IODSConstants.ODS_CONFIG_TMPDIR_DEFAULT );
+    final File tmpDir = new File( pathString );
     if( !tmpDir.exists() )
       throw new FileNotFoundException( "Path to config file doesn't exist: " + tmpDir.getAbsolutePath() );
     if( !tmpDir.canWrite() )
@@ -108,8 +104,8 @@ public class ODSEnvironment implements IODSEnvironment
 
   private void checkConfigDir( ) throws IOException
   {
-    String pathString = System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
-    File path = new File( pathString );
+    final String pathString = System.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
+    final File path = new File( pathString );
     if( !path.exists() )
       throw new FileNotFoundException( "Path to config file doesn't exist: " + path.getAbsolutePath() );
     if( !path.canRead() )
@@ -120,8 +116,8 @@ public class ODSEnvironment implements IODSEnvironment
 
   private void checkConfigFile( ) throws IOException
   {
-    String fileString = System.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
-    File file = new File( getConfigDir(), fileString );
+    final String fileString = System.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
+    final File file = new File( getConfigDir(), fileString );
     if( !file.exists() )
       throw new FileNotFoundException( "Configuration File doesn't exist: " + file.getAbsolutePath() );
     if( !file.canRead() )
@@ -129,18 +125,18 @@ public class ODSEnvironment implements IODSEnvironment
     m_configFile = file;
   }
 
-  private File getChartFile( String sceneID ) throws ConfigurationException, IOException
+  private File getChartFile( final String sceneID ) throws ConfigurationException, IOException
   {
     // URLs der ChartFiles für SceneID rausfinden
-    SceneType[] nonDefaultScenes = m_ocl.getConfigurationDocument().getODSConfiguration().getScenes().getSceneArray();
-    SceneType defaultScene = m_ocl.getConfigurationDocument().getODSConfiguration().getScenes().getDefaultScene();
+    final SceneType[] nonDefaultScenes = m_ocl.getConfigurationDocument().getODSConfiguration().getScenes().getSceneArray();
+    final SceneType defaultScene = m_ocl.getConfigurationDocument().getODSConfiguration().getScenes().getDefaultScene();
 
     // Default Scene muss extra hinzugefügt werden
-    SceneType[] sceneArray = (SceneType[]) ArrayUtils.addAll( nonDefaultScenes, new SceneType[] { defaultScene } );
+    final SceneType[] sceneArray = (SceneType[]) ArrayUtils.addAll( nonDefaultScenes, new SceneType[] { defaultScene } );
 
     String chartFilePath = null;
     String sceneIds = "";
-    for( SceneType sceneType : sceneArray )
+    for( final SceneType sceneType : sceneArray )
     {
       sceneIds += sceneType.getId() + " ";
       if( sceneType.getId().equals( sceneID ) )
@@ -151,7 +147,7 @@ public class ODSEnvironment implements IODSEnvironment
 
     if( (chartFilePath == null) || chartFilePath.trim().equals( "" ) )
       throw new ConfigurationException( "Scene '" + sceneID + "' not found; use one of " + sceneIds );
-    File chartFile = new File( getConfigDir(), chartFilePath );
+    final File chartFile = new File( getConfigDir(), chartFilePath );
     if( !chartFile.exists() )
       throw new FileNotFoundException( "ChartEile does not exist: " + chartFile.getAbsolutePath() );
     return chartFile;
@@ -166,27 +162,27 @@ public class ODSEnvironment implements IODSEnvironment
 
   private void createScenes( ) throws ConfigurationException, IOException, XmlException
   {
-    String[] sceneIds = m_ocl.getSceneIds();
-    for( String sceneId : sceneIds )
+    final String[] sceneIds = m_ocl.getSceneIds();
+    for( final String sceneId : sceneIds )
     {
-      File chartFile = getChartFile( sceneId );
+      final File chartFile = getChartFile( sceneId );
       if( chartFile != null )
       {
-        ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( chartFile );
-        ChartConfigurationType cc = ccd.getChartConfiguration();
-        ChartType[] chartArray = cc.getChartArray();
-        List<IODSChart> sceneCharts = new ArrayList<IODSChart>();
-        for( ChartType chartType : chartArray )
+        final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( chartFile );
+        final ChartConfigurationType cc = ccd.getChartConfiguration();
+        final ChartType[] chartArray = cc.getChartArray();
+        final List<IODSChart> sceneCharts = new ArrayList<IODSChart>();
+        for( final ChartType chartType : chartArray )
         {
-          ChartConfigurationLoader ccl = new ChartConfigurationLoader( chartType );
+          final ChartConfigurationLoader ccl = new ChartConfigurationLoader( chartType );
 
           // Offerings erzeugen
-          IChartModel model = new ChartModel();
+          final IChartModel model = new ChartModel();
           ChartFactory.configureChartModel( model, ccl, ccl.getChartIds()[0], ChartExtensionLoader.getInstance(), getConfigDir().toURI().toURL() );
 
-          CapabilitiesLoader cl = new CapabilitiesLoader( this );
+          final CapabilitiesLoader cl = new CapabilitiesLoader( this );
 
-          ChartOfferingType chartOffering = cl.createChartOffering( model, sceneId );
+          final ChartOfferingType chartOffering = cl.createChartOffering( model, sceneId );
           sceneCharts.add( new ODSChart( ccl, chartOffering ) );
 
         }

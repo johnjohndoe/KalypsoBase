@@ -75,7 +75,7 @@ public class DebugServlet extends HttpServlet
     doGet( request, response );
   }
 
-  private void doLogs( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doLogs( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
 
@@ -88,7 +88,7 @@ public class DebugServlet extends HttpServlet
     doDefaultFooter( request.getContextPath(), pw );
   }
 
-  private void doPlatformProperties( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doPlatformProperties( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
 
@@ -97,7 +97,7 @@ public class DebugServlet extends HttpServlet
     doDefaultFooter( request.getContextPath(), pw );
   }
 
-  private void doSystemProperties( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doSystemProperties( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
 
@@ -106,7 +106,7 @@ public class DebugServlet extends HttpServlet
     doDefaultFooter( request.getContextPath(), pw );
   }
 
-  private void doFrameworkProperties( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doFrameworkProperties( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
 
@@ -115,7 +115,7 @@ public class DebugServlet extends HttpServlet
     doDefaultFooter( request.getContextPath(), pw );
   }
 
-  private void doTest( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doTest( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
 
     final PrintWriter pw = doDefaultHeader( request, response );
@@ -130,11 +130,11 @@ public class DebugServlet extends HttpServlet
     pw.println( "Request URL: " + url + "<br>" );
 
     // Properties properties = System.getProperties();
-    Properties properties = FrameworkProperties.getProperties();
-    Enumeration<Object> propKeys = properties.keys();
+    final Properties properties = FrameworkProperties.getProperties();
+    final Enumeration<Object> propKeys = properties.keys();
     while( propKeys.hasMoreElements() )
     {
-      String key = (String) propKeys.nextElement();
+      final String key = (String) propKeys.nextElement();
       pw.println( key + ": " + System.getProperty( key ) + "<br>" );
     }
 
@@ -318,30 +318,30 @@ public class DebugServlet extends HttpServlet
       pw.println( "</td>" );
   }
 
-  private void doPostClientInfo( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doPostClientInfo( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
     pw.print( "<h2>Post-Test (client-side)</h2>" );
 
     try
     {
-      PostMethod filePost = new PostMethod( "http://127.0.0.1:8080/sp_debug?info=testPostServer" );
-      File file = new File( "C:/testfile.txt" );
-      Part[] parts = { new StringPart( "param_name", "value" ), new FilePart( file.getName(), file ) };
+      final PostMethod filePost = new PostMethod( "http://127.0.0.1:8080/sp_debug?info=testPostServer" );
+      final File file = new File( "C:/testfile.txt" );
+      final Part[] parts = { new StringPart( "param_name", "value" ), new FilePart( file.getName(), file ) };
       filePost.setRequestEntity( new MultipartRequestEntity( parts, filePost.getParams() ) );
-      HostConfiguration hc = new HostConfiguration();
+      final HostConfiguration hc = new HostConfiguration();
 
-      HttpClient client = new HttpClient();
+      final HttpClient client = new HttpClient();
       client.setHostConfiguration( hc );
-      int status = client.executeMethod( filePost );
+      final int status = client.executeMethod( filePost );
 
-      byte[] responseBody = filePost.getResponseBody();
+      final byte[] responseBody = filePost.getResponseBody();
 
       if( responseBody != null )
       {
         pw.print( "ResponseBody: " + responseBody.toString() + "<br>" );
-        for( int i = 0; i < responseBody.length; i++ )
-          pw.print( responseBody[i] );
+        for( final byte element : responseBody )
+          pw.print( element );
         pw.print( "<br>" );
       }
       pw.print( "ResponseBody as String: <div style='border-width:1px;border-color:black;border-style:solid'>" + filePost.getResponseBodyAsString() + "</div>" );
@@ -351,7 +351,7 @@ public class DebugServlet extends HttpServlet
       filePost.releaseConnection();
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -360,7 +360,7 @@ public class DebugServlet extends HttpServlet
 
   }
 
-  private void doPostServerInfo( HttpServletRequest request, HttpServletResponse response ) throws IOException
+  private void doPostServerInfo( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
     final PrintWriter pw = doDefaultHeader( request, response );
     pw.print( "<h2>Post-Test (server-side)</h2>" );
@@ -372,11 +372,11 @@ public class DebugServlet extends HttpServlet
     // Headers
     pw.print( "<h3>Headers:</h3>" );
     pw.print( "<table border='1'>" );
-    Enumeration headerNames = request.getHeaderNames();
+    final Enumeration< ? > headerNames = request.getHeaderNames();
     while( headerNames.hasMoreElements() )
     {
-      String headerName = (String) headerNames.nextElement();
-      Enumeration headerVals = request.getHeaders( headerName );
+      final String headerName = (String) headerNames.nextElement();
+      final Enumeration< ? > headerVals = request.getHeaders( headerName );
       String valTable = "";
       valTable = "<table>";
       while( headerVals.hasMoreElements() )
@@ -391,15 +391,15 @@ public class DebugServlet extends HttpServlet
     // Parameters
     pw.print( "<h3>Parameters:</h3>" );
     pw.print( "<table border='1'>" );
-    Enumeration parameterNames = request.getParameterNames();
+    final Enumeration< ? > parameterNames = request.getParameterNames();
     while( parameterNames.hasMoreElements() )
     {
-      String keyStr = (String) parameterNames.nextElement();
-      String[] values = request.getParameterValues( keyStr );
+      final String keyStr = (String) parameterNames.nextElement();
+      final String[] values = request.getParameterValues( keyStr );
       String valuesStr = "<table>";
-      for( int i = 0; i < values.length; i++ )
+      for( final String value : values )
       {
-        valuesStr += "<tr><td>" + values[i] + "</td></tr>";
+        valuesStr += "<tr><td>" + value + "</td></tr>";
       }
       valuesStr += "</table>";
       printTableRow( pw, keyStr, valuesStr );

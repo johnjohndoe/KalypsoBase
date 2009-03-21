@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Class representing a three dimensional ESRI Polygonz <BR>
  * <!---------------------------------------------------------------------------->
- * 
+ *
  * @version 26.01.2007
  * @author Thomas Jung
  */
@@ -64,7 +64,7 @@ public class SHPPolygonz implements ISHPGeometry
 
   private int m_numPoints;
 
-  public final SHPPointz[][] pointsZ = null;
+  public final SHPPointz[][] m_pointsZ = null;
 
   private SHPPolyLinez m_rings = null;
 
@@ -75,7 +75,7 @@ public class SHPPolygonz implements ISHPGeometry
   /**
    * constructor: recieves a stream <BR>
    */
-  public SHPPolygonz( byte[] recBuf )
+  public SHPPolygonz( final byte[] recBuf )
   {
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
@@ -89,7 +89,7 @@ public class SHPPolygonz implements ISHPGeometry
   /**
    * constructor: recieves an array of arrays of GM_Points <BR>
    */
-  public SHPPolygonz( GM_SurfacePatch[] surfacePatch )
+  public SHPPolygonz( final GM_SurfacePatch[] surfacePatch )
   {
 
     Debug.debugMethodBegin( this, "SHPPolygonz" );
@@ -97,11 +97,11 @@ public class SHPPolygonz implements ISHPGeometry
     try
     {
       final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
-      String crs = surfacePatch[0].getCoordinateSystem();
+      final String crs = surfacePatch[0].getCoordinateSystem();
 
-      for( int i = 0; i < surfacePatch.length; i++ )
+      for( final GM_SurfacePatch element : surfacePatch )
       {
-        final GM_Position[] exteriorRing = surfacePatch[i].getExteriorRing();
+        final GM_Position[] exteriorRing = element.getExteriorRing();
 
         GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( exteriorRing, crs );
 
@@ -110,16 +110,16 @@ public class SHPPolygonz implements ISHPGeometry
         if( cs != null )
           curveList.add( GeometryFactory.createGM_Curve( cs ) );
 
-        final GM_Position[][] interiorRings = surfacePatch[i].getInteriorRings();
+        final GM_Position[][] interiorRings = element.getInteriorRings();
 
         if( interiorRings != null )
         {
           final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, crs );
           if( rings != null )
           {
-            for( int j = 0; j < rings.length; j++ )
+            for( final GM_Curve ring : rings )
             {
-              curveList.add( rings[j] );
+              curveList.add( ring );
             }
           }
         }
@@ -133,7 +133,7 @@ public class SHPPolygonz implements ISHPGeometry
       m_envelope = m_rings.getEnvelope();
       m_zrange = m_rings.getZRange();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       System.out.println( "SHPPolygonz::" + e );
     }
@@ -169,7 +169,7 @@ public class SHPPolygonz implements ISHPGeometry
 
     offset += 4;
     // save offset of the bounding box
-    int tmp1 = offset;
+    final int tmp1 = offset;
 
     // increment offset with size of the bounding box
     offset += (4 * 8);
@@ -188,7 +188,7 @@ public class SHPPolygonz implements ISHPGeometry
     offset += (4 * m_numRings);
 
     int count = 0;
-    for( int i = 0; i < pointsZ.length; i++ )
+    for( final SHPPointz[] element : pointsZ )
     {
 
       // stores the index of the i'th part
@@ -196,51 +196,51 @@ public class SHPPolygonz implements ISHPGeometry
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
-      for( int j = 0; j < pointsZ[i].length; j++ )
+      for( int j = 0; j < element.length; j++ )
       {
         // number of the current point
         count++;
 
         // calculate bounding box
-        if( pointsZ[i][j].getX() > xmax )
+        if( element[j].getX() > xmax )
         {
-          xmax = pointsZ[i][j].getX();
+          xmax = element[j].getX();
         }
-        else if( pointsZ[i][j].getX() < xmin )
+        else if( element[j].getX() < xmin )
         {
-          xmin = pointsZ[i][j].getX();
-        }
-
-        if( pointsZ[i][j].getY() > ymax )
-        {
-          ymax = pointsZ[i][j].getY();
-        }
-        else if( pointsZ[i][j].getY() < ymin )
-        {
-          ymin = pointsZ[i][j].getY();
+          xmin = element[j].getX();
         }
 
-        if( pointsZ[i][j].getZ() > zmax )
+        if( element[j].getY() > ymax )
         {
-          zmax = pointsZ[i][j].getZ();
+          ymax = element[j].getY();
         }
-        else if( pointsZ[i][j].getZ() < zmin )
+        else if( element[j].getY() < ymin )
         {
-          zmin = pointsZ[i][j].getZ();
+          ymin = element[j].getY();
+        }
+
+        if( element[j].getZ() > zmax )
+        {
+          zmax = element[j].getZ();
+        }
+        else if( element[j].getZ() < zmin )
+        {
+          zmin = element[j].getZ();
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, pointsZ[i][j].getX() );
+        ByteUtils.writeLEDouble( bytearray, offset, element[j].getX() );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, pointsZ[i][j].getY() );
+        ByteUtils.writeLEDouble( bytearray, offset, element[j].getY() );
         offset += 8;
 
         // write z-coordinate
         // jump to the z-values
         byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_numRings) + (m_numPoints * 16) + 16 + ((count - 1) * 8);
-        ByteUtils.writeLEDouble( bytearray, byteposition, pointsZ[i][j].getZ() );
+        ByteUtils.writeLEDouble( bytearray, byteposition, element[j].getZ() );
       }
     }
     // jump back to the offset of the bounding box
@@ -299,7 +299,7 @@ public class SHPPolygonz implements ISHPGeometry
 
   public SHPPointz[][] getPointsz( )
   {
-    return pointsZ;
+    return m_pointsZ;
   }
 
   public SHPPolyLinez getRings( )
