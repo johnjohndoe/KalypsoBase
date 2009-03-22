@@ -503,4 +503,39 @@ public final class StatusUtilities
     return new Status( severity, status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
   }
 
+  public static boolean equals( final IStatus status1, final IStatus status2 )
+  {
+    if( status1 == null || status2 == null )
+      return status1 == null && status2 == null;
+
+    final int severity1 = status1.getSeverity();
+    final int severity2 = status1.getSeverity();
+    if( severity1 != severity2 )
+      return false;
+
+    final int code1 = status1.getCode();
+    final int code2 = status1.getCode();
+    if( code1 != code2 )
+      return false;
+
+    final String message1 = status1.getMessage();
+    final String message2 = status2.getMessage();
+    if( !message1.equals( message2 ) )
+      return false;
+
+    final String plugin1 = status1.getPlugin();
+    final String plugin2 = status2.getPlugin();
+    if( !plugin1.equals( plugin2 ) )
+      return false;
+
+    final Throwable exception1 = status1.getException();
+    final Throwable exception2 = status2.getException();
+    if( exception1 != exception2 )
+      return false;
+
+    final IStatus[] children1 = status1.getChildren();
+    final IStatus[] children2 = status2.getChildren();
+    return Arrays.equals( children1, children2 );
+  }
+
 }
