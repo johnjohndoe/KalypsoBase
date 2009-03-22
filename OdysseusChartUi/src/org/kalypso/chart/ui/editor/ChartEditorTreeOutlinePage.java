@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
@@ -56,13 +56,10 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
@@ -94,7 +91,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected CheckboxTreeViewer m_treeViewer;
 
-  public ChartEditorTreeOutlinePage( IChartPart editor )
+  public ChartEditorTreeOutlinePage( final IChartPart editor )
   {
     m_chartPart = editor;
     m_contentProvider = new ChartEditorTreeContentProvider( m_chartPart.getChartComposite().getChartModel() );
@@ -106,7 +103,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
        *      odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerAdded( IChartLayer layer )
+      public void onLayerAdded( final IChartLayer layer )
       {
         refreshItems( m_contentProvider.getParent( layer ) );
         m_treeViewer.setChecked( layer, true );
@@ -118,9 +115,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
        *      .openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerContentChanged( IChartLayer layer )
+      public void onLayerContentChanged( final IChartLayer layer )
       {
-       refreshItems( layer );
+        refreshItems( layer );
 
       }
 
@@ -128,7 +125,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerMoved( IChartLayer layer )
+      public void onLayerMoved( final IChartLayer layer )
       {
         refreshItems( layer );
       }
@@ -138,7 +135,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
        *      .odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
-      public void onLayerRemoved( IChartLayer layer )
+      public void onLayerRemoved( final IChartLayer layer )
       {
         m_treeViewer.remove( layer );
       }
@@ -148,7 +145,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        Object elt = event.getElement();
+        final Object elt = event.getElement();
         if( elt instanceof IChartLayer )
         {
           handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
@@ -156,7 +153,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         else
         {
           // children of layers cannot be unchecked
-          Object treeParent = m_contentProvider.getParent( elt );
+          final Object treeParent = m_contentProvider.getParent( elt );
           m_treeViewer.setChecked( elt, m_treeViewer.getChecked( treeParent ) );
         }
       }
@@ -179,51 +176,49 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     // Drag'n drop
 
     // add drag and drop support only for move operation
-    int ops = DND.DROP_MOVE;
+    final int ops = DND.DROP_MOVE;
 
-    DragSourceListener dragSL = new DragSourceListener()
+    final DragSourceListener dragSL = new DragSourceListener()
     {
 
-      public void dragFinished( DragSourceEvent event )
+      public void dragFinished( final DragSourceEvent event )
       {
         // nothing to do
       }
 
       @SuppressWarnings("unchecked")
-      public void dragSetData( DragSourceEvent event )
+      public void dragSetData( final DragSourceEvent event )
       {
         // resolve selected layer
-        IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
 
-        List list = selection.toList();
+        final List list = selection.toList();
         // only one can be selected
-        Object elt = list.get( 0 );
+        final Object elt = list.get( 0 );
         // only layers can be dragged
         if( elt instanceof IChartLayer )
         {
-          IChartLayer layer = (IChartLayer) elt;
+          final IChartLayer layer = (IChartLayer) elt;
           event.data = layer.getId();
         }
       }
 
-      public void dragStart( DragSourceEvent event )
+      public void dragStart( final DragSourceEvent event )
       {
         // nothing to do
       }
-
     };
 
-    ViewerDropAdapter vda = new ViewerDropAdapter( m_treeViewer )
+    final ViewerDropAdapter vda = new ViewerDropAdapter( m_treeViewer )
     {
-
       @Override
-      public boolean performDrop( Object data )
+      public boolean performDrop( final Object data )
       {
         if( data != null )
         {
-          String id = (String) data;
+          final String id = (String) data;
           ILayerManager lm = m_chartPart.getChartComposite().getChartModel().getLayerManager();
-          Object targetLayer = getCurrentTarget();
+          final Object targetLayer = getCurrentTarget();
           Object parent = null;
           // find dragged
           IChartLayer draggedLayer = lm.getLayerById( id );
@@ -251,7 +246,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       }
 
       @Override
-      public boolean validateDrop( Object target, int operation, TransferData transferType )
+      public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
       {
         if( ChartLayerTransfer.getInstance().isSupportedType( transferType ) )
         {
@@ -286,20 +281,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   {
     final Tree tree = new Tree( parent, SWT.CHECK );
     tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    final TreeColumn column = new TreeColumn( tree, SWT.NONE );
-    column.setWidth( tree.getSize().x );
-    tree.addControlListener( new ControlAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        column.setWidth( tree.getSize().x );
-      }
-    } );
-
     m_treeViewer = new CheckboxTreeViewer( tree );
 
     m_treeViewer.setContentProvider( m_contentProvider );
@@ -366,7 +347,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   {
     layer.setVisible( checked );
 
-    Object[] children = m_contentProvider.getChildren( layer );
+    final Object[] children = m_contentProvider.getChildren( layer );
     setChildChecked( children, checked );
     if( checked )
       setParentChecked( m_contentProvider.getParent( layer ), true );
@@ -380,8 +361,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected void refreshItems( final Object parent )
   {
-    Object[] o = m_treeViewer.getCheckedElements();
-    m_treeViewer.refresh( parent);
+    final Object[] o = m_treeViewer.getCheckedElements();
+    m_treeViewer.refresh( parent );
     m_treeViewer.setCheckedElements( o );
   }
 
@@ -398,17 +379,16 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
    */
   public void setActionBars( final IActionBars actionBars )
   {
-
   }
 
   private final void setChecked( final ILayerManager mngr )
   {
-    for( IChartLayer layer : mngr.getLayers() )
+    for( final IChartLayer layer : mngr.getLayers() )
     {
-      boolean checked = layer.isVisible();
+      final boolean checked = layer.isVisible();
       m_treeViewer.setChecked( layer, checked );
-      Object[] children = m_contentProvider.getChildren( layer );
-      for( Object object : children )
+      final Object[] children = m_contentProvider.getChildren( layer );
+      for( final Object object : children )
       {
         if( object instanceof IChartLayer )
         {
@@ -422,14 +402,14 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     }
   }
 
-  public void setCheckStateListener( ICheckStateListener checkStateListener )
+  public void setCheckStateListener( final ICheckStateListener checkStateListener )
   {
     m_checkStateListener = checkStateListener;
   }
 
   final private void setChildChecked( final Object[] children, final boolean checked )
   {
-    for( Object child : children )
+    for( final Object child : children )
     {
       if( child instanceof IChartLayer )
       {
@@ -440,7 +420,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     }
   }
 
-  public void setContentProvider( ChartEditorTreeContentProvider contentProvider )
+  public void setContentProvider( final ChartEditorTreeContentProvider contentProvider )
   {
     m_contentProvider = contentProvider;
   }
@@ -471,17 +451,16 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.setSelection( selection );
   }
 
-  public void setSelectionChangeListener( ISelectionChangedListener selectionChangeListener )
+  public void setSelectionChangeListener( final ISelectionChangedListener selectionChangeListener )
   {
     m_selectionChangeListener = selectionChangeListener;
   }
 
   public void updateControl( )
   {
-    IChartModel model = m_chartPart.getChartComposite().getChartModel();
+    final IChartModel model = m_chartPart.getChartComposite().getChartModel();
     m_treeViewer.setInput( model );
     setChecked( model.getLayerManager() );
-
   }
 
 }

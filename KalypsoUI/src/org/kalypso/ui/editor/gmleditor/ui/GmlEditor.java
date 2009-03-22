@@ -58,7 +58,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     if( m_viewer != null )
       m_viewer.dispose();
 
-    // unregister site selection provieder
+    // unregister site selection provider
     getSite().setSelectionProvider( null );
     super.dispose();
   }
