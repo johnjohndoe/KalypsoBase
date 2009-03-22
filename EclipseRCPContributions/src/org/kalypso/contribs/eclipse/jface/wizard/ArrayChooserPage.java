@@ -240,7 +240,9 @@ public class ArrayChooserPage extends WizardPage
     panel.setLayout( new GridLayout() );
 
     m_viewer = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
-    m_viewer.getTable().setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    viewerData.heightHint = 400; // maybe we want to get that from outside
+    m_viewer.getTable().setLayoutData( viewerData );
     m_viewer.setLabelProvider( m_labelProvider );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setInput( m_chooseables );
