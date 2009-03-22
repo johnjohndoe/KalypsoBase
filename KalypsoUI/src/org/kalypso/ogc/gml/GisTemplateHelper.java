@@ -217,10 +217,21 @@ public class GisTemplateHelper
 
   public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
   {
-    final InputSource is = new InputSource( file.getContents() );
-    if( file instanceof IEncodedStorage )
-      is.setEncoding( ((IEncodedStorage) file).getCharset() );
-    return GisTemplateHelper.loadGisMapView( is );
+    InputStream inputStream = null;
+    try
+    {
+      inputStream = file.getContents();
+      final InputSource is = new InputSource( inputStream );
+      if( file instanceof IEncodedStorage )
+        is.setEncoding( ((IEncodedStorage) file).getCharset() );
+      final Gismapview gisMapView = GisTemplateHelper.loadGisMapView( is );
+      inputStream.close();
+      return gisMapView;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+    }
   }
 
   public static final Gismapview loadGisMapView( final File file ) throws IOException, JAXBException, SAXException, ParserConfigurationException

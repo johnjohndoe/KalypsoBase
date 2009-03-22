@@ -74,7 +74,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -414,15 +413,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final IFile file = getFile();
-      if( m_partName == null )
-      {
-        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
-        setCustomName( fileName );
-      }
-      // TODO: always call in SWT thread (or move into setCustomName)
-// if( file != null )
-// setTitleToolTip( file.getFullPath().toPortableString() );
+// final IFile file = getFile();
+// if( m_partName == null )
+// {
+//        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
+// setCustomName( fileName );
+// }
 
       // At the moment, we stop after the .gmt file has loaded. One day we may change this to wait until
       // all themes have finished loading, but this might be a little bit tricky.
@@ -505,29 +501,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapModell = mapModell;
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
-    final String partName;
-    if( m_mapModell == null )
+//        partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
+    if( m_mapModell != null )
     {
-      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
-    }
-    else
-    {
+      final String partName;
       partName = m_mapModell.getLabel( m_mapModell );
+      if( partName != null )
+      setCustomName( partName );
     }
-    setCustomName( partName );
-
-    // final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-// if( !workbench.isClosing() )
-// {
-// workbench.getDisplay().asyncExec( new Runnable()
-// {
-// @SuppressWarnings("synthetic-access")
-// public void run( )
-// {
-// setPartName( partName );
-// }
-// } );
-// }
 
     if( m_mapPanel != null )
     {

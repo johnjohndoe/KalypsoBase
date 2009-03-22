@@ -44,7 +44,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -53,10 +55,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
@@ -65,6 +65,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
@@ -81,19 +82,16 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
+ * TODO: why not directly inherit from {@link org.eclipse.ui.part.EditorPart}?
+ * 
  * @author bce
  */
 public abstract class AbstractEditorPart extends WorkbenchPart implements IResourceChangeListener, ICommandTarget
 {
   /**
-   * The property id for <code>isDirty</code>.
-   */
-  public static final int PROP_DIRTY = IWorkbenchPartConstants.PROP_DIRTY;
-
-  /**
    * Editor input, or <code>null</code> if none.
    */
-  private IEditorInput editorInput = null;
+  private IStorageEditorInput m_editorInput = null;
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -121,25 +119,19 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     ResourcesPlugin.getWorkspace().addResourceChangeListener( this );
   }
 
-  /*
-   * (non-Javadoc) Method declared on IEditorPart.
-   */
-  public IEditorInput getEditorInput( )
+  public IStorageEditorInput getEditorInput( )
   {
-    return editorInput;
+    return m_editorInput;
   }
 
-  /*
-   * (non-Javadoc) Method declared on IEditorPart.
-   */
   public IEditorSite getEditorSite( )
   {
     return (IEditorSite) getSite();
   }
 
-  /*
-   * (non-Javadoc) Returns whether the contents of this editor should be saved when the editor is closed. <p> This
-   * method returns <code>true</code> if and only if the editor is dirty (<code>isDirty</code>). </p>
+  /**
+   * Returns whether the contents of this editor should be saved when the editor is closed. <br/>
+   * This method returns <code>true</code> if and only if the editor is dirty (<code>isDirty</code>).
    */
   public boolean isSaveOnCloseNeeded( )
   {
@@ -160,14 +152,12 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    */
   public final void doSave( final IProgressMonitor monitor )
   {
-    // save only possible when input is a file
     final IEditorInput eInput = getEditorInput();
+
     if( !(eInput instanceof FileEditorInput) )
     {
-      // given user a chance to use save-as
-      MessageDialog.openInformation( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.0" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.1" ) + Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.2" ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          + Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.3" ) + Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
+      // If input is not a file, allow user to save as
+      doSaveAs();
       return;
     }
 
@@ -193,26 +183,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException;
 
-  /**
-   * Returns the status line manager of this editor.
-   * 
-   * @return the status line manager of this editor
-   */
-  private IStatusLineManager getStatusLineManager( )
-  {
-    // final IEditorActionBarContributor contributor = getEditorSite().getActionBarContributor();
-    // if( !(contributor instanceof EditorActionBarContributor) )
-    // return null;
-    //
-    // final IActionBars actionBars = ((EditorActionBarContributor) contributor).getActionBars();
-    // if( actionBars == null )
-    // return null;
-
-    final IActionBars actionBars = getActionBars( getSite() );
-
-    return actionBars.getStatusLineManager();
-  }
-
   protected IActionBars getActionBars( final IWorkbenchPartSite site )
   {
     final IActionBars actionBars;
@@ -221,7 +191,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       actionBars = ((IViewSite) site).getActionBars();
     }
     else
-    { // site instanceof IEditorSite
+    {
       actionBars = ((IEditorSite) site).getActionBars();
     }
     return actionBars;
@@ -232,23 +202,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    */
   public boolean isDirty( )
   {
-    return m_commandTarget.isDirty();
-  }
-
-  /**
-   * Returns the progress monitor related to this editor.
-   * 
-   * @return the progress monitor related to this editor
-   */
-  protected IProgressMonitor getProgressMonitor( )
-  {
-    IProgressMonitor pm = null;
-
-    final IStatusLineManager manager = getStatusLineManager();
-    if( manager != null )
-      pm = manager.getProgressMonitor();
-
-    return pm != null ? pm : new NullProgressMonitor();
+    return (!(getEditorInput() instanceof IFileEditorInput)) || m_commandTarget.isDirty();
   }
 
   /**
@@ -257,48 +211,78 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   public void doSaveAs( )
   {
     final Shell shell = getSite().getShell();
-    final IEditorInput input = getEditorInput();
+    final IStorageEditorInput input = getEditorInput();
 
     final SaveAsDialog dialog = new SaveAsDialog( shell );
 
-    final IFile original = (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
-    if( original != null )
-      dialog.setOriginalFile( original );
-    else
+    final IFile currentFile = getSaveAsFile( input );
+    if( currentFile == null )
       dialog.setOriginalName( getTitle() );
+    else
+      dialog.setOriginalFile( currentFile );
 
-    dialog.create();
-
-    if( dialog.open() == Window.CANCEL )
-      return;
-
+    dialog.open();
     final IPath filePath = dialog.getResult();
     if( filePath == null )
       return;
 
-    final IProgressMonitor monitor = getProgressMonitor();
-
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().getFile( filePath );
-    final IFileEditorInput newInput = new FileEditorInput( file );
+    final JobExclusiveCommandTarget commandTarget = m_commandTarget;
+    final Job job = new Job( "Save As: " + filePath.toPortableString() )
+    {
+      @SuppressWarnings("synthetic-access")
+      // ignore: we do not want to make it more public
+      @Override
+      public IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
+          final IFileEditorInput newInput = new FileEditorInput( file );
+          doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
+          commandTarget.resetDirty();
+          setInput( newInput );
 
+          monitor.done();
+          return Status.OK_STATUS;
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+          return e.getStatus();
+        }
+      }
+    };
+    job.setUser( true );
+    job.setPriority( Job.LONG );
+    job.schedule();
+  }
+
+  private IFile getSaveAsFile( final IStorageEditorInput input )
+  {
     try
     {
-      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
-      doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
-      m_commandTarget.resetDirty();
+      if( input instanceof FileEditorInput )
+        ((IFileEditorInput) input).getFile();
 
-      monitor.done();
+      final IStorage storage = input.getStorage();
+      final IPath fullPath = storage.getFullPath();
+
+      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+      final IWorkspaceRoot root = workspace.getRoot();
+
+      if( fullPath == null )
+        return null;
+
+      return root.getFile( fullPath );
     }
-    catch( final CoreException ce )
+    catch( final CoreException e )
     {
-      ce.printStackTrace();
-
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.8" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.9" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      return;
+      e.printStackTrace();
     }
 
-    setInput( newInput );
+    return null;
   }
 
   /**
@@ -308,7 +292,10 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   {
     setSite( site );
 
-    setInput( input );
+    if( !(input instanceof IStorageEditorInput) )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+    setInput( (IStorageEditorInput) input );
+    load();
   }
 
   /**
@@ -319,21 +306,28 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  protected final void setInput( final IEditorInput input )
+  private final void setInput( final IStorageEditorInput input )
   {
-    if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+    m_editorInput = input;
 
-    editorInput = input;
-    load();
+    getSite().getShell().getDisplay().syncExec( new Runnable()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void run( )
+      {
+        setPartName( input.getName() );
+        firePropertyChange( IWorkbenchPart.PROP_TITLE );
+      }
+    } );
   }
 
   protected final void load( )
   {
-    final IStorageEditorInput input = (IStorageEditorInput) getEditorInput();
+    final IStorageEditorInput input = getEditorInput();
     try
     {
       loadInternal( new NullProgressMonitor(), input );
+      fireDirty();
     }
     catch( final Exception e )
     {
@@ -345,14 +339,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     }
 
     m_commandTarget.resetDirty();
-
-    getSite().getShell().getDisplay().syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        setDocumentTitle( input );
-      }
-    } );
   }
 
   protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException;
@@ -416,11 +402,23 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        firePropertyChange( PROP_DIRTY );
+        firePropertyChange( IWorkbenchPartConstants.PROP_DIRTY );
         return Status.OK_STATUS;
       }
     };
     job.schedule();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.EditorPart#getTitleToolTip()
+   */
+  @Override
+  public String getTitleToolTip( )
+  {
+    if( m_editorInput == null )
+      return super.getTitleToolTip();
+
+    return m_editorInput.getToolTipText();
   }
 
   /**
@@ -435,13 +433,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   public final JobExclusiveCommandTarget getCommandTarget( )
   {
     return m_commandTarget;
-  }
-
-  protected void setDocumentTitle( final IStorageEditorInput input )
-  {
-    setPartName( input.getName() );
-    if( input instanceof IFileEditorInput )
-      setTitleToolTip( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
   }
 
   /**
