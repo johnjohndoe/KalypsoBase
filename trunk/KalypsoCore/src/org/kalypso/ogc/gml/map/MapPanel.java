@@ -44,17 +44,21 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
@@ -73,6 +77,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
+import org.kalypso.contribs.eclipse.jobs.TextPaintable;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
@@ -135,7 +140,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
+  private final Collection<ISelectionChangedListener> m_selectionListeners = new HashSet<ISelectionChangedListener>( 5 );
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
@@ -153,9 +158,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private GM_Envelope m_wishBBox;
 
-  private final List<IMapPanelListener> m_mapPanelListeners = new ArrayList<IMapPanelListener>();
+  private final Collection<IMapPanelListener> m_mapPanelListeners = new HashSet<IMapPanelListener>();
 
-  private final List<IMapPanelPaintListener> m_paintListeners = new ArrayList<IMapPanelPaintListener>();
+  private final Collection<IMapPanelPaintListener> m_paintListeners = new HashSet<IMapPanelPaintListener>();
 
   private final Map<IKalypsoTheme, IMapLayer> m_layers = new HashMap<IKalypsoTheme, IMapLayer>();
 
@@ -529,8 +534,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( mapModell == null )
       return;
 
-    final IMapLayer[] layers = getLayersForRendering();
-    final IPaintable paintable = new MapPanelPainter( layers, mapModell, getProjection(), m_backgroundColor );
+    final IPaintable paintable = createPaintable( mapModell );
 
     final BufferPaintJob bufferPaintJob = new BufferPaintJob( paintable );
     bufferPaintJob.setRule( m_painterMutex );
@@ -565,6 +569,22 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     repaintMap();
   }
 
+  private IPaintable createPaintable( final IMapModell mapModell )
+  {
+    final GeoTransform projection = getProjection();
+
+    if( projection == null )
+    {
+      final int width = getWidth();
+      final int height = getHeight();
+      final Point size = new Point( width, height );
+      return new TextPaintable( size, "No Extent Set", m_backgroundColor );
+    }
+
+    final IMapLayer[] layers = getLayersForRendering();
+    return new MapPanelPainter( layers, mapModell, projection, m_backgroundColor );
+  }
+
   /**
    * Paints contents of the map ni the following order:
    * <ul>
@@ -596,10 +616,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       final BufferedImage image = bufferPaintJob == null ? null : bufferPaintJob.getImage();
       if( image != null )
       {
-        final MapPanelPainter paintable = (MapPanelPainter) bufferPaintJob.getPaintable();
-        final GeoTransform world2screen = paintable.getWorld2screen();
-        final GM_Envelope imageBounds = world2screen.getSourceRect();
-        if( imageBounds.equals( m_boundingBox ) )
+        final GM_Envelope imageBounds = imageBoundFromPaintable( bufferPaintJob );
+        if( ObjectUtils.equals( imageBounds, m_boundingBox ) )
           bufferGraphics.drawImage( image, 0, 0, null );
         else
         {
@@ -627,6 +645,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
 
     g.drawImage( buffer, 0, 0, null );
+  }
+
+  private GM_Envelope imageBoundFromPaintable( final BufferPaintJob bufferPaintJob )
+  {
+    final IPaintable paintable = bufferPaintJob.getPaintable();
+    if( paintable instanceof MapPanelPainter )
+    {
+      final MapPanelPainter mapPaintable = (MapPanelPainter) paintable;
+      final GeoTransform world2screen = mapPaintable.getWorld2screen();
+      return world2screen.getSourceRect();
+    }
+
+    return null;
   }
 
   /**
@@ -716,7 +747,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_wishBBox = wishBBox;
 
     /* We do remember the wish-box here, this behaves more nicely if the size of the view changed meanwhile. */
-    if( useHistory )
+    if( useHistory && m_wishBBox != null )
       m_extentHistory.push( m_wishBBox );
 
     /* Store the old extent */
@@ -733,16 +764,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() );
       KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() );
       KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() );
-
-      if( invalidateMap )
-        invalidateMap();
-      else
-        repaintMap();
     }
 
-    /* Tell everyone, that the extent has changed. */
     if( invalidateMap )
+    {
+      invalidateMap();
+      /* Tell everyone, that the extent has changed. */
       fireExtentChanged( oldExtent, boundingBox );
+    }
+    else
+      repaintMap();
   }
 
   /**
@@ -841,7 +872,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   public void setStatus( final IStatus status )
   {
+    if( StatusUtilities.equals( m_status, status ) )
+      return;
+
     m_status = status;
+
     fireStatusChanged();
   }
 
