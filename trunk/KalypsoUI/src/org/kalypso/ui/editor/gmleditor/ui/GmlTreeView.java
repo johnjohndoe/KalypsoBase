@@ -415,7 +415,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
               tree.setLinesVisible( false );
               treeViewer.setInput( m_workspace );
 
-              final GMLXPath rootPath = new GMLXPath( rootPathString );
+              final GMLXPath rootPath = new GMLXPath( rootPathString, null );
               contentProvider.setRootPath( rootPath );
             }
           }
@@ -624,7 +624,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     final GMLXPath currentRootPath = m_contentProvider.getRootPath();
     final String rootPathString = m_gisTreeview.getInput().getFeatureXPath();
-    final GMLXPath rootPath = new GMLXPath( rootPathString );
+    final GMLXPath rootPath = new GMLXPath( rootPathString, null );
 
     return !rootPath.equals( currentRootPath );
   }
@@ -670,7 +670,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     // set the rootPath twice (here and after object loaded), in order
     // to suppress the dirty flag after load
     final String rootPathString = input.getFeatureXPath();
-    final GMLXPath rootPath = new GMLXPath( rootPathString );
+    final GMLXPath rootPath = new GMLXPath( rootPathString, null );
     m_contentProvider.setRootPath( rootPath );
 
     final Image waitImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.WAIT_LOADING_OBJ );
