@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,15 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
 import org.eclipse.jface.wizard.IWizardContainer2;
 
 /**
- * Adds publisher-observer bahaviour to {@link org.eclipse.jface.wizard.IWizardContainer2}.
- * 
+ * Adds publisher-observer behaviour to {@link org.eclipse.jface.wizard.IWizardContainer2}.
+ *
  * @deprecated WizardDialog implements now the {@link org.eclipse.jface.dialogs.IPageChangedListener} interface. Use
  *             that instead.
  * @author belger

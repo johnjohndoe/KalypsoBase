@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * This page lists a list of objects from which the user can choose from.
- * 
+ *
  * @author Gernot Belger, Holger Albert
  */
 public class ArrayChooserPage extends WizardPage
@@ -89,12 +89,12 @@ public class ArrayChooserPage extends WizardPage
   /**
    * The list of the checked objects.
    */
-  protected Object[] m_checked = null;
+  private Object[] m_checked = null;
 
   /**
    * The number of objects, that must be selected, before the page can continue.
    */
-  protected int m_numToSelect = 0;
+  private int m_numToSelect = 0;
 
   /**
    * The dialog-settings for saving the state of the wizard.
@@ -109,7 +109,7 @@ public class ArrayChooserPage extends WizardPage
     public void checkStateChanged( final CheckStateChangedEvent event )
     {
       /* Update the list of checked elements. */
-      m_checked = m_viewer.getCheckedElements();
+      setChecked( m_viewer.getCheckedElements() );
 
       /* Update the dialog settings. */
       updateDialogSettings();
@@ -124,43 +124,67 @@ public class ArrayChooserPage extends WizardPage
    */
   private IBaseLabelProvider m_labelProvider = new LabelProvider();
 
+  private final boolean m_useDialogSettings;
+
   /**
-   * The constructor.
-   * 
    * @param chooseables
-   *            Used as input for {@link ArrayContentProvider}
+   *          Used as input for {@link ArrayContentProvider}
    * @param pageName
-   *            The name of this page (internal use).
+   *          The name of this page (internal use).
    * @param title
-   *            The title is displayed in the title bar of the wizard window.
+   *          The title is displayed in the title bar of the wizard window.
    * @param titleImage
-   *            This image is displayed in the page.
+   *          This image is displayed in the page.
    */
   public ArrayChooserPage( final Object chooseables, final String pageName, final String title, final ImageDescriptor titleImage )
   {
-    this( chooseables, null, null, 0, pageName, title, titleImage );
+    this( chooseables, null, null, 0, pageName, title, titleImage, true );
   }
 
   /**
    * The constructor.
-   * 
+   *
    * @param chooseables
-   *            Used as input for {@link ArrayContentProvider}
+   *          Used as input for {@link ArrayContentProvider}
    * @param selected
-   *            A list of objects from the chooseables-list, which should be preselected.
+   *          A list of objects from the chooseables-list, which should be preselected.
    * @param checked
-   *            A list of objects from the chooseables-list, which should be prechecked.
+   *          A list of objects from the chooseables-list, which should be prechecked.
    * @param numToSelect
-   *            This number specifies, how much of the objects are to be selected, before the page can continue. If 0,
-   *            the page will continue without having an object selected.
+   *          This number specifies, how much of the objects are to be selected, before the page can continue. If 0, the
+   *          page will continue without having an object selected.
    * @param pageName
-   *            The name of this page (internal use).
+   *          The name of this page (internal use).
    * @param title
-   *            The title is displayed in the title bar of the wizard window.
+   *          The title is displayed in the title bar of the wizard window.
    * @param titleImage
-   *            This image is displayed in the page.
+   *          This image is displayed in the page.
    */
   public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final String pageName, final String title, final ImageDescriptor titleImage )
+  {
+    this( chooseables, selected, checked, numToSelect, pageName, title, titleImage, true );
+  }
+
+  /**
+   * @param chooseables
+   *          Used as input for {@link ArrayContentProvider}
+   * @param selected
+   *          A list of objects from the chooseables-list, which should be preselected.
+   * @param checked
+   *          A list of objects from the chooseables-list, which should be prechecked.
+   * @param numToSelect
+   *          This number specifies, how much of the objects are to be selected, before the page can continue. If 0, the
+   *          page will continue without having an object selected.
+   * @param pageName
+   *          The name of this page (internal use).
+   * @param title
+   *          The title is displayed in the title bar of the wizard window.
+   * @param titleImage
+   *          This image is displayed in the page.
+   * @param useDialogSettings
+   *          If <code>false</code>, the page does not use the dialog settings to restore it's state.
+   */
+  public ArrayChooserPage( final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final String pageName, final String title, final ImageDescriptor titleImage, final boolean useDialogSettings )
   {
     super( pageName, title, titleImage );
 
@@ -168,13 +192,14 @@ public class ArrayChooserPage extends WizardPage
     m_selected = selected;
     m_checked = checked;
     m_numToSelect = numToSelect;
+    m_useDialogSettings = useDialogSettings;
   }
 
   /**
    * This function sets a LabelProvider, that will be used generate the list names of the objects.
-   * 
+   *
    * @param labelProvider
-   *            The new LabelProvider.
+   *          The new LabelProvider.
    */
   public void setLabelProvider( final IBaseLabelProvider labelProvider )
   {
@@ -183,7 +208,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns the current LabelProvider, that will be used to generate the list names of the objects.
-   * 
+   *
    * @return The current LabelProvider.
    */
   public IBaseLabelProvider getLabelProvider( )
@@ -246,7 +271,7 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function returns a list of selected objects from the chooseable list.
-   * 
+   *
    * @return All selected objects.
    */
   public Object[] getChoosen( )
@@ -260,15 +285,15 @@ public class ArrayChooserPage extends WizardPage
   /**
    * This function creates one type of button from two available types. Each type of button will change the check-state
    * of all chooseables.
-   * 
+   *
    * @param parent
-   *            The parent composite.
+   *          The parent composite.
    * @param viewer
-   *            The viewer, which will be manipulated from this button.
+   *          The viewer, which will be manipulated from this button.
    * @param select
-   *            The type of the created button.<br>
-   *            If true, a button which will select all chooseables, will be created.<br>
-   *            If false, a button which will unselect all chooseables, will be created.
+   *          The type of the created button.<br>
+   *          If true, a button which will select all chooseables, will be created.<br>
+   *          If false, a button which will unselect all chooseables, will be created.
    */
   private void createSelectButton( final Composite parent, final CheckboxTableViewer viewer, final boolean select )
   {
@@ -280,12 +305,12 @@ public class ArrayChooserPage extends WizardPage
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         viewer.setAllChecked( select );
 
         /* Update the list of checked elements. */
-        m_checked = viewer.getCheckedElements();
+        setChecked( viewer.getCheckedElements() );
 
         /* Update the dialog settings. */
         updateDialogSettings();
@@ -296,12 +321,17 @@ public class ArrayChooserPage extends WizardPage
     } );
   }
 
+  protected void setChecked( final Object[] checkedElements )
+  {
+    m_checked = checkedElements;
+  }
+
   /**
    * This function sets the list of chooseables. If one is already set via the construtor, it will be replaced by this
    * list.
-   * 
+   *
    * @param input
-   *            The new list of chooseables.
+   *          The new list of chooseables.
    */
   public void setInput( final Object input )
   {
@@ -314,16 +344,15 @@ public class ArrayChooserPage extends WizardPage
 
   /**
    * This function will check, if all requirements of this page are met.
-   * 
+   *
    * @param firstTime
-   *            This parameter should be true, if the page calls the function the first time. If true, the finish-state
-   *            will be checked, but no error-message will be displayed.
+   *          This parameter should be true, if the page calls the function the first time. If true, the finish-state
+   *          will be checked, but no error-message will be displayed.
    */
-  protected void chkPageComplete( boolean firstTime )
+  protected void chkPageComplete( final boolean firstTime )
   {
     /* Reset all messages. */
-    WizardPageUtilities.appendWarning( null, this );
-    WizardPageUtilities.appendError( null, this );
+    setErrorMessage( null );
     setPageComplete( true );
 
     /* If the number of selected objects does not matter, the page will always be finishable. */
@@ -345,9 +374,12 @@ public class ArrayChooserPage extends WizardPage
    */
   private void initDialogSettings( )
   {
-    IWizard wizard = getWizard();
+    if( !m_useDialogSettings )
+      return;
 
-    IDialogSettings dialogSettings = wizard.getDialogSettings();
+    final IWizard wizard = getWizard();
+
+    final IDialogSettings dialogSettings = wizard.getDialogSettings();
     if( dialogSettings == null )
     {
       m_dialogSettings = null;
@@ -367,7 +399,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page. */
-    IDialogSettings section = m_dialogSettings.getSection( "ChooserPage" + getName() );
+    final IDialogSettings section = m_dialogSettings.getSection( "ChooserPage" + getName() );
     if( section == null )
       return;
 
@@ -375,31 +407,31 @@ public class ArrayChooserPage extends WizardPage
     final Object[] elements = ((IStructuredContentProvider) m_viewer.getContentProvider()).getElements( m_viewer.getInput() );
 
     /* Check all elements of the viewer. */
-    for( int i = 0; i < elements.length; i++ )
+    for( final Object element : elements )
     {
       String name = "";
       if( m_labelProvider instanceof ILabelProvider )
       {
-        ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
-        name = labelProvider.getText( elements[i] );
+        final ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
+        name = labelProvider.getText( element );
       }
       else if( m_labelProvider instanceof ITableLabelProvider )
       {
-        ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
-        name = labelProvider.getColumnText( elements[i], 0 );
+        final ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
+        name = labelProvider.getColumnText( element, 0 );
       }
 
       if( name.equals( "" ) )
         continue;
 
       /* If they do exist in the dialog settings, the element is added. */
-      String state = section.get( name );
+      final String state = section.get( name );
 
       if( state == null )
         continue;
 
       /* The element is added, regardless the value it has. */
-      checked.add( elements[i] );
+      checked.add( element );
     }
 
     m_viewer.setCheckedElements( checked.toArray() );
@@ -415,20 +447,20 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* Get the section for this page in creating a new emtpy one, so that no old values will remain. */
-    IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage" + getName() );
+    final IDialogSettings section = m_dialogSettings.addNewSection( "ChooserPage" + getName() );
 
-    for( int i = 0; i < m_checked.length; i++ )
+    for( final Object element : m_checked )
     {
       String name = "";
       if( m_labelProvider instanceof ILabelProvider )
       {
-        ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
-        name = labelProvider.getText( m_checked[i] );
+        final ILabelProvider labelProvider = (ILabelProvider) m_labelProvider;
+        name = labelProvider.getText( element );
       }
       else if( m_labelProvider instanceof ITableLabelProvider )
       {
-        ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
-        name = labelProvider.getColumnText( m_checked[i], 0 );
+        final ITableLabelProvider labelProvider = (ITableLabelProvider) m_labelProvider;
+        name = labelProvider.getColumnText( element, 0 );
       }
 
       section.put( name, "checked" );
