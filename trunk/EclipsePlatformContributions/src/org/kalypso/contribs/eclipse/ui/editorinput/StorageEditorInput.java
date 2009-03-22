@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.editorinput;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdapterManager;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
@@ -50,7 +51,7 @@ import org.eclipse.ui.IStorageEditorInput;
 /**
  * An {@link org.eclipse.ui.IEditorInput} which is based on a {@link IStorage}.
  * <p>Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}.
- * 
+ *
  * @author Gernot Belger
  */
 public class StorageEditorInput implements IStorageEditorInput
@@ -110,8 +111,11 @@ public class StorageEditorInput implements IStorageEditorInput
    */
   public String getToolTipText( )
   {
-    // null not allowed, so return name of storage
-    return m_storage.getFullPath().toOSString();    
+    final IPath fullPath = m_storage.getFullPath();
+    if( fullPath == null )
+      return "<Unbekannt>";
+
+    return fullPath.toOSString();
   }
 
   /**
