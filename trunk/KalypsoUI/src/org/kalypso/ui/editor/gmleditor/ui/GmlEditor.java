@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -195,7 +196,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
 
     final TreeViewer treeViewer = m_viewer.getTreeViewer();
     final Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
-    getSite().registerContextMenu( menuManager, m_viewer );
+    ((IEditorSite) getSite()).registerContextMenu( menuManager, m_viewer, false );
     treeViewer.getControl().setMenu( menu );
   }
 
@@ -217,6 +218,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
