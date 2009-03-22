@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.obstableeditor;
 
@@ -66,7 +66,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * The Observation TableEditor.
- * 
+ *
  * @author schlienger
  */
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
@@ -126,6 +126,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -140,7 +141,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     final TableView template = (TableView)getView();
     if( template == null )
@@ -184,7 +185,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     return new IWizardPage[0];
   }
