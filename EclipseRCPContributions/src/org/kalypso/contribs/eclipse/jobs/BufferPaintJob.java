@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -52,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
@@ -76,8 +76,6 @@ public class BufferPaintJob extends Job
   private final IPaintable m_paintable;
 
   private BufferedImage m_image = null;
-
-  private Color m_bgColor = null;
 
   public BufferPaintJob( final IPaintable paintable )
   {
@@ -106,20 +104,6 @@ public class BufferPaintJob extends Job
   public IPaintable getPaintable( )
   {
     return m_paintable;
-  }
-
-  public Color getBackgroundColor( )
-  {
-    return m_bgColor;
-  }
-
-  /**
-   * Sets the background colour for this image. If non <code>null</code>, the image will be filled with the given colour
-   * before paint.
-   */
-  public void setBackgroundColor( final Color bgColor )
-  {
-    m_bgColor = bgColor;
   }
 
   /**
@@ -159,12 +143,6 @@ public class BufferPaintJob extends Job
         if( gr == null )
           return Status.OK_STATUS;
 
-        if( m_bgColor != null )
-        {
-          gr.setBackground( m_bgColor );
-          gr.fillRect( 0, 0, width, height );
-        }
-
         ProgressUtilities.worked( progress, 10 );
 
         m_paintable.paint( gr, progress.newChild( 90 ) );
@@ -172,6 +150,8 @@ public class BufferPaintJob extends Job
     }
     catch( final CoreException ce )
     {
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( ce.getStatus() );
+
       // REMARK: We translate every error to an warning, to avoid the error-dlg popup.
       // Especially for buffered layers this is needed, as we can have multiple thread running at once, producing lots
       // of error output
