@@ -71,7 +71,7 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
  * in one fifo-queue. Support parallel processing of jobs.
- *
+ * 
  * @author Belger
  */
 public class QueuedSimulationService implements ISimulationService
@@ -83,7 +83,9 @@ public class QueuedSimulationService implements ISimulationService
   static
   {
     if( !DO_DEBUG_TRACE )
+    {
       LOGGER.setUseParentHandlers( false );
+    }
   }
 
   /** Vector of {@link CalcJobThread}s */
@@ -204,7 +206,9 @@ public class QueuedSimulationService implements ISimulationService
     {
       m_threads.remove( cjt );
       if( m_threads.size() == 0 )
+      {
         stopScheduling();
+      }
     }
   }
 
@@ -255,7 +259,9 @@ public class QueuedSimulationService implements ISimulationService
         }
       }
       if( id == -1 )
+      {
         id = m_threads.size();
+      }
 
       File tmpdir;
       try
@@ -275,9 +281,13 @@ public class QueuedSimulationService implements ISimulationService
       cjt = new SimulationThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output, tmpdir );
 
       if( id == m_threads.size() )
+      {
         m_threads.add( cjt );
+      }
       else
+      {
         m_threads.set( id, cjt );
+      }
 
       LOGGER.info( "Job waiting for scheduling: " + id );
     }
@@ -298,11 +308,15 @@ public class QueuedSimulationService implements ISimulationService
       {
         final SimulationThread cjt = (SimulationThread) element;
         if( cjt.isAlive() )
+        {
           runningCount++;
+        }
 
         final SimulationInfo jobBean = cjt.getJobBean();
         if( jobBean.getState() == ISimulationConstants.STATE.WAITING )
+        {
           waitingCount++;
+        }
       }
 
       LOGGER.info( "Scheduler: Running jobs: " + runningCount );
@@ -340,7 +354,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören und
    * insbesondere alle Dateien löschen
-   *
+   * 
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -367,7 +381,7 @@ public class QueuedSimulationService implements ISimulationService
   public void transferCurrentResults( final File targetFolder, final String jobID ) throws SimulationException
   {
     final SimulationThread thread = findJobThread( jobID );
-    thread.transferCurrentResults(targetFolder);
+    thread.transferCurrentResults( targetFolder );
   }
 
   /**
@@ -386,10 +400,12 @@ public class QueuedSimulationService implements ISimulationService
       return data;
 
     final ISimulation job = m_calcJobFactory.createJob( typeID );
-    final URL modelspecURL = job.getSpezifikation();
+    if( job == null )
+      throw new SimulationException( String.format( "Can't find ISimulationJob for id: %s", typeID ) );
 
     try
     {
+      final URL modelspecURL = job.getSpezifikation();
       data = new ModelspecData( modelspecURL, KalypsoSimulationCoreJaxb.JC.createUnmarshaller() );
     }
     catch( final JAXBException e )
@@ -469,7 +485,9 @@ public class QueuedSimulationService implements ISimulationService
     final String[] namespaces = new String[catalog.size()];
     int count = 0;
     for( final String string : catalog.keySet() )
+    {
       namespaces[count++] = string;
+    }
 
     return namespaces;
   }
