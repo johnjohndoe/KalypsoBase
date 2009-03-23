@@ -48,7 +48,8 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
     final URL urlModelNA = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_Model.name() );
     final URL urlModelWSPM = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.WSPM_Model.name() );
     final URL urlStatisticalReportNA = (URL) inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_StatisticalReport.name() );
-    final String naRiverCode = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_RiverCode.name() ).toString();
+    final Object riverCode = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.NA_RiverCode.name() );
+    final String naRiverCode = riverCode == null ? "" : riverCode.toString();
     final String runOffEventID = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.WSPM_RunoffEventID.name() ).toString();
     try
     {
