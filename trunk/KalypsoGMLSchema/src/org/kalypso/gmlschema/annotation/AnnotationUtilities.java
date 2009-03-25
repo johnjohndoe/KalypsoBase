@@ -346,8 +346,9 @@ public class AnnotationUtilities
       /* Produce all parts */
       final String namespace = qname == null ? null : qname.getNamespaceURI();
       final boolean namespaceIsNull = namespace == null || namespace.length() == 0;
+      final String ns = namespaceIsNull ? null : URNUtilities.convertURN( namespace );
       final String localPart = qname == null ? null : qname.getLocalPart();
-      final String shortnameFromProperties = namespaceIsNull ? null : properties.getProperty( namespace, null );
+      final String shortnameFromProperties = namespaceIsNull ? null : properties.getProperty( ns, null );
       final String shortnameFromCatalog;
       // Allow for known prefix, but avoid creation of generated prefix
       if( namespaceIsNull || !nsMapper.hasPrefix( namespace ) )
@@ -355,7 +356,6 @@ public class AnnotationUtilities
       else
         shortnameFromCatalog = nsMapper.getPreferredPrefix( namespace, null );
 
-      final String ns = namespaceIsNull ? null : URNUtilities.convertURN( namespace );
 
       switch( type )
       {

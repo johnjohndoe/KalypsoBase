@@ -137,7 +137,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   {
     getMapPanel().getWidgetManager().setActualWidget( null );
 
-    // TODO: is this really the right place to save the map??
+    // FIXME: saving the map here causes dead-locks!
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) ) //$NON-NLS-1$
     {
