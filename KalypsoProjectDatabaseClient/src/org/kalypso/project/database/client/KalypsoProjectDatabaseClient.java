@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoProjectDatabaseClient extends Plugin
 {
-  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.afgui.kalypsoModule"; //$NON-NLS-1$
+  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
 
   private static List<IKalypsoModule> KALYPSO_MODULES = null;
   
