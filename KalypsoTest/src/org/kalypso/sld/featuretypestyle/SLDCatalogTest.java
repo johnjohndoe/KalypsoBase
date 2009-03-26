@@ -114,7 +114,7 @@ public class SLDCatalogTest extends TestCase
       final URL styleURL = getClass().getResource( "resources/styles.xml" );
       generateFeatureTypeStyleCatalogFromSLD( styleURL );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -129,7 +129,7 @@ public class SLDCatalogTest extends TestCase
     final IUrlResolver2 resolver = new IUrlResolver2()
     {
 
-      public URL resolveURL( String href ) throws MalformedURLException
+      public URL resolveURL( final String href ) throws MalformedURLException
       {
         return UrlResolverSingleton.resolveUrl( styleURL, href );
       }
@@ -158,10 +158,10 @@ public class SLDCatalogTest extends TestCase
           ftStyle.setTitle( name );
           ftStyle.setName( "default" );
           ftStyle.setFeatureTypeName( featureTypeQName );
-          final URI store = m_catalogSLD.getStore( ftStyle );
+          final URI store = m_catalogSLD.getStore();
           final IUrlResolver2 resolver2 = new IUrlResolver2()
           {
-            public URL resolveURL( String href ) throws MalformedURLException
+            public URL resolveURL( final String href ) throws MalformedURLException
             {
               return UrlResolverSingleton.resolveUrl( store.toURL(), href );
             }
@@ -186,16 +186,16 @@ public class SLDCatalogTest extends TestCase
     {
       System.out.println( "URI" + uri );
     }
-    FeatureTypeStyle default1 = m_catalogSLD.getDefault( resolver, qName );
+    final FeatureTypeStyle default1 = m_catalogSLD.getDefault( resolver, qName );
     assertNotNull( default1 );
   }
 
-  private void updateURNS( IUrlResolver2 resolver, Graphic graphic )
+  private void updateURNS( final IUrlResolver2 resolver, final Graphic graphic )
   {
     if( graphic == null )
       return;
     final Object[] marksAndExtGraphics = graphic.getMarksAndExtGraphics();
-    for( Object object : marksAndExtGraphics )
+    for( final Object object : marksAndExtGraphics )
     {
       if( object instanceof ExternalGraphic )
       {
@@ -212,12 +212,12 @@ public class SLDCatalogTest extends TestCase
           m_manager.getBaseCatalog().addEntry( uri, systemID, null );
           // externalGraphic.setOnlineResource( uri );
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        catch( URISyntaxException e )
+        catch( final URISyntaxException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -227,7 +227,7 @@ public class SLDCatalogTest extends TestCase
   }
 
   // TODO much better make Visitor that visits all sld-elements (doemming)
-  private void updateiconURNS( IUrlResolver2 resolver, FeatureTypeStyle ftStyle )
+  private void updateiconURNS( final IUrlResolver2 resolver, final FeatureTypeStyle ftStyle )
   {
     final Rule[] rules = ftStyle.getRules();
     for( final Rule rule : rules )
@@ -259,7 +259,7 @@ public class SLDCatalogTest extends TestCase
     }
   }
 
-  private void updateURNS( IUrlResolver2 resolver, Halo halo )
+  private void updateURNS( final IUrlResolver2 resolver, final Halo halo )
   {
     if( halo == null )
       return;
@@ -267,14 +267,14 @@ public class SLDCatalogTest extends TestCase
     updateURNS( resolver, halo.getStroke() );
   }
 
-  private void updateURNS( IUrlResolver2 resolver, Fill fill )
+  private void updateURNS( final IUrlResolver2 resolver, final Fill fill )
   {
     if( fill == null )
       return;
     updateURN( resolver, fill.getGraphicFill() );
   }
 
-  private void updateURNS( IUrlResolver2 resolver, Stroke stroke )
+  private void updateURNS( final IUrlResolver2 resolver, final Stroke stroke )
   {
     if( stroke == null )
       return;
@@ -285,7 +285,7 @@ public class SLDCatalogTest extends TestCase
     updateURNS( resolver, graphicStroke.getGraphic() );
   }
 
-  private void updateURN( IUrlResolver2 resolver, GraphicFill graphicFill )
+  private void updateURN( final IUrlResolver2 resolver, final GraphicFill graphicFill )
   {
     if( graphicFill == null )
       return;
