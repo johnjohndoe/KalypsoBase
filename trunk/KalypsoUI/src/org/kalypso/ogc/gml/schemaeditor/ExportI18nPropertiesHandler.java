@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.schemaeditor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -92,7 +88,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
 
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -122,7 +118,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     final NSPrefixProvider nsMapper = NSUtilities.getNSProvider();
 
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    for( IFeatureType featureType : featureTypes )
+    for( final IFeatureType featureType : featureTypes )
     {
       final QName ftName = featureType.getQName();
       final String ftNamespaceURI = ftName.getNamespaceURI();
@@ -138,7 +134,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
       formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion );
 
       final IPropertyType[] properties = featureType.getProperties();
-      for( IPropertyType propertyType : properties )
+      for( final IPropertyType propertyType : properties )
       {
         final QName ptName = propertyType.getQName();
 
@@ -155,7 +151,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
         {
           final IValuePropertyType vpt = (IValuePropertyType) propertyType;
           final IRestriction[] restrictions = vpt.getRestriction();
-          for( IRestriction restriction : restrictions )
+          for( final IRestriction restriction : restrictions )
           {
             if( restriction instanceof EnumerationRestriction )
             {
