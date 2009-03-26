@@ -332,9 +332,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     if( szenarioFolder == null )
       return null;
 
-    if( szenarioFolder.getFile( new Path( modelFile ) ).exists() )
+    final Path path = new Path( modelFile );
+    if( szenarioFolder.getFile( path ).exists() )
       return szenarioFolder;
-
+    
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
       return findModelContext( (IFolder) parent, modelFile );
