@@ -154,7 +154,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
           {
             getLocker().acquireUiUpdateLock();
 
-            final IStatus status = ProjectDataBaseController.createRemoteProject( getLocalProject() );
+            final IStatus status = ProjectDataBaseController.createRemoteProject( getDatabaseSettings(), getLocalProject() );
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell != null && !shell.isDisposed() )
