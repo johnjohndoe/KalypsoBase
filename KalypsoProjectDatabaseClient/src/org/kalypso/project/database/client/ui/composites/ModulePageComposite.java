@@ -58,11 +58,9 @@ import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.module.IModulePageWizardDelegate;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
 import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseComposite;
@@ -173,10 +171,7 @@ public class ModulePageComposite extends Composite
     bodyProjects.setLayout( layout );
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final IProjectDatabaseFilter handler = modulePage.getDatabaseFilter();
-    final IKalypsoModuleProjectOpenAction openAction = modulePage.getProjectOpenAction();
-
-    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, m_toolkit, handler, openAction );
+    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( m_module, bodyProjects, m_toolkit );
     projects.setLayout( new GridLayout() );
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
@@ -192,7 +187,7 @@ public class ModulePageComposite extends Composite
       @Override
       public String getCommitType( )
       {
-        final IKalypsoRemoteDatabaseSettings settings = m_module.getRemoteDatabaseSettings();
+        final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
 
         return settings.getModuleCommitType();
       }
@@ -224,7 +219,7 @@ public class ModulePageComposite extends Composite
         @Override
         public String getCommitType( )
         {
-          final IKalypsoRemoteDatabaseSettings settings = m_module.getRemoteDatabaseSettings();
+          final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
           
           return settings.getModuleCommitType();
         }

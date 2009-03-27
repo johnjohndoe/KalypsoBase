@@ -56,8 +56,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
@@ -77,9 +77,9 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
 
   private final ILocalProject m_local;
 
-  public AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
-    super( action, locker );
+    super( module, locker );
     m_local = local;
   }
 
