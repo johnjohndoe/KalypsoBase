@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension;
 
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+
 
 /**
  * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
@@ -49,7 +52,7 @@ package org.kalypso.project.database.client.extension;
  */
 public interface IKalypsoModule
 {
-  public IKalypsoModuleWelcomePageHandler getWelcomePageHandler( );
+  public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 
-  public IKalypsoModuleEnteringPageHandler getModuleEnteringPage( );
+  public IKalypsoModulePage getModulePage( );
 }

@@ -50,7 +50,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 
 /**
  * Composite for calling the new project wizard
@@ -63,9 +63,9 @@ public class SpecialImportProjectComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  protected final IKalypsoModuleEnteringPageHandler m_enteringPage;
+  protected final IKalypsoModulePage m_enteringPage;
 
-  public SpecialImportProjectComposite( final Composite parent, final FormToolkit toolkit, final IKalypsoModuleEnteringPageHandler enteringPage )
+  public SpecialImportProjectComposite( final Composite parent, final FormToolkit toolkit, final IKalypsoModulePage enteringPage )
   {
     super( parent, SWT.NULL );
 
@@ -86,9 +86,7 @@ public class SpecialImportProjectComposite extends Composite
   public final void update( )
   {
     if( this.isDisposed() )
-    {
       return;
-    }
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );

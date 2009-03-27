@@ -38,66 +38,18 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.pages.welcome;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.kalypso.afgui.wizards.INewProjectWizard;
 
 /**
- * Entering page of a Kalypso Module. Page contains list of projects and a description about the module.
- * 
  * @author Dirk Kuch
  */
-public interface IKalypsoModuleEnteringPageHandler
+public interface IKalypsoWelcomePage
 {
-  /**
-   * @return Entering Page Heading
-   */
-  String getHeader( );
+  void setPage( IKalypsoModulePage page );
 
-  /**
-   * @return welcome page module placement priority
-   */
-  Integer getPriority( );
+  void update( );
 
-  /**
-   * @return Informations about the module. URL links to a html page
-   */
-  URL getInfoURL( ) throws MalformedURLException;
-
-  /**
-   * @return a module handles only specific IProjects in workspace
-   */
-  IProjectDatabaseFilter getDatabaseFilter( );
-
-  /**
-   * @return special new project wizard of plugin
-   */
-  INewProjectWizard getProjectWizard( );
-
-  /**
-   * @return special new demo project wizard of plugin
-   */
-  INewProjectWizard getDemoProjectWizard( );
-
-  public boolean hasDemoProjectWizard( );
-
-  /**
-   * @return project data base commit type
-   */
-  String getRemoteCommitType( );
-
-  /**
-   * @return special plugin import wizard
-   */
-  IWizard getImportWizard( );
-
-  public boolean hasImportWizard( );
-
-  String getImportWizardLabel( );
-
-  IKalypsoProjectOpenAction getProjectOpenAction( );
 }

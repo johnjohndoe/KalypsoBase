@@ -18,7 +18,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.server.ProjectDatabase;
 import org.osgi.framework.Bundle;
@@ -177,8 +178,8 @@ public class KalypsoProjectDatabaseClient extends Plugin
         @Override
         public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
         {
-          final IKalypsoModuleEnteringPageHandler p1 = o1.getModuleEnteringPage();
-          final IKalypsoModuleEnteringPageHandler p2 = o2.getModuleEnteringPage();
+          final IKalypsoModulePage p1 = o1.getModulePage();
+          final IKalypsoModulePage p2 = o2.getModulePage();
 
           final int compare = p1.getPriority().compareTo( p2.getPriority() );
           if( compare == 0 )

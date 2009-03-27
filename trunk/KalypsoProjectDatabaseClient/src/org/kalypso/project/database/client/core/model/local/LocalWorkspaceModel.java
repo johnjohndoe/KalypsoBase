@@ -12,7 +12,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 
 /**
  * @author Dirk Kuch

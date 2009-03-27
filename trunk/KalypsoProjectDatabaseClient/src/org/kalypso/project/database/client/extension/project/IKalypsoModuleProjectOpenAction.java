@@ -38,18 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.project;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
 
 /**
- * Some model operations need a bunch of time. Is the UI update during this operations, the UI can display wrong states
- * of the model
- * 
  * @author Dirk Kuch
  */
-public interface IProjectDatabaseUiLocker
+public interface IKalypsoModuleProjectOpenAction
 {
-  public void acquireUiUpdateLock( );
-
-  public void releaseUiUpdateLock( );
-
+  IStatus open( IProject project );
 }

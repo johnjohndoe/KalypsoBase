@@ -59,8 +59,8 @@ import org.kalypso.project.database.client.core.model.remote.RemoteProjectHandle
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.transcendence.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;

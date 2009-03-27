@@ -73,8 +73,8 @@ import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceP
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -111,7 +111,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
   protected final ITranscendenceProject m_transcendence;
 
-  public TranscendenceProjectRowBuilder( final ITranscendenceProject transcendence, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public TranscendenceProjectRowBuilder( final ITranscendenceProject transcendence, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     super( transcendence, action, locker );
     m_transcendence = transcendence;

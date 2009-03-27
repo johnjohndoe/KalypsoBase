@@ -38,20 +38,34 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.pages.welcome;
 
-
+import org.eclipse.swt.graphics.Image;
 
 /**
- * Model Database Filter
+ * interface for rendering the welcome page content of a kalypso module
  * 
  * @author Dirk Kuch
  */
-public interface IProjectDatabaseFilter
+public interface IKalypsoModuleWelcomePageFrame
 {
   /**
-   * add this element?
+   * @return icon of module
    */
-  boolean select( IProjectHandler handler );
+  Image getIcon( );
 
+  /**
+   * @return hover icon of module
+   */
+  Image getHoverIcon( );
+
+  /**
+   * @return label of model icon (placed at the right side of the icon)
+   */
+  String getLabel( );
+
+  /**
+   * @return module icon tooltip
+   */
+  String getTooltip( );
 }

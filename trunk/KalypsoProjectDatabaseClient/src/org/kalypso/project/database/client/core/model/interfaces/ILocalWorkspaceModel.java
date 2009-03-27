@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 
 /**
  * @author Dirk Kuch

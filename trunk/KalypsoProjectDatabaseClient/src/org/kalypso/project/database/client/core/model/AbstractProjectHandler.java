@@ -3,7 +3,7 @@ package org.kalypso.project.database.client.core.model;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
-import org.kalypso.project.database.client.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
 
 public abstract class AbstractProjectHandler implements Comparable<IProjectHandler>, IProjectHandler
 {
