@@ -40,10 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database;
 
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+
 /**
  * @author Dirk Kuch
  */
-public interface IKalypsoRemoteDatabaseSettings
+public interface IKalypsoModuleDatabaseSettings
 {
+  /**
+   * @return commit type of "module project type"
+   */
   String getModuleCommitType( );
+  
+  
+  /**
+   * @return a module handles only specific IProjects in workspace
+   */
+  IProjectDatabaseFilter getFilter( );
+  
+  IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 }

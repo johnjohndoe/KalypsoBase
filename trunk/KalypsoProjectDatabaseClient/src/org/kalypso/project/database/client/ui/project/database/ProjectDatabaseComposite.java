@@ -53,10 +53,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.IProjectHandler;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.database.internal.ProjectRowBuilderFabrication;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
@@ -72,15 +72,13 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private Composite m_body = null;
 
-  private final IProjectDatabaseModel m_model;
-
-  private final IProjectDatabaseFilter m_filter;
-
   protected UIJob m_updateJob = null;
 
   private boolean m_updateLock = false;
 
-  private final IKalypsoModuleProjectOpenAction m_openAction;
+  private final IKalypsoModule m_module;
+
+  private final IProjectDatabaseModel m_model;
 
   /**
    * @param parent
@@ -92,12 +90,11 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param isExpert
    *          show expert debug informations?
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoModuleProjectOpenAction openAction )
+  public ProjectDatabaseComposite( final IKalypsoModule module, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
-    m_filter = filter;
-    m_openAction = openAction;
+    m_module = module;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     m_model.addListener( this );
@@ -138,10 +135,12 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final IProjectHandler[] projects = m_model.getProjects( m_filter );
+    final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
+
+    final IProjectHandler[] projects = m_model.getProjects( settings.getFilter() );
     for( final IProjectHandler project : projects )
     {
-      final IProjectRowBuilder builder = ProjectRowBuilderFabrication.getBuilder( project, m_openAction, this );
+      final IProjectRowBuilder builder = ProjectRowBuilderFabrication.getBuilder( project, m_module, this );
       builder.render( m_body, m_toolkit );
     }
 

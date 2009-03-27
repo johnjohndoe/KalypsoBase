@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database.internal;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
@@ -54,15 +53,12 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
@@ -73,9 +69,9 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 
   public static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) ); //$NON-NLS-1$
 
-  public LocalProjectRowBuilder( final ILocalProject local, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public LocalProjectRowBuilder( final ILocalProject local, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
-    super( local, action, locker );
+    super( local, module, locker );
   }
 
   /**
@@ -130,18 +126,9 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 
   private boolean isCommitableProject( )
   {
-    try
-    {
-      final ILocalProject project = getLocalProject();
-      final IRemoteProjectPreferences preferences = project.getRemotePreferences();
-
-      if( preferences != null )
-        return true;
-    }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+    final String type = getCommitType();
+    if( type != null && !"".equals( type ) )
+      return true;
 
     return false;
   }
@@ -149,7 +136,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
   protected void getCommitLink( final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkCommit = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkCommit.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.3"), getLocalProject().getName() ) ); //$NON-NLS-1$
+    lnkCommit.setToolTipText( String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.3" ), getLocalProject().getName() ) ); //$NON-NLS-1$
 
     if( ProjectDatabaseServerUtils.isServerOnline() )
     {
@@ -172,7 +159,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell != null && !shell.isDisposed() )
             {
-              ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.4"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.4" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           finally

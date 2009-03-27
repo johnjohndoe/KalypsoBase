@@ -42,7 +42,9 @@ package org.kalypso.project.database.client.core.project.export;
 
 import java.io.File;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,6 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.core.utils.ZipUtils;
+import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**
  * @author Dirk Kuch
@@ -73,8 +76,19 @@ public class ProjectExportHandler implements ICoreRunnableWithProgress
   {
     try
     {
-      m_project.close( monitor );
+      if( !m_project.hasNature( RemoteProjectNature.NATURE_ID ) )
+      {
+        final IProjectDescription description = m_project.getDescription();
+        final String[] natures = description.getNatureIds();
+        description.setNatureIds( (String[]) ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID ) );
+        
+        m_project.setDescription( description, monitor );
+      } 
+      
+       m_project.close( monitor );
 
+     
+      
       ZipUtils.pack( m_target, m_project.getLocation().toFile() );
     }
     catch( final Exception e )

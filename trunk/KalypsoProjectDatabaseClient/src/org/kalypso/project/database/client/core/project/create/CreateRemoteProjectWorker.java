@@ -94,9 +94,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
-      {
         throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2") ) ); //$NON-NLS-1$
-      }
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
@@ -124,7 +122,10 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       }, "update.zip" ); //$NON-NLS-1$
 
+      
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+      
+      // always commit - download of projects assert nature!
       final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
       if( nature instanceof RemoteProjectNature )
       {

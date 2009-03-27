@@ -46,8 +46,6 @@ import java.net.URL;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * Entering page of a Kalypso Module. Page contains list of projects and a description about the module.
@@ -74,11 +72,6 @@ public interface IKalypsoModulePage
   URL getInfoURL( ) throws MalformedURLException;
 
   /**
-   * @return a module handles only specific IProjects in workspace
-   */
-  IProjectDatabaseFilter getDatabaseFilter( );
-
-  /**
    * @return special new project wizard of plugin
    */
   INewProjectWizard getProjectWizard( );
@@ -98,6 +91,4 @@ public interface IKalypsoModulePage
   public boolean hasImportWizard( );
 
   String getImportWizardLabel( );
-
-  IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 }

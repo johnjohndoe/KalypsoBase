@@ -43,29 +43,23 @@ package org.kalypso.project.database.client.ui.project.database.internal;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.IProjectHandler;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author Dirk Kuch
  */
 public class ProjectRowBuilderFabrication
 {
-  public static IProjectRowBuilder getBuilder( final IProjectHandler handler, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public static IProjectRowBuilder getBuilder( final IProjectHandler handler, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
     if( handler instanceof ITranscendenceProject )
-    {
-      return new TranscendenceProjectRowBuilder( (ITranscendenceProject) handler, action, locker );
-    }
+      return new TranscendenceProjectRowBuilder( (ITranscendenceProject) handler, module, locker );
     else if( handler instanceof IRemoteProject )
-    {
-      return new RemoteProjectRowBuilder( (IRemoteProject) handler, action, locker );
-    }
+      return new RemoteProjectRowBuilder( (IRemoteProject) handler, module, locker );
     else if( handler instanceof ILocalProject )
-    {
-      return new LocalProjectRowBuilder( (ILocalProject) handler, action, locker );
-    }
+      return new LocalProjectRowBuilder( (ILocalProject) handler, module, locker );
 
     return null;
   }

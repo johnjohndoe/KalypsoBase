@@ -45,6 +45,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
@@ -53,22 +54,25 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
  */
 public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-
-  private final IKalypsoModuleProjectOpenAction m_action;
-
   private final IProjectDatabaseUiLocker m_locker;
+  private final IKalypsoModule m_module;
 
-  public AbstractProjectRowBuilder( final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public AbstractProjectRowBuilder( final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
-    m_action = action;
+    m_module = module;
     m_locker = locker;
   }
 
   protected IKalypsoModuleProjectOpenAction getOpenAction( )
   {
-    return m_action;
+    return m_module.getDatabaseSettings().getProjectOpenAction();
   }
 
+  protected String getCommitType( )
+  {
+    return m_module.getDatabaseSettings().getModuleCommitType();
+  }
+  
   protected IProjectDatabaseUiLocker getLocker( )
   {
     return m_locker;
