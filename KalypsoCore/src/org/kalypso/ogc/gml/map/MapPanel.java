@@ -623,7 +623,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
         {
           // If current buffer only shows part of the map, paint it into the right screen-rect
           final GeoTransform currentProjection = getProjection();
-          if( currentProjection != null )
+          if( currentProjection != null && imageBounds != null )
             MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
         }
       }
