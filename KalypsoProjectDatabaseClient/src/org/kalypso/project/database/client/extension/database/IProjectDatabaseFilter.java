@@ -38,17 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.database;
 
-import java.util.Properties;
 
-import org.eclipse.core.runtime.IStatus;
 
 /**
+ * Model Database Filter
+ * 
  * @author Dirk Kuch
  */
-public interface IKalypsoProjectOpenAction
+public interface IProjectDatabaseFilter
 {
-  // TODO: give IProject instead of properties
-  IStatus open( Properties properties );
+  /**
+   * add this element?
+   */
+  boolean select( IProjectHandler handler );
+
 }

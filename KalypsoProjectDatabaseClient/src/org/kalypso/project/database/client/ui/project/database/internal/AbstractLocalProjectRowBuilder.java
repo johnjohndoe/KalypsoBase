@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database.internal;
 
-import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -58,8 +56,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
@@ -79,7 +77,7 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
 
   private final ILocalProject m_local;
 
-  public AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     super( action, locker );
     m_local = local;
@@ -105,10 +103,7 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )
           {
-            final Properties properties = new Properties();
-            properties.setProperty( "project", getLocalProject().getProject().getName() ); //$NON-NLS-1$
-
-            return getOpenAction().open( properties );
+            return getOpenAction().open( getLocalProject().getProject() );
           }
         }.schedule();
       }

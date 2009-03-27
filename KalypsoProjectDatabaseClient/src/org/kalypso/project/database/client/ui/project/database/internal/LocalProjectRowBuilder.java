@@ -59,8 +59,8 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -73,7 +73,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 
   public static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) ); //$NON-NLS-1$
 
-  public LocalProjectRowBuilder( final ILocalProject local, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public LocalProjectRowBuilder( final ILocalProject local, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     super( local, action, locker );
   }

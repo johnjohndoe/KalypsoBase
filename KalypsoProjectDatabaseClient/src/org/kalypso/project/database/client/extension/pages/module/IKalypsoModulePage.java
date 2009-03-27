@@ -38,34 +38,68 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.pages.module;
 
-import org.eclipse.swt.graphics.Image;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.jface.wizard.IWizard;
+import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
- * interface for rendering the welcome page content of a kalypso module
+ * Entering page of a Kalypso Module. Page contains list of projects and a description about the module.
  * 
  * @author Dirk Kuch
  */
-public interface IKalypsoModuleWelcomePageHandler
+public interface IKalypsoModulePage
 {
   /**
-   * @return icon of module
+   * @return Entering Page Heading
    */
-  Image getIcon( );
+  String getHeader( );
 
   /**
-   * @return hover icon of module
+   * @return welcome page module placement priority
    */
-  Image getHoverIcon( );
+  Integer getPriority( );
 
   /**
-   * @return label of model icon (placed at the right side of the icon)
+   * @return Informations about the module. URL links to a html page
    */
-  String getLabel( );
+  URL getInfoURL( ) throws MalformedURLException;
 
   /**
-   * @return module icon tooltip
+   * @return a module handles only specific IProjects in workspace
    */
-  String getTooltip( );
+  IProjectDatabaseFilter getDatabaseFilter( );
+
+  /**
+   * @return special new project wizard of plugin
+   */
+  INewProjectWizard getProjectWizard( );
+
+  /**
+   * @return special new demo project wizard of plugin
+   */
+  INewProjectWizard getDemoProjectWizard( );
+
+  public boolean hasDemoProjectWizard( );
+
+  /**
+   * @return project data base commit type
+   */
+  String getRemoteCommitType( );
+
+  /**
+   * @return special plugin import wizard
+   */
+  IWizard getImportWizard( );
+
+  public boolean hasImportWizard( );
+
+  String getImportWizardLabel( );
+
+  IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 }

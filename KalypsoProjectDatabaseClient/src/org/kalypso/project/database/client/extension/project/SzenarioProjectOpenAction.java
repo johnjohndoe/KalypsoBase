@@ -38,10 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.project;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
@@ -49,15 +50,18 @@ import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
 /**
  * @author Dirk Kuch
  */
-public class SzenarioProjectOpenAction implements IKalypsoProjectOpenAction
+public class SzenarioProjectOpenAction implements IKalypsoModuleProjectOpenAction
 {
 
   /**
    * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
    */
   @Override
-  public IStatus open( final Properties properties )
+  public IStatus open( final IProject project )
   {
+    final Properties properties = new Properties();
+    properties.setProperty( "project", project.getName() ); //$NON-NLS-1$
+
     final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
     action.run( null, properties );
 

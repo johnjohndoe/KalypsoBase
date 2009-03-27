@@ -53,10 +53,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.database.internal.ProjectRowBuilderFabrication;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
@@ -80,7 +80,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private boolean m_updateLock = false;
 
-  private final IKalypsoProjectOpenAction m_openAction;
+  private final IKalypsoModuleProjectOpenAction m_openAction;
 
   /**
    * @param parent
@@ -92,7 +92,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param isExpert
    *          show expert debug informations?
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoProjectOpenAction openAction )
+  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoModuleProjectOpenAction openAction )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;

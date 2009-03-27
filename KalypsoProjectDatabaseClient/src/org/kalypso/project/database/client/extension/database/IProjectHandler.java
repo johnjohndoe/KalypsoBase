@@ -38,16 +38,25 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.database;
 
 
 /**
  * @author Dirk Kuch
  */
-public interface IKalypsoModulePageHandler
+public interface IProjectHandler
 {
-  void setPage( IKalypsoModuleEnteringPageHandler page );
+  boolean isLocal( );
 
-  void update( );
+  boolean isRemote( );
 
+  /**
+   * @return "label" name of project
+   */
+  String getName( );
+
+  /**
+   * @return unique (bean unix name, iproject.name) of project
+   */
+  String getUniqueName( );
 }

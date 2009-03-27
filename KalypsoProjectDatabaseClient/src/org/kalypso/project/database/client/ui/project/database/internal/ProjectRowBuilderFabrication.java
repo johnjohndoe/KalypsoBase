@@ -43,16 +43,16 @@ package org.kalypso.project.database.client.ui.project.database.internal;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author Dirk Kuch
  */
 public class ProjectRowBuilderFabrication
 {
-  public static IProjectRowBuilder getBuilder( final IProjectHandler handler, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public static IProjectRowBuilder getBuilder( final IProjectHandler handler, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     if( handler instanceof ITranscendenceProject )
     {

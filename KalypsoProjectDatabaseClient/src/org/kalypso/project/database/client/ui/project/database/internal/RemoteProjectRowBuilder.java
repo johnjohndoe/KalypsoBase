@@ -57,8 +57,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -77,7 +77,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
 
   protected final IRemoteProject m_remote;
 
-  public RemoteProjectRowBuilder( final IRemoteProject remote, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public RemoteProjectRowBuilder( final IRemoteProject remote, final IKalypsoModuleProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     super( action, locker );
     m_remote = remote;
