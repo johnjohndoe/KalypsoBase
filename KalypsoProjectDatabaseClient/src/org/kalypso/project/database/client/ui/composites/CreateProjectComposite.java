@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.wizard.create;
+package org.kalypso.project.database.client.ui.composites;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -61,7 +61,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.IEnteringPageWizardDelegate;
+import org.kalypso.project.database.client.extension.pages.module.IModulePageWizardDelegate;
+import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
+import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
@@ -80,9 +82,9 @@ public class CreateProjectComposite extends Composite
 
   private final String m_label;
 
-  protected final IEnteringPageWizardDelegate m_delegate;
+  protected final IModulePageWizardDelegate m_delegate;
 
-  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final IEnteringPageWizardDelegate delegate )
+  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final IModulePageWizardDelegate delegate )
   {
     super( parent, SWT.NULL );
 
@@ -104,9 +106,7 @@ public class CreateProjectComposite extends Composite
   public final void update( )
   {
     if( this.isDisposed() )
-    {
       return;
-    }
 
     final ImageHyperlink lnkCreateProject = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkCreateProject.setImage( m_delegate.getImage() );
@@ -166,7 +166,7 @@ public class CreateProjectComposite extends Composite
               final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
               preferences.setVersion( -1 );
               preferences.setIsOnServer( Boolean.FALSE );
-              preferences.setProjectType( m_delegate.getRemoteCommitType() );
+              preferences.setProjectType( m_delegate.getCommitType() );
             }
           }
           catch( final CoreException e1 )

@@ -38,24 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.ui;
 
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-
+import org.eclipse.swt.graphics.Color;
 
 /**
- * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
- * welcome page
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IKalypsoModule
+public class MyColors
 {
-  public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
+  public static final Color COLOR_WELCOME_PAGE_HEADING = new Color( null, 0x99, 0xB4, 0xCE );
 
-  public IKalypsoModulePage getModulePage( );
-  
-  public IKalypsoRemoteDatabaseSettings getRemoteDatabaseSettings( );
 }
