@@ -9,7 +9,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.service.ogc,
  org.kalypso.simulation.core,
- org.junit4;resolution:=optional
+ org.junit4;resolution:=optional,
+ org.kalypso.gmlschema;bundle-version="1.0.0",
+ org.kalypso.core;bundle-version="1.0.0"
 Export-Package: net.opengeospatial.ows,
  net.opengeospatial.wps,
  org.kalypso.service.wps,
