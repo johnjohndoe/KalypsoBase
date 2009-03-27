@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -72,9 +73,11 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 {
 
   private final ILocalProject m_handler;
+  private final IKalypsoModuleDatabaseSettings m_settings;
 
-  public CreateRemoteProjectWorker( final ILocalProject handler )
+  public CreateRemoteProjectWorker( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
   {
+    m_settings = settings;
     m_handler = handler;
   }
 
@@ -137,12 +140,13 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
         bean.setDescription( project.getName() );
         bean.setUnixName( project.getName() ); // TODO generate unixName
         bean.setProjectVersion( 0 );
-        bean.setProjectType( preferences.getProjectType() );
+        bean.setProjectType( m_settings.getModuleCommitType() );
 
         service.createProject( bean, myDestinationUrl );
 
         preferences.setVersion( 0 );
         preferences.setIsOnServer( true );
+        preferences.setModified( false );
       }
 
       // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
