@@ -78,8 +78,8 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
   {
     if( val == null || key == null )
       return;
-    if( val.equals( key ) )
-      return;
+//    if( val.equals( key ) )
+//      return;
     if( key != "" )
       m_properties.setProperty( prefix + "_" + key + "_" + kind, val );
   }
@@ -124,7 +124,11 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
       final String ftNamespaceURI = ftName.getNamespaceURI();
       final String ftLocalPart = ftName.getLocalPart();
       final String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
-      m_properties.setProperty(ftNamespaceURI.replace( ':','_' ), ftPrefix );
+      
+      final String nsURI = ftNamespaceURI.replace(':','_' );
+      final String nsURI2 = nsURI.replace('/','_' );
+      
+      m_properties.setProperty(nsURI2, ftPrefix );
 
       final IAnnotation ftAnno = featureType.getAnnotation();
       final String ftLabel = ftAnno.getLabel();
