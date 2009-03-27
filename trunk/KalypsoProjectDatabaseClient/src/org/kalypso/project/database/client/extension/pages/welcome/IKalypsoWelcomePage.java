@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.pages.welcome;
 
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 
 /**
@@ -48,8 +48,5 @@ import org.kalypso.project.database.client.extension.pages.module.IKalypsoModule
  */
 public interface IKalypsoWelcomePage
 {
-  void setPage( IKalypsoModulePage page );
-
-  void update( );
-
+  void setSelectedModule( IKalypsoModule module );
 }

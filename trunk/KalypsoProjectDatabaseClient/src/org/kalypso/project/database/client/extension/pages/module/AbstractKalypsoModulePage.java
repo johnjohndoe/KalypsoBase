@@ -38,19 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension;
+package org.kalypso.project.database.client.extension.pages.module;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IEnteringPageWizardDelegate
+public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
 {
-  Image getImage( );
+  private final IKalypsoModule m_module;
 
-  INewProjectWizard getWizard( );
+  public AbstractKalypsoModulePage( final IKalypsoModule module )
+  {
+    m_module = module;
+  }
 
-  String getRemoteCommitType( );
+  public IKalypsoModule getModule( )
+  {
+    return m_module;
+  }
 }

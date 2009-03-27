@@ -23,8 +23,8 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.extension.pages.module,
  org.kalypso.project.database.client.extension.pages.welcome,
  org.kalypso.project.database.client.extension.project,
+ org.kalypso.project.database.client.ui.composites,
  org.kalypso.project.database.client.ui.project.database,
  org.kalypso.project.database.client.ui.project.status,
- org.kalypso.project.database.client.ui.project.wizard.create,
- org.kalypso.project.database.client.ui.project.wizard.imp
+ org.kalypso.project.database.client.ui.project.wizard.create
 Import-Package: org.junit

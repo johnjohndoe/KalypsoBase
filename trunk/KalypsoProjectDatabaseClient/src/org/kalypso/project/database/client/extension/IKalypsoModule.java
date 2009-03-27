@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension;
 
+import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
 
@@ -55,4 +56,6 @@ public interface IKalypsoModule
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 
   public IKalypsoModulePage getModulePage( );
+  
+  public IKalypsoRemoteDatabaseSettings getRemoteDatabaseSettings( );
 }

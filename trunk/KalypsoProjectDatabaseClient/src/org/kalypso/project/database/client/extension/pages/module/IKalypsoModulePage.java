@@ -45,6 +45,7 @@ import java.net.URL;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
@@ -55,6 +56,8 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
  */
 public interface IKalypsoModulePage
 {
+  IKalypsoModule getModule( );
+  
   /**
    * @return Entering Page Heading
    */
@@ -86,11 +89,6 @@ public interface IKalypsoModulePage
   INewProjectWizard getDemoProjectWizard( );
 
   public boolean hasDemoProjectWizard( );
-
-  /**
-   * @return project data base commit type
-   */
-  String getRemoteCommitType( );
 
   /**
    * @return special plugin import wizard
