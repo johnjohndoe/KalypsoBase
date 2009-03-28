@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.junit.Assert;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kml.export.KMLExportDelegate;
 import org.kalypso.kml.export.KMLThemeVisitor;
@@ -100,8 +100,9 @@ public class KMLExporter implements ICoreRunnableWithProgress
    */
   private File createTmpDir( ) throws IOException
   {
-    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURL(); //$NON-NLS-1$
-    Assert.assertNotNull( urlTmpDir );
+    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURI().toURL(); //$NON-NLS-1$
+    
+    Assert.isNotNull( urlTmpDir );
 
     /* delete old test dir */
     final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" ); //$NON-NLS-1$
@@ -157,7 +158,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
       }
 
       final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( googleEarthFactory );
-      styleFactory.addStylesToDocument( documentType, googleEarthFactory );
+      styleFactory.addStylesToDocument( documentType );
 
       // TODO;
 // GoogleEarthExportUtils.removeEmtpyFolders( folderType );

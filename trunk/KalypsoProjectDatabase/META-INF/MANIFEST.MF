@@ -6,10 +6,9 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.project.database.KalypsoProjectDatabase
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
- org.junit4,
  org.eclipse.equinox.http.registry,
- org.kalypso.lib.hsqldb;bundle-version="1.0.0";resolution:=optional,
  javax.servlet;bundle-version="2.4.0",
+ org.kalypso.lib.hsqldb;bundle-version="1.0.0",
  org.kalypso.commons;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
