@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.4"?>
 
-<product name="KalypsoBase" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+<product name="%appName" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" version="0.2.0" useFeatures="true">
 
    <aboutInfo>
       <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
       <text>
-         %productBlurb
+         %aboutText
       </text>
    </aboutInfo>
 
@@ -27,7 +27,7 @@
    <splash
       location="org.kalypso.base"
       startupProgressRect="0,215,400,15"
-      startupMessageRect="5,200,395,15"
+      startupMessageRect="5,199,395,15"
       startupForegroundColor="0000A0" />
    <launcher name="kalypso">
       <solaris/>
@@ -42,6 +42,7 @@
       </win>
    </launcher>
 
+
    <vm>
       <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
       <macos>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
@@ -53,8 +54,7 @@
    </plugins>
 
    <features>
-      <feature id="org.kalypso.base" version="1.0.0"/>
-      <feature id="org.eclipse.platform" version="3.3.2.R33x_v20071022-_19UEksF-G8Yc6bUv3Dz"/>
+      <feature id="org.kalypso.base.feature" version="0.1.0"/>
    </features>
 
 </product>
