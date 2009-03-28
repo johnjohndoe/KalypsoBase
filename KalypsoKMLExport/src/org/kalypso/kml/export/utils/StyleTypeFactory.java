@@ -73,7 +73,7 @@ public class StyleTypeFactory
    * @param documentType
    * @param googleEarthFactory
    */
-  public void addStylesToDocument( final DocumentType documentType, final ObjectFactory googleEarthFactory )
+  public void addStylesToDocument( final DocumentType documentType )
   {
     final List<JAXBElement< ? extends StyleSelectorType>> styles = documentType.getStyleSelector();
 
@@ -193,7 +193,7 @@ public class StyleTypeFactory
    * @param feature
    * @param symbolizer
    */
-  public StyleType getPointSymbolizer( final PointSymbolizer symbolizer )
+  public StyleType getPointSymbolizer( @SuppressWarnings("unused") final PointSymbolizer symbolizer )
   {
     // TODO implement some point styletype which will render an image and generates an IconStyleType
     if( m_labelStyleType == null )

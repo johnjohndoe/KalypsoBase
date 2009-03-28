@@ -161,10 +161,10 @@ public class KalypsoProjectDatabaseClient extends Plugin
         {
           final String pluginid = element.getContributor().getName();
           final Bundle bundle = Platform.getBundle( pluginid );
-          final Class< ? extends IKalypsoModule> featureClass = bundle.loadClass( element.getAttribute( "module" ) ); //$NON-NLS-1$
-          final Constructor< ? extends IKalypsoModule> constructor = featureClass.getConstructor();
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "module" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
 
-          final IKalypsoModule instance = constructor.newInstance();
+          final IKalypsoModule instance = (IKalypsoModule) constructor.newInstance();
           KALYPSO_MODULES.add( instance );
         }
         catch( final Throwable e )

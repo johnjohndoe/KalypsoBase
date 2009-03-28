@@ -26,7 +26,6 @@ import org.kalypso.kml.export.constants.IKMLExportSettings;
  */
 public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 {
-
   protected File m_file; // file target
 
   protected String m_name;
@@ -47,10 +46,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
     setDescription( Messages.PageGoogleExport_2 );
   }
 
-  /**
-   *
-   */
-  private void checkPageCompleted( )
+  protected void checkPageCompleted( )
   {
 
     if( m_name == null )

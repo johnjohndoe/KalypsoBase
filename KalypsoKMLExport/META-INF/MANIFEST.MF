@@ -3,9 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.kml.export;singleton:=true
 Bundle-Version: 1.0.0
-Require-Bundle: org.junit4,
- org.kalypso.ui,
- org.eclipse.core.expressions
+Require-Bundle: org.eclipse.core.expressions,
+ org.kalypso.ui
 Export-Package: org.kalypso.kml.export.constants,
  org.kalypso.kml.export.interfaces;uses:="org.kalypsodeegree.model.feature"
 Bundle-Localization: plugin

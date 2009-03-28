@@ -42,8 +42,6 @@ package org.kalypso.project.database.client.test;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
  * @author Dirk Kuch
@@ -53,8 +51,8 @@ public class TestGetProjectTypes extends Assert
   @Test
   public void testGetProjectTypes( )
   {
-    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final String[] types = service.getProjectTypes();
+// final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+// final String[] types = service.getProjectTypes();
 
   }
 }

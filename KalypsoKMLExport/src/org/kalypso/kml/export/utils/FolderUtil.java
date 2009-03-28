@@ -23,9 +23,9 @@ public class FolderUtil
       {
         continue;
       }
-      final JAXBElement< ? extends FeatureType> element = (JAXBElement< ? extends FeatureType>) obj;
+      final JAXBElement< ? > element = (JAXBElement< ? >) obj;
 
-      final FeatureType featureType = element.getValue();
+      final FeatureType featureType = (FeatureType) element.getValue();
       if( featureType instanceof FolderType )
       {
         final FolderType myFolderType = (FolderType) featureType;
@@ -49,9 +49,9 @@ public class FolderUtil
       {
         continue;
       }
-      final JAXBElement< ? extends FeatureType> element = (JAXBElement< ? extends FeatureType>) obj;
+      final JAXBElement< ? > element = (JAXBElement< ? >) obj;
 
-      final FeatureType featureType = element.getValue();
+      final FeatureType featureType = (FeatureType) element.getValue();
       if( featureType instanceof FolderType )
       {
         final FolderType myFolderType = (FolderType) featureType;

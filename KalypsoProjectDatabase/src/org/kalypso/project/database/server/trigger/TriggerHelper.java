@@ -64,10 +64,10 @@ public class TriggerHelper
     /* resolve trigger extension class */
     final String pluginid = element.getContributor().getName();
     final Bundle bundle = Platform.getBundle( pluginid );
-    final Class< ? extends IProjectDatabaseTrigger> triggerClass = bundle.loadClass( element.getAttribute( "class" ) );
-    final Constructor< ? extends IProjectDatabaseTrigger> constructor = triggerClass.getConstructor();
+    final Class< ? > triggerClass = bundle.loadClass( element.getAttribute( "class" ) );
+    final Constructor< ? > constructor = triggerClass.getConstructor();
 
-    final IProjectDatabaseTrigger trigger = constructor.newInstance();
+    final IProjectDatabaseTrigger trigger = (IProjectDatabaseTrigger) constructor.newInstance();
 
     final FileSystemManager manager = VFSUtilities.getManager();
 
