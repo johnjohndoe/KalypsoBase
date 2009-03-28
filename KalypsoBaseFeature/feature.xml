@@ -1,57 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.kalypso.base"
-      label="KalypsoBase Feature"
-      version="1.0.0"
-      provider-name="kalypsobase.sourceforge.net"
-      os="win32"
-      ws="win32"
-      nl="de"
-      arch="x86">
+      id="org.kalypso.base.feature"
+      label="%Feature.featureName"
+      version="0.1.0"
+      provider-name="%Feature.providerName"
+      plugin="org.kalypso.base"
+      image="kalypso_128.jpg">
 
-   <description url="http://kalypso.bjoernsen.de/">
-      KalypsoBase is a framework for application
-development. It provides implementations of open standards for
-geospatial information systems.
+   <description>
+      %Feature.description
    </description>
 
-   <copyright url="http://kalypsobase.sourceforge.net/">
-      Copyright (C) 2008 by:
-Technical University of Hamburg-Harburg (TUHH)
-Institute of River and Coastal Engineering
-Denickestr. 22
-21073 Hamburg, Germany
-http://www.tuhh.de/wb
-and
-Bjoernsen Consulting Engineers (BCE)
-Maria Trost 3
-56070 Koblenz, Germany
-http://www.bjoernsen.de
+   <copyright>
+      %Feature.copyright
    </copyright>
 
-   <license url="http://kalypso.bjoernsen.de/">
-      This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU
-Lesser General Public License for more details.
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-USA
+   <license url="%Feature.licenseURL">
+      %Feature.license
    </license>
-
-   <url>
-      <discovery label="The Kalypso web page" url="http://kalypsobase.sourceforge.net/"/>
-   </url>
 
    <includes
          id="org.eclipse.platform"
-         version="0.0.0"/>
+         version="0.0.0"
+         search-location="both"/>
+
+   <includes
+         id="org.eclipse.jdt"
+         version="0.0.0"
+         search-location="both"/>
+
+   <requires>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.help"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="org.eclipse.ui.intro"/>
+      <import plugin="org.eclipse.core.runtime.compatibility.auth"/>
+      <import plugin="org.eclipse.ui.forms" version="3.3.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.kalypso.commons" version="0.0.1" match="greaterOrEqual"/>
+      <import plugin="org.apache.ant"/>
+      <import plugin="javax.servlet"/>
+      <import plugin="org.kalypso.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.expressions" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.ui.ide.application" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.navigator.resources"/>
+      <import plugin="de.renew.workflow.connector" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.simulation.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.0" match="compatible"/>
+      <import plugin="de.openali.odysseus.chart.factory" version="0.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="de.openali.odysseus.chart.ext.base" version="0.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.http.registry"/>
+      <import plugin="javax.servlet" version="2.4.0" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.lib.hsqldb" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.project.database" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.4.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.forms" version="3.3.101" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.1" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.contribs.eclipsercp" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.ui" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.http.registry" version="1.0.100" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.gmlschema" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ant.ui"/>
+      <import plugin="org.eclipse.ant.core" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="org.kalypso.service.wps" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.debug.ui"/>
+   </requires>
 
    <plugin
          id="org.kalypso.ui"
@@ -111,27 +140,6 @@ USA
 
    <plugin
          id="org.kalypso.contribs.ogc31"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.bsf.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.bsf.groovy"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.bsf.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -215,13 +223,6 @@ USA
          unpack="false"/>
 
    <plugin
-         id="de.renew.libs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="de.renew.workflow.connector"
          download-size="0"
          install-size="0"
@@ -244,34 +245,6 @@ USA
 
    <plugin
          id="org.kalypso.afgui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.optimize"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.model.wspm.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.model.wspm.schema"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.ModelSimulationBase"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -314,6 +287,76 @@ USA
 
    <plugin
          id="de.openali.odysseus.chart.ext.observation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.debug.servlet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.kml.export"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.project.database"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.project.database.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.service.ogc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.service.wps"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.services.observation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.simulation.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.lib.hsqldb"
          download-size="0"
          install-size="0"
          version="0.0.0"
