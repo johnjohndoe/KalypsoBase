@@ -1,5 +1,6 @@
 package org.kalypso.project.database.client.core.model.remote;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,6 +15,9 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -23,7 +27,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  * 
  * @author Dirk Kuch
  */
-public class RemoteWorkspaceModel
+public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 {
   // 300 000 = 5 min
   private static final int JOB_DELAY = 5000;
@@ -49,9 +53,7 @@ public class RemoteWorkspaceModel
         {
           final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
           if( service == null )
-          {
             return Status.CANCEL_STATUS;
-          }
 
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
           if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
@@ -186,5 +188,62 @@ public class RemoteWorkspaceModel
   public IStatus getRemoteConnectionState( )
   {
     return m_connectionState;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects()
+   */
+  @Override
+  public IRemoteProject[] getProjects( )
+  {
+    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+
+    final KalypsoProjectBean[] beans = getBeans();
+    for( final KalypsoProjectBean bean : beans )
+    {
+      myHandlers.add( new RemoteProjectHandler( bean ) );
+    }
+
+    return myHandlers.toArray( new IRemoteProject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects(java.lang.String)
+   */
+  @Override
+  public IRemoteProject[] getProjects( final String type )
+  {
+    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+
+    final IRemoteProject[] projects = getProjects();
+    for( final IRemoteProject project : projects )
+    {
+      if( type.equals( project.getBean().getProjectType() ) )
+      {
+        myHandlers.add( project );
+      }
+    }
+
+    return myHandlers.toArray( new IRemoteProject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter)
+   */
+  @Override
+  public IRemoteProject[] getProjects( final IProjectDatabaseFilter filter )
+  {
+    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+
+    final IRemoteProject[] projects = getProjects();
+    for( final IRemoteProject project : projects )
+    {
+      if( filter.select( project ) )
+      {
+        myHandlers.add( project );
+      }
+    }
+
+    return myHandlers.toArray( new IRemoteProject[] {} );
   }
 }

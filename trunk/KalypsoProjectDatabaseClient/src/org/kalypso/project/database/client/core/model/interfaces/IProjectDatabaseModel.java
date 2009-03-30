@@ -68,6 +68,8 @@ public interface IProjectDatabaseModel
 
   public ILocalWorkspaceModel getLocalWorkspaceModel( );
   
+  public IRemoteWorkspaceModel getRemoteWorkspaceModel( );
+  
   /**
    * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
    */
