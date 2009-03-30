@@ -69,8 +69,8 @@ import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
-import org.kalypso.template.gismapview.Gismapview.Translator;
 import org.kalypso.template.types.ExtentType;
+import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -134,7 +134,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   private ITranslator createTranslator( final Gismapview gisview )
   {
-    final Translator translatorElement = gisview.getTranslator();
+    final I18NTranslatorType translatorElement = gisview.getTranslator();
     if( translatorElement == null )
       return null;
 
@@ -232,7 +232,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final ITranslator i10nTranslator = name.getTranslator();
       if( i10nTranslator != null )
       {
-        final Translator translator = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewTranslator();
+        final I18NTranslatorType translator = GisTemplateHelper.OF_TEMPLATE_TYPES.createI18NTranslatorType();
         translator.setId( i10nTranslator.getId() );
         translator.getAny().addAll( i10nTranslator.getConfiguration() );
         gismapview.setTranslator( translator );
