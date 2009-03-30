@@ -6,7 +6,8 @@ Bundle-Version: 2.1.0
 Bundle-Vendor: www.deegree.org
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime
-Bundle-ClassPath: lib/acme/acme.jar,
+Bundle-ClassPath: .,
+ lib/acme/acme.jar,
  lib/arcsde/jsde90_sdk.jar,
  lib/deegree2/deegree2_v2_2_rc6.jar,
  lib/jts/jts-1.8.jar,
