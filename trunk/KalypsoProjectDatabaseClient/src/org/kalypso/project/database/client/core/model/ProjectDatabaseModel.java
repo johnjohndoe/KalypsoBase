@@ -311,4 +311,25 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   {
     return m_remote;
   }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#getProject(java.lang.String)
+   */
+  @Override
+  public IProjectHandler getProject( String unique )
+  {
+    if( unique.startsWith( "/" ) )
+    {
+      unique = unique.substring( 1 );
+    }
+    
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler project : projects )
+    {
+      if( project.getUniqueName().equals( unique ) )
+        return project;
+    }
+    
+    return null;
+  }
 }

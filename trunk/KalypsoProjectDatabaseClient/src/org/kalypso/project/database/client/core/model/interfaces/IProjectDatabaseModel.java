@@ -74,4 +74,6 @@ public interface IProjectDatabaseModel
    * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
    */
   public IProjectHandler findProject( IProject project );
+
+  public IProjectHandler getProject( String name );
 }
