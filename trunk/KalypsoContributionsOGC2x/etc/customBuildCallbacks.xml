@@ -4,17 +4,16 @@
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
 
-	<property name="plugin.destination" value="${ant.file}/../.."/>
-	<property name="project" value="${plugin.destination}" />
+	<!-- basedir must be the project in order to let this script work -->
+	<property name="project" value="${basedir}" />
+	<property name="plugin.destination" value="${project}"/>
 	<property name="gen.srcbind" value="${project}/srcbind" />
 
 	<patternset id="binding.schemata">
 		<include name="etc/schemas/original/**/*.xsd" />
 	</patternset>
 
-	<import file="../../KalypsoBuild/common-binding/build_callbacks.xml" />
-
-
+	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
@@ -37,7 +36,6 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
-		<echo message="Hallo Gernot post.build.jars"></echo>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -69,7 +67,7 @@
 	</target>
 
 	<target name="pre.@dot">
-		<antcall target="generate" inheritall="true"/>
+		<antcall target="generate"/>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -126,8 +124,6 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<echo message="Hallo Gernot pre.gather.sources"></echo>
-		<echoproperties></echoproperties>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -159,8 +155,8 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">              
-		<antcall target="clean" inheritall="true"/>
+	<target name="pre.clean">     
+		<antcall target="clean"/>
 	</target>
 
 	<!-- ===================================================================== -->

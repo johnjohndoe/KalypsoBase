@@ -4,17 +4,16 @@
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
 
-	<property name="plugin.destination" value="${ant.file}/../.."/>
-	<property name="project" value="${plugin.destination}" />
+	<!-- basedir must be the project in order to let this script work -->
+	<property name="project" value="${basedir}" />
+	<property name="plugin.destination" value="${project}"/>
 	<property name="gen.srcbind" value="${project}/srcbind" />
 
 	<patternset id="binding.schemata">
-		<include name="etc/schemas/original/**/*.xsd" />
+		<include name="etc/schemas/generated/**/*.xsd" />
 	</patternset>
 
-	<import file="../../KalypsoBuild/common-binding/build_callbacks.xml" />
-
-
+	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
@@ -37,7 +36,6 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
-		<echo message="Hallo Gernot post.build.jars"></echo>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -69,7 +67,28 @@
 	</target>
 
 	<target name="pre.@dot">
-		<antcall target="generate" inheritall="true"/>
+		<mkdir dir="etc/schemas/generated"/>
+		<delete>
+			<fileset dir="etc/schemas/generated">
+    			<include name="**/*.xsd"/>
+			</fileset>
+		</delete>
+		<!-- TODO: check if this generation process is really needed. Probabyl we jsut need some binding-options -->
+		<xslt style="etc/schemas/generateSchemas.xsl" destdir="etc/schemas/generated" basedir="src/org/kalypso/contribs/ogc31/schemata" extension=".xsd" >
+		    <include name="*.xsd"/>
+		    <include name="filter/**/*.xsd"/>
+		    <include name="gml/**/*.xsd"/>
+		    <include name="iso19139/**/*.xsd"/>
+		    <!--include name="kalypso/**/*.xsd"/-->
+		    <!--include name="om/**/*.xsd"/-->
+			<include name="ows/**/*.xsd"/>
+			<include name="sweCommon/**/*.xsd"/>
+		    <include name="wfs/**/*.xsd"/>
+		    <include name="xlink/**/*.xsd"/>
+		    <!--include name="xsd/**/*.xsd"/-->
+		</xslt>
+		
+		<antcall target="generate"/>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -126,8 +145,6 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<echo message="Hallo Gernot pre.gather.sources"></echo>
-		<echoproperties></echoproperties>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -160,7 +177,11 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.clean">              
-		<antcall target="clean" inheritall="true"/>
+		<antcall target="clean"/>
+
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="etc/schemas/generated" includes="**/*" />
+		</delete>
 	</target>
 
 	<!-- ===================================================================== -->
