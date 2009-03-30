@@ -52,6 +52,7 @@ import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
@@ -300,5 +301,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public ILocalWorkspaceModel getLocalWorkspaceModel( )
   {
     return m_local;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#getRemoteWorkspaceModel()
+   */
+  @Override
+  public IRemoteWorkspaceModel getRemoteWorkspaceModel( )
+  {
+    return m_remote;
   }
 }
