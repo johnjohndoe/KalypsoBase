@@ -7,6 +7,7 @@
 	<xs:element name="featuretemplate">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0"/>
 				<xs:element name="layer" minOccurs="0">
 					<xs:complexType>
 						<xs:complexContent>
