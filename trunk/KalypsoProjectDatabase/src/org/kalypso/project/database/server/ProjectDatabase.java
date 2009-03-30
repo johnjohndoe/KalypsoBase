@@ -73,7 +73,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
 import org.kalypso.project.database.server.trigger.TriggerHelper;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 @WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")
 public class ProjectDatabase implements IProjectDatabase
@@ -193,9 +193,7 @@ public class ProjectDatabase implements IProjectDatabase
     tx.commit();
 
     if( projects.size() <= 0 )
-    {
       return null;
-    }
 
     /* determine head */
     final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
@@ -223,9 +221,7 @@ public class ProjectDatabase implements IProjectDatabase
     try
     {
       if( !src.exists() )
-      {
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
-      }
 
       /* destination of incoming file */
       final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
@@ -292,23 +288,17 @@ public class ProjectDatabase implements IProjectDatabase
     myTx.commit();
 
     if( updated == 0 )
-    {
       return null;
-    }
 
     final KalypsoProjectBean project = getProject( projectUnixName );
     if( !project.isProjectLockedForEditing() )
-    {
       throw new IllegalStateException( "Updating edit lock of projects failed." );
-    }
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
     {
       if( !child.isProjectLockedForEditing() )
-      {
         throw new IllegalStateException( "Updating edit lock of projects failed." );
-      }
     }
 
     return ticket;
@@ -330,17 +320,13 @@ public class ProjectDatabase implements IProjectDatabase
 
     final KalypsoProjectBean project = getProject( projectUnixName );
     if( project.isProjectLockedForEditing() )
-    {
       return false;
-    }
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
     {
       if( child.isProjectLockedForEditing() )
-      {
         return false;
-      }
     }
 
     return true;
