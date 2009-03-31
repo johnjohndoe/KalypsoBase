@@ -8,18 +8,21 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry,
  javax.servlet;bundle-version="2.4.0",
- org.kalypso.lib.hsqldb;bundle-version="1.0.0",
  org.kalypso.commons;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.project.database,
- org.kalypso.project.database.common.interfaces,
- org.kalypso.project.database.common.nature,
+Export-Package: org.kalypso.project.database;uses:="org.eclipse.core.runtime,org.osgi.framework",
+ org.kalypso.project.database.common.interfaces;uses:="org.apache.commons.vfs,org.kalypso.project.database.sei.beans",
+ org.kalypso.project.database.common.nature;uses:="org.eclipse.core.resources,org.eclipse.core.runtime.preferences",
  org.kalypso.project.database.common.utils,
- org.kalypso.project.database.sei,
+ org.kalypso.project.database.sei;uses:="org.kalypso.project.database.sei.beans",
  org.kalypso.project.database.sei.beans,
- org.kalypso.project.database.sei.jaxws,
- org.kalypso.project.database.server
+ org.kalypso.project.database.sei.jaxws;uses:="org.kalypso.project.database.sei.beans",
+ org.kalypso.project.database.server;
+  uses:="org.kalypso.project.database.sei,
+   javax.servlet,
+   com.sun.xml.ws.transport.http.servlet,
+   org.kalypso.project.database.sei.beans"
 Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/jax-ws-2.1.7/FastInfoset.jar,
  lib/jax-ws-2.1.7/http.jar,
@@ -52,4 +55,5 @@ Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/hibernate/core/lib/required/javassist-3.4.GA.jar,
  lib/hibernate/core/lib/required/jta-1.1.jar,
  lib/hibernate/core/lib/required/slf4j-api-1.5.2.jar,
+ lib/hsqldb/lib/hsqldb.jar,
  .
