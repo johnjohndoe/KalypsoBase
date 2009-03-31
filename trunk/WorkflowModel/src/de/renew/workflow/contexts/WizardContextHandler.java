@@ -55,7 +55,6 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -116,7 +115,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   {
     if( data instanceof Map )
     {
-      final Map parameterMap = (Map) data;
+      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_wizardId = (String) parameterMap.get( WIZARD_ID );
       m_wizardType = EWizardType.valueOf( (String) parameterMap.get( WIZARD_TYPE ) );
     }

@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="srcservice"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/activation.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/FastInfoset.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/http.jar" sourcepath="KalypsoProjectDatabasesrc.zip"/>

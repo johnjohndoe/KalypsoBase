@@ -40,7 +40,6 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -73,7 +72,7 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
   {
     if( data instanceof Map )
     {
-      final Map parameterMap = (Map) data;
+      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_viewId = (String) parameterMap.get( CONTEXT_VIEW_ID );
     }
   }

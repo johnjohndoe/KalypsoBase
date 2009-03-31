@@ -17,7 +17,6 @@ Export-Package: org.kalypso.project.database;uses:="org.eclipse.core.runtime,org
  org.kalypso.project.database.common.utils,
  org.kalypso.project.database.sei;uses:="org.kalypso.project.database.sei.beans",
  org.kalypso.project.database.sei.beans,
- org.kalypso.project.database.sei.jaxws;uses:="org.kalypso.project.database.sei.beans",
  org.kalypso.project.database.server;
   uses:="org.kalypso.project.database.sei,
    javax.servlet,

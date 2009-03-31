@@ -6,7 +6,6 @@
 
 	<!-- basedir must be the project in order to let this script work -->
 	<property name="project" value="${basedir}" />
-	<property name="plugin.destination" value="${project}"/>
 	<property name="gen.srcbind" value="${project}/srcbind" />
 
     <patternset id="binding.schemata">

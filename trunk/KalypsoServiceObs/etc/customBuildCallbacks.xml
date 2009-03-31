@@ -6,9 +6,7 @@
 
 	<!-- basedir must be the project in order to let this script work -->
 	<property name="project" value="${basedir}" />
-	<property name="plugin.destination" value="${project}"/>
 
-	<property name="project.srcservice" value="${project}/srcservice"/>
 	<property name="service.endpoint.interface" value="org.kalypso.services.observation.server.ObservationServiceImpl"/>
 
 	<property name="target.folder" value="${project}/build/bin"/>
@@ -17,10 +15,6 @@
 		<pathelement location="${java.home}/../lib/tools.jar" />
 		<fileset dir="${project}/../KalypsoServiceObs/lib" includes="**/*.jar" />
 	</path>
-
-	<!--
-		<pathelement location="${project}/../KalypsoServiceObs/build/bin" />
-	-->
 
 	<path id="@dot.classpath">
 		<pathelement location="${project}/../KalypsoRepository/build/bin" />
@@ -108,8 +102,6 @@
 					be present on server and client side.
 		-->
 		<echo message="Building necessary artefacts for observation service: ${service.endpoint.interface}" />
-
-		<echoproperties/>
 
 		<wsgen description="Wsgenning" sei="${service.endpoint.interface}" destdir="${target.folder}" resourcedestdir="${target.folder}" keep="false" verbose="true" genwsdl="true">
 			<classpath>
