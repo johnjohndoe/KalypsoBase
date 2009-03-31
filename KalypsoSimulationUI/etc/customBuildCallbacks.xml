@@ -8,10 +8,10 @@
 	<property name="project" value="${basedir}" />
 	<property name="gen.srcbind" value="${project}/srcbind" />
 
-	<patternset id="binding.schemata">
-		<include name="etc/schemas/original/**/*.xsd" />
-	</patternset>
-
+	  <patternset id="binding.schemata">
+	    <include name="etc/schemas/*.xsd"/>
+	  </patternset>
+	
 	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
