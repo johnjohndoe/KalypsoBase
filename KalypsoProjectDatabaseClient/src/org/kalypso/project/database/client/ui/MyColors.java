@@ -49,4 +49,6 @@ public class MyColors
 {
   public static final Color COLOR_WELCOME_PAGE_HEADING = new Color( null, 0x99, 0xB4, 0xCE );
 
+  public static final Color COLOR_BLACK = new Color( null, 0x0, 0x0, 0x0 );
+
 }

@@ -14,7 +14,9 @@ import javax.xml.ws.WebServiceException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
@@ -28,13 +30,15 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class KalypsoProjectDatabaseClient extends Plugin
+public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 {
   private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
 
   private static List<IKalypsoModule> KALYPSO_MODULES = null;
   
   private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
+
+  private FormToolkit m_formToolkit;
 
   private static IProjectDatabase m_service = null;
 
@@ -115,6 +119,12 @@ public class KalypsoProjectDatabaseClient extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
+    if( m_formToolkit != null )
+    {
+      m_formToolkit.dispose();
+      m_formToolkit = null;
+    }
+    
     plugin = null;
     super.stop( context );
   }
@@ -193,5 +203,20 @@ public class KalypsoProjectDatabaseClient extends Plugin
     }
 
     return KALYPSO_MODULES.toArray( new IKalypsoModule[] {} );
+  }
+  
+  /**
+   * This function returns the form toolkit for the Planer-Client.
+   * 
+   * @return The form toolkit.
+   */
+  public FormToolkit getToolkit( )
+  {
+    if( m_formToolkit == null )
+    {
+      m_formToolkit = new FormToolkit( PlatformUI.getWorkbench().getDisplay() );
+    }
+
+    return m_formToolkit;
   }
 }
