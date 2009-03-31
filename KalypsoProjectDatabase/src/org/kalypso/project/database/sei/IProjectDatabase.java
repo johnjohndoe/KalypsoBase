@@ -117,6 +117,8 @@ public interface IProjectDatabase
    */
   KalypsoProjectBean getProject( String projectUnixName );
 
+  Boolean deleteProject( KalypsoProjectBean bean );
+  
   /**
    *
    */
