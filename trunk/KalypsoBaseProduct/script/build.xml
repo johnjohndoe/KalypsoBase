@@ -45,7 +45,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<!--
 		This target actually executes the PDE Build process by launching the 
 		Eclipse antRunner application.
@@ -54,18 +54,19 @@
 		with the one that is commented out.
 	-->
 	<target name="pde-build">
-		<java classname="org.eclipse.equinox.launcher.Main" fork="true" failonerror="true">
+		<java classname="org.eclipse.equinox.launcher.Main" fork="true" failonerror="true" maxmemory="512m">
 			<arg value="-application" />
 			<arg value="org.eclipse.ant.core.antRunner" />
 			<arg value="-buildfile" />
 			<arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml" />
-			<arg value="-Dtimestamp=${timestamp}" />
+			<jvmarg value="-Dtimestamp=${timestamp}"/>
+			<jvmarg value="-XX:MaxPermSize=256M"/>
 			<classpath>
 				<pathelement location="${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
 			</classpath>
 		</java>
 	</target>
-		
+
 	<target name="clean">
 		<delete dir="${buildDirectory}" />
 	</target>
