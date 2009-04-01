@@ -84,11 +84,14 @@ public class ProjectDatabaseHelper
       if( fileBean.exists() )
       {
         fileBean.delete();
-        final FileObject parent = fileBean.getParent();
-
-        final int asdfadsf = 0;
       }
 
+      final FileObject parentFolder = fileBean.getParent();
+      if( parentFolder.exists() )
+      {
+        parentFolder.delete();
+      }
+      
       /* delete database entry */
       final Transaction tx = session.beginTransaction();
       session.delete( bean );
