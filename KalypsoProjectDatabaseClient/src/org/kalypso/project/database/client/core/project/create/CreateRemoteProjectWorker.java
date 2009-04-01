@@ -44,6 +44,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -73,6 +74,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 {
 
   private final ILocalProject m_handler;
+
   private final IKalypsoModuleDatabaseSettings m_settings;
 
   public CreateRemoteProjectWorker( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
@@ -97,10 +99,10 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2" ) ) ); //$NON-NLS-1$
 
-      final FileSystemManager manager = VFSUtilities.getManager();
-      final FileObject source = manager.resolveFile( src.getAbsolutePath() );
+      FileSystemManager manager = VFSUtilities.getManager();
+      FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
       final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
       {
@@ -112,8 +114,36 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       }, "update.zip" ); //$NON-NLS-1$
 
-      final FileObject destination = manager.resolveFile( urlDestination );
-      VFSUtilities.copy( source, destination );
+      FileObject destination = manager.resolveFile( urlDestination );
+
+      int count = 0;
+      boolean uploaded = false;
+
+      // @hack - under windows apache webdav the first upload try of an planer client instance always fails
+      while( count < 5 && uploaded == false )
+      {
+        try
+
+        {
+          VFSUtilities.copy( source, destination );
+          uploaded = true;
+        }
+        catch( final FileSystemException e )
+        {
+          e.printStackTrace();
+          count++;
+
+          Thread.sleep( 100 );
+
+          // reinit components
+          manager = VFSUtilities.getManager();
+          source = manager.resolveFile( src.getAbsolutePath() );
+          destination = manager.resolveFile( urlDestination );
+        }
+      }
+
+      if( uploaded == false )
+        throw new CoreException( StatusUtilities.createErrorStatus( "Project server upload failed" ) );
 
       final URL myDestinationUrl = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
       {
@@ -125,9 +155,8 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       }, "update.zip" ); //$NON-NLS-1$
 
-      
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      
+
       // always commit - download of projects assert nature!
       final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
       if( nature instanceof RemoteProjectNature )
