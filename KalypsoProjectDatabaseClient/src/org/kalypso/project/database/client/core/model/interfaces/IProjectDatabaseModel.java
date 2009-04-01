@@ -56,6 +56,8 @@ public interface IProjectDatabaseModel
 
   public void addRemoteListener( final IRemoteProjectsListener listener );
 
+  public void removeRemoteListener( final IRemoteProjectsListener listener );
+
   public void removeListener( final IProjectDatabaseListener listener );
 
   public IStatus getRemoteConnectionState( );
@@ -67,13 +69,14 @@ public interface IProjectDatabaseModel
   public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter );
 
   public ILocalWorkspaceModel getLocalWorkspaceModel( );
-  
+
   public IRemoteWorkspaceModel getRemoteWorkspaceModel( );
-  
+
   /**
    * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
    */
   public IProjectHandler findProject( IProject project );
 
   public IProjectHandler getProject( String name );
+
 }

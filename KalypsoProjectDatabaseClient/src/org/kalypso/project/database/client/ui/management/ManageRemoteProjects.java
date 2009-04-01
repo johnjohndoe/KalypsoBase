@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.management;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -49,7 +52,11 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
@@ -59,7 +66,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 /**
  * @author Dirk Kuch
  */
-public class ManageRemoteProjects extends Composite
+public class ManageRemoteProjects extends Composite implements IRemoteProjectsListener
 {
   private static final Image IMG_DELETE = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/delete.gif" ) );
 
@@ -79,9 +86,25 @@ public class ManageRemoteProjects extends Composite
 
     this.setLayout( new GridLayout() );
 
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    model.addRemoteListener( this );
+    
     update();
   }
 
+  
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    model.removeRemoteListener( this );
+    
+    super.dispose();
+  }
+  
   /**
    * @see org.eclipse.swt.widgets.Control#update()
    */
@@ -117,8 +140,22 @@ public class ManageRemoteProjects extends Composite
       final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
       lnkDeleteAll.setToolTipText( "Delete whole remote project" );
       lnkDeleteAll.setImage( IMG_DELETE );
-      
+     
       final KalypsoProjectBean[] versions = KalypsoProjectBeanHelper.getSortedBeans( head );
+      
+      lnkDeleteAll.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          for( final KalypsoProjectBean version : versions )
+          {
+            service.deleteProject( version );
+          }
+        }
+      } );
+      
+     
       for( final KalypsoProjectBean version : versions )
       {
         final String text = String.format( "Version: %d", version.getProjectVersion() );
@@ -141,7 +178,11 @@ public class ManageRemoteProjects extends Composite
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            service.deleteProject( version );
+            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+            final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
+            
+            remoteModel.deleteBean( version );
+                        
           }
         } );
       }
@@ -151,6 +192,36 @@ public class ManageRemoteProjects extends Composite
 
     m_toolkit.adapt( this );
     this.layout();
+  }
+
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged(org.eclipse.core.runtime.IStatus)
+   */
+  @Override
+  public void remoteConnectionChanged( final IStatus connectionState )
+  {
+
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteWorkspaceChanged()
+   */
+  @Override
+  public void remoteWorkspaceChanged( )
+  {
+    new UIJob( "" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        update();
+        
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
 }

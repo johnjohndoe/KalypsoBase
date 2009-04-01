@@ -34,7 +34,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0") ); //$NON-NLS-1$
+  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0" ) ); //$NON-NLS-1$
 
   protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
 
@@ -44,7 +44,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
   {
     init();
 
-    UPDATE_JOB = new WorkspaceJob( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.1") ) //$NON-NLS-1$
+    UPDATE_JOB = new WorkspaceJob( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.1" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -58,7 +58,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
           if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
           {
-            m_connectionState = StatusUtilities.createOkStatus( Messages.getString("org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.2") ); //$NON-NLS-1$
+            m_connectionState = StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.2" ) ); //$NON-NLS-1$
             fireConnectionStatusChanged();
           }
 
@@ -245,5 +245,19 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     }
 
     return myHandlers.toArray( new IRemoteProject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#deleteBean(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
+   */
+  @Override
+  public void deleteBean( final KalypsoProjectBean bean )
+  {
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    final boolean deleted = service.deleteProject( bean );
+    if( deleted )
+    {
+      setDirty();
+    }
   }
 }
