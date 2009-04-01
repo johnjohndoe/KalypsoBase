@@ -11,53 +11,43 @@ The following targets are defined here:
 
 It is designed to be imported using the following syntax:
 
- <import file="${workspace}/KalypsoBuild/common-binding/build-xmlbeans.xml" />
+ <import file="${project}/../KalypsoBuild/common-binding/build-xmlbeans.xml" />
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
-
-<project name="commonbinding" default="generate">
-
-	<!-- define following properties in importing script
+Define following properties in importing script
 	
 	<property name="project" value="full path of the project..." />
-	<property name="jarname" value="will be used for naming the jar containing the bindings..." />
+	<property name="xmlbean.classgendir" value="full path of the project..." />
 	
-	** and the following patternset defines, which .xsd files relativ to the project basedir 
-	** files are imported 
+And the following patternset defines, which .xsd files relativ to the project basedir will be bound 
 	
 	<patternset id="binding.schemata">
       <include name="etc/schemas/sld/**/*.xsd"/>
     </patternset>
 
-	-->
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-	<dirname property="commonbinding.basedir" file="${ant.file.commonbinding}" />
+<project name="commonbinding" default="generate">
 
 	<path id="binding.classpath">
-		<fileset dir="${workspace}/KalypsoCommons">
+		<fileset dir="${project}/../KalypsoCommons">
 			<include name="lib/xmlbeans-2.3/*.jar" />
 		</fileset>
 	</path>
 
-	<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="binding.classpath">
-	</taskdef>
+	<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="binding.classpath"/>
 
-	<target name="init" description="erzeugt die Build-Verzeichnisse">
-		<echo message="Making srcbind directory for ${project}" />
-		<mkdir dir="${gen.srcbind}" />
-	</target>
-
-	<target name="clean" depends="init" description="cleans it up - totally">
+	<target name="clean" description="cleans it up - totally">
 		<echo message="Deleting old sources for ${project}" />
 		<delete includeemptydirs="true">
-			<fileset dir="${gen.srcbind}" includes="**/*" />
+			<fileset dir="${xmlbean.srcgendir}" includes="**/*"/>
 		</delete>
 	</target>
 
-	<target name="generate" depends="clean" description="erzeugt die sourcen">
+	<target name="generate" description="erzeugt die sourcen">
 		<echo message="Generating binding sources for ${project}" />
 
-		<xmlbean srcgendir="${gen.srcbind}" classgendir="${gen.srcbind}" memoryMaximumSize="128M" classpath="binding.classpath" srconly="true">
+		<mkdir dir="${xmlbean.classgendir}"/>
+		<xmlbean classgendir="${xmlbean.classgendir}" srcgendir="${xmlbean.srcgendir}" memoryMaximumSize="128M" classpathref="binding.classpath" srconly="${xmlbean.srconly}">
 			<fileset dir="${project}">
 				<patternset refid="binding.schemata" />
 			</fileset>
@@ -66,8 +56,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<!-- REMARK: This is a speciality of xml-beans: xml-beans generates a lot of non-class files, that are needed for the binding stuff to run. Among them are files with extension '.class'., that are NOT automatically copied by eclipse into the binary folder while compilation. So we need to copy them ourselfes.-->
 	<target name="copyClassStuff">
-		<copy todir="${gen.bin}">
-			<fileset dir="${gen.srcbind}" includes="**/*.class">
+		<copy todir="${xmlbean.copyClassStuffTarget}">
+			<fileset dir="${xmlbean.srcgendir}" includes="**/*.class">
 			</fileset>
 		</copy>
 	</target>

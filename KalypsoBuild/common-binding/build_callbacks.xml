@@ -31,14 +31,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 <project name="commonbinding" default="generate">
 
 	<!-- these Flags are compile options for javac and other tasks that compile java code -->
-	<property name="jwsdp" value="${project}/../KalypsoCommons" />
 	<property name="flag-debug" value="false" />
 	<property name="flag-optimize" value="true" />
-	<!-- TODO: allow for overrride-->
 	<property name="xjc-args" value="-verbose" />
 
 	<path id="binding.classpath">
-		<fileset dir="${jwsdp}">
+		<fileset dir="${basedir}/../../KalypsoCommons">
 			<include name="lib/**/*.jar" />
 		</fileset>
 	</path>
@@ -57,7 +55,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project}" />
-		<xjc destdir="${gen.srcbind}" extension="true" removeoldoutput="true" source="2.0">
+		<xjc destdir="${gen.srcbind}" extension="true" removeoldoutput="true" source="2.0" >
 			<!-- stackSize="60mb"> -->
 			<arg line="${xjc-args}" />
 			<schema dir="${project}">
