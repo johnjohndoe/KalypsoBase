@@ -42,7 +42,6 @@ package org.kalypso.project.database.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,11 +64,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.IProjectDataBaseServerConstant;
-import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
-import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
@@ -227,14 +222,7 @@ public class ProjectDatabase implements IProjectDatabase
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
 
       /* destination of incoming file */
-      final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
-      {
-        @Override
-        public String getPath( )
-        {
-          return System.getProperty( IProjectDataBaseServerConstant.SERVER_WRITEABLE_PATH );
-        }
-      }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
+      final String urlDestination = ProjectDatabaseHelper.resolveDestinationUrl( bean );
 
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( src, destination );
@@ -391,61 +379,6 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public Boolean deleteProject( final KalypsoProjectBean bean )
   {
-    try
-    {
-      final URL url = bean.getUrl();
-      
-      final int asdfadf = 0;
-    }
-    catch( final MalformedURLException e )
-    {
-     KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-// final FileSystemManager manager = VFSUtilities.getManager();
-// final FileObject src = manager.resolveFile( incoming.toExternalForm() );
-//
-// try
-// {
-// if( !src.exists() )
-// throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
-//
-// /* destination of incoming file */
-// final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new
-    // ProjectModelUrlResolver.IResolverInterface()
-// {
-// @Override
-// public String getPath( )
-// {
-// return System.getProperty( IProjectDataBaseServerConstant.SERVER_WRITEABLE_PATH );
-// }
-// }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
-//
-// final FileObject destination = manager.resolveFile( urlDestination );
-// VFSUtilities.copy( src, destination );
-//
-// /* store project bean in database */
-// bean.setCreationDate( Calendar.getInstance().getTime() );
-//
-// final Session session = FACTORY.getCurrentSession();
-// final Transaction tx = session.beginTransaction();
-// session.save( bean );
-//
-// tx.commit();
-//
-// final IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers(
-    // bean.getProjectType() );
-// if( confElementTrigger != null )
-// {
-// TriggerHelper.handleBean( bean, confElementTrigger );
-// }
-//
-// return bean;
-// }
-// catch( final Exception e )
-// {
-// throw new IOException( e.getMessage(), e );
-// }
-
-    return false;
+    return ProjectDatabaseHelper.removeBean( FACTORY.getCurrentSession(), bean );
   }
 }

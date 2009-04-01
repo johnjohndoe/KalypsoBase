@@ -18,8 +18,8 @@
 
 	<path id="@dot.classpath">
 		<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.equinox.common*.jar" />
-<!--		<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.core.jobs*.jar" /> -->
 		<fileset dir="${project}/lib" includes="**/*.jar" />
+		<!--<fileset dir="${project}/../ApacheCommonsVFS/lib" includes="**/*.jar" />-->
 	</path>
 	
 	<taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
