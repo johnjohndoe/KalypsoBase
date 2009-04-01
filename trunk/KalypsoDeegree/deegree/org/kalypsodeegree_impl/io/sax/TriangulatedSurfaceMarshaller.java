@@ -102,7 +102,9 @@ public class TriangulatedSurfaceMarshaller
       startSurface( atts );
 
       for( final GM_Triangle triangle : m_surface )
+      {
         marshalTriangle( triangle, crs );
+      }
 
       endSurface();
     }
@@ -140,9 +142,13 @@ public class TriangulatedSurfaceMarshaller
 
     final AttributesImpl atts;
     if( crsTri != null && !crsTri.equals( surfaceCrs ) )
+    {
       atts = createCrsAttributes( crsTri );
+    }
     else
+    {
       atts = new AttributesImpl();
+    }
     atts.addAttribute( "", "interpolation", "interpolation", "CDATA", "planar" );
 
     contentHandler.startElement( NS.GML3, TAG_TRIANGLE, QNAME_TRIANGLE, atts );
@@ -156,7 +162,9 @@ public class TriangulatedSurfaceMarshaller
       contentHandler.startElement( NS.GML3, TAG_LINEAR_RING, QNAME_LINEAR_RING, EMPTY_ATTRIBUTES );
 
       for( final GM_Position position : exteriorRing )
+      {
         marshallPosition( position );
+      }
 
       contentHandler.endElement( NS.GML3, TAG_LINEAR_RING, QNAME_LINEAR_RING );
     }
