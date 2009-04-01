@@ -1,14 +1,11 @@
 package org.kalypso.project.database.client;
 
 import java.lang.reflect.Constructor;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -23,7 +20,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.sei.IProjectDatabase;
-import org.kalypso.project.database.server.ProjectDatabase;
+import org.kalypso.project.database.sei.ProjectDatabaseServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -56,16 +53,8 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     {
       try
       {
-        final String namespaceURI = "http://server.database.project.kalypso.org/"; //$NON-NLS-1$
-        final String serviceImplName = ProjectDatabase.class.getSimpleName();
-
         final String wsdlLocationProperty = System.getProperty( IProjectDataBaseClientConstant.SERVER_WSDL_LOCATION );
-        final URL wsdlLocation = new URL( wsdlLocationProperty );
-        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
-
-        final Service service = Service.create( wsdlLocation, serviceName );
-        m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class ); //$NON-NLS-1$
-
+        m_service = ProjectDatabaseServiceLocator.locate( wsdlLocationProperty );
       }
       catch( final Throwable e )
       {
