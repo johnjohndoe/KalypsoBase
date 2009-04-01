@@ -340,6 +340,8 @@ public class GMLSchema implements IGMLSchema
   /** public in order to allow force dependency from outside. */
   public GMLSchema getGMLSchemaForNamespaceURI( final String namespaceURI ) throws GMLSchemaException
   {
+    Assert.isNotNull( namespaceURI );
+
     /* The XML-Schema will never be loaded. */
     if( NS.XSD_SCHEMA.equals( namespaceURI ) )
       return null;
