@@ -41,6 +41,7 @@
 package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
@@ -52,4 +53,9 @@ public interface IRemoteWorkspaceModel
   IRemoteProject[] getProjects( String type );
 
   IRemoteProject[] getProjects( IProjectDatabaseFilter filter );
+
+  /**
+   * deletes an remote project bean and sets the remote workspace dirty
+   */
+  void deleteBean( KalypsoProjectBean bean );
 }

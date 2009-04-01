@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -73,6 +74,8 @@ public class ViewManageServerProjects extends ViewPart
   private Composite m_parent;
 
   private Composite m_body;
+
+  private ManageRemoteProjects m_manager;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -119,6 +122,27 @@ public class ViewManageServerProjects extends ViewPart
     
     viewerType.setInput( types );
     
+    if( m_selectedType != null )
+    {
+      viewerType.setSelection( new StructuredSelection( m_selectedType ) );
+
+      final Group grDetails = new Group( m_body, SWT.NONE );
+      grDetails.setText( "Details" );
+      grDetails.setLayout( new GridLayout() );
+      grDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      toolkit.adapt( grDetails );
+
+      if( m_manager != null )
+      {
+        m_manager.dispose();
+      }
+      
+      m_manager = new ManageRemoteProjects( toolkit, grDetails, m_selectedType );
+      m_manager.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    }
+    
+    
+    
     viewerType.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
@@ -142,19 +166,6 @@ public class ViewManageServerProjects extends ViewPart
         }
       }
     } );
-    
-    if( m_selectedType != null )
-    {
-      final Group grDetails = new Group( m_body, SWT.NONE );
-      grDetails.setText( "Details" );
-      grDetails.setLayout( new GridLayout() );
-      grDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      toolkit.adapt( grDetails );
-      
-      final ManageRemoteProjects manager = new ManageRemoteProjects( toolkit, grDetails, m_selectedType );
-      manager.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    }
-    
     
     m_body.layout();
     m_parent.layout();

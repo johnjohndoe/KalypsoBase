@@ -226,6 +226,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       m_remote.addListener( listener );
     }
   }
+  
+  public void removeRemoteListener( final IRemoteProjectsListener listener )
+  {
+    if( m_remote != null )
+    {
+      m_remote.removeListener( listener );
+    }
+  }
 
   public void removeListener( final IProjectDatabaseListener listener )
   {
