@@ -97,7 +97,7 @@ public class WelcomePageComposite extends Composite
     final ImageCanvas2 mainCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final IKalypsoModule[] extensions = KalypsoProjectDatabaseClient.getKalypsoModules();
+    final IKalypsoModule[] extensions = KalypsoProjectDatabaseClient.getDefault().getKalypsoModules();
     for( final IKalypsoModule module : extensions )
     {
       final IKalypsoModuleWelcomePageFrame handler = module.getWelcomePageFrame();

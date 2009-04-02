@@ -143,7 +143,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized static IKalypsoModule[] getKalypsoModules( )
+  public synchronized IKalypsoModule[] getKalypsoModules( )
   {
     // fill binding map
     if( KALYPSO_MODULES == null )
@@ -207,5 +207,18 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     }
 
     return m_formToolkit;
+  }
+
+  public IKalypsoModule getKalypsoModule( final String modulueId )
+  {
+    final IKalypsoModule[] modules = getKalypsoModules();
+    for( final IKalypsoModule module : modules )
+    {
+      if( modulueId.equals( module.getId() ) )
+        return module;
+          
+    }
+
+    return null;
   }
 }
