@@ -10,6 +10,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: de.openali.odysseus.chart.ext.base.axis,
+ de.openali.odysseus.chart.ext.base.axisrenderer,
  de.openali.odysseus.chart.ext.base.data,
  de.openali.odysseus.chart.ext.base.layer,
  de.openali.odysseus.chart.ext.base.layer.provider
