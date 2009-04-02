@@ -58,4 +58,6 @@ public interface IKalypsoModule
   public IKalypsoModulePage getModulePage( );
   
   public IKalypsoModuleDatabaseSettings getDatabaseSettings( );
+
+  public String getId( );
 }
