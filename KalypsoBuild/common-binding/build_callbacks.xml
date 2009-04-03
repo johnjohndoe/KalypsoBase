@@ -36,7 +36,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	<property name="xjc-args" value="-verbose" />
 
 	<path id="binding.classpath">
-		<fileset dir="${basedir}/../../KalypsoCommons">
+		<fileset dir="${basedir}/../KalypsoCommons">
 			<include name="lib/**/*.jar" />
 		</fileset>
 	</path>
