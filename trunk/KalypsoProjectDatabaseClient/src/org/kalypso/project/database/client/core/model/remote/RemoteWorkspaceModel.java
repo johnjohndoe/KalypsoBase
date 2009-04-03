@@ -260,4 +260,49 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
       setDirty();
     }
   }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProject(java.lang.String,
+   *      java.lang.String)
+   */
+  @Override
+  public IRemoteProject getProject( final String typeId, final String uniqueProjectName )
+  {
+    final IRemoteProject[] projects = getProjects( typeId );
+    for( final IRemoteProject project : projects )
+    {
+      if( project.getUniqueName().equals( uniqueProjectName ) )
+        return project;
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProject(java.lang.String)
+   */
+  @Override
+  public IRemoteProject getProject( final String uniqueProjectName )
+  {
+    final IRemoteProject[] projects = getProjects();
+    for( final IRemoteProject project : projects )
+    {
+      if( project.getUniqueName().equals( uniqueProjectName ) )
+        return project;
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#unlockRemoteProject(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
+   */
+  @Override
+  public void forceUnlock( final KalypsoProjectBean bean )
+  {
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+
+    service.forceUnlock( bean );
+    setDirty();
+  }
 }
