@@ -124,4 +124,6 @@ public interface IProjectDatabase
    */
   public Boolean ping( );
 
+  void forceUnlock( KalypsoProjectBean bean );
+
 }
