@@ -488,7 +488,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
   protected abstract void colorMapChanged( );
 
-  protected static List<PolygonColorMapEntry> createColorMap( final PolygonColorMapEntry fromEntry, final PolygonColorMapEntry toEntry, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue, final boolean useStroke )
+  public static List<PolygonColorMapEntry> createColorMap( final PolygonColorMapEntry fromEntry, final PolygonColorMapEntry toEntry, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue, final boolean useStroke )
   {
     final List<PolygonColorMapEntry> colorMapList = new LinkedList<PolygonColorMapEntry>();
 
