@@ -41,35 +41,32 @@
 package org.kalypso.commons.process;
 
 import java.io.IOException;
-import java.net.URL;
-
-import org.apache.commons.vfs.FileObject;
 
 /**
- * Creates a new {@link IProcess} object.
+ * Factory for creating new {@link IProcess} objects.
  * 
  * @author Gernot Belger
  */
 public interface IProcessFactory
 {
   /**
-   * Factory-ID (extension id) of the default process implementation. <br>
-   * This id should be used as fall-back if not other factory is specified.
+   * Id of the default (local) process factory implementation. <br>
+   * This id should be used as fall-back if no other factory is specified.
    */
   final String DEFAULT_PROCESS_FACTORY_ID = "org.kalypso.commons.process.defaultProcessFactory";
 
   /**
    * Creates a new {@link IProcess}.
    * 
-   * @param workingDir
-   *          The working directory for the process to execute. All necessary files should be inside this working
-   *          directory.
+   * @param tempDirName
+   *          The name of the working directory of the process. The process will create a sandbox directory in a place
+   *          it finds suitable using this name. All necessary files should be copied into this sandbox including the
+   *          executable file if needed.
    * @param executeable
-   *          The location of the executable file.
+   *          The location of the executable file relative to the sandbox.
    * @param commandlineArgs
    *          Command line arguments passed to the executable.
    */
-  IProcess newProcess( final FileObject workingDir, URL executeable, final String[] commandlineArgs ) throws IOException;
-
+  IProcess newProcess( final String tempDirName, final String executeable, final String... commandlineArgs ) throws IOException;
 
 }

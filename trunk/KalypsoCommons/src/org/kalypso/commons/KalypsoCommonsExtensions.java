@@ -30,11 +30,9 @@
 package org.kalypso.commons;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -108,26 +106,26 @@ public class KalypsoCommonsExtensions
   /**
    * @param factoryId
    *          The extension-id of the {@link IProcessFactory} that should be used in order to create the new process.
-   * @see IProcessFactory#newProcess(File, String, String[])
+   * @see IProcessFactory#newProcess(String, String, String...)
    */
-  public static synchronized IProcess createProcess( final String factoryId, final FileObject workingDir, final URL executeable, final String[] commandlineArgs ) throws CoreException
+  public static synchronized IProcess createProcess( final String factoryId, final String tempDirName, final String executeable, final String... commandlineArgs ) throws CoreException
   {
     Assert.isNotNull( factoryId );
 
     final IProcessFactory factory = getProcessFactory( factoryId );
     if( factory == null )
     {
-      final Status status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 1, "No process factory with id: " + factoryId, null );
+      final IStatus status = StatusUtilities.createErrorStatus( "No process factory with id: %s", factoryId );
       throw new CoreException( status );
     }
 
     try
     {
-      return factory.newProcess( workingDir, executeable, commandlineArgs );
+      return factory.newProcess( tempDirName, executeable, commandlineArgs );
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Problem creating process for executable %s in working dir %s.", executeable.toString(), workingDir.toString() );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Problem creating process for executable %s in working dir %s.", executeable, tempDirName );
       throw new CoreException( status );
     }
   }
