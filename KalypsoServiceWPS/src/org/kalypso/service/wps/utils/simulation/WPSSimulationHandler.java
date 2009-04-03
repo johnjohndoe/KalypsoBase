@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +58,10 @@ import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -124,7 +128,6 @@ public class WPSSimulationHandler extends Thread
 
         // get current results
         final List<IOValueType> ioValues = jobInfo.getCurrentResults();
-        final Throwable t = jobInfo.getException();
 
         /* Do something, according to the results. */
         switch( state )
@@ -134,16 +137,17 @@ public class WPSSimulationHandler extends Thread
           case ERROR:
             final int finishStatus = jobInfo.getFinishStatus();
             final String statusMessage = "Process ended with status: " + finishStatus;
+            final String finishText = jobInfo.getFinishText();
             /* Send user a message. */
             if( finishStatus != IStatus.ERROR )
             {
-              final String finishText = jobInfo.getFinishText();
               // false means process succeeded
               createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( statusMessage + ". " + finishText, false ), ioValues );
             }
             else
             {
-              createProcessFailedExecuteResponse( statusMessage, t );
+              final Throwable t = jobInfo.getException();
+              createProcessFailedExecuteResponse( finishText, t );
             }
             bEnd = true;
             break;
@@ -214,10 +218,18 @@ public class WPSSimulationHandler extends Thread
 
     if( t != null )
     {
-      final StackTraceElement[] stackTrace = t.getStackTrace();
-      for( final StackTraceElement stackTraceElement : stackTrace )
+      final Throwable cause = t.getCause();
+      if( cause != null && cause instanceof CoreException )
       {
-        list.add( stackTraceElement.toString() );
+        final IStatus status = ((CoreException) cause).getStatus();
+        final String messageFromStatus = StatusUtilities.messageFromStatus( status );
+        list.add( messageFromStatus );
+      }
+      else
+      {
+        final StringWriter out = new StringWriter();
+        t.printStackTrace( new PrintWriter( out ) );
+        list.add( out.toString() );
       }
     }
 

@@ -40,26 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBElement;
 
 import net.opengeospatial.ows.BoundingBoxType;
+import net.opengeospatial.ows.ExceptionReport;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.LiteralValueType;
 import net.opengeospatial.wps.ProcessDescriptionType;
+import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
@@ -70,8 +68,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.utils.Debug;
-import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
 /**
@@ -127,12 +125,17 @@ public class WPSRequest
   /**
    * A non blocking request. This class will use it to send a request and waits for its results afterwards.
    */
-  private final NonBlockingWPSRequest wpsRequest;
+  protected final NonBlockingWPSRequest wpsRequest;
 
   /**
    * After this period of time, the job gives up, waiting for a result of the service.
    */
   private final long m_timeout;
+  
+  /**
+   *  My file system manager. Initialized in the run() method and available during callbacks
+   */
+  private StandardFileSystemManager m_manager = null;
 
   public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {
@@ -196,7 +199,6 @@ public class WPSRequest
       return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
     }
 
-    StandardFileSystemManager manager = null;
     FileObject statusFile = null;
     try
     {
@@ -212,71 +214,9 @@ public class WPSRequest
       final String title = processDescription.getTitle();
       monitor.setTaskName( "Warte auf Prozess " + title );
 
-      manager = VFSUtilities.getNewManager();
-      // TODO: at least put parsing of status file in a separate method to reduce the size of this one;
-      // maybe use same method to handle first status?
+      m_manager = VFSUtilities.getNewManager();
       while( run )
       {
-        statusFile = VFSUtilities.checkProxyFor( statusLocation, manager );
-        if( statusFile.exists() )
-        {
-          final JAXBElement<ExecuteResponseType> executeState = waitForExecuteResponse( statusFile );
-
-          /* Status was read successfull. */
-          exState = executeState.getValue();
-          final StatusType state = exState.getStatus();
-
-          if( state.getProcessAccepted() != null )
-          {
-            /* Do nothing, but wait for an other response. */
-            continue;
-          }
-          else if( state.getProcessFailed() != null )
-          {
-            final String messages = WPSUtilities.createErrorString( state.getProcessFailed().getExceptionReport() );
-            status = StatusUtilities.createErrorStatus( messages );
-            run = false;
-          }
-          else if( state.getProcessStarted() != null )
-          {
-            final ProcessStartedType processStarted = state.getProcessStarted();
-            final String descriptionValue = processStarted.getValue();
-            final Integer percent = processStarted.getPercentCompleted();
-            int percentCompleted = 0;
-            if( percent != null )
-            {
-              percentCompleted = percent.intValue();
-            }
-
-            /* Update the monitor values. */
-            updateMonitor( percentCompleted, descriptionValue, monitor );
-          }
-          else if( state.getProcessSucceeded() != null )
-          {
-            Debug.println( "The simulation has finished ..." );
-            run = false;
-          }
-          else
-          {
-            status = StatusUtilities.createErrorStatus( "The server responded with an unknown state ..." );
-            run = false;
-          }
-
-          /* If the user aborted the job. */
-          if( monitor.isCanceled() )
-          {
-            return Status.CANCEL_STATUS;
-          }
-
-          /* Get the process outputs every time. */
-          final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
-
-          /* Collect all process output. */
-          if( processOutputs != null )
-          {
-            collectOutput( processOutputs );
-          }
-        }
         try
         {
           Thread.sleep( 2000 );
@@ -287,38 +227,50 @@ public class WPSRequest
           return StatusUtilities.statusFromThrowable( e );
         }
 
-        /* If the timeout is reached. */
-        if( executed >= m_timeout )
+        exState = wpsRequest.getExecuteResponse( m_manager );
+        if( exState == null )
         {
-          Debug.println( "Timeout reached ..." );
-          return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+          return StatusUtilities.createErrorStatus( "The process did not return an execute response." );
         }
-      }
 
-      if( exState != null )
-      {
-        /* Check if the results are ready. */
-        monitor.subTask( "" ); // reset subtask, was used for server-side messages
-        monitor.setTaskName( "Prüfe Ergebnisse ..." );
-        Debug.println( "Check the results ..." );
-
-        /* Get the process outputs. */
-        final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
-
-        if( processOutputs == null )
+        final StatusType state = exState.getStatus();
+        if( state.getProcessAccepted() != null )
         {
-          status = StatusUtilities.createErrorStatus( "The process did not return any results." );
+          doProcessAccepted( exState );
+        }
+        else if( state.getProcessFailed() != null )
+        {
+          return doProcessFailed( exState );
+        }
+        else if( state.getProcessStarted() != null )
+        {
+          doProcessStarted( monitor, exState );
+        }
+        else if( state.getProcessSucceeded() != null )
+        {
+          return doProcessSucceeded( exState );
         }
         else
         {
-          /* Collect all process output. */
-          collectOutput( processOutputs );
+          return doUnknownState( exState );
+        }
+
+        /* If the user aborted the job. */
+        if( monitor.isCanceled() )
+        {
+          return doCanceled();
+        }
+
+        /* If the timeout is reached. */
+        if( executed >= m_timeout )
+        {
+          return doTimeout();
         }
       }
     }
     catch( final Exception e )
     {
-      status = StatusUtilities.statusFromThrowable( e );
+      return StatusUtilities.statusFromThrowable( e );
     }
     finally
     {
@@ -333,65 +285,89 @@ public class WPSRequest
           // gobble
         }
       }
-      if( manager != null )
-        manager.close();
+      if( m_manager != null )
+        m_manager.close();
     }
 
+    // never reach this line
+    return StatusUtilities.createErrorStatus( "Unknown state." );
+  }
+
+  protected IStatus doTimeout( )
+  {
+    Debug.println( "Timeout reached ..." );
+    return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+  }
+
+  protected IStatus doCanceled( )
+  {
+    return Status.CANCEL_STATUS;
+  }
+
+  protected IStatus doUnknownState( final ExecuteResponseType exState )
+  {
+    IStatus status;
+    status = StatusUtilities.createErrorStatus( "The server responded with an unknown state ..." );
     return status;
   }
 
-  @SuppressWarnings("unchecked")
-  private JAXBElement<ExecuteResponseType> waitForExecuteResponse( final FileObject statusFile ) throws Exception, InterruptedException
+  protected IStatus doProcessSucceeded( final ExecuteResponseType exState )
   {
-    /* Some variables for handling the errors. */
-    boolean success = false;
-    int cnt = 0;
+    /* Check if the results are ready. */
+    Debug.println( "The simulation has finished ..." );
 
-    /* Try to read the status at least 3 times, before exiting. */
-    JAXBElement<ExecuteResponseType> executeState = null;
-    while( success == false )
+    /* Get the process outputs. */
+    final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+
+    if( processOutputs == null )
     {
-      final FileContent content = statusFile.getContent();
-      InputStream inputStream = null;
-      try
-      {
-        inputStream = content.getInputStream();
-        final String xml = MarshallUtilities.fromInputStream( inputStream );
-        if( xml != null && !"".equals( xml ) )
-        {
-          final Object object = MarshallUtilities.unmarshall( xml );
-          executeState = (JAXBElement<ExecuteResponseType>) object;
-          success = true;
-        }
-      }
-      catch( final Exception e )
-      {
-        /* An error has occured while copying the file. */
-        Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+      return StatusUtilities.createErrorStatus( "The process did not return any results." );
+    }
+    else
+    {
+      /* Collect all process output. */
+      collectOutput( processOutputs );
+      return Status.OK_STATUS;
+    }
+  }
 
-        /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
-        if( cnt >= 2 )
-        {
-          Debug.println( "The second retry has failed, rethrowing the error ..." );
-          throw e;
-        }
-
-        /* Retry the copying of the file. */
-        cnt++;
-        Debug.println( "Retry: " + String.valueOf( cnt ) );
-        success = false;
-
-        /* Wait for some milliseconds. */
-        Thread.sleep( 1000 );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( inputStream );
-        statusFile.close();
-      }
+  protected void doProcessStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
+  {
+    final ProcessStartedType processStarted = exState.getStatus().getProcessStarted();
+    final String descriptionValue = processStarted.getValue();
+    final Integer percent = processStarted.getPercentCompleted();
+    int percentCompleted = 0;
+    if( percent != null )
+    {
+      percentCompleted = percent.intValue();
     }
 
-    return executeState;
+    /* Get the process outputs every time. */
+    final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
+
+    /* Collect all process output. */
+    if( processOutputs != null )
+    {
+      collectOutput( processOutputs );
+    }
+
+    /* Update the monitor values. */
+    updateMonitor( percentCompleted, descriptionValue, monitor );
+  }
+
+  protected IStatus doProcessFailed( final ExecuteResponseType exState )
+  {
+    IStatus status;
+    final StatusType exStatus = exState.getStatus();
+    final ProcessFailedType processFailed = exStatus.getProcessFailed();
+    final ExceptionReport exceptionReport = processFailed.getExceptionReport();
+    final String messages = WPSUtilities.createErrorString( exceptionReport );
+    status = StatusUtilities.createErrorStatus( messages );
+    return status;
+  }
+
+  protected void doProcessAccepted( final ExecuteResponseType exState )
+  {
   }
 
   /**

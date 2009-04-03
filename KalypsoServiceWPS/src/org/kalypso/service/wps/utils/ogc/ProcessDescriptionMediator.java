@@ -42,8 +42,10 @@ package org.kalypso.service.wps.utils.ogc;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -51,6 +53,8 @@ import javax.xml.namespace.QName;
 import net.opengeospatial.ows.AnyValue;
 import net.opengeospatial.ows.DomainMetadataType;
 import net.opengeospatial.ows.MetadataType;
+import net.opengeospatial.wps.InputDescriptionType;
+import net.opengeospatial.wps.ProcessDescriptionType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -270,5 +274,24 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         return WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, minOccurs );
     }
     return null;
+  }
+
+  public Map<String, Object> getInputDescriptions( final String typeID ) throws CoreException
+  {
+    final Object processDescription = getProcessDescription( typeID );
+    final Map<String, Object> inputDescriptions = new HashMap<String, Object>();
+    switch( getVersion() )
+    {
+      case V040:
+        final ProcessDescriptionType processDescription04 = (ProcessDescriptionType) processDescription;
+        final List<InputDescriptionType> inputList = processDescription04.getDataInputs().getInput();
+        for( final InputDescriptionType inputDescriptionType : inputList )
+        {
+          final String inputId = inputDescriptionType.getIdentifier().getValue();
+          inputDescriptions.put( inputId, inputDescriptionType );
+        }
+        break;
+    }
+    return inputDescriptions;
   }
 }

@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.ogc;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.IOValueType;
+
 /**
  * @author kurzbach
  */
@@ -66,4 +73,42 @@ public class ExecuteMediator extends AbstractWPSMediator<net.opengis.wps._1_0.Ex
     return null;
   }
 
+  public Map<String, Object> getInputList( )
+  {
+    final Map<String, Object> inputList = new LinkedHashMap<String, Object>();
+    switch( getVersion() )
+    {
+      case V040:
+        final DataInputsType dataInputs = getV04().getDataInputs();
+        final List<IOValueType> inputs = dataInputs.getInput();
+        for( final IOValueType input : inputs )
+        {
+          Object value = null;
+          final String identifier = input.getIdentifier().getValue();
+          if( input.getComplexValue() != null )
+          {
+            value = input.getComplexValue();
+          }
+          else if( input.getLiteralValue() != null )
+          {
+            value = input.getLiteralValue();
+          }
+          else if( input.getComplexValueReference() != null )
+          {
+            value = input.getComplexValueReference();
+          }
+          else if( input.getBoundingBoxValue() != null )
+          {
+            value = input.getBoundingBoxValue();
+          }
+          else
+          {
+            value = null;
+          }
+          inputList.put( identifier, value );
+        }
+        break;
+    }
+    return inputList;
+  }
 }

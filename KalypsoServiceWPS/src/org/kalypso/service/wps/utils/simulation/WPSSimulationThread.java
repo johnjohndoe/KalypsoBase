@@ -41,22 +41,20 @@
 package org.kalypso.service.wps.utils.simulation;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import net.opengeospatial.wps.DataInputsType;
-import net.opengeospatial.wps.Execute;
-import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
-import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
+import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -130,131 +128,50 @@ public class WPSSimulationThread extends Thread
    * @param resultDir
    *          The job can put his results here.
    */
-  public WPSSimulationThread( final ISimulation job, final Execute execute, final ProcessDescriptionType processDescription, final String resultSpace ) throws SimulationException
+  public WPSSimulationThread( final ISimulation job, final ExecuteMediator executeMediator, final ProcessDescriptionMediator processDescriptionMediator, final String resultSpace ) throws SimulationException
   {
-    super( "WPS-SimulationThread (" + processDescription.getIdentifier().getValue() + ")" );
+    super( "WPS-SimulationThread" );
     m_job = job;
 
     // TODO: should this temp dir not be inside the general wps tmp-dir?
     final long threadId = getId();
-    final String jobId = execute.getIdentifier().getValue();
-
     m_tmpDir = FileUtilities.createNewTempDir( "CalcJob-" + threadId );
     m_tmpDir.deleteOnExit();
 
-    final Map<String, Object> inputList = index( execute );
-    m_inputData = new WPSSimulationDataProvider( inputList );
-    m_resultEater = new WPSSimulationResultEater( processDescription, execute, m_tmpDir, resultSpace );
-
-    final String description = processDescription.getAbstract();
-    m_jobInfo = new WPSSimulationInfo( threadId, jobId, description, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
-
-    /* Check, if the required input is available. */
-    checkInput( execute, processDescription );
-  }
-
-  /**
-   * Indexes the input values with their id.
-   * 
-   * @param execute
-   *          The execute request, containing the input data.
-   * @return The indexed map.
-   */
-  private Map<String, Object> index( final Execute execute ) throws SimulationException
-  {
-    final Map<String, Object> inputList = new LinkedHashMap<String, Object>();
-
-    final DataInputsType dataInputs = execute.getDataInputs();
-    final List<IOValueType> inputs = dataInputs.getInput();
-    for( final IOValueType input : inputs )
+    final String typeID = executeMediator.getProcessId();
+    final Map<String, Object> inputList = executeMediator.getInputList();
+    Map<String, Object> inputDescriptions;
+    try
     {
-      Object value = null;
-      if( input.getComplexValue() != null )
-      {
-        value = input.getComplexValue();
-      }
-      else if( input.getLiteralValue() != null )
-      {
-        value = input.getLiteralValue();
-      }
-      else if( input.getComplexValueReference() != null )
-      {
-        value = input.getComplexValueReference();
-      }
-      else if( input.getBoundingBoxValue() != null )
-      {
-        value = input.getBoundingBoxValue();
-      }
-      else
-      {
-        throw new SimulationException( "Input has no valid value!", null );
-      }
-
-      inputList.put( input.getIdentifier().getValue(), value );
+      inputDescriptions = processDescriptionMediator.getInputDescriptions( typeID );
+    }
+    catch( final CoreException e )
+    {
+      throw new SimulationException( "Could not get process description.", e );
     }
 
-    return inputList;
+    /* Check, if the required input is available. */
+    checkInputs( inputList, inputDescriptions );
+
+    m_inputData = new WPSSimulationDataProvider( inputList );
+    m_resultEater = new WPSSimulationResultEater( processDescriptionMediator, executeMediator, m_tmpDir, resultSpace );
+    m_jobInfo = new WPSSimulationInfo( threadId, typeID, typeID, ISimulationConstants.STATE.WAITING, -1, m_resultEater );
   }
 
   /**
    * This function checks the input, if every needed input is available.
-   * 
-   * @param execute
-   *          The execute request containing the input data.<br>
-   *          (Ok, it contains also info about the expected output data, but that is not needed now.)
-   * @param processDescription
-   *          The processDescription containing the output data.<br>
-   *          (Ok, it contains also info about the output data, but that is not needed now.)
    */
-  private void checkInput( final Execute execute, final ProcessDescriptionType processDescription ) throws SimulationException
+  private void checkInputs( final Map<String, Object> inputList, final Map<String, Object> inputDescriptions ) throws SimulationException
   {
-    DataInputsType dataInputsExecute = execute.getDataInputs();
-    DataInputs dataInputsProcessDescription = processDescription.getDataInputs();
-
-    List<IOValueType> ioValues = dataInputsExecute.getInput();
-    List<InputDescriptionType> inputDescriptions = dataInputsProcessDescription.getInput();
-
-    for( int i = 0; i < inputDescriptions.size(); i++ )
+    for( final Entry<String, Object> entry : inputDescriptions.entrySet() )
     {
-      InputDescriptionType inputDescription = inputDescriptions.get( i );
-
-      IOValueType ioValue = findInput( inputDescription, ioValues );
-      if( ioValue == null )
+      final String id = entry.getKey();
+      final InputDescriptionType inputDescription = (InputDescriptionType) entry.getValue();
+      if( inputDescription.getMinimumOccurs().intValue() == 1 && inputList.get( id ) == null )
       {
-        /* Ooops, one input is missing, hopefully it was an optional one. */
-        if( inputDescription.getMinimumOccurs().intValue() == 1 )
-        {
-          /* No, it was mandatory. */
-          throw new SimulationException( "Missing input for ID: " + inputDescription.getIdentifier().getValue(), null );
-        }
-
-        /* It was an optional one. */
-        continue;
+        throw new SimulationException( "Missing input for id " + id );
       }
-
-      /* Input is here, everything is allright. */
     }
-  }
-
-  /**
-   * Tries to find a input in this list.
-   * 
-   * @param inputDescription
-   *          The description of one input.
-   * @param ioValues
-   *          The input list.
-   * @return The input in the input list of the execute request. If it is not available it returns null.
-   */
-  private IOValueType findInput( InputDescriptionType inputDescription, List<IOValueType> ioValues )
-  {
-    String value = inputDescription.getIdentifier().getValue();
-    for( IOValueType ioValue : ioValues )
-    {
-      if( value.equals( ioValue.getIdentifier().getValue() ) )
-        return ioValue;
-    }
-
-    return null;
   }
 
   /**
@@ -319,6 +236,7 @@ public class WPSSimulationThread extends Thread
     {
       LOGGER.warning( "Simulation aborted with exception: " + jobID );
       m_jobInfo.setFinishText( "Simulation aborted with exception." );
+      m_jobInfo.setFinishStatus( IStatus.ERROR );
       m_jobInfo.setException( t );
       m_jobInfo.setState( ISimulationConstants.STATE.ERROR );
     }

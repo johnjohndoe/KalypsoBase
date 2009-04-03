@@ -41,12 +41,15 @@
 package org.kalypso.service.wps.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.bind.JAXBElement;
 
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DataInputsType;
@@ -67,13 +70,17 @@ import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -81,6 +88,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
@@ -375,10 +383,11 @@ public class NonBlockingWPSRequest
     final SupportedComplexDataType complexData = inputDescription.getComplexData();
     final LiteralInputType literalInput = inputDescription.getLiteralData();
     final SupportedCRSsType boundingBoxInput = inputDescription.getBoundingBoxData();
-    
+
     if( complexData != null )
     {
-      // TODO: we ignore this information at the time, but it should be checked if we can actually send this kind of data
+      // TODO: we ignore this information at the time, but it should be checked if we can actually send this kind of
+      // data
       // final String defaultEncoding = complexData.getDefaultEncoding();
       // final String defaultFormat = complexData.getDefaultFormat();
       // final String defaultSchema = complexData.getDefaultSchema();
@@ -466,7 +475,7 @@ public class NonBlockingWPSRequest
       value.add( valueString );
       valueType = WPS040ObjectFactoryUtilities.buildComplexValueType( format, encoding, schema, value );
     }
-    
+
     final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( null, inputId );
     final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( code, title, abstrakt, valueType );
     return ioValue;
@@ -547,6 +556,65 @@ public class NonBlockingWPSRequest
   public String getStatusLocation( )
   {
     return m_statusLocation;
+  }
+
+  @SuppressWarnings("unchecked")
+  public ExecuteResponseType getExecuteResponse( final FileSystemManager manager ) throws Exception, InterruptedException
+  {
+    final FileObject statusFile = VFSUtilities.checkProxyFor( m_statusLocation, manager );
+    if( statusFile.exists() )
+    {
+      /* Some variables for handling the errors. */
+      boolean success = false;
+      int cnt = 0;
+
+      /* Try to read the status at least 3 times, before exiting. */
+      JAXBElement<ExecuteResponseType> executeState = null;
+      while( success == false )
+      {
+        final FileContent content = statusFile.getContent();
+        InputStream inputStream = null;
+        try
+        {
+          inputStream = content.getInputStream();
+          final String xml = MarshallUtilities.fromInputStream( inputStream );
+          if( xml != null && !"".equals( xml ) )
+          {
+            final Object object = MarshallUtilities.unmarshall( xml );
+            executeState = (JAXBElement<ExecuteResponseType>) object;
+            success = true;
+          }
+        }
+        catch( final Exception e )
+        {
+          /* An error has occured while copying the file. */
+          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+
+          /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
+          if( cnt >= 2 )
+          {
+            Debug.println( "The second retry has failed, rethrowing the error ..." );
+            throw e;
+          }
+
+          /* Retry the copying of the file. */
+          cnt++;
+          Debug.println( "Retry: " + String.valueOf( cnt ) );
+          success = false;
+
+          /* Wait for some milliseconds. */
+          Thread.sleep( 1000 );
+        }
+        finally
+        {
+          IOUtils.closeQuietly( inputStream );
+          statusFile.close();
+        }
+      }
+      return executeState.getValue();
+    }
+    else
+      return null;
   }
 
 }
