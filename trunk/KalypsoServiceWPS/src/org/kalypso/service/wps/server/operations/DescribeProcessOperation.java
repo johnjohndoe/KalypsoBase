@@ -151,6 +151,9 @@ public class DescribeProcessOperation implements IOperation
         final Object describeProcessRequest = MarshallUtilities.unmarshall( xml );
         final DescribeProcessMediator describeProcessMediator = new DescribeProcessMediator( describeProcessRequest );
         simulationTypes = describeProcessMediator.getProcessIdentifiers();
+     
+        m_version = describeProcessMediator.getVersion().toString();
+        
       }
       catch( final JAXBException e )
       {
@@ -165,7 +168,9 @@ public class DescribeProcessOperation implements IOperation
       /* Search for the parameter Identifier. */
       final String parameterValue = request.getParameterValue( "Identifier" );
       if( parameterValue != null )
+      {
         simulationTypes.add( parameterValue );
+      }
 
       m_version = request.getParameterValue( "Version" );
     }
