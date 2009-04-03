@@ -381,4 +381,19 @@ public class ProjectDatabase implements IProjectDatabase
   {
     return ProjectDatabaseHelper.removeBean( FACTORY.getCurrentSession(), bean );
   }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#forceUnlock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
+   */
+  @Override
+  public void forceUnlock( final KalypsoProjectBean bean )
+  {
+    final Session mySession = FACTORY.getCurrentSession();
+    final Transaction myTx = mySession.beginTransaction();
+
+    final String unixName = bean.getUnixName();
+
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate();
+    myTx.commit();
+  }
 }
