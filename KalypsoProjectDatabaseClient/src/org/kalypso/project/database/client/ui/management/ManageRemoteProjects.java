@@ -71,7 +71,9 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   private static final Image IMG_DELETE = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/delete.gif" ) );
 
   private static final Image IMG_REMOTE_PROJECT = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/remote_project.gif" ) );
-  
+
+  private static final Image IMG_UNLOCK = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/unlock.gif" ) );
+
   private final String m_type;
 
   private final FormToolkit m_toolkit;
@@ -88,11 +90,10 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
     final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     model.addRemoteListener( this );
-    
+
     update();
   }
 
-  
   /**
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
@@ -101,10 +102,10 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   {
     final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     model.removeRemoteListener( this );
-    
+
     super.dispose();
   }
-  
+
   /**
    * @see org.eclipse.swt.widgets.Control#update()
    */
@@ -121,7 +122,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
     }
 
     m_body = m_toolkit.createComposite( this );
-    m_body.setLayout( new GridLayout( 2, false ) );
+    m_body.setLayout( new GridLayout( 3, false ) );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
@@ -136,13 +137,42 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       link.setForeground( MyColors.COLOR_BLACK );
       link.setFont( MyFonts.HEADING );
       link.setUnderlined( false );
-      
+
       final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
       lnkDeleteAll.setToolTipText( "Delete whole remote project" );
       lnkDeleteAll.setImage( IMG_DELETE );
-     
+
+      // project locked in database?!?
+      if( head.isProjectLockedForEditing() )
+      {
+        final ImageHyperlink lnkReleaseLock = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
+        lnkReleaseLock.setToolTipText( "Remove lock from remote project" );
+        lnkReleaseLock.setImage( IMG_UNLOCK );
+
+        lnkReleaseLock.addHyperlinkListener( new HyperlinkAdapter()
+        {
+          /**
+           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+           */
+          @Override
+          public void linkActivated( final HyperlinkEvent e )
+          {
+            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+            final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
+
+            remoteModel.forceUnlock( head );
+
+          }
+        } );
+
+      }
+      else
+      {
+        m_toolkit.createImageHyperlink( m_body, SWT.NULL ); // spacer
+      }
+
       final KalypsoProjectBean[] versions = KalypsoProjectBeanHelper.getSortedBeans( head );
-      
+
       lnkDeleteAll.addHyperlinkListener( new HyperlinkAdapter()
       {
         @Override
@@ -154,22 +184,21 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           }
         }
       } );
-      
-     
+
       for( final KalypsoProjectBean version : versions )
       {
         final String text = String.format( "Version: %d", version.getProjectVersion() );
-        
+
         final ImageHyperlink linkVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        linkVersion.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false ) );
+        linkVersion.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false, 2, 0 ) );
         linkVersion.setText( text );
         linkVersion.setEnabled( false );
         linkVersion.setUnderlined( false );
-          
+
         final ImageHyperlink lnkDeleteVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
         lnkDeleteVersion.setToolTipText( String.format( "Delete %s", text ) );
         lnkDeleteVersion.setImage( IMG_DELETE );
-        
+
         lnkDeleteVersion.addHyperlinkListener( new HyperlinkAdapter()
         {
           /**
@@ -180,20 +209,19 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           {
             final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
             final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
-            
+
             remoteModel.deleteBean( version );
-                        
+
           }
         } );
       }
-      
-     m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 2, 0 ) );
+
+      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 2, 0 ) );
     }
 
     m_toolkit.adapt( this );
     this.layout();
   }
-
 
   /**
    * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged(org.eclipse.core.runtime.IStatus)
@@ -217,7 +245,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         update();
-        
+
         return Status.OK_STATUS;
       }
     }.schedule();

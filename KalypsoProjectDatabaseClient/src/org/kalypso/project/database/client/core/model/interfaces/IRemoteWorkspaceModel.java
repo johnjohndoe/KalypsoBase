@@ -58,4 +58,10 @@ public interface IRemoteWorkspaceModel
    * deletes an remote project bean and sets the remote workspace dirty
    */
   void deleteBean( KalypsoProjectBean bean );
+
+  IRemoteProject getProject( String typeId, String uniqueProjectName );
+
+  IRemoteProject getProject( String uniqueProjectName );
+
+  void forceUnlock( KalypsoProjectBean head );
 }
