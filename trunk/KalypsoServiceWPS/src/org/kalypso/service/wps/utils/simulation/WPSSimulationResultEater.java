@@ -73,12 +73,15 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
+import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
@@ -146,10 +149,18 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    * @param resultDir
    *          The FileObject contains information, where the results should be put, so that the client can read them.
    */
-  public WPSSimulationResultEater( final ProcessDescriptionType processDescription, final Execute execute, final File tmpDir, final String resultSpace ) throws SimulationException
+  public WPSSimulationResultEater( final ProcessDescriptionMediator processDescriptionMediator, final ExecuteMediator executeMediator, final File tmpDir, final String resultSpace ) throws SimulationException
   {
-    m_processDescription = processDescription;
-    m_execute = execute;
+    try
+    {
+      m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( executeMediator.getProcessId() );
+    }
+    catch( CoreException e1 )
+    {
+      throw new SimulationException( "Could not get process description", e1 );
+    }
+
+    m_execute = executeMediator.getV04();
     m_tmpDir = tmpDir;
     m_results = new LinkedHashMap<String, IOValueType>();
     m_references = new LinkedHashMap<File, FileObject>();
@@ -161,7 +172,11 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       m_vfsManager = VFSUtilities.getNewManager();
       final String resultDirectoryName = tmpDir.getName();
-      final FileObject resultRoot = m_vfsManager.resolveFile( resultSpace );
+      final FileObject resultRoot;
+      if( resultSpace != null )
+        resultRoot = m_vfsManager.resolveFile( resultSpace );
+      else
+        resultRoot = m_vfsManager.toFileObject( FileUtilities.TMP_DIR );
       m_resultDir = resultRoot.resolveFile( resultDirectoryName );
       m_resultDir.createFolder();
     }
@@ -344,6 +359,9 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       if( relativePathToSource == null )
         throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
       final FileObject destination = m_vfsManager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
+      final FileObject source = m_vfsManager.toFileObject( sourceFile );
+      if( !source.equals( destination ) )
+        VFSUtilities.copy( source, destination );
 
       // keep track of file references
       m_references.put( sourceFile, destination );
@@ -351,7 +369,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       /* Build complex value reference. */
       return WPS040ObjectFactoryUtilities.buildComplexValueReference( WPSUtilities.convertInternalToClient( destination.getURL().toExternalForm() ), null, null, null );
     }
-    catch( final FileSystemException e )
+    catch( final IOException e )
     {
       throw new SimulationException( "Could not add ComplexValueReference for file " + sourceFile, e );
     }

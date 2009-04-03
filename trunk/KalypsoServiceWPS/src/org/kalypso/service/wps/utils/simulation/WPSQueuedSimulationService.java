@@ -52,13 +52,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 
-import net.opengeospatial.wps.Execute;
-import net.opengeospatial.wps.ProcessDescriptionType;
-import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
-import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
-
 import org.apache.commons.vfs.FileObject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -118,11 +112,6 @@ public class WPSQueuedSimulationService
    * Time (in ms) where the queue is searched for waiting jobs.
    */
   private final long m_schedulingPeriod;
-
-  /**
-   * Stores the process description of each simulation.
-   */
-  private final Map<String, ProcessDescriptionType> m_descriptions = new HashMap<String, ProcessDescriptionType>();
 
   /**
    * The URL catalog.
@@ -256,37 +245,22 @@ public class WPSQueuedSimulationService
 
   public WPSSimulationInfo startJob( final ExecuteMediator executeMediator ) throws SimulationException
   {
-    final Execute executeV04 = executeMediator.getV04();
-    final String typeID = executeV04.getIdentifier().getValue();
+    final String typeID = executeMediator.getProcessId();
     if( typeID == null || typeID.length() == 0 )
     {
       Debug.println( "Missing parameter Identifier!" );
       throw new SimulationException( "Process identifier is missing!" );
     }
 
-    Object processDescription;
-    try
-    {
-      /* Get the process description. */
-      final WPS_VERSION version = executeMediator.getVersion();
-      final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( version );
-      processDescription = processDescriptionMediator.getProcessDescription( typeID );
-    }
-    catch( final CoreException e )
-    {
-      throw new SimulationException( "Could not get process description!" );
-    }
+    final WPS_VERSION version = executeMediator.getVersion();
+    final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( version );
 
     WPSSimulationThread cjt = null;
     synchronized( m_threads )
     {
       final ISimulation job = m_calcJobFactory.createJob( typeID );
 
-      /* Need the description and the result directory. */
-      final ProcessDescriptionType processDescriptionV04 = (ProcessDescriptionType) processDescription;
-      m_descriptions.put( typeID, processDescriptionV04 );
-
-      cjt = new WPSSimulationThread( job, executeV04, processDescriptionV04, m_resultSpace );
+      cjt = new WPSSimulationThread( job, executeMediator, processDescriptionMediator, m_resultSpace );
 
       final String threadId = Long.toString( cjt.getId() );
       m_threads.put( threadId, cjt );
@@ -364,22 +338,6 @@ public class WPSQueuedSimulationService
       }
     }
     super.finalize();
-  }
-
-  private ProcessDescriptionType getProcessDescription( final String typeID )
-  {
-    final ProcessDescriptionType processDescription = m_descriptions.get( typeID );
-    return processDescription;
-  }
-
-  public ProcessOutputs getRequiredInput( final String typeID )
-  {
-    return getProcessDescription( typeID ).getProcessOutputs();
-  }
-
-  public DataInputs getDeliveringResults( final String typeID )
-  {
-    return getProcessDescription( typeID ).getDataInputs();
   }
 
   public DataHandler getSchema( final String namespace )
