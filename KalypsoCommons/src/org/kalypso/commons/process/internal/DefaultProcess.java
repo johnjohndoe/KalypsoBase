@@ -46,26 +46,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.Selectors;
-import org.apache.commons.vfs.provider.local.LocalFile;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
@@ -80,76 +68,41 @@ public class DefaultProcess implements IProcess
 {
   private final ProcessBuilder m_processBuilder;
 
-  /** will be shown in case of error */
-  private final String m_commandLabel;
-
   private long m_timeout;
 
   private final File m_command;
 
-  private final URL m_exeUrl;
+  private final String m_executable;
 
-  public DefaultProcess( final FileObject workingDir, final URL exeUrl, final String[] commandlineArgs ) throws IOException
+  public DefaultProcess( final String tempDirName, final String executable, final String... commandLineArgs )
   {
-    Assert.isNotNull( workingDir );
-    Assert.isNotNull( exeUrl );
-    Assert.isTrue( workingDir instanceof LocalFile );
+    Assert.isNotNull( tempDirName );
+    Assert.isNotNull( executable );
 
-    m_exeUrl = exeUrl;
-    m_commandLabel = exeUrl.toString();
-    m_command = findCommand( (LocalFile) workingDir, exeUrl );
+    m_executable = executable;
+
+    final File sandbox = FileUtilities.createNewTempDir( tempDirName );
+    m_command = findCommand( sandbox, executable );
 
     final List<String> commandLine = new ArrayList<String>();
     commandLine.add( m_command.getAbsolutePath() );
 
-    if( commandlineArgs != null )
+    if( commandLineArgs != null )
     {
-      for( final String arg : commandlineArgs )
+      for( final String arg : commandLineArgs )
+      {
         commandLine.add( arg );
+      }
     }
 
     m_processBuilder = new ProcessBuilder( commandLine );
-
-    try
-    {
-      final String uri = workingDir.getName().getURI();
-      final String encodedUri = URIUtil.encodePath( uri );
-      final File workingDirFile = new File(new URI(encodedUri));
-      m_processBuilder.directory(workingDirFile);
-    }
-    catch( final URISyntaxException e )
-    {
-      throw new IOException("Could not set local working directory.",e);
-    }
+    m_processBuilder.directory( sandbox );
   }
 
   /** Final because called from constructor. */
-  private final File findCommand( final LocalFile workingDir, final URL exeUrl ) throws IOException
+  private final File findCommand( final File sandbox, final String executable )
   {
-    final FileSystemManager manager = VFSUtilities.getManager();
-
-    // If it is a local file we will directly call it.
-    File localExeFile = FileUtils.toFile( exeUrl );
-    if( localExeFile != null )
-      return localExeFile;
-
-    // Else we will copy the exe to the working directory
-// final String path = exeUrl.getPath();
-// final String name = FileUtilities.nameFromPath( path );
-// final File exeFile = new File( workingDir, name );
-
-    // try to convert bundle resouce url to local file url
-    final String exeUrlName = FileLocator.toFileURL( exeUrl ).toString();
-    final FileObject exeFile = manager.resolveFile( exeUrlName );
-    VFSUtilities.copyFileTo( exeFile, workingDir );
-
-    if( exeFile.exists() )
-      // TODO: better exception
-      throw new IllegalArgumentException( "File with same name already exists in working directory" );
-    final FileObject localExeFileObject = workingDir.resolveFile( exeFile.getName().getBaseName() );
-    localExeFile = localExeFileObject.getFileSystem().replicateFile( localExeFileObject, Selectors.SELECT_SELF );
-
-    return localExeFile;
+    return new File( sandbox, executable );
   }
 
   /**
@@ -159,6 +112,15 @@ public class DefaultProcess implements IProcess
   public Map<String, String> environment( )
   {
     return m_processBuilder.environment();
+  }
+
+  /**
+   * @see org.kalypso.commons.process.IProcess#getSandboxDirectory()
+   */
+  @Override
+  public String getSandboxDirectory( )
+  {
+    return m_command.getParentFile().toURI().toString();
   }
 
   /**
@@ -177,10 +139,6 @@ public class DefaultProcess implements IProcess
   @Override
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException
   {
-    /* First, copy the exe to a local place if necessary */
-    if( !m_command.exists() )
-      FileUtilities.makeFileFromUrl( m_exeUrl, m_command, false );
-
     /* Now start the process in the workDir */
     Process process = null;
     int iRetVal = -1;
@@ -228,19 +186,18 @@ public class DefaultProcess implements IProcess
     {
       final IStatus result = procCtrlThread.getResult();
       if( result != null && result.matches( IStatus.ERROR ) )
-        throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + m_commandLabel + "'" );
+        throw new ProcessTimeoutException( "Timeout executing " + m_executable );
     }
 
     return iRetVal;
   }
 
-  /**
-   * @see org.kalypso.commons.process.IProcess#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public void setProgressMonitor( final IProgressMonitor monitor )
-  {
-    // ignore at this time
-  }
-
+// /**
+// * @see org.kalypso.commons.process.IProcess#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
+// */
+// @Override
+// public void setProgressMonitor( final IProgressMonitor monitor )
+// {
+// // ignore at this time
+// }
 }

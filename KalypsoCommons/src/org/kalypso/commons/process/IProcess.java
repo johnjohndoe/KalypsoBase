@@ -43,9 +43,9 @@ package org.kalypso.commons.process;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.java.lang.ICancelable;
 
@@ -60,18 +60,23 @@ public interface IProcess
 {
   /**
    * The environment used to start the new process.<br>
-   * Initially, the map is initialised to the target environment of the current process and/or target machine (depending
+   * Initially, the map is initialized to the target environment of the current process and/or target machine (depending
    * on the implementation).<br>
-   * The map can be modified (before calling
-   * {@link #startProcess(ICancelable, long, OutputStream, OutputStream, InputStream, int)}.
+   * The map can be modified (before calling {@link #startProcess(OutputStream, OutputStream, InputStream, ICancelable)}
+   * .
    */
   public Map<String, String> environment( );
+
+  /**
+   * Returns the URI of the sandbox directory for the process
+   */
+  public String getSandboxDirectory( );
 
   /**
    * Sets a timeout for this process. If set to a value <code>&gt; 1</code>, the process will automatically killed after
    * the given time in milliseconds and a {@link ProcessTimeoutException} will be thrown.
    */
-  public void setTimeout( long timeout );
+  public void setTimeout( final long timeout );
 
   /**
    * Executes the process and waits for it to end.
@@ -84,19 +89,19 @@ public interface IProcess
    *          Contents of this stream will be piped into the standard input of the process.
    *@param cancelable
    *          The process will be killed if {@link ICancelable#isCanceled()} returns <code>true</code>.
-   * @return The process'es exit code.
+   * @return The exit code of the process.
    *@throws ProcessTimeoutException
    *           If a timeout was set (see {@link #setTimeout(long)}) and the process run longer than this specified time.
    */
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException, OperationCanceledException;
 
-  /**
-   * Sets a progress monitor (optional). Process implementations may ignore the monitor.
-   * 
-   * @param monitor
-   *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
-   *          done() on the given monitor. Accepts null, indicating that no progress should be reported and that the
-   *          operation cannot be cancelled.
-   */
-  public void setProgressMonitor( final IProgressMonitor monitor );
+// /**
+// * Sets a progress monitor (optional). Process implementations may ignore the monitor.
+// *
+// * @param monitor
+// * the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
+// * done() on the given monitor. Accepts null, indicating that no progress should be reported and that the
+// * operation cannot be canceled.
+// */
+// public void setProgressMonitor( final IProgressMonitor monitor );
 }

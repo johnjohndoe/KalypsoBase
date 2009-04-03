@@ -66,7 +66,7 @@ public class ProcessControlJob extends Job
         }
         catch( final InterruptedException e )
         {
-          // sollte nicht passieren
+          // should not happen
           e.printStackTrace();
         }
       }
