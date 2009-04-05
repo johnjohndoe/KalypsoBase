@@ -17,6 +17,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
+@SuppressWarnings("restriction")
 public class CalculationChainMember extends Feature_Impl implements ICalculationChainMember
 {
   private final FeatureBindingCollection<ICalculationChainMemberEntry> m_inputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_INPUTS );;
