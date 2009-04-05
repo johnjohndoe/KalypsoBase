@@ -484,7 +484,7 @@ public class ExportResultsWizardPage extends AbstractCalcWizardPage
 
     final UrlResolver resolver = new UrlResolver();
     URL resultURL;
-    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator< ? > iter = featureList.iterator(); iter.hasNext(); )
     {
       final Feature fe = (Feature) iter.next();
       final TimeseriesLinkType resultLink = (TimeseriesLinkType) fe.getProperty( propertyNameTimeserieslink );

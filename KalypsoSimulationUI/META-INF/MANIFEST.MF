@@ -17,12 +17,14 @@ Require-Bundle: org.eclipse.ui.externaltools,
  org.eclipse.debug.core,
  org.eclipse.ant.ui,
  org.eclipse.ant.core;bundle-version="3.2.0",
- org.kalypso.service.wps;bundle-version="1.0.0"
+ org.kalypso.service.wps;bundle-version="1.0.0",
+ org.kalypso.services.observation;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.compare,
  org.kalypso.simulation.modellist,
  org.kalypso.simulation.ui,
  org.kalypso.simulation.ui.actions,
+ org.kalypso.simulation.ui.ant,
  org.kalypso.simulation.ui.calccase,
  org.kalypso.simulation.ui.calccase.jface,
  org.kalypso.simulation.ui.dialogs,

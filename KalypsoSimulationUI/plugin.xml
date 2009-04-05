@@ -190,6 +190,19 @@
             library="lib/anttasks.jar"
             headless="false"
             name="kalypso.runCalculation"/>
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.CopyObservationTask" library="lib/anttasks.jar" name="kalypso.copyObservation" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.GmlPropertyTask" library="lib/anttasks.jar" name="kalypso.gmlProperty" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.KrigingTask" library="lib/anttasks.jar" name="kalypso.kriging" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.GMLWeightingTask" library="lib/anttasks.jar" name="kalypso.gmlWeight" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.CommitObservationsTask" library="lib/anttasks.jar" name="kalypso.commitPrognoses" />
+		<antTask class="org.kalypso.ui.ant.MultiEqualsTask" library="lib/anttasks.jar" name="kalypso.multiequals" />
+		<antTask class="org.kalypso.ui.ant.MapZmlMeta2FeatureTask" library="lib/anttasks.jar" name="kalypso.mapZmlMeta2Feature" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.FetchFromURLsTask" library="lib/anttasks.jar" name="Kalypso.fetchFromURL" />
+		<antTask class="org.kalypso.ui.ant.PropertyReplaceTask" headless="true" library="lib/anttasks.jar" name="kalypso.propertyReplace" />
+		<antTask eclipseRuntime="false" class="org.kalypso.ui.ant.GetFileTask" headless="false" library="lib/anttasks.jar" name="kalypso.getFileTask" />
+		<antTask class="org.kalypso.ui.ant.ThiessenWeightTask" headless="true" library="lib/anttasks.jar" name="kalypso.thiessenWeightTask" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.MergeObservationTask" library="lib/anttasks.jar" name="kalypso.mergeObservation" />
+		<antTask eclipseRuntime="true" class="org.kalypso.ui.ant.ChangeGmlTask" library="lib/anttasks.jar" name="kalypso.changeGml" />
    </extension>
    <extension
          point="org.eclipse.core.variables.dynamicVariables">

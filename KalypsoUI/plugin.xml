@@ -181,21 +181,6 @@
 		<perspective name="%org.kalypso.ui.perspectives.ModelerPerspectiveFactory" icon="icons/perspective/expert.gif" fixed="false" class="org.kalypso.ui.perspectives.ModelerPerspectiveFactory" id="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
 		</perspective>
 	</extension>
-	<extension point="org.eclipse.ant.core.antTasks">
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.CopyObservationTask" library="lib/kalypsoAnt.jar" name="kalypso.copyObservation" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.GmlPropertyTask" library="lib/kalypsoAnt.jar" name="kalypso.gmlProperty" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.KrigingTask" library="lib/kalypsoAnt.jar" name="kalypso.kriging" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.GMLWeightingTask" library="lib/kalypsoAnt.jar" name="kalypso.gmlWeight" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.CommitObservationsTask" library="lib/kalypsoAnt.jar" name="kalypso.commitPrognoses" />
-		<antTask class="org.kalypso.ant.MultiEqualsTask" library="lib/kalypsoAnt.jar" name="kalypso.multiequals" />
-		<antTask class="org.kalypso.ant.MapZmlMeta2FeatureTask" library="lib/kalypsoAnt.jar" name="kalypso.mapZmlMeta2Feature" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.FetchFromURLsTask" library="lib/kalypsoAnt.jar" name="Kalypso.fetchFromURL" />
-		<antTask class="org.kalypso.ant.PropertyReplaceTask" headless="true" library="lib/kalypsoAnt.jar" name="kalypso.propertyReplace" />
-		<antTask eclipseRuntime="false" class="org.kalypso.ant.GetFileTask" headless="false" library="lib/kalypsoAnt.jar" name="kalypso.getFileTask" />
-		<antTask class="org.kalypso.ant.ThiessenWeightTask" headless="true" library="lib/kalypsoAnt.jar" name="kalypso.thiessenWeightTask" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.MergeObservationTask" library="lib/kalypsoAnt.jar" name="kalypso.mergeObservation" />
-		<antTask eclipseRuntime="true" class="org.kalypso.ant.ChangeGmlTask" library="lib/kalypsoAnt.jar" name="kalypso.changeGml" />
-	</extension>
 	<extension id="repository.factories" name="repository.factories" point="org.kalypso.repository.factories">
 		<repository factory="org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory" name="%org.kalypso.ui.repository.factory.SWTZmlRepositoryFactory"/>
 	</extension>
