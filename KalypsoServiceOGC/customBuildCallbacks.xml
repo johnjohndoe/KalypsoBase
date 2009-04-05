@@ -5,18 +5,14 @@
 <project name="Build specific targets and properties" default="noDefault">
 
 	<!-- basedir must be the project in order to let this script work -->
-	<property name="project" value="${basedir}" />
-	<property name="gen.srcbind" value="${project}/srcbind" />
+	<property name="gen.srcbind" value="srcbind" />
 
-	<patternset id="binding.schemata">
-		<include name="etc/schemas/ows/1.0.0/*.xsd" />
-		<include name="etc/schemas/ows/1.1.0/*.xsd" />		
-		<include name="etc/schemas/wps/0.4.0/*.xsd" />
-		<include name="etc/schemas/wps/1.0.0/*.xsd" />
-	</patternset>	
-	<property name="xjc-args" value="-nv" />
+	<fileset id="binding.fileset" dir="${basedir}">
+		<include name="etc/binding/ows/1.0.0/*.xsd" />
+		<include name="etc/binding/ows/1.1.0/*.xsd" />
+	</fileset>
 	
-	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
+	<import file="../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->

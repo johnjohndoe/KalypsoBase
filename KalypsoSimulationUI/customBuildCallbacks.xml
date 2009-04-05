@@ -5,23 +5,21 @@
 <project name="Build specific targets and properties" default="noDefault">
 
 	<!-- basedir must be the project in order to let this script work -->
-	<property name="project" value="${basedir}" />
-	<property name="gen.srcbind" value="${project}/srcbind" />
+	<property name="gen.srcbind" value="srcbind" />
 
-	<patternset id="binding.schemata">
-		<include name="etc/binding/ows/1.0.0/*.xsd" />
-		<include name="etc/binding/ows/1.1.0/*.xsd" />
-	</patternset>
-	
-	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
-	
+	<fileset id="binding.fileset" dir="${basedir}">
+		<include name="etc/schemas/*.xsd" />
+	</fileset>
+
+	<import file="../KalypsoBuild/common-binding/build_callbacks.xml" />
+
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
 	<target name="noDefault">
 		<echo message="This file must be called with explicit targets" />
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.jars                              -->
 	<!-- Available parameters :                                                -->
@@ -37,7 +35,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.sources                           -->
 	<!-- Available parameters :                                                -->
@@ -67,7 +65,7 @@
 	</target>
 
 	<target name="pre.@dot">
-		<antcall target="generate"/>
+		<antcall target="generate" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -85,7 +83,7 @@
 
 	<target name="post.compile.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the compilation target <name>                       -->
 	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
@@ -99,7 +97,7 @@
 
 	<target name="post.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -147,7 +145,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="post.gather.logs">       
+	<target name="post.gather.logs">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -155,8 +153,8 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">     
-		<antcall target="clean"/>
+	<target name="pre.clean">
+		<antcall target="clean" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -166,6 +164,6 @@
 	<!--   build.result.folder - results of the compilation                    -->
 	<!--   temp.folder - temporary folder                                      -->
 	<!-- ===================================================================== -->
-	<target name="post.clean">             
+	<target name="post.clean">
 	</target>
 </project>
