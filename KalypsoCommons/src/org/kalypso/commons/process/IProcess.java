@@ -43,7 +43,6 @@ package org.kalypso.commons.process;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.Map;
 
 import org.eclipse.core.runtime.OperationCanceledException;
