@@ -78,7 +78,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   /**
    * List of check state listeners (element type: <code>ICheckStateListener</code>).
    */
-  private ListenerList m_checkStateListeners = new ListenerList( 3 );
+  private final ListenerList m_checkStateListeners = new ListenerList( 3 );
 
   private final TableSorter m_tableSorter = new TableSorter( new IViewerSorterFactory()
   {
@@ -102,7 +102,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     init( markedCalcCase );
   }
 
-  public CalcCaseTableTreeViewer( final IFolder markedCalcCase, final Composite parent, int style )
+  public CalcCaseTableTreeViewer( final IFolder markedCalcCase, final Composite parent, final int style )
   {
     super( parent, style );
 
@@ -150,7 +150,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
      *      java.lang.Object)
      */
     @Override
-    public int compare( Viewer viewer, Object e1, Object e2 )
+    public int compare( final Viewer viewer, final Object e1, final Object e2 )
     {
       if( e1 instanceof IFolder && e2 instanceof IFolder )
       {
@@ -182,13 +182,13 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
    * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
    */
   @Override
-  protected void inputChanged( Object input, Object oldInput )
+  protected void inputChanged( final Object input, final Object oldInput )
   {
     super.inputChanged( input, oldInput );
 
     final TableColumn[] columns = getTableTree().getTable().getColumns();
-    for( int i = 0; i < columns.length; i++ )
-      columns[i].pack();
+    for( final TableColumn column : columns )
+      column.pack();
   }
 
   /**
@@ -202,7 +202,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   /**
    * @see org.eclipse.jface.viewers.ICheckable#getChecked(java.lang.Object)
    */
-  public boolean getChecked( Object element )
+  public boolean getChecked( final Object element )
   {
     final Widget widget = findItem( element );
     if( widget instanceof TableTreeItem )
@@ -225,9 +225,8 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
   {
     final TableTreeItem[] children = getTableTree().getItems();
     final ArrayList<Object> v = new ArrayList<Object>( children.length );
-    for( int i = 0; i < children.length; i++ )
+    for( final TableTreeItem item : children )
     {
-      final TableTreeItem item = children[i];
       if( item.getChecked() )
         v.add( item.getData() );
     }
@@ -295,7 +294,7 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
    * @see org.eclipse.jface.viewers.StructuredViewer#handleSelect(org.eclipse.swt.events.SelectionEvent)
    */
   @Override
-  public void handleSelect( SelectionEvent event )
+  public void handleSelect( final SelectionEvent event )
   {
     if( event.detail == SWT.CHECK )
     {
@@ -321,10 +320,10 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
    */
   private void fireCheckStateChanged( final CheckStateChangedEvent event )
   {
-    Object[] array = m_checkStateListeners.getListeners();
-    for( int i = 0; i < array.length; i++ )
+    final Object[] array = m_checkStateListeners.getListeners();
+    for( final Object element : array )
     {
-      final ICheckStateListener l = (ICheckStateListener)array[i];
+      final ICheckStateListener l = (ICheckStateListener)element;
       Platform.run( new SafeRunnable()
       {
         public void run()
@@ -339,15 +338,14 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
    * (non-Javadoc) Method declared on Viewer.
    */
   @Override
-  protected void preservingSelection( Runnable updateCode )
+  protected void preservingSelection( final Runnable updateCode )
   {
     final TableTreeItem[] children = getTableTree().getItems();
-    final Hashtable checked = new Hashtable( children.length * 2 + 1 );
+    final Hashtable<Object, Object> checked = new Hashtable<Object, Object>( children.length * 2 + 1 );
     //  	Hashtable grayed = new Hashtable(children.length*2+1);
 
-    for( int i = 0; i < children.length; i++ )
+    for( final TableTreeItem item : children )
     {
-      final TableTreeItem item = children[i];
       final Object data = item.getData();
       if( data != null )
       {
@@ -361,9 +359,8 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     super.preservingSelection( updateCode );
 
     final TableTreeItem[] newChildren = getTableTree().getItems();
-    for( int i = 0; i < newChildren.length; i++ )
+    for( final TableTreeItem item : newChildren )
     {
-      final TableTreeItem item = newChildren[i];
       final Object data = item.getData();
       if( data != null )
       {
