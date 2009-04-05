@@ -28,8 +28,10 @@ public class JUnitTest_CalculationChain extends TestCase
     /*
      * NA calculation; uses model-defined (default) model data specification
      */
-    final IContainer calcCaseNA = ResourcesPlugin.getWorkspace().getRoot().getProject( "01-Kollau-NA-PlanerClient" ).getFolder( "Rechenvarianten/kz-2002_10_26" );
-    final CalculationChainMemberJobSpecification jobSpecification_NA = new CalculationChainMemberJobSpecification( "KalypsoNA", calcCaseNA );
+// final IContainer calcCaseNA = ResourcesPlugin.getWorkspace().getRoot().getProject( "01-Kollau-NA-PlanerClient"
+    // ).getFolder( "Rechenvarianten/kz-2002_10_26" );
+// final CalculationChainMemberJobSpecification jobSpecification_NA = new CalculationChainMemberJobSpecification(
+    // "KalypsoNA", calcCaseNA );
 // jobSpecificationList.add(jobSpecification_NA);
 
     /*
@@ -70,7 +72,8 @@ public class JUnitTest_CalculationChain extends TestCase
      * FM calculation; uses model-defined (default) model data specification
      */
     // calcCaseFM we already have...
-    final CalculationChainMemberJobSpecification jobSpecification_FM = new CalculationChainMemberJobSpecification( "KalypsoFloodSimulation", calcCaseFM );
+// final CalculationChainMemberJobSpecification jobSpecification_FM = new CalculationChainMemberJobSpecification(
+    // "KalypsoFloodSimulation", calcCaseFM );
     // jobSpecificationList.add(jobSpecification_FM);
 
     /*
@@ -89,7 +92,8 @@ public class JUnitTest_CalculationChain extends TestCase
      * RM calculation; uses model-defined (default) model data specification
      */
     // calcCaseRM we already have...
-    final CalculationChainMemberJobSpecification jobSpecification_RM = new CalculationChainMemberJobSpecification( "KalypsoRisk_RiskZonesCalculation", calcCaseRM );
+// final CalculationChainMemberJobSpecification jobSpecification_RM = new CalculationChainMemberJobSpecification(
+    // "KalypsoRisk_RiskZonesCalculation", calcCaseRM );
     // jobSpecificationList.add(jobSpecification_RM);
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
