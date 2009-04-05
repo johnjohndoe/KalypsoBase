@@ -266,4 +266,10 @@
             id="org.kalypso.simulation.ui.logview.views.LogViewer"
             name="Log Ansicht"/>
    </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/anttasks.jar">
+      </extraClasspathEntry>
+   </extension>
 </plugin>
