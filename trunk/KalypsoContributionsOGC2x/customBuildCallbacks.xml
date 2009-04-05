@@ -5,14 +5,13 @@
 <project name="Build specific targets and properties" default="noDefault">
 
 	<!-- basedir must be the project in order to let this script work -->
-	<property name="project" value="${basedir}" />
-	<property name="gen.srcbind" value="${project}/srcbind" />
+	<property name="gen.srcbind" value="srcbind" />
 
-	<patternset id="binding.schemata">
-		<include name="etc/schemas/generated/**/*.xsd" />
-	</patternset>
-
-	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
+	<fileset id="binding.fileset" dir="${basedir}">
+		<include name="etc/schemas/original/**/*.xsd" />
+	</fileset>
+	
+	<import file="../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
@@ -66,27 +65,6 @@
 	</target>
 
 	<target name="pre.@dot">
-		<mkdir dir="etc/schemas/generated"/>
-		<delete>
-			<fileset dir="etc/schemas/generated">
-    			<include name="**/*.xsd"/>
-			</fileset>
-		</delete>
-		<!-- TODO: check if this generation process is really needed. Probabyl we jsut need some binding-options -->
-		<xslt style="etc/schemas/generateSchemas.xsl" destdir="etc/schemas/generated" basedir="src/org/kalypso/contribs/ogc31/schemata" extension=".xsd" >
-		    <include name="*.xsd"/>
-		    <include name="filter/**/*.xsd"/>
-		    <include name="gml/**/*.xsd"/>
-		    <include name="iso19139/**/*.xsd"/>
-		    <!--include name="kalypso/**/*.xsd"/-->
-		    <!--include name="om/**/*.xsd"/-->
-			<include name="ows/**/*.xsd"/>
-			<include name="sweCommon/**/*.xsd"/>
-		    <include name="wfs/**/*.xsd"/>
-		    <include name="xlink/**/*.xsd"/>
-		    <!--include name="xsd/**/*.xsd"/-->
-		</xslt>
-		
 		<antcall target="generate"/>
 	</target>
 
@@ -175,12 +153,8 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">              
+	<target name="pre.clean">     
 		<antcall target="clean"/>
-
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="etc/schemas/generated" includes="**/*" />
-		</delete>
 	</target>
 
 	<!-- ===================================================================== -->

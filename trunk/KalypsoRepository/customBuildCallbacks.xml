@@ -5,14 +5,13 @@
 <project name="Build specific targets and properties" default="noDefault">
 
 	<!-- basedir must be the project in order to let this script work -->
-	<property name="project" value="${basedir}" />
-	<property name="gen.srcbind" value="${project}/srcbind" />
+	<property name="gen.srcbind" value="srcbind" />
 
-    <patternset id="binding.schemata">
-      <include name="etc/schemas/**/*.xsd"/>
-    </patternset>
+	<fileset id="binding.fileset" dir="${basedir}">
+	   <include name="etc/xmlbinding/**/*.xsd"/>
+	</fileset>
 	
-	<import file="${project}/../KalypsoBuild/common-binding/build_callbacks.xml" />
+	<import file="../KalypsoBuild/common-binding/build_callbacks.xml" />
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
