@@ -113,14 +113,10 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   {
     final Object input = m_inputList.get( id );
     if( input == null )
-    {
       throw new SimulationException( "Input not available with the ID: " + id, null );
-    }
 
     if( input instanceof ComplexValueType )
-    {
       return parseComplexValue( (ComplexValueType) input );
-    }
     else if( input instanceof LiteralValueType )
     {
       final LiteralValueType literalValue = (LiteralValueType) input;
@@ -175,11 +171,10 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     final String mimeType = complexValue.getFormat();
     final List<Object> content = complexValue.getContent();
     if( content.size() == 0 )
-    {
       return null;
-    }
 
     final String textContent = (String) content.get( 0 );
+
     // distinguish by mime type, default to binary
     if( TYPE_GML.equals( mimeType ) )
     {
@@ -201,8 +196,10 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         // parse as hexBinary
         // TODO: why not base64 encoded byte[]?
         final byte[] bytes = DatatypeConverter.parseHexBinary( textContent );
+
         final File file = FileUtilities.createNewUniqueFile( "complexValue_", FileUtilities.TMP_DIR );
         FileUtils.writeByteArrayToFile( file, bytes );
+
         return file.toURI().toURL();
       }
       catch( final IOException e )
