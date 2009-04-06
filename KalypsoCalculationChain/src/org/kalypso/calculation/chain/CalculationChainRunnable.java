@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -71,7 +72,11 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
         {
           System.out.println( jobSpecification.getCalculationTypeID() + " started..." );
           final IPath path = jobSpecification.getContainer();
-          final IContainer container = ResourcesPlugin.getWorkspace().getRoot().getFolder( path ); 
+          
+          
+          final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( path );
+          final IContainer container = (IContainer) resource; 
+          
           if( jobSpecification.useAntLauncher() )
           {
             final ModelNature nature = (ModelNature) container.getProject().getNature( ModelNature.ID );
