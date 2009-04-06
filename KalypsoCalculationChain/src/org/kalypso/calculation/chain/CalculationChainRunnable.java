@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -67,21 +70,23 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
         if( status.isOK() )
         {
           System.out.println( jobSpecification.getCalculationTypeID() + " started..." );
+          final IPath path = jobSpecification.getContainer();
+          final IContainer container = ResourcesPlugin.getWorkspace().getRoot().getFolder( path ); 
           if( jobSpecification.useAntLauncher() )
           {
-            final ModelNature nature = (ModelNature) jobSpecification.getContainer().getProject().getNature( ModelNature.ID );
-            status = nature.launchAnt( "Progress text", "calc", jobSpecification.getAntProperties(), jobSpecification.getContainer(), monitor );
+            final ModelNature nature = (ModelNature) container.getProject().getNature( ModelNature.ID );
+            status = nature.launchAnt( "Progress text", "calc", jobSpecification.getAntProperties(), container, monitor );
           }
           else
           {
             if( jobSpecification.useDefaultModelspec() )
             {
-              final ModelNature nature = (ModelNature) jobSpecification.getContainer().getProject().getNature( ModelNature.ID );
-              status = nature.runCalculation( jobSpecification.getContainer(), monitor );
+              final ModelNature nature = (ModelNature) container.getProject().getNature( ModelNature.ID );
+              status = nature.runCalculation( container, monitor );
             }
             else
             {
-              status = ModelNature.runCalculation( jobSpecification.getContainer(), monitor, jobSpecification.getModeldata() );
+              status = ModelNature.runCalculation( container, monitor, jobSpecification.getModeldata() );
             }
           }
           System.out.println( jobSpecification.getCalculationTypeID() + " finished, status: " + (status.isOK() ? "OK" : "NOT OK") );

@@ -6,9 +6,6 @@ import java.net.URL;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -89,58 +86,34 @@ public class CalculationChainMember extends Feature_Impl implements ICalculation
   }
 
   @Override
-  public IContainer getCalculationCaseFolder( ) throws URIException, MalformedURLException
+  public IPath getCalculationCaseFolder( ) throws URIException, MalformedURLException
   {
     final Object property = getProperty( QNAME_PROP_CALCULATION_CASE_FOLDER );
     if( property instanceof String )
     {
       final String encodedUrl = (String) property;
-
+      final String decodedUrl = URIUtil.decode( encodedUrl );
       IPath path;
+      
       if( encodedUrl.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
       {
-        path = ResourceUtilities.findPathFromURL( new URL( encodedUrl ) );
+        path = ResourceUtilities.findPathFromURL( new URL( decodedUrl ) );
       }
       else
       {
-// String url = URIUtil.decode( encodedUrl );
-        path = new Path( encodedUrl );
+        path = new Path( decodedUrl );
       }
 
-      try
-      {
-        final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
-        if( !folder.exists() )
-          throw new IllegalStateException();
-
-        return folder;
-      }
-      catch( final IllegalArgumentException e )
-      {
-        
-        return ResourcesPlugin.getWorkspace().getRoot().getProject( path.toString() );
-      }
+      return path;
     }
 
     return null;
   }
 
   @Override
-  public void setCalculationCaseFolder( final IContainer container ) throws URIException
+  public void setCalculationCaseFolder( final IPath path ) throws URIException
   {
-    final String portableString = container.getFullPath().toPortableString();
-    final String path;
-    if( !portableString.startsWith( "platform:/resource/" ) )
-    {
-      path = String.format( "platform:/resource/%s", portableString );
-    }
-    else
-    {
-      path = portableString;
-    }
-
-    final String encodedPath = URIUtil.encodePath( path );
-
+    final String encodedPath = URIUtil.encodePath( path.toOSString() );
     setProperty( QNAME_PROP_CALCULATION_CASE_FOLDER, encodedPath );
   }
 

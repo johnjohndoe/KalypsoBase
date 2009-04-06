@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
@@ -21,9 +21,9 @@ public class CalculationChainMemberJobSpecification
 
   private final List<Output> m_outputList = new ArrayList<Output>();
 
-  private final IContainer m_container;
+  private final IPath m_container;
 
-  public CalculationChainMemberJobSpecification( final String calculationTypeID, final IContainer container )
+  public CalculationChainMemberJobSpecification( final String calculationTypeID, final IPath container )
   {
     m_calculationTypeID = calculationTypeID;
     m_container = container;
@@ -72,7 +72,7 @@ public class CalculationChainMemberJobSpecification
     return m_calculationTypeID;
   }
 
-  public IContainer getContainer( )
+  public IPath getContainer( )
   {
     return m_container;
   }
