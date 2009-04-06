@@ -203,7 +203,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         final byte[] bytes = DatatypeConverter.parseHexBinary( textContent );
         final File file = FileUtilities.createNewUniqueFile( "complexValue_", FileUtilities.TMP_DIR );
         FileUtils.writeByteArrayToFile( file, bytes );
-        return file.toURI();
+        return file.toURI().toURL();
       }
       catch( final IOException e )
       {
