@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="LiteralsV1.0">
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="LiteralsV1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!-- Input -->
   <input id="INPUT_LITERAL" path="" relativeToCalcCase="false" />
 
