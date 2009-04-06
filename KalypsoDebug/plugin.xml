@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Kalypso Debug"
+            id="org.kalypso.view.debug"/>
+      <view
+            allowMultiple="false"
+            class="org.kalypso.debug.view.PoolView"
+            category="org.kalypso.view.debug"
+            name="Resource Pool"
+            id="org.kalypso.debug.view.pool"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            launcher="org.kalypso.debug.editor.GmlConvertLauncher"
+            default="false"
+            name="GML Converter"
+            id="org.kalypso.debug.editor.gmlconvert"
+            extensions="gmc"/>
+   </extension>
+   <extension
+         point="org.kalypso.core.obsManipulator">
+      <obsManipulator class="org.kalypso.debug.zml.SimpleWQTableObsManipulator"/>
+   </extension>
+</plugin>
