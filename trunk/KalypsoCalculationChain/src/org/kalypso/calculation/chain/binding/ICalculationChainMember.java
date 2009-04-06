@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.httpclient.URIException;
-import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.calculation.chain.ModelConnectorUrlCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -46,7 +46,7 @@ public interface ICalculationChainMember extends Feature, Comparable<ICalculatio
 
   public void setUseAntLauncher( final boolean value );
   
-  public IContainer getCalculationCaseFolder( ) throws URIException, MalformedURLException;
+  public IPath getCalculationCaseFolder( ) throws URIException, MalformedURLException;
 
-  public void setCalculationCaseFolder( IContainer container ) throws URIException;
+  public void setCalculationCaseFolder( IPath container ) throws URIException;
 }
