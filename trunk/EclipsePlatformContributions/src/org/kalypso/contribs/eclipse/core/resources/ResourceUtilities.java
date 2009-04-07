@@ -109,13 +109,14 @@ public class ResourceUtilities
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
    *
-   * @return A Java-File representing the resource.
+   * @return A Java-File representing the resource, or null if file does not exists.
    */
   public static File makeFileFromPath( final IPath resource )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile file = root.getFile( resource );
-    return file.getLocation().toFile();
+    final IPath location = file.getLocation();
+    return location != null ? location.toFile() : null;
   }
 
   public static File makeFileFromPath2( final IPath resource )
@@ -246,12 +247,13 @@ public class ResourceUtilities
   }
 
   /**
-   * This function tries to construct an Eclipse-File from a path with a relative path to the workspace.<br/> <br/>
+   * This function tries to construct an Eclipse-File from a path with a relative path to the workspace.<br/>
+   * <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
    *
    * @param path
-   *            The path of the file. It must be relative to the workspace.
+   *          The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
    */
   public static IFile getFileFromPath( final IPath path )
@@ -282,7 +284,7 @@ public class ResourceUtilities
    * Returns all children of the given container.
    *
    * @param depth
-   *            See {@link org.eclipse.core.resources.IResource}
+   *          See {@link org.eclipse.core.resources.IResource}
    */
   public static IFile[] getChildren( final IContainer container, final int depth ) throws CoreException
   {
@@ -297,7 +299,7 @@ public class ResourceUtilities
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
    *
    * @param depth
-   *            See {@link org.eclipse.core.resources.IResource}
+   *          See {@link org.eclipse.core.resources.IResource}
    */
   public static IFile[] getChildrenQuiet( final IContainer container, final int depth )
   {
@@ -320,9 +322,9 @@ public class ResourceUtilities
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
    *
    * @param depth
-   *            See {@link org.eclipse.core.resources.IResource}
+   *          See {@link org.eclipse.core.resources.IResource}
    * @param extension
-   *            the extension
+   *          the extension
    */
   public static IFile[] getChildrenWithExtensionQuiet( final IContainer container, final int depth, final String extension )
   {

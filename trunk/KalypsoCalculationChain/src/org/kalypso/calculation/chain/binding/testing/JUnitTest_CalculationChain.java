@@ -41,9 +41,10 @@ public class JUnitTest_CalculationChain extends TestCase
     
     final CalculationChainMemberJobSpecification jobSpecification_NA_WSPM = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_NA_WSPM", calcCaseWSPM.getFullPath() );
     jobSpecification_NA_WSPM.addInput( "NA_Model", "platform:/resource//01-Kollau-NA-PlanerClient/modell.gml", false );
+    jobSpecification_NA_WSPM.addInput( "NA_ControlModel", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/.calculation", false );
     jobSpecification_NA_WSPM.addInput( "NA_StatisticalReport", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/Ergebnisse/Aktuell/Reports/nodesMax.zml", false );
     jobSpecification_NA_WSPM.addInput( "NA_RiverCode", "" );
-    jobSpecification_NA_WSPM.addInput( "WSPM_RunoffEventID", "RunOffEvent1234888262265697" );
+    jobSpecification_NA_WSPM.addInput( "WSPM_RunoffEventID", "RunOffEvent1228494901140881" );
     jobSpecification_NA_WSPM.addInput( "WSPM_Model", "modell.gml", true );
     jobSpecification_NA_WSPM.addOutput( "WSPM_Model", "modell.gml", true );
     jobSpecificationList.add( jobSpecification_NA_WSPM );
@@ -63,6 +64,8 @@ public class JUnitTest_CalculationChain extends TestCase
      */
     final IContainer calcCaseFM = ResourcesPlugin.getWorkspace().getRoot().getProject( "FM_FloodDemo" ).getFolder( "Basis" );
     final CalculationChainMemberJobSpecification jobSpecification_WSPM_FM = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_WSPM_FM", calcCaseFM.getFullPath() );
+    jobSpecification_WSPM_FM.addInput( "WSPM_Model", "platform:/resource//02-Kollau-1D-PlanerClient/modell.gml", false );
+    jobSpecification_WSPM_FM.addInput( "WSPM_RunoffEventID", "RunOffEvent1228494901140881" );
     jobSpecification_WSPM_FM.addInput( "WSPM_TinFile", "platform:/resource//02-Kollau-1D-PlanerClient/Ergebnisse/kollau-ist-HQ_5_neu/_aktuell/Daten/WspTin.gml", false );
     jobSpecification_WSPM_FM.addInput( "WSPM_TinReference", "platform:/resource//02-Kollau-1D-PlanerClient/Ergebnisse/kollau-ist-HQ_5_neu/_aktuell/Daten/WspTin.gml" );
     jobSpecification_WSPM_FM.addInput( "FM_Model", "models/flood.gml", true );
