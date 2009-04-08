@@ -57,7 +57,7 @@ import org.osgi.framework.Bundle;
  */
 public class TriggerHelper
 {
-  public static final String COMMON_FOLDER = "common";
+  private static final String COMMON_FOLDER = "common";
 
   public static void handleBean( final KalypsoProjectBean bean, final IConfigurationElement element ) throws Exception
   {

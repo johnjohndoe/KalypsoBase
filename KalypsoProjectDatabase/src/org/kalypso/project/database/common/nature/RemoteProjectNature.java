@@ -46,10 +46,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.kalypso.project.database.KalypsoProjectDatabase;
 
 /**
  * ProjectNature of remote Kalypso Projects
@@ -65,29 +63,9 @@ public class RemoteProjectNature implements IProjectNature
 
   public static final String NATURE_ID = "org.kalypso.project.database.project.nature";
 
-  public static final String PREFERENCES = "org.kalypso.project.database";
+  private static final String PREFERENCES = "org.kalypso.project.database";
 
-  IProject m_project = null;
-
-  /**
-   * This function returns the nature of the Planer-Client if the project is Planer-Client project.
-   * 
-   * @return The nature or null.
-   */
-  public static RemoteProjectNature getNature( final IProject project )
-  {
-    try
-    {
-      return (RemoteProjectNature) project.getNature( NATURE_ID );
-    }
-    catch( final CoreException ex )
-    {
-      /* Log the error. */
-      KalypsoProjectDatabase.getDefault().getLog().log( ex.getStatus() );
-
-      return null;
-    }
-  }
+  private IProject m_project = null;
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()

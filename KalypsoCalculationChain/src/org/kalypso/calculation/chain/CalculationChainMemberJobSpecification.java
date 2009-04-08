@@ -1,5 +1,7 @@
 package org.kalypso.calculation.chain;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,9 +79,9 @@ public class CalculationChainMemberJobSpecification
     return m_container;
   }
 
-  public Modeldata getModeldata( )
-  {
-    return SimulationUtilitites.createModelData( m_calculationTypeID, m_inputList, m_outputList );
+  public Modeldata getModeldata( final URL context ) throws MalformedURLException
+  { 
+    return SimulationUtilitites.createModelData( context, m_calculationTypeID, m_inputList, m_outputList );
   }
 
   public Map<String, Object> getAntProperties( )

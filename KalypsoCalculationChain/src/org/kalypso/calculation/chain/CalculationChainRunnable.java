@@ -1,6 +1,7 @@
 package org.kalypso.calculation.chain;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +30,18 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
   private CHAIN_STATUS m_chainStatus;
 
-  public CalculationChainRunnable( )
+  private final URL m_context;
+
+  public CalculationChainRunnable( final URL context )
   {
+    m_context = context;
+    
     m_chainStatus = CHAIN_STATUS.INIT;
   }
 
-  public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList )
+  public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList, final URL context )
   {
-    this();
+    this( context );
     m_jobSpecificationList.addAll( jobSpecificationList );
   }
 
@@ -91,7 +96,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
             }
             else
             {
-              status = ModelNature.runCalculation( container, monitor, jobSpecification.getModeldata() );
+              status = ModelNature.runCalculation( container, monitor, jobSpecification.getModeldata( m_context ) );
             }
           }
           System.out.println( jobSpecification.getCalculationTypeID() + " finished, status: " + (status.isOK() ? "OK" : "NOT OK") );

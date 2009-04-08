@@ -89,7 +89,7 @@ public class ProjectDatabase implements IProjectDatabase
     FACTORY = configure.buildSessionFactory();
   }
 
-  public void dispose( )
+  public void dispose( ) // NO_UCD
   {
     if( FACTORY != null )
     {

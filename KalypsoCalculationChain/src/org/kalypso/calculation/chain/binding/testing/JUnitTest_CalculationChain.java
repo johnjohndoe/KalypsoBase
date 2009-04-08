@@ -1,6 +1,8 @@
 package org.kalypso.calculation.chain.binding.testing;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +102,18 @@ public class JUnitTest_CalculationChain extends TestCase
     // "KalypsoRisk_RiskZonesCalculation", calcCaseRM );
     // jobSpecificationList.add(jobSpecification_RM);
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final Shell shell = workbench.getDisplay().getActiveShell();
-    final CalculationChainRunnable chainRunnable = new CalculationChainRunnable( jobSpecificationList );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, chainRunnable );
+    try
+    {
+      final URI workspaceUri = ResourcesPlugin.getWorkspace().getRoot().getLocationURI();
+
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final Shell shell = workbench.getDisplay().getActiveShell();
+      final CalculationChainRunnable chainRunnable = new CalculationChainRunnable( jobSpecificationList, workspaceUri.toURL() );
+      RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, chainRunnable );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 }
