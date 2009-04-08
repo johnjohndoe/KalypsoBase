@@ -738,6 +738,30 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   // TODO: move this one to simulation plugins
   public static IStatus runCalculation( final IContainer calcCaseFolder, final IProgressMonitor monitor, final Modeldata modelspec ) throws CoreException
   {
+    /**
+     * FIXME refactoring
+     * 
+     * <pre>
+     * 
+     * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
+     * runner.getSpec();
+     * 
+     * final String typeID = modeldata.getTypeID();
+     * 
+     * // Übersetzung modeldata -&gt; hashmap
+     * // - Ableich modelspec/modeldata
+     * 
+     * // modelspec -&gt; Map&lt;String, Object&gt;
+     * // - Literal: String, Double, Integer
+     * // - ComplexValueType: Feature/Image
+     * // - ComplexReferenceType: URL/URI
+     * 
+     * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
+     * 
+     * </pre>
+     */
+    
+    
     final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 1000 );
 
     try
