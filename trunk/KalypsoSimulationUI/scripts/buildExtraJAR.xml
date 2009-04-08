@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="org.eclipse.core.resources" default="main" basedir="..">
 
+	<!-- This scripts build the lib/anttaks.jar for developement. 
+		It is NOT used for the deployment, there the settings in the build.properties 
+		are configured to build this jar file.
+	-->
+	
 	<target name="main" depends="clean, buildAntJar">
 	</target>
 
@@ -18,7 +23,7 @@
 		<delete dir="${destdir}" />
 		<mkdir dir="${destdir}" />
 		<!-- compile the source code -->
-		<javac destdir="${destdir}" failonerror="true" verbose="true" source="1.6" target="1.6" encoding="ISO-8859-1">
+		<javac destdir="${destdir}" failonerror="true" verbose="true" source="1.6" target="1.6" debug="true" nowarn="true" encoding="ISO-8859-1">
 			<classpath>
 				<dirset dir="${basedir}/..">
 					<include name="JavaApiContributions/build/bin" />
