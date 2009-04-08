@@ -30,17 +30,15 @@ public class JUnitTest_CalculationChain extends TestCase
     /*
      * NA calculation; uses model-defined (default) model data specification
      */
-// final IContainer calcCaseNA = ResourcesPlugin.getWorkspace().getRoot().getProject( "01-Kollau-NA-PlanerClient"
-    // ).getFolder( "Rechenvarianten/kz-2002_10_26" );
-// final CalculationChainMemberJobSpecification jobSpecification_NA = new CalculationChainMemberJobSpecification(
-    // "KalypsoNA", calcCaseNA );
-// jobSpecificationList.add(jobSpecification_NA);
+    final IContainer calcCaseNA = ResourcesPlugin.getWorkspace().getRoot().getProject( "01-Kollau-NA-PlanerClient" ).getFolder( "Rechenvarianten/kz-2002_10_26" );
+    final CalculationChainMemberJobSpecification jobSpecification_NA = new CalculationChainMemberJobSpecification( "KalypsoNA", calcCaseNA.getFullPath() );
+    jobSpecificationList.add( jobSpecification_NA );
 
     /*
      * NA - WSPM connector; defines custom model data specification
      */
     final IProject calcCaseWSPM = ResourcesPlugin.getWorkspace().getRoot().getProject( "02-Kollau-1D-PlanerClient" );
-    
+
     final CalculationChainMemberJobSpecification jobSpecification_NA_WSPM = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_NA_WSPM", calcCaseWSPM.getFullPath() );
     jobSpecification_NA_WSPM.addInput( "NA_Model", "platform:/resource//01-Kollau-NA-PlanerClient/modell.gml", false );
     jobSpecification_NA_WSPM.addInput( "NA_ControlModel", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/.calculation", false );
@@ -59,7 +57,7 @@ public class JUnitTest_CalculationChain extends TestCase
     jobSpecification_WSPM.setAntLauncher( true );
     jobSpecification_WSPM.addInput( "calc.xpath", "id( 'CalculationWspmTuhhSteadyState123488821975039' )" );
     jobSpecification_WSPM.addInput( "result.path", "Ergebnisse/kollau-ist-HQ_5_neu" );
-// jobSpecificationList.add(jobSpecification_WSPM);
+    jobSpecificationList.add( jobSpecification_WSPM );
 
     /*
      * WSPM - FM connector; defines custom model data specification
@@ -72,16 +70,14 @@ public class JUnitTest_CalculationChain extends TestCase
     jobSpecification_WSPM_FM.addInput( "WSPM_TinReference", "platform:/resource//02-Kollau-1D-PlanerClient/Ergebnisse/kollau-ist-HQ_5_neu/_aktuell/Daten/WspTin.gml" );
     jobSpecification_WSPM_FM.addInput( "FM_Model", "models/flood.gml", true );
     jobSpecification_WSPM_FM.addOutput( "FM_Model", "models/flood.gml", true );
-    // jobSpecificationList.add(jobSpecification_WSPM_FM);
+    jobSpecificationList.add( jobSpecification_WSPM_FM );
 
     /*
      * FM calculation; uses model-defined (default) model data specification
      */
     // calcCaseFM we already have...
-// final CalculationChainMemberJobSpecification jobSpecification_FM = new CalculationChainMemberJobSpecification(
-    // "KalypsoFloodSimulation", calcCaseFM );
-    // jobSpecificationList.add(jobSpecification_FM);
-
+    final CalculationChainMemberJobSpecification jobSpecification_FM = new CalculationChainMemberJobSpecification( "KalypsoFloodSimulation", calcCaseFM.getFullPath() );
+    jobSpecificationList.add( jobSpecification_FM );
     /*
      * FM - RM connector; defines custom model data specification
      */
@@ -98,10 +94,12 @@ public class JUnitTest_CalculationChain extends TestCase
      * RM calculation; uses model-defined (default) model data specification
      */
     // calcCaseRM we already have...
-// final CalculationChainMemberJobSpecification jobSpecification_RM = new CalculationChainMemberJobSpecification(
-    // "KalypsoRisk_RiskZonesCalculation", calcCaseRM );
-    // jobSpecificationList.add(jobSpecification_RM);
-
+    final CalculationChainMemberJobSpecification jobSpecification_RM1 = new CalculationChainMemberJobSpecification( "KalypsoRisk_SpecificDamageCalculation", calcCaseRM.getFullPath() );
+    jobSpecificationList.add( jobSpecification_RM1 );
+    final CalculationChainMemberJobSpecification jobSpecification_RM2 = new CalculationChainMemberJobSpecification( "KalypsoRisk_RiskZonesCalculation", calcCaseRM.getFullPath() );
+    jobSpecificationList.add( jobSpecification_RM2 );
+    
+    
     try
     {
       final URI workspaceUri = ResourcesPlugin.getWorkspace().getRoot().getLocationURI();
