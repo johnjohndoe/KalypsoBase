@@ -76,12 +76,10 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
   private void formatInternal( final String prefix, final String key, final String kind, final String val )
   {
-    if( val == null || key == null )
+    if( val == null || key == null || key == "" )//|| key.equals( val ) )
       return;
-//    if( val.equals( key ) )
-//      return;
-    if( key != "" )
-      m_properties.setProperty( prefix + "_" + key + "_" + kind, val );
+
+    m_properties.setProperty( prefix + "_" + key + "_" + kind, val );
   }
 
   /**
@@ -90,12 +88,15 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    m_properties.clear();
 
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     final GMLSchemaEditor editor = (GMLSchemaEditor) context.getVariable( ISources.ACTIVE_EDITOR_NAME );
 
     final IGMLSchema schema = editor.getSchema();
+
+    final String targetNamespace = schema.getTargetNamespace();
 
     final FileDialog dlg = new FileDialog( editor.getEditorSite().getShell(), SWT.SAVE );
 
@@ -122,62 +123,65 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     {
       final QName ftName = featureType.getQName();
       final String ftNamespaceURI = ftName.getNamespaceURI();
-      final String ftLocalPart = ftName.getLocalPart();
-      final String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
-      
-      final String nsURI = ftNamespaceURI.replace(':','_' );
-      final String nsURI2 = nsURI.replace('/','_' );
-      
-      m_properties.setProperty(nsURI2, ftPrefix );
-
-      final IAnnotation ftAnno = featureType.getAnnotation();
-      final String ftLabel = ftAnno.getLabel();
-      final String ftDescripion = ftAnno.getDescription();
-
-      formatInternal( ftPrefix, ftLocalPart, "label", ftLabel );
-      formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion );
-
-      final IPropertyType[] properties = featureType.getProperties();
-      for( final IPropertyType propertyType : properties )
+      if( ftNamespaceURI.equals( targetNamespace ) )
       {
-        final QName ptName = propertyType.getQName();
 
-        final IAnnotation pAnno = propertyType.getAnnotation();
+        final String ftLocalPart = ftName.getLocalPart();
+        final String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
 
-        final String pLabel = pAnno.getLabel();
-        final String pTooltip = pAnno.getTooltip();
-        final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ftPrefix;
+        final String nsURI = ftNamespaceURI.replace( ':', '_' );
+        final String nsURI2 = nsURI.replace( '/', '_' );
 
-        formatInternal( prefix, ptName.getLocalPart(), "label", pLabel );
-        formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip );
+        m_properties.setProperty( nsURI2, ftPrefix );
 
-        if( propertyType instanceof IValuePropertyType )
+        final IAnnotation ftAnno = featureType.getAnnotation();
+        final String ftLabel = ftAnno.getLabel();
+        final String ftDescripion = ftAnno.getDescription();
+
+        formatInternal( ftPrefix, ftLocalPart, "label", ftLabel );
+        formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion );
+
+        final IPropertyType[] properties = featureType.getProperties();
+        for( final IPropertyType propertyType : properties )
         {
-          final IValuePropertyType vpt = (IValuePropertyType) propertyType;
-          final IRestriction[] restrictions = vpt.getRestriction();
-          for( final IRestriction restriction : restrictions )
+          final QName ptName = propertyType.getQName();
+
+          final IAnnotation pAnno = propertyType.getAnnotation();
+
+          final String pLabel = pAnno.getLabel();
+          final String pTooltip = pAnno.getTooltip();
+          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ftPrefix;
+
+          formatInternal( prefix, ptName.getLocalPart(), "label", pLabel );
+          formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip );
+
+          if( propertyType instanceof IValuePropertyType )
           {
-            if( restriction instanceof EnumerationRestriction )
+            final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+            final IRestriction[] restrictions = vpt.getRestriction();
+            for( final IRestriction restriction : restrictions )
             {
-              final EnumerationRestriction enumRest = (EnumerationRestriction) restriction;
-              final Map<Object, IAnnotation> map = enumRest.getMapping();
-              for( final Object obj : map.keySet() )
+              if( restriction instanceof EnumerationRestriction )
               {
-                final String key = obj.toString();
-                final IAnnotation anno = map.get( obj );
-                final String aLabel = anno.getLabel();
-                final String aTooltip = anno.getTooltip();
-                final String enumPrefix = prefix + '_' + ptName.getLocalPart();
-                formatInternal( enumPrefix, key, "label", aLabel );
-                formatInternal( enumPrefix, key, "tooltip", aTooltip );
+                final EnumerationRestriction enumRest = (EnumerationRestriction) restriction;
+                final Map<Object, IAnnotation> map = enumRest.getMapping();
+                for( final Object obj : map.keySet() )
+                {
+                  final String key = obj.toString();
+                  final IAnnotation anno = map.get( obj );
+                  final String aLabel = anno.getLabel();
+                  final String aTooltip = anno.getTooltip();
+                  final String enumPrefix = prefix + '_' + ptName.getLocalPart();
+                  formatInternal( enumPrefix, key, "label", aLabel );
+                  formatInternal( enumPrefix, key, "tooltip", aTooltip );
+
+                }
 
               }
-
             }
           }
         }
       }
-
     }
     try
     {
