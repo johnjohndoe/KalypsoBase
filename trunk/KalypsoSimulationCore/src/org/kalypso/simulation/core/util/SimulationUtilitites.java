@@ -158,15 +158,15 @@ public class SimulationUtilitites
 
     final List<Input> inputList = modelData.getInput();
     final List<Output> outputList = modelData.getOutput();
-    
+
     for( final Input input : inputs )
     {
       if( !input.isRelativeToCalcCase() )
       {
-        final URL url = new URL( context, input.getPath() );
+        final URL url = new URL( context, input.getPath() ); 
         input.setPath( url.toExternalForm() );
       }
-      
+
       inputList.add( input );
     }
 
@@ -180,8 +180,7 @@ public class SimulationUtilitites
 
       outputList.add( output );
     }
-    
-    
+
     return modelData;
   }
 

@@ -68,7 +68,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   // TODO FIXME map name and version as primary key!
 
   @Transient
-  KalypsoProjectBean[] m_children;
+  private KalypsoProjectBean[] m_children;
 
   @Column(name = "project_name")
   private String m_name;
@@ -131,9 +131,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   {
     final String ticket = getEditLockTicket();
     if( ticket == null || "".equals( ticket.trim() ) )
-    {
       return false;
-    }
 
     return true;
   }

@@ -52,14 +52,10 @@ import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
-/**
- * @author kuch
- *
- */
-public class ProjectDatabaseHelper
+class ProjectDatabaseHelper
 {
 
-  public static String resolveDestinationUrl( final KalypsoProjectBean bean )
+  protected static String resolveDestinationUrl( final KalypsoProjectBean bean )
   {
     return ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
     {
@@ -71,7 +67,7 @@ public class ProjectDatabaseHelper
     }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
   }
 
-  public static Boolean removeBean( final Session session, final KalypsoProjectBean bean )
+  protected static Boolean removeBean( final Session session, final KalypsoProjectBean bean )
   {
     try
     {

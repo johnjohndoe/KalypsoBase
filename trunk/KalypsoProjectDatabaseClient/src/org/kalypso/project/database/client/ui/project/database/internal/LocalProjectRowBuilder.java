@@ -60,10 +60,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.i18n.Messages;
 
-/**
- * @author Dirk Kuch
- */
-public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
+class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 {
   public static Image IMG_LOCAL_COMMIT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) ); //$NON-NLS-1$
 

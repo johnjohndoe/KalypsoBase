@@ -46,12 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
-/**
- * Remote project settings of {@link org.eclipse.core.resources.IProjectNature} -> {@link RemoteProjectNature}
- * 
- * @author Dirk Kuch
- */
-public class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
+class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 {
   private static final String PROJECT_LOCK_TICKET = "project.lock";
 
@@ -67,7 +62,7 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 
   protected final IEclipsePreferences m_node;
 
-  public RemoteProjectPreferencesHandler( final IEclipsePreferences node )
+  protected RemoteProjectPreferencesHandler( final IEclipsePreferences node )
   {
     m_node = node;
   }
