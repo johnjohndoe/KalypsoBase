@@ -42,6 +42,8 @@ package org.kalypso.simulation.core.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +95,9 @@ public class SimulationUtilitites
       return;
 
     if( tmpDir != null )
+    {
       FileUtilities.deleteRecursive( tmpDir );
+    }
   }
 
   public static Modeldata createModelData( final Map<String, String> inputs, final Collection<String> outputs )
@@ -147,15 +151,37 @@ public class SimulationUtilitites
     return modelData;
   }
 
-  public static Modeldata createModelData( final String typeID, final List<Input> inputs, final List<Output> outputs )
+  public static Modeldata createModelData( final URL context, final String typeID, final List<Input> inputs, final List<Output> outputs ) throws MalformedURLException
   {
     final Modeldata modelData = OF.createModeldata();
     modelData.setTypeID( typeID );
 
     final List<Input> inputList = modelData.getInput();
     final List<Output> outputList = modelData.getOutput();
-    inputList.addAll( inputs );
-    outputList.addAll( outputs );
+    
+    for( final Input input : inputs )
+    {
+      if( !input.isRelativeToCalcCase() )
+      {
+        final URL url = new URL( context, input.getPath() );
+        input.setPath( url.toExternalForm() );
+      }
+      
+      inputList.add( input );
+    }
+
+    for( final Output output : outputs )
+    {
+      if( !output.isRelativeToCalcCase() )
+      {
+        final URL url = new URL( context, output.getPath() );
+        output.setPath( url.toExternalForm() );
+      }
+
+      outputList.add( output );
+    }
+    
+    
     return modelData;
   }
 
