@@ -136,7 +136,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
       final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
       lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-      if( preferences.isLocked() )
+      if( preferences != null && preferences.isLocked() )
       {
         lnk.setImage( IMG_LORE_LOCKED );
         lnk.setToolTipText( String.format( "Öffne Projekt: %s (Bearbeitungsmodus)", getLocalProject().getName() ) ); 
@@ -188,7 +188,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
   private void getChangeVersion( final Composite body, final FormToolkit toolkit ) throws CoreException
   {
     final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
-    if( preferences.isLocked() )
+    if( preferences != null && preferences.isLocked() )
     {
       final ImageHyperlink lnkChangeVersion = toolkit.createImageHyperlink( body, SWT.NONE );
       lnkChangeVersion.setImage( IMG_CHANGE_VERSION );
@@ -274,7 +274,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
   {
     final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
 
-    if( preferences.isLocked() )
+    if( preferences != null && preferences.isLocked() )
     {
       /* open project lock */
       if( ProjectDatabaseServerUtils.isServerOnline() )
@@ -288,7 +288,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
         lnkLock.setEnabled( false );
       }
     }
-    else if( getLocalProject().isModified() && !preferences.getChangesCommited() )
+    else if( preferences != null && getLocalProject().isModified() && !preferences.getChangesCommited() )
     {
       /* commit project */
       if( ProjectDatabaseServerUtils.isServerOnline() )
@@ -483,7 +483,14 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
     try
     {
       final Integer remoteVersion = m_transcendence.getBean().getProjectVersion();
-      final Integer localVersion = m_transcendence.getRemotePreferences().getVersion();
+      
+      final IRemoteProjectPreferences preferences = m_transcendence.getRemotePreferences();
+      Integer localVersion;
+
+      if( preferences == null )
+        localVersion = -1;
+      else
+        localVersion = m_transcendence.getRemotePreferences().getVersion();
 
       final ImageHyperlink lnkUpdate = toolkit.createImageHyperlink( body, SWT.NONE );
       lnkUpdate.setImage( IMG_LORE_UPDATEABLE );

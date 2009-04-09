@@ -62,6 +62,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 /**
  * @author Dirk Kuch
  */
+@SuppressWarnings("restriction")
 public class PageSelectExportDestination extends WizardPage
 {
   protected String m_sFile;

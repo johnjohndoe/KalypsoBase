@@ -43,11 +43,13 @@ package org.kalypso.project.database.client.core.project.create;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -158,26 +160,35 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
       // always commit - download of projects assert nature!
-      final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
-      if( nature instanceof RemoteProjectNature )
+      final KalypsoProjectBean bean = new KalypsoProjectBean();
+      bean.setName( project.getName() );
+      bean.setDescription( project.getName() );
+      bean.setUnixName( project.getName() ); // TODO generate unixName
+      bean.setProjectVersion( 0 );
+      bean.setProjectType( m_settings.getModuleCommitType() );
+
+      service.createProject( bean, myDestinationUrl );
+
+      new WorkspaceJob( "" )
       {
-        final RemoteProjectNature remote = (RemoteProjectNature) nature;
-        final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
 
-        final KalypsoProjectBean bean = new KalypsoProjectBean();
-        bean.setName( project.getName() );
-        bean.setDescription( project.getName() );
-        bean.setUnixName( project.getName() ); // TODO generate unixName
-        bean.setProjectVersion( 0 );
-        bean.setProjectType( m_settings.getModuleCommitType() );
+        @Override
+        public IStatus runInWorkspace( final IProgressMonitor m ) throws CoreException
+        {
+          final IProjectDescription description = project.getDescription();
+          description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
+          project.setDescription( description, m );
 
-        service.createProject( bean, myDestinationUrl );
+          final RemoteProjectNature remote = (RemoteProjectNature) project.getNature( RemoteProjectNature.NATURE_ID );
+          final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+          preferences.setVersion( 0 );
+          preferences.setIsOnServer( true );
+          preferences.setModified( false );
 
-        preferences.setVersion( 0 );
-        preferences.setIsOnServer( true );
-        preferences.setModified( false );
-      }
-
+          return Status.OK_STATUS;
+        }
+      }.schedule( 250 );
+      
       // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
       // file.close() reestablish this http-connection
       destination.close();
