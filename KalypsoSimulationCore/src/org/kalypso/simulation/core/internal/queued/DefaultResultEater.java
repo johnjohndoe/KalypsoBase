@@ -125,7 +125,7 @@ public class DefaultResultEater implements ISimulationResultEater
       {
         final File file = result.getFile();
         final String path = result.getPath();
-
+        
         // destination file is the file relative to the target folder
         final File targetRelativeFile = new File( targetFolder, path );
 

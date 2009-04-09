@@ -59,6 +59,7 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -98,7 +99,8 @@ public class CalcJobHandler
 
   private File m_zipFile = null;
 
-  private IProject m_project;
+  private IWorkspaceRoot m_root;
+
 
   public CalcJobHandler( final Modeldata modelspec, final ISimulationService calcService )
   {
@@ -179,8 +181,8 @@ public class CalcJobHandler
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
           // Ergebniss abholen
-          m_calcService.transferCurrentResults( m_project.getLocation().toFile(), m_jobID );
-          m_project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+          m_calcService.transferCurrentResults( m_root.getLocation().toFile(), m_jobID );
+          m_root.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
 
           final String finishText = jobBean.getFinishText();
           final String message = finishText == null ? "" : finishText;
@@ -329,7 +331,7 @@ public class CalcJobHandler
     ZipResourceVisitor zipper = null;
     try
     {
-      m_project = calcCaseFolder.getProject();
+      m_root = calcCaseFolder.getWorkspace().getRoot();
 
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Input input : inputList )
@@ -339,8 +341,6 @@ public class CalcJobHandler
         final SimulationDescription description = inputdescriptionMap.get( inputId );
         final QName inputType = description == null ? QNAME_ANY_URI : description.getType();
 
-        if( m_project == null && inputPath != null )
-          m_project = resolveProjectFromPath( calcCaseFolder, inputPath );
 
         final String beanValue;
         if( inputType.equals( QNAME_ANY_URI ) )
@@ -351,17 +351,16 @@ public class CalcJobHandler
           IResource inputResource;
           if( inputPath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
           {
-            final IContainer baseresource = m_project.getWorkspace().getRoot();
             final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
-            inputResource = baseresource.findMember( path );
+            inputResource = m_root.findMember( path );
             if( inputResource == null )
             {
-              inputResource = baseresource.findMember( URIUtil.decode( path ) );
+              inputResource = m_root.findMember( URIUtil.decode( path ) );
             }
           }
           else
           {
-            final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : m_project;
+            final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : m_root;
             inputResource = baseresource.findMember( inputPath );
           }
           if( inputResource == null )
@@ -417,21 +416,4 @@ public class CalcJobHandler
     }
   }
 
-  private IProject resolveProjectFromPath( final IContainer container, final String inputPath )
-  {
-    String myPath = inputPath;
-    while( myPath.contains( "\\" ) )
-    {
-      myPath = myPath.replace( "\\", "/" );
-    }
-    while( myPath.contains( "//" ) )
-    {
-      myPath = myPath.replace( "//", "/" );
-    }
-
-    final String[] splitted = myPath.split( "/" );
-    final IProject project = container.getWorkspace().getRoot().getProject( splitted[2] );
-
-    return project;
-  }
 }
