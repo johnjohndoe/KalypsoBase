@@ -118,7 +118,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
       img.setImage( IMG_SERVER_OK );
 
     }
-    else if( connectionState.getSeverity() == IStatus.WARNING )
+    else if( connectionState != null && connectionState.getSeverity() == IStatus.WARNING )
     {
       img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.4") ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_WAITING );

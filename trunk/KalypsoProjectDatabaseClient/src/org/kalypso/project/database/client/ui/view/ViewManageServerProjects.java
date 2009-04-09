@@ -118,6 +118,12 @@ public class ViewManageServerProjects extends ViewPart
     viewerType.setLabelProvider( new LabelProvider() );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    if( service == null )
+    {
+      toolkit.createLabel( m_body, "Project database is offline..." );
+      return;
+    }
+    
     final String[] types = service.getProjectTypes();
     
     viewerType.setInput( types );

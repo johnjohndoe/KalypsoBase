@@ -42,9 +42,12 @@ package org.kalypso.project.database.client.ui.project.database.internal;
 
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.window.Window;
@@ -128,6 +131,14 @@ public class RemoteProjectHelper
       {
         final IProject project = wizard.getNewProject();
 
+        if( !project.hasNature( RemoteProjectNature.NATURE_ID ) )
+        {
+          final IProjectDescription description = project.getDescription();
+          description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
+          
+          project.setDescription( description, new NullProgressMonitor() );
+        }
+        
         final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
         if( nature instanceof RemoteProjectNature )
         {
