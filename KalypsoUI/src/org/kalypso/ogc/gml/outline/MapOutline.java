@@ -47,7 +47,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
- * @author Gernot BElger
+ * @author Gernot Belger
  */
 public class MapOutline extends ContentOutline
 {
