@@ -176,5 +176,12 @@
             name="Koordinaten-Systeme">
       </page>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypsodeegree_impl.gml.binding.commons.Image"
+            qname="{org.kalypso.gml.common}Image">
+      </feature>
+   </extension>
 
 </plugin>
