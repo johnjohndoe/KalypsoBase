@@ -792,10 +792,6 @@ public class ShapeFile
             vec.add( null );
           }
         }
-        else
-        {
-          System.out.println( "Oups..." );
-        }
       }
 
       // write the ArrayList (properties) to the dbase file
