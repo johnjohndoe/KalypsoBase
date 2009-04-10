@@ -93,7 +93,7 @@ public class RingTreeElement
 
     if( innerCrd == null )
     {
-      System.out.println();
+// System.out.println();
     }
 
     if( !isInnerCrdInChild() )

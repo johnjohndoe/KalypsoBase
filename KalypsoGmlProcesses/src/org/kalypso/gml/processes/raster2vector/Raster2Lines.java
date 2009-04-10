@@ -142,7 +142,7 @@ public class Raster2Lines implements IGeoGridWalker
 
   /**
    * Gibt ein Objekt vom Type LineString[] zurück
-   * 
+   *
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
   public Object finish( )
@@ -251,9 +251,8 @@ public class Raster2Lines implements IGeoGridWalker
      */
     final List<Coordinate> coordinates = new ArrayList<Coordinate>();
     coordinates.add( crdBegin );
-    for( int i = 0; i < linkedCrs.length; i++ )
+    for( final LinkedCoordinate value : linkedCrs )
     {
-      final LinkedCoordinate value = linkedCrs[i];
       if( value != null )
       {
         final Coordinate crd = value.crd;
@@ -275,7 +274,7 @@ public class Raster2Lines implements IGeoGridWalker
         final LinkedCoordinate currentLC = lcs.get( prev );
 
         if( currentLC == null )
-          System.out.println();
+         ;// System.out.println();
         else
         {
           final Coordinate innerLeft = interpolateForInnerCrd( prevprev, prev );
@@ -284,7 +283,7 @@ public class Raster2Lines implements IGeoGridWalker
           {
             if( (innerLeft.x == 85937.5 && innerLeft.y == 407071.25) )
             {
-              System.out.println();
+              // System.out.println();
             }
           }
           currentLC.setInnerCrds( new Coordinate[] { innerLeft, innerRight } );

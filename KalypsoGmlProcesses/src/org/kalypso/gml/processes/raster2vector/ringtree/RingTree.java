@@ -42,7 +42,6 @@ public class RingTree
 
     if( c == null )
     {
-      System.out.println();
       final double area = element.polygon.getArea();
       if( area == 0 )
       {
