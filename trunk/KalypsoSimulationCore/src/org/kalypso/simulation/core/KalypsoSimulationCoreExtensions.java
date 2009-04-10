@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core;
 
@@ -46,7 +46,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -61,7 +60,7 @@ import org.kalypso.simulation.core.internal.FailureService;
 
 /**
  * Helper class to read extension points from registry.
- * 
+ *
  * @author Belger
  */
 public class KalypsoSimulationCoreExtensions
@@ -114,7 +113,7 @@ public class KalypsoSimulationCoreExtensions
 
   /**
    * Adds all defined {@link IUrlCatalog}s to the given list.
-   * 
+   *
    * @return A status indicating the succes of the process.
    */
   public static IStatus createCatalogs( final List<IUrlCatalog> catalogs )
@@ -139,9 +138,10 @@ public class KalypsoSimulationCoreExtensions
       }
       else
       {
-        // TODO: this is probably no error as catalogClass is optional
-        Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS + "> attribute is not defined for definition with typeID: "
-            + element.getAttribute( EXT_ATTRIB_SIMULATIONID ) );
+        // TODO: put this into a tracing-option; this is NOT an error/problem
+// Logger.getLogger( KalypsoSimulationCoreExtensions.class.getName() ).warning( "<" + EXT_ATTRIB_CATALOGCLASS +
+        // "> attribute is not defined for definition with typeID: "
+// + element.getAttribute( EXT_ATTRIB_SIMULATIONID ) );
       }
     }
 
@@ -161,7 +161,7 @@ public class KalypsoSimulationCoreExtensions
 
   /**
    * This function creates a linked list with all simulations.
-   * 
+   *
    * @return All simulations.
    */
   public static List<ISimulation> createSimulations( ) throws CoreException
