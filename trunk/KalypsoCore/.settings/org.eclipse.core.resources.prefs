@@ -1,4 +1,6 @@
-#Fri Nov 21 16:49:12 CET 2008
+#Mon Apr 06 11:36:55 CEST 2009
 eclipse.preferences.version=1
 encoding//etc/schemas/gazetter/gazetterView.xsd=UTF8
+encoding//etc/schemas/gml/gmlconvert.xsd=UTF8
 encoding//etc/schemas/template/featureview.xsd=UTF8
+encoding//src/org/kalypso/core/resources/shape.xsd=UTF8
