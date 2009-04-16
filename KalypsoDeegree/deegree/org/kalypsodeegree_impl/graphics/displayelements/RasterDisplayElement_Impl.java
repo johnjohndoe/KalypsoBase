@@ -210,10 +210,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     {
       /* Cell is smaller than one pixel, we iterate through all pixels and get their values. */
 
-      final int screenXfrom = (int) projection.getDestX( env.getMinX() );
-      final int screenXto = (int) projection.getDestX( env.getMaxX() );
-      final int screenYfrom = (int) projection.getDestY( env.getMaxY() );
-      final int screenYto = (int) projection.getDestY( env.getMinY() );
+      // Always +/- 1 in order to avoid gaps due to rounding errors
+      // cells outside the grid will not be painted, as we get Double.NaN here
+      final int screenXfrom = (int) projection.getDestX( env.getMinX() ) - 1;
+      final int screenXto = (int) projection.getDestX( env.getMaxX() ) + 1;
+      final int screenYfrom = (int) projection.getDestY( env.getMaxY() ) - 1;
+      final int screenYto = (int) projection.getDestY( env.getMinY() ) + 1;
 
       final int screenYheight = screenYto - screenYfrom;
 
