@@ -557,6 +557,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     panel.setSize( size );
     sc.setMinHeight( size.y );
 
+    updateButtons();
+
     return panel;
   }
 
@@ -669,7 +671,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void updateButtons( )
   {
     /* Let actions update themselves */
-    final ICoverage[] allCoverages = m_coverages.toArray( new ICoverage[m_coverages.size()] );
+    final ICoverage[] allCoverages = m_coverages == null ? null : m_coverages.toArray( new ICoverage[m_coverages.size()] );
     final ICoverage[] selectedCoverages = m_selectedCoverage == null ? new ICoverage[0] : new ICoverage[] { m_selectedCoverage };
     for( final CoverageManagementAction action : m_actions )
     {
@@ -753,7 +755,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       @Override
       public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
       {
-        setEnabled( allCoverages.length > 0 );
+        setEnabled( allCoverages != null && allCoverages.length > 0 );
       }
     } );
 
@@ -885,6 +887,16 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         {
           handleCoverageAdd( event );
         }
+
+        /**
+         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
+         */
+        @Override
+        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
+        {
+          setEnabled( allCoverages != null );
+        }
       };
 
       final Action removeAction = new CoverageManagementAction( "Remove Coverage", "Kachel löschen", removeID )
@@ -961,7 +973,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         @Override
         public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
         {
-          setEnabled( selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[0], allCoverages[0] ) );
+          setEnabled( allCoverages != null && selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[0], allCoverages[0] ) );
         }
       };
 
@@ -983,7 +995,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         @Override
         public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
         {
-          setEnabled( selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[selectedCoverages.length - 1], allCoverages[allCoverages.length - 1] ) );
+          setEnabled( allCoverages != null && selectedCoverages.length > 0 && allCoverages.length > 0
+              && !ObjectUtils.equal( selectedCoverages[selectedCoverages.length - 1], allCoverages[allCoverages.length - 1] ) );
         }
       };
 
