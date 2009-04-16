@@ -42,12 +42,16 @@ package org.kalypso.ui.editor.sldEditor;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
  * @author Thomas Jung
@@ -57,7 +61,7 @@ public class SldHelper
 
   /**
    * returns the interpolated color of a colormap defined by start and end color.
-   * 
+   *
    * @param currentClass
    *            current class
    * @param numOfClasses
@@ -98,7 +102,7 @@ public class SldHelper
 
   /**
    * checks the user typed string for the double value
-   * 
+   *
    * @param comp
    *            composite of the text field
    * @param text
@@ -129,7 +133,7 @@ public class SldHelper
 
   /**
    * checks the user typed a string for a positive double value, if it is negative the value is set to 0.
-   * 
+   *
    * @param comp
    *            composite of the text field
    * @param text
@@ -165,5 +169,38 @@ public class SldHelper
     }
     return null;
   }
+
+  public static ColorMapEntry[] createColorMap( final Color fromColor, final Color toColor, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue )
+  {
+    final List<ColorMapEntry> colorMapList = new LinkedList<ColorMapEntry>();
+
+    final double opacityFrom = fromColor.getAlpha() / 255.0;
+    final double opacityTo = toColor.getAlpha() / 255.0;
+
+    // get rounded values below min and above max (rounded by first decimal)
+    final BigDecimal minDecimal = minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
+
+    final BigDecimal rasterStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( rasterStepWidth )).intValue() + 1;
+
+    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    {
+      final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+      // Color
+      final Color color = SldHelper.interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+      final double opacity = SldHelper.interpolate( opacityFrom, opacityTo, currentClass, numOfClasses );
+
+      final String label = String.format( "%.2f", quantity.doubleValue() ); //$NON-NLS-1$
+
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, opacity, quantity.doubleValue(), label );
+
+      colorMapList.add( colorMapEntry );
+    }
+
+    return colorMapList.toArray( new ColorMapEntry[colorMapList.size()] );
+  }
+
 
 }
