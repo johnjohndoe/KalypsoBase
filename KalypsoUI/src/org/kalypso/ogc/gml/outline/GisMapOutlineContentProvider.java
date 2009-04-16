@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.outline;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckable;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -76,7 +77,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
      */
     public void treeExpanded( final TreeExpansionEvent event )
     {
-      resetCheckState( event.getElement() );
+      updateChildrenCheckState( event.getElement() );
     }
   };
 
@@ -157,14 +158,15 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
       final Viewer viewer = getViewer();
-      if( viewer instanceof CheckboxTreeViewer && !viewer.getControl().isDisposed() )
+      final Control control = viewer.getControl();
+      if( viewer instanceof CheckboxTreeViewer && !control.isDisposed() )
       {
-        viewer.getControl().getDisplay().asyncExec( new Runnable()
+        control.getDisplay().asyncExec( new Runnable()
         {
           public void run( )
           {
-            if( !viewer.getControl().isDisposed() )
-              ((CheckboxTreeViewer) viewer).setChecked( theme, visibility );
+            if( !control.isDisposed() )
+              updateCheckState( theme );
           }
         } );
       }
@@ -297,28 +299,36 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
       @Override
       public void run( )
       {
-        resetCheckState( newInput );
+        updateChildrenCheckState( newInput );
       }
     } );
-
   }
 
-  protected void resetCheckState( final Object object )
+  /**
+   * Updates the check state of all children of the given element.<br>
+   * Does NOT recurse further into the element
+   */
+  protected void updateChildrenCheckState( final Object parent )
   {
-    if( object == null || !(m_viewer instanceof CheckboxTreeViewer) )
-      return;
-
-    final CheckboxTreeViewer viewer = (CheckboxTreeViewer) m_viewer;
-
-    final boolean checked = m_labelProvider.isChecked( object );
-    final boolean grayed = m_labelProvider.isGrayed( object );
-
-    viewer.setGrayed( object, grayed );
-    viewer.setChecked( object, grayed || checked );
-
-    final Object[] children = getChildren( object );
+    final Object[] children = getChildren( parent );
     for( final Object child : children )
-      resetCheckState( child );
+      updateCheckState( child );
+  }
+
+  /**
+   * Updates grayed and checked stated of the given object.<br>
+   * Does NOT recurse
+   **/
+  protected void updateCheckState( final Object object )
+  {
+    if( m_viewer instanceof ICheckable )
+    {
+      final ICheckable checkable = (ICheckable) m_viewer;
+
+      final boolean checked = m_labelProvider.isChecked( object );
+// final boolean grayed = m_labelProvider.isGrayed( object );
+      checkable.setChecked( object, checked );
+    }
   }
 
   protected void refreshViewer( final Object element )
@@ -328,6 +338,8 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     if( viewer == null || control.isDisposed() )
       return;
 
+    final Object elementToRefresh = element == null ? m_viewer.getInput() : element;
+
     control.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
@@ -335,13 +347,10 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
         if( control.isDisposed() )
           return;
 
-        if( element == null )
-          viewer.refresh();
-        else
-          viewer.refresh( element );
-
-        if( element instanceof IKalypsoTheme && viewer instanceof CheckboxTreeViewer )
-          resetCheckState( element );
+        viewer.refresh( elementToRefresh );
+        updateCheckState( elementToRefresh );
+        if( viewer.getExpandedState( elementToRefresh ) )
+          updateChildrenCheckState( elementToRefresh );
       }
     } );
   }
