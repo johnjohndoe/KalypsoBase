@@ -44,10 +44,13 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Collection;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.math.Range;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -88,7 +91,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper class for {@link IGeoGrid}s.
- * 
+ *
  * @author Gernot Belger
  */
 public class GeoGridUtilities
@@ -100,7 +103,7 @@ public class GeoGridUtilities
 
   /**
    * Calclates the geo-position of the given cell.
-   * 
+   *
    * @param c
    *          If c is null, a new coordinate is returned, else its values are changed.
    */
@@ -126,7 +129,7 @@ public class GeoGridUtilities
   /**
    * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a grid point as a center point
    * representation.
-   * 
+   *
    * @param pos
    *          The search position, must be in the saem coordinate system as the grid.
    * @return The grid cell that contains the given position. Always returns a value, even if the position is not
@@ -195,7 +198,7 @@ public class GeoGridUtilities
 
   /**
    * Opens a {@link IGeoGrid} for a resource of a given mime-type.
-   * 
+   *
    * @param writeable
    *          if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid} will
    *          be returned.
@@ -241,7 +244,7 @@ public class GeoGridUtilities
 
   /**
    * This function creates the surface of a grid.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param targetCRS
@@ -294,7 +297,7 @@ public class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a surface
    * with the grid point as center point of the surface.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param x
@@ -354,7 +357,7 @@ public class GeoGridUtilities
    * Converts a gml-coverage to a {@link IGeoGrid}.<br>
    * After use, the grid has to be disposed.
    */
-  public static IGeoGrid toGrid( final ICoverage coverage ) throws Exception
+  public static IGeoGrid toGrid( final ICoverage coverage )
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
     return new RectifiedGridCoverageGeoGrid( coverage.getFeature() );
@@ -385,7 +388,7 @@ public class GeoGridUtilities
    * geometry.<br>
    * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
    * ATTENTION: this does not work for every walker implementation! *
-   * 
+   *
    * @param walkingArea
    *          If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
@@ -412,7 +415,7 @@ public class GeoGridUtilities
 
   /**
    * This function creates a writable geo grid.
-   * 
+   *
    * @param mimeType
    *          The mime type for this grid (e.g. "image/bin").
    * @param file
@@ -448,7 +451,7 @@ public class GeoGridUtilities
   /**
    * Reads values from the given {@link IGeoGrid} and write it out into a new file which is then added as a new coverage
    * to the outputCoverages.
-   * 
+   *
    * @param coverages
    *          The new coverage will be added to this collection.
    * @param grid
@@ -509,7 +512,7 @@ public class GeoGridUtilities
 
   /**
    * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
-   * 
+   *
    * @param coverage
    *          The coverage that refers the grid
    * @param grid
@@ -735,7 +738,7 @@ public class GeoGridUtilities
 
   /**
    * This function transforms the coordinate crd from its coordinate system to the grid coordinate system.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param crd
@@ -783,7 +786,7 @@ public class GeoGridUtilities
 
   /**
    * calculates the common envelope for an array of {@link ICoverageCollection}s.
-   * 
+   *
    * @param collections
    *          the collections
    * @param intersection
@@ -851,7 +854,7 @@ public class GeoGridUtilities
 
   /**
    * Flattens several grids into one grid, that has the value set for the category as cell value
-   * 
+   *
    * @param gridCategories
    *          the categories with which the grid get flattened
    * @param intersection
@@ -931,7 +934,7 @@ public class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a polygon
    * with the grid point as center point of the polygon.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param x
@@ -970,7 +973,7 @@ public class GeoGridUtilities
   /**
    * Returns the value of a grid at a given position. Returns {@link Double#NaN} if the coordinate is outside the
    * bounding box.
-   * 
+   *
    * @see IGeoGrid#getValueChecked(int, int)
    */
   public static double getValueChecked( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
@@ -981,7 +984,7 @@ public class GeoGridUtilities
 
   /**
    * Writes a value to the grid at a specified position. The value is written to the cell covering the given coordinate.
-   * 
+   *
    * @return <code>true</code>, if and only if the coordinate lies within the grid and the value could be written.
    * @see #cellFromPosition(IGeoGrid, Coordinate)
    */
@@ -996,5 +999,53 @@ public class GeoGridUtilities
 
     writeableGrid.setValue( cell.x, cell.y, value );
     return true;
+  }
+
+  public static Range calculateRange( final Collection<ICoverage> coverages )
+  {
+    // get min / max
+    BigDecimal min = new BigDecimal( Double.MAX_VALUE );
+    BigDecimal max = new BigDecimal( -Double.MAX_VALUE );
+
+    for( final ICoverage coverage : coverages )
+    {
+      try
+      {
+        final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+        min = min.min( geoGrid.getMin() );
+        max = max.max( geoGrid.getMax() );
+
+        // dispose it
+        geoGrid.dispose();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    final BigDecimal rangeMin = min;
+    final BigDecimal rangeMax = max;
+
+    return new Range()
+    {
+      @Override
+      public boolean containsNumber( final Number number )
+      {
+        throw new NotImplementedException();
+      }
+
+      @Override
+      public Number getMaximumNumber( )
+      {
+        return rangeMax;
+      }
+
+      @Override
+      public Number getMinimumNumber( )
+      {
+        return rangeMin;
+      }
+    };
   }
 }
