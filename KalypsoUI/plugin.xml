@@ -966,14 +966,14 @@
 		<handler class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureHandler" commandId="org.kalypso.gis.newFeature.command">
 			<enabledWhen>
 				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.activeThemeNotNull" />
+					<test property="org.kalypso.ui.test.map.activeTheme.isNotNull" />
 				</with>
 			</enabledWhen>
 		</handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler" commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand">
 			<enabledWhen>
 				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.activeThemeHasExtent" />
+					<test property="org.kalypso.ui.test.map.activeTheme.hasExtent" />
 				</with>
 			</enabledWhen>
 		</handler>
@@ -1020,7 +1020,7 @@
 			</class>
 			<enabledWhen>
 				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
+					<test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
 				</with>
 			</enabledWhen>
 		</handler>
@@ -1040,7 +1040,7 @@
 			</class>
 			<enabledWhen>
 				<with variable="activeMapPanel">
-					<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
+					<test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
 				</with>
 			</enabledWhen>
 		</handler>
