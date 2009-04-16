@@ -62,10 +62,7 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseUi
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
-/**
- * @author kuch
- */
-public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
+class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
 {
   public static Image IMG_IMPORT_REMOTE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) ); //$NON-NLS-1$
 

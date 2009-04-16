@@ -65,19 +65,19 @@ import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialo
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowBuilder
+abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowBuilder
 {
-  public static Image IMG_LOCAL_PROJECT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) ); //$NON-NLS-1$
+  protected static Image IMG_LOCAL_PROJECT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_EXPORT_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) ); //$NON-NLS-1$
+  private static Image IMG_EXPORT_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_REMOTE_INFO = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) ); //$NON-NLS-1$
+  private static Image IMG_REMOTE_INFO = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_DELETE_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) ); //$NON-NLS-1$
+  private static Image IMG_DELETE_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) ); //$NON-NLS-1$
 
   private final ILocalProject m_local;
 
-  public AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
+  protected AbstractLocalProjectRowBuilder( final ILocalProject local, final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
     super( module, locker );
     m_local = local;
