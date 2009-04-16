@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 
 /**
  * A job that observes a given job and calls a 'jobRunning' method while the observed job is running and a 'jobDone'
@@ -86,7 +85,7 @@ public abstract class JobObserverJob extends Job
       }
       catch( final InterruptedException e )
       {
-        return new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), "repaint thread was interrupted", e ); //$NON-NLS-1$
+        // Ignore, will happen quite often, i.e. when the observed job is cancelled
       }
     }
 
@@ -113,6 +112,12 @@ public abstract class JobObserverJob extends Job
   protected void handleObservedJobDone( final IStatus result )
   {
     cancel();
+
+    // If still sleeping, interrupt
+    final Thread thread = getThread();
+    if( thread != null )
+      thread.interrupt();
+
     m_observedJob.removeJobChangeListener( m_jobListener );
 
     jobDone( result );
