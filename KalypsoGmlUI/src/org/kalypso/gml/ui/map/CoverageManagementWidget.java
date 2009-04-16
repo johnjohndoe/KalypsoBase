@@ -45,21 +45,29 @@ import java.awt.Graphics;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.math.Range;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -76,24 +84,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.jfree.util.ObjectUtils;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -102,6 +105,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.gml.ui.CoverageManagementAction;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard;
@@ -112,7 +116,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -134,6 +137,7 @@ import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapLabelProvider;
+import org.kalypso.ui.editor.sldEditor.SldHelper;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -151,6 +155,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -233,7 +238,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private ICoverage m_selectedCoverage;
 
+  /** If set, grids get imported by default into this folder */
   private IFolder m_gridFolder;
+
+  /**
+   * If set to <code>true</code>, the user is allowed to change the grid import folder, where grids are imported.<br>
+   * Will default to <code>true</code>, if {@link #m_gridFolder} is <code>null</code>.
+   */
+  private boolean m_allowUserChangeGridFolder = true;
 
   private ListViewer m_coverageViewer;
 
@@ -258,6 +270,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       refreshControl();
     }
   };
+
+  private final Set<CoverageManagementAction> m_actions = new HashSet<CoverageManagementAction>();
 
   private final IAction[] m_customActions;
 
@@ -298,12 +312,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   }
 
   /**
-   * The constructor.
-   *
    * @param name
    *          The name of the widget.
    * @param tooltip
    *          The tooltip of the widget.
+   * @param customActions
+   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement
+   *          {@link CoverageManagementAction} in order to get inrformed about selection changes.
    */
   public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions, final String partName )
   {
@@ -450,11 +465,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_coverageViewer.getControl().setLayoutData( coverageViewerData );
     toolkit.adapt( m_coverageViewer.getControl(), true, false );
 
-    final Composite coverageButtonPanel = toolkit.createComposite( coveragePanel );
-    final FillLayout coverageButtonPanelLayout = new FillLayout( SWT.VERTICAL );
-    coverageButtonPanelLayout.spacing = 4;
-    coverageButtonPanel.setLayout( coverageButtonPanelLayout );
-    coverageButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
+    final ToolBar coverageToolbar = new ToolBar( coveragePanel, SWT.VERTICAL );
+    toolkit.adapt( coverageToolbar );
+    coverageToolbar.getLayout();
+    coverageToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.FILL, false, true ) );
 
     /* Info view */
     final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
@@ -476,6 +490,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         m_theme.postCommand( changeCommand, null );
         updateGridProperties();
+        updateButtons();
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -503,19 +518,18 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
     toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
 
-    final Composite colormapPanelButtonPanel = toolkit.createComposite( colormapPanel, SWT.NONE );
-    final GridLayout colormapButtonPanelLayout = new GridLayout();
-    colormapButtonPanelLayout.marginHeight = 0;
-    colormapButtonPanelLayout.marginWidth = 0;
-    colormapPanelButtonPanel.setLayout( colormapButtonPanelLayout );
-    colormapPanelButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, false ) );
+    final ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL );
+    toolkit.adapt( colormapToolbar );
+    colormapToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
     // Fill contents
     initalizeCoverageViewer( m_coverageViewer );
-    initalizeCoverageActions( toolkit, coverageButtonPanel, m_customActions );
+    final ToolBarManager coverageToolbarManager = new ToolBarManager( coverageToolbar );
+    initalizeCoverageActions( coverageToolbarManager, m_customActions );
 
     initializeColorMapTableViewer( m_colorMapTableViewer );
-    initalizeColorMapActions( toolkit, colormapPanelButtonPanel );
+    final ToolBarManager colormapToolbarManager = new ToolBarManager( colormapToolbar );
+    initalizeColorMapActions( colormapToolbarManager );
 
     /* Hook Events */
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -549,6 +563,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void refreshControl( )
   {
     ViewerUtilities.refresh( m_coverageViewer, true );
+
+    updateButtons();
   }
 
   protected void updateGridProperties( )
@@ -624,6 +640,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( coveragesFeature != null )
         setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
     }
+
+    updateButtons();
   }
 
   protected void handleListSelectionChanged( final Composite parent, final ScrolledComposite sc, final Composite panel, final Group coverageInfoGroup, final FeatureComposite featureComposite, final SelectionChangedEvent event )
@@ -645,6 +663,25 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     sc.setMinHeight( size.y );
 
     getMapPanel().repaintMap();
+    updateButtons();
+  }
+
+  private void updateButtons( )
+  {
+    /* Let actions update themselves */
+    final ICoverage[] allCoverages = m_coverages.toArray( new ICoverage[m_coverages.size()] );
+    final ICoverage[] selectedCoverages = m_selectedCoverage == null ? new ICoverage[0] : new ICoverage[] { m_selectedCoverage };
+    for( final CoverageManagementAction action : m_actions )
+    {
+      SafeRunnable.run( new SafeRunnable()
+      {
+        @Override
+        public void run( ) throws Exception
+        {
+          action.update( allCoverages, selectedCoverages );
+        }
+      } );
+    }
   }
 
   /**
@@ -697,12 +734,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * initializes the button action for the style panel.
    */
-  private void initalizeColorMapActions( final FormToolkit toolkit, final Composite parent )
+  private void initalizeColorMapActions( final IToolBarManager manager )
   {
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    createButton( toolkit, parent, new Action( "Generate ColorMap", generateID )
+    createButton( manager, new CoverageManagementAction( "Generate ColorMap", "", generateID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -712,8 +749,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleGenerateColorMap( event );
       }
+
+      @Override
+      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
+      {
+        setEnabled( allCoverages.length > 0 );
+      }
     } );
 
+    manager.update( true );
   }
 
   /**
@@ -726,49 +770,18 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( input != null )
     {
-      final List<ColorMapEntry> entryList = new LinkedList<ColorMapEntry>();
-
       // convert map into an array
-      for( final ColorMapEntry entry : input.values() )
-      {
-        entryList.add( entry );
-      }
-      final ColorMapEntry[] entries = entryList.toArray( new ColorMapEntry[entryList.size()] );
+      final Collection<ColorMapEntry> values = input.values();
+      final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
 
-      // get min / max
-      BigDecimal min = new BigDecimal( Double.MAX_VALUE );
-      BigDecimal max = new BigDecimal( Double.MIN_VALUE );
-
-      for( final ICoverage coverage : m_coverages )
-      {
-        try
-        {
-          final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
-          min = min.min( geoGrid.getMin() );
-          max = max.max( geoGrid.getMax() );
-
-          // dispose it
-          geoGrid.dispose();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
+      final Range minMax = GeoGridUtilities.calculateRange( m_coverages );
+      final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
+      final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
 
       // open dialog
       final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
       if( dialog.open() == Window.OK )
-      {
-        updateRasterSymbolizer( symb, dialog.getColorMap() );
-
-        saveStyle();
-
-        m_colorMapTableViewer.refresh();
-        m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
-
-      }
-      getMapPanel().invalidateMap();
+        updateRasterSymbolizer( dialog.getColorMap() );
     }
   }
 
@@ -791,8 +804,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           {
             final GisTemplateUserStyle style = (GisTemplateUserStyle) userStyle;
 
-            style.save( new SubProgressMonitor( monitor, 1 ) );
+            // HACK: also fire style change in order to update the map
             style.fireStyleChanged();
+            style.save( new SubProgressMonitor( monitor, 1 ) );
           }
         }
 
@@ -808,8 +822,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * update the colorMap of the {@link RasterSymbolizer}
    */
-  private void updateRasterSymbolizer( final RasterSymbolizer symb, final ColorMapEntry[] entries )
+  private void updateRasterSymbolizer( final ColorMapEntry[] entries )
   {
+    final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
 
     try
@@ -830,6 +845,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
 
     symb.setColorMap( new_colorMap );
+
+    saveStyle();
+
+    m_colorMapTableViewer.refresh();
+    m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
   }
 
   private void initializeColorMapTableViewer( final TableViewer viewer )
@@ -845,10 +865,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateStylePanel();
   }
 
-  private void initalizeCoverageActions( final FormToolkit toolkit, final Composite parent, final IAction[] customActions )
+  private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
   {
-    final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
-    final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
     final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
     final ImageDescriptor exportID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT );
 
@@ -857,7 +875,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
       final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
 
-      final Action addAction = new Action( "Add Coverage", addID )
+      final Action addAction = new CoverageManagementAction( "Add Coverage", "Kachel hinzufügen", addID )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -865,12 +883,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         @Override
         public void runWithEvent( final Event event )
         {
-          handleCoverageAdded( event );
+          handleCoverageAdd( event );
         }
       };
-      addAction.setDescription( "Kachel hinzufügen" );
 
-      final Action removeAction = new Action( "Remove Coverage", removeID )
+      final Action removeAction = new CoverageManagementAction( "Remove Coverage", "Kachel löschen", removeID )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -878,16 +895,25 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         @Override
         public void runWithEvent( final Event event )
         {
-          handleCoverageRemoved( event );
+          handleCoverageRemove( event );
+        }
+
+        /**
+         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
+         */
+        @Override
+        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
+        {
+          setEnabled( selectedCoverages.length > 0 );
         }
       };
-      removeAction.setDescription( "Kachel löschen" );
 
-      createButton( toolkit, parent, addAction );
-      createButton( toolkit, parent, removeAction );
+      createButton( manager, addAction );
+      createButton( manager, removeAction );
     }
 
-    final Action exportAction = new Action( "Export Coverage", exportID )
+    final Action exportAction = new CoverageManagementAction( "Export Coverage", "Kachel exportieren", exportID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -897,36 +923,75 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageExport( event );
       }
-    };
-    exportAction.setDescription( "Kachel exportieren" );
 
-    final Action moveUpAction = new Action( "Move Coverage Up", upID )
-    {
       /**
-       * @see org.eclipse.jface.action.Action#run()
+       * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
        */
       @Override
-      public void run( )
+      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
       {
-        handleCoverageMove( -1 );
+        setEnabled( selectedCoverages.length > 0 );
       }
     };
-    moveUpAction.setDescription( "Kachel nach oben verschieben" );
 
-    final Action moveDownAction = new Action( "Move Coverage Down", downID )
+    createButton( manager, exportAction );
+
+    if( m_showAddRemoveButtons )
     {
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
-      @Override
-      public void run( )
-      {
-        handleCoverageMove( 1 );
-      }
-    };
-    moveDownAction.setDescription( "Kachel nach unten verschieben" );
+      // Changeing the order of grids only makes sense, if the user is allowed to add/remove them.
+      final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
+      final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
-    final Action jumpToAction = new Action( "Jump To Coverage", jumptoID )
+      final Action moveUpAction = new CoverageManagementAction( "Move Coverage Up", "Kachel nach oben verschieben", upID )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#run()
+         */
+        @Override
+        public void run( )
+        {
+          handleCoverageMove( -1 );
+        }
+
+        /**
+         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
+         */
+        @Override
+        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
+        {
+          setEnabled( selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[0], allCoverages[0] ) );
+        }
+      };
+
+      final Action moveDownAction = new CoverageManagementAction( "Move Coverage Down", "Kachel nach unten verschieben", downID )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#run()
+         */
+        @Override
+        public void run( )
+        {
+          handleCoverageMove( 1 );
+        }
+
+        /**
+         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
+         */
+        @Override
+        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
+        {
+          setEnabled( selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[selectedCoverages.length - 1], allCoverages[allCoverages.length - 1] ) );
+        }
+      };
+
+      createButton( manager, moveUpAction );
+      createButton( manager, moveDownAction );
+    }
+
+    final IAction jumpToAction = new CoverageManagementAction( "Jump To Coverage", "Springe zu Kachel", jumptoID )
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -936,62 +1001,39 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         handleCoverageJumpTo();
       }
-    };
-    jumpToAction.setDescription( "Springe zu Kachel" );
 
-    createButton( toolkit, parent, exportAction );
-    createButton( toolkit, parent, moveUpAction );
-    createButton( toolkit, parent, moveDownAction );
-    createButton( toolkit, parent, jumpToAction );
-
-    /* Should some custom action be added. */
-    if( customActions == null || customActions.length == 0 )
-      return;
-
-    /* Add custom actions. */
-    for( final IAction customAction : customActions )
-      createButton( toolkit, parent, customAction );
-  }
-
-  private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
-  {
-    /* Create the button. */
-    final Button button = toolkit.createButton( parent, null, SWT.PUSH );
-
-    /* If an image is set in the action, use it for the button. */
-    final ImageDescriptor imageDescriptor = action.getImageDescriptor();
-    if( imageDescriptor != null )
-    {
-      final Image image = imageDescriptor.createImage( true );
-      button.setImage( image );
-      button.addDisposeListener( new DisposeListener()
-      {
-        public void widgetDisposed( final DisposeEvent e )
-        {
-          image.dispose();
-        }
-      } );
-    }
-
-    /* Set a tooltip. */
-    button.setToolTipText( action.getDescription() );
-
-    /* What happens, if the button is pressed? */
-    button.addSelectionListener( new SelectionAdapter()
-    {
       /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
       {
-        final Event event = new Event();
-        event.display = e.display;
-        // ...
-
-        action.runWithEvent( event );
+        setEnabled( selectedCoverages.length > 0 );
       }
-    } );
+    };
+
+    createButton( manager, jumpToAction );
+
+    /* Should some custom action be added. */
+    if( customActions != null )
+    {
+      /* Add custom actions. */
+      for( final IAction customAction : customActions )
+        createButton( manager, customAction );
+    }
+
+    manager.update( true );
+  }
+
+  private void createButton( final IToolBarManager manager, final IAction action )
+  {
+    if( action instanceof CoverageManagementAction )
+      m_actions.add( (CoverageManagementAction) action );
+
+    final ActionContributionItem item = new ActionContributionItem( action );
+// item.setId( "" + System.currentTimeMillis() );
+    manager.add( item );
   }
 
   protected void handleCoverageJumpTo( )
@@ -1037,22 +1079,25 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
-  protected void handleCoverageAdded( final Event event )
+  protected void handleCoverageAdd( final Event event )
   {
     final IKalypsoFeatureTheme theme = m_theme;
     final ICoverageCollection coverages = m_coverages;
     final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
 
     final Shell shell = event.display.getActiveShell();
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, m_gridFolder );
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, m_gridFolder, m_allowUserChangeGridFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return;
 
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( wizard.getBoundingBox(), 1.05 );
+    final ICoverage[] newCoverages = wizard.getNewCoverages();
+    final GM_Envelope bbox = FeatureHelper.getEnvelope( newCoverages );
+
+    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( bbox, 1.05 );
     getMapPanel().setBoundingBox( scaledBox );
 
-    // TODO: move into finish method? / very slow, why?
+    // TODO: move into finish method? / very slow, because all the tins are saved as well...
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
@@ -1078,8 +1123,32 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       }
     };
 
+    handleCoveragesAdded( newCoverages );
+
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, "Kachel hinzufügen", "Die Kachel konnte nicht hinzugeladen werden.", status );
+  }
+
+  private void handleCoveragesAdded( final ICoverage[] newCoverages )
+  {
+    // set selection to new coverages
+    final StructuredSelection selection = new StructuredSelection( newCoverages );
+    m_coverageViewer.setSelection( selection );
+
+    final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
+    final TreeMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
+    if( colorMap.isEmpty() )
+    {
+      /* IN order to show anything to the user, create a default colour map, if no colours have been defined yet */
+      final Range minMax = GeoGridUtilities.calculateRange( m_coverages );
+      final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
+      final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
+      final BigDecimal stepWidth = new BigDecimal( 0.1 );
+      final Color fromColor = new Color( 0, 255, 0, 200 );
+      final Color toColor = new Color( 255, 0, 0, 200 );
+      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max );
+      updateRasterSymbolizer( colors );
+    }
   }
 
   protected void handleCoverageExport( final Event event )
@@ -1095,7 +1164,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     wizardDialog.open();
   }
 
-  protected void handleCoverageRemoved( final Event event )
+  protected void handleCoverageRemove( final Event event )
   {
     if( m_selectedCoverage == null )
       return;
@@ -1118,14 +1187,25 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           theme.postCommand( command, refreshRunnable );
 
-          /* Delete underlying grid file */
-          final IStatus status = CoverageManagementHelper.deleteGridFile( selectedCoverage );
-          if( !status.isOK() )
-            return status;
-
           /* save the model */
           final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
           pool.saveObject( workspace, monitor );
+
+          /*
+           * Delete underlying grid file: we do it in a job, later, in order to let the map give-up the handle to the
+           * file
+           */
+          final Job job = new Job( "Delete grid file" )
+          {
+            @Override
+            protected IStatus run( final IProgressMonitor progress )
+            {
+              return CoverageManagementHelper.deleteGridFile( selectedCoverage );
+            }
+          };
+          job.setUser( false );
+          job.setSystem( true );
+          job.schedule( 5000 );
 
           return Status.OK_STATUS;
         }
@@ -1250,6 +1330,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public void setGridFolder( final IFolder gridFolder )
   {
     m_gridFolder = gridFolder;
+  }
+
+  public void setAllowUserChangeGridFolder( final boolean allowUserChangeGridFolder )
+  {
+    m_allowUserChangeGridFolder = allowUserChangeGridFolder;
   }
 
   /**

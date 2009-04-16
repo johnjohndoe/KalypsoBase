@@ -59,15 +59,13 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Dieser Wizard dient dazu, (mehrere) Rasterdateien in eine bestehende GML-Datei zu imporiteren.
- * 
+ *
  * @author Gernot Belger
  */
 public class AddRectifiedGridCoveragesWizard extends Wizard
@@ -78,16 +76,22 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
 
   private final IContainer m_gridFolder;
 
-  private GM_Envelope m_bbox;
+  private final boolean m_allowUserChangeGridFolder;
+
+  private ICoverage[] m_newCoverages;
 
   /**
    * @param gridFolder
    *          The new grid gets imported into this folder. If <code>null</code>, the user will be asked for the folder.
+   * @param allowUserChangeGridFolder
+   *          If <code>false</code>, the entry field for the grid folder is hidden Resets to <code>true</code>, if
+   *          'gridFolder' is null..
    */
-  public AddRectifiedGridCoveragesWizard( final ICoverageCollection coverages, final IContainer gridFolder )
+  public AddRectifiedGridCoveragesWizard( final ICoverageCollection coverages, final IContainer gridFolder, final boolean allowUserChangeGridFolder )
   {
     m_coverages = coverages;
     m_gridFolder = gridFolder;
+    m_allowUserChangeGridFolder = allowUserChangeGridFolder;
 
     final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" );
     setDialogSettings( settings );
@@ -102,7 +106,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_pageSelect = new PageSelectGeodataFiles( "pageSelect", m_gridFolder );
+    m_pageSelect = new PageSelectGeodataFiles( "pageSelect", m_gridFolder, m_allowUserChangeGridFolder );
     m_pageSelect.setTitle( "Rasterdatei" );
     m_pageSelect.setDescription( "Wählen Sie die Rasterdatei aus. Die Rasterdatei wird in den Arbeitsbereich kopiert." );
 
@@ -123,9 +127,6 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     final IFolder gridFolder = m_pageSelect.getGridFolder();
     try
     {
-// final IGridMetaReader reader = m_pageSelect.getReader();
-// final RectifiedGridDomain coverage = reader.getCoverage( offsetX, offsetY, ulc, crs );
-
       final ICoverageCollection coverageCollection = m_coverages;
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
@@ -139,8 +140,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
           for( int i = 0; i < selectedFiles.length; i++ )
             names[i] = selectedFiles[i].getName();
           final ICoverage[] coverages = addCoverages( names, domains, importedFiles, coverageCollection, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
-          final GM_Envelope bbox = FeatureHelper.getEnvelope( coverages );
-          setBoundingBox( bbox );
+          setCoverages( coverages );
 
           return Status.OK_STATUS;
         }
@@ -170,16 +170,13 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     return false;
   }
 
-  protected void setBoundingBox( final GM_Envelope bbox )
+  protected void setCoverages( final ICoverage[] coverages )
   {
-    m_bbox = bbox;
+    m_newCoverages = coverages;
   }
 
-  /**
-   * Returns the bounding box of the newly imported coverages.
-   */
-  public GM_Envelope getBoundingBox( )
+  public ICoverage[] getNewCoverages( )
   {
-    return m_bbox;
+    return m_newCoverages;
   }
 }
