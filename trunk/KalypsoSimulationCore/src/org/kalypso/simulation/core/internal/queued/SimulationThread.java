@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulation;
@@ -137,12 +138,21 @@ public class SimulationThread extends Thread
         LOGGER.info( "JOB exited normally: " + jobID );
       }
     }
+    catch( final SimulationException se )
+    {
+      LOGGER.warning( "Simulation aborted with exception: " + jobID );
+      se.printStackTrace();
+
+      m_jobBean.setFinishInfo( IStatus.ERROR, se.getLocalizedMessage() );
+      m_jobBean.setException( se );
+      m_jobBean.setState( ISimulationConstants.STATE.ERROR );
+    }
     catch( final Throwable t )
     {
       LOGGER.warning( "Simulation aborted with exception: " + jobID );
       t.printStackTrace();
 
-      m_jobBean.setMessage( "Simulation aborted with exception." );
+      m_jobBean.setFinishInfo( IStatus.ERROR, t.getLocalizedMessage() );
       m_jobBean.setException( t );
       m_jobBean.setState( ISimulationConstants.STATE.ERROR );
     }
