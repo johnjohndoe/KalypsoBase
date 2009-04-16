@@ -110,6 +110,7 @@ public class CalcJobHandler
     try
     {
       // Daten zum Service schieben
+      monitor.subTask( "Initialisiere Berechnung..." );
       m_jobID = startCalcJob( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
 
       if( monitor.isCanceled() )
@@ -170,28 +171,29 @@ public class CalcJobHandler
       final SimulationInfo jobBean = m_calcService.getJob( m_jobID );
 
       // Abhängig von den Ergebnissen was machen
+      final String finishText = jobBean.getFinishText();
+      final String message = finishText == null ? "" : finishText;
       switch( jobBean.getState() )
       {
         case FINISHED:
+        {
           final IProject project = calcCaseFolder.getProject();
-
           // clear results as defined in modelspec
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
           // Ergebniss abholen
           m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
           project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
-
-          final String finishText = jobBean.getFinishText();
-          final String message = finishText == null ? "" : finishText;
           return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null );
+        }
 
         case CANCELED:
           throw m_cancelException;
 
         case ERROR:
         {
-          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          final Throwable exception = jobBean.getException();
+          final IStatus status = StatusUtilities.createStatus( jobBean.getFinishStatus(), message, exception );
           throw new CoreException( status );
         }
 
