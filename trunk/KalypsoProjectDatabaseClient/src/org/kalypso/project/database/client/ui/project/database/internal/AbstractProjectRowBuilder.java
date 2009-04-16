@@ -53,12 +53,12 @@ import org.kalypso.project.database.client.extension.project.IKalypsoModuleProje
 /**
  * @author kuch
  */
-public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
+abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 {
   private final IProjectDatabaseUiLocker m_locker;
   private final IKalypsoModule m_module;
 
-  public AbstractProjectRowBuilder( final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
+  protected AbstractProjectRowBuilder( final IKalypsoModule module, final IProjectDatabaseUiLocker locker )
   {
     m_module = module;
     m_locker = locker;

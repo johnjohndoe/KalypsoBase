@@ -97,6 +97,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
         {
           final FileType file = (FileType) m_rangeSet;
           final URL url = new URL( m_context, file.getFileName() );
+          
           m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
         }
         else
