@@ -40,7 +40,7 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
     final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlContext );
     final IContainer gmlFolder = gmlFile == null ? null : gmlFile.getParent();
 
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( cc, gmlFolder );
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( cc, gmlFolder, true );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     wizardDialog.open();
 

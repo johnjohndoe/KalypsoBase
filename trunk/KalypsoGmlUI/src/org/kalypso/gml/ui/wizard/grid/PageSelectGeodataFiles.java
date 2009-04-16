@@ -87,13 +87,20 @@ public class PageSelectGeodataFiles extends WizardPage
 
   private String m_gridFolderPath;
 
+  private final boolean m_allowUserChangeGridFolder;
+
   /**
    * @param chooseGridFolder
    *          If <code>true</code>, the user is asked for the destination folder to store the grid files into.
+   * @param allowUserChangeGridFolder
+   *          If <code>false</code>, the entry field for the grid folder is hidden Resets to <code>true</code>, if
+   *          'gridFolder' is null..
    */
-  public PageSelectGeodataFiles( final String pageName, final IContainer gridFolder )
+  public PageSelectGeodataFiles( final String pageName, final IContainer gridFolder, final boolean allowUserChangeGridFolder )
   {
     super( pageName );
+
+    m_allowUserChangeGridFolder = gridFolder == null ? true : allowUserChangeGridFolder;
     m_gridFolderPath = gridFolder == null ? null : gridFolder.getFullPath().toPortableString();
   }
 
@@ -182,10 +189,11 @@ public class PageSelectGeodataFiles extends WizardPage
       }
     } );
     tFolder.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    tFolder.setEnabled( true );
+    tFolder.setEnabled( m_allowUserChangeGridFolder );
 
     final Button buttonFolder = new Button( folderGroup, SWT.NONE );
     buttonFolder.setText( "..." );
+    buttonFolder.setEnabled( m_allowUserChangeGridFolder );
     buttonFolder.addSelectionListener( new SelectionAdapter()
     {
       @Override
