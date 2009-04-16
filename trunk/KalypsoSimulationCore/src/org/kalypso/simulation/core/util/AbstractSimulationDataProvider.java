@@ -70,7 +70,7 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
 {
   private final Map<String, String> m_idhash;
 
-  private static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+  protected static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
 
   protected final ModelspecData m_modelspec;
 

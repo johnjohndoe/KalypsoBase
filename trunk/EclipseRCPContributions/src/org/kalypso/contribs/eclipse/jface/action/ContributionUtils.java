@@ -48,7 +48,7 @@ import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * Helper class for {@link org.eclipse.jface.action.IContributionManager}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class ContributionUtils
@@ -75,7 +75,7 @@ public class ContributionUtils
 
   /**
    * Contribute elements from a 'org.eclipse.ui.menus' extension.
-   *
+   * 
    * @param uri
    *          The uri of the extension to add.
    * @see IMenuService#populateContributionManager(ContributionManager, String)
@@ -89,14 +89,17 @@ public class ContributionUtils
 
   /**
    * Release previously populated managers.<br/>
-   *
+   * 
    * @see IMenuService#releaseContributions(ContributionManager)
    */
   public static void releaseContributions( final IServiceLocator serviceLocator, final IContributionManager contributionManager )
   {
     final IMenuService menuService = (IMenuService) serviceLocator.getService( IMenuService.class );
-    final ContributionManager mgr = findContributionManager( contributionManager );
-    menuService.releaseContributions( mgr );
+    if( menuService != null )
+    {
+      final ContributionManager mgr = findContributionManager( contributionManager );
+      menuService.releaseContributions( mgr );
+    }
   }
 
 }

@@ -59,7 +59,6 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -98,9 +97,6 @@ public class CalcJobHandler
   private final ISimulationService m_calcService;
 
   private File m_zipFile = null;
-
-  private IWorkspaceRoot m_root;
-
 
   public CalcJobHandler( final Modeldata modelspec, final ISimulationService calcService )
   {
@@ -177,12 +173,14 @@ public class CalcJobHandler
       switch( jobBean.getState() )
       {
         case FINISHED:
+          final IProject project = calcCaseFolder.getProject();
+
           // clear results as defined in modelspec
           clearResults( calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
           // Ergebniss abholen
-          m_calcService.transferCurrentResults( m_root.getLocation().toFile(), m_jobID );
-          m_root.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
+          m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
+          project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
 
           final String finishText = jobBean.getFinishText();
           final String message = finishText == null ? "" : finishText;
@@ -331,8 +329,7 @@ public class CalcJobHandler
     ZipResourceVisitor zipper = null;
     try
     {
-      m_root = calcCaseFolder.getWorkspace().getRoot();
-
+      final IProject project = calcCaseFolder.getProject();
       final List<SimulationDataPath> inputBeanList = new ArrayList<SimulationDataPath>();
       for( final Input input : inputList )
       {
@@ -341,8 +338,8 @@ public class CalcJobHandler
         final SimulationDescription description = inputdescriptionMap.get( inputId );
         final QName inputType = description == null ? QNAME_ANY_URI : description.getType();
 
-
         final String beanValue;
+
         if( inputType.equals( QNAME_ANY_URI ) )
         {
           // if the type is a uri, put the content as file into the zip
@@ -351,16 +348,18 @@ public class CalcJobHandler
           IResource inputResource;
           if( inputPath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
           {
+            final IContainer baseresource = project.getWorkspace().getRoot();
             final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
-            inputResource = m_root.findMember( path );
+            inputResource = baseresource.findMember( path );
             if( inputResource == null )
             {
-              inputResource = m_root.findMember( URIUtil.decode( path ) );
+              inputResource = baseresource.findMember( URIUtil.decode( path ) );
             }
+
           }
           else
           {
-            final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : m_root;
+            final IContainer baseresource = input.isRelativeToCalcCase() ? calcCaseFolder : project;
             inputResource = baseresource.findMember( inputPath );
           }
           if( inputResource == null )
@@ -415,5 +414,4 @@ public class CalcJobHandler
       }
     }
   }
-
 }
