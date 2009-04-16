@@ -55,7 +55,7 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
    * <p>
    * Override in order to optimize according to the underlying (real) grid.
    * </p>
-   * 
+   *
    * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
    *      org.kalypso.grid.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -77,7 +77,7 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
         final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, tmpCrd );
         if( walkingArea == null || walkingArea.contains( x, y, coordinate ) )
         {
-          // PERFORMANCE: only acces z value if we will visit that cell
+          // PERFORMANCE: only access z value if we will visit that cell
           final double value = grid.getValueChecked( x, y );
           coordinate.z = value;
           pwo.operate( x, y, coordinate );
