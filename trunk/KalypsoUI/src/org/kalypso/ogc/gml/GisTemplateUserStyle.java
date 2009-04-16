@@ -244,7 +244,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     if( m_styleKey != null )
     {
       final KeyInfo info = pool.getInfoForKey( m_styleKey );
-      info.setDirty( isDirty );
+      if( info != null )
+        info.setDirty( isDirty );
     }
   }
 }
