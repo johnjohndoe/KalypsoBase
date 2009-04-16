@@ -45,17 +45,17 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   private final boolean m_writeable;
 
-  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature ) throws Exception
+  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature )
   {
     this( rgcFeature, null );
   }
 
-  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context ) throws Exception
+  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context )
   {
     this( rgcFeature, context, false );
   }
 
-  protected RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context, final boolean writeable ) throws Exception
+  protected RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context, final boolean writeable )
   {
     m_writeable = writeable;
     if( context == null )
@@ -65,7 +65,17 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
     final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
     m_rangeSet = rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
-    final GM_Point origin = domain.getOrigin( null );
+    GM_Point origin = null;
+    try
+    {
+      origin = domain.getOrigin( null );
+    }
+    catch( final Exception e )
+    {
+      // Ignore: will never happen, as we are giving 'null' to getOrigin; change this if there will ever be a crs for
+      // domain
+      e.printStackTrace();
+    }
     m_origin = new Coordinate( origin.getX(), origin.getY() );
     m_offsetX = new Coordinate( domain.getOffsetX().getGeoX(), domain.getOffsetX().getGeoY() );
     m_offsetY = new Coordinate( domain.getOffsetY().getGeoX(), domain.getOffsetY().getGeoY() );
