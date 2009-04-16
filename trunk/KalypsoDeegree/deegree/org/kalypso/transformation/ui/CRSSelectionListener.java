@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
- * This class is a listener for notifying, if an selection of an crs has changed.<br>
+ * This class is a listener for notifying, if a selection of a crs has changed.<br>
  * It only works with elements, which has {@link org.deegree.model.crs.CoordinateSystem} as input.
  * 
  * @author Holger Albert
@@ -90,10 +90,10 @@ public abstract class CRSSelectionListener implements ISelectionChangedListener
   }
 
   /**
-   * This function is a simplification of the normal {@link #selectionChanged(SelectionChangedEvent)} function. <br>
+   * This function is a simplification of the normal {@link #selectionChanged(SelectionChangedEvent)} function.
    * 
    * @param selectedCRS
-   *            The name of the selected coordinate system, or null, if none is selected.
+   *          The name of the selected coordinate system, or null, if none is selected.
    */
   protected abstract void selectionChanged( String selectedCRS );
 }
