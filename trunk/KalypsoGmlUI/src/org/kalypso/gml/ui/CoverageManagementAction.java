@@ -60,6 +60,9 @@ public abstract class CoverageManagementAction extends Action
   /**
    * Called when selection changes, allows the actions to update itself.<br>
    * Does nothing by default.
+   * 
+   * @param allCoverages
+   *          All coverages of the currently selected themes. <code>null</code>, if no theme is selected.
    */
   @SuppressWarnings("unused")
   public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
