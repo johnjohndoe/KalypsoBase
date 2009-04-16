@@ -163,7 +163,13 @@ public class SimulationUtilitites
     {
       if( !input.isRelativeToCalcCase() )
       {
-        final URL url = new URL( context, input.getPath() ); 
+        String path = input.getPath();
+        while( path.contains( "\\" ) )
+        {
+          path = path.replace( "\\", "/" );
+        }
+        
+        final URL url = new URL( context, path ); 
         input.setPath( url.toExternalForm() );
       }
 
@@ -174,7 +180,13 @@ public class SimulationUtilitites
     {
       if( !output.isRelativeToCalcCase() )
       {
-        final URL url = new URL( context, output.getPath() );
+        String path = output.getPath();
+        while( path.contains( "\\" ) )
+        {
+          path = path.replace( "\\", "/" );
+        }
+
+        final URL url = new URL( context, path );
         output.setPath( url.toExternalForm() );
       }
 

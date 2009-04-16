@@ -48,10 +48,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.utils.Debug;
 
-
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class AsynchronousWPSWatchdog
 {
@@ -66,22 +64,6 @@ public class AsynchronousWPSWatchdog
     m_observer = observer;
     m_timeout = timeout;
   }
-
-// public void startProcess( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
-// {
-// monitor = SubMonitor.convert( monitor );
-//
-// IStatus status = m_wpsRequest.init( inputs, outputs, monitor );
-//
-// // on error return immediately
-// if( !status.isOK() )
-// {
-// return status;
-// }
-//
-// // start request, returns immediately
-// status = m_process.run( monitor );
-// }
 
   public IStatus waitForProcess( final IProgressMonitor monitor )
   {

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.util;
+package org.kalypso.simulation.core.refactoring.local;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -46,14 +46,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.httpclient.util.URIUtil;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -62,45 +60,37 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.simspec.DataType;
+import org.kalypso.simulation.core.util.AbstractSimulationDataProvider;
 
 /**
- * @author kurzbach
+ * @author Dirk Kuch
  */
-public abstract class AbstractSimulationDataProvider implements ISimulationDataProvider
+public class LocalSimulationDataProvider extends AbstractSimulationDataProvider implements ISimulationDataProvider
 {
-  private final Map<String, String> m_idhash;
+  private final URL m_context;
+  private final Map<String, String> m_inputs;
 
-  protected static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
-
-  protected final ModelspecData m_modelspec;
-
-  public AbstractSimulationDataProvider( final ModelspecData modelspec, final SimulationDataPath[] input )
+  public LocalSimulationDataProvider( final ModelspecData modelspec, final SimulationDataPath[] inputPaths, final URL context ) throws IOException
   {
-    m_modelspec = modelspec;
-
-    // wir interessieren uns nur für id->pfad
-    m_idhash = indexInput( input );
+    super( modelspec, inputPaths );
+    
+    m_inputs = indexInput( inputPaths );
+    m_context = context;
   }
 
-  protected Map<String, String> indexInput( final SimulationDataPath[] input )
+  /**
+   * @see org.kalypso.simulation.core.util.AbstractSimulationDataProvider#getBaseURL()
+   */
+  @Override
+  protected URL getBaseURL( ) throws IOException
   {
-    final Map<String, String> index = new HashMap<String, String>( input.length );
-    for( final SimulationDataPath bean : input )
-    {
-      index.put( bean.getId(), bean.getPath() );
-    }
-
-    return index;
+    return m_context;
   }
 
-  public boolean hasID( final String id )
-  {
-    return m_idhash.containsKey( id );
-  }
-
+  @Override
   public Object getInputForID( final String id ) throws SimulationException
   {
-    final String path = m_idhash.get( id );
+    final String path = m_inputs.get( id );
     if( path == null )
       throw new NoSuchElementException( "Eingabedaten nicht vorhanden mit ID: " + id );
 
@@ -114,9 +104,19 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
     {
       try
       {
+        final URI relativeURI;
+        
         final URI baseURL = getBaseURL().toURI();
-        final URI relativeURI = baseURL.resolve( URIUtil.encodePath( path ) );
-
+        if( path.startsWith( "platform:/resource//" ) )
+        {
+          relativeURI = baseURL.resolve( URIUtil.encodePath( path.substring( 20 ) ) );
+        }
+        else
+        {
+          relativeURI = baseURL.resolve( URIUtil.encodePath( path ) );
+        }
+        
+       
         // try to silently convert the URI to a URL
         try
         {
@@ -156,19 +156,5 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
     }
 
     throw new SimulationException( "Unknown type " + type, null );
-  }
-
-  /**
-   *
-   */
-  protected abstract URL getBaseURL( ) throws IOException;
-
-  /**
-   * This method does nothing. Override if needed
-   * 
-   * @see org.kalypso.simulation.core.ISimulationDataProvider#dispose()
-   */
-  public void dispose( )
-  {
   }
 }

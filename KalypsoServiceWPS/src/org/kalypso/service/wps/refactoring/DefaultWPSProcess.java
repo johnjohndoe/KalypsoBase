@@ -198,7 +198,7 @@ public class DefaultWPSProcess implements IWPSProcess
   @Override
   public synchronized String getTitle( )
   {
-    // TODO Auto-generated method stub
+    // TODO
     return null;
   }
 
@@ -273,7 +273,7 @@ public class DefaultWPSProcess implements IWPSProcess
     final ProcessDescriptionType processDescription = getProcessDescription( monitor );
     /* Get the input data. */
     final DataInputsType dataInputs = createDataInputs( processDescription, inputs );
-/* Get the output data. */
+    /* Get the output data. */
     m_outputDefinitions = WPSUtilities.createOutputDefinitions( processDescription, outputs );
 
     /* Send the request. */

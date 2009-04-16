@@ -12,6 +12,8 @@ Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.internal,
  org.kalypso.simulation.core.internal.local,
  org.kalypso.simulation.core.internal.queued,
+ org.kalypso.simulation.core.refactoring,
+ org.kalypso.simulation.core.refactoring.local,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
