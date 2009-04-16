@@ -42,7 +42,9 @@ package org.kalypsodeegree.graphics.transformation;
 
 import java.awt.Rectangle;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -55,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public class GeoTransformUtils
 {
-  /** Conctant for LatLon-Coordinate System: 'ESPG:4326' */
+  /** Constant for LatLon-Coordinate System: 'ESPG:4326' */
   public static String EPSG_LATLON = "EPSG:4326";
 
   private GeoTransformUtils( )
@@ -83,4 +85,23 @@ public class GeoTransformUtils
     return new Rectangle( x, y, width, height );
   }
 
+  /**
+   * Silently transforms a {@link GM_Object} into another coordinate system.<br>
+   * Silently, i.e. the {@link Exception}, normally thrown by {@link GeoTransformer#transform(GM_Object)} is ignored (it
+   * really is never thrown at all...)
+   * 
+   * @return <code>null</code>, if {@link GeoTransformer#transform(GM_Object)} throws an exception.
+   */
+  public static GM_Object transformQuiet( final GM_Object geo, final String targetSrs )
+  {
+    try
+    {
+      final GeoTransformer transformer = new GeoTransformer( targetSrs );
+      return transformer.transform( geo );
+    }
+    catch( final Exception e )
+    {
+      return null;
+    }
+  }
 }
