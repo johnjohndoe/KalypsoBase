@@ -208,7 +208,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.addTheme( theme );
   }
 
-  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws Exception
+  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException
   {
     return m_innerMapModel.addLayer( layer );
   }
