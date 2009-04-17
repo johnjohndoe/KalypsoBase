@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -77,7 +78,7 @@ public class FeatureTypeVisitor implements FeatureVisitor
   {
     return m_typename;
   }
-  
+
   public void setVisitor( final FeatureVisitor visitor )
   {
     m_visitor = visitor;
@@ -103,10 +104,9 @@ public class FeatureTypeVisitor implements FeatureVisitor
     if( QNameUtilities.equalsLocal( m_typename, featureType.getQName() ) )
       return true;
 
-    // ATTENTION: only one level of substitution.... this is too weak!
     if( m_acceptIfSubstituting )
-      return QNameUtilities.equalsLocal( m_typename, featureType.getSubstitutionGroupFT().getQName() );
-    
+      return GMLSchemaUtilities.substitutes( featureType, m_typename );
+
     return false;
   }
 }
