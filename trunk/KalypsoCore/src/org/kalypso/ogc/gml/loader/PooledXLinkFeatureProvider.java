@@ -113,7 +113,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         try
         {
           final URL gmlURL = uri.startsWith( "urn:" ) ? null : UrlResolverSingleton.resolveUrl( contextUrl, uri );
-          if( gmlURL.equals( contextUrl ) )
+          if( gmlURL != null && gmlURL.equals( contextUrl ) )
           {
             m_workspace = contextWorkspace;
             return m_workspace;
