@@ -1640,10 +1640,8 @@ public class StyleFactory
    *          - rules contained in the featureTypeStyle
    * @return the new feature type styler
    */
-  public static FeatureTypeStyle createFeatureTypeStyle( String featureTypeStyleName, String title, final String abstract_, final QName featureTypeQName, final String[] semanticTypeIdentifier, final Rule[] rules )
+  public static FeatureTypeStyle createFeatureTypeStyle( final String featureTypeStyleName, final String title, final String abstract_, final QName featureTypeQName, final String[] semanticTypeIdentifier, final Rule[] rules )
   {
-    featureTypeStyleName = StringExtend.toUTF8( featureTypeStyleName );
-    title = StringExtend.toUTF8( title );
     return new FeatureTypeStyle_Impl( featureTypeStyleName, title, abstract_, featureTypeQName, semanticTypeIdentifier, rules );
   }
 
