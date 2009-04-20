@@ -478,7 +478,7 @@ public class DisplayElementFactory
    */
   public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym )
   {
-    final GM_Object[] objects = findPoints( geomOrList, EMPTY_SURFACES );
+    final GM_Object[] objects = findPoints( geomOrList, EMPTY_GEOMS );
     if( objects == null )
       return null;
 

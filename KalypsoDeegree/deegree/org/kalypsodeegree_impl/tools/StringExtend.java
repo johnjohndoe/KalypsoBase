@@ -465,7 +465,6 @@ public class StringExtend
    */
   public static String stackTraceToString( StackTraceElement[] se )
   {
-
     StringBuffer sb = new StringBuffer();
     for( int i = 0; i < se.length; i++ )
     {
@@ -482,7 +481,6 @@ public class StringExtend
    */
   public static String stackTraceToString( Exception e )
   {
-
     StackTraceElement[] se = e.getStackTrace();
     StringBuffer sb = new StringBuffer();
     sb.append( e.getMessage() ).append( "\n" );
@@ -497,19 +495,5 @@ public class StringExtend
         break;
     }
     return sb.toString();
-  }
-
-  public static String toUTF8( String string )
-  {
-    if( string == null )
-      return null;
-    String tmp = null;
-    try
-    {
-      tmp = new String( string.getBytes(), "UTF-8" );
-    }
-    catch( Exception e )
-    {}
-    return tmp;
   }
 }
