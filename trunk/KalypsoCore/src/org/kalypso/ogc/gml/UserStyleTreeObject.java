@@ -154,4 +154,21 @@ public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 
     return getStyle().getAbstract();
   }
+
+  public static UserStyleTreeObject findObject( Object[] objects, String styleName )
+  {
+    for( Object object : objects )
+    {
+      if( object instanceof UserStyleTreeObject )
+      {
+        UserStyleTreeObject usto = (UserStyleTreeObject) object;
+        if( usto.getStyle().getName().equals( styleName ) )
+          return usto;
+      }
+    }
+    
+    return null;
+  }
+  
+  
 }

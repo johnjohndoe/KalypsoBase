@@ -136,7 +136,6 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( size != null && size.height > 0 )
       height = size.height;
 
-
     /*
      * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have too
      * many RuleTreeObjects.
@@ -180,7 +179,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( m_rule.getName() != null )
       return m_rule.getName();
 
-    return Messages.getString("org.kalypso.ogc.gml.RuleTreeObject.3"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.RuleTreeObject.3" ); //$NON-NLS-1$
   }
 
   /**
@@ -205,4 +204,18 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     return m_rule.getAbstract();
   }
 
+  public static RuleTreeObject findObject( Object[] objects, String ruleName )
+  {
+    for( Object object : objects )
+    {
+      if( object instanceof RuleTreeObject )
+      {
+        RuleTreeObject rto = (RuleTreeObject) object;
+        if( rto.getRule().getName().equals( ruleName ) )
+          return rto;
+      }
+    }
+
+    return null;
+  }
 }

@@ -82,6 +82,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -91,7 +92,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * <p>
  * Implements common features to all KalypsoTheme's
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme, IWorkbenchAdapter2
@@ -149,7 +150,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of the theme.
    * @param type
@@ -277,7 +278,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Fire the given event to my registered listeners.<br>
-   *
+   * 
    * @param invalidExtent
    *          The extent that is no more valid; <code>null</code> indicating that the complete theme should be
    *          repainted.
@@ -306,7 +307,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Returns the type of the theme by default. Override if needed.
-   *
+   * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
   public String getTypeContext( )
@@ -341,7 +342,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the icon set in the style (StyledLayerType), if any.<br>
    * This may be icons with a relative path or icons, which are defined via some URNs.<br>
-   *
+   * 
    * @return If an user icon or URN is defined, this icon will be returned.<br>
    *         If not, it checks the number of styles and rules.<br>
    *         If only one style and rule exists, there is a generated icon returned, representing the first rule.<br>
@@ -397,45 +398,34 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     if( m.matches() && m.groupCount() == 2 )
     {
       final String styleName = m.group( 1 );
+      final String ftsName = "";
       final String ruleName = m.group( 2 );
 
-      final Object[] children = getChildren( this );
-      if( children instanceof UserStyleTreeObject[] )
-      {
-        final UserStyleTreeObject[] styles = (UserStyleTreeObject[]) children;
-        for( final UserStyleTreeObject style : styles )
-        {
-          final String sName = style.getStyle().getName();
-          if( styleName.equals( sName ) )
-          {
-            final Object[] children2 = style.getChildren( style );
-            if( children2 instanceof RuleTreeObject[] )
-            {
-              final RuleTreeObject[] rules = (RuleTreeObject[]) children2;
-              for( final RuleTreeObject ruleTreeObject : rules )
-              {
-                final String rName = ruleTreeObject.getRule().getName();
-                if( ruleName.equals( rName ) )
-                {
-                  /* Found the right one, need this image icon. */
-                  final ImageDescriptor descriptor = ruleTreeObject.getImageDescriptor( ruleTreeObject );
+      final Object[] themeChildren = getChildren( this );
+      final UserStyleTreeObject styleTreeObject = UserStyleTreeObject.findObject( themeChildren, styleName );
+      if( styleTreeObject == null )
+        return getDefaultIcon();
 
-                  /* Create the Image. */
-                  m_externIcon = descriptor.createImage();
+      final Object[] styleTreeChildren = styleTreeObject.getChildren( styleTreeObject );
+      final FeatureTypeStyleTreeObject ftsObject = FeatureTypeStyleTreeObject.findObject( styleTreeChildren, ftsName );
+      if( ftsObject == null )
+        return getDefaultIcon();
 
-                  /* Need a new one with the created image, because the image is cached and should be disposed. */
-                  /* Using the descriptor above will result in undisposed images. */
-                  return ImageDescriptor.createFromImage( m_externIcon );
-                }
-              }
-            }
+      final Object[] ftsChildren = ftsObject.getChildren( ftsObject );
+      final RuleTreeObject rto = RuleTreeObject.findObject( ftsChildren, ruleName );
 
-            break;
-          }
-        }
-      }
+      if( rto == null )
+        return getDefaultIcon();
 
-      return getDefaultIcon();
+      /* Found the right one, need this image icon. */
+      final ImageDescriptor descriptor = rto.getImageDescriptor( rto );
+
+      /* Create the Image. */
+      m_externIcon = descriptor.createImage();
+
+      /* Need a new one with the created image, because the image is cached and should be disposed. */
+      /* Using the descriptor above will result in undisposed images. */
+      return ImageDescriptor.createFromImage( m_externIcon );
     }
 
     /* Resolve the URL. */
@@ -458,7 +448,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the resolved URL for the legend icon or null, if none could be created.
-   *
+   * 
    * @return The resolved URL for the legend icon or null, if none could be created.
    */
   private URL getLegendIconURL( )
@@ -503,7 +493,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * <strong>Note:</strong><br>
    * <br>
    * This has only an effect, if the user does not define an URL or URN and the theme has more then one style or rule.
-   *
+   * 
    * @return The default image descriptor.
    */
   protected ImageDescriptor getDefaultIcon( )
@@ -760,7 +750,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the URL or URN defined by the user for an icon, which should be displayed in a legend or an
    * outline.
-   *
+   * 
    * @return The URL or URN string. May be null.
    */
   public String getLegendIcon( )
@@ -788,7 +778,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the context.
-   *
+   * 
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
   protected URL getContext( )
@@ -799,7 +789,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns true, if the theme allows showing its children in an outline. Otherwise, it will return
    * false.
-   *
+   * 
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
   public boolean shouldShowLegendChildren( )
