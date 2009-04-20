@@ -50,27 +50,8 @@ import org.kalypso.ogc.gml.ICheckStateProvider;
  *
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 {
-// /**
-// * If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple styles of a
-// * theme, this is not neccessary, because their level will be displayed in the outline then.
-// */
-// private final boolean m_showStyle;
-
-  /**
-   * The constructor.
-   *
-   * @param showStyle
-   *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
-   *          styles of a theme, this is not necessary, because their level will be displayed in the outline then.
-   */
-  public GisMapOutlineLabelProvider( /* final boolean showStyle */)
-  {
-// m_showStyle = showStyle;
-  }
-
   public void elementsChanged( final Object... elements )
   {
     super.fireLabelProviderChanged( new LabelProviderChangedEvent( this, elements ) );
@@ -82,34 +63,6 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
   @Override
   protected String decorateText( final String input, final Object element )
   {
-// if( element instanceof IWorkbenchAdapter && element instanceof IKalypsoTheme )
-// {
-// final IWorkbenchAdapter adapter = (IWorkbenchAdapter) element;
-//
-// /* Standard behaviour, if the style name for a single style of a theme should not be added. */
-// if( m_showStyle == false )
-// return input;
-//
-// final Object[] children = adapter.getChildren( element );
-// if( !(children instanceof UserStyleTreeObject[]) )
-// return input;
-//
-// if( children != null && children.length != 1 )
-// return input;
-//
-// final UserStyleTreeObject style = (UserStyleTreeObject) children[0];
-// final String label = style.getLabel( style );
-//
-// // GRRRRR!
-// if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )
-// return input;
-//
-//      if( label.trim().equals( "" ) ) //$NON-NLS-1$
-// return input;
-//
-//      return input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-// }
-
     return input;
   }
 
@@ -131,6 +84,7 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
     return provider.isGrayed();
   }
 
+  @SuppressWarnings("restriction")
   private ICheckStateProvider getCheckStateProvider( final Object element )
   {
     return (ICheckStateProvider) Util.getAdapter( element, ICheckStateProvider.class );
