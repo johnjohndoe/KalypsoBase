@@ -53,7 +53,7 @@ import org.kalypsodeegree.graphics.sld.Rule;
 
 /**
  * Tree object representing a {@link FeatureTypeStyle}.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureTypeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
@@ -141,5 +141,18 @@ public class FeatureTypeStyleTreeObject implements IWorkbenchAdapter, ITooltipPr
       throw new IllegalStateException();
 
     return m_fts.getAbstract();
+  }
+
+  // TODO Later on, we would like to search via the name.
+  public static FeatureTypeStyleTreeObject findObject( Object[] objects, String ftsName )
+  {
+    if( objects == null || objects.length == 0 )
+      return null;
+
+    Object object = objects[0];
+    if( !(object instanceof FeatureTypeStyleTreeObject) )
+      return null;
+
+    return (FeatureTypeStyleTreeObject) object;
   }
 }
