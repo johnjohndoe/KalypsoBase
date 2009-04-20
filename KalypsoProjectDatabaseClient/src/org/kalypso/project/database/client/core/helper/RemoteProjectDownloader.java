@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.core.helper;
 import java.io.File;
 import java.net.URL;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,6 +67,8 @@ public class RemoteProjectDownloader implements ICoreRunnableWithProgress
 
   public RemoteProjectDownloader( final IRemoteProject project, final File destination )
   {
+    Assert.isNotNull( project );
+
     m_project = project;
     m_destination = destination;
   }
