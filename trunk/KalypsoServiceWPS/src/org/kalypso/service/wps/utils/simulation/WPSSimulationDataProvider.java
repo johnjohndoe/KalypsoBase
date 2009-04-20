@@ -181,7 +181,13 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       final InputSource inputSource = new InputSource( new StringReader( textContent ) );
       try
       {
-        final URL schemaLocationHint = new URL( complexValue.getSchema() );
+        final String schema = complexValue.getSchema();
+        if( schema == null )
+        {
+          return GmlSerializer.createGMLWorkspace( inputSource, null, null, null );
+        }
+        
+        final URL schemaLocationHint = new URL( schema );
         return GmlSerializer.createGMLWorkspace( inputSource, schemaLocationHint, null, null );
       }
       catch( final Exception e )

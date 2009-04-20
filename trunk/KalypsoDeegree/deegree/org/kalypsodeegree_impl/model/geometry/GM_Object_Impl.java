@@ -47,6 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.tools.Debug;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
@@ -266,11 +267,11 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   {
     try
     {
-      Geometry export = JTSAdapter.export( this );
-      Geometry poly = export.buffer( distance );
+      final Geometry export = JTSAdapter.export( this );
+      final Geometry poly = export.buffer( distance );
       return JTSAdapter.wrap( poly );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;
@@ -432,6 +433,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       // let JTS do the hard work
       final Geometry jtsThis = JTSAdapter.export( this );
       final Geometry jtsThat = JTSAdapter.export( that );
+     
       final Geometry jtsDifference = jtsThis.difference( jtsThat );
 
       if( !jtsDifference.isEmpty() )
@@ -444,6 +446,11 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     {
       System.out.println( e );
     }
+    catch( final TopologyException e )
+    {
+      System.out.println( e );
+    }
+    
     return difference;
   }
 

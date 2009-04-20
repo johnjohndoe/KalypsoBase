@@ -456,8 +456,14 @@ public class NonBlockingWPSRequest
 
         format = WPSSimulationDataProvider.TYPE_GML;
         encoding = "UTF-8";
-        schema = schemaLocationString;
 
+        // TODO: copy the schema to a place where the server can find it
+        // REMARK: makes no sense to give platform: or bundleresource: urls; they do not exist on theother side
+        if( schemaLocationString != null && !schemaLocationString.startsWith( "bundleresource:" ) && !schemaLocationString.startsWith( "platform:" ) )
+          schema = schemaLocationString;
+        else
+          schema = null;
+        
         // enforce the schemaLocation
         // TODO: copy the schema to a place where the server can find it
         gmlWorkspace.setSchemaLocation( schemaLocationString );
