@@ -220,8 +220,6 @@ public final class KeyInfo extends Job implements ILoaderListener
       {
         m_object = null;
 
-        e.printStackTrace();
-
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
@@ -234,6 +232,7 @@ public final class KeyInfo extends Job implements ILoaderListener
             return status;
         }
 
+        e.printStackTrace();
         return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
       }
     }

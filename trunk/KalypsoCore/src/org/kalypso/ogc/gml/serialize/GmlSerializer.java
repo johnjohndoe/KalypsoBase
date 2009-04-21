@@ -357,7 +357,8 @@ public final class GmlSerializer
         is = bis;
       }
 
-      final GMLWorkspace workspace = createGMLWorkspace( is, null, factory );
+      final URL context = file.toURI().toURL();
+      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, context, factory );
       is.close();
       return workspace;
     }
