@@ -47,6 +47,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.deegree.model.crs.CoordinateSystem;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -69,6 +76,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.CachedCRSFactory;
 
@@ -77,7 +86,7 @@ import org.kalypso.transformation.CachedCRSFactory;
  * 
  * @author Holger Albert
  */
-public class AvailableCRSPanel extends Composite
+public class AvailableCRSPanel extends Composite implements IJobChangeListener
 {
   /**
    * The list of available crs panel listener.
@@ -130,10 +139,13 @@ public class AvailableCRSPanel extends Composite
 
     /* Create the combo. */
     m_viewer = new ListViewer( main, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 0 ) );
+    GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, false, 3, 0 );
+    viewerData.heightHint = 200;
+    m_viewer.getList().setLayoutData( viewerData );
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new CRSLabelProvider( false ) );
     m_viewer.setSorter( new ViewerSorter() );
+    m_viewer.setInput( new String[] { "Koordinaten-Systeme werden geladen ..." } );
 
     /* Create the info image. */
     final Label imageLabel = new Label( main, SWT.NONE );
@@ -218,7 +230,8 @@ public class AvailableCRSPanel extends Composite
   {
     super.setEnabled( enabled );
 
-    m_viewer.getControl().setEnabled( enabled );
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+      m_viewer.getControl().setEnabled( enabled );
   }
 
   /**
@@ -234,41 +247,38 @@ public class AvailableCRSPanel extends Composite
    * This function sets the available coordinate systems.
    * 
    * @param preferenceNames
-   *            An array of names from coordinate systems. Make sure, they are ; seperated.
+   *          An array of names from coordinate systems. Make sure, they are ; seperated.
    */
   public void setAvailableCoordinateSystems( String preferenceNames )
   {
-    try
+    if( m_viewer == null || m_viewer.getControl().isDisposed() )
+      return;
+
+    if( preferenceNames == null || preferenceNames.length() == 0 )
     {
-      if( preferenceNames == null || preferenceNames.length() == 0 )
-      {
-        m_coordHash.clear();
-        m_viewer.setInput( null );
-        return;
-      }
-
-      /* The names of the coordinate systems as array. */
-      String[] namesArray = preferenceNames.split( ";" );
-
-      /* Get all coordinate system names. */
-      List<String> names = Arrays.asList( namesArray );
-
-      /* Create a hash of it. */
-      m_coordHash = CRSHelper.getCoordHash( names );
-
-      /* Get all coordinate systems. */
-      List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
-
-      /* Set the input. */
-      m_viewer.setInput( coordinateSystems );
-
-      /* Notify it about the initializing. */
-      fireCoordinateSystemsInitialized( names );
+      m_coordHash.clear();
+      m_viewer.setInput( null );
+      return;
     }
-    catch( Exception ex )
-    {
-      ex.printStackTrace();
-    }
+
+    /* Disable. */
+    setEnabled( false );
+
+    /* The names of the coordinate systems as array. */
+    String[] namesArray = preferenceNames.split( ";" );
+
+    /* Get all coordinate system names. */
+    List<String> names = Arrays.asList( namesArray );
+
+    /* Start the job. */
+    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names );
+    initCRSJob.setSystem( true );
+
+    /* Add myself as a listener. */
+    initCRSJob.addJobChangeListener( this );
+
+    /* Schedule. */
+    initCRSJob.schedule();
   }
 
   /**
@@ -305,7 +315,7 @@ public class AvailableCRSPanel extends Composite
    * This function sets the selection of the panel.
    * 
    * @param selection
-   *            The selection.
+   *          The selection.
    */
   public void setSelectedCRS( String selectedCRS )
   {
@@ -357,7 +367,7 @@ public class AvailableCRSPanel extends Composite
    * This function adds a available crs panel listener.
    * 
    * @param listener
-   *            The available crs panel listener.
+   *          The available crs panel listener.
    */
   public void addAvailableCRSPanelListener( IAvailableCRSPanelListener listener )
   {
@@ -369,7 +379,7 @@ public class AvailableCRSPanel extends Composite
    * This function removes a available crs panel listener.
    * 
    * @param listener
-   *            The available crs panel listener.
+   *          The available crs panel listener.
    */
   public void removeAvailableCRSPanelListener( IAvailableCRSPanelListener listener )
   {
@@ -381,7 +391,7 @@ public class AvailableCRSPanel extends Composite
    * This function adds a selection changed listener.
    * 
    * @param listener
-   *            The selection changed listener.
+   *          The selection changed listener.
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
@@ -393,7 +403,7 @@ public class AvailableCRSPanel extends Composite
    * This function removes a selection changed listener.
    * 
    * @param listener
-   *            The selection changed listener.
+   *          The selection changed listener.
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
@@ -405,9 +415,9 @@ public class AvailableCRSPanel extends Composite
    * This function informs listeners about the coordinate system, which was removed.
    * 
    * @param names
-   *            The list of names of the coordinate systems.
+   *          The list of names of the coordinate systems.
    */
-  private void fireCoordinateSystemsInitialized( List<String> names )
+  protected void fireCoordinateSystemsInitialized( List<String> names )
   {
     for( int i = 0; i < m_listener.size(); i++ )
     {
@@ -451,7 +461,7 @@ public class AvailableCRSPanel extends Composite
    * This function informs listeners about the coordinate system, which was removed.
    * 
    * @param name
-   *            The name of the coordinate system.
+   *          The name of the coordinate system.
    */
   private void fireCoordinateSystemRemoved( String name )
   {
@@ -469,7 +479,7 @@ public class AvailableCRSPanel extends Composite
    * This function adds a new coordinate system.
    * 
    * @param display
-   *            The display.
+   *          The display.
    */
   protected void handleAddPressed( Display display )
   {
@@ -509,7 +519,7 @@ public class AvailableCRSPanel extends Composite
    * This function informs listeners about the coordinate system, which was added.
    * 
    * @param name
-   *            The name of the coordinate system.
+   *          The name of the coordinate system.
    */
   private void fireCoordinateSystemAdded( String name )
   {
@@ -521,5 +531,149 @@ public class AvailableCRSPanel extends Composite
       /* Notify it about the addition. */
       availableCRSPanelListener.coordinateSystemAdded( name );
     }
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void aboutToRun( IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#awake(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void awake( IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void done( final IJobChangeEvent event )
+  { /* Get the display. */
+    Display display = getDisplay();
+
+    /* Create a UI job. */
+    UIJob uiJob = new UIJob( display, "AvailableCRSPanelRefreshJob" )
+    {
+      /**
+       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      @Override
+      public IStatus runInUIThread( IProgressMonitor monitor )
+      {
+        try
+        {
+          /* If no monitor is given, create a null progress monitor. */
+          if( monitor == null )
+            monitor = new NullProgressMonitor();
+
+          /* Monitor. */
+          monitor.beginTask( "Aktualisiere verfügbare Koordinaten-Systeme ...", 100 );
+
+          if( m_viewer == null || m_viewer.getControl().isDisposed() )
+          {
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            return Status.OK_STATUS;
+          }
+
+          /* Get the job. */
+          Job job = event.getJob();
+          if( !(job instanceof CRSInitializeJob) )
+          {
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            return Status.OK_STATUS;
+          }
+
+          /* Cast. */
+          CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
+
+          /* Get the used names to initialize the coordinate systems. */
+          List<String> names = initCRSJob.getNames();
+
+          /* Get the hash of them. */
+          m_coordHash = initCRSJob.getCoordHash();
+
+          /* Check if everything is in order. */
+          if( names == null || names.size() == 0 || m_coordHash == null || m_coordHash.size() == 0 )
+          {
+            /* Clear. */
+            m_coordHash.clear();
+            m_viewer.setInput( null );
+
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            return Status.OK_STATUS;
+          }
+
+          /* Get all coordinate systems. */
+          List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
+
+          /* Set the input. */
+          m_viewer.setInput( coordinateSystems );
+
+          /* Notify it about the initializing. */
+          fireCoordinateSystemsInitialized( names );
+
+          /* Remove myself as a listener. */
+          initCRSJob.removeJobChangeListener( AvailableCRSPanel.this );
+
+          /* Monitor. */
+          monitor.worked( 100 );
+
+          return Status.OK_STATUS;
+        }
+        catch( Exception ex )
+        {
+          ex.printStackTrace();
+
+          return StatusUtilities.statusFromThrowable( ex );
+        }
+        finally
+        {
+          /* Enable. */
+          setEnabled( true );
+
+          /* Monitor. */
+          monitor.done();
+        }
+      }
+    };
+
+    /* Execute the UI job. */
+    uiJob.schedule();
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#running(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void running( IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#scheduled(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void scheduled( IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#sleeping(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void sleeping( IJobChangeEvent event )
+  {
   }
 }
