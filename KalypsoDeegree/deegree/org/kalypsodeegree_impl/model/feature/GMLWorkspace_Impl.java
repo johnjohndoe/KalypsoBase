@@ -319,6 +319,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_context;
   }
 
+  /**
+   * @deprecated Using this method is a hack that which probably can be solved otherwise...
+   */
+  @Deprecated
   public void setContext( final URL context )
   {
     m_context = context;
