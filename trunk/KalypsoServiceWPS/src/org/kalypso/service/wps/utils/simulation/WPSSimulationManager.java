@@ -76,7 +76,7 @@ public class WPSSimulationManager
   {
     int maxNumThreads = 1;
     final String property = System.getProperty( WPS_MAX_NUM_THREADS );
-    if( !"".equals( property ) )
+    if( property != null && !"".equals( property ) )
     {
       try
       {
@@ -141,7 +141,7 @@ public class WPSSimulationManager
    *          The id of the current running job.
    * @return The FileObject containing the path to the result space of this job.
    */
-  public FileObject getResultDir( String jobID ) throws SimulationException
+  public FileObject getResultDir( final String jobID ) throws SimulationException
   {
     return m_service.getResultDir( jobID );
   }

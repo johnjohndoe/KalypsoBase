@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
@@ -103,8 +104,9 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
         return Status.OK_STATUS;
       }
-
     };
+    
+    
     UPDATE_JOB.addJobChangeListener( new JobChangeAdapter()
     {
       /**
@@ -113,7 +115,6 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
       @Override
       public void done( final IJobChangeEvent event )
       {
-
         UPDATE_JOB.schedule( JOB_DELAY );
       }
     } );
@@ -123,18 +124,36 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected void fireWorkspaceChanged( )
   {
-    for( final IRemoteProjectsListener listener : m_listener )
+    new WorkspaceJob( "" )
     {
-      listener.remoteWorkspaceChanged();
-    }
+      @Override
+      public IStatus runInWorkspace( final IProgressMonitor monitor )
+      {
+        for( final IRemoteProjectsListener listener : m_listener )
+        {
+          listener.remoteWorkspaceChanged();
+        }
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
   }
 
   protected void fireConnectionStatusChanged( )
   {
-    for( final IRemoteProjectsListener listener : m_listener )
+    new WorkspaceJob( "" )
     {
-      listener.remoteConnectionChanged( m_connectionState );
-    }
+      @Override
+      public IStatus runInWorkspace( final IProgressMonitor monitor )
+      {
+        for( final IRemoteProjectsListener listener : m_listener )
+        {
+          listener.remoteConnectionChanged( m_connectionState );
+        }
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
   }
 
   private void init( )
@@ -161,6 +180,21 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   public KalypsoProjectBean[] getBeans( )
   {
+    try
+    {
+      int count = 0;
+
+      while( Job.RUNNING == UPDATE_JOB.getState() && count < 100 )
+      {
+        Thread.sleep( 100 );
+        count++;
+      }
+    }
+    catch( final InterruptedException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+    
     return m_beans;
   }
 
