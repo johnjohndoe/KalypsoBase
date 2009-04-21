@@ -172,7 +172,14 @@ public class GmlLoader extends AbstractLoader
 
       return workspace;
     }
-    // TODO: special handle cancel-coreException!
+    catch( final CoreException ce )
+    {
+      final IStatus status = ce.getStatus();
+      setStatus( status );
+      if( !status.matches( IStatus.CANCEL ) )
+        ce.printStackTrace();
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + ce.toString(), ce ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     catch( final LoaderException le )
     {
       le.printStackTrace();
