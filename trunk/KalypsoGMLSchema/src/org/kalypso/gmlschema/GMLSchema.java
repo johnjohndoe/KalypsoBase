@@ -75,7 +75,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
  * represents a gml schema
- *
+ * 
  * @author doemming
  */
 public class GMLSchema implements IGMLSchema
@@ -164,7 +164,7 @@ public class GMLSchema implements IGMLSchema
 
   /**
    * initializes this schema, loads all included and imported schemas
-   *
+   * 
    * @throws GMLSchemaException
    */
   private void init( final SchemaDocument schemaDocument ) throws GMLSchemaException
@@ -554,12 +554,12 @@ public class GMLSchema implements IGMLSchema
 
   /**
    * @param schemasToIgnore
-   *            list of schemas not to visit
+   *          list of schemas not to visit
    * @param visitor
    */
   private void innerAccept( final IGMLSchemaVisitor visitor, final List<GMLSchema> schemasToIgnore )
   {
-    if( visitor.visit( this ) && !schemasToIgnore.contains( this ) )
+    if( !schemasToIgnore.contains( this ) && visitor.visit( this ) )
     {
       schemasToIgnore.add( this );
       for( final GMLSchema schema : getImports() )
@@ -644,7 +644,7 @@ public class GMLSchema implements IGMLSchema
   @Override
   public String toString( )
   {
-    return "XML-Schema: " + getTargetNamespace();
+    return String.format( "XML-Schema: %s (%s)", getTargetNamespace(), getContext() );
   }
 
   public SchemaDocument[] getIncludedSchemas( )
