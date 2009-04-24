@@ -48,19 +48,16 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
@@ -80,16 +77,19 @@ public class SldLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  public Object load( IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
   {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     InputStream is = null;
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.1"), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
       final URL url = m_urlResolver.resolveURL( context, source );
 
@@ -107,16 +107,12 @@ public class SldLoader extends AbstractLoader
 
       is.close();
 
-      final IResource resource = ResourceUtilities.findFileFromURL( url );
-      if( resource != null )
-        addResource( resource, styledLayerDescriptor );
-
       monitor.done();
       return styledLayerDescriptor;
     }
     catch( final Exception e )
     {
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.2") + source, e ); //$NON-NLS-1$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.2" ) + source, e ); //$NON-NLS-1$
     }
     finally
     {
@@ -125,8 +121,11 @@ public class SldLoader extends AbstractLoader
   }
 
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     if( data instanceof StyledLayerDescriptor )
     {
       IFile sldFile = null;
@@ -143,45 +142,46 @@ public class SldLoader extends AbstractLoader
         final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
 
         if( sldFile != null )
-        {
-          sldFile.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
           sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
-        }
         else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
         {
-//          sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
+// sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
         }
         else
-          throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.6") + styleURL ); //$NON-NLS-1$
+          throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
 
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.7") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.7" ) + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Throwable e )
       {
         e.printStackTrace();
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.9") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
-      }
-      finally
-      {
-        /* delete all markers on the corresponding resource */
-        if( sldFile != null )
-        {
-          try
-          {
-            final IMarker[] markers = sldFile.findMarkers( source, false, IResource.DEPTH_ZERO );
-            for( final IMarker marker : markers )
-              marker.delete();
-          }
-          catch( final CoreException e )
-          {
-            KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-          }
-        }
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.9" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
+  @Override
+  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
+  {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+    final URL url = m_urlResolver.resolveURL( context, source );
+    final IResource resource = ResourceUtilities.findFileFromURL( url );
+    return new IResource[] { resource };
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
+   */
+  @Override
+  public void release( final Object object )
+  {
   }
 }

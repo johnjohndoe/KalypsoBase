@@ -41,20 +41,19 @@
 package org.kalypso.ogc.sensor.loaders;
 
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.core.IKalypsoCoreConstants;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -72,29 +71,26 @@ public class ZmlLoader extends AbstractLoader
   private final UrlResolver m_urlResolver = new UrlResolver();
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  public Object load( IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
   {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     try
     {
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.0") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.0" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
-
-      // add resource in order to get aware of changes made by tier on it
-      final IFile file = ResourceUtilities.findFileFromURL( url );
-      if( file != null )
-        addResource( file, obs );
-      return obs;
+      return ZmlFactory.parseXML( url, url.getFile() );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-//      e.printStackTrace();
+// e.printStackTrace();
       // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }
@@ -105,13 +101,14 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(org.kalypso.core.util.pool.IPoolableObjectType,
+   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( IPoolableObjectType key, IProgressMonitor monitor, Object data ) throws LoaderException
   {
-    IMarker lockMarker = null;
+    final String source = key.getLocation();
+    final URL context = key.getContext();
 
     try
     {
@@ -119,15 +116,12 @@ public class ZmlLoader extends AbstractLoader
         return;
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.1") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.1" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.2") + url ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
 
-      // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation
-      lockMarker = file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
-      
       final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
 
       // set contents of ZML-file
@@ -150,19 +144,6 @@ public class ZmlLoader extends AbstractLoader
     }
     finally
     {
-      /* delete all markers on the corresponding resource */
-      if( lockMarker != null )
-      {
-        try
-        {
-          lockMarker.delete();
-        }
-        catch( final CoreException e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-        }
-      }
-      
       monitor.done();
     }
   }
@@ -173,5 +154,26 @@ public class ZmlLoader extends AbstractLoader
   public String getDescription( )
   {
     return "ZML"; //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
+  @Override
+  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
+  {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+    final URL url = m_urlResolver.resolveURL( context, source );
+    final IFile file = ResourceUtilities.findFileFromURL( url );
+    return new IResource[] { file };
+  }
+  
+  /**
+   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
+   */
+  @Override
+  public void release( Object object )
+  {
   }
 }
