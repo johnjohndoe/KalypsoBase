@@ -52,17 +52,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.core.util.pool.KeyInfo;
-import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.loader.AbstractLoader;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -74,32 +69,9 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 /**
  * @author Belger
  */
-public class ShapeLoader extends AbstractLoader
+public class ShapeLoader extends WorkspaceLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
-
-  /** A special command listener, which sets the dirty flag on the corresponding KeyInfo for the loaded workspace. */
-  private final ICommandManagerListener m_commandManagerListener = new ICommandManagerListener()
-  {
-    public void onCommandManagerChanged( final ICommandManager source )
-    {
-      final Object[] objects = getObjects();
-      for( final Object element : objects )
-      {
-        final CommandableWorkspace workspace = (CommandableWorkspace) element;
-        final ICommandManager cm = workspace.getCommandManager();
-        if( cm == source )
-        {
-          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-          final KeyInfo info = pool.getInfo( workspace );
-          if( info != null )
-          {
-            info.setDirty( source.isDirty() );
-          }
-        }
-      }
-    }
-  };
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
@@ -114,28 +86,18 @@ public class ShapeLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
+    final String location = key.getLocation();
+    final URL context = key.getContext();
+
     /* Files that get deleted at the end of this operation. */
     final List<File> filesToDelete = new ArrayList<File>();
 
     try
     {
-      // eventuelle vorhandenen Information zum CRS abschneiden
-      final int index = location.indexOf( '#' );
-
-      final String sourceSrs;
-      final String shpSource;
-      if( index != -1 && index + 1 < location.length() )
-      {
-        sourceSrs = location.substring( index + 1 );
-        shpSource = location.substring( 0, index );
-      }
-      else
-      {
-        sourceSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        shpSource = location;
-      }
+      final String sourceSrs = parseSrs(location);
+      final String shpSource = parseSource(location);
 
       final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", shpSource ); //$NON-NLS-1$
       final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 100 );
@@ -143,29 +105,17 @@ public class ShapeLoader extends AbstractLoader
 
       final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
 
-
-      final URL shpURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shp" ); //$NON-NLS-1$
-      final URL dbfURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".dbf" ); //$NON-NLS-1$
-      final URL shxURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shx" ); //$NON-NLS-1$
+      final URL shpURL = new URL( sourceURL.toExternalForm() + ".shp" );//$NON-NLS-1$
+      final URL dbfURL = new URL( sourceURL.toExternalForm() + ".dbf" ); //$NON-NLS-1$
+      final URL shxURL = new URL( sourceURL.toExternalForm() + ".shx" ); //$NON-NLS-1$
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       final File sourceFile;
-      IResource shpResource = null;
-      IResource dbfResource = null;
-      IResource shxResource = null;
       final IPath resource = ResourceUtilities.findPathFromURL( sourceURL );
       if( resource != null )
-      {
         sourceFile = ResourceUtilities.makeFileFromPath( resource );
-
-        shpResource = ResourceUtilities.findFileFromURL( shpURL );
-        dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
-        shxResource = ResourceUtilities.findFileFromURL( shxURL );
-      }
       else if( sourceURL.getProtocol().startsWith( "file" ) ) //$NON-NLS-1$
-      {
         sourceFile = new File( sourceURL.getPath() );
-      }
       else
       {
         moni.subTask( "Downloading to local file system" );
@@ -198,7 +148,6 @@ public class ShapeLoader extends AbstractLoader
 
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
-      workspace.addCommandManagerListener( m_commandManagerListener );
 
       try
       {
@@ -212,13 +161,6 @@ public class ShapeLoader extends AbstractLoader
       {
         e1.printStackTrace();
       }
-
-      if( shpResource != null )
-        addResource( shpResource, workspace );
-      if( dbfResource != null )
-        addResource( dbfResource, workspace );
-      if( shxResource != null )
-        addResource( shxResource, workspace );
 
       return workspace;
     }
@@ -234,9 +176,40 @@ public class ShapeLoader extends AbstractLoader
     }
   }
 
-  @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  private String parseSource( String location )
   {
+    // eventuelle vorhandenen Information zum CRS abschneiden
+    final int index = location.indexOf( '#' );
+
+    final String shpSource;
+    if( index != -1 && index + 1 < location.length() )
+      shpSource = location.substring( 0, index );
+    else
+      shpSource = location;
+
+    return shpSource;
+  }
+
+  private String parseSrs( String location )
+  {
+    // eventuelle vorhandenen Information zum CRS abschneiden
+    final int index = location.indexOf( '#' );
+
+    final String sourceSrs;
+    if( index != -1 && index + 1 < location.length() )
+      sourceSrs = location.substring( index + 1 );
+    else
+      sourceSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    return sourceSrs;
+  }
+
+  @Override
+  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace) data;
@@ -263,16 +236,34 @@ public class ShapeLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#release(java.lang.Object)
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public void release( final Object object )
+  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
   {
-    final CommandableWorkspace workspace = (CommandableWorkspace) object;
-    workspace.removeCommandManagerListener( m_commandManagerListener );
+    final String location = key.getLocation();
+    final URL context = key.getContext();
+    final String shpSource = parseSource(location);
+    final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
 
-    super.release( object );
+    IResource shpResource = null;
+    IResource dbfResource = null;
+    IResource shxResource = null;
+    final IPath resource = ResourceUtilities.findPathFromURL( sourceURL );
 
-    workspace.dispose();
+    if( resource != null )
+    {
+      final URL shpURL = new URL( sourceURL.toExternalForm() + ".shp" );//$NON-NLS-1$
+      final URL dbfURL = new URL( sourceURL.toExternalForm() + ".dbf" ); //$NON-NLS-1$
+      final URL shxURL = new URL( sourceURL.toExternalForm() + ".shx" ); //$NON-NLS-1$
+
+      shpResource = ResourceUtilities.findFileFromURL( shpURL );
+      dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
+      shxResource = ResourceUtilities.findFileFromURL( shxURL );
+      
+      return new IResource[]{ shpResource, dbfResource, shxResource };
+    }
+
+    return new IResource[]{};
   }
 }

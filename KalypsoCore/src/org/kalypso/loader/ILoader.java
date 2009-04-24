@@ -40,10 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import java.net.URL;
+import java.net.MalformedURLException;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
  * ILoader is intended to be subclassed by clients who wish to integrate a loading solution for specific file types into
@@ -59,30 +61,25 @@ public interface ILoader
   /**
    * Load an object from somewhere
    * 
-   * @param location
-   *            information about the location of the resource to load
-   * @param context
-   *            some context for making the relative location of the resource to load absolute
    * @param monitor
    *            monitors the progress of loading
    * @return object
    * @throws LoaderException
    */
-  public Object load( final String location, final URL context, final IProgressMonitor monitor ) throws LoaderException;
+  public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException;
 
   /**
    * Save an object to the given location
    */
-  public void save( final String location, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException;
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException;
 
   /**
    * Release resources or whatsoever is associated to the given object
    */
   public void release( final Object object );
 
-  public void addLoaderListener( final ILoaderListener l );
-
-  public void removeLoaderListener( final ILoaderListener l );
-
   public IStatus getStatus( );
+
+  /** Returns the resources this key describes in respect to this loader. */
+  public IResource[] getResources( final IPoolableObjectType key ) throws MalformedURLException;
 }

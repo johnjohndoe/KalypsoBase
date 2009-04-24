@@ -40,11 +40,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core.util.pool;
 
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,10 +62,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
 
-public final class KeyInfo extends Job implements ILoaderListener
+public final class KeyInfo extends Job
 {
   private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) ); //$NON-NLS-1$
 
@@ -74,6 +81,8 @@ public final class KeyInfo extends Job implements ILoaderListener
   /** Flag, indicating if the associated object needs saving. */
   private boolean m_isDirty = false;
 
+  private Map<IResource, Boolean> m_resources = new HashMap<IResource, Boolean>();
+
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
     super( Messages.getString( "org.kalypso.util.pool.KeyInfo.1" ) + key.toString() ); //$NON-NLS-1$
@@ -81,7 +90,18 @@ public final class KeyInfo extends Job implements ILoaderListener
     m_key = key;
     m_loader = loader;
 
-    m_loader.addLoaderListener( this );
+    m_resources.clear();
+    try
+    {
+      final IResource[] resources = m_loader.getResources( m_key );
+      for( IResource resource : resources )
+        m_resources.put( resource, Boolean.FALSE );
+    }
+    catch( MalformedURLException e )
+    {
+      // Save to just ignore it; later we will get the same exception when invoking load on the loader
+      e.printStackTrace();
+    }
 
     setPriority( Job.LONG );
   }
@@ -93,8 +113,6 @@ public final class KeyInfo extends Job implements ILoaderListener
     // TODO: this doesn't really kills the job
     // are there means to kill it?
     cancel();
-
-    m_loader.removeLoaderListener( this );
 
     synchronized( this )
     {
@@ -126,52 +144,67 @@ public final class KeyInfo extends Job implements ILoaderListener
     return m_listeners.remove( l );
   }
 
-  /**
-   * @see org.kalypso.loader.ILoaderListener#onLoaderObjectInvalid(java.lang.Object, boolean)
-   */
-  public void onLoaderObjectInvalid( final Object object, final boolean bCannotReload ) throws Exception
+  private void reloadInternal( )
   {
-    Object oldObject = null;
+    // check, if any of our registered resourdces is locked for load
+    if( isLocked() )
+      return;
+
     synchronized( this )
     {
-      if( m_object == object )
+      if( DO_LOG )
       {
-        if( DO_LOG )
-        {
-          LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        m_loader.release( m_object );
-        m_object = null;
-
-        // nur Objekt invalidieren, wenn nicht neu geladen werden kann
-        // ansonsten einfach neu laden, dann werden die listener ja auch
-        // informiert
-        if( bCannotReload )
-        {
-          oldObject = object;
-        }
-        else
-        {
-          // TODO: better would be to cancel any old job and always start a new one
-          if( getState() == Job.NONE )
-          {
-            schedule();
-          }
-        }
+        LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + m_object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-    }
 
-    if( oldObject != null )
+      m_object = null;
+      // TODO: better would be to cancel any old job and always start a new one
+      if( getState() == Job.NONE )
+        schedule();
+    }
+  }
+
+  private boolean isLocked( )
+  {
+    boolean isLocked = false;
+    
+    for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
     {
-      // TRICKY: objectInvalid may add/remove PoolListener for this key,
-      // so we cannot iterate over m_listeners
-      final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-      for( final IPoolListener element : ls )
+      if( entry.getValue() )
       {
-        element.objectInvalid( m_key, oldObject );
+        entry.setValue( Boolean.FALSE );
+        isLocked = true;
       }
     }
+
+    return isLocked;
+  }
+
+  private void fireObjectLoaded( final Object o, final IStatus status )
+  {
+    // TRICKY: objectLoaded may add a new PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    for( final IPoolListener element : ls )
+      element.objectLoaded( m_key, o, status );
+  }
+
+  private void fireObjectInvalid( Object oldObject )
+  {
+    // TRICKY: objectInvalid may add/remove PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    for( final IPoolListener element : ls )
+      element.objectInvalid( m_key, oldObject );
+  }
+
+  private void fireDirtyChanged( final boolean isDirty )
+  {
+    // TRICKY: objectInvalid may add/remove PoolListener for this key,
+    // so we cannot iterate over m_listeners
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    for( final IPoolListener element : ls )
+      element.dirtyChanged( m_key, isDirty );
   }
 
   /**
@@ -180,22 +213,8 @@ public final class KeyInfo extends Job implements ILoaderListener
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    final Object o;
-    final IStatus status;
-    synchronized( this )
-    {
-      status = loadObject( monitor );
-      o = m_object;
-    }
-
-    // TRICKY: objectLoaded may add a new PoolListener for this key,
-    // so we cannot iterate over m_listeners
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-    for( final IPoolListener element : ls )
-    {
-      element.objectLoaded( m_key, o, status );
-    }
-
+    final IStatus status = loadObject( monitor );
+    fireObjectLoaded( m_object, status );
     return status;
   }
 
@@ -214,7 +233,8 @@ public final class KeyInfo extends Job implements ILoaderListener
           LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.4" ) + m_key ); //$NON-NLS-1$
         }
 
-        m_object = m_loader.load( location, m_key.getContext(), monitor );
+        m_object = m_loader.load( m_key, monitor );
+        m_isDirty = false;
       }
       catch( final Throwable e )
       {
@@ -249,7 +269,10 @@ public final class KeyInfo extends Job implements ILoaderListener
   {
     synchronized( this )
     {
-      m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
+      // Lock next load
+      for( Entry<IResource, Boolean> entry : m_resources.entrySet() )
+        entry.setValue( Boolean.TRUE );
+      m_loader.save( m_key, monitor, m_object );
       setDirty( false );
     }
   }
@@ -300,14 +323,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     m_isDirty = isDirty;
 
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-
-    // TRICKY: objectInvalid may add/remove PoolListener for this key,
-    // so we cannot iterate over m_listeners
-    for( final IPoolListener element : ls )
-    {
-      element.dirtyChanged( m_key, isDirty );
-    }
+    fireDirtyChanged( isDirty );
   }
 
   public void reload( )
@@ -317,13 +333,66 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     try
     {
-      onLoaderObjectInvalid( getObject(), false );
+      reloadInternal();
       setDirty( false );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
+  }
+
+  public void handleResourceChanged( IResourceDelta delta )
+  {
+    final List<IResourceDelta> deltas = new ArrayList<IResourceDelta>( m_resources.size() );
+
+    for( final IResource resource : m_resources.keySet() )
+    {
+      if( resource != null )
+      {
+        final IResourceDelta resourceDelta = delta.findMember( resource.getFullPath() );
+        if( resourceDelta != null )
+          deltas.add( resourceDelta );
+      }
+    }
+
+    if( deltas.size() == 0 )
+      return;
+
+    for( final IResourceDelta resourceDelta : deltas )
+    {
+      // TODO: handle case for more than one resource
+      checkDelta( resourceDelta );
+    }
+
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+   */
+  private boolean checkDelta( final IResourceDelta delta )
+  {
+    final int flags = delta.getFlags();
+
+    if( (flags & ( IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM | IResourceDelta.CONTENT | IResourceDelta.ENCODING)) != 0 )
+    {
+      switch( delta.getKind() )
+      {
+        case IResourceDelta.REMOVED:
+          final Object oldObject = m_object;
+          m_loader.release( m_object );
+          m_object = null;
+          fireObjectInvalid( oldObject );
+          break;
+
+        case IResourceDelta.ADDED:
+        case IResourceDelta.CHANGED:
+          reloadInternal();
+          break;
+      }
+    }
+
+    return true;
   }
 
 }
