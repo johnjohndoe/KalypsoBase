@@ -136,12 +136,6 @@
             name="KalypsoDictionaryCatalogContribution"/>
    </extension>
  <extension
-       id="resourcePoolLockMarker"
-       name="Resource Pool Lock Marker"
-       point="org.eclipse.core.resources.markers">
-    <persistent value="false"/>
- </extension>
- <extension
        point="org.eclipse.core.runtime.adapters">
     <factory
           adaptableType="org.kalypso.ogc.gml.IKalypsoFeatureTheme"
