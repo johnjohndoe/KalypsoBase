@@ -74,12 +74,14 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   private GM_Object m_result;
 
   private final ToolTipRenderer m_renderer;
-
+ 
   final java.awt.Cursor CROSSHAIR_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
 
   final java.awt.Cursor DEFAULT_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
 
   private final IGeometryBuilderExtensionProvider m_extender;
+
+  private final boolean m_updateCursor;
 
   /**
    * The constructor.
@@ -92,18 +94,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
-    m_extender = extender;
-    m_cnt_points = 0;
-
-    if( cnt_points > 2 )
-      m_cnt_points = cnt_points;
-
-    m_crs = targetCrs;
-
-    m_renderer = new ToolTipRenderer( m_extender );
-
-    if( m_extender != null )
-      m_extender.setCursor( CROSSHAIR_CURSOR );
+    this( cnt_points, targetCrs, extender, true );
   }
 
   /**
@@ -118,6 +109,23 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs )
   {
     this( cnt_points, targetCrs, null );
+  }
+
+  public PolygonGeometryBuilder( final int cnt_points, final String targetCrs, final IGeometryBuilderExtensionProvider extender, final boolean updateCursor )
+  {
+    m_extender = extender;
+    m_updateCursor = updateCursor;
+    m_cnt_points = 0;
+
+    if( cnt_points > 2 )
+      m_cnt_points = cnt_points;
+
+    m_crs = targetCrs;
+
+    m_renderer = new ToolTipRenderer( m_extender );
+
+    if( m_extender != null && m_updateCursor )
+      m_extender.setCursor( CROSSHAIR_CURSOR ); 
   }
 
   /**
@@ -171,7 +179,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object finish( ) throws Exception
   {
-    if( m_extender != null )
+    if( m_extender != null && m_updateCursor )
       m_extender.setCursor( DEFAULT_CURSOR );
 
     if( m_result != null )
@@ -264,7 +272,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   {
     m_points.clear();
     m_result = null;
-    if( m_extender != null )
+    if( m_extender != null && m_updateCursor )
       m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 

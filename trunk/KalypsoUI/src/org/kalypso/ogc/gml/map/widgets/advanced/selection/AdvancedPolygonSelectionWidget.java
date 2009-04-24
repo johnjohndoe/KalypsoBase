@@ -46,6 +46,10 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate;
@@ -74,6 +78,18 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
     m_delegates.put( EDIT_MODE.eRectangle, new RectanglePolygonDelegate( this, provider ) );
     m_delegates.put( EDIT_MODE.eDrawing, new DrawingPolygonDelegate( this, provider ) );
     m_delegates.put( EDIT_MODE.eRemove, new RemovePolygonDelegate( this, provider ) );
+    
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        setCursor( getCurrentDelegate().getCursor() );
+
+        return Status.OK_STATUS;
+      }
+    }.schedule( 500 );
+
   }
 
   public EDIT_MODE getEditMode( )
@@ -81,7 +97,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
     return m_mode;
   }
 
-  private IAdvancedSelectionWidgetDelegate getCurrentDelegate( )
+  protected IAdvancedSelectionWidgetDelegate getCurrentDelegate( )
   {
     return m_delegates.get( m_mode );
   }
@@ -182,6 +198,8 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
       m_mode = EDIT_MODE.eSelect;
     }
 
+    setCursor( getCurrentDelegate().getCursor() );
+    
     getMapPanel().repaintMap();
   }
 

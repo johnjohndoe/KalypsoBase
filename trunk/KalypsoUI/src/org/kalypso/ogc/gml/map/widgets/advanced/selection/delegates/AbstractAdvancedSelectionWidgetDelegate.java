@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -163,5 +166,12 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   public void doubleClickedLeft( final Point p )
   {
     // nothing to do
+  }
+
+  public Cursor getCursor( final Image imgCursor )
+  {
+    final Toolkit toolkit = Toolkit.getDefaultToolkit();
+    
+    return toolkit.createCustomCursor( imgCursor, new Point( 2, 1 ), "selection cursor" );
   }
 }
