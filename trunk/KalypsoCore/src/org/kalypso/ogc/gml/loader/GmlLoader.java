@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
@@ -59,8 +58,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -68,15 +65,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.util.pool.IModelAdaptor;
-import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ModelAdapterExtension;
-import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -91,40 +85,20 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  * 
  * @author Belger
  */
-public class GmlLoader extends AbstractLoader
+public class GmlLoader extends WorkspaceLoader
 {
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
-  /** A special command listener, which sets the dirty flag on the corresponding KeyInfo for the loaded workspace. */
-  private final ICommandManagerListener m_commandManagerListener = new ICommandManagerListener()
-  {
-    public void onCommandManagerChanged( final ICommandManager source )
-    {
-      final Object[] objects = getObjects();
-      for( final Object element : objects )
-      {
-        final CommandableWorkspace workspace = (CommandableWorkspace) element;
-        final ICommandManager cm = workspace.getCommandManager();
-        if( cm == source )
-        {
-          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-          final KeyInfo info = pool.getInfo( workspace );
-          if( info != null )
-          {
-            info.setDirty( source.isDirty() );
-          }
-        }
-      }
-    }
-  };
-
   /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
+   * @see org.kalypso.ogc.gml.loader.WorkspaceLoader#loadIntern(java.lang.String, java.net.URL,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected CommandableWorkspace loadIntern( final IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
   {
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     try
     {
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
@@ -139,7 +113,6 @@ public class GmlLoader extends AbstractLoader
 
       /* Loading GML */
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory, moni.newChild( 700, SubMonitor.SUPPRESS_BEGINTASK ) );
-// final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory );
       ProgressUtilities.worked( moni, 0 );
 
       /* Transforming to Kalypso CRS */
@@ -157,16 +130,11 @@ public class GmlLoader extends AbstractLoader
 
       /* Adapting if necessary */
       moni.subTask( "checking backwards compability..." );
-      final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
-      final GMLWorkspace adaptedWorkspace = adaptWorkspace( source, context, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
+      IResource gmlFile = getResources( key )[0];
+      final GMLWorkspace adaptedWorkspace = adaptWorkspace( key, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
 
       /* Hook for Loader stuff */
       final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
-      workspace.addCommandManagerListener( m_commandManagerListener );
-      if( gmlFile != null )
-      {
-        addResource( gmlFile, workspace );
-      }
 
       setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
@@ -194,7 +162,7 @@ public class GmlLoader extends AbstractLoader
     }
   }
 
-  private GMLWorkspace adaptWorkspace( final String source, final URL context, final IProgressMonitor monitor, final List<IStatus> resultList, GMLWorkspace workspace, final IResource gmlFile ) throws LoaderException, CoreException
+  private GMLWorkspace adaptWorkspace( IPoolableObjectType key, final IProgressMonitor monitor, final List<IStatus> resultList, GMLWorkspace workspace, final IResource gmlFile ) throws LoaderException, CoreException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName() );
@@ -223,7 +191,7 @@ public class GmlLoader extends AbstractLoader
       }
 
       moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.8" ) ); //$NON-NLS-1$
-      save( source, context, moni.newChild( 3, SubMonitor.SUPPRESS_SETTASKNAME ), workspace );
+      save( key, moni.newChild( 3, SubMonitor.SUPPRESS_SETTASKNAME ), workspace );
     }
     return workspace;
   }
@@ -264,9 +232,11 @@ public class GmlLoader extends AbstractLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    IMarker lockMarker = null;
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace) data;
@@ -277,9 +247,6 @@ public class GmlLoader extends AbstractLoader
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
       {
-        // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation
-        lockMarker = file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
-
         final SetContentHelper thread = new SetContentHelper()
         {
           @Override
@@ -310,34 +277,19 @@ public class GmlLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.19" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
-    finally
-    {
-      /* delete all markers on the corresponding resource */
-      if( lockMarker != null )
-      {
-        try
-        {
-          lockMarker.delete();
-        }
-        catch( final CoreException e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-        }
-      }
-    }
   }
 
   /**
-   * @see org.kalypso.loader.AbstractLoader#release(java.lang.Object)
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public void release( final Object object )
+  public IResource[] getResources( final IPoolableObjectType key ) throws MalformedURLException
   {
-    final CommandableWorkspace workspace = (CommandableWorkspace) object;
-    workspace.removeCommandManagerListener( m_commandManagerListener );
-
-    super.release( object );
-
-    workspace.dispose();
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+    final URL gmlURL = m_urlResolver.resolveURL( context, source );
+    final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
+    return new IResource[] { gmlFile };
   }
+
 }

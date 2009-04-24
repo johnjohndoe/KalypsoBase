@@ -42,7 +42,6 @@ package org.kalypso.core.util.pool;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +49,9 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +61,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
@@ -86,26 +87,38 @@ public class ResourcePool
 
   private final ILoaderFactory m_factory;
 
-  /** type -> loader */
-  private final Map<String, ILoader> m_loaderCache = new HashMap<String, ILoader>();
+// /** type -> loader */
+// private final Map<String, ILoader> m_loaderCache = new HashMap<String, ILoader>();
 
   /** key -> KeyInfo */
   private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
 
+  private IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
+  {
+    @Override
+    public void resourceChanged( IResourceChangeEvent event )
+    {
+      handleResourceChanged( event );
+    }
+  };
+
   public ResourcePool( final ILoaderFactory factory )
   {
     m_factory = factory;
+
+    ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
   }
 
   public void dispose( )
   {
+    ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+
     synchronized( m_keyInfos )
     {
       for( final Entry<IPoolableObjectType, KeyInfo> entry : m_keyInfos.entrySet() )
         entry.getValue().dispose();
       m_keyInfos.clear();
     }
-    m_loaderCache.clear();
   }
 
   /**
@@ -123,19 +136,19 @@ public class ResourcePool
       KeyInfo info = m_keyInfos.get( key );
       if( info == null )
         try
-      {
-          final ILoader loader = getLoader( key.getType() );
+        {
+          final ILoader loader = m_factory.getLoaderInstance( key.getType() );
           info = new KeyInfo( key, loader );
           m_keyInfos.put( key, info );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        e.getMessage();
-        final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
-        ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
-        throw iae;
-      }
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          e.getMessage();
+          final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
+          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
+          throw iae;
+        }
 
       info.addListener( l );
 
@@ -189,18 +202,6 @@ public class ResourcePool
         info.dispose();
       }
     }
-  }
-
-  private ILoader getLoader( final String type ) throws FactoryException
-  {
-    ILoader loader = m_loaderCache.get( type );
-    if( loader == null )
-    {
-      loader = m_factory.getLoaderInstance( type );
-      m_loaderCache.put( type, loader );
-    }
-
-    return loader;
   }
 
   public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException
@@ -258,8 +259,9 @@ public class ResourcePool
   {
     final KeyInfo info = m_keyInfos.get( key );
     if( info != null )
-      try
     {
+      try
+      {
         // wait for info
         info.join();
 
@@ -268,12 +270,13 @@ public class ResourcePool
           throw new CoreException( result );
 
         return info.getObject();
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
+      }
+      catch( final InterruptedException e )
+      {
+        e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.7" ) ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.7" ) ) ); //$NON-NLS-1$
+      }
     }
 
     // falls object nicht bereits da,
@@ -281,7 +284,7 @@ public class ResourcePool
     KeyInfo info2 = null;
     try
     {
-      final ILoader loader = getLoader( key.getType() );
+      final ILoader loader = m_factory.getLoaderInstance( key.getType() );
       info2 = new KeyInfo( key, loader );
       final IStatus result = info2.loadObject( new NullProgressMonitor() );
       if( (result.getSeverity() & Status.ERROR) == 1 )
@@ -303,5 +306,21 @@ public class ResourcePool
   public KeyInfo getInfoForKey( final IPoolableObjectType poolKey )// TODO: synchronize
   {
     return m_keyInfos.get( poolKey );
+  }
+
+  protected void handleResourceChanged( IResourceChangeEvent event )
+  {
+    // allways true, because of the bitmask set on adding this listener
+    if( event.getType() == IResourceChangeEvent.POST_CHANGE )
+    {
+      final IResourceDelta delta = event.getDelta();
+      synchronized( m_keyInfos )
+      {
+        final Collection<KeyInfo> values = m_keyInfos.values();
+        final KeyInfo[] array = values.toArray( new KeyInfo[values.size()] );
+        for( final KeyInfo keyInfo : array )
+          keyInfo.handleResourceChanged( delta );
+      }
+    }
   }
 }
