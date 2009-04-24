@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
+import java.awt.Cursor;
 import java.awt.Point;
 
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -55,6 +56,7 @@ public interface IAdvancedSelectionWidget
   {
     eSelect,
     eRectangle,
+    eDrawing,
     eRemove;
   }
   
@@ -65,4 +67,8 @@ public interface IAdvancedSelectionWidget
   GM_Point getCurrentGmPoint( );
   
   EDIT_MODE getEditMode( );
+  
+  String getToolTip( );
+
+  void setCursor( Cursor cursor );
 }

@@ -38,13 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.advanced.selection;
+package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -143,4 +147,21 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     return m_pressed;
   }
   
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    // nothing to do
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#doubleClickedLeft(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedLeft( final Point p )
+  {
+    // nothing to do
+  }
 }

@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.AbstractAdvancedSelectionWidgetDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypsodeegree.model.feature.Feature;

@@ -41,97 +41,174 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.AbstractAdvancedSelectionWidgetDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Dirk Kuch
  */
-public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
+public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate implements IGeometryBuilderExtensionProvider
 {
-  private final PolygonGeometryBuilder m_geoBuilder = null;
-  
+  private PolygonGeometryBuilder m_geoBuilder = null;
+
   public DrawingPolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
     super( widget, provider );
+
+    init();
+  }
+
+  private void init( )
+  {
+    final IMapPanel mapPanel = getWidget().getIMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final IMapModell mapModell = mapPanel.getMapModell();
+    m_geoBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem(), this );
   }
 
   /**
-   * @see org.kalypso.planer.client.ui.gui.widgets.measures.aw.IAdvancedSelectionWidgetDelegate#leftReleased(java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.AbstractAdvancedSelectionWidgetDelegate#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftReleased( final Point p )
+  public void leftPressed( final Point p )
   {
-// try
-// {
-// final GM_Point base = MapUtilities.transform( getWidget().getIMapPanel(), getMousePressed() );
-// final GM_Point current = getWidget().getCurrentGmPoint();
-// Assert.isTrue( base.getCoordinateSystem() == current.getCoordinateSystem() );
-//
-// final GM_Envelope envelop = GeometryFactory.createGM_Envelope( base.getPosition(), current.getPosition(),
-    // base.getCoordinateSystem() );
-//
-// final Feature[] features = getDataProvider().query( envelop );
-// getDataProvider().post( features, getWidget().getEditMode() );
-// }
-// catch( final Exception e )
-// {
-// KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-// }
+    super.leftPressed( p );
 
-// super.leftReleased( p );
+    if( m_geoBuilder == null )
+      init();
+
+    try
+    {
+      final IMapPanel mapPanel = getWidget().getIMapPanel();
+      final GM_Point point = MapUtilities.transform( mapPanel, p );
+
+      m_geoBuilder.addPoint( point );
+    }
+    catch( final Exception e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#doubleClickedLeft(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedLeft( final Point p )
+  {
+    if( m_geoBuilder.size() >= 2 )
+    {
+      try
+      {
+
+        m_geoBuilder.addPoint( getWidget().getCurrentGmPoint() );
+        final GM_Object gmo = m_geoBuilder.finish();
+        m_geoBuilder.removeLastPoint();
+
+        final Geometry jtsBase = JTSAdapter.export( gmo );
+
+        final GM_Envelope envelope = gmo.getEnvelope();
+        final List<Feature> myFeatures = new ArrayList<Feature>();
+        
+        final Feature[] features = getDataProvider().query( envelope );
+
+        for( final Feature feature : features )
+        {
+          final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
+          if( jtsBase.intersects( jts ) )
+            myFeatures.add( feature );
+        }
+        
+        getDataProvider().post( myFeatures.toArray( new Feature[] {} ), EDIT_MODE.eDrawing );
+      }
+      catch( final Exception e )
+      {
+        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+
+      m_geoBuilder = null;
+    }
+    
+    
+  }
+  
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.selection.AbstractAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
   @Override
   public void paint( final Graphics g )
   {
-    if( isMouseButtonPressed() == false )
+    final IMapPanel mapPanel = getWidget().getIMapPanel();
+    if( mapPanel == null )
       return;
 
-    /* draw rectangle */
-    final Point base = getMousePressed();
-    final Point current = getWidget().getCurrentPoint();
-
-    g.drawRect( base.x, base.y, current.x - base.x, current.y - base.y );
-
-    try
+    if( m_geoBuilder == null )
     {
-      final GM_Point gmBase = MapUtilities.transform( getWidget().getIMapPanel(), base );
-      final GM_Point gmCurrent = getWidget().getCurrentGmPoint();
-      Assert.isTrue( gmBase.getCoordinateSystem() == gmCurrent.getCoordinateSystem() );
-
-      final GM_Envelope envelop = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
-
-      final Feature[] features = getDataProvider().query( envelop );
-      for( final Feature feature : features )
-      {
-        highlightUnderlying( feature, g );
-      }
+      init();
     }
-    catch( final Exception e )
+
+    final Point point = getWidget().getCurrentPoint();
+    if( point == null )
+      return;
+
+    m_geoBuilder.paint( g, mapPanel.getProjection(), point );
+
+    if( m_geoBuilder.size() >= 2 )
     {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      try
+      {
+
+        m_geoBuilder.addPoint( getWidget().getCurrentGmPoint() );
+        final GM_Object gmo = m_geoBuilder.finish();
+        m_geoBuilder.removeLastPoint();
+
+        final Geometry jtsBase = JTSAdapter.export( gmo );
+
+        final GM_Envelope envelope = gmo.getEnvelope();
+        final Feature[] features = getDataProvider().query( envelope );
+
+        for( final Feature feature : features )
+        {
+          final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
+          if( jtsBase.intersects( jts ) )
+            highlightUnderlying( feature, g );
+        }
+      }
+      catch( final Exception e )
+      {
+        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
   }
 
@@ -167,4 +244,33 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
+   */
+  @Override
+  public String[] getTooltip( )
+  {
+    return new String[] { getWidget().getToolTip() };
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
+   */
+  @Override
+  public void setCursor( final Cursor cursor )
+  {
+    getWidget().setCursor( cursor );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.AbstractAdvancedSelectionWidgetDelegate#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    if( KeyEvent.VK_BACK_SPACE == e.getKeyCode() )
+    {
+      m_geoBuilder.removeLastPoint();
+    }
+  }
 }
