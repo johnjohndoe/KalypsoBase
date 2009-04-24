@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 /**
  * @author Dirk Kuch
@@ -57,4 +58,8 @@ public interface IAdvancedSelectionWidgetDelegate
   boolean isMouseButtonPressed( );
   
   Point getMousePressed( );
+
+  void keyReleased( KeyEvent e );
+
+  void doubleClickedLeft( Point p );
 }

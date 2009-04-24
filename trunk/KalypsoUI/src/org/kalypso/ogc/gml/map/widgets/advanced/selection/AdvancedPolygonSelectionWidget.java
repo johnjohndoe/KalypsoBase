@@ -41,11 +41,13 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RemovePolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.SelectPolygonDelegate;
@@ -70,6 +72,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
     m_delegates.put( EDIT_MODE.eSelect, new SelectPolygonDelegate( this, provider ) );
     m_delegates.put( EDIT_MODE.eRectangle, new RectanglePolygonDelegate( this, provider ) );
+    m_delegates.put( EDIT_MODE.eDrawing, new DrawingPolygonDelegate( this, provider ) );
     m_delegates.put( EDIT_MODE.eRemove, new RemovePolygonDelegate( this, provider ) );
   }
 
@@ -113,6 +116,15 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
   }
 
   /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedLeft( final Point p )
+  {
+    getCurrentDelegate().doubleClickedLeft( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#getToolTip()
    */
   @Override
@@ -147,6 +159,8 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
     }
 
     super.keyReleased( e );
+
+    getCurrentDelegate().keyReleased( e );
   }
 
   private void switchMode( )
@@ -156,6 +170,10 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
       m_mode = EDIT_MODE.eRectangle;
     }
     else if( EDIT_MODE.eRectangle.equals( m_mode ) )
+    {
+      m_mode = EDIT_MODE.eDrawing;
+    }
+    else if( EDIT_MODE.eDrawing.equals( m_mode ) )
     {
       m_mode = EDIT_MODE.eRemove;
     }
