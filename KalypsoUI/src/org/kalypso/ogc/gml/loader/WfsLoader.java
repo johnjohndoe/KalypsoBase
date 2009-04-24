@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -38,7 +38,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 /**
  * @author Kuepferle, v.Doemming
  */
-public class WfsLoader extends AbstractLoader
+public class WfsLoader extends WorkspaceLoader
 {
   public final static String KEY_URL = "URL"; //$NON-NLS-1$
 
@@ -64,8 +64,10 @@ public class WfsLoader extends AbstractLoader
    *            the URL form the map context (here the path to the associated gmt file)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
+    final String source = key.getLocation();
+
     final BufferedInputStream inputStream = null;
     final PrintStream ps = null;
     try
@@ -120,8 +122,11 @@ public class WfsLoader extends AbstractLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data )
   {
+//    final String source = key.getLocation();
+//    final URL context = key.getContext();
+
     // TODO implementation of a transactional WFS
     if( data instanceof CommandableWorkspace )
     {
@@ -144,7 +149,6 @@ public class WfsLoader extends AbstractLoader
         }
         else if( result == 1 )
         {
-
           MessageDialog.openError( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.12"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.13") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
@@ -166,5 +170,15 @@ public class WfsLoader extends AbstractLoader
         display.dispose();
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
+  @Override
+  public IResource[] getResources( IPoolableObjectType key )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
