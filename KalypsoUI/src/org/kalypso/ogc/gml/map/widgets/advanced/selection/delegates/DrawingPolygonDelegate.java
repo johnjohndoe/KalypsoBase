@@ -43,10 +43,14 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
@@ -79,6 +83,8 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 {
   private PolygonGeometryBuilder m_geoBuilder = null;
 
+  private Image m_imgCursor;
+
   public DrawingPolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
     super( widget, provider );
@@ -93,7 +99,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
       return;
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    m_geoBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem(), this );
+    m_geoBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem(), this, false );
   }
 
   /**
@@ -139,7 +145,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final GM_Envelope envelope = gmo.getEnvelope();
         final List<Feature> myFeatures = new ArrayList<Feature>();
-        
+
         final Feature[] features = getDataProvider().query( envelope );
 
         for( final Feature feature : features )
@@ -148,7 +154,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
           if( jtsBase.intersects( jts ) )
             myFeatures.add( feature );
         }
-        
+
         getDataProvider().post( myFeatures.toArray( new Feature[] {} ), EDIT_MODE.eDrawing );
       }
       catch( final Exception e )
@@ -158,11 +164,9 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
       m_geoBuilder = null;
     }
-    
-    
+
   }
-  
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.selection.AbstractAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
@@ -272,5 +276,26 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     {
       m_geoBuilder.removeLastPoint();
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
+   */
+  @Override
+  public Cursor getCursor( )
+  {
+    try
+    {
+      if( m_imgCursor == null )
+        m_imgCursor = ImageIO.read( DrawingPolygonDelegate.class.getResourceAsStream( "images/cursor_add_drawing.png" ) );
+
+      return super.getCursor( m_imgCursor );
+    }
+    catch( final IOException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return null;
   }
 }

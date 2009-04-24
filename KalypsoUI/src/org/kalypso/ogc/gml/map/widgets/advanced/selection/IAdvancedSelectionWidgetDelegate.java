@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -62,4 +63,6 @@ public interface IAdvancedSelectionWidgetDelegate
   void keyReleased( KeyEvent e );
 
   void doubleClickedLeft( Point p );
+
+  Cursor getCursor( );
 }

@@ -89,7 +89,9 @@ public abstract class AbstractWidget implements IWidget
    */
   public void setCursor( final Cursor cursor )
   {
-    getMapPanel().setCursor( cursor );
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+      mapPanel.setCursor( cursor );
   }
 
   /**
