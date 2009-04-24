@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -47,19 +48,24 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author kuch
- *
  */
 public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvancedSelectionWidgetDelegate
 {
@@ -84,7 +90,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   {
     return m_provider;
   }
-  
+
   /**
    * @see org.kalypso.planer.client.ui.gui.widgets.measures.aw.IAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
@@ -96,12 +102,9 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       // underlying features
       final GM_Point point = m_widget.getCurrentGmPoint();
       final Feature[] features = m_provider.query( point, 0.1, getWidget().getEditMode() );
-      
+
       // highlight these features
-      for( final Feature feature : features )
-      {
-        highlightUnderlying(feature, g);
-      }
+      highlightUnderlyingGeometries( features, g );
     }
     catch( final GM_Exception e )
     {
@@ -109,7 +112,35 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     }
   }
 
-  protected abstract void highlightUnderlying( final Feature feature, final Graphics g );
+  abstract protected Color getColor( );
+
+  protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g )
+  {
+    final Color originalColor = g.getColor();
+    g.setColor( getColor() );
+
+    for( final Feature feature : features )
+    {
+      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) getDataProvider().resolveGeometry( feature );
+      final GM_Ring ring = surface.getSurfaceBoundary().getExteriorRing();
+      final GM_Position[] positions = ring.getPositions();
+
+      int[] x_positions = new int[] {};
+      int[] y_positions = new int[] {};
+
+      for( final GM_Position position : positions )
+      {
+        final Point awt = MapUtilities.retransform( getWidget().getIMapPanel(), position );
+        x_positions = ArrayUtils.add( x_positions, Double.valueOf( awt.getX() ).intValue() );
+        y_positions = ArrayUtils.add( y_positions, Double.valueOf( awt.getY() ).intValue() );
+      }
+
+      Assert.isTrue( x_positions.length == y_positions.length );
+      g.fillPolygon( x_positions, y_positions, x_positions.length );
+    }
+
+    g.setColor( originalColor );
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.selection.IAdvancedSelectionWidgetDelegate#leftPressed(java.awt.Point)
@@ -119,14 +150,14 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   {
     m_pressed = p;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.selection.IAdvancedSelectionWidgetDelegate#leftReleased(java.awt.Point)
    */
   @Override
   public void leftReleased( final Point p )
   {
-   m_pressed = null; 
+    m_pressed = null;
   }
 
   /**
@@ -140,7 +171,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
     return true;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.selection.IAdvancedSelectionWidgetDelegate#getMousePressed()
    */
@@ -149,7 +180,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   {
     return m_pressed;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#keyReleased(java.awt.event.KeyEvent)
    */
@@ -158,7 +189,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   {
     // nothing to do
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#doubleClickedLeft(java.awt.Point)
    */
@@ -171,7 +202,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   public Cursor getCursor( final Image imgCursor )
   {
     final Toolkit toolkit = Toolkit.getDefaultToolkit();
-    
+
     return toolkit.createCustomCursor( imgCursor, new Point( 2, 1 ), "selection cursor" );
   }
 }
