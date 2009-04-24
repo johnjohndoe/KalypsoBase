@@ -52,8 +52,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -68,10 +66,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -201,51 +195,23 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final GM_Envelope envelope = gmo.getEnvelope();
         final Feature[] features = getDataProvider().query( envelope );
-
+        
+        final List<Feature> highlight = new ArrayList<Feature>();
+        
         for( final Feature feature : features )
         {
           final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
           if( jtsBase.intersects( jts ) )
-            highlightUnderlying( feature, g );
+            highlight.add( feature );
         }
+        
+        highlightUnderlyingGeometries( highlight.toArray( new Feature[] {} ), g );
       }
       catch( final Exception e )
       {
         KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.planer.client.ui.gui.widgets.measures.aw.AbstractAdvancedSelectionWidgetDelegate#highlightUnderlying(org.kalypsodeegree.model.feature.Feature,
-   *      java.awt.Graphics)
-   */
-  @Override
-  protected void highlightUnderlying( final Feature feature, final Graphics g )
-  {
-    final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) getDataProvider().resolveGeometry( feature );
-
-    final Color originalColor = g.getColor();
-    g.setColor( new Color( 0, 255, 0, 128 ) );
-
-    final GM_Ring ring = surface.getSurfaceBoundary().getExteriorRing();
-    final GM_Position[] positions = ring.getPositions();
-
-    int[] x_positions = new int[] {};
-    int[] y_positions = new int[] {};
-
-    for( final GM_Position position : positions )
-    {
-      final Point awt = MapUtilities.retransform( getWidget().getIMapPanel(), position );
-      x_positions = ArrayUtils.add( x_positions, Double.valueOf( awt.getX() ).intValue() );
-      y_positions = ArrayUtils.add( y_positions, Double.valueOf( awt.getY() ).intValue() );
-    }
-
-    Assert.isTrue( x_positions.length == y_positions.length );
-    g.fillPolygon( x_positions, y_positions, x_positions.length );
-
-    g.setColor( originalColor );
-
   }
 
   /**
@@ -297,5 +263,14 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#getColor()
+   */
+  @Override
+  protected Color getColor( )
+  {
+    return new Color( 0xBB, 0xFF, 0x6D, 128 );
   }
 }
