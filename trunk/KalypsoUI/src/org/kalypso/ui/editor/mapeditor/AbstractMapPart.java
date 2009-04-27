@@ -44,6 +44,7 @@ import java.awt.Rectangle;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -102,7 +103,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- *
+ * 
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
@@ -223,9 +224,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         }
 
         if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-        {
           startLoadJob( file );
-        }
       }
     };
 
@@ -257,7 +256,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
 
     site.setSelectionProvider( m_mapPanel );
-
   }
 
   /**
@@ -267,9 +265,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFocus( )
   {
     if( m_control != null && !m_control.isDisposed() )
-    {
       m_control.setFocus();
-    }
   }
 
   /**
@@ -306,9 +302,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_mapPanel != null )
-    {
       loadMap( monitor, input.getStorage() );
-    }
   }
 
   /**
@@ -317,7 +311,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * The method starts a (user-)job, which loads the map.
    * </p>
    * .
-   *
+   * 
    * @param waitFor
    *          <code>true</code> if this method should return when the job has finished, if <code>false</code> returns
    *          immediately
@@ -361,6 +355,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       // prepare for exception
       setMapModell( null, null );
+      
+      /* If no storage is passed, clear the map view. */
+      if( storage == null )
+      {
+        /* Clear everything. */
+        setFile( null );
+
+        /* Monitor. */
+        monitor.worked( 2 );
+
+        return;
+      }
 
       /* "Loading map..." */
       showBusy( true );
@@ -408,17 +414,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       throw new CoreException( status );
     }
-
     finally
     {
       monitor.done();
 
-// final IFile file = getFile();
-// if( m_partName == null )
-// {
-//        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
-// setCustomName( fileName );
-// }
+      // final IFile file = getFile();
+      // if( m_partName == null )
+      // {
+      // final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
+      // setCustomName( fileName );
+      // }
 
       // At the moment, we stop after the .gmt file has loaded. One day we may change this to wait until
       // all themes have finished loading, but this might be a little bit tricky.
@@ -507,7 +512,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final String partName;
       partName = m_mapModell.getLabel( m_mapModell );
       if( partName != null )
-      setCustomName( partName );
+        setCustomName( partName );
     }
 
     if( m_mapPanel != null )
@@ -603,7 +608,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void setFile( final IFile file )
   {
+    if( ObjectUtils.equals( m_file, file ))
+      return;
+    
+    if( m_file != null )
+      m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+
     m_file = file;
+
     if( m_file != null )
       m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
   }
@@ -625,9 +637,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.dispose();
 
     if( m_file != null )
-    {
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
-    }
 
     super.dispose();
   }
