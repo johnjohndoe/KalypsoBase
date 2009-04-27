@@ -82,7 +82,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -215,14 +214,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_listeners.clear();
 
     if( m_standardThemeIcon != null )
-    {
       m_standardThemeIcon.dispose();
-    }
 
     if( m_externIcon != null )
-    {
       m_externIcon.dispose();
-    }
   }
 
   /**
