@@ -167,7 +167,7 @@ public final class KeyInfo extends Job
   private boolean isLocked( )
   {
     boolean isLocked = false;
-    
+
     for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
     {
       if( entry.getValue() )
@@ -364,35 +364,39 @@ public final class KeyInfo extends Job
       // TODO: handle case for more than one resource
       checkDelta( resourceDelta );
     }
-
   }
 
   /**
    * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
    */
-  private boolean checkDelta( final IResourceDelta delta )
+  private void checkDelta( final IResourceDelta delta )
   {
     final int flags = delta.getFlags();
+    final int kind = delta.getKind();
 
-    if( (flags & ( IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM | IResourceDelta.CONTENT | IResourceDelta.ENCODING)) != 0 )
+    // TRICKY: if (exactly) only markers have changed, do nothing
+    if( flags == IResourceDelta.MARKERS )
+      return;
+
+    switch( kind )
     {
-      switch( delta.getKind() )
-      {
-        case IResourceDelta.REMOVED:
-          final Object oldObject = m_object;
+      case IResourceDelta.REMOVED:
+        final Object oldObject = m_object;
+        if( oldObject != null )
+        {
           m_loader.release( m_object );
           m_object = null;
           fireObjectInvalid( oldObject );
-          break;
+        }
+        return;
 
-        case IResourceDelta.ADDED:
-        case IResourceDelta.CHANGED:
-          reloadInternal();
-          break;
-      }
+      case IResourceDelta.ADDED:
+      case IResourceDelta.CHANGED:
+        reloadInternal();
+        return;
     }
 
-    return true;
+    return;
   }
 
 }

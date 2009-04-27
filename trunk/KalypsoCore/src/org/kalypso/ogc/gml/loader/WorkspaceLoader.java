@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * Abstract helper for all loader's that produce a {@link GMLWorkspace}.
+ * 
  * @author Holger Albert
  * @author Gernot Belger
  */
@@ -70,7 +71,8 @@ public abstract class WorkspaceLoader extends AbstractLoader
   };
 
   /**
-   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
@@ -80,7 +82,7 @@ public abstract class WorkspaceLoader extends AbstractLoader
     m_workspace = workspace;
     return workspace;
   }
-  
+
   protected abstract CommandableWorkspace loadIntern( IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException;
 
   /**
@@ -95,14 +97,14 @@ public abstract class WorkspaceLoader extends AbstractLoader
     m_workspace = null;
   }
 
-  /*default*/ void handleCommandManagerChanged( final ICommandManager source )
+  /* default */void handleCommandManagerChanged( final ICommandManager source )
   {
     if( m_workspace != null && m_workspace.getCommandManager() == source )
     {
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    final KeyInfo info = pool.getInfo( m_workspace );
-    if( info != null )
-      info.setDirty( source.isDirty() );
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      final KeyInfo info = pool.getInfo( m_workspace );
+      if( info != null )
+        info.setDirty( source.isDirty() );
     }
   }
 }
