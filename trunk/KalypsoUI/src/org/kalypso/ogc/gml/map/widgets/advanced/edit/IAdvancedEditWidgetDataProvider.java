@@ -56,17 +56,17 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface IAdvancedEditWidgetDataProvider
 {
 
+  FeatureChange[] getAsFeatureChanges( IAdvancedEditWidgetResult result ) throws CoreException;
+
+  void post( FeatureChange[] array ) throws Exception;
+
   /**
    * @return features in range of point
    */
   Feature[] query( GM_Point point, double range ) throws GM_Exception;
 
-  Map<Geometry, Feature> resolveJtsGeometries( Feature[] features );
-
-  Geometry resolveJtsGeometry( Feature feature );
-
-  FeatureChange[] getAsFeatureChanges( IAdvancedEditWidgetResult result ) throws CoreException; 
+  Map<Geometry, Feature> resolveJtsGeometries( Feature[] features ); 
  
-  void post( FeatureChange[] array ) throws Exception;
+  Geometry resolveJtsGeometry( Feature feature );
 
 }

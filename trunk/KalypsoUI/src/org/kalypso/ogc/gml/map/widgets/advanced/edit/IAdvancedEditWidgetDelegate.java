@@ -51,16 +51,18 @@ import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
  */
 public interface IAdvancedEditWidgetDelegate
 {
-   static final IPointHighLighter VERTEX = new IPointHighLighter()
+   static final IPointHighLighter MOVED_SNAP_POINT = new IPointHighLighter()
   {
-    Color cVertex = new Color( 0x3e, 0x79, 0xd9 );
+    Color cSnap = new Color( 0x31, 0x47, 0xa0, 128 );
+
+    int size = 5;
 
     @Override
     public void draw( final Graphics g, final java.awt.Point point )
     {
       final Color original = g.getColor();
-      g.setColor( cVertex );
-      g.drawRect( point.x - 6 / 2, point.y - 6 / 2, 6, 6 );
+      g.setColor( cSnap );
+      g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
       g.setColor( original );
     }
   };
@@ -81,28 +83,26 @@ public interface IAdvancedEditWidgetDelegate
     }
   };
 
-   static final IPointHighLighter MOVED_SNAP_POINT = new IPointHighLighter()
+   static final IPointHighLighter VERTEX = new IPointHighLighter()
   {
-    Color cSnap = new Color( 0x31, 0x47, 0xa0, 128 );
-
-    int size = 5;
+    Color cVertex = new Color( 0x3e, 0x79, 0xd9 );
 
     @Override
     public void draw( final Graphics g, final java.awt.Point point )
     {
       final Color original = g.getColor();
-      g.setColor( cSnap );
-      g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
+      g.setColor( cVertex );
+      g.drawRect( point.x - 6 / 2, point.y - 6 / 2, 6, 6 );
       g.setColor( original );
     }
   };
   
   
-  public void paint( final Graphics g );
+  public double getRange( );
 
   public String getToolTip( );
 
-  public double getRange( );
-
   public void leftReleased( Point p );
+
+  public void paint( final Graphics g );
 }
