@@ -56,19 +56,19 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
+  String getToolTip( EDIT_MODE editMode );
+
+  void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
+
+  Feature[] query( GM_Envelope envelop );
+
   Feature[] query( final GM_Point point, final double range, EDIT_MODE mode ) throws GM_Exception;
-
-  Map<Geometry, Feature> resolveJtsGeometries( final Feature[] features ) throws GM_Exception;
-
-  Geometry resolveJtsGeometry( final Feature feature ) throws GM_Exception;
 
   GM_Object resolveGeometry( final Feature feature );
 
   Map<GM_Object, Feature> resolveGeometry( final Feature[] features );
 
-  void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
+  Map<Geometry, Feature> resolveJtsGeometries( final Feature[] features ) throws GM_Exception;
 
-  String getToolTip( EDIT_MODE editMode );
-
-  Feature[] query( GM_Envelope envelop );
+  Geometry resolveJtsGeometry( final Feature feature ) throws GM_Exception;
 }

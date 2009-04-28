@@ -50,19 +50,19 @@ import java.awt.event.KeyEvent;
  */
 public interface IAdvancedSelectionWidgetDelegate
 {
-  void paint( Graphics g );
-
-  void leftReleased( Point p );
-
-  void leftPressed( Point p );
-  
-  boolean isMouseButtonPressed( );
-  
-  Point getMousePressed( );
-
-  void keyReleased( KeyEvent e );
-
   void doubleClickedLeft( Point p );
 
   Cursor getCursor( );
+
+  Point getMousePressed( );
+  
+  boolean isMouseButtonPressed( );
+  
+  void keyReleased( KeyEvent e );
+
+  void leftPressed( Point p );
+
+  void leftReleased( Point p );
+
+  void paint( Graphics g );
 }

@@ -54,19 +54,19 @@ public interface IAdvancedSelectionWidget
   // TODO multi select, drawing
   enum EDIT_MODE
   {
-    eSelect,
-    eRectangle,
     eDrawing,
-    eRemove;
+    eRectangle,
+    eRemove,
+    eSelect;
   }
   
-  IMapPanel getIMapPanel( );
+  GM_Point getCurrentGmPoint( );
   
   Point getCurrentPoint( );
 
-  GM_Point getCurrentGmPoint( );
-  
   EDIT_MODE getEditMode( );
+  
+  IMapPanel getIMapPanel( );
   
   String getToolTip( );
 
