@@ -96,8 +96,8 @@ public class ShapeLoader extends WorkspaceLoader
 
     try
     {
-      final String sourceSrs = parseSrs(location);
-      final String shpSource = parseSource(location);
+      final String sourceSrs = parseSrs( location );
+      final String shpSource = parseSource( location );
 
       final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", shpSource ); //$NON-NLS-1$
       final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 100 );
@@ -212,6 +212,8 @@ public class ShapeLoader extends WorkspaceLoader
 
     try
     {
+      // TODO: Save in the original coordinate system,
+      // not the one from other sources (e.g map, kalypso coordinate system)
       final GMLWorkspace workspace = (GMLWorkspace) data;
       final URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] ); //$NON-NLS-1$
 
@@ -243,7 +245,7 @@ public class ShapeLoader extends WorkspaceLoader
   {
     final String location = key.getLocation();
     final URL context = key.getContext();
-    final String shpSource = parseSource(location);
+    final String shpSource = parseSource( location );
     final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
 
     IResource shpResource = null;
@@ -260,10 +262,10 @@ public class ShapeLoader extends WorkspaceLoader
       shpResource = ResourceUtilities.findFileFromURL( shpURL );
       dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
       shxResource = ResourceUtilities.findFileFromURL( shxURL );
-      
-      return new IResource[]{ shpResource, dbfResource, shxResource };
+
+      return new IResource[] { shpResource, dbfResource, shxResource };
     }
 
-    return new IResource[]{};
+    return new IResource[] {};
   }
 }
