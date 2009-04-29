@@ -50,8 +50,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.kalypso.contribs.java.io.FileUtilities;
-
 /**
  * @author doemming
  */
@@ -86,10 +84,13 @@ public class PropertiesUtilities
   }
 
   /**
-   * Tires to load a (international) properties file from a given location.
+   * Tries to load a (international) properties file from a given location.
+   * 
+   * @deprecated Use ResourceBundleUtils#loadResourceBundle() instead
    */
   // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific class loader instead, in order
-  // to completely simulate the java-ResourceBundle behaviour (i.e. fallback to more generel property) 
+  // to completely simulate the java-ResourceBundle behaviour (i.e. fallback to more generel property)
+  @Deprecated
   public static void loadI18nProperties( final Properties properties, final URL baseUrl, final String path )
   {
     final String[] suffixes = getLocalSuffixes();
@@ -124,53 +125,7 @@ public class PropertiesUtilities
 // suffixes[0] );
 // JavaApiContributionsPlugin.getDefault().getLog().log( status );
   }
-
-  /**
-   * Tries to load a (international) properties file for a given existing 'file'.<br>
-   * The existing file is given by its url location. The property file is searches as follows: the file extension is
-   * replaces by the current language pattern plus '.properties'.<br>
-   * Example: <code>http://somehist/workflow.xml</code> is replaced by
-   * <code>http://somehost/workflow_de_DE.properties</code>.<br>
-   * According to java conventions, different language patterns are tried before giving up: 'de_DE', 'de', 'DE', ''.<br>
-   * Attention: as the file extension is determined by {@link URL#toExternalForm()}, url with query parts are not
-   * supported.
-   */
-  public static void loadI18nProperties( final Properties properties, final URL baseUrl )
-  {
-    final String baseUrlAsString = baseUrl.toExternalForm();
-    final String baseUrlWithoutExtension = FileUtilities.nameWithoutExtension( baseUrlAsString );
-
-    final String[] suffixes = getLocalSuffixes();
-    for( final String suffix : suffixes )
-    {
-      try
-      {
-        final URL url = new URL( baseUrlWithoutExtension + suffix );
-        load( url, properties );
-        // On first success: stop loading
-        return;
-      }
-      catch( final FileNotFoundException e )
-      {
-        // ignore file not found exceptions, as we have several tries
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-      }
-    }
-
-    // If we reach this line, nothing was found...
-    // TODO: produces too much output, make a tracing option
-// final IStatus status = new Status( IStatus.ERROR,
-// JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), "Message file not found: " + path +
-// suffixes[0] );
-// JavaApiContributionsPlugin.getDefault().getLog().log( status );
-  }
-
+  
   private static final String EXTENSION = ".properties"; //$NON-NLS-1$
 
   private static String[] NL_SUFFIXES;
@@ -236,40 +191,5 @@ public class PropertiesUtilities
         }
       }
     }
-  }
-
-  /**
-   * Returns an translated string for a given key, similar to i18n of the plugin.xml file.<br>
-   * The string is translated according to the given properties, if it start with '%'. If not, the original value is
-   * returned.<br>
-   * If the given string starts with '%', but the properties do not contain a corresponding entry, the original string
-   * is returned.
-   * 
-   * @param translatableString
-   *          If <code>null</code>, <code>null</code> is returned.
-   * @param i10nProperties
-   *          If <code>null</code>, we always return <code>translatableString</code>.
-   * @return If <code>translatableString</code> starts with '%',
-   *         <code>i10nproperties.get( translatableString.substring(1) )</code> is returned. Else return
-   *         <code>translatableString</code>.
-   */
-  public static String getI18NString( final String translatableString, final Properties i10nProperties )
-  {
-    if( translatableString == null )
-      return null;
-
-    if( translatableString.isEmpty() )
-      return translatableString;
-
-    if( i10nProperties == null )
-      return translatableString;
-
-    if( translatableString.charAt( 0 ) == '%' )
-    {
-      final String key = translatableString.substring( 1 );
-      return i10nProperties.getProperty( key, translatableString );
-    }
-
-    return translatableString;
   }
 }
