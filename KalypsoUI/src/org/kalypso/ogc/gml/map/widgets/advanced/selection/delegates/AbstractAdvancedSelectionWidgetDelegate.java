@@ -40,29 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -71,10 +76,11 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvancedSelectionWidgetDelegate
 {
-  private static final Color COLOR_ADD_MODE = new Color( 0xBB, 0xFF, 0x6D, 128 );
-  
-  private static final Color COLOR_REMOVE_MODE = new  Color( 0xFF, 0x4A, 0x26, 128 );
-  
+
+  static Document SLD_ADD;
+
+  static Document SLD_REMOVE;
+
   private final IAdvancedSelectionWidget m_widget;
 
   private final IAdvancedSelectionWidgetDataProvider m_dataProvider;
@@ -104,7 +110,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   {
     return m_geometryProvider;
   }
-  
+
   /**
    * @see org.kalypso.planer.client.ui.gui.widgets.measures.aw.IAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
@@ -116,7 +122,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       // underlying features
       final GM_Point point = m_widget.getCurrentGmPoint();
       final EDIT_MODE mode = getEditMode();
-      
+
       final Feature[] features = m_dataProvider.query( getSurface( point ), mode );
 
       highlightUnderlyingGeometries( features, g, mode );
@@ -140,40 +146,47 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
   protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g, final EDIT_MODE mode )
   {
-    final Color originalColor = g.getColor();
-    g.setColor( getColor( mode ) );
+    if( ArrayUtils.isEmpty( features ) )
+      return;
 
-    for( final Feature feature : features )
+    try
     {
-      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) getGeometryProvider().resolveGeometry( feature );
-      final GM_Ring ring = surface.getSurfaceBoundary().getExteriorRing();
-      final GM_Position[] positions = ring.getPositions();
+      final Document document = getDocument( mode );
+      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+      final GeoTransform projection = getWidget().getIMapPanel().getProjection();
 
-      int[] x_positions = new int[] {};
-      int[] y_positions = new int[] {};
-
-      for( final GM_Position position : positions )
+      for( final Feature feature : features )
       {
-        final Point awt = MapUtilities.retransform( getWidget().getIMapPanel(), position );
-        x_positions = ArrayUtils.add( x_positions, Double.valueOf( awt.getX() ).intValue() );
-        y_positions = ArrayUtils.add( y_positions, Double.valueOf( awt.getY() ).intValue() );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+        lde.paint( g, projection, new NullProgressMonitor() );
       }
-
-      Assert.isTrue( x_positions.length == y_positions.length );
-      g.fillPolygon( x_positions, y_positions, x_positions.length );
     }
-
-    g.setColor( originalColor );
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
-  private Color getColor( final EDIT_MODE mode )
+  private Document getDocument( final EDIT_MODE mode ) throws IOException, SAXException
   {
     if( EDIT_MODE.eAdd.equals( mode ) )
-      return COLOR_ADD_MODE;
+    {
+      if( SLD_ADD == null )
+        SLD_ADD = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/add.sld" ) );
+
+      return SLD_ADD;
+
+    }
     else if( EDIT_MODE.eRemove.equals( mode ) )
-      return COLOR_REMOVE_MODE;
-    
-    throw new IllegalStateException();
+    {
+      if( SLD_REMOVE == null )
+        SLD_REMOVE = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/remove.sld" ) );
+
+      return SLD_REMOVE;
+    }
+
+    return null;
   }
 
   /**
