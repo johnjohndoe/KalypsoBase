@@ -114,15 +114,14 @@ public class Debug
   /**
    * Format the given arguments to the printer.
    * <p>
-   * If debugging is switched of, no output and no formatting (performance!) taes place.
+   * If debugging is switched of, no output and no formatting (performance!) takes place.
    * </p>
    * IMPORTANT: Always use the format with arguments, do not concatenate the string outside of this scope. This can lead
-   * to serious performance problems.
-   * </p>
+   * to serious performance problems. </p>
    * 
    * @param severity
-   *            One of {@link org.eclipse.core.runtime.IStatus}#OK, ... . If it is not
-   *            {@link org.eclipse.core.runtime.IStatus}#INFO, the message will also be logged to the plugin's log.
+   *          One of {@link org.eclipse.core.runtime.IStatus}#OK, ... . If it is not
+   *          {@link org.eclipse.core.runtime.IStatus}#INFO, the message will also be logged to the plugin's log.
    */
   public void printf( final int severity, final String format, final Object... args )
   {
