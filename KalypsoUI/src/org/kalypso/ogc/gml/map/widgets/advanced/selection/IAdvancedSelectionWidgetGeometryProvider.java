@@ -40,25 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
-import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
+import java.util.Map;
+
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedSelectionWidgetDataProvider
+public interface IAdvancedSelectionWidgetGeometryProvider
 {
-  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
+  GM_Object resolveGeometry( final Feature feature );
 
-  /**
-   * post selection changes
-   */
-  void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
+  Map<GM_Object, Feature> resolveGeometry( final Feature[] features );
 
-  public void addSelectionChangeListener( IAdvancedWidgetChangeListener listener );
+  Map<Geometry, Feature> resolveJtsGeometries( final Feature[] features ) throws GM_Exception;
 
-  public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
+  Geometry resolveJtsGeometry( final Feature feature ) throws GM_Exception;
 }

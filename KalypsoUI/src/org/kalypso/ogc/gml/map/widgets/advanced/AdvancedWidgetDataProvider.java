@@ -38,27 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.advanced.selection;
+package org.kalypso.ogc.gml.map.widgets.advanced;
 
-import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedSelectionWidgetDataProvider
+public abstract class AdvancedWidgetDataProvider implements IAdvancedSelectionWidgetDataProvider
 {
-  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
-
+  Set<IAdvancedWidgetChangeListener> m_listeners = new LinkedHashSet<IAdvancedWidgetChangeListener>();
+  
   /**
-   * post selection changes
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider#addSelectionChangeListener(org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener)
    */
-  void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
-
-  public void addSelectionChangeListener( IAdvancedWidgetChangeListener listener );
-
-  public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
+  @Override
+  public void addSelectionChangeListener( final IAdvancedWidgetChangeListener listener )
+  {
+    m_listeners.add( listener );
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider#removeSelectionChangeListener(org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener)
+   */
+  @Override
+  public void removeSelectionChangeListener( final IAdvancedWidgetChangeListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+  
+  public void fireSelectionChanged( )
+  {
+    for( final IAdvancedWidgetChangeListener listener : m_listeners )
+    {
+      listener.selectionChanged();
+    }
+  }
 }

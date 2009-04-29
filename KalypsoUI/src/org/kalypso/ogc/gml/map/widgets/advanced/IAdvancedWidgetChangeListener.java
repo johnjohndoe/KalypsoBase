@@ -38,27 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.advanced.selection;
-
-import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+package org.kalypso.ogc.gml.map.widgets.advanced;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedSelectionWidgetDataProvider
+public interface IAdvancedWidgetChangeListener
 {
-  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
-
-  /**
-   * post selection changes
-   */
-  void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
-
-  public void addSelectionChangeListener( IAdvancedWidgetChangeListener listener );
-
-  public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
+  void selectionChanged( );
 }

@@ -58,6 +58,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
@@ -79,9 +80,9 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
   private PolygonGeometryBuilder m_geoBuilder = null;
   private static BufferedImage IMG_CURSOR; 
 
-  public DrawingPolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
+  public DrawingPolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
-    super( widget, provider );
+    super( widget, provider, geometryProvider );
 
     init();
   }
@@ -141,7 +142,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         for( final Feature feature : features )
         {
-          final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
+          final Geometry jts = getGeometryProvider().resolveJtsGeometry( feature );
           if( jtsBase.intersects( jts ) )
             myFeatures.add( feature );
         }
@@ -183,7 +184,6 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     {
       try
       {
-
         m_geoBuilder.addPoint( getWidget().getCurrentGmPoint() );
         final GM_Object gmo = m_geoBuilder.finish();
         m_geoBuilder.removeLastPoint();
@@ -196,7 +196,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         for( final Feature feature : features )
         {
-          final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
+          final Geometry jts = getGeometryProvider().resolveJtsGeometry( feature );
           if( jtsBase.intersects( jts ) )
             highlight.add( feature );
         }
