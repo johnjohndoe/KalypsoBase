@@ -88,6 +88,8 @@ public class PropertiesUtilities
   /**
    * Tires to load a (international) properties file from a given location.
    */
+  // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific class loader instead, in order
+  // to completely simulate the java-ResourceBundle behaviour (i.e. fallback to more generel property) 
   public static void loadI18nProperties( final Properties properties, final URL baseUrl, final String path )
   {
     final String[] suffixes = getLocalSuffixes();
