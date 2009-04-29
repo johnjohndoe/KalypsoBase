@@ -51,21 +51,16 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IAdvancedSelectionWidget
 {
-  // TODO multi select, drawing
   enum EDIT_MODE
   {
-    eDrawing,
-    eRectangle,
-    eRemove,
-    eSelect;
+    eAdd,
+    eRemove;
   }
   
   GM_Point getCurrentGmPoint( );
   
   Point getCurrentPoint( );
 
-  EDIT_MODE getEditMode( );
-  
   IMapPanel getIMapPanel( );
   
   String getToolTip( );

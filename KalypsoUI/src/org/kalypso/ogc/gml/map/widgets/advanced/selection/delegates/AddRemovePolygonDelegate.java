@@ -49,28 +49,33 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.eclipse.core.runtime.Assert;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Dirk Kuch
  */
-public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
+public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private static BufferedImage IMG_CURSOR;
+  private static BufferedImage IMG_CURSOR_ADD;
+  
+  private static BufferedImage IMG_CURSOR_REMOVE;
 
-  public RectanglePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
+  private static Cursor ADD_CURSOR;
+
+  private static Cursor REMOVE_CURSOR;
+
+  private EDIT_MODE m_lastMode = null;
+
+  private boolean m_modeSwitched = false;
+  
+  public AddRemovePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
     super( widget, provider );
   }
@@ -81,58 +86,20 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public void leftReleased( final Point p )
   {
+    super.leftReleased( p );
+
     try
     {
-      final GM_Point base = MapUtilities.transform( getWidget().getIMapPanel(), getMousePressed() );
-      final GM_Point current = getWidget().getCurrentGmPoint();
-      Assert.isTrue( base.getCoordinateSystem() == current.getCoordinateSystem() );
+      final Feature[] features = getDataProvider().query( getSurface( getWidget().getCurrentGmPoint() ), getEditMode() );
 
-      final GM_Envelope envelop = GeometryFactory.createGM_Envelope( base.getPosition(), current.getPosition(), base.getCoordinateSystem() );
-      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
-
-      final Feature[] features = getDataProvider().query( box, getEditMode() );
       getDataProvider().post( features, getEditMode() );
     }
     catch( final Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-
-    super.leftReleased( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.selection.AbstractAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
-   */
-  @Override
-  public void paint( final Graphics g )
-  {
-    if( isMouseButtonPressed() == false )
-      return;
-
-    /* draw rectangle */
-    final Point base = getMousePressed();
-    final Point current = getWidget().getCurrentPoint();
-
-    g.drawRect( base.x, base.y, current.x - base.x, current.y - base.y );
-
-    try
-    {
-      final GM_Point gmBase = MapUtilities.transform( getWidget().getIMapPanel(), base );
-      final GM_Point gmCurrent = getWidget().getCurrentGmPoint();
-      Assert.isTrue( gmBase.getCoordinateSystem() == gmCurrent.getCoordinateSystem() );
-
-      final GM_Envelope envelope = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
-      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
-
-      final Feature[] features = getDataProvider().query( box, getEditMode() );
-      highlightUnderlyingGeometries( features, g, getEditMode() );
-    }
-    catch( final Exception e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-  }
 
 
   /**
@@ -141,6 +108,32 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public EDIT_MODE getEditMode( )
   {
+    try
+    {
+      final Feature[] features = getDataProvider().query( getSurface( getWidget().getCurrentGmPoint() ), EDIT_MODE.eRemove );
+      
+      if( !ArrayUtils.isEmpty( features ) ) 
+      {
+        if (m_lastMode != EDIT_MODE.eRemove)
+        {
+          m_modeSwitched = true;
+          m_lastMode = EDIT_MODE.eRemove;
+        }
+          
+        return EDIT_MODE.eRemove;
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    } 
+
+    if( m_lastMode != EDIT_MODE.eAdd )
+    {
+      m_modeSwitched = true;
+      m_lastMode = EDIT_MODE.eAdd;
+    }
+    
     return EDIT_MODE.eAdd;
   }
 
@@ -150,7 +143,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public String[] getTooltip( )
   {
-    return new String[] { "Editiermodus: Umrande neue Elemente" };
+    return new String[] { "Editiermodus: Hinzufügen / Entfernen von Elementen" };
   }
   
   /**
@@ -161,11 +154,21 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   {
     try
     {
-      if( IMG_CURSOR == null )
-        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) );
+    if( IMG_CURSOR_ADD == null )
+      IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) );
 
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
+    if( IMG_CURSOR_REMOVE == null )
+        IMG_CURSOR_REMOVE = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
+
+    final Toolkit toolkit = Toolkit.getDefaultToolkit();
+    if( ADD_CURSOR == null )
+      ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" );
+    
+    if( REMOVE_CURSOR == null )
+        REMOVE_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_REMOVE, new Point( 2, 1 ), "selection remove cursor" );
+    
+    return getCursor( getEditMode() );
+    
     }
     catch( final IOException e )
     {
@@ -175,4 +178,29 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     return null;
   }
 
+  private Cursor getCursor( final EDIT_MODE mode )
+  {
+    if( EDIT_MODE.eAdd.equals( mode ) )
+      return ADD_CURSOR;
+    else if( EDIT_MODE.eRemove.equals( mode ) )
+      return REMOVE_CURSOR;
+    
+
+    return ADD_CURSOR;
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    if( m_modeSwitched )
+    {
+      getWidget().setCursor( getCursor() );
+      m_modeSwitched = false;
+    }
+    
+    super.paint( g );
+  }
 }

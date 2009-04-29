@@ -45,6 +45,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
+
 /**
  * @author Dirk Kuch
  */
@@ -65,4 +67,8 @@ public interface IAdvancedSelectionWidgetDelegate
   void leftReleased( Point p );
 
   void paint( Graphics g );
+  
+  EDIT_MODE getEditMode( );
+
+  String[] getTooltip( ); 
 }
