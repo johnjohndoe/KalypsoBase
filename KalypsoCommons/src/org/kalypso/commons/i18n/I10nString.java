@@ -83,11 +83,6 @@ public class I10nString
     return getValue( locale, new Object[] {} );
   }
 
-  public String getValue( final Object... context )
-  {
-    return getValue( Locale.getDefault(), context );
-  }
-
   public String getValue( final Locale locale, final Object... context )
   {
     if( m_key == null || m_key.length() == 0 || m_key.charAt( 0 ) != '%' )

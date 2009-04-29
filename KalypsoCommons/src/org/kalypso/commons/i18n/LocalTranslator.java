@@ -40,17 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -61,15 +59,11 @@ import org.w3c.dom.Element;
  */
 public class LocalTranslator implements ITranslator, IExecutableExtension
 {
-  private final Map<Locale, Properties> m_properties = new HashMap<Locale, Properties>();
-
   private String m_id;
 
   private List<Element> m_configuration;
 
-  private String m_path;
-
-  private URL m_context;
+  private ResourceBundle m_bundle;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -93,18 +87,14 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
    */
   public void configure( final URL context, final List<Element> configuration )
   {
-    m_context = context;
-    m_configuration = configuration;
-
-    for( final Element element : configuration )
+    try
     {
-      m_path = element.getTextContent();
-      return;
+      m_bundle = ResourceBundleUtils.loadResourceBundle( context );
     }
-
-    // If we reach this line, no path was configured: we try to use the context itself instead:
-    final String externalForm = m_context.toExternalForm();
-    m_path = FileUtilities.nameWithoutExtension( externalForm );
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -116,31 +106,26 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   }
 
   /**
-   * REMARK: locale is always ignored, as the language is determined whn the message class is loaded. It is always the
+   * REMARK: locale is always ignored, as the language is determined when the message class is loaded. It is always the
    * current locale of the eclipse platform.
    * 
    * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
    */
   public String get( final String key, final Locale locale, final Object[] context )
   {
-    if( m_path == null )
+    if( m_bundle == null )
       return "Key: " + key;
 
-    final Properties props = getProperties( locale );
-    return props.getProperty( key, "Key not found: " + key );
-  }
-
-  private Properties getProperties( final Locale locale )
-  {
-    if( m_properties.containsKey( locale ) )
-      return m_properties.get( locale );
-
-    final Properties properties = new Properties();
-    m_properties.put( locale, properties );
-
-    // try to load the properties in order of suffixes
-    PropertiesUtilities.loadI18nProperties( properties, m_context, m_path );
-
-    return properties;
+    try
+    {
+      final String value = m_bundle.getString( key );
+      if( value == null || value.isEmpty() )
+        return "Key not found: " + key;
+      return value;
+    }
+    catch( final MissingResourceException e )
+    {
+      return "Key not found: " + key;
+    }
   }
 }
