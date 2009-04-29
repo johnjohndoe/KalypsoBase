@@ -74,7 +74,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.Debug;
+import org.kalypso.commons.KalypsoCommonsDebug;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 
@@ -147,7 +147,7 @@ public class VFSUtilities
     // maybe add webdav
     if( !schemeList.contains( "webdav" ) )
     {
-      Debug.println( "Adding webdav file provider ..." );
+      KalypsoCommonsDebug.DEBUG.printf( "Adding webdav file provider ...%n" );
       fsManager.addProvider( "webdav", new WebdavFileProvider() );
     }
 
@@ -252,7 +252,7 @@ public class VFSUtilities
   {
     if( source.equals( destination ) )
     {
-      Debug.println( "Files '" + source.getName() + "' and '" + destination.getName() + "' are the same files. Ignoring!" );
+      KalypsoCommonsDebug.DEBUG.printf( "Files '%s' and '%s' are the same files. Ignoring!%n", source.getName(), destination.getName() );
       return;
     }
 
@@ -277,7 +277,7 @@ public class VFSUtilities
         if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize() )
         {
           /* Copy file. */
-          Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
+          KalypsoCommonsDebug.DEBUG.printf( "Copy file '%s' to '%s' ...%n", source.getName(), destinationFile.getName() );
           FileUtil.copyContent( source, destinationFile );
           source.close();
         }
@@ -288,18 +288,18 @@ public class VFSUtilities
       catch( final IOException e )
       {
         /* An error has occurred while copying the file. */
-        Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+        KalypsoCommonsDebug.DEBUG.printf( "An error has occured with the message: %s%n", e.getLocalizedMessage() );
 
         /* If a certain amount (here 2) of retries was reached before, re-throw the error. */
         if( cnt >= 2 )
         {
-          Debug.println( "The second retry has failed, rethrowing the error ..." );
+          KalypsoCommonsDebug.DEBUG.printf( "The second retry has failed, rethrowing the error ...%n" );
           throw e;
         }
 
         /* Retry the copying of the file. */
         cnt++;
-        Debug.println( "Retry: " + String.valueOf( cnt ) );
+        KalypsoCommonsDebug.DEBUG.printf( "Retry: %s%n", String.valueOf( cnt ) );
         success = false;
 
         /* Wait for some milliseconds. */
@@ -341,14 +341,13 @@ public class VFSUtilities
     }
     else
     {
-      Debug.println( "Creating directory " + destination.getName() + " ..." );
+      KalypsoCommonsDebug.DEBUG.printf( "Creating directory %s ...%", destination.getName() );
       destination.createFolder();
     }
 
     final FileObject[] children = source.getChildren();
-    for( int i = 0; i < children.length; i++ )
+    for( final FileObject child : children )
     {
-      final FileObject child = children[i];
       if( FileType.FILE.equals( child.getType() ) )
       {
         /* Need a destination file with the same name as the source file. */
@@ -363,12 +362,12 @@ public class VFSUtilities
         final FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        Debug.println( "Copy directory " + child.getName() + " to " + destinationDir.getName() + " ..." );
+        KalypsoCommonsDebug.DEBUG.printf( "Copy directory %s to %s ...", child.getName(), destinationDir.getName() );
         copyDirectoryToDirectory( child, destinationDir, overwrite );
       }
       else
       {
-        Debug.println( "Could not determine the file type ..." );
+        KalypsoCommonsDebug.DEBUG.printf( "Could not determine the file type ...%n" );
       }
     }
   }
@@ -439,7 +438,7 @@ public class VFSUtilities
         continue;
       }
 
-      Debug.println( "Creating folder " + newDir.getName().getPath() + " ..." );
+      KalypsoCommonsDebug.DEBUG.printf( "Creating folder %s ...%n", newDir.getName().getPath() );
       newDir.createFolder();
       return newDir;
     }
@@ -456,14 +455,14 @@ public class VFSUtilities
   public static FileObject checkProxyFor( final String absoluteFile, final FileSystemManager fsManager ) throws FileSystemException, MalformedURLException
   {
     final Proxy proxy = ProxyUtilities.getProxy();
-    Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
+    KalypsoCommonsDebug.DEBUG.printf( "Should use proxy: %s%n", String.valueOf( proxy.useProxy() ) );
 
     if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
     {
       final String proxyHost = proxy.getProxyHost();
       final int proxyPort = proxy.getProxyPort();
-      Debug.println( "Proxy host: " + proxyHost );
-      Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
+      KalypsoCommonsDebug.DEBUG.printf( "Proxy host: %s%n", proxyHost );
+      KalypsoCommonsDebug.DEBUG.printf( "Proxy port: %s%n", String.valueOf( proxyPort ) );
 
       /* Get the credentials. */
       final String user = proxy.getUser();
@@ -473,8 +472,8 @@ public class VFSUtilities
       final Matcher m = p.matcher( absoluteFile );
       if( m.find() == true )
       {
-        Debug.println( "File: " + absoluteFile );
-        Debug.println( "Protocol: " + m.group( 1 ) );
+        KalypsoCommonsDebug.DEBUG.printf( "File: %s%n", absoluteFile );
+        KalypsoCommonsDebug.DEBUG.printf( "Protocol: %s%n", m.group( 1 ) );
 
         if( m.group( 1 ).equals( "webdav" ) )
         {
@@ -551,24 +550,24 @@ public class VFSUtilities
     if( FileType.FOLDER.equals( toDel.getType() ) )
     {
       /* Delete the directory. */
-      Debug.println( "Deleting the directory " + toDel.getName() + " ..." );
+      KalypsoCommonsDebug.DEBUG.printf( "Deleting the directory %s ...%n", toDel.getName() );
       return toDel.delete( new AllFileSelector() );
     }
     else if( FileType.FILE.equals( toDel.getType() ) )
     {
       /* Delete the file. */
-      Debug.println( "Deleting the file " + toDel.getName() + " ..." );
+      KalypsoCommonsDebug.DEBUG.printf( "Deleting the file %s ...%n", toDel.getName() );
       if( toDel.delete() )
         return 1;
 
-      Debug.println( "Could not delete " + toDel.getName() + "!" );
+      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() );
 
       return 0;
     }
     else
     {
       /* The type of the file could not be determined, or it is an imaginary one. */
-      Debug.println( "Could not delete " + toDel.getName() + "!" );
+      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() );
 
       return 0;
     }

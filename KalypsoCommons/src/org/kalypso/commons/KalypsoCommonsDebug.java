@@ -40,31 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons;
 
-import org.eclipse.core.runtime.Platform;
 
 /**
  * This class is a helper for debugging.
  * 
  * @author Holger Albert
  */
-public class Debug
+public class KalypsoCommonsDebug
 {
-  /**
-   * The constructor.
-   */
-  private Debug( )
-  {
-  }
+  public static org.kalypso.contribs.eclipse.core.runtime.Debug DEBUG = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoCommonsPlugin.getDefault(), "/debug" );//$NON-NLS-1$
 
-  /**
-   * This function will print a given Message on the console, if the tracing option is set to true.
-   * 
-   * @param message
-   *          The debug message.
-   */
-  public static void println( String message )
-  {
-    if( "true".equals( Platform.getDebugOption( "org.kalypso.commons/debug" ) ) )
-      System.out.println( "DEBUG: " + message );
-  }
+  public static org.kalypso.contribs.eclipse.core.runtime.Debug DEBUG_I18N = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoCommonsPlugin.getDefault(), "/debug/i18n" );//$NON-NLS-1$
 }
