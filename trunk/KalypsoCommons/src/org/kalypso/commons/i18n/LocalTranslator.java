@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -87,14 +86,7 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
    */
   public void configure( final URL context, final List<Element> configuration )
   {
-    try
-    {
-      m_bundle = ResourceBundleUtils.loadResourceBundle( context );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
+    m_bundle = ResourceBundleUtils.loadResourceBundle( context );
   }
 
   /**

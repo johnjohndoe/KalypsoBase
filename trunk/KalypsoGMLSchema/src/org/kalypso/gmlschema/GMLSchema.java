@@ -38,7 +38,7 @@ import java.util.Hashtable;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
@@ -140,14 +140,14 @@ public class GMLSchema implements IGMLSchema
   /* list of schemas that are referenced by include and have allready been processed */
   private final List<URL> m_processedIncludeUrls = new ArrayList<URL>();
 
-  private final Properties m_i18nProperties;
+  private final ResourceBundle m_resourceBundle;
 
-  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion, final Properties i18nProperties ) throws GMLSchemaException
+  public GMLSchema( final SchemaDocument schemaDocument, final URL context, final String gmlVersion, final ResourceBundle bundle ) throws GMLSchemaException
   {
     m_gmlVersion = gmlVersion;
     m_schemaDocument = schemaDocument;
     m_context = context;
-    m_i18nProperties = i18nProperties;
+    m_resourceBundle = bundle;
     m_urlResolver = new UrlResolver();
     init( schemaDocument );
   }
@@ -660,12 +660,12 @@ public class GMLSchema implements IGMLSchema
   }
 
   /**
-   * Returns the properties that serve to provide language specific labels/tooltips for this schema.<br>
+   * Returns the resource bundle that serves to provide language specific labels/tooltips for this schema.<br>
    * Not in interface, as this is only used during the creation of feature/property-types.<br>
    * Not intended to be used outside this framework.
    */
-  public Properties getI18nProperties( )
+  public ResourceBundle getResourceBundle( )
   {
-    return m_i18nProperties;
+    return m_resourceBundle;
   }
 }

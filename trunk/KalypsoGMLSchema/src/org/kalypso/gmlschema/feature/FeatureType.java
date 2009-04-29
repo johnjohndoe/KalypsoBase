@@ -94,7 +94,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     super( gmlSchema, element, QualifiedElement.createQName( gmlSchema, element ) );
 
     final QName qname = getQName();
-    final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), new QName[] { qname }, qname.getLocalPart() );
+    final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( gmlSchema.getResourceBundle(), new QName[] { qname }, qname.getLocalPart() );
     if( annotation == null )
       m_annotation = AnnotationUtilities.annotationForElement( element.getAnnotation(), element.getName(), true );
     else

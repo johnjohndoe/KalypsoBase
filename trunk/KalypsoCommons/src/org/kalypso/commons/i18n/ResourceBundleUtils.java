@@ -69,15 +69,15 @@ public final class ResourceBundleUtils
    *          properties like <code>http://somehost/myfile.properties</code>.<br>
    *          Urls with query part or anchor are not supported.
    */
-  public static ResourceBundle loadResourceBundle( final URL baseURL ) throws MalformedURLException
+  public static ResourceBundle loadResourceBundle( final URL baseURL )
   {
-    // Unfinished: this does probably does not cover all cases...
-    final URL _baseURL = extractBaseUrl( baseURL );
-    final String path = baseURL.getPath();
-    final String baseName = FilenameUtils.getBaseName( path );
-
     try
     {
+      // Unfinished: this does probably does not cover all cases...
+      final URL _baseURL = extractBaseUrl( baseURL );
+      final String path = baseURL.getPath();
+      final String baseName = FilenameUtils.getBaseName( path );
+      
       // REMARK: the trick here is to use the special class loader, that just links back to the given url.
       // This allows us to use the full functionality of the ResourceBundle#getBundle implementation.
       final ClassLoader loader = new ClassLoader()
@@ -104,6 +104,11 @@ public final class ResourceBundleUtils
     catch( final MissingResourceException e )
     {
       KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.WARNING, "No resource bundle found for: %s%n", baseURL );
+      return null;
+    }
+    catch( final MalformedURLException e )
+    {
+      KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.WARNING, "Could not load resource bundle found for: %s (%s)%n", baseURL, e.toString() );
       return null;
     }
   }
@@ -160,6 +165,25 @@ public final class ResourceBundleUtils
     }
 
     return translatableString;
+  }
+
+  /**
+   * Returns <code>bundle.getString(key)</code>, silently returning <code>null</code>, if key is not known.
+   */
+  public static String getStringQuiet( final ResourceBundle bundle, final String key )
+  {
+    try
+    {
+      if( bundle == null )
+        return null;
+      
+      return bundle.getString( key );
+    }
+    catch( final MissingResourceException e )
+    {
+      // ignore
+      return null;
+    }
   }
 
 }

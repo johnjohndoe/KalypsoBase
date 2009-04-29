@@ -41,7 +41,7 @@
 package org.kalypso.gmlschema.annotation;
 
 import java.util.HashSet;
-import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -51,6 +51,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
 import org.apache.xmlbeans.impl.xb.xsdschema.AnnotationDocument.Annotation;
 import org.apache.xmlbeans.impl.xb.xsdschema.DocumentationDocument.Documentation;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
@@ -200,7 +201,7 @@ public class AnnotationUtilities
     System.arraycopy( qnames, 0, qnamesWithEnum, 0, qnames.length );
     qnamesWithEnum[qnames.length] = new QName( null, enumString );
 
-    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getI18nProperties(), qnamesWithEnum, enumString );
+    final IAnnotation annotationFromProperties = AnnotationUtilities.annotationFromProperties( gmlSchema.getResourceBundle(), qnamesWithEnum, enumString );
     if( annotationFromProperties != null )
       return annotationFromProperties;
 
@@ -257,7 +258,7 @@ public class AnnotationUtilities
     // REMARK: first, we are using the schema of the enclosing feature type, as we want to consider the annotation in
     // respect to its feature
     final GMLSchema featureSchema = (GMLSchema) featureType.getGMLSchema();
-    final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( featureSchema.getI18nProperties(), new QName[] { featureQName, qname }, qname.getLocalPart() );
+    final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( featureSchema.getResourceBundle(), new QName[] { featureQName, qname }, qname.getLocalPart() );
     if( annotation != null )
       return annotation;
 
@@ -300,12 +301,12 @@ public class AnnotationUtilities
     return new DefaultAnnotation( lang, defaultName );
   }
 
-  public static IAnnotation annotationFromProperties( final Properties properties, final QName[] qnames, final String defaultName )
+  public static IAnnotation annotationFromProperties( final ResourceBundle resourceBundle, final QName[] qnames, final String defaultName )
   {
-    final String[] keys = createKeys( properties, qnames );
+    final String[] keys = createKeys( resourceBundle, qnames );
     for( final String key : keys )
     {
-      final IAnnotation annotation = findAnnotation( properties, key, defaultName );
+      final IAnnotation annotation = findAnnotation( resourceBundle, key, defaultName );
       if( annotation != null )
         return annotation;
     }
@@ -313,13 +314,13 @@ public class AnnotationUtilities
     return null;
   }
 
-  private static String[] createKeys( final Properties props, final QName[] qnames )
+  private static String[] createKeys( final ResourceBundle resourceBundle, final QName[] qnames )
   {
     /* Produce the different types of keys */
     final Set<String> keys = new HashSet<String>( 5 );
 
     for( final KeyTypes type : KeyTypes.values() )
-      keys.add( buildKey( type, props, qnames ) );
+      keys.add( buildKey( type, resourceBundle, qnames ) );
 
     return keys.toArray( new String[keys.size()] );
   }
@@ -335,7 +336,7 @@ public class AnnotationUtilities
 // onlyFeatureNamespaceCatalog
   }
 
-  private static String buildKey( final KeyTypes type, final Properties properties, final QName[] qnames )
+  private static String buildKey( final KeyTypes type, final ResourceBundle resourceBundle, final QName[] qnames )
   {
     final StringBuffer sb = new StringBuffer();
 
@@ -348,7 +349,7 @@ public class AnnotationUtilities
       final boolean namespaceIsNull = namespace == null || namespace.length() == 0;
       final String ns = namespaceIsNull ? null : URNUtilities.convertURN( namespace );
       final String localPart = qname == null ? null : qname.getLocalPart();
-      final String shortnameFromProperties = namespaceIsNull ? null : properties.getProperty( ns, null );
+      final String shortnameFromProperties = namespaceIsNull ? null : ResourceBundleUtils.getStringQuiet( resourceBundle, ns );
       final String shortnameFromCatalog;
       // Allow for known prefix, but avoid creation of generated prefix
       if( namespaceIsNull || !nsMapper.hasPrefix( namespace ) )
@@ -396,14 +397,14 @@ public class AnnotationUtilities
     }
   }
 
-  private static IAnnotation findAnnotation( final Properties props, final String key, final String defaultName )
+  private static IAnnotation findAnnotation( final ResourceBundle resourceBundle, final String key, final String defaultName )
   {
     final String lang = Platform.getNL();
 
-    final String nameValue = props.getProperty( key + "name", null );
-    final String labelValue = props.getProperty( key + "label" );
-    final String tooltipValue = props.getProperty( key + "tooltip" );
-    final String descriptionValue = props.getProperty( key + "description" );
+    final String nameValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "name" );
+    final String labelValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "label" );
+    final String tooltipValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "tooltip" );
+    final String descriptionValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "description" );
 
     if( nameValue == null && labelValue == null && tooltipValue == null && descriptionValue == null )
       return null;
