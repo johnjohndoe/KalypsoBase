@@ -1155,66 +1155,72 @@ public class SLDFactory
 
     for( int i = 0; i < symbolizerNL.getLength(); i++ )
     {
-      if( symbolizerNL.item( i ) instanceof Element )
+      final Node item = symbolizerNL.item( i );
+      if( item instanceof Element )
       {
-        final Element symbolizerElement = (Element) symbolizerNL.item( i );
-        final String namespace = symbolizerElement.getNamespaceURI();
-
-        if( !(CommonNamespaces.SLDNS.toString().equals( namespace ) || SLDNS_EXT.equals( namespace )) )
-        {
-          continue;
-        }
-
-        /*
-         * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
-         * Symbology-Elements. In SLD 1.0.0 this is not yet supported, always 'pixel' is assumed.
-         */
-        final UOM uom;
-        if( symbolizerElement.hasAttribute( "uom" ) )
-        {
-          uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );
-        }
-        else
-        {
-          uom = UOM.pixel;
-        }
-
-        final String symbolizerName = symbolizerElement.getLocalName();
-
-        if( symbolizerName.equals( "LineSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
-        else if( symbolizerName.equals( "PointSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
-        else if( symbolizerName.equals( "PolygonSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
-        else if( symbolizerName.equals( "TextSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
-        else if( symbolizerName.equals( "RasterSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createRasterSymbolizer( symbolizerElement, uom ) );
-        }
-        else if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
-        else if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
-        {
-          symbolizerList.add( SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
+        final Symbolizer symbolizer = createSymbolizer( urlResolver, (Element) item, min, max );
+        if( symbolizer != null )
+          symbolizerList.add( symbolizer );
       }
     }
 
     final Symbolizer[] symbolizers = symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
-
     return StyleFactory.createRule( symbolizers, name, title, abstract_, legendGraphic, filter, isAnElseFilter, min, max );
+  }
+
+  public static Symbolizer createSymbolizer( final IUrlResolver2 urlResolver, final Element symbolizerElement, final double min, final double max ) throws XMLParsingException
+  {
+    final String namespace = symbolizerElement.getNamespaceURI();
+
+    if( !(CommonNamespaces.SLDNS.toString().equals( namespace ) || SLDNS_EXT.equals( namespace )) )
+      return null;
+
+    /*
+     * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
+     * Symbology-Elements. In SLD 1.0.0 this is not yet supported, always 'pixel' is assumed.
+     */
+    final UOM uom;
+    if( symbolizerElement.hasAttribute( "uom" ) )
+    {
+      uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );
+    }
+    else
+    {
+      uom = UOM.pixel;
+    }
+
+    final String symbolizerName = symbolizerElement.getLocalName();
+
+    if( symbolizerName.equals( "LineSymbolizer" ) )
+    {
+      return SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    else if( symbolizerName.equals( "PointSymbolizer" ) )
+    {
+     return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    else if( symbolizerName.equals( "PolygonSymbolizer" ) )
+    {
+      return SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    else if( symbolizerName.equals( "TextSymbolizer" ) )
+    {
+      return SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    else if( symbolizerName.equals( "RasterSymbolizer" ) )
+    {
+      return SLDFactory.createRasterSymbolizer( symbolizerElement, uom );
+    }
+    else if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
+    {
+      return SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    else if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
+    {
+      return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    }
+    
+    return null;
   }
 
   /**
@@ -1272,7 +1278,6 @@ public class SLDFactory
    */
   private static LineSymbolizer createLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
   {
-
     // optional: <Geometry>
     Geometry geometry = null;
     final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
