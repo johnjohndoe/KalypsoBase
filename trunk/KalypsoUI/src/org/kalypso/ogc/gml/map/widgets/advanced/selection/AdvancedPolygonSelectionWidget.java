@@ -43,18 +43,17 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AddRemovePolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RemovePolygonDelegate;
-import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.SelectPolygonDelegate;
 import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
 
 /**
@@ -62,22 +61,19 @@ import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
  */
 public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget implements IAdvancedSelectionWidget
 {
+  List<IAdvancedSelectionWidgetDelegate> m_delegates = new ArrayList<IAdvancedSelectionWidgetDelegate>();
 
-  private EDIT_MODE m_mode = EDIT_MODE.eSelect;
-
-  Map<EDIT_MODE, IAdvancedSelectionWidgetDelegate> m_delegates = new HashMap<EDIT_MODE, IAdvancedSelectionWidgetDelegate>();
-
-  private final IAdvancedSelectionWidgetDataProvider m_provider;
-
+  IAdvancedSelectionWidgetDelegate m_current = null;
+  
   public AdvancedPolygonSelectionWidget( final IAdvancedSelectionWidgetDataProvider provider )
   {
     super( "AdvancedPolygonSelectionWidget" );
-    m_provider = provider;
 
-    m_delegates.put( EDIT_MODE.eSelect, new SelectPolygonDelegate( this, provider ) );
-    m_delegates.put( EDIT_MODE.eRectangle, new RectanglePolygonDelegate( this, provider ) );
-    m_delegates.put( EDIT_MODE.eDrawing, new DrawingPolygonDelegate( this, provider ) );
-    m_delegates.put( EDIT_MODE.eRemove, new RemovePolygonDelegate( this, provider ) );
+    m_delegates.add( new AddRemovePolygonDelegate( this, provider ) );
+    m_delegates.add( new RectanglePolygonDelegate( this, provider ) );
+    m_delegates.add( new DrawingPolygonDelegate( this, provider ) );
+    
+    m_current = m_delegates.get( 0 );
     
     new UIJob( "" )
     {
@@ -92,14 +88,10 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
   }
 
-  public EDIT_MODE getEditMode( )
-  {
-    return m_mode;
-  }
 
   protected IAdvancedSelectionWidgetDelegate getCurrentDelegate( )
   {
-    return m_delegates.get( m_mode );
+    return m_current;
   }
 
   /**
@@ -146,9 +138,9 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
   @Override
   public String getToolTip( )
   {
-    final String tip = m_provider.getToolTip( getEditMode() );
+    final String[] tip = m_current.getTooltip();
 
-    return String.format( "%s <SPACE>", tip );
+    return String.format( "%s <SPACE>", tip[0] );
   }
 
   /**
@@ -181,25 +173,15 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
   private void switchMode( )
   {
-    if( EDIT_MODE.eSelect.equals( m_mode ) )
-    {
-      m_mode = EDIT_MODE.eRectangle;
-    }
-    else if( EDIT_MODE.eRectangle.equals( m_mode ) )
-    {
-      m_mode = EDIT_MODE.eDrawing;
-    }
-    else if( EDIT_MODE.eDrawing.equals( m_mode ) )
-    {
-      m_mode = EDIT_MODE.eRemove;
-    }
-    else if( EDIT_MODE.eRemove.equals( m_mode ) )
-    {
-      m_mode = EDIT_MODE.eSelect;
-    }
+    int index = m_delegates.indexOf( m_current );
+    index++;
 
-    setCursor( getCurrentDelegate().getCursor() );
+    if( index == m_delegates.size() )
+      index = 0;
     
+    m_current = m_delegates.get( index );
+    setCursor( getCurrentDelegate().getCursor() );
+
     getMapPanel().repaintMap();
   }
 

@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -55,9 +55,12 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -65,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private Image m_imgCursor;
+  private static BufferedImage IMG_CURSOR;
 
   public RectanglePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
@@ -85,9 +88,10 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       Assert.isTrue( base.getCoordinateSystem() == current.getCoordinateSystem() );
 
       final GM_Envelope envelop = GeometryFactory.createGM_Envelope( base.getPosition(), current.getPosition(), base.getCoordinateSystem() );
+      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
 
-      final Feature[] features = getDataProvider().query( envelop );
-      getDataProvider().post( features, getWidget().getEditMode() );
+      final Feature[] features = getDataProvider().query( box, getEditMode() );
+      getDataProvider().post( features, getEditMode() );
     }
     catch( final Exception e )
     {
@@ -118,10 +122,11 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       final GM_Point gmCurrent = getWidget().getCurrentGmPoint();
       Assert.isTrue( gmBase.getCoordinateSystem() == gmCurrent.getCoordinateSystem() );
 
-      final GM_Envelope envelop = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
+      final GM_Envelope envelope = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
+      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
 
-      final Feature[] features = getDataProvider().query( envelop );
-      highlightUnderlyingGeometries( features, g );
+      final Feature[] features = getDataProvider().query( box, getEditMode() );
+      highlightUnderlyingGeometries( features, g, getEditMode() );
     }
     catch( final Exception e )
     {
@@ -129,6 +134,25 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     }
   }
 
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
+   */
+  @Override
+  public EDIT_MODE getEditMode( )
+  {
+    return EDIT_MODE.eAdd;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getTooltip()
+   */
+  @Override
+  public String[] getTooltip( )
+  {
+    return new String[] { "Editiermodus: Umrande neue Elemente" };
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
    */
@@ -137,10 +161,11 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   {
     try
     {
-      if( m_imgCursor == null )
-        m_imgCursor = ImageIO.read( RectanglePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) );
+      if( IMG_CURSOR == null )
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) );
 
-      return super.getCursor( m_imgCursor );
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
     }
     catch( final IOException e )
     {
@@ -148,15 +173,6 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     }
 
     return null;
-  }
-  
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#getColor()
-   */
-  @Override
-  protected Color getColor( )
-  {
-    return new Color( 0xBB, 0xFF, 0x6D, 128 );
   }
 
 }

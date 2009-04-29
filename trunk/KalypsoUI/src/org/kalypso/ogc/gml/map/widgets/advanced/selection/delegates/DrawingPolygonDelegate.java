@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +63,10 @@ import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvide
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -76,8 +77,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate implements IGeometryBuilderExtensionProvider
 {
   private PolygonGeometryBuilder m_geoBuilder = null;
-
-  private Image m_imgCursor;
+  private static BufferedImage IMG_CURSOR; 
 
   public DrawingPolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
@@ -130,17 +130,14 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     {
       try
       {
-
         m_geoBuilder.addPoint( getWidget().getCurrentGmPoint() );
         final GM_Object gmo = m_geoBuilder.finish();
         m_geoBuilder.removeLastPoint();
 
         final Geometry jtsBase = JTSAdapter.export( gmo );
-
-        final GM_Envelope envelope = gmo.getEnvelope();
         final List<Feature> myFeatures = new ArrayList<Feature>();
 
-        final Feature[] features = getDataProvider().query( envelope );
+        final Feature[] features = getDataProvider().query( (GM_Surface<GM_SurfacePatch>) gmo, getEditMode() );
 
         for( final Feature feature : features )
         {
@@ -149,7 +146,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
             myFeatures.add( feature );
         }
 
-        getDataProvider().post( myFeatures.toArray( new Feature[] {} ), EDIT_MODE.eDrawing );
+        getDataProvider().post( myFeatures.toArray( new Feature[] {} ), getEditMode() );
       }
       catch( final Exception e )
       {
@@ -193,19 +190,18 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final Geometry jtsBase = JTSAdapter.export( gmo );
 
-        final GM_Envelope envelope = gmo.getEnvelope();
-        final Feature[] features = getDataProvider().query( envelope );
-        
+        final Feature[] features = getDataProvider().query( (GM_Surface<GM_SurfacePatch>) gmo, getEditMode() );
+
         final List<Feature> highlight = new ArrayList<Feature>();
-        
+
         for( final Feature feature : features )
         {
           final Geometry jts = getDataProvider().resolveJtsGeometry( feature );
           if( jtsBase.intersects( jts ) )
             highlight.add( feature );
         }
-        
-        highlightUnderlyingGeometries( highlight.toArray( new Feature[] {} ), g );
+
+        highlightUnderlyingGeometries( highlight.toArray( new Feature[] {} ), g, EDIT_MODE.eAdd );
       }
       catch( final Exception e )
       {
@@ -214,14 +210,6 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
-   */
-  @Override
-  public String[] getTooltip( )
-  {
-    return new String[] { getWidget().getToolTip() };
-  }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
@@ -244,6 +232,25 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     }
   }
 
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
+   */
+  @Override
+  public EDIT_MODE getEditMode( )
+  {
+    return EDIT_MODE.eAdd;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
+   */
+  @Override
+  public String[] getTooltip( )
+  {
+    return new String[] { "Editiermodus: Umzeichne neue Elemente" };
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
    */
@@ -252,10 +259,11 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
   {
     try
     {
-      if( m_imgCursor == null )
-        m_imgCursor = ImageIO.read( DrawingPolygonDelegate.class.getResourceAsStream( "images/cursor_add_drawing.png" ) );
+      if( IMG_CURSOR == null )
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_drawing.png" ) );
 
-      return super.getCursor( m_imgCursor );
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
     }
     catch( final IOException e )
     {
@@ -265,12 +273,4 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#getColor()
-   */
-  @Override
-  protected Color getColor( )
-  {
-    return new Color( 0xBB, 0xFF, 0x6D, 128 );
-  }
 }

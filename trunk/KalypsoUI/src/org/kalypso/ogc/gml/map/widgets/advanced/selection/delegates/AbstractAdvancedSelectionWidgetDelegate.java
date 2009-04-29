@@ -41,11 +41,8 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -56,6 +53,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -63,12 +61,19 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvancedSelectionWidgetDelegate
 {
+  private static final Color COLOR_ADD_MODE = new Color( 0xBB, 0xFF, 0x6D, 128 );
+  
+  private static final Color COLOR_REMOVE_MODE = new  Color( 0xFF, 0x4A, 0x26, 128 );
+  
   private final IAdvancedSelectionWidget m_widget;
 
   private final IAdvancedSelectionWidgetDataProvider m_provider;
@@ -101,10 +106,11 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     {
       // underlying features
       final GM_Point point = m_widget.getCurrentGmPoint();
-      final Feature[] features = m_provider.query( point, 0.1, getWidget().getEditMode() );
+      final EDIT_MODE mode = getEditMode();
+      
+      final Feature[] features = m_provider.query( getSurface( point ), mode );
 
-      // highlight these features
-      highlightUnderlyingGeometries( features, g );
+      highlightUnderlyingGeometries( features, g, mode );
     }
     catch( final GM_Exception e )
     {
@@ -112,12 +118,21 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     }
   }
 
-  abstract protected Color getColor( );
+  protected GM_Surface<GM_SurfacePatch> getSurface( final GM_Point point ) throws GM_Exception
+  {
+    if( point == null )
+      return null;
 
-  protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g )
+    final Geometry geometry = JTSAdapter.export( point );
+    final Geometry buffer = geometry.buffer( 0.1 );
+
+    return (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( buffer );
+  }
+
+  protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g, final EDIT_MODE mode )
   {
     final Color originalColor = g.getColor();
-    g.setColor( getColor() );
+    g.setColor( getColor( mode ) );
 
     for( final Feature feature : features )
     {
@@ -140,6 +155,16 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     }
 
     g.setColor( originalColor );
+  }
+
+  private Color getColor( final EDIT_MODE mode )
+  {
+    if( EDIT_MODE.eAdd.equals( mode ) )
+      return COLOR_ADD_MODE;
+    else if( EDIT_MODE.eRemove.equals( mode ) )
+      return COLOR_REMOVE_MODE;
+    
+    throw new IllegalStateException();
   }
 
   /**
@@ -197,12 +222,5 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   public void doubleClickedLeft( final Point p )
   {
     // nothing to do
-  }
-
-  public Cursor getCursor( final Image imgCursor )
-  {
-    final Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-    return toolkit.createCustomCursor( imgCursor, new Point( 2, 1 ), "selection cursor" );
   }
 }

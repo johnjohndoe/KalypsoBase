@@ -44,10 +44,10 @@ import java.util.Map;
 
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -56,13 +56,7 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
-  String getToolTip( EDIT_MODE editMode );
-
   void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
-
-  Feature[] query( GM_Envelope envelop );
-
-  Feature[] query( final GM_Point point, final double range, EDIT_MODE mode ) throws GM_Exception;
 
   GM_Object resolveGeometry( final Feature feature );
 
@@ -71,4 +65,6 @@ public interface IAdvancedSelectionWidgetDataProvider
   Map<Geometry, Feature> resolveJtsGeometries( final Feature[] features ) throws GM_Exception;
 
   Geometry resolveJtsGeometry( final Feature feature ) throws GM_Exception;
+
+  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode ); 
 }

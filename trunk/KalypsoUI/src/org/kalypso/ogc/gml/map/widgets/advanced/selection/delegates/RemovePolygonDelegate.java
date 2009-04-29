@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -52,16 +52,17 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Dirk Kuch
  */
 public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private Image m_imgCursor;
-
+  private static Image IMG_CURSOR = null;
+  
+  
   public RemovePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
   {
     super( widget, provider );
@@ -77,10 +78,9 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
 
     try
     {
-      final GM_Point point = getWidget().getCurrentGmPoint();
-      final Feature[] features = getDataProvider().query( point, 0.1, getWidget().getEditMode() );
+      final Feature[] features = getDataProvider().query( getSurface( getWidget().getCurrentGmPoint() ), getEditMode() );
 
-      getDataProvider().post( features, getWidget().getEditMode() );
+      getDataProvider().post( features, getEditMode() );
     }
     catch( final Exception e )
     {
@@ -89,6 +89,26 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
 
   }
 
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
+   */
+  @Override
+  public EDIT_MODE getEditMode( )
+  {
+    return EDIT_MODE.eRemove;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getTooltip()
+   */
+  @Override
+  public String[] getTooltip( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
    */
@@ -97,10 +117,11 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
   {
     try
     {
-      if( m_imgCursor == null )
-        m_imgCursor = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
+      if( IMG_CURSOR == null )
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
 
-      return super.getCursor( m_imgCursor );
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
     }
     catch( final IOException e )
     {
@@ -110,12 +131,4 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
     return null;
   }
   
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#getColor()
-   */
-  @Override
-  protected Color getColor( )
-  {
-    return new Color( 0xFF, 0x4A, 0x26, 128 );
-  }
 }
