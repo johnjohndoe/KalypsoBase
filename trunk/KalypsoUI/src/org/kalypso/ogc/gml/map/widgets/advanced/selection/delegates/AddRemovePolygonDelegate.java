@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -64,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
   private static BufferedImage IMG_CURSOR_ADD;
-  
+
   private static BufferedImage IMG_CURSOR_REMOVE;
 
   private static Cursor ADD_CURSOR;
@@ -74,10 +75,10 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   private EDIT_MODE m_lastMode = null;
 
   private boolean m_modeSwitched = false;
-  
-  public AddRemovePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
+
+  public AddRemovePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
-    super( widget, provider );
+    super( widget, provider, geometryProvider );
   }
 
   /**
@@ -100,8 +101,6 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     }
   }
 
-
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
    */
@@ -111,29 +110,29 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     try
     {
       final Feature[] features = getDataProvider().query( getSurface( getWidget().getCurrentGmPoint() ), EDIT_MODE.eRemove );
-      
-      if( !ArrayUtils.isEmpty( features ) ) 
+
+      if( !ArrayUtils.isEmpty( features ) )
       {
-        if (m_lastMode != EDIT_MODE.eRemove)
+        if( m_lastMode != EDIT_MODE.eRemove )
         {
           m_modeSwitched = true;
           m_lastMode = EDIT_MODE.eRemove;
         }
-          
+
         return EDIT_MODE.eRemove;
       }
     }
     catch( final GM_Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    } 
+    }
 
     if( m_lastMode != EDIT_MODE.eAdd )
     {
       m_modeSwitched = true;
       m_lastMode = EDIT_MODE.eAdd;
     }
-    
+
     return EDIT_MODE.eAdd;
   }
 
@@ -145,7 +144,7 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   {
     return new String[] { "Editiermodus: Hinzufügen / Entfernen von Elementen" };
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
    */
@@ -154,21 +153,20 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   {
     try
     {
-    if( IMG_CURSOR_ADD == null )
-      IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) );
+      if( IMG_CURSOR_ADD == null )
+        IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) );
 
-    if( IMG_CURSOR_REMOVE == null )
+      if( IMG_CURSOR_REMOVE == null )
         IMG_CURSOR_REMOVE = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
 
-    final Toolkit toolkit = Toolkit.getDefaultToolkit();
-    if( ADD_CURSOR == null )
-      ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" );
-    
-    if( REMOVE_CURSOR == null )
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      if( ADD_CURSOR == null )
+        ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" );
+
+      if( REMOVE_CURSOR == null )
         REMOVE_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_REMOVE, new Point( 2, 1 ), "selection remove cursor" );
-    
-    return getCursor( getEditMode() );
-    
+
+      return getCursor( getEditMode() );
     }
     catch( final IOException e )
     {
@@ -184,11 +182,10 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       return ADD_CURSOR;
     else if( EDIT_MODE.eRemove.equals( mode ) )
       return REMOVE_CURSOR;
-    
 
     return ADD_CURSOR;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AbstractAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
@@ -200,7 +197,7 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       getWidget().setCursor( getCursor() );
       m_modeSwitched = false;
     }
-    
+
     super.paint( g );
   }
 }

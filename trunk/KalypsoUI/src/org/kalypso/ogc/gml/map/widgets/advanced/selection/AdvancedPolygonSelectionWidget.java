@@ -65,13 +65,13 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
   IAdvancedSelectionWidgetDelegate m_current = null;
   
-  public AdvancedPolygonSelectionWidget( final IAdvancedSelectionWidgetDataProvider provider )
+  public AdvancedPolygonSelectionWidget( final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
     super( "AdvancedPolygonSelectionWidget" );
 
-    m_delegates.add( new AddRemovePolygonDelegate( this, provider ) );
-    m_delegates.add( new RectanglePolygonDelegate( this, provider ) );
-    m_delegates.add( new DrawingPolygonDelegate( this, provider ) );
+    m_delegates.add( new AddRemovePolygonDelegate( this, provider, geometryProvider ) );
+    m_delegates.add( new RectanglePolygonDelegate( this, provider, geometryProvider ) );
+    m_delegates.add( new DrawingPolygonDelegate( this, provider, geometryProvider ) );
     
     m_current = m_delegates.get( 0 );
     

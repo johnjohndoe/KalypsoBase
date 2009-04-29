@@ -40,31 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 
-import java.util.Map;
-
+import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Dirk Kuch
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
+  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
+
+  /**
+   * post selection changes
+   */
   void post( final Feature[] features, EDIT_MODE mode ) throws Exception;
 
-  GM_Object resolveGeometry( final Feature feature );
+  public void addSelectionChangeListener( IAdvancedWidgetChangeListener listener );
 
-  Map<GM_Object, Feature> resolveGeometry( final Feature[] features );
-
-  Map<Geometry, Feature> resolveJtsGeometries( final Feature[] features ) throws GM_Exception;
-
-  Geometry resolveJtsGeometry( final Feature feature ) throws GM_Exception;
-
-  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode ); 
+  public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
 }

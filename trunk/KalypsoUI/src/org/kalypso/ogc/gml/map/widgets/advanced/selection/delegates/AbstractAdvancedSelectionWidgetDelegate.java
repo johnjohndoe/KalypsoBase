@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate;
+import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -76,14 +77,17 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
   
   private final IAdvancedSelectionWidget m_widget;
 
-  private final IAdvancedSelectionWidgetDataProvider m_provider;
+  private final IAdvancedSelectionWidgetDataProvider m_dataProvider;
 
   private Point m_pressed = null;
 
-  public AbstractAdvancedSelectionWidgetDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider )
+  private final IAdvancedSelectionWidgetGeometryProvider m_geometryProvider;
+
+  public AbstractAdvancedSelectionWidgetDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider dataProvider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
     m_widget = widget;
-    m_provider = provider;
+    m_geometryProvider = geometryProvider;
+    m_dataProvider = dataProvider;
   }
 
   protected IAdvancedSelectionWidget getWidget( )
@@ -93,9 +97,14 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
   protected IAdvancedSelectionWidgetDataProvider getDataProvider( )
   {
-    return m_provider;
+    return m_dataProvider;
   }
 
+  protected IAdvancedSelectionWidgetGeometryProvider getGeometryProvider( )
+  {
+    return m_geometryProvider;
+  }
+  
   /**
    * @see org.kalypso.planer.client.ui.gui.widgets.measures.aw.IAdvancedSelectionWidgetDelegate#paint(java.awt.Graphics)
    */
@@ -108,7 +117,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       final GM_Point point = m_widget.getCurrentGmPoint();
       final EDIT_MODE mode = getEditMode();
       
-      final Feature[] features = m_provider.query( getSurface( point ), mode );
+      final Feature[] features = m_dataProvider.query( getSurface( point ), mode );
 
       highlightUnderlyingGeometries( features, g, mode );
     }
@@ -136,7 +145,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
     for( final Feature feature : features )
     {
-      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) getDataProvider().resolveGeometry( feature );
+      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) getGeometryProvider().resolveGeometry( feature );
       final GM_Ring ring = surface.getSurfaceBoundary().getExteriorRing();
       final GM_Position[] positions = ring.getPositions();
 
