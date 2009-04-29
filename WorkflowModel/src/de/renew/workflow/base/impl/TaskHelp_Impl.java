@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base.impl;
 
-import java.util.Properties;
+import java.util.ResourceBundle;
 
-import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 
 import de.renew.workflow.base.EHelpType;
 import de.renew.workflow.base.ITaskHelp;
@@ -55,12 +55,12 @@ public class TaskHelp_Impl implements ITaskHelp
 {
   private final Help m_help;
 
-  private final Properties m_i10nproperties;
+  private final ResourceBundle m_resourceBundle;
 
-  public TaskHelp_Impl( final Help help, final Properties i10nproperties )
+  public TaskHelp_Impl( final Help help, final ResourceBundle resourceBundle )
   {
     m_help = help;
-    m_i10nproperties = i10nproperties;
+    m_resourceBundle = resourceBundle;
   }
 
   /**
@@ -74,7 +74,7 @@ public class TaskHelp_Impl implements ITaskHelp
     if( m_help.getType() == EHelpType.HTML )
       return value;
 
-    return PropertiesUtilities.getI18NString( value, m_i10nproperties );
+    return ResourceBundleUtils.getI18NString( value, m_resourceBundle );
   }
 
 }

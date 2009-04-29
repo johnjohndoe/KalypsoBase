@@ -43,7 +43,7 @@ package de.renew.workflow.contexts;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.osgi.framework.Bundle;
 
 import de.renew.workflow.base.IWorkflow;
@@ -144,11 +144,8 @@ public class WorkflowSystemExtension
     try
     {
       final Workflow workflow = (Workflow) JC.createUnmarshaller().unmarshal( location );
-
-      final Properties i10nProperties = new Properties();
-      PropertiesUtilities.loadI18nProperties( i10nProperties, location );
-
-      return new Workflow_Impl( workflow, i10nProperties );
+      final ResourceBundle resourceBundle = ResourceBundleUtils.loadResourceBundle( location );
+      return new Workflow_Impl( workflow, resourceBundle );
     }
     catch( final Throwable e )
     {

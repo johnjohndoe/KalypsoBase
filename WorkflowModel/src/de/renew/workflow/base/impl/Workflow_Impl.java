@@ -41,7 +41,7 @@
 package de.renew.workflow.base.impl;
 
 import java.util.List;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
@@ -61,12 +61,12 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
    *          Used to i10n this workflow. If any human-readable string in the wrapped binding objects starts with an
    *          '%', the value is interpreted as key of the given properties and the corresponding value will be returned.
    */
-  public Workflow_Impl( final Workflow workflow, final Properties i10nproperties )
+  public Workflow_Impl( final Workflow workflow, final ResourceBundle resourceBundle )
   {
-    super( workflow, i10nproperties );
+    super( workflow, resourceBundle );
 
     final Task defaultTask = workflow.getDefaultTask();
-    m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, i10nproperties );
+    m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, resourceBundle );
   }
 
   protected Workflow getWorkflow( )
@@ -117,7 +117,7 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
 
       if( task.getURI().equals( uri ) )
       {
-        m_defaultTask = new Task_Impl( task, getI18nProperties() );
+        m_defaultTask = new Task_Impl( task, getResourceBundle() );
         return;
       }
     }

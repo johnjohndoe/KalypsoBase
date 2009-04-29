@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base.impl;
 
-import java.util.Properties;
+import java.util.ResourceBundle;
 
-import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 
 import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.ITask;
@@ -60,15 +60,15 @@ public class Task_Impl implements ITask
 
   private final ITaskHelp m_help;
 
-  private final Properties m_i10nproperties;
+  private final ResourceBundle m_resourceBundle;
 
-  public Task_Impl( final Task task, final Properties i10nproperties )
+  public Task_Impl( final Task task, final ResourceBundle resourceBundle )
   {
     m_task = task;
-    m_i10nproperties = i10nproperties;
+    m_resourceBundle = resourceBundle;
 
     final Help help = m_task.getHelp();
-    m_help = help == null ? null : new TaskHelp_Impl( help, i10nproperties );
+    m_help = help == null ? null : new TaskHelp_Impl( help, resourceBundle );
   }
 
   protected Task getTask( )
@@ -110,7 +110,7 @@ public class Task_Impl implements ITask
   public String getName( )
   {
     final String name = getTask().getName();
-    return PropertiesUtilities.getI18NString( name, m_i10nproperties );
+    return ResourceBundleUtils.getI18NString( name, m_resourceBundle );
   }
 
   /**
@@ -129,9 +129,9 @@ public class Task_Impl implements ITask
     return value;
   }
 
-  protected Properties getI18nProperties( )
+  protected ResourceBundle getResourceBundle( )
   {
-    return m_i10nproperties;
+    return m_resourceBundle;
   }
 
   /**
