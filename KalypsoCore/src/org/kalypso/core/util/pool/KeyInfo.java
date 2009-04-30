@@ -81,7 +81,7 @@ public final class KeyInfo extends Job
   /** Flag, indicating if the associated object needs saving. */
   private boolean m_isDirty = false;
 
-  private Map<IResource, Boolean> m_resources = new HashMap<IResource, Boolean>();
+  private final Map<IResource, Boolean> m_resources = new HashMap<IResource, Boolean>();
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
@@ -94,10 +94,10 @@ public final class KeyInfo extends Job
     try
     {
       final IResource[] resources = m_loader.getResources( m_key );
-      for( IResource resource : resources )
+      for( final IResource resource : resources )
         m_resources.put( resource, Boolean.FALSE );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // Save to just ignore it; later we will get the same exception when invoking load on the loader
       e.printStackTrace();
@@ -189,7 +189,7 @@ public final class KeyInfo extends Job
       element.objectLoaded( m_key, o, status );
   }
 
-  private void fireObjectInvalid( Object oldObject )
+  private void fireObjectInvalid( final Object oldObject )
   {
     // TRICKY: objectInvalid may add/remove PoolListener for this key,
     // so we cannot iterate over m_listeners
@@ -270,7 +270,7 @@ public final class KeyInfo extends Job
     synchronized( this )
     {
       // Lock next load
-      for( Entry<IResource, Boolean> entry : m_resources.entrySet() )
+      for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
         entry.setValue( Boolean.TRUE );
       m_loader.save( m_key, monitor, m_object );
       setDirty( false );
@@ -342,7 +342,7 @@ public final class KeyInfo extends Job
     }
   }
 
-  public void handleResourceChanged( IResourceDelta delta )
+  public void handleResourceChanged( final IResourceDelta delta )
   {
     final List<IResourceDelta> deltas = new ArrayList<IResourceDelta>( m_resources.size() );
 
