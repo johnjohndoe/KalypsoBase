@@ -77,7 +77,7 @@ public final class ResourceBundleUtils
       final URL _baseURL = extractBaseUrl( baseURL );
       final String path = baseURL.getPath();
       final String baseName = FilenameUtils.getBaseName( path );
-      
+
       // REMARK: the trick here is to use the special class loader, that just links back to the given url.
       // This allows us to use the full functionality of the ResourceBundle#getBundle implementation.
       final ClassLoader loader = new ClassLoader()
@@ -112,7 +112,7 @@ public final class ResourceBundleUtils
       return null;
     }
   }
-  
+
   private static URL extractBaseUrl( final URL location ) throws MalformedURLException
   {
     final String externalForm = location.toExternalForm();
@@ -151,16 +151,12 @@ public final class ResourceBundleUtils
 
     if( translatableString.charAt( 0 ) == '%' )
     {
-      try
+      final String key = translatableString.substring( 1 );
+      if( resourceBundle.containsKey( key ) )
       {
-        final String key = translatableString.substring( 1 );
         final String string = resourceBundle.getString( key );
-        if( string != null && !string.isEmpty() )
+        if( !string.isEmpty() )
           return string;
-      }
-      catch( final MissingResourceException e )
-      {
-        KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.WARNING, "No translation found for: %s%n", translatableString );
       }
     }
 
@@ -172,18 +168,10 @@ public final class ResourceBundleUtils
    */
   public static String getStringQuiet( final ResourceBundle bundle, final String key )
   {
-    try
-    {
-      if( bundle == null )
-        return null;
-      
+    if( bundle != null && bundle.containsKey( key ) )
       return bundle.getString( key );
-    }
-    catch( final MissingResourceException e )
-    {
-      // ignore
-      return null;
-    }
+
+    return null;
   }
 
 }
