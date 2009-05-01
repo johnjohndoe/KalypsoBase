@@ -74,6 +74,9 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
   private final boolean m_paintRunningTile;
 
+  /** If <code>true</code>, painting is rescheduled on next extent-change */
+  private boolean m_tileInvalid = false;
+
   /**
    * When constructed with this constructed, no repaint happens during painting of the theme.<br>
    * Same as {@link #BufferedRescaleMapLayer(IMapPanel, IKalypsoTheme, ISchedulingRule, Long.MAX_Value)}
@@ -138,8 +141,8 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       runningTile.paint( g, world2screen );
   }
 
-  /** Check if the tile fits to the given world2screen */
-  private boolean checkTile( final BufferedTile tile, final GeoTransform world2screen )
+  /** Check if the tile fits to the given world2screen (extent and screen-size) */
+  private boolean isSameExtent( final BufferedTile tile, final GeoTransform world2screen )
   {
     if( tile == null )
       return false;
@@ -175,7 +178,13 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   {
     // Force repaint: reschedule, will eventually replace the current tile
     if( m_tile != null && m_tile.intersects( extent ) )
+    {
       rescheduleJob( m_tile.getWorld2Screen() );
+      // FIX: extra mark tile as invalid. Fixes the problem, if the tile is currently invisible
+      // setting it now to visible would not result in a repaint
+      if( !getTheme().isVisible() )
+        m_tileInvalid = true;
+    }
   }
 
   /**
@@ -184,19 +193,17 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   @Override
   protected void handleExtentChanged( final GeoTransform world2screen )
   {
-    // reschedule
-
     // Fetch current state here (avoid synchronised blocks)
     final BufferedTile tile = m_tile;
     final BufferedTile runningTile = m_runningTile;
 
-    final boolean currentIsGood = checkTile( tile, world2screen );
-    if( currentIsGood )
+    if( !m_tileInvalid && isSameExtent( tile, world2screen ) )
       return;
 
-    final boolean runningIsGood = checkTile( runningTile, world2screen );
-    if( runningIsGood && runningTile.getResult() == null )
+    if( isSameExtent( runningTile, world2screen ) && runningTile.getResult() == null )
       return;
+
+    m_tileInvalid = false;
 
     rescheduleJob( world2screen );
   }
