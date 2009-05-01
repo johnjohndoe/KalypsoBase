@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -120,7 +120,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -135,7 +135,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -170,13 +170,12 @@ public class SplitSort implements FeatureList
     // HM: still dangerous: the calculation of the whole bbox is not synchronized, as we access 'getEnvelope' here
     // However, this is not thread safe...
 
-    // What is the solution? Maybe never get the envelopes again? IN that case we need to maintain an own Map
+    // What is the solution? Maybe never get the envelopes again? In that case we need to maintain an own Map
     // object->envelope?
     // But: we need the recalculate all envelopes if the whole index is invalidated...
 
     if( m_index == null )
     {
-
       // Recalculate the bounding box
       Envelope bbox = null;
       for( final Object item : m_items )
@@ -185,13 +184,9 @@ public class SplitSort implements FeatureList
         if( env != null )
         {
           if( bbox == null )
-          {
             bbox = new Envelope( env );
-          }
           else
-          {
             bbox.expandToInclude( env );
-          }
         }
       }
 
@@ -264,10 +259,10 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @deprecated This is slow: TODO: better comment TODO: deprecate in parent interface
+   * This is slow: TODO: better comment
+   *
    * @see java.util.List#remove(java.lang.Object)
    */
-  @Deprecated
   public boolean remove( final Object object )
   {
     final Envelope env = getEnvelope( object );
@@ -556,7 +551,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   * 
+   *
    * @see java.util.List#retainAll(java.util.Collection)
    */
   public boolean retainAll( final Collection c )
@@ -568,7 +563,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#iterator()
    */
   public Iterator iterator( )
@@ -580,7 +575,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   * 
+   *
    * @see java.util.List#subList(int, int)
    */
   public List subList( final int fromIndex, final int toIndex )
@@ -591,7 +586,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#listIterator()
    */
   public ListIterator listIterator( )
@@ -603,7 +598,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#listIterator(int)
    */
   public ListIterator listIterator( final int index )
