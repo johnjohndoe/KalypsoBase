@@ -790,6 +790,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
       for( final IMapLayer layer : m_layers.values() )
         layer.dispose();
+      m_layers.clear();
     }
 
     m_model = modell;

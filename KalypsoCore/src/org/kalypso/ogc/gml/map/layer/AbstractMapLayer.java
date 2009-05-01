@@ -118,8 +118,8 @@ public abstract class AbstractMapLayer implements IMapLayer
   @Override
   public void dispose( )
   {
-    getTheme().removeKalypsoThemeListener( m_themeListener );
-    getMapPanel().removeMapPanelListener( m_panelListener );
+    m_theme.removeKalypsoThemeListener( m_themeListener );
+    m_panel.removeMapPanelListener( m_panelListener );
   }
 
   public String getLabel( )
