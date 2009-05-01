@@ -74,9 +74,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
   private final boolean m_paintRunningTile;
 
-  /** If <code>true</code>, painting is rescheduled on next extent-change */
-  private boolean m_tileInvalid = false;
-
   /**
    * When constructed with this constructed, no repaint happens during painting of the theme.<br>
    * Same as {@link #BufferedRescaleMapLayer(IMapPanel, IKalypsoTheme, ISchedulingRule, Long.MAX_Value)}
@@ -180,10 +177,12 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     if( m_tile != null && m_tile.intersects( extent ) )
     {
       rescheduleJob( m_tile.getWorld2Screen() );
-      // FIX: extra mark tile as invalid. Fixes the problem, if the tile is currently invisible
-      // setting it now to visible would not result in a repaint
+      // If invisble, no reschedule has happened, so we have to dismiss the current tile
       if( !getTheme().isVisible() )
-        m_tileInvalid = true;
+      {
+        m_tile.dispose();
+        m_tile = null;
+      }
     }
   }
 
@@ -197,13 +196,11 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     final BufferedTile tile = m_tile;
     final BufferedTile runningTile = m_runningTile;
 
-    if( !m_tileInvalid && isSameExtent( tile, world2screen ) )
+    if( isSameExtent( tile, world2screen ) )
       return;
 
     if( isSameExtent( runningTile, world2screen ) && runningTile.getResult() == null )
       return;
-
-    m_tileInvalid = false;
 
     rescheduleJob( world2screen );
   }
