@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
@@ -103,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- * 
+ *
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
@@ -252,7 +253,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( this instanceof IEditorPart )
     {
       final MenuManager contextMenu = MapPartHelper.createMapContextMenu( m_control.getBody(), m_mapPanel, site );
-      site.registerContextMenu( contextMenu, m_mapPanel );
+      if( site instanceof IEditorSite )
+        ((IEditorSite) site).registerContextMenu( contextMenu, m_mapPanel, false );
+      else
+        site.registerContextMenu( contextMenu, m_mapPanel );
     }
 
     site.setSelectionProvider( m_mapPanel );
@@ -311,7 +315,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * The method starts a (user-)job, which loads the map.
    * </p>
    * .
-   * 
+   *
    * @param waitFor
    *          <code>true</code> if this method should return when the job has finished, if <code>false</code> returns
    *          immediately
@@ -355,7 +359,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       // prepare for exception
       setMapModell( null, null );
-      
+
       /* If no storage is passed, clear the map view. */
       if( storage == null )
       {
@@ -610,7 +614,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     if( ObjectUtils.equals( m_file, file ))
       return;
-    
+
     if( m_file != null )
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
 
