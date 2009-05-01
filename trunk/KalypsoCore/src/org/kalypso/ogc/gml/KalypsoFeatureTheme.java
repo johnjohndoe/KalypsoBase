@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -208,7 +209,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     final Graphics graphics = wrapGrahicForSelection( g, selected );
 
@@ -234,14 +235,21 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
     };
 
-    final double scale = p.getScale();
-    final GM_Envelope bbox = p.getSourceRect();
-    paint( scale, bbox, selected, monitor, paintDelegate );
-
-    if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
+    try
     {
-      m_featureList.paint( g, p );
+      final double scale = p.getScale();
+      final GM_Envelope bbox = p.getSourceRect();
+      paint( scale, bbox, selected, monitor, paintDelegate );
+
+      if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
+        m_featureList.paint( g, p );
     }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+
+    return Status.OK_STATUS;
   }
 
   /**

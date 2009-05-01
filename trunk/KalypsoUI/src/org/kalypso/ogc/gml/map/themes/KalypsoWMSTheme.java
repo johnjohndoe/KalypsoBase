@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -136,22 +137,27 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     /* The image can not be selected. */
     if( selected != null && selected )
-      return;
+      return Status.OK_STATUS;
+
+    setStatus( AbstractKalypsoTheme.PAINT_STATUS );
 
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
     final IStatus status = loader.run( monitor );
-    if( !status.isOK() )
-      throw new CoreException( status );
+    if( status.isOK() )
+    {
+      final Image buffer = loader.getBuffer();
+      g.drawImage( buffer, 0, 0, null );
+    }
 
-    final Image buffer = loader.getBuffer();
-    g.drawImage( buffer, 0, 0, null );
+    setStatus( status );
+    return status;
   }
 
   /**

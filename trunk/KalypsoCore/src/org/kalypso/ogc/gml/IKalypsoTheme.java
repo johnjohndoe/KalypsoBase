@@ -84,7 +84,14 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
 
   public void dispose( );
 
-  public void paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
+  /**
+   * Paints the theme to the given graphics context<br/>
+   *
+   * @throws CoreException
+   *           REAMRK: Implementors should additionally set the status object internally, if an exception occurs in
+   *           order to show the problem in the outline.
+   */
+  public IStatus paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor );
 
   /**
    * returns the name of the layer
