@@ -75,7 +75,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This item displays map coordinates in the status line.
- * 
+ *
  * @author Dirk Kuch
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
@@ -134,6 +134,8 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   public void dispose( )
   {
     m_adapterListener.dispose();
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( this );
 
     super.dispose();
   }
