@@ -357,30 +357,35 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( m_isSingleFeature )
         {
           // TODO: we do not know which one of the changed features is the right one... (se FIXME below)
-          // S owe just invalidate all features i nthis list
+          // So we just invalidate all features i nthis list
           for( final Feature feature : features )
-          {
             m_featureList.invalidate( feature );
-          }
         }
 
-        
-        // TODO: BOTH ways (if and else) are mayor performance bugs.
-        // we MUST first determine if we have to restyle at all that is, if this modell event
-        // did change any features belonging to me
-
-        // Optimise: i think it is faster to restyle all than to find and
-        // exchange so many display elements
-        // FIXME: we should always check if we are responsible for thechanged features
-        if( features.length > m_featureList.size() / 5 )
+        if( features.length > 100 )
         {
+          // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
+          // is too large.
           setDirty();
         }
         else
         {
+          GM_Envelope invalidBox = null;
           for( final Feature feature : features )
           {
-            restyleFeature( feature );
+            if( m_featureList.contains( feature ) || m_featureList.contains( feature.getId() ) )
+            {
+              final GM_Envelope envelope = feature.getEnvelope();
+              if( invalidBox == null )
+                invalidBox = envelope;
+              else
+                invalidBox = invalidBox.getMerged( envelope );
+            }
+          }
+          if( invalidBox != null )
+          {
+            // TODO: buffer: does not work well for points, or fat-lines
+            fireRepaintRequested( invalidBox );
           }
         }
       }
