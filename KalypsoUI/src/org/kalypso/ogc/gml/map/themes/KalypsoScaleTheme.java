@@ -54,6 +54,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.i18n.Messages;
@@ -120,10 +122,10 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected == true )
-      return;
+      return Status.OK_STATUS;
 
     /* The number of sub rectangles. */
     final int NUMBER_SUBS = 5;
@@ -166,6 +168,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     /* Draw the scale with the evaluated unit, width and values. */
     final double scale = p.getScale();
     paintScale( g, offset_x, offset_y, determineUnit( values ), values, width, scale );
+    return Status.OK_STATUS;
   }
 
   /**

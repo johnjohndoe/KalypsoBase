@@ -36,7 +36,10 @@ import java.util.logging.Logger;
 import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
@@ -66,7 +69,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private final URL m_context;
 
-  public KalypsoPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell ) 
+  public KalypsoPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell )
   {
     super( layerName, layerType.getLinktype(), modell );
 
@@ -154,10 +157,10 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
-      return;
+      return Status.OK_STATUS;
 
     try
     {
@@ -165,10 +168,14 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
       final String crs = m_domain.getCoordinateSystem();
       // transform from crs to crs? optimisation possible?
       TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
+      return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      setStatus( status );
+      return status;
     }
 
   }

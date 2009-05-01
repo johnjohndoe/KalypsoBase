@@ -192,10 +192,10 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
-      return;
+      return Status.OK_STATUS;
 
     final int wMax = g.getClipBounds().width;
     final int hMax = g.getClipBounds().height;
@@ -206,6 +206,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       final int heightImage = m_image.getHeight( null );
       g.drawImage( m_image, wMax - widthIamge, hMax - heightImage, widthIamge, heightImage, null );
     }
+    return Status.OK_STATUS;
   }
 
   protected final void invalidateLegend( )

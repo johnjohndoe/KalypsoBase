@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
-import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -251,14 +250,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     // Ignore cancel, can happen any time, i.e. the extent changes
     if( result.matches( IStatus.CANCEL ) )
       return;
-
-    // REMARK: this is not nice, but at the moment the only way to show the status to the user.
-    // It would be better, to keep an extra status on the layer, but this is not recognized by the outline
-    // This is a hint, that we need extra-tree elements for the outline, could be combined with this layer stuff.
-    // TODO: we also have a clash with any status already existing on the theme...
-    final IKalypsoTheme theme = getTheme();
-    if( theme instanceof AbstractKalypsoTheme )
-      ((AbstractKalypsoTheme) theme).setStatus( result );
 
     m_tile = tile;
     m_runningTile = null;

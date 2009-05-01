@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.jai.JAI;
@@ -114,12 +115,13 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     /** image creation removed from constructor, so not visible themes will not be loaded! */
     if( getImage() == null )
-      try
     {
+      try
+      {
         for( final ICoverage coverage : m_coverages )
         {
           final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
@@ -131,7 +133,6 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
             final FileType type = (FileType) rangeSet;
 
             final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
-
             final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
             final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
             setImage( new TiledImage( image, true ) );
@@ -142,12 +143,16 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
           break;
         }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        setStatus( status );
+        return status;
+      }
     }
 
-    super.paint( g, p, selected, monitor );
+    return super.paint( g, p, selected, monitor );
   }
 }

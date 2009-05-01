@@ -52,6 +52,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
@@ -250,10 +251,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( m_theme != null )
-      m_theme.paint( g, p, selected, monitor );
+    {
+      if( selected == null || !selected )
+        setStatus( PAINT_STATUS );
+      final IStatus status = m_theme.paint( g, p, selected, monitor );
+      if( selected == null || !selected )
+        setStatus( status );
+      return status;
+    }
+
+    return Status.OK_STATUS;
   }
 
   /**

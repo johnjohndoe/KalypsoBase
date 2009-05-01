@@ -48,6 +48,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -407,7 +409,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
     paint( g, p, null, monitor );
   }
@@ -417,10 +419,20 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
-    if( m_innerMapModel != null )
+    if( m_innerMapModel == null )
+      return Status.OK_STATUS;
+
+    try
+    {
       m_innerMapModel.paint( g, p, monitor );
+      return Status.OK_STATUS;
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
   }
 
   /**
