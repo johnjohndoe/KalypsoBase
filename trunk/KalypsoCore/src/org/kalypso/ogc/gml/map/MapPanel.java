@@ -768,9 +768,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     if( invalidateMap )
     {
-      invalidateMap();
       /* Tell everyone, that the extent has changed. */
       fireExtentChanged( oldExtent, boundingBox );
+
+      invalidateMap();
     }
     else
       repaintMap();
@@ -970,7 +971,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       }
       else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) )
       {
-        // Render asynchronous: yes (own mutex)
+        // Render asynchronously: yes (own mutex)
         // Repaint during rendering: no
         newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), false );
       }

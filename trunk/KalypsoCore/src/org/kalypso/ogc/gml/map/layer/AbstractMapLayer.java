@@ -45,6 +45,9 @@ import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.map.IMapLayer;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -66,6 +69,32 @@ public abstract class AbstractMapLayer implements IMapLayer
     {
       handeRepaintRequested( invalidExtent );
     }
+
+    /**
+     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#visibilityChanged(org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
+    {
+      final GeoTransform world2screen = getMapPanel().getProjection();
+      if( world2screen != null )
+        handleExtentChanged( world2screen );
+    }
+  };
+
+  private final IMapPanelListener m_panelListener = new MapPanelAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
+     *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
+     */
+    @Override
+    public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+    {
+      final GeoTransform world2screen = source.getProjection();
+      if( world2screen != null )
+        handleExtentChanged( world2screen );
+    }
   };
 
   private final IMapPanel m_panel;
@@ -77,6 +106,7 @@ public abstract class AbstractMapLayer implements IMapLayer
     m_panel = panel;
     m_theme = theme;
 
+    panel.addMapPanelListener( m_panelListener );
     theme.addKalypsoThemeListener( m_themeListener );
   }
 
@@ -89,6 +119,7 @@ public abstract class AbstractMapLayer implements IMapLayer
   public void dispose( )
   {
     getTheme().removeKalypsoThemeListener( m_themeListener );
+    getMapPanel().removeMapPanelListener( m_panelListener );
   }
 
   public String getLabel( )
@@ -118,6 +149,15 @@ public abstract class AbstractMapLayer implements IMapLayer
     invalidate( extent );
 
     getMapPanel().invalidateMap();
+  }
+
+  /**
+   * Called, when the extent of the map has changed.<br>
+   * Does nothing by default, inteneded to be overwritten by clients.
+   */
+  protected void handleExtentChanged( @SuppressWarnings("unused") final GeoTransform world2screen )
+  {
+    // nothing by default
   }
 
   /** Called, when the theme request a repaint for the given extent. */

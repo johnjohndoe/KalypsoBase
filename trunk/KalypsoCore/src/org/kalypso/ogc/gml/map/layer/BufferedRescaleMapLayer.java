@@ -97,6 +97,8 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     m_paintRunningTile = paintRunningTile;
     m_repaintMillis = repaintMillis;
     m_rule = rule;
+
+    rescheduleJob( panel.getProjection() );
   }
 
   /**
@@ -124,15 +126,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     // Fetch current state here (avoid synchronised blocks)
     final BufferedTile tile = m_tile;
     final BufferedTile runningTile = m_runningTile;
-
-    // If m_tile fits to world2screen, just paint it
-    if( !checkTile( tile, world2screen ) )
-    {
-      // If m_running tile does not fit or already was finished, reschedule it
-      if( !checkTile( runningTile, world2screen ) || runningTile.getResult() != null )
-        rescheduleJob( world2screen );
-      // else, we wait for it to finish; then m_tile will be good
-    }
 
     // If we have a running tile, that already has started, paint it if this is requested
     if( runningTile != null && runningTile.intersects( world2screen ) && runningTile.getState() == Job.RUNNING && m_paintRunningTile )
@@ -185,6 +178,29 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       rescheduleJob( m_tile.getWorld2Screen() );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#handleExtentChanged(org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
+  @Override
+  protected void handleExtentChanged( final GeoTransform world2screen )
+  {
+    // reschedule
+
+    // Fetch current state here (avoid synchronised blocks)
+    final BufferedTile tile = m_tile;
+    final BufferedTile runningTile = m_runningTile;
+
+    final boolean currentIsGood = checkTile( tile, world2screen );
+    if( currentIsGood )
+      return;
+
+    final boolean runningIsGood = checkTile( runningTile, world2screen );
+    if( runningIsGood && runningTile.getResult() == null )
+      return;
+
+    rescheduleJob( world2screen );
+  }
+
   private synchronized void rescheduleJob( final GeoTransform world2screen )
   {
     if( m_runningTile != null )
@@ -192,6 +208,9 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       m_runningTile.dispose();
       m_runningTile = null;
     }
+
+    if( !getTheme().isVisible() )
+      return;
 
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, world2screen );
