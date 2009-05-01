@@ -92,10 +92,8 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
   public I10nString getName( );
 
   /**
-   * Returns the label of this label, in the current locale.
-   * <p>
-   * No status texts are added here
-   * </p>.
+   * Returns the label of this label, in the current locale.<br/>
+   * No status texts are added here<br/>
    */
   public String getLabel( );
 
