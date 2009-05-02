@@ -51,7 +51,6 @@ import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -148,7 +147,7 @@ public class GisMapPerfTest extends TestCase
     modell.dispose();
   }
 
-  private void paintModel( final BufferedImage image, final IMapModell model, final GeoTransform worldToScreen ) throws CoreException
+  private void paintModel( final BufferedImage image, final IMapModell model, final GeoTransform worldToScreen )
   {
     Graphics2D gr = null;
     try

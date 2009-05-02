@@ -409,9 +409,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
-    paint( g, p, null, monitor );
+    return paint( g, p, null, monitor );
   }
 
   /**
@@ -424,15 +424,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     if( m_innerMapModel == null )
       return Status.OK_STATUS;
 
-    try
-    {
-      m_innerMapModel.paint( g, p, monitor );
-      return Status.OK_STATUS;
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
+    return m_innerMapModel.paint( g, p, monitor );
   }
 
   /**

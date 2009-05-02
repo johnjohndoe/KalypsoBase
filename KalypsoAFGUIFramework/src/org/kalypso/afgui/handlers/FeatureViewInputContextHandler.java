@@ -73,7 +73,6 @@ public class FeatureViewInputContextHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -105,7 +104,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
     final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.5") ) //$NON-NLS-1$
     {
       @Override
-      public IStatus runInUIThread( IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         try
         {
@@ -117,7 +116,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
             // if we have a gmlPath we create a pseudo template here
             template = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplate();
             template.setName( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.6") ); //$NON-NLS-1$
-            Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
+            final Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
             layer.setHref( gmlPath );
             layer.setLinktype( "gml" ); //$NON-NLS-1$
             layer.setFeaturePath( "#fid#root" ); // always use root feature; maybe get from parameter some day //$NON-NLS-1$
@@ -137,7 +136,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
 
           return Status.OK_STATUS;
         }
-        catch( Throwable e )
+        catch( final Throwable e )
         {
           return StatusUtilities.statusFromThrowable( e );
         }

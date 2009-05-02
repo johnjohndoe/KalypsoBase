@@ -44,6 +44,7 @@ import java.awt.Graphics;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -69,7 +70,9 @@ public class DirectMapLayer extends AbstractMapLayer
   @Override
   public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor ) throws CoreException
   {
-    getTheme().paint( g, world2screen, null, monitor );
+    final IStatus result = getTheme().paint( g, world2screen, null, monitor );
+    if( !result.isOK() )
+      throw new CoreException( result );
   }
 
   /**

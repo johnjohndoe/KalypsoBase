@@ -45,7 +45,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
@@ -152,7 +151,7 @@ public class BufferedMapLayer extends AbstractMapLayer implements IPaintable
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics2D g, final IProgressMonitor monitor )
   {
     getTheme().paint( g, m_world2screen, null, monitor );
   }

@@ -64,7 +64,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * </p>
  * TODO: still slow, how to improve performance? <br>
  * TODO: overide the walk method in order to make sure, that we iterate thorugh lines, not columns
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
@@ -273,7 +273,7 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
-  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  public void setMax( final BigDecimal maxValue )
   {
     // TODO Auto-generated method stub
 
@@ -282,7 +282,7 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
-  public void setMin( BigDecimal minValue ) throws GeoGridException
+  public void setMin( final BigDecimal minValue )
   {
     // TODO Auto-generated method stub
 

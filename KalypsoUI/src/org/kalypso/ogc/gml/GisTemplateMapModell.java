@@ -54,6 +54,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -397,9 +398,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
-    m_modell.paint( g, p, monitor );
+    return m_modell.paint( g, p, monitor );
   }
 
   public void removeTheme( final IKalypsoTheme theme )

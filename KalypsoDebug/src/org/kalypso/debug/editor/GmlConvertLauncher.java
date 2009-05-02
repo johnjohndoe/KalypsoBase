@@ -42,7 +42,7 @@ public class GmlConvertLauncher implements IEditorLauncher
     final Job job = new Job( "GML Konvertieren" )
     {
       @Override
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( final IProgressMonitor monitor )
       {
         try
         {
@@ -59,7 +59,7 @@ public class GmlConvertLauncher implements IEditorLauncher
           final IUrlResolver resolver = new UrlResolver();
           final URL context = ResourceUtilities.createURL( convertFile );
 
-          return GmlConvertFactory.convertXml( inputSource, resolver, context, new HashMap() );
+          return GmlConvertFactory.convertXml( inputSource, resolver, context, new HashMap<Object, Object>() );
         }
         catch( final GmlConvertException e )
         {

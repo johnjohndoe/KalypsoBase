@@ -94,9 +94,7 @@ public class JTSQuadMesher
    */
   public Coordinate[][] calculateMesh( )
   {
-    final Coordinate[] coordinatesBottom = m_bottomLine.getCoordinates();
     final Coordinate[] coordinatesTop = m_topLine.getCoordinates();
-    final Coordinate[] coordinatesLeft = m_leftLine.getCoordinates();
     final Coordinate[] coordinatesRight = m_rightLine.getCoordinates();
 
     final LineString newTop;
@@ -206,7 +204,7 @@ public class JTSQuadMesher
   /**
    * Calculates the route through a coordinate array coords from start point to end point
    */
-  private double calcRoute( Coordinate[] coords, int startPoint, int endPoint )
+  private double calcRoute( final Coordinate[] coords, final int startPoint, final int endPoint )
   {
     double route = 0;
     if( startPoint != endPoint )

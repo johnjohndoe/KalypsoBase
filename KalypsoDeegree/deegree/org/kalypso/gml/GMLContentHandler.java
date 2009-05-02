@@ -473,7 +473,10 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       final Object value = simpleHandler.convertToJavaValue( simpleString );
       if( m_scopeProperty.isList() )
-        ((List) m_scopeFeature.getProperty( m_scopeProperty )).add( value );
+      {
+        final List<Object> list = (List<Object>) m_scopeFeature.getProperty( m_scopeProperty );
+        list.add( value );
+      }
       else
         m_scopeFeature.setProperty( m_scopeProperty, value );
     }

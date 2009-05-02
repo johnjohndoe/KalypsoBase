@@ -50,6 +50,5 @@ public class ImageProvider
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.auth", location );
   }
   
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "icons/kalypso16.gif" );
   public static final ImageDescriptor IMAGE_LOGIN = id( "icons/login.gif" );
 }
