@@ -65,15 +65,15 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
- * 
+ *
  * @author belger
  */
 public class PoolView extends ViewPart implements ITableLabelProvider
@@ -97,7 +97,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
   private final List<PoolViewColumn> m_columns = new ArrayList<PoolViewColumn>( 3 );
 
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
   private final TimerTask m_task;
 
@@ -178,7 +178,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
              * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
              */
             @Override
-            public String getText( Object element )
+            public String getText( final Object element )
             {
               if( element != null )
                 return super.getText( element ) + " (" + element.getClass().getName() + ")";

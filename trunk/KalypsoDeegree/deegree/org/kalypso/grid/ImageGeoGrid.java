@@ -58,7 +58,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * slow (several seconds), but succeeding access is accpetable fast. However, no remarkable memory consumption is
  * noticed.
  * </p>
- * 
+ *
  * @author Dejan
  */
 public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
@@ -140,7 +140,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
-  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  public void setMax( final BigDecimal maxValue )
   {
     // TODO Auto-generated method stub
 
@@ -149,7 +149,7 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
-  public void setMin( BigDecimal minValue ) throws GeoGridException
+  public void setMin( final BigDecimal minValue )
   {
     // TODO Auto-generated method stub
 

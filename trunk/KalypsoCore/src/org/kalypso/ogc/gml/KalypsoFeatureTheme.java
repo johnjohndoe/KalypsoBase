@@ -429,18 +429,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
-  private void restyleFeature( final Feature feature )
-  {
-    // my feature ?
-    // FIXME: SLOW!! This is a major performance bug
-    if( m_featureList.contains( feature ) || m_featureList.contains( feature.getId() ) )
-    {
-      // TODO: invalidation should made via the screen-rectangle of this feature
-      // depending on the styled geometry
-      fireRepaintRequested( feature.getEnvelope() );
-    }
-  }
-
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */

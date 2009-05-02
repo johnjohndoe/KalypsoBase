@@ -7,10 +7,10 @@ Bundle-Activator: org.kalypso.debug.KalypsoDebugPlugin
 Bundle-Vendor: kalypso.org
 Export-Package: org.kalypso.debug,
  org.kalypso.debug.editor,
- org.kalypso.debug.view,
- org.kalypso.debug.zml
+ org.kalypso.debug.view
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.ui,
  org.kalypso.contribs.eclipseplatform
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -46,15 +46,17 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -137,7 +139,7 @@ public class MapModell implements IMapModell
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public void activateTheme( final IKalypsoTheme theme )
@@ -171,7 +173,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   * 
+   *
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -255,19 +257,21 @@ public class MapModell implements IMapModell
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
+  public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.ThemePainter.0" ), m_themes.size() ); //$NON-NLS-1$
     final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    final IStatus[] children = new IStatus[themes.length];
     for( int i = themes.length; i > 0; i-- )
     {
       final IKalypsoTheme theme = themes[i - 1];
       progress.subTask( theme.getLabel() );
       if( theme.isVisible() )
-      {
-        theme.paint( g, p, null, progress.newChild( 1 ) );
-      }
+        children[i] = theme.paint( g, p, null, progress.newChild( 1 ) );
     }
+
+    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null );
+    return multiStatus;
   }
 
   public IKalypsoTheme getTheme( final int pos )
@@ -600,7 +604,7 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   public boolean isLoaded( )

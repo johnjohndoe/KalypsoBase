@@ -65,7 +65,7 @@ import org.w3c.dom.Node;
  */
 public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-  public static final Class CLASS_NAME = TimeseriesLinkType.class;
+  public static final Class< ? > CLASS_NAME = TimeseriesLinkType.class;
 
   public static final String NAMESPACE = "obslink.zml.kalypso.org";
 
@@ -78,7 +78,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return CLASS_NAME;
   }
@@ -126,7 +126,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
       // child namespace may be null
       if( NAMESPACE.equals( node.getNamespaceURI() ) && "TimeseriesLink".equals( node.getLocalName() ) )
       {
-        final JAXBElement<TimeseriesLinkType> valueElement = (JAXBElement<TimeseriesLinkType>) JC.createUnmarshaller().unmarshal( node );
+        final JAXBElement< ? > valueElement = (JAXBElement< ? >) JC.createUnmarshaller().unmarshal( node );
         return valueElement.getValue();
       }
       return null;

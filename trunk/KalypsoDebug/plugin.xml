@@ -24,10 +24,6 @@
             extensions="gmc"/>
    </extension>
    <extension
-         point="org.kalypso.core.obsManipulator">
-      <obsManipulator class="org.kalypso.debug.zml.SimpleWQTableObsManipulator"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             description="Kommandos für die Behandlung von GML"
@@ -70,14 +66,6 @@
                label="Perspective Config">
             <groupMarker name="KalypsoDebug.configGroupMarker"/>
          </menu>
-         <action
-               class="org.kalypso.debug.action.SavePerspectivePageAction"
-               id="KalypsoDebug.config.SavePerspectivePageAction"
-               label="&amp;Save Perspective"
-               menubarPath="KalypsoDebug.configmenu/KalypsoDebug.configGroupMarker"
-               style="push"
-               toolbarPath="KalypsoDebug.configGroupMarker"
-               tooltip="Save this Workbenchepage as Perspective (incl. all open Editors and Views)"/>
       </actionSet>
    </extension>
    <extension

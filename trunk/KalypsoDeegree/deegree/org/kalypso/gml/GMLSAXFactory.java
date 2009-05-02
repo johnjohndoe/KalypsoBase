@@ -227,14 +227,14 @@ public class GMLSAXFactory
         if( values != null )
         {
           for( final Object propertyValue : values )
-            processProperty( feature, pt, propertyValue );
+            processProperty( pt, propertyValue );
         }
       }
       else
       {
         // If value == null && minOccurs == 0 do not write an element
         if( value != null || pt.getMinOccurs() > 0 )
-          processProperty( feature, pt, value );
+          processProperty( pt, value );
       }
     }
 
@@ -254,7 +254,7 @@ public class GMLSAXFactory
   /**
    * Writes one single property
    */
-  private void processProperty( final Feature feature, final IPropertyType pt, final Object propertyValue ) throws SAXException
+  private void processProperty( final IPropertyType pt, final Object propertyValue ) throws SAXException
   {
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 

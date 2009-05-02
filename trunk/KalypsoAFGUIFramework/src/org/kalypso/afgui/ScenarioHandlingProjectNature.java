@@ -95,7 +95,6 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   /**
    * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#getCaseManager()
    */
-  @SuppressWarnings("unchecked")
   @Override
   public IScenarioManager getCaseManager( ) throws CoreException
   {

@@ -155,7 +155,6 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
    */
-  @SuppressWarnings("unchecked")
   public void resourceChanged( final IResourceChangeEvent event )
   {
     // TODO:

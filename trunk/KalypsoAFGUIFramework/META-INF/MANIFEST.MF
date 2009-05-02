@@ -15,7 +15,7 @@ Require-Bundle: org.kalypso.ui,
  org.eclipse.core.expressions;bundle-version="3.4.0",
  de.renew.workflow.connector;bundle-version="1.0.0";visibility:=reexport,
  org.kalypso.simulation.core;bundle-version="1.0.0"
-Eclipse-LazyStart: true 
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.application,
  org.kalypso.afgui.handlers,
@@ -25,3 +25,4 @@ Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.scenarios,
  org.kalypso.afgui.views,
  org.kalypso.afgui.wizards
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

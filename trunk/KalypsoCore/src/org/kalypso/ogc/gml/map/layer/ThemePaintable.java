@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.layer;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -89,7 +88,7 @@ public class ThemePaintable implements IPaintable
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics2D g, final IProgressMonitor monitor )
   {
     g.setClip( 0, 0, (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
     m_theme.paint( g, m_world2screen, null, monitor );

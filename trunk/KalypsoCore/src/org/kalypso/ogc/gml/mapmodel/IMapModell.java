@@ -43,8 +43,8 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Graphics;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -97,7 +97,7 @@ public interface IMapModell extends IWorkbenchAdapter
    * Directly paints all themes contained inside this model. <br>
    * Blocks until all themes are painted. .
    */
-  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException;
+  public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
 
   public IKalypsoTheme getTheme( final int pos );
 
