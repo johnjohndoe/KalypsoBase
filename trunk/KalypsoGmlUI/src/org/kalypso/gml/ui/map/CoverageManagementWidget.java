@@ -82,9 +82,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -416,29 +413,28 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
-    sc.setMinWidth( 200 );
-    sc.setExpandVertical( true );
-    sc.setExpandHorizontal( true );
+// final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
+// sc.setMinWidth( 200 );
+// sc.setExpandVertical( true );
+// sc.setExpandHorizontal( true );
 
-    final Composite panel = toolkit.createComposite( sc, SWT.NONE );
+    final Composite panel = toolkit.createComposite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    sc.setContent( panel );
-    parent.addControlListener( new ControlAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-        panel.setSize( size );
-        sc.setMinHeight( size.y );
-      }
-    } );
-    // Basic Layout
+// sc.setContent( panel );
+// parent.addControlListener( new ControlAdapter()
+// {
+// /**
+// * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+// */
+// @Override
+// public void controlResized( final ControlEvent e )
+// {
+// final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+// panel.setSize( size );
+// sc.setMinHeight( size.y );
+// }
+// } );
 
     /* Theme selection combo */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
@@ -537,7 +533,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleListSelectionChanged( parent, sc, panel, coverageInfoGroup, featureComposite, event );
+        handleListSelectionChanged( parent, coverageInfoGroup, featureComposite, event );
       }
     } );
 
@@ -556,7 +552,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
-    sc.setMinHeight( size.y );
+// sc.setMinHeight( size.y );
 
     updateButtons();
 
@@ -582,7 +578,18 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void initializeThemeCombo( )
   {
     m_themeCombo.setContentProvider( new ArrayContentProvider() );
-    m_themeCombo.setLabelProvider( new LabelProvider() );
+    m_themeCombo.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        final IKalypsoTheme theme = (IKalypsoTheme) element;
+        return theme.getLabel();
+      }
+    } );
 
     refreshThemeCombo();
   }
@@ -647,7 +654,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateButtons();
   }
 
-  protected void handleListSelectionChanged( final Composite parent, final ScrolledComposite sc, final Composite panel, final Group coverageInfoGroup, final FeatureComposite featureComposite, final SelectionChangedEvent event )
+  protected void handleListSelectionChanged( final Composite parent, final Group coverageInfoGroup, final FeatureComposite featureComposite, final SelectionChangedEvent event )
   {
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     m_selectedCoverage = (ICoverage) selection.getFirstElement();
@@ -661,9 +668,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       parent.layout( true, true );
     }
 
-    final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    panel.setSize( size );
-    sc.setMinHeight( size.y );
+// final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+// panel.setSize( size );
+// sc.setMinHeight( size.y );
 
     getMapPanel().repaintMap();
     updateButtons();
