@@ -60,6 +60,8 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
@@ -68,6 +70,7 @@ import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -159,7 +162,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
     /* Get the envelope of the surface of the grid (it is transformed). */
-    final GM_Envelope envelope = grid.getSurface( targetCRS ).getEnvelope();
+    final GM_Surface< ? > gridSurface = grid.getSurface( targetCRS );
+    final GM_Envelope envelope = gridSurface.getEnvelope();
 
     /* Convert this to an JTS envelope. */
     final Envelope gridEnvelope = JTSAdapter.export( envelope );
@@ -207,92 +211,127 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridUtilities.Interpolation interpolation = Interpolation.none;
 
     if( cellPixelWidth < 1 || interpolation != Interpolation.none )
-    {
-      /* Cell is smaller than one pixel, we iterate through all pixels and get their values. */
-
-      // Always +/- 1 in order to avoid gaps due to rounding errors
-      // cells outside the grid will not be painted, as we get Double.NaN here
-      final int screenXfrom = (int) projection.getDestX( env.getMinX() ) - 1;
-      final int screenXto = (int) projection.getDestX( env.getMaxX() ) + 1;
-      final int screenYfrom = (int) projection.getDestY( env.getMaxY() ) - 1;
-      final int screenYto = (int) projection.getDestY( env.getMinY() ) + 1;
-
-      final int screenYheight = screenYto - screenYfrom;
-
-      progress.setWorkRemaining( screenYheight );
-
-      for( int y = screenYfrom; y < screenYto; y++ )
-      {
-        for( int x = screenXfrom; x < screenXto; x++ )
-        {
-          /* These coordinates should be in the target coordinate system. */
-          final double geoX = projection.getSourceX( x );
-          final double geoY = projection.getSourceY( y );
-
-          final Coordinate crd = new Coordinate( geoX, geoY );
-
-          final double value;
-
-          /* If cell size is lower than pixel size, we do not need to interpolate. */
-          if( cellPixelWidth < 1 )
-          {
-            /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
-            final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ) );
-
-            value = grid.getValueChecked( cell.x, cell.y );
-          }
-          else
-          {
-            /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
-            value = GeoGridUtilities.getValue( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ), interpolation );
-          }
-
-          if( Double.isNaN( value ) )
-            continue;
-
-          final Color color = symbolizer.getColor( value );
-          if( color == null )
-            continue;
-
-          g.setColor( color );
-          g.fillRect( x, y, 1, 1 );
-        }
-
-        ProgressUtilities.worked( monitor, 1 );
-      }
-    }
+      paintPixelwise( g, grid, projection, symbolizer, targetCRS, cellPixelWidth, env, interpolation, progress.newChild( 95 ) );
     else
-    {
-      progress.setWorkRemaining( clippedMaxCell.y + 2 - clippedMinCell.y );
+      paintCellWise( g, grid, projection, symbolizer, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress.newChild( 95 ) );
 
-      /* Iterate through the grid */
-      // REMARK: always iterate through a bigger extent in order to compensate for rounding problems during
-      // determination of the cell-box
-      for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
-      {
-        for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
-        {
-          final double value = grid.getValueChecked( i, j );
-          if( !Double.isNaN( value ) )
-          {
-            final Color color = symbolizer.getColor( value );
-            if( color == null )
-              continue;
-
-            /* Get the surface of the cell (in the target coordinate system). */
-            final GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
-            final GM_Envelope cellEnvelope = cell.getEnvelope();
-            final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
-            paintEnvelope( g, projection, jtsCellEnvelope, color );
-          }
-        }
-
-        ProgressUtilities.worked( monitor, 1 );
-      }
-    }
+    final Symbolizer imageOutline = symbolizer.getImageOutline();
+    paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5 ) );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
     // paintCells( g, grid, projection, targetCRS, true, true );
+  }
+
+  /**
+   * Paints the grid pixel by pixel. This is used, if one cell is smaller than a screen-pixel.<br>
+   * We iterate through all pixels and get their values.
+   */
+  private static void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final double cellPixelWidth, final Envelope env, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  {
+    // Always +/- 1 in order to avoid gaps due to rounding errors
+    // cells outside the grid will not be painted, as we get Double.NaN here
+    final int screenXfrom = (int) projection.getDestX( env.getMinX() ) - 1;
+    final int screenXto = (int) projection.getDestX( env.getMaxX() ) + 1;
+    final int screenYfrom = (int) projection.getDestY( env.getMaxY() ) - 1;
+    final int screenYto = (int) projection.getDestY( env.getMinY() ) + 1;
+
+    final int screenYheight = screenYto - screenYfrom;
+
+    monitor.beginTask( "Painting pixels", screenYheight );
+
+    for( int y = screenYfrom; y < screenYto; y++ )
+    {
+      for( int x = screenXfrom; x < screenXto; x++ )
+        paintPixel( g, grid, projection, symbolizer, targetCRS, cellPixelWidth, interpolation, x, y );
+
+      ProgressUtilities.worked( monitor, 1 );
+    }
+  }
+
+  private static void paintPixel( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final double cellPixelWidth, final GeoGridUtilities.Interpolation interpolation, final int x, final int y ) throws GeoGridException
+  {
+    /* These coordinates should be in the target coordinate system. */
+    final double geoX = projection.getSourceX( x );
+    final double geoY = projection.getSourceY( y );
+
+    final Coordinate crd = new Coordinate( geoX, geoY );
+
+    /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
+    final Coordinate transformedCrd = GeoGridUtilities.transformCoordinate( grid, crd, targetCRS );
+
+    /* If cell size is lower than pixel size, we do not need to interpolate. */
+    final double value;
+    if( cellPixelWidth < 1 )
+    {
+      final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, transformedCrd );
+      value = grid.getValueChecked( cell.x, cell.y );
+    }
+    else
+    {
+      value = GeoGridUtilities.getValue( grid, transformedCrd, interpolation );
+    }
+
+    if( Double.isNaN( value ) )
+      return;
+
+    final Color color = symbolizer.getColor( value );
+    if( color == null )
+      return;
+
+    g.setColor( color );
+    g.fillRect( x, y, 1, 1 );
+  }
+
+  private static void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  {
+    monitor.beginTask( "Painting cells", clippedMaxCell.y + 2 - clippedMinCell.y );
+
+    /* Iterate through the grid */
+    // REMARK: always iterate through a bigger extent in order to compensate for rounding problems during
+    // determination of the cell-box
+    for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
+    {
+      for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
+        paintCell( g, grid, projection, symbolizer, targetCRS, j, i );
+
+      ProgressUtilities.worked( monitor, 1 );
+    }
+  }
+
+  private static void paintCell( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final int j, final int i ) throws GeoGridException
+  {
+    final double value = grid.getValueChecked( i, j );
+    if( Double.isNaN( value ) )
+      return;
+
+    final Color color = symbolizer.getColor( value );
+    if( color == null )
+      return;
+
+    /* Get the surface of the cell (in the target coordinate system). */
+    final GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
+    final GM_Envelope cellEnvelope = cell.getEnvelope();
+    final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
+    paintEnvelope( g, projection, jtsCellEnvelope, color );
+  }
+
+  private void paintImageOutline( final Graphics2D g, final GM_Surface< ? > gridSurface, final GeoTransform projection, final Symbolizer imageOutline, final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      if( imageOutline == null )
+        return;
+
+      final Feature feature = getFeature();
+      final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, imageOutline, gridSurface );
+      if( displayElement != null )
+        displayElement.paint( g, projection, monitor );
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to create display element for image-outline", e );
+      throw new CoreException( status );
+    }
   }
 
   // REMARK: below is an essay of using geotools to render the coverages, but it
@@ -348,7 +387,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * This is used instead of reusing PolygoneDisplayElement or similar, as for the grid it is crucial, that the border
    * of two cells is painted without intersection or gap.
    */
-  private void paintEnvelope( final Graphics2D g, final GeoTransform projection, final Envelope currentCellEnv, final Color color )
+  private static void paintEnvelope( final Graphics2D g, final GeoTransform projection, final Envelope currentCellEnv, final Color color )
   {
     // We assume the envelope is normalized here, so we can safely switch minY anc maxY
     final double paintMinX = projection.getDestX( currentCellEnv.getMinX() );

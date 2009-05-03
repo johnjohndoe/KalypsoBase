@@ -1112,7 +1112,7 @@ public class StyleFactory
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
-    return new RasterSymbolizer_Impl( colorMap );
+    return new RasterSymbolizer_Impl( colorMap, null );
   }
 
   /**

@@ -38,16 +38,21 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.SortedMap;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
+import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 
@@ -55,13 +60,13 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
 public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
 {
-  private TreeMap<Double, ColorMapEntry> m_colorMap = null;
+  private SortedMap<Double, ColorMapEntry> m_colorMap = null;
 
   private transient double[] m_values;
 
@@ -71,23 +76,31 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
   private double m_max;
 
-  public RasterSymbolizer_Impl( final TreeMap<Double, ColorMapEntry> colorMap )
+  private Symbolizer m_imageOutline;
+
+  /**
+   * @param imageOutline
+   *          See {@link #setImageOutline(Symbolizer)}
+   */
+  public RasterSymbolizer_Impl( final SortedMap<Double, ColorMapEntry> colorMap, final Symbolizer imageOutline )
   {
     setColorMap( colorMap );
+    setImageOutline( imageOutline );
   }
 
-  public TreeMap<Double, ColorMapEntry> getColorMap( )
+  public SortedMap<Double, ColorMapEntry> getColorMap( )
   {
     return m_colorMap;
   }
 
   @SuppressWarnings("unchecked")
-  public void setColorMap( final TreeMap<Double, ColorMapEntry> colorMap )
+  public void setColorMap( final SortedMap<Double, ColorMapEntry> colorMap )
   {
     m_colorMap = colorMap;
 
     // PERFORMANCE: create doubles and colors as arrays for quick access
-    final Entry<Double, ColorMapEntry>[] entries = colorMap.entrySet().toArray( new Map.Entry[colorMap.size()] );
+    final Set<Entry<Double, ColorMapEntry>> entrySet = colorMap.entrySet();
+    final Entry<Double, ColorMapEntry>[] entries = entrySet.toArray( new Entry[entrySet.size()] );
     m_values = new double[entries.length];
     m_colors = new Color[entries.length];
     for( int i = 0; i < entries.length; i++ )
@@ -109,6 +122,24 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       m_min = m_values[0];
       m_max = m_values[m_values.length - 1];
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getImageOutline()
+   */
+  public Symbolizer getImageOutline( )
+  {
+    return m_imageOutline;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#setImageOutline(org.kalypsodeegree.graphics.sld.Symbolizer)
+   */
+  public void setImageOutline( final Symbolizer imageOutline )
+  {
+    Assert.isTrue( imageOutline == null || imageOutline instanceof LineSymbolizer || imageOutline instanceof PolygonSymbolizer );
+    
+    m_imageOutline = imageOutline;
   }
 
   public String exportAsXML( )

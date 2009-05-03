@@ -114,7 +114,7 @@ public class SldExportHandler extends AbstractHandler
     dateTimeInstance.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     final String dateString = dateTimeInstance.format( new Date() );
     final String abstract_ = String.format( "Exported by Kalypso %s", dateString );
-    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( fileName, fileName, "1.0.0", abstract_, layers );
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( fileName, fileName, abstract_, layers );
 
     /* Open file dialog and save the file */
     final String[] filterExtensions = new String[] { "*.sld" }; //$NON-NLS-1$

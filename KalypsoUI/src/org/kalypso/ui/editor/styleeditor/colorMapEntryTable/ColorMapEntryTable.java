@@ -42,9 +42,10 @@ package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -127,14 +128,11 @@ public class ColorMapEntryTable
     m_userStyle = userStyle;
     m_rasterSymbolizer = rasterSymbolizer;
     m_colorMapEntryList = new ColorMapEntryList();
-    final TreeMap colorMap = m_rasterSymbolizer.getColorMap();
-    final Iterator it = colorMap.keySet().iterator();
-    while( it.hasNext() )
+    final SortedMap<Double, ColorMapEntry> colorMap = m_rasterSymbolizer.getColorMap();
+    for( final Entry<Double, ColorMapEntry> entry : colorMap.entrySet() )
     {
-      final Double key = (Double) it.next();
-      final ColorMapEntry colorMapEntry = (ColorMapEntry) colorMap.get( key );
+      final ColorMapEntry colorMapEntry = entry.getValue();
       m_colorMapEntryList.addColorMapEntry( colorMapEntry.clone() );
-
     }
 
     this.addChildControls( parent );
@@ -393,7 +391,7 @@ public class ColorMapEntryTable
    * 
    * @return List containing column names
    */
-  public java.util.List getColumnNames( )
+  public java.util.List<String> getColumnNames( )
   {
     return Arrays.asList( columnNames );
   }

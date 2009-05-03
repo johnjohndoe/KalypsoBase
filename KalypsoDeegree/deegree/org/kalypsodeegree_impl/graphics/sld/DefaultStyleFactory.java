@@ -99,7 +99,7 @@ public class DefaultStyleFactory
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer );
     final Style[] styles = new Style[] { (UserStyle_Impl) StyleFactory.createStyle( styleName, styleName, "no Abstract", featureTypeStyle ) };
     final Layer[] layers = new Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) };
-    return SLDFactory.createStyledLayerDescriptor( layers, "1.0.0" );
+    return SLDFactory.createStyledLayerDescriptor( layers );
   }
 
   private static Symbolizer createGeometrySymbolizer( final IValuePropertyType ftp ) throws StyleNotDefinedException

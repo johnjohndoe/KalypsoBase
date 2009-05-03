@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.math.Range;
@@ -768,7 +769,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void handleGenerateColorMap( final Event event )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
-    final TreeMap<Double, ColorMapEntry> input = symb.getColorMap();
+    final SortedMap<Double, ColorMapEntry> input = symb.getColorMap();
 
     if( input != null )
     {
@@ -1149,7 +1150,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_coverageViewer.setSelection( selection );
 
     final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
-    final TreeMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
+    final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
     if( colorMap.isEmpty() )
     {
       /* IN order to show anything to the user, create a default colour map, if no colours have been defined yet */
