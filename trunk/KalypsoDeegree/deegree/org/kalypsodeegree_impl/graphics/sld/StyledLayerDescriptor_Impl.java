@@ -59,9 +59,9 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marshallable
 {
-  private ArrayList<Layer> m_layers = null;
+  private final String m_version = "1.0.0";
 
-  private String m_version = null;
+  private ArrayList<Layer> m_layers = null;
 
   private String m_abstract = null;
 
@@ -76,11 +76,10 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param abstract_
    * @param layers
    */
-  public StyledLayerDescriptor_Impl( final String name, final String title, final String version, final String abstract_, final Layer[] layers )
+  public StyledLayerDescriptor_Impl( final String name, final String title, final String abstract_, final Layer[] layers )
   {
     m_layers = new ArrayList<Layer>( layers.length );
     setLayers( layers );
-    setVersion( version );
     setAbstract( abstract_ );
     setName( name );
     setTitle( title );
@@ -89,11 +88,10 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * constructor initializing the class with the <StyledLayerDescriptor>
    */
-  public StyledLayerDescriptor_Impl( final Layer[] layers, final String version )
+  public StyledLayerDescriptor_Impl( final Layer[] layers )
   {
     m_layers = new ArrayList<Layer>( layers.length );
     setLayers( layers );
-    setVersion( version );
   }
 
   /**
@@ -110,15 +108,15 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layers
    *            the Layers as Array
    */
-  public void setLayers( Layer[] layers )
+  public void setLayers( final Layer[] layers )
   {
     m_layers.clear();
 
     if( layers != null )
     {
-      for( int i = 0; i < layers.length; i++ )
+      for( final Layer layer : layers )
       {
-        m_layers.add( layers[i] );
+        m_layers.add( layer );
       }
     }
   }
@@ -192,7 +190,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * 
    * @return the NamedLayers as Array
    */
-  public NamedLayer getNamedLayer( String layerName )
+  public NamedLayer getNamedLayer( final String layerName )
   {
     for( int i = 0; i < m_layers.size(); i++ )
     {
@@ -223,7 +221,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void setVersion( final String version )
   {
-    m_version = version;
+    throw new UnsupportedOperationException( "Cannot change version, must always be 1.0.0" );
   }
 
   /**
@@ -313,24 +311,22 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   public UserStyle findUserStyle( final String name )
   {
     final NamedLayer[] namedLayers = getNamedLayers();
-    for( int i = 0; i < namedLayers.length; i++ )
+    for( final NamedLayer namedLayer : namedLayers )
     {
-      final Style[] styles = namedLayers[i].getStyles();
-      for( int n = 0; n < styles.length; n++ )
+      final Style[] styles = namedLayer.getStyles();
+      for( final Style style : styles )
       {
-        final Style style = styles[n];
         if( style instanceof UserStyle && name.equals( style.getName() ) )
           return (UserStyle) style;
       }
     }
 
     final UserLayer[] userLayers = getUserLayers();
-    for( int i = 0; i < userLayers.length; i++ )
+    for( final UserLayer userLayer : userLayers )
     {
-      final Style[] styles = userLayers[i].getStyles();
-      for( int n = 0; n < styles.length; n++ )
+      final Style[] styles = userLayer.getStyles();
+      for( final Style style : styles )
       {
-        final Style style = styles[n];
         if( style instanceof UserStyle && name.equals( style.getName() ) )
           return (UserStyle) style;
       }

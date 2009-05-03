@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.symbolizer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 import org.kalypso.ogc.gml.SymbolizerTreeObject;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -65,7 +65,7 @@ public class RasterSymbolizerTreeObject extends SymbolizerTreeObject
   public Object[] getChildren( final Object o )
   {
     final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
-    final TreeMap<Double, ColorMapEntry> colorMap = symbolizer.getColorMap();
+    final SortedMap<Double, ColorMapEntry> colorMap = symbolizer.getColorMap();
     final List<ColorMapEntryTreeObject> children = new ArrayList<ColorMapEntryTreeObject>( colorMap.size() );
     for( final ColorMapEntry entry : colorMap.values() )
       children.add( new ColorMapEntryTreeObject( this, entry ) );

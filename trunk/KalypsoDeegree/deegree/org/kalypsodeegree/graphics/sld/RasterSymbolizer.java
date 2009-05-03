@@ -36,7 +36,7 @@
 package org.kalypsodeegree.graphics.sld;
 
 import java.awt.Color;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 /**
  * <p>
@@ -48,9 +48,26 @@ import java.util.TreeMap;
  */
 public interface RasterSymbolizer extends Symbolizer
 {
-  TreeMap<Double, ColorMapEntry> getColorMap( );
+  SortedMap<Double, ColorMapEntry> getColorMap( );
 
-  void setColorMap( TreeMap<Double, ColorMapEntry> colorMap );
+  void setColorMap( SortedMap<Double, ColorMapEntry> colorMap );
 
   public Color getColor( final double value );
+  
+  /**
+   * @param imageOutline
+   *          Represents the 'ImageOutline' element of this symbolizer. Must be either a
+   *          {@link org.kalypsodeegree.graphics.sld.LineSymbolizer} or a
+   *          {@link org.kalypsodeegree.graphics.sld.PolygonSymbolizer}. If set to <code>null</code>, no image-outline
+   *          will be painted.
+   */
+  public void setImageOutline( final Symbolizer imageOutline );
+
+  /**
+   * Gets the image-outline element of this symbolizer.
+   * 
+   * @return Either <code>null</code>, or a {@link LineSymbolizer} or a {@link PolygonSymbolizer}.
+   */
+  public Symbolizer getImageOutline( );
+
 }

@@ -861,7 +861,7 @@
 					</visibleWhen>
 				</dynamic>
 				<separator name="widgetAdditions" visible="false">
-					<!-- Additional widgets (especially those whichs visibility depends on a certain layer/datatype) should be
+					<!-- Additional widgets (especially those which's visibility depends on a certain layer/datatype) should be
 					added before this separator  -->
 				</separator>
 				<separator name="klickNavigation" visible="true" />

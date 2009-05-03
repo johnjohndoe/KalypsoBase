@@ -234,7 +234,7 @@ public class DisplayElementFactory
   /**
    * Internally build the display element, without decoration and other stuff.
    */
-  private static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject ) throws IncompatibleGeometryTypeException
   {
     if( symbolizer instanceof PointSymbolizer )
       return buildPointDisplayElement( feature, geoObject, (PointSymbolizer) symbolizer );

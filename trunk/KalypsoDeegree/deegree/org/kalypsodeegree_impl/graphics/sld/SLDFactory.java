@@ -48,10 +48,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
@@ -268,14 +269,14 @@ public class SLDFactory
     }
   }
 
-  public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String version, final String abstract_, final Layer[] layers )
+  public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String abstract_, final Layer[] layers )
   {
-    return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
+    return new StyledLayerDescriptor_Impl( name, title, abstract_, layers );
   }
 
-  public static StyledLayerDescriptor createStyledLayerDescriptor( final Layer[] layers, final String version )
+  public static StyledLayerDescriptor createStyledLayerDescriptor( final Layer[] layers )
   {
-    return new StyledLayerDescriptor_Impl( layers, version );
+    return new StyledLayerDescriptor_Impl( layers );
   }
 
   /**
@@ -653,7 +654,8 @@ public class SLDFactory
     // optional: <Abstract>
     final String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );
     // required: version-Attribute
-    final String version = XMLTools.getRequiredAttrValue( "version", element );
+    // final String version = XMLTools.getRequiredAttrValue( "version", element );
+    // TODO: check for correct version here...; must be "1.0.0", but i have seen many wrong .sld's
 
     // optional: <NamedLayer>(s) / <UserLayer>(s)
     final NodeList nodelist = element.getChildNodes();
@@ -684,7 +686,7 @@ public class SLDFactory
 
     final Layer[] layers = layerList.toArray( new Layer[layerList.size()] );
 
-    return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
+    return new StyledLayerDescriptor_Impl( name, title, abstract_, layers );
   }
 
   /**
@@ -1181,44 +1183,32 @@ public class SLDFactory
      */
     final UOM uom;
     if( symbolizerElement.hasAttribute( "uom" ) )
-    {
       uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );
-    }
     else
-    {
       uom = UOM.pixel;
-    }
 
     final String symbolizerName = symbolizerElement.getLocalName();
 
     if( symbolizerName.equals( "LineSymbolizer" ) )
-    {
       return SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
-    else if( symbolizerName.equals( "PointSymbolizer" ) )
-    {
+    
+    if( symbolizerName.equals( "PointSymbolizer" ) )
      return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
-    else if( symbolizerName.equals( "PolygonSymbolizer" ) )
-    {
+    
+    if( symbolizerName.equals( "PolygonSymbolizer" ) )
       return SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
-    else if( symbolizerName.equals( "TextSymbolizer" ) )
-    {
+
+    if( symbolizerName.equals( "TextSymbolizer" ) )
       return SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
-    else if( symbolizerName.equals( "RasterSymbolizer" ) )
-    {
-      return SLDFactory.createRasterSymbolizer( symbolizerElement, uom );
-    }
-    else if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
-    {
+    
+    if( symbolizerName.equals( "RasterSymbolizer" ) )
+      return SLDFactory.createRasterSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    
+    if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
       return SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
-    else if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
-    {
+
+    if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
       return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    }
     
     return null;
   }
@@ -1784,42 +1774,31 @@ public class SLDFactory
 
     // optional: <ExternalGraphic>s / <Mark>s
     final NodeList nodelist = element.getChildNodes();
-    final ArrayList marksAndExtGraphicsList = new ArrayList();
+    final List<Object> marksAndExtGraphicsList = new ArrayList<Object>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
+    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
-
         if( childName.equals( "ExternalGraphic" ) )
-        {
           marksAndExtGraphicsList.add( SLDFactory.createExternalGraphic( urlResolver, child ) );
-        }
         else if( childName.equals( "Mark" ) )
-        {
           marksAndExtGraphicsList.add( SLDFactory.createMark( urlResolver, child ) );
-        }
         else if( childName.equals( "Opacity" ) )
-        {
           opacity = SLDFactory.createParameterValueType( child );
-        }
         else if( childName.equals( "Size" ) )
-        {
           size = SLDFactory.createParameterValueType( child );
-        }
         else if( childName.equals( "Rotation" ) )
-        {
           rotation = SLDFactory.createParameterValueType( child );
-        }
       }
+    }
 
     final Object[] marksAndExtGraphics = marksAndExtGraphicsList.toArray( new Object[marksAndExtGraphicsList.size()] );
 
@@ -1846,19 +1825,17 @@ public class SLDFactory
     return (new CssParameter_Impl( name, pvt ));
   }
 
-  private static RasterSymbolizer createRasterSymbolizer( final Element element, final UOM uom )
+  private static RasterSymbolizer createRasterSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom )
   {
     try
     {
-      // IMPORTANT: BOTH object factories need to be included, else jaxb does not find all defined classes and the
-      // JaxContext does not get created.
-      // REMARK: that seems to be a Jax-Bug?
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class, ogc2.www.opengis.net.gml.ObjectFactory.class, ogc2.www.opengis.net.ogc.ObjectFactory.class );
-      final Unmarshaller unmarshaller = jc.createUnmarshaller();
-      final Object e = unmarshaller.unmarshal( element );
-      final ogc2.www.opengis.net.sld.RasterSymbolizer rasterSymbolizerElement = ((JAXBElement<ogc2.www.opengis.net.sld.RasterSymbolizer>) e).getValue();
-      final TreeMap colorMap = SLDFactory.createColorMap( rasterSymbolizerElement.getColorMap() );
-      return new RasterSymbolizer_Impl( colorMap );
+      final Element colorMapElement = XMLTools.getChildByName( "ColorMap", CommonNamespaces.SLDNS.toString(), element );
+      final SortedMap<Double, ColorMapEntry> colorMap = createColorMap( colorMapElement );
+      
+      final Element imageOutlineElement = XMLTools.getChildByName( "ImageOutline", CommonNamespaces.SLDNS.toString(), element );
+      final Symbolizer imageOutline = createImageOutline( urlResolver, imageOutlineElement, min, max, uom );
+
+      return new RasterSymbolizer_Impl( colorMap, imageOutline );
     }
     catch( final Exception e )
     {
@@ -1867,14 +1844,36 @@ public class SLDFactory
     }
   }
 
-  private static TreeMap<Double, ColorMapEntry> createColorMap( final ColorMap colorMapType )
+  private static Symbolizer createImageOutline( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
   {
-    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    if( element == null )
+      return null;
 
-    final List colorMapEntries = colorMapType.getColorMapEntry();
+    final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    if( lineSymbolizerElement != null )
+      return createLineSymbolizer( urlResolver, lineSymbolizerElement, min, max, uom );
+
+    final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    if( polygonSymbolizerElement != null )
+      return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, min, max, uom );
+
+    return null;
+  }
+
+  private static SortedMap<Double, ColorMapEntry> createColorMap( final Element colorMapElement ) throws JAXBException
+  {
+    final SortedMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    if( colorMapElement == null )
+      return null;
+
+    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class, ogc2.www.opengis.net.gml.ObjectFactory.class, ogc2.www.opengis.net.ogc.ObjectFactory.class );
+    final Unmarshaller unmarshaller = jc.createUnmarshaller();
+    final ogc2.www.opengis.net.sld.ColorMap colorMapObject = (ColorMap) unmarshaller.unmarshal( colorMapElement );
+
+    final List<ogc2.www.opengis.net.sld.ColorMapEntry> colorMapEntries = colorMapObject.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
-      final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = (ogc2.www.opengis.net.sld.ColorMapEntry) colorMapEntries.get( i );
+      final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = colorMapEntries.get( i );
       final Color color = Color.decode( colorMapEntry.getColor() );
       final Double opacity = colorMapEntry.getOpacity();
       final Double quantity = colorMapEntry.getQuantity();
