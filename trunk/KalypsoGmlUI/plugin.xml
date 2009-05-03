@@ -92,7 +92,7 @@
 			</class>
 			<enabledWhen>
 				<and>
-					<reference definitionId="mapContext" />
+					<!--reference definitionId="mapContext" /-->
 					<with variable="activeMapPanel">
 						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 					</with>
@@ -141,7 +141,7 @@
 						<with variable="activeEditorId">
 							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
 						</with>
-						<reference definitionId="mapContext" />
+						<!--reference definitionId="mapContext" /-->
 						<with variable="activeMapPanel">
 							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
