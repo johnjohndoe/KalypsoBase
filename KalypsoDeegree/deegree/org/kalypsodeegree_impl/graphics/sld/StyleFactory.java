@@ -74,7 +74,6 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
-import org.kalypsodeegree_impl.tools.StringExtend;
 
 /**
  * An utility class designed to easy creation of style by convinience methods.
@@ -1112,7 +1111,7 @@ public class StyleFactory
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
-    return new RasterSymbolizer_Impl( colorMap, null );
+    return new RasterSymbolizer_Impl( null, colorMap, null, null );
   }
 
   /**

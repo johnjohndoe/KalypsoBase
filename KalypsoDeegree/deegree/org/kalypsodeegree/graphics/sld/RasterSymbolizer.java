@@ -35,8 +35,9 @@
  */
 package org.kalypsodeegree.graphics.sld;
 
-import java.awt.Color;
 import java.util.SortedMap;
+
+import org.kalypsodeegree_impl.graphics.sld.ShadedRelief;
 
 /**
  * <p>
@@ -48,11 +49,17 @@ import java.util.SortedMap;
  */
 public interface RasterSymbolizer extends Symbolizer
 {
+  ParameterValueType getOpacity( );
+
+  void setOpacity( ParameterValueType opacity );
+  
   SortedMap<Double, ColorMapEntry> getColorMap( );
 
   void setColorMap( SortedMap<Double, ColorMapEntry> colorMap );
 
-  public Color getColor( final double value );
+  ShadedRelief getShadedRelief( );
+
+  void setShadedRelief( final ShadedRelief shadedRelief );
   
   /**
    * @param imageOutline
@@ -61,7 +68,7 @@ public interface RasterSymbolizer extends Symbolizer
    *          {@link org.kalypsodeegree.graphics.sld.PolygonSymbolizer}. If set to <code>null</code>, no image-outline
    *          will be painted.
    */
-  public void setImageOutline( final Symbolizer imageOutline );
+  void setImageOutline( final Symbolizer imageOutline );
 
   /**
    * Gets the image-outline element of this symbolizer.

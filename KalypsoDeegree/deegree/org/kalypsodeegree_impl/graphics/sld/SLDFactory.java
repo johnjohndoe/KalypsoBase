@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -130,7 +131,7 @@ import org.xml.sax.SAXException;
  * corresponding objects (Fill), but marked as left out (to make it possible to differentiate between explicitly given
  * values and default values).
  * <p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -146,11 +147,11 @@ public class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given XML-representation.
    * <p>
-   *
+   * 
    * @param s
-   *            contains the XML document
+   *          contains the XML document
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the XML document is encountered
+   *           if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
   public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final String s ) throws XMLParsingException
@@ -163,11 +164,11 @@ public class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
    * <p>
-   *
+   * 
    * @param reader
-   *            provides the XML document
+   *          provides the XML document
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the XML document is encountered
+   *           if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    * @deprecated Use the inputStream version instead: {@link #createSLD(IUrlResolver2, InputStream)}, because with
    *             reader's the xml-encoding is not handled properly.
@@ -197,11 +198,11 @@ public class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
    * <p>
-   *
+   * 
    * @param reader
-   *            provides the XML document
+   *          provides the XML document
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the XML document is encountered
+   *           if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
   public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final InputStream is ) throws XMLParsingException
@@ -223,11 +224,12 @@ public class SLDFactory
 
   public static StyledLayerDescriptor createSLD( final File file ) throws IOException, XMLParsingException
   {
+    final URL context = file.toURI().toURL();
     final IUrlResolver2 urlResolver = new IUrlResolver2()
     {
       public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
       {
-        return new URL( file.toURL(), relativeOrAbsolute );
+        return new URL( context, relativeOrAbsolute );
       }
     };
 
@@ -283,15 +285,15 @@ public class SLDFactory
    * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'TextSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'TextSymbolizer'- <tt>Element</tt>
+   *          the 'TextSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>TextSymbolizer</tt> -instance
    */
   private static TextSymbolizer createTextSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -352,11 +354,11 @@ public class SLDFactory
    * Creates a <tt>Halo</tt> -instance according to the contents of the DOM-subtree starting at the given 'Halo'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Halo'- <tt>Element</tt>
+   *          the 'Halo'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Halo</tt> -instance
    */
   private static Halo createHalo( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -395,11 +397,11 @@ public class SLDFactory
    * Creates a <tt>LabelPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LabelPlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'LabelPlacement'- <tt>Element</tt>
+   *          the 'LabelPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LabelPlacement</tt> -instance
    */
   private static LabelPlacement createLabelPlacement( final Element element ) throws XMLParsingException
@@ -452,11 +454,11 @@ public class SLDFactory
    * Creates a <tt>PointPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointPlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'PointPlacement'- <tt>Element</tt>
+   *          the 'PointPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointPlacement</tt> -instance
    */
   private static PointPlacement createPointPlacement( final Element element ) throws XMLParsingException
@@ -523,11 +525,11 @@ public class SLDFactory
    * Creates a <tt>LinePlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LinePlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'LinePlacement'- <tt>Element</tt>
+   *          the 'LinePlacement'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LinePlacement</tt> -instance
    */
   private static LinePlacement createLinePlacement( final Element element ) throws XMLParsingException
@@ -567,11 +569,11 @@ public class SLDFactory
    * Creates a <tt>Font</tt> -instance according to the contents of the DOM-subtree starting at the given 'Font'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Font'- <tt>Element</tt>
+   *          the 'Font'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Font</tt> -instance
    */
   private static Font createFont( final Element element ) throws XMLParsingException
@@ -579,7 +581,7 @@ public class SLDFactory
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
-    final HashMap cssParams = new HashMap( nl.getLength() );
+    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -591,20 +593,23 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the
-   * given <tt>Element</tt>.
+   * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the given
+   * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the <tt>Element</tt> (must be of the type sld:ParameterValueType)
+   *          the <tt>Element</tt> (must be of the type sld:ParameterValueType)
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>ParameterValueType</tt> -instance
    */
   private static ParameterValueType createParameterValueType( final Element element ) throws XMLParsingException
   {
+    if( element == null )
+      return null;
+    
     // mix of text nodes and <wfs:Expression>-elements
-    final ArrayList componentList = new ArrayList();
+    final List<Object> componentList = new ArrayList<Object>();
     final NodeList nl = element.getChildNodes();
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -637,11 +642,11 @@ public class SLDFactory
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'StyledLayerDescriptor'- <tt>Element</tt>
+   *          the 'StyledLayerDescriptor'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
    */
   public static StyledLayerDescriptor createStyledLayerDescriptor( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -693,11 +698,11 @@ public class SLDFactory
    * Creates a <tt>NamedStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'NamedStyle'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'NamedStyle'- <tt>Element</tt>
+   *          the 'NamedStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>NamedStyle</tt> -instance
    */
   private static NamedStyle createNamedStyle( final Element element ) throws XMLParsingException
@@ -720,11 +725,11 @@ public class SLDFactory
    * Creates a <tt>RemoteOWS</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'RemoteOWS'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'RemoteOWS'- <tt>Element</tt>
+   *          the 'RemoteOWS'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>RemoteOWS</tt> -instance
    */
   private static RemoteOWS createRemoteOWS( final Element element ) throws XMLParsingException
@@ -756,11 +761,11 @@ public class SLDFactory
    * Creates a <tt>NamedLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'NamedLayer'- <tt>Element</tt>
+   *          the 'NamedLayer'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>NamedLayer</tt> -instance
    */
   private static NamedLayer createNamedLayer( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -779,7 +784,7 @@ public class SLDFactory
 
     // optional: <NamedStyle>(s) / <UserStyle>(s)
     final NodeList nodelist = element.getChildNodes();
-    final ArrayList styleList = new ArrayList();
+    final List<Style> styleList = new ArrayList<Style>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
       if( nodelist.item( i ) instanceof Element )
@@ -804,7 +809,7 @@ public class SLDFactory
         }
       }
 
-    final Style[] styles = (Style[]) styleList.toArray( new Style[styleList.size()] );
+    final Style[] styles = styleList.toArray( new Style[styleList.size()] );
 
     return new NamedLayer_Impl( name, lfc, styles );
   }
@@ -821,11 +826,11 @@ public class SLDFactory
    * Creates a <tt>UserLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'UserLayer'- <tt>Element</tt>
+   *          the 'UserLayer'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>UserLayer</tt> -instance
    */
   private static UserLayer createUserLayer( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -863,11 +868,11 @@ public class SLDFactory
    * Creates a <tt>FeatureTypeConstraint</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'FeatureTypeConstraint'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'FeatureTypeConstraint'- <tt>Element</tt>
+   *          the 'FeatureTypeConstraint'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>FeatureTypeConstraint</tt> -instance
    */
   private static FeatureTypeConstraint createFeatureTypeConstraint( final Element element ) throws XMLParsingException
@@ -900,11 +905,11 @@ public class SLDFactory
    * Creates an <tt>Extent</tt> -instance according to the contents of the DOM-subtree starting at the given 'Extent'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Extent'- <tt>Element</tt>
+   *          the 'Extent'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Extent</tt> -instance
    */
   private static Extent createExtent( final Element element ) throws XMLParsingException
@@ -921,11 +926,11 @@ public class SLDFactory
    * Creates a <tt>LayerFeatureConstraints</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'LayerFeatureConstraints'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'LayerFeatureConstraints'- <tt>Element</tt>
+   *          the 'LayerFeatureConstraints'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LayerFeatureConstraints</tt> -instance
    */
   public static LayerFeatureConstraints createLayerFeatureConstraints( final Element element ) throws XMLParsingException
@@ -946,11 +951,11 @@ public class SLDFactory
    * Creates a <tt>UserStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserStyle'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'UserStyle'- <tt>Element</tt>
+   *          the 'UserStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>UserStyle</tt> -instance
    */
   private static UserStyle createUserStyle( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -993,11 +998,11 @@ public class SLDFactory
    * <p>
    * TODO: The ElseFilter currently does not work correctly with FeatureFilters.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'FeatureTypeStyle'- <tt>Element</tt>
+   *          the 'FeatureTypeStyle'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>FeatureTypeStyle</tt> -instance
    */
   public static FeatureTypeStyle createFeatureTypeStyle( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1102,11 +1107,11 @@ public class SLDFactory
    * Creates a <tt>Rule</tt> -instance according to the contents of the DOM-subtree starting at the given 'Rule'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Rule'- <tt>Element</tt>
+   *          the 'Rule'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Rule</tt> -instance
    */
   private static Rule createRule( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1191,25 +1196,25 @@ public class SLDFactory
 
     if( symbolizerName.equals( "LineSymbolizer" ) )
       return SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    
+
     if( symbolizerName.equals( "PointSymbolizer" ) )
-     return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    
+      return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+
     if( symbolizerName.equals( "PolygonSymbolizer" ) )
       return SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
 
     if( symbolizerName.equals( "TextSymbolizer" ) )
       return SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    
+
     if( symbolizerName.equals( "RasterSymbolizer" ) )
       return SLDFactory.createRasterSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    
+
     if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
       return SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
 
     if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
       return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
-    
+
     return null;
   }
 
@@ -1217,15 +1222,15 @@ public class SLDFactory
    * Creates a <tt>PointSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'PointSymbolizer'- <tt>Element</tt>
+   *          the 'PointSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointSymbolizer</tt> -instance
    */
   private static PointSymbolizer createPointSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -1255,15 +1260,15 @@ public class SLDFactory
    * Creates a <tt>LineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'LineSymbolizer'- <tt>Element</tt>
+   *          the 'LineSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LineSymbolizer</tt> -instance
    */
   private static LineSymbolizer createLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -1293,15 +1298,15 @@ public class SLDFactory
    * Creates a <tt>PolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PolygonSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'PolygonSymbolizer'- <tt>Element</tt>
+   *          the 'PolygonSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PolygonSymbolizer</tt> -instance
    */
   private static PolygonSymbolizer createPolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -1340,15 +1345,15 @@ public class SLDFactory
    * Creates a <tt>SurfaceLineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'SurfaceLineSymbolizer'- <tt>Element</tt>
+   *          the 'SurfaceLineSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>SurfaceLineSymbolizer</tt> -instance
    */
   private static SurfaceLineSymbolizer createSurfaceLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -1373,18 +1378,18 @@ public class SLDFactory
   }
 
   /**
-   * Creates a <tt>SurfacePolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at
-   * the given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
+   * Creates a <tt>SurfacePolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'SurfacePolygonSymbolizer'- <tt>Element</tt>
+   *          the 'SurfacePolygonSymbolizer'- <tt>Element</tt>
    * @param min
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @param max
-   *            scale-constraint to be used
+   *          scale-constraint to be used
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>SurfacePolygonSymbolizer</tt> -instance
    */
   private static SurfacePolygonSymbolizer createSurfacePolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
@@ -1523,11 +1528,11 @@ public class SLDFactory
    * <p>
    * FIXME: Add support for 'Function'-Elements.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Geometry'- <tt>Element</tt>
+   *          the 'Geometry'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Geometry</tt> -instance
    */
   private static Geometry createGeometry( final Element element ) throws XMLParsingException
@@ -1541,11 +1546,11 @@ public class SLDFactory
    * Creates a <tt>Fill</tt> -instance according to the contents of the DOM-subtree starting at the given 'Fill'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Fill'- <tt>Element</tt>
+   *          the 'Fill'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Fill</tt> -instance
    */
   private static Fill createFill( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1561,7 +1566,7 @@ public class SLDFactory
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
-    final HashMap cssParams = new HashMap( nl.getLength() );
+    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -1576,11 +1581,11 @@ public class SLDFactory
    * Creates a <tt>LegendGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LegendGraphic'-element.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'LegendGraphic'- <tt>Element</tt>
+   *          the 'LegendGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Graphic</tt> -instance
    */
   private static LegendGraphic createLegendGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1596,11 +1601,11 @@ public class SLDFactory
    * Creates an <tt>ExternalGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'ExternalGraphic'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'ExternalGraphic'- <tt>Element</tt>
+   *          the 'ExternalGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>ExternalGraphic</tt> -instance
    */
   private static ExternalGraphic createExternalGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1632,11 +1637,11 @@ public class SLDFactory
    * Creates a <tt>Mark</tt> -instance according to the contents of the DOM-subtree starting at the given 'Mark'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Mark'- <tt>Element</tt>
+   *          the 'Mark'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Mark</tt> -instance
    */
   private static Mark createMark( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1670,11 +1675,11 @@ public class SLDFactory
    * Creates a <tt>Stroke</tt> -instance according to the contents of the DOM-subtree starting at the given 'Stroke'-
    * <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Stroke'- <tt>Element</tt>
+   *          the 'Stroke'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Stroke</tt> -instance
    */
   private static Stroke createStroke( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1700,7 +1705,7 @@ public class SLDFactory
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
-    final HashMap cssParams = new HashMap( nl.getLength() );
+    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -1715,11 +1720,11 @@ public class SLDFactory
    * Creates a <tt>GraphicFill</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicFill'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'GraphicFill'- <tt>Element</tt>
+   *          the 'GraphicFill'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>GraphicFill</tt> -instance
    */
   private static GraphicFill createGraphicFill( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1735,11 +1740,11 @@ public class SLDFactory
    * Creates a <tt>GraphicStroke</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicStroke'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'GraphicStroke'- <tt>Element</tt>
+   *          the 'GraphicStroke'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>GraphicStroke</tt> -instance
    */
   private static GraphicStroke createGraphicStroke( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1755,11 +1760,11 @@ public class SLDFactory
    * Creates a <tt>Graphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'Graphic'-element.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'Graphic'- <tt>Element</tt>
+   *          the 'Graphic'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Graphic</tt> -instance
    */
   private static Graphic createGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1809,11 +1814,11 @@ public class SLDFactory
    * Creates a <tt>CssParameter</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'CssParameter'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
-   *            the 'CssParamter'- <tt>Element</tt>
+   *          the 'CssParamter'- <tt>Element</tt>
    * @throws XMLParsingException
-   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>CssParameter</tt> -instance
    */
   private static CssParameter createCssParameter( final Element element ) throws XMLParsingException
@@ -1831,33 +1836,23 @@ public class SLDFactory
     {
       final Element colorMapElement = XMLTools.getChildByName( "ColorMap", CommonNamespaces.SLDNS.toString(), element );
       final SortedMap<Double, ColorMapEntry> colorMap = createColorMap( colorMapElement );
-      
+
       final Element imageOutlineElement = XMLTools.getChildByName( "ImageOutline", CommonNamespaces.SLDNS.toString(), element );
       final Symbolizer imageOutline = createImageOutline( urlResolver, imageOutlineElement, min, max, uom );
 
-      return new RasterSymbolizer_Impl( colorMap, imageOutline );
+      final Element shadedReliefElement = XMLTools.getChildByName( "ShadedRelief", CommonNamespaces.SLDNS.toString(), element );
+      final ShadedRelief shadedRelief = createShadedRelief( shadedReliefElement );
+
+      final Element opacityElement = XMLTools.getChildByName( "Opacity", CommonNamespaces.SLDNS.toString(), element );
+      final ParameterValueType opacity = createParameterValueType( opacityElement );
+
+      return new RasterSymbolizer_Impl( opacity, colorMap, imageOutline, shadedRelief );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
     }
-  }
-
-  private static Symbolizer createImageOutline( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
-  {
-    if( element == null )
-      return null;
-
-    final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", CommonNamespaces.SLDNS.toString(), element );
-    if( lineSymbolizerElement != null )
-      return createLineSymbolizer( urlResolver, lineSymbolizerElement, min, max, uom );
-
-    final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", CommonNamespaces.SLDNS.toString(), element );
-    if( polygonSymbolizerElement != null )
-      return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, min, max, uom );
-
-    return null;
   }
 
   private static SortedMap<Double, ColorMapEntry> createColorMap( final Element colorMapElement ) throws JAXBException
@@ -1893,4 +1888,36 @@ public class SLDFactory
 
     return colorMap;
   }
+  
+  private static ShadedRelief createShadedRelief( final Element element )
+  {
+    if( element == null )
+      return null;
+
+    final String brightnessOnlyString = XMLTools.getStringValue( "BrightnessOnly", CommonNamespaces.SLDNS.toString(), element, null );
+    final Boolean brightnessOnly = brightnessOnlyString == null ? null : DatatypeConverter.parseBoolean( brightnessOnlyString );
+
+    final String reliefFactorString = XMLTools.getStringValue( "ReliefFactor", CommonNamespaces.SLDNS.toString(), element, null );
+    final Double reliefFactor = reliefFactorString == null ? null : DatatypeConverter.parseDouble( reliefFactorString );
+
+    return new ShadedRelief( brightnessOnly, reliefFactor );
+  }
+
+  private static Symbolizer createImageOutline( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  {
+    if( element == null )
+      return null;
+
+    final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    if( lineSymbolizerElement != null )
+      return createLineSymbolizer( urlResolver, lineSymbolizerElement, min, max, uom );
+
+    final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    if( polygonSymbolizerElement != null )
+      return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, min, max, uom );
+
+    return null;
+  }
+
+ 
 }

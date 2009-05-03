@@ -40,8 +40,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.Map.Entry;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -53,6 +59,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.grid.GeoGridCell;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -60,13 +67,16 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -96,11 +106,45 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
   private IGeoGrid m_grid = null;
 
+  private final double[] m_values;
+
+  private final Color[] m_colors;
+
+  private double m_min;
+
+  private double m_max;
+
+  @SuppressWarnings("unchecked")
   RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
-  }
+    
+    // PERFORMANCE: create doubles and colors as arrays for quick access
+    final SortedMap<Double, ColorMapEntry> colorMap = symbolizer.getColorMap();
+    final Set<Entry<Double, ColorMapEntry>> entrySet = colorMap.entrySet();
+    final Entry<Double, ColorMapEntry>[] entries = entrySet.toArray( new Entry[entrySet.size()] );
+    m_values = new double[entries.length];
+    m_colors = new Color[entries.length];
+    for( int i = 0; i < entries.length; i++ )
+    {
+      final Entry<Double, ColorMapEntry> entry = entries[i];
+      m_values[i] = entry.getKey();
+      m_colors[i] = entry.getValue().getColorAndOpacity();
+    }
 
+    if( m_values.length == 0 )
+    {
+      m_min = Double.MAX_VALUE;
+      m_max = Double.MIN_VALUE;
+    }
+    else
+    {
+      m_min = m_values[0];
+      m_max = m_values[m_values.length - 1];
+    }
+  }
+  
+  
   private IGeoGrid getGrid( ) throws Exception
   {
     if( m_grid == null )
@@ -137,8 +181,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         final String targetCrs = projection.getSourceRect().getCoordinateSystem();
         Assert.isNotNull( targetCrs );
-        final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
-        paintGrid( (Graphics2D) g, grid, projection, symbolizer, targetCrs, monitor );
+        paintGrid( (Graphics2D) g, grid, projection, targetCrs, monitor );
       }
     }
     catch( final CoreException ce )
@@ -156,7 +199,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IProgressMonitor monitor ) throws GeoGridException, CoreException, FilterEvaluationException
   {
     /* Progress monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
@@ -210,12 +253,15 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     // Experimental: change interpolation method for better rendering; is quit slow however
     final GeoGridUtilities.Interpolation interpolation = Interpolation.none;
 
+    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+
     if( cellPixelWidth < 1 || interpolation != Interpolation.none )
-      paintPixelwise( g, grid, projection, symbolizer, targetCRS, cellPixelWidth, env, interpolation, progress.newChild( 95 ) );
+      paintPixelwise( g, grid, projection, targetCRS, cellPixelWidth, env, interpolation, progress.newChild( 95 ) );
     else
-      paintCellWise( g, grid, projection, symbolizer, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress.newChild( 95 ) );
+      paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress.newChild( 95 ) );
 
     final Symbolizer imageOutline = symbolizer.getImageOutline();
+    // TODO Tricky: apply opacityFactor to imageOutline as well?
     paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5 ) );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
@@ -226,7 +272,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * Paints the grid pixel by pixel. This is used, if one cell is smaller than a screen-pixel.<br>
    * We iterate through all pixels and get their values.
    */
-  private static void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final double cellPixelWidth, final Envelope env, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final double cellPixelWidth, final Envelope env, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor monitor ) throws GeoGridException, CoreException, FilterEvaluationException
   {
     // Always +/- 1 in order to avoid gaps due to rounding errors
     // cells outside the grid will not be painted, as we get Double.NaN here
@@ -242,13 +288,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     for( int y = screenYfrom; y < screenYto; y++ )
     {
       for( int x = screenXfrom; x < screenXto; x++ )
-        paintPixel( g, grid, projection, symbolizer, targetCRS, cellPixelWidth, interpolation, x, y );
+        paintPixel( g, grid, projection, targetCRS, cellPixelWidth, interpolation, x, y );
 
       ProgressUtilities.worked( monitor, 1 );
     }
   }
 
-  private static void paintPixel( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final double cellPixelWidth, final GeoGridUtilities.Interpolation interpolation, final int x, final int y ) throws GeoGridException
+  private void paintPixel( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final double cellPixelWidth, final GeoGridUtilities.Interpolation interpolation, final int x, final int y ) throws GeoGridException, FilterEvaluationException
   {
     /* These coordinates should be in the target coordinate system. */
     final double geoX = projection.getSourceX( x );
@@ -274,7 +320,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     if( Double.isNaN( value ) )
       return;
 
-    final Color color = symbolizer.getColor( value );
+    final Color color = getColor( value );
     if( color == null )
       return;
 
@@ -282,7 +328,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     g.fillRect( x, y, 1, 1 );
   }
 
-  private static void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException, CoreException, FilterEvaluationException
   {
     monitor.beginTask( "Painting cells", clippedMaxCell.y + 2 - clippedMinCell.y );
 
@@ -292,19 +338,19 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
     {
       for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
-        paintCell( g, grid, projection, symbolizer, targetCRS, j, i );
+        paintCell( g, grid, projection, targetCRS, j, i );
 
       ProgressUtilities.worked( monitor, 1 );
     }
   }
 
-  private static void paintCell( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final int j, final int i ) throws GeoGridException
+  private void paintCell( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int j, final int i ) throws GeoGridException, FilterEvaluationException
   {
     final double value = grid.getValueChecked( i, j );
     if( Double.isNaN( value ) )
       return;
 
-    final Color color = symbolizer.getColor( value );
+    final Color color = getColor( value );
     if( color == null )
       return;
 
@@ -408,6 +454,68 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     g.fillRect( x1, y1, width, height );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getColor(double)
+   */
+  public Color getColor( final double value ) throws FilterEvaluationException
+  {
+    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+    m_min = symbolizer.getMinScaleDenominator();
+    m_max = symbolizer.getMaxScaleDenominator();
+
+    if( value < m_min )
+      return null;
+
+    if( value > m_max )
+      return null;
+
+    final int binarySearch = Arrays.binarySearch( m_values, value );
+    if( binarySearch >= 0 )
+      return adaptColor( m_colors[binarySearch] );
+
+    final int index = Math.abs( binarySearch ) - 1;
+    if( index == m_colors.length )
+      return null;
+
+    // Experimental: set to true to linearly interpolate the color
+    // Using colormaps with many entries produces the same result
+    final boolean interpolate = false;
+
+    if( interpolate )
+    {
+      if( index == 0 )
+        return m_colors[index];
+
+      final Color lower = m_colors[index - 1];
+      final Color upper = m_colors[index];
+
+      return interpolate( lower, upper, m_values[index - 1], m_values[index], value );
+    }
+
+    return adaptColor( m_colors[index] );
+  }
+
+  private Color adaptColor( final Color color ) throws FilterEvaluationException
+  {
+    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+    final ParameterValueType opacity = symbolizer.getOpacity();
+    if( opacity == null )
+      return color;
+
+    final String evaluate = opacity.evaluate( getFeature() );
+    final double opacityValue = DatatypeConverter.parseDouble( evaluate );
+
+    return ColorUtilities.applyOpacity( color, opacityValue );
+  }
+
+
+  private Color interpolate( final Color lowerColor, final Color upperColor, final double lowerValue, final double upperValue, final double value )
+  {
+    final double factor = (value - lowerValue) / (upperValue - lowerValue);
+    return ColorUtilities.interpolateLinear( lowerColor, upperColor, factor );
+  }
+  
+  
   //
   // THE GRID CACHE
   //

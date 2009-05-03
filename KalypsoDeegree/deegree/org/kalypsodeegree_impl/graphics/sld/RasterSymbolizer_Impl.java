@@ -36,21 +36,20 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Formatter;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -67,26 +66,34 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
 {
-  private SortedMap<Double, ColorMapEntry> m_colorMap = null;
+  private ParameterValueType m_opacity;
 
-  private transient double[] m_values;
-
-  private Color[] m_colors;
-
-  private double m_min;
-
-  private double m_max;
+  private SortedMap<Double, ColorMapEntry> m_colorMap;
 
   private Symbolizer m_imageOutline;
+
+  private ShadedRelief m_shadedRelief;
 
   /**
    * @param imageOutline
    *          See {@link #setImageOutline(Symbolizer)}
    */
-  public RasterSymbolizer_Impl( final SortedMap<Double, ColorMapEntry> colorMap, final Symbolizer imageOutline )
+  public RasterSymbolizer_Impl( final ParameterValueType opacity, final SortedMap<Double, ColorMapEntry> colorMap, final Symbolizer imageOutline, final ShadedRelief shadedRelief )
   {
+    setOpacity( opacity );
     setColorMap( colorMap );
+    setShadedRelief( shadedRelief );
     setImageOutline( imageOutline );
+  }
+
+  public ParameterValueType getOpacity( )
+  {
+    return m_opacity;
+  }
+
+  public void setOpacity( final ParameterValueType opacity )
+  {
+    m_opacity = opacity;
   }
 
   public SortedMap<Double, ColorMapEntry> getColorMap( )
@@ -94,35 +101,9 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     return m_colorMap;
   }
 
-  @SuppressWarnings("unchecked")
   public void setColorMap( final SortedMap<Double, ColorMapEntry> colorMap )
   {
     m_colorMap = colorMap;
-
-    // PERFORMANCE: create doubles and colors as arrays for quick access
-    final Set<Entry<Double, ColorMapEntry>> entrySet = colorMap.entrySet();
-    final Entry<Double, ColorMapEntry>[] entries = entrySet.toArray( new Entry[entrySet.size()] );
-    m_values = new double[entries.length];
-    m_colors = new Color[entries.length];
-    for( int i = 0; i < entries.length; i++ )
-    {
-      final Entry<Double, ColorMapEntry> entry = entries[i];
-      m_values[i] = entry.getKey();
-      final Color color = entry.getValue().getColor();
-      final double opacity = entry.getValue().getOpacity();
-      m_colors[i] = ColorUtilities.createTransparent( color, opacity );
-    }
-
-    if( m_values.length == 0 )
-    {
-      m_min = Double.MAX_VALUE;
-      m_max = Double.MIN_VALUE;
-    }
-    else
-    {
-      m_min = m_values[0];
-      m_max = m_values[m_values.length - 1];
-    }
   }
 
   /**
@@ -143,6 +124,16 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     m_imageOutline = imageOutline;
   }
 
+  public ShadedRelief getShadedRelief( )
+  {
+    return m_shadedRelief;
+  }
+
+  public void setShadedRelief( final ShadedRelief shadedRelief )
+  {
+    m_shadedRelief = shadedRelief;
+  }
+  
   public String exportAsXML( )
   {
     final Formatter formatter = new Formatter();
@@ -155,6 +146,11 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
     formatter.format( ">%n" );
 
+    if( m_opacity != null )
+    {
+      formatter.format( "<Opacity>%s</Opacity>", ((Marshallable) m_opacity).exportAsXML() );
+    }
+    
     if( m_colorMap != null )
     {
       formatter.format( "<ColorMap>%n" );
@@ -166,6 +162,9 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       formatter.format( "</ColorMap>%n" );
     }
 
+    if( m_shadedRelief != null )
+      formatter.format( m_shadedRelief.exportAsXML() );
+    
     if( m_imageOutline != null )
     {
       formatter.format( "<ImageOutline>%n" );
@@ -178,72 +177,39 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     return formatter.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getColor(double)
-   */
-  public Color getColor( final double value )
-  {
-    if( value < m_min )
-      return null;
-
-    if( value > m_max )
-      return null;
-
-    final int binarySearch = Arrays.binarySearch( m_values, value );
-    if( binarySearch >= 0 )
-      return m_colors[binarySearch];
-
-    final int index = Math.abs( binarySearch ) - 1;
-    if( index == m_colors.length )
-      return null;
-
-    // Experimental: set to true to linearly interpolate the color
-    // Using colormaps with many entries produces the same result
-    final boolean interpolate = false;
-
-    if( interpolate )
-    {
-      if( index == 0 )
-        return m_colors[index];
-
-      final Color lower = m_colors[index - 1];
-      final Color upper = m_colors[index];
-
-      return interpolate( lower, upper, m_values[index - 1], m_values[index], value );
-    }
-
-    return m_colors[index];
-  }
-
-  private Color interpolate( final Color lowerColor, final Color upperColor, final double lowerValue, final double upperValue, final double value )
-  {
-    final double factor = (value - lowerValue) / (upperValue - lowerValue);
-    return ColorUtilities.interpolateLinear( lowerColor, upperColor, factor );
-  }
-
   @Override
-  public void paint( final GC gc, final Feature feature )
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
+    // TODO: apply opacity
+    final ParameterValueType opacity = getOpacity();
+    final double opacityValue = opacity == null ? 1.0 : Double.parseDouble( opacity.evaluate( feature ) );
+    
     final Rectangle clipping = gc.getClipping();
 
-    if( m_colors.length == 0 )
+    // FIXME
+    if( m_colorMap.size() == 0 )
       return;
 
+    final Collection<ColorMapEntry> values = m_colorMap.values();
+    final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
+    
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
     gc.setLineAttributes( new LineAttributes( 1 ) );
 
     /* we draw 2 rects in the colors of the color map and a black rectangle around it */
-    final Color colorAwtStart = m_colors[0];
+    final Color colorAwtStart = entries[0].getColorAndOpacity();
     final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtStart.getRed(), colorAwtStart.getGreen(), colorAwtStart.getBlue() );
     gc.setBackground( colorStart );
-    gc.setAlpha( colorAwtStart.getAlpha() );
+    final double alphaStart = colorAwtStart.getAlpha() / 255.0;
+    gc.setAlpha( (int) ((alphaStart * opacityValue) * 255.0) );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
-    final Color colorAwtEnd = m_colors[m_colors.length - 1];
+    final Color colorAwtEnd = entries[entries.length - 1].getColorAndOpacity();
     final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtEnd.getRed(), colorAwtEnd.getGreen(), colorAwtEnd.getBlue() );
     gc.setBackground( colorEnd );
-    gc.setAlpha( colorAwtEnd.getAlpha() );
+    final double alphaEnd = colorAwtEnd.getAlpha() / 255.0;
+    gc.setAlpha( (int) ((alphaEnd * opacityValue) * 255.0) );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
     // the black border

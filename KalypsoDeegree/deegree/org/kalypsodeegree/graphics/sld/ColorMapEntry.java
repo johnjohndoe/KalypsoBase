@@ -62,4 +62,7 @@ public interface ColorMapEntry
   public String exportAsXML( );
 
   public ColorMapEntry clone( );
+  
+  /** Return a the color with opacity set as alpha value. */
+  public Color getColorAndOpacity( );
 }

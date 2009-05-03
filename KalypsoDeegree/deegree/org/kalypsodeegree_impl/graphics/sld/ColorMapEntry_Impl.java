@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
@@ -117,6 +118,15 @@ public class ColorMapEntry_Impl implements ColorMapEntry
   public ColorMapEntry clone( )
   {
     return new ColorMapEntry_Impl( m_color, m_opacity, m_quantity, m_label );
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.ColorMapEntry#getColorAndOpacity()
+   */
+  @Override
+  public Color getColorAndOpacity( )
+  {
+    return ColorUtilities.createTransparent( m_color, m_opacity );
   }
 
 }
