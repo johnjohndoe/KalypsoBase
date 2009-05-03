@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class Symbolizer_Impl implements Symbolizer
+public abstract class Symbolizer_Impl implements Symbolizer
 {
   public enum UOM
   {

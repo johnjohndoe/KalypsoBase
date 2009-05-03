@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -138,38 +139,43 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   public void setImageOutline( final Symbolizer imageOutline )
   {
     Assert.isTrue( imageOutline == null || imageOutline instanceof LineSymbolizer || imageOutline instanceof PolygonSymbolizer );
-    
+
     m_imageOutline = imageOutline;
   }
 
   public String exportAsXML( )
   {
-    final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<RasterSymbolizer" );
+    final Formatter formatter = new Formatter();
+
+    formatter.format( "<RasterSymbolizer" );
 
     final UOM uom = getUom();
     if( uom != null )
-    {
-      sb.append( " uom=\"" + uom.name() + "\">\n" );
-    }
-    else
-      sb.append( ">\n" );
+      formatter.format( " uom=\"%s\"", uom.name() );
 
-    sb.append( "<ColorMap>\n" );
+    formatter.format( ">%n" );
 
     if( m_colorMap != null )
     {
+      formatter.format( "<ColorMap>%n" );
       for( final Map.Entry<Double, ColorMapEntry> entry : m_colorMap.entrySet() )
       {
         final ColorMapEntry colorMapEntry = entry.getValue();
-        sb.append( colorMapEntry.exportAsXML() );
+        formatter.format( colorMapEntry.exportAsXML() );
       }
+      formatter.format( "</ColorMap>%n" );
     }
 
-    sb.append( "</ColorMap>\n" );
-    sb.append( "</RasterSymbolizer>\n" );
+    if( m_imageOutline != null )
+    {
+      formatter.format( "<ImageOutline>%n" );
+      formatter.format( m_imageOutline.exportAsXML() );
+      formatter.format( "</ImageOutline>%n" );
+    }
+    
+    formatter.format( "</RasterSymbolizer>%n" );
 
-    return sb.toString();
+    return formatter.toString();
   }
 
   /**

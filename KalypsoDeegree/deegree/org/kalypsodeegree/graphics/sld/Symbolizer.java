@@ -38,6 +38,7 @@ package org.kalypsodeegree.graphics.sld;
 import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
@@ -50,7 +51,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public interface Symbolizer
+public interface Symbolizer extends Marshallable
 {
 
   /**
