@@ -127,13 +127,33 @@ public class ColorUtilities
    */
   public static Color createTransparent( final Color color, final double opacity )
   {
-    final int alpha = (int) Math.round( opacity * 255 );
+    final int alpha = (int) Math.round( opacity * 255.0 );
     final int red = color.getRed();
     final int green = color.getGreen();
     final int blue = color.getBlue();
     return new Color( red, green, blue, alpha );
   }
 
+  /**
+   * Creates a new color with the given opacity.<br>
+   * If the color already has an alpha value, the alpha is multiplied by the igven opacity.
+   * 
+   * @param opacity
+   *          0.0 - 1.0: Corresponds to alpha value from 0 to 255.
+   */
+  public static Color applyOpacity( final Color color, final double opacity )
+  {
+    final double currentAlpha = color.getAlpha() / 255.0;
+    final double changedAlpha = currentAlpha * opacity;
+
+    final int alpha = (int) (changedAlpha * 255.0);
+    final int red = color.getRed();
+    final int green = color.getGreen();
+    final int blue = color.getBlue();
+    return new Color( red, green, blue, alpha );
+  }
+  
+  
   public static Color interpolateLinear( final Color color1, final Color color2, final double factor )
   {
     final float[] hsba1 = new float[4];

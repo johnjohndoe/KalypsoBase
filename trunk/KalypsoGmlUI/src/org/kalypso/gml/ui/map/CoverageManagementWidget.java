@@ -695,18 +695,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   }
 
   /**
-   * sets the input of the style panel by reading the raster sld.
+   * sets the input of the style panel by fetching the style from the selected theme
    */
   protected void updateStylePanel( )
   {
-    /* get sld from theme */
-    if( m_theme == null )
-      return;
-
-    final UserStyle[] styles = m_theme.getStyles();
-
-    final RasterSymbolizer symb = findRasterSymbolizer( styles );
-
+    final RasterSymbolizer symb = findRasterSymbolizer();
     if( m_colorMapTableViewer != null && !m_colorMapTableViewer.getControl().isDisposed() )
       m_colorMapTableViewer.setInput( symb );
   }
@@ -718,8 +711,13 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
    */
-  private RasterSymbolizer findRasterSymbolizer( final UserStyle[] styles )
+  private RasterSymbolizer findRasterSymbolizer( )
   {
+    if( m_theme == null )
+      return null;
+
+    final UserStyle[] styles = m_theme.getStyles();
+
     for( final UserStyle userStyle : styles )
     {
       final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
@@ -775,7 +773,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   protected void handleGenerateColorMap( final Event event )
   {
-    final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
+    final RasterSymbolizer symb = findRasterSymbolizer();
     final SortedMap<Double, ColorMapEntry> input = symb.getColorMap();
 
     if( input != null )
@@ -834,7 +832,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   private void updateRasterSymbolizer( final ColorMapEntry[] entries )
   {
-    final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
+    final RasterSymbolizer symb = findRasterSymbolizer();
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
 
     try
@@ -1156,7 +1154,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final StructuredSelection selection = new StructuredSelection( newCoverages );
     m_coverageViewer.setSelection( selection );
 
-    final RasterSymbolizer symb = (RasterSymbolizer) m_colorMapTableViewer.getInput();
+    final RasterSymbolizer symb = findRasterSymbolizer();
+    if( symb == null )
+      return;
+    
     final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
     if( colorMap.isEmpty() )
     {
