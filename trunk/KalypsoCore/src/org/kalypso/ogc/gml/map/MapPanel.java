@@ -952,9 +952,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   protected IMapLayer getLayer( final IKalypsoTheme theme )
   {
-    final IMapLayer existingLayer = m_layers.get( theme );
-    if( existingLayer == null )
+    synchronized( this )
     {
+      final IMapLayer existingLayer = m_layers.get( theme );
+      if( existingLayer != null )
+        return existingLayer;
+
       // TODO: move into factory method; there should be an extension-point...
       final IMapLayer newLayer;
       if( theme instanceof IKalypsoCascadingTheme )
@@ -990,8 +993,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       m_layers.put( theme, newLayer );
       return newLayer;
     }
-
-    return existingLayer;
   }
 
   protected void handleThemeRemoved( final IKalypsoTheme theme, final boolean lastVisibility )
