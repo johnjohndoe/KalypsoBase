@@ -23,5 +23,17 @@
             name="%command.name.0">
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.kalypso.ui.views.mapView?before=mapExportAdditions">
+         <command
+               commandId="org.kalypso.kml.export.command"
+               label="KML Export"
+               style="push"
+               tooltip="KML Export">
+         </command>
+      </menuContribution>
+   </extension>
 
 </plugin>
