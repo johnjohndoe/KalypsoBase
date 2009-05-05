@@ -339,4 +339,13 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     service.forceUnlock( bean );
     setDirty();
   }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#isDatabaseOnline()
+   */
+  @Override
+  public boolean isDatabaseOnline( )
+  {
+    return m_connectionState.isOK();
+  }
 }

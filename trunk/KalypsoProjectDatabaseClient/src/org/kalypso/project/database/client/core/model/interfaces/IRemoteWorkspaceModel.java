@@ -64,4 +64,6 @@ public interface IRemoteWorkspaceModel
   IRemoteProject getProject( String uniqueProjectName );
 
   void forceUnlock( KalypsoProjectBean head );
+
+  boolean isDatabaseOnline( );
 }
