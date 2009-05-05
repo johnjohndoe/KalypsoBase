@@ -371,7 +371,7 @@
 			<command commandId="org.eclipse.ui.file.print" style="push" tooltip="Print" />
 			<command commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" label="%command.label.1" style="push" tooltip="%command.tooltip.1" />
 			<!--  TODO: does not really belong here, as it introduces a hidden dependency to a non-dependent plug-in (KML-Export) -->
-			<command commandId="org.kalypso.kml.export.command" label="kml Export" style="push" tooltip="kml Export"/>
+			<!--<command commandId="org.kalypso.kml.export.command" label="kml Export" style="push" tooltip="kml Export"/>-->
 			<separator name="mapExportAdditions" visible="false" />
 		</menuContribution>
 		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=additions">
