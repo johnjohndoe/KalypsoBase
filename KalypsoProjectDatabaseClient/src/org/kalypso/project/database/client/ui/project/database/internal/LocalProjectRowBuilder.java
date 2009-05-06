@@ -95,7 +95,7 @@ class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_LOCAL_PROJECT );
-    lnk.setToolTipText( String.format( "Öffne Projekt: %s (Bearbeitungsmodus)", project.getName() ) ); //$NON-NLS-1$
+    lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.0"), project.getName() ) ); //$NON-NLS-1$
     lnk.setText( project.getName() );
 
     addProjectOpenListener( lnk );
@@ -124,7 +124,7 @@ class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
   private boolean isCommitableProject( )
   {
     final String type = getCommitType();
-    if( type != null && !"".equals( type ) )
+    if( type != null && !"".equals( type ) ) //$NON-NLS-1$
       return true;
 
     return false;
