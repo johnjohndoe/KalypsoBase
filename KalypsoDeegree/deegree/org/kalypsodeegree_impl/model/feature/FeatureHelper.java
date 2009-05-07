@@ -260,7 +260,7 @@ public class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
-   *
+   * 
    * @throws CloneNotSupportedException
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
@@ -299,7 +299,7 @@ public class FeatureHelper
 
   /**
    * Clones a feature and puts it into the given parent feature at the given property.
-   *
+   * 
    * @param newParentFeature
    *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
    * @param relation
@@ -511,7 +511,7 @@ public class FeatureHelper
 
   /**
    * Checks if one of the feature properties is a collection.
-   *
+   * 
    * @param f
    * @return It returns true after the first occurrenc of a list
    */
@@ -589,7 +589,7 @@ public class FeatureHelper
 
   /**
    * Create properties by using the property-value of the given feature for each of the replace-tokens
-   *
+   * 
    * @param tokens
    *          replace-tokens (tokenKey-featurePropertyName;...)
    */
@@ -656,7 +656,7 @@ public class FeatureHelper
 
   /**
    * copys all simple type properties from the source feature into the target feature
-   *
+   * 
    * @param srcFE
    * @param targetFE
    * @throws MultiException
@@ -724,7 +724,7 @@ public class FeatureHelper
    * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
    * the list.</li>
    * </ul>
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public static void addProperty( final Feature feature, final IPropertyType pt, final Object newValue )
@@ -758,7 +758,7 @@ public class FeatureHelper
 
   /**
    * Adds a new member to a property of the given feature. The property must be a feature list.
-   *
+   * 
    * @param newFeatureName
    *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
    *          is taken.
@@ -794,7 +794,7 @@ public class FeatureHelper
 
   /**
    * Only works for non list feature property
-   *
+   * 
    * @param feature
    *          feature which list property receive the new feature
    * @param listProperty
@@ -867,7 +867,7 @@ public class FeatureHelper
 
   /**
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
-   *
+   * 
    * @param qname
    *          Must denote a property of type IRelationType of maxoccurs 1.
    * @param followXLinks
@@ -901,7 +901,7 @@ public class FeatureHelper
 
   /**
    * Resolves and adapts the linked feature. Note that the real feature is wrapped and return not the xlinked feature.
-   *
+   * 
    * @param feature
    *          the link property holder
    * @param propertyQName
@@ -954,7 +954,7 @@ public class FeatureHelper
    * set a workspace local link between 2 feature wrappers; i.e. the object feature is set as property with the given
    * name of the subject feature.<br/>
    * <b>Note that no check is made to assert whether the property exists or is not a list feature</b>
-   *
+   * 
    * @param subjectFeature
    *          the feature wrapper whose property is to be set
    * @param propertyQName
@@ -1006,7 +1006,7 @@ public class FeatureHelper
 
   /**
    * Creates a data object suitable for a feature property out of string.
-   *
+   * 
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
@@ -1061,7 +1061,7 @@ public class FeatureHelper
    * <p>
    * This method creates directly a feature of the target feature type of the given property.
    * </p>
-   *
+   * 
    * @throws IllegalArgumentException
    *           If the target feature type of the given property is abstract.
    */
@@ -1171,12 +1171,17 @@ public class FeatureHelper
   }
 
   /**
-   * This function creates a feature list of the given rootFeature.
+   * This function creates separate lists of features by qname and collects them in a hash map.
+   * 
+   * @param parent
+   *          The parent feature, containing the original feature list.
+   * @param propertyQName
+   *          The qname of the original feature list, which contains all features.
    */
-  public static HashMap<QName, ArrayList<Feature>> sortType( final Feature rootFeature, final QName propertyQName )
+  public static HashMap<QName, ArrayList<Feature>> sortType( final Feature parent, final QName propertyQName )
   {
     /* Get a list of all features in the given property. */
-    final FeatureList list = (FeatureList) rootFeature.getProperty( propertyQName );
+    final FeatureList list = (FeatureList) parent.getProperty( propertyQName );
 
     /* Create a map QName->Features. */
     final HashMap<QName, ArrayList<Feature>> featureMap = new HashMap<QName, ArrayList<Feature>>();
@@ -1323,7 +1328,7 @@ public class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   *
+   * 
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final Feature[] features )
@@ -1496,7 +1501,7 @@ public class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   *
+   * 
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
@@ -1561,6 +1566,5 @@ public class FeatureHelper
     else
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
   }
-
 
 }
