@@ -12,7 +12,6 @@
             allowMultiple="false"
             category="org.kalypso.planer.client.manager.views"
             class="org.kalypso.project.database.client.ui.view.ViewManageServerProjects"
-            icon="icons/application/icon_16.gif"
             id="org.kalypso.project.database.client.ui.view.ViewManageServerProjects"
             name="Modelldatenbank Verwaltung">
       </view>
