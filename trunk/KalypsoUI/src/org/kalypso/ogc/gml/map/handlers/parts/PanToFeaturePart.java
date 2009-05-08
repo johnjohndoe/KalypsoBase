@@ -96,6 +96,8 @@ public class PanToFeaturePart
 
     /* The extent of the map panel. */
     final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    if (boundingBox == null)
+      return;
 
     /* Get the new paned bounding box to the centroid of the geometry. */
     final GM_Envelope paned = boundingBox.getPaned( centroid );
