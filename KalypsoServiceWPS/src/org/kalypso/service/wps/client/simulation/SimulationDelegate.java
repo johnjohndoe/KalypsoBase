@@ -326,9 +326,7 @@ public class SimulationDelegate
 
           // TODO Is that wanted (that all from the client not expected output is ignored)?
           if( output == null )
-          {
             continue;
-          }
 
           /* Everything should be relative to the project! */
           final String outputPath = output.getPath();
@@ -343,12 +341,12 @@ public class SimulationDelegate
           final IResource destResource = baseresource.findMember( new Path( outputPath ) );
           if( destResource != null )
           {
+            /* Refresh. */
             destResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
             // TODO: NO!!!! We do not know that!
             if( destResource.getType() == IResource.FILE )
-            {
               ((IFile) destResource).setCharset( "UTF-8", new NullProgressMonitor() );
-            }
           }
         }
       }
@@ -589,9 +587,7 @@ public class SimulationDelegate
       /* Copy all collected files. */
       final IFile[] files = visitor.getFiles();
       if( files.length > 0 )
-      {
         copyInputFiles( files );
-      }
 
       /* Monitor. */
       monitor.worked( 300 );
@@ -627,9 +623,7 @@ public class SimulationDelegate
     final List<String> outputs = new LinkedList<String>();
 
     for( final Output output : outputList )
-    {
       outputs.add( output.getId() );
-    }
 
     return outputs;
   }
