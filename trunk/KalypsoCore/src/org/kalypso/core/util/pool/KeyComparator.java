@@ -71,21 +71,29 @@ public final class KeyComparator implements Comparator<IPoolableObjectType>
     if( typeCompare != 0 )
       return typeCompare;
 
+    final String source1 = resolveUri( k1 );
+    final String source2 = resolveUri( k2 );
+
+    return source1.compareTo( source2 );
+  }
+
+  private String resolveUri( final IPoolableObjectType key ) 
+  {
+    final String location = key.getLocation();
+    final URL context = key.getContext();
     try
     {
-      final URL sourceURL1 = m_urlResolver.resolveURL( k1.getContext(), k1.getLocation() );
-      final URL sourceURL2 = m_urlResolver.resolveURL( k2.getContext(), k2.getLocation() );
-
-      final String source1 = sourceURL1.toExternalForm();
-      final String source2 = sourceURL2.toExternalForm();
-
-      return source1.compareTo( source2 );
+      if( location.startsWith( "urn:" ))
+        return location;
+      
+      final URL sourceURL = m_urlResolver.resolveURL( context, location );
+      return sourceURL.toExternalForm();
     }
-    catch( MalformedURLException e )
+    catch( final  MalformedURLException e )
     {
       e.printStackTrace();
+      
+      return context.toExternalForm() + "#" + location;
     }
-
-    return 0;
   }
 }
