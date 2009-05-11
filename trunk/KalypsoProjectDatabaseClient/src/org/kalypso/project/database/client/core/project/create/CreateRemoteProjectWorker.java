@@ -121,7 +121,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       int count = 0;
       boolean uploaded = false;
 
-      // @hack - under windows apache webdav the first upload try of an planer client instance always fails
+      // @hack - under windows apache webdav the first upload try of an Kalypso planer client instance always fails
       while( count < 5 && uploaded == false )
       {
         try

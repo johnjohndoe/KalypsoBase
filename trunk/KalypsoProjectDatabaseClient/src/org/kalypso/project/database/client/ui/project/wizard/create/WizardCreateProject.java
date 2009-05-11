@@ -60,7 +60,7 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * Wizard for creating a new local Planer Client Project
+ * Wizard for creating a new local Kalypso Planer Client Project
  * 
  * @author Dirk Kuch
  */
