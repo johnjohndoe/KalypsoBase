@@ -119,4 +119,7 @@ public interface StyledLayerDescriptor extends Marshallable
   public UserStyle findUserStyle( final String name );
   
   public NamedLayer getNamedLayer( String layerName );
+
+  /** Returns the first user style with 'default' set to <code>true</code>. */
+  UserStyle getDefaultUserStyle( );
 }
