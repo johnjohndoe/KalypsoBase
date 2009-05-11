@@ -46,7 +46,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -60,7 +59,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -133,7 +132,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   {
     m_shadedRelief = shadedRelief;
   }
-  
+
   public String exportAsXML( )
   {
     final Formatter formatter = new Formatter();
@@ -150,7 +149,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     {
       formatter.format( "<Opacity>%s</Opacity>", ((Marshallable) m_opacity).exportAsXML() );
     }
-    
+
     if( m_colorMap != null )
     {
       formatter.format( "<ColorMap>%n" );
@@ -164,26 +163,27 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
     if( m_shadedRelief != null )
       formatter.format( m_shadedRelief.exportAsXML() );
-    
+
     if( m_imageOutline != null )
     {
       formatter.format( "<ImageOutline>%n" );
       formatter.format( m_imageOutline.exportAsXML() );
       formatter.format( "</ImageOutline>%n" );
     }
-    
+
     formatter.format( "</RasterSymbolizer>%n" );
 
     return formatter.toString();
   }
 
   @Override
-  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  public void paint( final GC gc, final Feature feature )
   {
-    // TODO: apply opacity
-    final ParameterValueType opacity = getOpacity();
-    final double opacityValue = opacity == null ? 1.0 : Double.parseDouble( opacity.evaluate( feature ) );
-    
+    // TODO: decide, if we should show the overal opacity
+// final ParameterValueType opacity = getOpacity();
+// final double opacityValue = opacity == null ? 1.0 : Double.parseDouble( opacity.evaluate( feature ) );
+    final double opacityValue = 1.0;
+
     final Rectangle clipping = gc.getClipping();
 
     // FIXME
@@ -192,7 +192,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
     final Collection<ColorMapEntry> values = m_colorMap.values();
     final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
-    
+
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
     gc.setLineAttributes( new LineAttributes( 1 ) );

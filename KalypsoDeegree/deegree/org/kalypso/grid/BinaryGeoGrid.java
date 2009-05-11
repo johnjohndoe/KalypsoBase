@@ -67,7 +67,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * Format description:
  * </p>
- * 
+ *
  * <pre>
  *  Version:        Version Number (Currently 0)
  *  SizeX:          Grid Size in horizontal direction
@@ -80,7 +80,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * All values are encoded as lower endian integers (4 bytes).
  * </p>
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
@@ -112,7 +112,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * Opens an existing grid for read-only access.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
-   * 
+   *
    * @param writeable
    *          If <code>true</code>, the grid is opened for writing and a {@link IWriteableGeoGrid} is returned.
    */
@@ -146,7 +146,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Crates a new grid file with the given size and scale.<br>
    * The grid is then opened in write mode, so its values can then be set.<br>
    * The grid must be disposed afterwards in order to flush the written information. *
-   * 
+   *
    * @param fillGrid
    *          If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid values
    *          are undetermined.
@@ -316,7 +316,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the value of a grid cell. The given value is scaled to the scale of this grid.
-   * 
+   *
    * @throws DoubleGridException
    *           If the grid is not opened for write access.
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
@@ -339,7 +339,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the value of a grid cell. The given value is rescaled to the scale of this grid.
-   * 
+   *
    * @throws DoubleGridException
    *           If the grid is not opened for write access.
    */
@@ -414,7 +414,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Gets the statistically values of this grid.
-   * 
+   *
    * @throws IOException
    *           If the file position is not valid.
    */
@@ -428,7 +428,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the statistically values of this grid.
-   * 
+   *
    * @throws IOException
    *           If the grid is not opened for write access.
    */

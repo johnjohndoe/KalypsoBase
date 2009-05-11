@@ -152,8 +152,11 @@ public class TransformUtilities
     final CoordinateSystem targetCRS = trans.getTargetCRS();
 
     /* If the coordinate systems are the same, do not transform. */
-    if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
+    if( sourceCRS.equals( targetCRS ) )
       return pos;
+// TODO: check: why did we use getIdAndName instead of euqals?
+// if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
+// return pos;
 
     Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 

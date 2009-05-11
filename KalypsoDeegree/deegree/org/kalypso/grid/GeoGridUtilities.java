@@ -46,6 +46,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.vecmath.Tuple2d;
+
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
@@ -614,8 +616,11 @@ public class GeoGridUtilities
   public enum Interpolation
   {
     none, // no interpolation: grid values are of constant value in a grid cell with middle-point the given coordinate
+    // (equals neareast)
+    nearest, // nearest neighbour: grid values are of constant value in a grid cell with middle-point the given
+    // coordinate
     bilinear, // bilinear interpolation
-    bicubic; // bilinear interpolation
+    bicubic; // bilinear interpolation (NOT YET IMPLEMENTED)
   }
 
   public static double getValue( final IGeoGrid grid, final Coordinate crd, final Interpolation interpolation ) throws GeoGridException
@@ -623,8 +628,28 @@ public class GeoGridUtilities
     switch( interpolation )
     {
       case none:
+      case nearest:
         final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
         return grid.getValueChecked( cell.x, cell.y );
+
+      case bilinear:
+        return interpolateBilinear( grid, crd ).x;
+
+      default:
+        throw new UnsupportedOperationException( "Unsupported interpolation method: " + interpolation );
+    }
+  }
+
+  public static Tuple2d getValueAndSlope( final IGeoGrid grid, final Coordinate crd, final Interpolation interpolation ) throws GeoGridException
+  {
+    switch( interpolation )
+    {
+      case none:
+      case nearest:
+        final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
+        return new Tuple2d( grid.getValueChecked( cell.x, cell.y ), Double.NaN )
+        {
+        };
 
       case bilinear:
         return interpolateBilinear( grid, crd );
@@ -634,7 +659,7 @@ public class GeoGridUtilities
     }
   }
 
-  private static double interpolateBilinear( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
+  private static Tuple2d interpolateBilinear( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
   {
     /* Find four adjacent cells */
     final GeoGridCell c11 = cellFromPosition( grid, crd );
@@ -645,29 +670,8 @@ public class GeoGridUtilities
     final double centerX = crd11.x;
     final double centerY = crd11.y;
 
-    int cellShiftX = 0;
-    int cellShiftY = 0;
-
-    if( crd.x < centerX && crd.y > centerY )
-    {
-      cellShiftX = -1;
-      cellShiftY = -1;
-    }
-    else if( crd.x < centerX && crd.y < centerY )
-    {
-      cellShiftX = -1;
-      cellShiftY = 1;
-    }
-    else if( crd.x > centerX && crd.y > centerY )
-    {
-      cellShiftX = 1;
-      cellShiftY = -1;
-    }
-    else if( crd.x > centerX && crd.y < centerY )
-    {
-      cellShiftX = 1;
-      cellShiftY = 1;
-    }
+    final int cellShiftX = crd.x < centerX ? -1 : 1;
+    final int cellShiftY = crd.y < centerY ? 1 : -1;
 
     final GeoGridCell c12 = new GeoGridCell( c11.x + cellShiftX, c11.y );
     final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + cellShiftY );
@@ -677,6 +681,11 @@ public class GeoGridUtilities
     final double v12 = grid.getValueChecked( c12.x, c12.y );
     final double v21 = grid.getValueChecked( c21.x, c21.y );
     final double v22 = grid.getValueChecked( c22.x, c22.y );
+
+    // //// EXPERIMENTAL: SHADING ////
+    final double gradient = calculateGradient( grid, v11, v12, v21, v22 );
+
+    // ///
 
     final Coordinate crd12 = toCoordinate( grid, c12 );
     final Coordinate crd21 = toCoordinate( grid, c21 );
@@ -693,15 +702,53 @@ public class GeoGridUtilities
 
       // interpolate in y direction
       final LinearEquation ley = new LinearEquation( crd11.y, vx1, crd22.y, vx2 );
-      return ley.computeY( crd.y );
+      return new Tuple2d( ley.computeY( crd.y ), gradient )
+      {
+      };
     }
     catch( final SameXValuesException e )
     {
       // should never happen...
       e.printStackTrace();
 
-      return Double.NaN;
+      return new Tuple2d( Double.NaN, Double.NaN )
+      {
+      };
     }
+  }
+
+  private static double calculateGradient( final IGeoGrid grid, final double v11, final double v12, final double v21, final double v22 ) throws GeoGridException
+  {
+    final Coordinate offsetX = grid.getOffsetX();
+    final Coordinate offsetY = grid.getOffsetY();
+    // REMARK: simplification: we are thinking in rectangular cells....
+    final double cellSizeX = Math.abs( offsetX.x );
+    final double cellSizeY = Math.abs( offsetY.y );
+
+    // horizontal
+    final double d1112 = Math.abs( v11 - v12 );
+    final double d2122 = Math.abs( v21 - v22 );
+    final double maxDifHori = Math.max( d1112, d2122 );
+    final double slopeHori = maxDifHori / cellSizeX;
+
+    // vertical
+    final double d1121 = Math.abs( v11 - v21 );
+    final double d1222 = Math.abs( v12 - v22 );
+    final double maxDifVert = Math.max( d1121, d1222 );
+    final double slopeVert = maxDifVert / cellSizeY;
+
+    // diagonal
+    final double d1122 = Math.abs( v11 - v22 );
+    final double d2112 = Math.abs( v21 - v12 );
+    final double maxDifDiag = Math.max( d1122, d2112 );
+    final double slopeDiag = maxDifDiag / (Math.sqrt( cellSizeX * cellSizeX + cellSizeY * cellSizeY ));
+
+    final double maxSlope = Math.max( Math.max( slopeHori, slopeVert ), slopeDiag );
+
+    final double arcSlope = Math.abs( Math.atan( maxSlope ) );
+
+    final double normalizedSlope = arcSlope * 2 / Math.PI;
+    return normalizedSlope;
   }
 
   private static Coordinate toCoordinate( final IGeoGrid grid, final GeoGridCell cell ) throws GeoGridException
