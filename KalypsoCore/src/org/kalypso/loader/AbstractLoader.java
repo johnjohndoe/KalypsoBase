@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
+import java.net.MalformedURLException;
+
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
  * @author belger
@@ -62,4 +66,29 @@ public abstract class AbstractLoader implements ILoader
   {
     m_status = status;
   }
+
+  /**
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
+  @Override
+  public final IResource[] getResources( final IPoolableObjectType key )
+  {
+    try
+    {
+      return getResourcesInternal( key );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IllegalArgumentException e )
+    {
+      // Explicitely catch this one too, as finding resources may result in IllegalArgumentException
+      e.printStackTrace();
+    }
+
+    return new IResource[0];
+  }
+
+  protected abstract IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException, IllegalArgumentException;
 }

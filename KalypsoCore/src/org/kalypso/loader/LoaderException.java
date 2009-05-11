@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,35 +36,40 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
+
 /**
  * Exceptionklasse für Exceptions innerhalb diesesPakets.
- * 
+ *
  * @author Schlienger
- *  
+ *
  */
-public class LoaderException extends Exception
+public class LoaderException extends CoreException
 {
-  public LoaderException()
+  public LoaderException( final IStatus status )
   {
-    super();
+    super( status );
   }
 
-  public LoaderException( String arg0 )
+  public LoaderException( final String msg )
   {
-    super( arg0 );
+    super( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg ) );
   }
 
-  public LoaderException( Throwable arg0 )
+  public LoaderException( final Throwable cause )
   {
-    super( arg0 );
+    super( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), cause.getLocalizedMessage(), cause ) );
   }
 
-  public LoaderException( String arg0, Throwable arg1 )
+  public LoaderException( final String msg, final Throwable cause )
   {
-    super( arg0, arg1 );
+    super( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, cause ) );
   }
 }

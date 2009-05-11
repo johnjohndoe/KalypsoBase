@@ -145,7 +145,7 @@ public class BufferPaintJob extends Job
 
         ProgressUtilities.worked( progress, 10 );
 
-        m_paintable.paint( gr, progress.newChild( 90 ) );
+        m_paintable.paint( gr, progress.newChild( 90, SubMonitor.SUPPRESS_NONE ) );
       }
     }
     catch( final CoreException ce )

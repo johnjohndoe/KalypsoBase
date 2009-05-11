@@ -176,7 +176,7 @@ public class ShapeLoader extends WorkspaceLoader
     }
   }
 
-  private String parseSource( String location )
+  private String parseSource( final String location )
   {
     // eventuelle vorhandenen Information zum CRS abschneiden
     final int index = location.indexOf( '#' );
@@ -190,7 +190,7 @@ public class ShapeLoader extends WorkspaceLoader
     return shpSource;
   }
 
-  private String parseSrs( String location )
+  private String parseSrs( final String location )
   {
     // eventuelle vorhandenen Information zum CRS abschneiden
     final int index = location.indexOf( '#' );
@@ -205,7 +205,7 @@ public class ShapeLoader extends WorkspaceLoader
   }
 
   @Override
-  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -238,10 +238,10 @@ public class ShapeLoader extends WorkspaceLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
+  public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
     final String location = key.getLocation();
     final URL context = key.getContext();

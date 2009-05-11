@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.loaders;
 
@@ -63,7 +63,7 @@ import org.kalypso.zml.Observation;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
- * 
+ *
  * @author schlienger
  */
 public class ZmlLoader extends AbstractLoader
@@ -75,7 +75,7 @@ public class ZmlLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public Object load( IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
+  public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -105,7 +105,7 @@ public class ZmlLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   @Override
-  public void save( IPoolableObjectType key, IProgressMonitor monitor, Object data ) throws LoaderException
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -157,10 +157,10 @@ public class ZmlLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
+  public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -168,12 +168,12 @@ public class ZmlLoader extends AbstractLoader
     final IFile file = ResourceUtilities.findFileFromURL( url );
     return new IResource[] { file };
   }
-  
+
   /**
    * @see org.kalypso.loader.ILoader#release(java.lang.Object)
    */
   @Override
-  public void release( Object object )
+  public void release( final Object object )
   {
   }
 }
