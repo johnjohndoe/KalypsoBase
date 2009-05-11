@@ -113,6 +113,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
         final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
         m_userStyle = sld.findUserStyle( m_styleName );
         if( m_userStyle == null )
+          m_userStyle = sld.getDefaultUserStyle();
+        if( m_userStyle == null )
         {
           final String msg = Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.1" ) + m_styleName + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.2" ); //$NON-NLS-1$ //$NON-NLS-2$
           System.out.println( msg );
