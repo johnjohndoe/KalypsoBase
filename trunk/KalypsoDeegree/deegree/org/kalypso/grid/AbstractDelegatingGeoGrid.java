@@ -52,21 +52,29 @@ import com.vividsolutions.jts.geom.Envelope;
  * <p>
  * The delegate can be changed during runtime, if it is not present a suitable exception is thrown.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
 {
   private IGeoGrid m_delegate;
 
-  public AbstractDelegatingGeoGrid( )
-  {
-    m_delegate = null;
-  }
+  /** See {@link #AbstractDelegatingGeoGrid(IGeoGrid, boolean)} */
+  private final boolean m_disposeDelegate;
 
   public AbstractDelegatingGeoGrid( final IGeoGrid delegate )
   {
+    this( delegate, false );
+  }
+
+  /**
+   * @param disposeDelegate
+   *          The delegate only gets disposed with this wrapper, iff the this parameter is set to <code>true</code>.
+   */
+  public AbstractDelegatingGeoGrid( final IGeoGrid delegate, final boolean disposeDelegate )
+  {
     m_delegate = delegate;
+    m_disposeDelegate = disposeDelegate;
   }
 
   public void setDelegate( final IGeoGrid delegate )
@@ -80,11 +88,13 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   /**
+   * @see m_disposeDelegate
    * @see org.kalypso.grid.IGeoGrid#dispose()
    */
   public void dispose( )
   {
-    // The delegate comes from outside, so it should be disposed outside
+    if( m_disposeDelegate )
+      m_delegate.dispose();
   }
 
   /**
@@ -200,7 +210,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
-  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );
@@ -211,7 +221,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
-  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );
