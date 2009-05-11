@@ -41,14 +41,13 @@
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -60,6 +59,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author Gernot Belger
@@ -126,7 +126,7 @@ public class DeleteFeatureCommand implements ICommand
     for( final Feature featureToAdd : m_featuresToDelete )
     {
       final GMLWorkspace workspace = featureToAdd.getWorkspace();
-      final Feature parentFeature = featureToAdd.getParent();
+      final Feature parentFeature = featureToAdd.getOwner();
       final IRelationType rt = featureToAdd.getParentRelation();
 
       if( workspace.contains( featureToAdd ) )
@@ -220,14 +220,16 @@ public class DeleteFeatureCommand implements ICommand
       children.add( featureToRemove );
     }
 
-    final Map<GMLWorkspace, Collection<Feature>> changedLinkFeatures = new HashMap<GMLWorkspace, Collection<Feature>>();
+    final List<ModellEvent> linkEvents = new ArrayList<ModellEvent>();
+    
     for( final GMLWorkspace workspace : touchedWorkspaces )
     {
       final FindLinksFeatureVisitor visitor = new FindLinksFeatureVisitor( workspace );
       workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-      final Map<GMLWorkspace, Collection<Feature>> changedFeatures = visitor.getChangedFeatures();
-      changedLinkFeatures.putAll( changedFeatures );
+      final ModellEvent[] events = visitor.getEvents();
+      for( final ModellEvent modellEvent : events )
+        linkEvents.add( modellEvent );
     }
 
     for( final ICommand command : m_removeBrokenLinksCommands )
@@ -246,13 +248,10 @@ public class DeleteFeatureCommand implements ICommand
     }
 
     /* fire events for removed links */
-    final Set<Entry<GMLWorkspace, Collection<Feature>>> entrySet = changedLinkFeatures.entrySet();
-    for( final Entry<GMLWorkspace, Collection<Feature>> entry : entrySet )
+    for( final ModellEvent modellEvent : linkEvents )
     {
-      final GMLWorkspace workspace = entry.getKey();
-      final Collection<Feature> value = entry.getValue();
-      final Feature[] features = value.toArray( new Feature[value.size()] );
-      workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, features ) );
+      final GMLWorkspace workspace = (GMLWorkspace) modellEvent.getEventSource();
+      workspace.fireModellEvent( modellEvent );
     }
   }
 
@@ -261,7 +260,9 @@ public class DeleteFeatureCommand implements ICommand
    */
   private final class FindLinksFeatureVisitor implements FeatureVisitor
   {
-    private final Map<GMLWorkspace, Collection<Feature>> m_changedFeatures = new HashMap<GMLWorkspace, Collection<Feature>>();
+    private final Set<Feature> m_changedFeatures = new HashSet<Feature>();
+
+    private final Map<Feature, FeatureStructureChangeModellEvent> m_structureEvents = new HashMap<Feature, FeatureStructureChangeModellEvent>();
 
     private final GMLWorkspace m_workspace;
 
@@ -270,22 +271,17 @@ public class DeleteFeatureCommand implements ICommand
       m_workspace = workspace;
     }
 
-    public Map<GMLWorkspace, Collection<Feature>> getChangedFeatures( )
+    public ModellEvent[] getEvents( )
     {
-      return m_changedFeatures;
+      final ModellEvent[] modellEvents = m_structureEvents.values().toArray( new ModellEvent[0] );
+      return (ModellEvent[]) ArrayUtils.addAll( modellEvents, new ModellEvent[] { getChangedFeatures() } );
     }
 
-    private void addChangedFeature( final Feature feature )
+    private FeaturesChangedModellEvent getChangedFeatures( )
     {
-      final GMLWorkspace ws = feature.getWorkspace();
-      if( !m_changedFeatures.containsKey( ws ) )
-      {
-        m_changedFeatures.put( ws, new HashSet<Feature>() );
-      }
-
-      m_changedFeatures.get( ws ).add( feature );
+      return new FeaturesChangedModellEvent( m_workspace, m_changedFeatures.toArray( new Feature[0] ) );
     }
-    
+
     // checks all properties for broken links
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
@@ -294,11 +290,11 @@ public class DeleteFeatureCommand implements ICommand
     {
       final IFeatureType ft = f.getFeatureType();
       final IPropertyType[] ftps = ft.getProperties();
-      for( int j = 0; j < ftps.length; j++ )
+      for( final IPropertyType ftp : ftps )
       {
-        if( ftps[j] instanceof IRelationType )
+        if( ftp instanceof IRelationType )
         {
-          final IRelationType linkftp = (IRelationType) ftps[j];
+          final IRelationType linkftp = (IRelationType) ftp;
           if( linkftp.isList() )
           {
             final List< ? > propList = (List< ? >) f.getProperty( linkftp );
@@ -308,7 +304,7 @@ public class DeleteFeatureCommand implements ICommand
               if( m_workspace.isBrokenLink( f, linkftp, k ) )
               {
                 m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, (String) propList.get( k ), k ) );
-                addChangedFeature( f );
+                m_structureEvents.put( f, new FeatureStructureChangeModellEvent( m_workspace, f, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
               }
             }
           }
@@ -318,7 +314,7 @@ public class DeleteFeatureCommand implements ICommand
             {
               final String childID = (String) f.getProperty( linkftp );
               m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, childID, 1 ) );
-              addChangedFeature( f );
+              m_changedFeatures.add( f );
             }
           }
         }
