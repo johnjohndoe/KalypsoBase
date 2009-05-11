@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,8 +50,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -59,6 +63,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
@@ -81,7 +86,7 @@ public class SldLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public Object load( IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
+  public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -92,8 +97,6 @@ public class SldLoader extends AbstractLoader
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
       final URL url = m_urlResolver.resolveURL( context, source );
-
-      // create reader via resolver in order to use the right encoding
       is = new BufferedInputStream( url.openStream() );
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
@@ -107,12 +110,59 @@ public class SldLoader extends AbstractLoader
 
       is.close();
 
-      monitor.done();
+      ProgressUtilities.done( monitor );
       return styledLayerDescriptor;
     }
-    catch( final Exception e )
+    catch( final IllegalArgumentException e )
     {
-      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.2" ) + source, e ); //$NON-NLS-1$
+      // This one may happen, because the platform-URL-connector does not always throw correct MalformedURLExceptions,
+      // but throws this one, when opening the stream...
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
+    }
+    catch( final XMLParsingException e )
+    {
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      setStatus( status );
+      if( !status.matches( IStatus.CANCEL ) )
+        e.printStackTrace();
+
+      throw new LoaderException( e.getStatus() );
     }
     finally
     {
@@ -121,7 +171,7 @@ public class SldLoader extends AbstractLoader
   }
 
   @Override
-  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -143,10 +193,10 @@ public class SldLoader extends AbstractLoader
 
         if( sldFile != null )
           sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
-        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
-        {
+//        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
+// {
 // sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
-        }
+// }
         else
           throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
       }
@@ -165,10 +215,10 @@ public class SldLoader extends AbstractLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public IResource[] getResources( IPoolableObjectType key ) throws MalformedURLException
+  public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();

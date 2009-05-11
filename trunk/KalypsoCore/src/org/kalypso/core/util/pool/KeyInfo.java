@@ -85,7 +85,7 @@ public final class KeyInfo extends Job
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
-    super( Messages.getString( "org.kalypso.util.pool.KeyInfo.1" ) + key.toString() ); //$NON-NLS-1$
+    super( Messages.format( "org.kalypso.util.pool.KeyInfo.1", key.getLocation() ) ); //$NON-NLS-1$
 
     m_key = key;
     m_loader = loader;
@@ -104,6 +104,7 @@ public final class KeyInfo extends Job
     }
 
     setPriority( Job.LONG );
+// setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
   }
 
   public void dispose( )
@@ -225,7 +226,6 @@ public final class KeyInfo extends Job
   {
     synchronized( this )
     {
-      final String location = m_key.getLocation();
       try
       {
         if( DO_LOG )
@@ -236,10 +236,15 @@ public final class KeyInfo extends Job
         m_object = m_loader.load( m_key, monitor );
         m_isDirty = false;
       }
+      catch( final CoreException ce )
+      {
+        if( m_key.isIgnoreExceptions() )
+          return Status.CANCEL_STATUS;
+
+        return ce.getStatus();
+      }
       catch( final Throwable e )
       {
-        m_object = null;
-
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
@@ -253,7 +258,9 @@ public final class KeyInfo extends Job
         }
 
         e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
+
+        return StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), null );
+//        return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
       }
     }
 

@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -58,10 +59,10 @@ public class WfsLoader extends WorkspaceLoader
    * Loads a WFS DataSource from the given URL
    *
    * @param source
-   *            the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
-   *            feature to be loaded
+   *          the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
+   *          feature to be loaded
    * @param context
-   *            the URL form the map context (here the path to the associated gmt file)
+   *          the URL form the map context (here the path to the associated gmt file)
    */
   @Override
   protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
@@ -99,10 +100,25 @@ public class WfsLoader extends WorkspaceLoader
 
       return new CommandableWorkspace( workspace );
     }
-    catch( final Exception e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.6"), e ); //$NON-NLS-1$
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
     }
     finally
     {
@@ -122,17 +138,17 @@ public class WfsLoader extends WorkspaceLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data )
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data )
   {
-//    final String source = key.getLocation();
-//    final URL context = key.getContext();
+// final String source = key.getLocation();
+// final URL context = key.getContext();
 
     // TODO implementation of a transactional WFS
     if( data instanceof CommandableWorkspace )
     {
       final Display display = new Display();
-      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.8"), (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.9"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-          Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.10"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.11") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.8" ), (ImageProvider.IMAGE_STYLEEDITOR_SAVE).createImage(), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.9" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+      Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.10" ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.11" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
       final int result = md.open();
       try
       {
@@ -149,9 +165,8 @@ public class WfsLoader extends WorkspaceLoader
         }
         else if( result == 1 )
         {
-          MessageDialog.openError( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.12"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.13") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.12" ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
-
       }
       catch( final IOException e )
       {
@@ -173,12 +188,11 @@ public class WfsLoader extends WorkspaceLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public IResource[] getResources( IPoolableObjectType key )
+  public IResource[] getResourcesInternal( final IPoolableObjectType key )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return new IResource[0];
   }
 }

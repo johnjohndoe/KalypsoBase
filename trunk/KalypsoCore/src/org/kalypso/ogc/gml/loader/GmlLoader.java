@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
- * 
+ *
  * @author Belger
  */
 public class GmlLoader extends WorkspaceLoader
@@ -94,7 +94,7 @@ public class GmlLoader extends WorkspaceLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected CommandableWorkspace loadIntern( final IPoolableObjectType key, IProgressMonitor monitor ) throws LoaderException
+  protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -130,13 +130,15 @@ public class GmlLoader extends WorkspaceLoader
 
       /* Adapting if necessary */
       moni.subTask( "checking backwards compability..." );
-      IResource gmlFile = getResources( key )[0];
+      final IResource gmlFile = getResources( key )[0];
       final GMLWorkspace adaptedWorkspace = adaptWorkspace( key, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
 
       /* Hook for Loader stuff */
       final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
 
       setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
+
+      ProgressUtilities.done( moni );
 
       return workspace;
     }
@@ -146,23 +148,32 @@ public class GmlLoader extends WorkspaceLoader
       setStatus( status );
       if( !status.matches( IStatus.CANCEL ) )
         ce.printStackTrace();
-      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + ce.toString(), ce ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      throw new LoaderException( ce.getStatus() );
     }
-    catch( final LoaderException le )
+    catch( final MalformedURLException e )
     {
-      le.printStackTrace();
-      setStatus( StatusUtilities.statusFromThrowable( le ) );
-      throw le;
+      e.printStackTrace();
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      setStatus( StatusUtilities.statusFromThrowable( e ) );
-      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + e.toString(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
+      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
+      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
+      setStatus( loaderException.getStatus() );
+      throw loaderException;
     }
   }
 
-  private GMLWorkspace adaptWorkspace( IPoolableObjectType key, final IProgressMonitor monitor, final List<IStatus> resultList, GMLWorkspace workspace, final IResource gmlFile ) throws LoaderException, CoreException
+  private GMLWorkspace adaptWorkspace( final IPoolableObjectType key, final IProgressMonitor monitor, final List<IStatus> resultList, GMLWorkspace workspace, final IResource gmlFile ) throws LoaderException, CoreException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName() );
@@ -232,7 +243,7 @@ public class GmlLoader extends WorkspaceLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
+  public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
@@ -280,10 +291,10 @@ public class GmlLoader extends WorkspaceLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
    */
   @Override
-  public IResource[] getResources( final IPoolableObjectType key ) throws MalformedURLException
+  protected IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
