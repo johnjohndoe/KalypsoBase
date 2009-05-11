@@ -54,17 +54,24 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Layer;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author schlienger
@@ -91,27 +98,14 @@ public class SldLoader extends AbstractLoader
     final String source = key.getLocation();
     final URL context = key.getContext();
 
-    InputStream is = null;
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
-      final URL url = m_urlResolver.resolveURL( context, source );
-      is = new BufferedInputStream( url.openStream() );
-      final IUrlResolver2 resolver = new IUrlResolver2()
-      {
-        public URL resolveURL( final String href ) throws MalformedURLException
-        {
-          return UrlResolverSingleton.resolveUrl( url, href );
-        }
-      };
+      if( source.startsWith( "urn" ) )
+        return loadFromCatalog( context, source );
 
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
-
-      is.close();
-
-      ProgressUtilities.done( monitor );
-      return styledLayerDescriptor;
+      return loadFromUrl( context, source );
     }
     catch( final IllegalArgumentException e )
     {
@@ -163,6 +157,59 @@ public class SldLoader extends AbstractLoader
         e.printStackTrace();
 
       throw new LoaderException( e.getStatus() );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  private StyledLayerDescriptor loadFromCatalog( final URL context, final String source ) throws LoaderException
+  {
+    final CatalogSLD catalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
+
+    final IUrlResolver2 resolver = new IUrlResolver2()
+    {
+      /**
+       * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
+       */
+      @Override
+      public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return UrlResolverSingleton.resolveUrl( context, relativeOrAbsolute );
+      }
+    };
+
+    /* HACK: Use the name of the feature type style in the GMT for referencing this style. */
+    final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
+    if( fts == null )
+      throw new LoaderException( String.format( "Failed to resolve urn %s", source ) );
+
+    final UserStyle userStyle = StyleFactory.createUserStyle( fts.getName(), fts.getTitle(), fts.getAbstract(), true, new FeatureTypeStyle[] { fts } );
+    final NamedLayer namedLayer = SLDFactory.createNamedLayer( "", null, new Style[] { userStyle } );
+    return SLDFactory.createStyledLayerDescriptor( "", "", "", new Layer[] { namedLayer } );
+  }
+
+  private StyledLayerDescriptor loadFromUrl( URL context, String source ) throws IOException, XMLParsingException
+  {
+    InputStream is = null;
+    try
+    {
+      final URL url = m_urlResolver.resolveURL( context, source );
+      is = new BufferedInputStream( url.openStream() );
+      final IUrlResolver2 resolver = new IUrlResolver2()
+      {
+        public URL resolveURL( final String href ) throws MalformedURLException
+        {
+          return UrlResolverSingleton.resolveUrl( url, href );
+        }
+      };
+
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
+
+      is.close();
+
+      return styledLayerDescriptor;
     }
     finally
     {
@@ -222,6 +269,10 @@ public class SldLoader extends AbstractLoader
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
+
+    if( source.startsWith( "urn" ) )
+      return new IResource[] {};
+
     final URL url = m_urlResolver.resolveURL( context, source );
     final IResource resource = ResourceUtilities.findFileFromURL( url );
     return new IResource[] { resource };
