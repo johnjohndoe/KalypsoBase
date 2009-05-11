@@ -334,5 +334,36 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
     return null;
   }
+  
+  /**
+   * @see org.kalypsodeegree.graphics.sld.StyledLayerDescriptor#getDefaultUserStyle()
+   */
+  @Override
+  public UserStyle getDefaultUserStyle( )
+  {
+    final NamedLayer[] namedLayers = getNamedLayers();
+    for( final NamedLayer namedLayer : namedLayers )
+    {
+      final Style[] styles = namedLayer.getStyles();
+      for( final Style style : styles )
+      {
+        if( style instanceof UserStyle && ((UserStyle)style).isDefault() )
+          return (UserStyle) style;
+      }
+    }
+
+    final UserLayer[] userLayers = getUserLayers();
+    for( final UserLayer userLayer : userLayers )
+    {
+      final Style[] styles = userLayer.getStyles();
+      for( final Style style : styles )
+      {
+        if( style instanceof UserStyle && ((UserStyle)style).isDefault() )
+          return (UserStyle) style;
+      }
+    }
+
+    return null;
+  }
 
 }
