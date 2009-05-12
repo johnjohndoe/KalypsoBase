@@ -139,7 +139,7 @@ public class MapModell implements IMapModell
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public void activateTheme( final IKalypsoTheme theme )
@@ -173,7 +173,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   *
+   * 
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -267,7 +267,7 @@ public class MapModell implements IMapModell
       final IKalypsoTheme theme = themes[i - 1];
       progress.subTask( theme.getLabel() );
       if( theme.isVisible() )
-        children[i] = theme.paint( g, p, null, progress.newChild( 1 ) );
+        children[i - 1] = theme.paint( g, p, null, progress.newChild( 1 ) );
     }
 
     final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null );
@@ -604,7 +604,7 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   public boolean isLoaded( )
