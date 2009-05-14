@@ -7,7 +7,7 @@
 	<xs:element name="featuretemplate">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0"/>
+				<xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
 				<xs:element name="layer" minOccurs="0">
 					<xs:complexType>
 						<xs:complexContent>
@@ -241,6 +241,20 @@
 										<xs:attribute name="label" type="xs:string" />
 									</xs:extension>
 								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="filter" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="expression" type="xs:anyType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												<p>Filter expression in order to filter the list of shown elements.</p>
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="id" type="xs:string" use="optional" />
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
