@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -88,6 +89,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
+import org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -114,6 +116,7 @@ import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
+import org.kalypso.template.featureview.Combo.Filter;
 import org.kalypso.template.featureview.Combo.Sorter;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.template.gistableview.Gistableview;
@@ -166,16 +169,16 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * Constructs the FeatureComposite.
-   *
+   * 
    * @param feature
-   *            If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
+   *          If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
    * @param selectionManager
-   *            A selection manager, which provides functionality for adding and removing a feature from an selection
-   *            and it handels the registration of listerners and so on. It has to implement IFeatureSelectionManager.
-   *            You can get a default one for the features here
-   *            <strong>KalypsoCorePlugin.getDefault().getSelectionManager()</strong>.
+   *          A selection manager, which provides functionality for adding and removing a feature from an selection and
+   *          it handels the registration of listerners and so on. It has to implement IFeatureSelectionManager. You can
+   *          get a default one for the features here
+   *          <strong>KalypsoCorePlugin.getDefault().getSelectionManager()</strong>.
    * @param featureviewFactory
-   *            A factory which delivers feature-view-templates (e.g. FeatureviewHelper).
+   *          A factory which delivers feature-view-templates (e.g. FeatureviewHelper).
    */
   public FeatureComposite( final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory featureviewFactory )
   {
@@ -584,7 +587,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       /* The comparator. */
       ViewerComparator comparator = null;
 
-      /* If there is an sorter, look deeper. */
+      /* If there is a sorter, look deeper. */
       if( sorter != null )
       {
         /* The id of the sorter. */
@@ -599,35 +602,74 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         {
           final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           if( id.equals( elementId ) )
+          {
             try
-          {
+            {
               comparator = (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
+            }
+            catch( final CoreException e )
+            {
+              e.printStackTrace();
+            }
           }
         }
 
         /* If a valid id was given ... */
-        if( comparator != null )
-          /* The default-comparator doesn't use any parameter, so they are ignored, even, if they are supplied. */
-          if( comparator instanceof IViewerComparator )
-          {
-            /* The parameter map. */
-            final HashMap<String, String> params = new HashMap<String, String>();
+        if( comparator != null && (comparator instanceof IViewerComparator) )
+        {
+          /* The parameter map. */
+          final HashMap<String, String> params = new HashMap<String, String>();
 
-            /* Get all parameter. */
-            final List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
-            if( parameter != null )
-              /* Collect all parameter. */
-              for( final org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
-                params.put( param.getName(), param.getValue() );
+          /* Get all parameter. */
+          final List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
+          if( parameter != null )
+            /* Collect all parameter. */
+            for( final org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
+              params.put( param.getName(), param.getValue() );
 
-            ((IViewerComparator) comparator).init( feature, params );
-          }
+          ((IViewerComparator) comparator).init( feature, params );
+        }
       }
 
+      /* Should a filter be added? */
+      Filter filter = comboType.getFilter();
+
+      /* The filter. */
+      ViewerFilter viewerFilter = null;
+
+      /* If there is a filter, look deeper. */
+      if( filter != null )
+      {
+        /* The id of the sorter. */
+        String id = filter.getId();
+        if( id == null || id.length() == 0 )
+          id = "org.kalypso.ui.featureview.filters.defaultFilter"; //$NON-NLS-1$
+
+        /* Get the filter with this id. */
+        IExtensionRegistry registry = Platform.getExtensionRegistry();
+        IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
+        for( IConfigurationElement element : elements )
+        {
+          String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
+          if( id.equals( elementId ) )
+          {
+            try
+            {
+              viewerFilter = (ViewerFilter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+            }
+            catch( final CoreException ex )
+            {
+              ex.printStackTrace();
+            }
+          }
+        }
+
+        /* If a valid id was given ... */
+        if( viewerFilter != null && (viewerFilter instanceof IViewerFilter) )
+          ((IViewerFilter) viewerFilter).init( feature, filter.getExpression() );
+      }
+
+      /* Handle the entries. */
       final List<Entry> entryList = comboType.getEntry();
       final Map<Object, String> comboEntries = new LinkedHashMap<Object, String>( entryList.size() );
 
@@ -655,7 +697,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final int comboStyle = SWTUtilities.createStyleFromString( comboType.getStyle() );
 
-      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries, comparator );
+      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries, comparator, viewerFilter );
 
       final Control control = cfc.createControl( parent, comboStyle );
 
@@ -976,9 +1018,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * This function sets, if the green hook on a ok validated feature should be displayed. The default is false. This
    * flag has only an effect, if the validator label is activated.
-   *
+   * 
    * @param showOk
-   *            The flag, indicating, if the green hook should be displayed.
+   *          The flag, indicating, if the green hook should be displayed.
    */
   public void setShowOk( final boolean showOk )
   {
@@ -987,7 +1029,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * This function returns the flag for displaying the green hook on a ok validated feature.
-   *
+   * 
    * @return The flag, indicating, if the green hook should be displayed.
    */
   public boolean isShowOk( )
