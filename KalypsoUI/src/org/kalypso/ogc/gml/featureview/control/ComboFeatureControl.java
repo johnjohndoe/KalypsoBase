@@ -54,6 +54,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -77,7 +78,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor
  * <p>
  * Today only properties with String type are supported.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -107,12 +108,17 @@ public class ComboFeatureControl extends AbstractFeatureControl
    */
   private final ViewerComparator m_comparator;
 
-  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator )
+  /**
+   * Used for filtering the elements in the combobox.
+   */
+  private final ViewerFilter m_filter;
+
+  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator, final ViewerFilter filter )
   {
-    this( null, ftp, entries, comparator );
+    this( null, ftp, entries, comparator, filter );
   }
 
-  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator )
+  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator, final ViewerFilter filter )
   {
     super( feature, ftp );
 
@@ -120,6 +126,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       m_fixedEntries.putAll( entries );
 
     m_comparator = comparator;
+    m_filter = filter;
   }
 
   private void updateEntries( final IPropertyType ftp )
@@ -205,6 +212,10 @@ public class ComboFeatureControl extends AbstractFeatureControl
     /* Set the comparator, if any was given. */
     if( m_comparator != null )
       m_comboViewer.setComparator( m_comparator );
+
+    /* Set the filter, if any was given. */
+    if( m_filter != null )
+      m_comboViewer.addFilter( m_filter );
 
     m_comboViewer.setInput( m_entries.keySet() );
 

@@ -1381,6 +1381,17 @@
            type="gmlpic">
      </factory>
 	 </extension>
+  <extension
+        point="org.kalypso.core.featureviewFilter">
+     <filter
+           class="org.kalypso.ogc.gml.featureview.control.filters.FeatureViewerFilter"
+           id="org.kalypso.ui.featureview.filters.defaultFilter">
+     </filter>
+     <filter
+           class="org.kalypso.ogc.gml.featureview.control.filters.FeatureViewerFilter"
+           id="org.kalypso.ui.featureview.filters.featureFilter">
+     </filter>
+  </extension>
    
    
 </plugin>

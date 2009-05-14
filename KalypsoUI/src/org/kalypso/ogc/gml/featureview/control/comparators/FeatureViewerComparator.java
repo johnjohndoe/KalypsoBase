@@ -50,7 +50,7 @@ import org.kalypso.ui.editor.actions.FeatureComparator;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * This ViewerComparator has a init()-function, which will allow the client to send any parameters (out of a .gft, for
+ * This viewer comparator has an init()-function, which will allow the client to send any parameters (out of a .gft, for
  * example) to the comparator, which he can use to compare the elements. He can also compare objects and not only
  * strings.
  * 
