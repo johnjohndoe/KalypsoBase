@@ -1339,14 +1339,12 @@ public class FeatureHelper
     {
       final GM_Envelope envelope = feature.getEnvelope();
       if( envelope != null )
+      {
         if( result == null )
-        {
           result = envelope;
-        }
         else
-        {
           result = result.getMerged( envelope );
-        }
+      }
     }
 
     return result;
