@@ -56,40 +56,49 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
+ * Feature provider, which substitute the given qname and which have geometries.
+ * 
  * @author Holger Albert
  */
 public class GeometryFeaturesProvider implements IFeaturesProvider
 {
-  private final QName m_qname;
+  /**
+   * The qname, which must be substituted.
+   */
+  private QName m_qname;
 
-  public GeometryFeaturesProvider( final QName qname )
+  /**
+   * The constructor.
+   * 
+   * @param qname
+   *          The qname, which must be substituted.
+   */
+  public GeometryFeaturesProvider( QName qname )
   {
     m_qname = qname;
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IFeaturesProvider#getFeatures()
+   * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
+  public EasyFeatureWrapper[] getFeatures( IMapPanel mapPanel )
   {
-    final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
+    IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
+    List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
 
-    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
-
-    for( final IKalypsoTheme theme : allThemes )
+    for( IKalypsoTheme theme : allThemes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-        final CommandableWorkspace workspace = featureTheme.getWorkspace();
-
-        final FeatureList featureList = featureTheme.getFeatureListVisible( null );
+        IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+        CommandableWorkspace workspace = featureTheme.getWorkspace();
+        FeatureList featureList = featureTheme.getFeatureListVisible( null );
 
         if( featureList != null )
         {
-          for( final Object object : featureList )
+          for( Object object : featureList )
           {
-            final Feature f;
+            Feature f;
             if( object instanceof Feature )
               f = (Feature) object;
             else if( object instanceof String )
@@ -99,7 +108,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
 
             if( f.getGeometryProperties().length > 0 )
             {
-              final IFeatureType targetFeatureType = f.getFeatureType();
+              IFeatureType targetFeatureType = f.getFeatureType();
               if( GMLSchemaUtilities.substitutes( targetFeatureType, m_qname ) )
                 foundfeatures.add( new EasyFeatureWrapper( workspace, f, featureList.getParentFeature(), featureList.getParentFeatureTypeProperty() ) );
             }
@@ -110,5 +119,4 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
 
     return foundfeatures.toArray( new EasyFeatureWrapper[foundfeatures.size()] );
   }
-
 }

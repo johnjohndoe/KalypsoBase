@@ -83,15 +83,15 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
    * The constructor.
    * 
    * @param radius
-   *            The radius in which the features should be selected.
+   *          The radius in which the features should be selected.
    * @param featuresProvider
-   *            The provider of the features (e.g.
-   *            {@link org.kalypso.informdss.manager.util.widgets.providers.QNameFeaturesProvider}).
+   *          The provider of the features
+   *          (e.g. {@link org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider}).
    * @param selectionChanger
-   *            The selection changer is responsible for really changing the selection in a specific way (e.g.
-   *            {@link org.kalypso.informdss.manager.util.widgets.changers.SingleSelectionChanger}).
+   *          The selection changer is responsible for really changing the selection in a specific way
+   *          (e.g. {@link org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger}).
    * @param manager
-   *            The selection manager, which holds the current selection.
+   *          The selection manager, which holds the current selection.
    */
   public SelectFeaturesMapFunction( final int radius, final IFeaturesProvider featuresProvider, final IFeatureSelectionChanger selectionChanger, final IFeatureSelectionManager manager )
   {
