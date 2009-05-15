@@ -40,7 +40,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -60,7 +59,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Implementation of ogc feature
- *
+ * 
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -127,7 +126,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   *
+   * 
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -171,16 +170,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    */
   public GM_Envelope getEnvelope( )
   {
-    try
-    {
-      return getBoundedBy();
-    }
-    catch( final GeometryException e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
+    return getBoundedBy();
   }
 
   private void calculateEnv( )
@@ -364,12 +354,10 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
-  public GM_Envelope getBoundedBy( ) throws GeometryException
+  public GM_Envelope getBoundedBy( )
   {
     if( m_envelope == Feature_Impl.INVALID_ENV )
-    {
       calculateEnv();
-    }
 
     return m_envelope;
   }
@@ -542,7 +530,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   *
+   * 
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
