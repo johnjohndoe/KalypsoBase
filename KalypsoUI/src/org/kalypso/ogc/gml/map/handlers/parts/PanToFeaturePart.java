@@ -65,7 +65,7 @@ public class PanToFeaturePart
    * The constructor.
    * 
    * @param part
-   *            A view part containing a map panel.
+   *          A view part containing a map panel.
    */
   public PanToFeaturePart( final IMapPanel mapPanel )
   {
@@ -77,26 +77,26 @@ public class PanToFeaturePart
    * given feature.
    * 
    * @param Feature
-   *            The feature to center to.
+   *          The feature to center to.
    */
   public void panTo( final Feature feature ) throws ExecutionException
   {
     /* Get all geometrys. */
-    final GM_Object[] geometrys = feature.getGeometryProperties();
+    final GM_Object[] geometries = feature.getGeometryPropertyValues();
 
     /* If the feature has no geometrys, there is nothing to do. */
-    if( geometrys.length == 0 )
+    if( geometries.length == 0 )
       return;
 
     /* If there are some geometrys, zoom to the first one. */
-    final GM_Object geometry = geometrys[0];
+    final GM_Object geometry = geometries[0];
 
     /* The center point. */
     final GM_Point centroid = geometry.getCentroid();
 
     /* The extent of the map panel. */
     final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
-    if (boundingBox == null)
+    if( boundingBox == null )
       return;
 
     /* Get the new paned bounding box to the centroid of the geometry. */
