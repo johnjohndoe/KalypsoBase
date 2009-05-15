@@ -73,13 +73,13 @@ public class MapfunctionHelper
    * Find one feature on a map within a rectangle.
    * 
    * @param IMapPanel
-   *            The map panel.
+   *          The map panel.
    * @param rectangle
-   *            The rectangle contains the point, to which the radious is added.
+   *          The rectangle contains the point, to which the radius is added.
    * @param featureToSelectFrom
-   *            The features which are checked.
+   *          The features which are checked.
    * @param radius
-   *            The radius, in which is searched.
+   *          The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
   public static EasyFeatureWrapper[] findFeatureToSelect( final IMapPanel mapPanel, final Rectangle rectangle, final EasyFeatureWrapper[] featureToSelectFrom, final int radius )
@@ -127,13 +127,13 @@ public class MapfunctionHelper
    * REMARK: This function is used for processing shape file workspace (see new QName("namespace", "type"))
    * 
    * @param IMapPanel
-   *            The map panel.
+   *          The map panel.
    * @param rectangle
-   *            The rectangle contains the point, to which the radious is added.
+   *          The rectangle contains the point, to which the radious is added.
    * @param features
-   *            The features which are checked.
+   *          The features which are checked.
    * @param radius
-   *            The radius, in which is searched.
+   *          The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
   public static Feature[] findFeatureToSelect( final IMapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )

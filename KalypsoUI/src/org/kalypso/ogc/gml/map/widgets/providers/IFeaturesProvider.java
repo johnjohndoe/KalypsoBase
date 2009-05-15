@@ -44,9 +44,11 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 
 /**
+ * This interface can be implemented, if a class should be able to provide features from a map panel.
+ * 
  * @author Holger Albert
  */
 public interface IFeaturesProvider
 {
-  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel );
+  public EasyFeatureWrapper[] getFeatures( IMapPanel mapPanel );
 }
