@@ -76,13 +76,13 @@ public class ZoomToFeaturesPart
   /**
    * The constructor.
    * 
-   * @param part
-   *            A view part containing a map panel.
+   * @param mapPanel
+   *          The map panel.
    * @param features
-   *            The list of features, to zoom to.
+   *          The list of features, to zoom to.
    * @param percent
-   *            This value specifies the amount of the new extent used to increase it for creating a border around the
-   *            new extent.
+   *          This value specifies the amount of the new extent used to increase it for creating a border around the new
+   *          extent.
    */
   public ZoomToFeaturesPart( final IMapPanel mapPanel, final List<Feature> features, final int percent )
   {
@@ -91,6 +91,17 @@ public class ZoomToFeaturesPart
     m_percent = percent;
   }
 
+  /**
+   * The constructor.
+   * 
+   * @param mapPanel
+   *          The map panel.
+   * @param features
+   *          The list of features, to zoom to.
+   * @param percent
+   *          This value specifies the amount of the new extent used to increase it for creating a border around the new
+   *          extent.
+   */
   public ZoomToFeaturesPart( final IMapPanel mapPanel, final Feature[] features, final int percent )
   {
     m_mapPanel = mapPanel;
