@@ -261,7 +261,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     for( int i = 0; i < Math.abs( wheelRotation ); i++ )
       boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
 
-    getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
+    if( boundingBox != null )
+      getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
   }
 
   public void paintWidget( final Graphics g )
