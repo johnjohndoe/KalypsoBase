@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Helper code for {@link IMapPanel}
- *
+ * 
  * @author Gernot
  */
 public class MapPanelUtilities
@@ -83,6 +83,9 @@ public class MapPanelUtilities
 
   public static GM_Envelope calcZoomInBoundingBox( final GM_Envelope bbox, final boolean in )
   {
+    if( bbox == null )
+      return null;
+
     final GM_Position currentMax = bbox.getMax();
     final GM_Position currentMin = bbox.getMin();
 
@@ -147,7 +150,5 @@ public class MapPanelUtilities
     if( noFillArea.y < bottom )
       g.fillRect( left, noFillArea.y + noFillArea.height, width, bottom - noFillArea.y - noFillArea.height );
   }
-
-
 
 }
