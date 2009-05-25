@@ -45,6 +45,9 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
@@ -124,12 +127,20 @@ public class ProjectDataBaseController
   }
 
   public static IStatus acquireProjectLock( final ILocalProject handler )
-  {
-    final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
-    final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-    setDirty();
+  { 
+    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+    if( MessageDialog.openQuestion( shell, "Projekt zur Bearbeitung sperren", "Sie sind im Begriff, dass Projekt zur Bearbeitung zu sperren. Diese Sperre wirkt sich auf alle Nutzer im System aus.\n\nMöchten Sie das Projekt wirklich sperren / editieren?" ) )
+    {
+      final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
+      final IStatus status = ProgressUtilities.busyCursorWhile( worker );
+      setDirty();
 
-    return status;
+      return status;
+    }
+
+    return Status.CANCEL_STATUS;
+    
+    
   }
 
 }
