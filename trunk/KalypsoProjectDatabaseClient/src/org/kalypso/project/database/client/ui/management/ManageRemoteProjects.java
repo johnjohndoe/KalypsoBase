@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
@@ -160,7 +161,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
             final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
             final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
 
-            remoteModel.forceUnlock( head );
+            final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( head, false );
 
           }
         } );

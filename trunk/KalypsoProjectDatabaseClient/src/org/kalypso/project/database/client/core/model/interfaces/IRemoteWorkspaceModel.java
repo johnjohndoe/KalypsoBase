@@ -49,10 +49,21 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public interface IRemoteWorkspaceModel
 {
+  /**
+   * @return list of all remote projects
+   */
   IRemoteProject[] getProjects( );
 
+  /**
+   * @return list of all remote projects of an special type
+   */
   IRemoteProject[] getProjects( String type );
 
+  /**
+   * @param filter
+   *          add remote project to result set? yes / no
+   * @return list of all remote projects accepted by filter
+   */
   IRemoteProject[] getProjects( IProjectDatabaseFilter filter );
 
   /**
@@ -63,8 +74,6 @@ public interface IRemoteWorkspaceModel
   IRemoteProject getProject( String typeId, String uniqueProjectName );
 
   IRemoteProject getProject( String uniqueProjectName );
-
-  void forceUnlock( KalypsoProjectBean head );
 
   boolean isDatabaseOnline( );
 }

@@ -57,6 +57,7 @@ import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabas
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
@@ -116,9 +117,9 @@ public class ProjectDataBaseController
     throw new NotImplementedException();
   }
 
-  public static IStatus releaseProjectLock( final ILocalProject handler )
+  public static IStatus releaseProjectLock( final ITranscendenceProject handler )
   {
-    final ReleaseProjectLockWorker worker = new ReleaseProjectLockWorker( handler );
+    final ReleaseProjectLockWorker worker = new ReleaseProjectLockWorker( handler, false );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
     setDirty();
 
@@ -126,6 +127,15 @@ public class ProjectDataBaseController
 
   }
 
+  public static IStatus releaseProjectLock( final KalypsoProjectBean bean, final boolean force )
+  {
+    final ReleaseProjectLockWorker worker = new ReleaseProjectLockWorker( bean, force );
+    final IStatus status = ProgressUtilities.busyCursorWhile( worker );
+    setDirty();
+
+    return status;
+  }
+  
   public static IStatus acquireProjectLock( final ILocalProject handler )
   { 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();

@@ -40,19 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.worker;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
-import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Acquires a project lock (lock ticket) in the model base and update
@@ -63,11 +62,22 @@ import org.kalypso.project.database.sei.IProjectDatabase;
 public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
 {
 
-  private final ILocalProject m_handler;
+  private ITranscendenceProject m_project = null;
 
-  public ReleaseProjectLockWorker( final ILocalProject handler )
+  private final boolean m_force;
+
+  private KalypsoProjectBean m_bean = null;
+
+  public ReleaseProjectLockWorker( final KalypsoProjectBean bean, final boolean force )
   {
-    m_handler = handler;
+    m_bean = bean;
+    m_force = force;
+  }
+
+  public ReleaseProjectLockWorker( final ITranscendenceProject project, final boolean force )
+  {
+    m_project = project;
+    m_force = force;
   }
 
   /**
@@ -76,23 +86,41 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    /* project preferences */
-    if( !(m_handler instanceof ITranscendenceProject) )
+    String ticket = null;
+
+    /* remove lock from local project */
+    if( m_project != null )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString( "org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker.0" ), m_handler.getName() ) ) ); //$NON-NLS-1$
+      final IRemoteProjectPreferences preferences = m_project.getRemotePreferences();
+      ticket = preferences.getEditTicket();
+      Assert.isNotNull( ticket );
+
+      /* reset edit ticket */
+      preferences.setEditTicket( "" ); //$NON-NLS-1$
+      Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) ); //$NON-NLS-1$
     }
 
-    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-    final String ticket = preferences.getEditTicket();
-    Assert.isNotNull( ticket );
-
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final Boolean released = service.releaseProjectEditLock( m_handler.getUniqueName(), ticket );
-    Assert.isTrue( released );
+    if( m_force )
+    {
+      if( m_project != null )
+        service.forceUnlock( m_project.getBean() );
+      if( m_bean != null )
+        service.forceUnlock( m_bean );
+    }
+    else
+    {
+      if( m_project != null )
+      {
+        final Boolean released = service.releaseProjectEditLock( m_project.getUniqueName(), ticket );
+        Assert.isTrue( released );
+      }
+      else
+      {
+        throw new NotImplementedException();
+      }
 
-    /* reset edit ticket */
-    preferences.setEditTicket( "" ); //$NON-NLS-1$
-    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) ); //$NON-NLS-1$
+    }
 
     return Status.OK_STATUS;
   }

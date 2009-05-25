@@ -329,17 +329,6 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     return null;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#unlockRemoteProject(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
-   */
-  @Override
-  public void forceUnlock( final KalypsoProjectBean bean )
-  {
-    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-
-    service.forceUnlock( bean );
-    setDirty();
-  }
 
   /**
    * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#isDatabaseOnline()
