@@ -48,20 +48,20 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
-import org.kalypso.project.database.client.core.model.remote.RemoteProjectHandler;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
-import org.kalypso.project.database.client.core.model.transcendence.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.handlers.implementation.RemoteProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.implementation.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -253,7 +253,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       }
     }
 
-    return myProjects.toArray( new AbstractProjectHandler[] {} );
+    return myProjects.toArray( new IProjectHandler[] {} );
   }
 
   public void setRemoteProjectsDirty( )

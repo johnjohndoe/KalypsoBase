@@ -10,9 +10,10 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.implementation.LocalProjectHandler;
 
 /**
  * @author Dirk Kuch
@@ -50,7 +51,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     update();
   }
 
-  protected void fireLocalUpdateEvent( )
+  public void fireLocalUpdateEvent( )
   {
     for( final ILocalWorkspaceListener listener : m_listener )
     {
