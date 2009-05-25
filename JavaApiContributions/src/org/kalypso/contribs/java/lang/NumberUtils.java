@@ -87,6 +87,15 @@ public final class NumberUtils
     }
   }
 
+  public static final boolean isInteger( final String string )
+  {
+    Integer integer = parseQuietInteger( string );
+    if( integer == null )
+      return false;
+
+    return true;
+  }
+
   /**
    * Tries to parse an integer, if fails retruns null
    */
@@ -114,18 +123,18 @@ public final class NumberUtils
    * Tries to parse a {@link BigDecimal} from a part of a string and additionally sets the indicated scale.
    * 
    * @param line
-   *            The string from which to parse the decimal.
+   *          The string from which to parse the decimal.
    * @param beginIndex
-   *            the beginning index, inclusive.
+   *          the beginning index, inclusive.
    * @param endIndex
-   *            the ending index, exclusive.
+   *          the ending index, exclusive.
    * @param scale
-   *            The scale to set on the parsed decimal. If rounding is necessary the {@link BigDecimal#ROUND_HALF_UP}
-   *            method is used.
-   * @return A new BigDecimal parsed from the indicated substring scaled to the givern scale. <code>null</code>, if
-   *         the substring is not parseable as BigDecimal or if the given string is too short.
+   *          The scale to set on the parsed decimal. If rounding is necessary the {@link BigDecimal#ROUND_HALF_UP}
+   *          method is used.
+   * @return A new BigDecimal parsed from the indicated substring scaled to the givern scale. <code>null</code>, if the
+   *         substring is not parseable as BigDecimal or if the given string is too short.
    * @throws IllegalArgumentException
-   *             If <code>beginIndex</code> is not less than <code>endIndex</code>.
+   *           If <code>beginIndex</code> is not less than <code>endIndex</code>.
    * @see BigDecimal
    * @see BigDecimal#setScale(int, int)
    * @see String#substring(int, int)
