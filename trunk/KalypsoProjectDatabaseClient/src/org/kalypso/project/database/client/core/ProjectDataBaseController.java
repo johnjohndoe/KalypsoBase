@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -53,6 +52,7 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWorker;
+import org.kalypso.project.database.client.core.base.worker.UpdateProjectWorker;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
@@ -108,13 +108,11 @@ public class ProjectDataBaseController
 
   public static IStatus updateProject( final ITranscendenceProject handler )
   {
-// final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
-// final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-// setDirty();
-//
-// return status;
+    final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
+    final IStatus status = ProgressUtilities.busyCursorWhile( worker );
+    setDirty();
 
-    throw new NotImplementedException();
+    return status;
   }
 
   public static IStatus releaseProjectLock( final ITranscendenceProject handler )
@@ -135,9 +133,9 @@ public class ProjectDataBaseController
 
     return status;
   }
-  
+
   public static IStatus acquireProjectLock( final ILocalProject handler )
-  { 
+  {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     if( MessageDialog.openQuestion( shell, "Projekt zur Bearbeitung sperren", "Sie sind im Begriff, dass Projekt zur Bearbeitung zu sperren. Diese Sperre wirkt sich auf alle Nutzer im System aus.\n\nMöchten Sie das Projekt wirklich sperren / editieren?" ) )
     {
@@ -149,8 +147,7 @@ public class ProjectDataBaseController
     }
 
     return Status.CANCEL_STATUS;
-    
-    
+
   }
 
 }
