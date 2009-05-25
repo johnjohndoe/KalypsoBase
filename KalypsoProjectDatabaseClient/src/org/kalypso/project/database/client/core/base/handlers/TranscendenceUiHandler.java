@@ -60,7 +60,6 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author kuch
- *
  */
 public class TranscendenceUiHandler implements IProjectUiHandler
 {
@@ -83,9 +82,8 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDeleteAction( )
   {
-    return new ProjectDeleteAction( m_handler, m_locker ); 
+    return new ProjectDeleteAction( m_handler, m_locker );
   }
-
 
   /**
    * @see org.kalypso.project.database.client.core.base.handlers.IProjectUiHandler#getEditAction()
@@ -120,7 +118,7 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getOpenAction( )
   {
-    return new ProjectOpenAction(m_module, m_handler);
+    return new ProjectOpenAction( m_module, m_handler );
   }
 
   /**
@@ -148,9 +146,8 @@ public class TranscendenceUiHandler implements IProjectUiHandler
     {
       KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-    
+
     return new EmptyProjectAction();
   }
-
 
 }

@@ -106,8 +106,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
         return Status.OK_STATUS;
       }
     };
-    
-    
+
     UPDATE_JOB.addJobChangeListener( new JobChangeAdapter()
     {
       /**
@@ -195,7 +194,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     {
       KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-    
+
     return m_beans;
   }
 
@@ -328,7 +327,6 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
     return null;
   }
-
 
   /**
    * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#isDatabaseOnline()

@@ -42,7 +42,6 @@ package org.kalypso.project.database.client.extension.pages.welcome;
 
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 
-
 /**
  * @author Dirk Kuch
  */

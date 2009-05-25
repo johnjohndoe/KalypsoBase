@@ -51,7 +51,6 @@ import org.kalypso.project.database.client.extension.database.handlers.IRemotePr
 
 /**
  * @author kuch
- *
  */
 public class RemoteUiHandler implements IProjectUiHandler
 {
@@ -83,7 +82,7 @@ public class RemoteUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDeleteAction( )
   {
-   return new EmptyProjectAction();
+    return new EmptyProjectAction();
   }
 
   /**

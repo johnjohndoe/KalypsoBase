@@ -68,7 +68,7 @@ import org.kalypso.project.database.sei.IProjectDatabase;
 public class ViewManageServerProjects extends ViewPart
 {
   protected String m_selectedType = null;
-  
+
   public static final String ID = "org.kalypso.project.database.client.ui.view.ViewManageServerProjects";
 
   private Composite m_parent;
@@ -111,7 +111,7 @@ public class ViewManageServerProjects extends ViewPart
     grModelType.setLayout( new GridLayout() );
     grModelType.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     toolkit.adapt( grModelType );
-    
+
     final ComboViewer viewerType = new ComboViewer( grModelType, SWT.BORDER | SWT.READ_ONLY );
     viewerType.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     viewerType.setContentProvider( new ArrayContentProvider() );
@@ -123,11 +123,11 @@ public class ViewManageServerProjects extends ViewPart
       toolkit.createLabel( m_body, "Project database is offline..." );
       return;
     }
-    
+
     final String[] types = service.getProjectTypes();
-    
+
     viewerType.setInput( types );
-    
+
     if( m_selectedType != null )
     {
       viewerType.setSelection( new StructuredSelection( m_selectedType ) );
@@ -142,13 +142,11 @@ public class ViewManageServerProjects extends ViewPart
       {
         m_manager.dispose();
       }
-      
+
       m_manager = new ManageRemoteProjects( toolkit, grDetails, m_selectedType );
       m_manager.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     }
-    
-    
-    
+
     viewerType.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
@@ -159,7 +157,7 @@ public class ViewManageServerProjects extends ViewPart
         if( element instanceof String )
         {
           m_selectedType = (String) element;
-          
+
           new UIJob( "" )
           {
             @Override
@@ -172,7 +170,7 @@ public class ViewManageServerProjects extends ViewPart
         }
       }
     } );
-    
+
     m_body.layout();
     m_parent.layout();
   }

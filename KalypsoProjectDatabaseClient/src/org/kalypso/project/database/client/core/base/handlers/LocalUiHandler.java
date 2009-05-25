@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.handlers;
 
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectDeleteAction;
@@ -47,13 +48,14 @@ import org.kalypso.project.database.client.core.base.actions.ProjectExportAction
 import org.kalypso.project.database.client.core.base.actions.ProjectInfoAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class LocalUiHandler implements IProjectUiHandler
 {
@@ -77,9 +79,15 @@ public class LocalUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDatabaseAction( )
   {
-    return new ProjectUploadAction( m_handler, m_module, m_locker );
-  }
+    final KalypsoProjectDatabaseClient client = KalypsoProjectDatabaseClient.getDefault();
+    final IProjectDatabaseModel model = client.getProjectDatabaseModel();
+    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
 
+    if( remote.isDatabaseOnline() )
+      return new ProjectUploadAction( m_handler, m_module, m_locker );
+
+    return new EmptyProjectAction();
+  }
 
   /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getDeleteAction()
@@ -106,10 +114,9 @@ public class LocalUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getExportAction( )
   {
-   return new ProjectExportAction( m_handler, m_locker );
+    return new ProjectExportAction( m_handler, m_locker );
   }
 
-  
   /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getInfoAction()
    */
@@ -128,7 +135,4 @@ public class LocalUiHandler implements IProjectUiHandler
     return new ProjectOpenAction( m_module, m_handler );
   }
 
-
-
-  
 }

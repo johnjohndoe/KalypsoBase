@@ -63,7 +63,7 @@ import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
  * Composite for rendering and handling remote and local projects
- *
+ * 
  * @author Dirk Kuch
  */
 public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener, IProjectDatabaseUiLocker
@@ -141,8 +141,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     for( final IProjectHandler project : projects )
     {
       renderProject( m_body, project );
-      
-      
+
     }
 
     m_toolkit.adapt( this );

@@ -69,7 +69,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 /**
  * @author Dirk Kuch
  */
-public class RemoteImportWorker 
+public class RemoteImportWorker
 {
   private final ProjectTemplate[] m_templates;
 

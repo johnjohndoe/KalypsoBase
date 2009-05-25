@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers;
 
-
-
 /**
  * @author Dirk Kuch
  */

@@ -56,12 +56,11 @@ import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDial
 
 /**
  * @author kuch
- *
  */
 public class ProjectInfoAction implements IProjectAction
 {
   private static final Image IMG_INFO = new Image( null, ProjectInfoAction.class.getResourceAsStream( "images/action_info.gif" ) );
-  
+
   protected final IProjectHandler m_handler;
 
   public ProjectInfoAction( final IProjectHandler handler )
@@ -70,7 +69,8 @@ public class ProjectInfoAction implements IProjectAction
   }
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
@@ -80,8 +80,7 @@ public class ProjectInfoAction implements IProjectAction
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_INFO );
     link.setToolTipText( "Projektinformationen abrufen" );
-    
-    
+
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       /**
@@ -100,7 +99,7 @@ public class ProjectInfoAction implements IProjectAction
           final LocalInfoDialog dialog = new LocalInfoDialog( (ILocalProject) m_handler, link.getShell() );
           dialog.open();
         }
-        
+
       }
     } );
 

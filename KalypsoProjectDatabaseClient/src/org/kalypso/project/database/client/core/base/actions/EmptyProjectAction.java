@@ -45,13 +45,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author kuch
- *
  */
 public class EmptyProjectAction implements IProjectAction
 {
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )

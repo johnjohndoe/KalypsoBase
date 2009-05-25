@@ -55,7 +55,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 public interface IKalypsoModulePage
 {
   IKalypsoModule getModule( );
-  
+
   /**
    * @return Entering Page Heading
    */

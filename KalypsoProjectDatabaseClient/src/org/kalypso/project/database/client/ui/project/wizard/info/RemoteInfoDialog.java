@@ -290,7 +290,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
       {
         if( !(m_handler instanceof ITranscendenceProject) )
           return;
-        
+
         try
         {
           final IProject myProject = ((ITranscendenceProject) m_handler).getProject();
@@ -306,8 +306,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
       }
     } );
 
-
-      name.setText( m_handler.getName() );
+    name.setText( m_handler.getName() );
     description.setText( m_handler.getBean().getDescription() );
   }
 
