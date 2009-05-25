@@ -159,7 +159,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     {
       if( project.getName().equals( projectReference ) )
         return project;
-      
+
       final String path = project.getProject().getFullPath().toString();
       if( path.equals( projectReference ) )
         return project;

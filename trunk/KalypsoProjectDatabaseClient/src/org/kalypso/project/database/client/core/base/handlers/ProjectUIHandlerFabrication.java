@@ -49,7 +49,6 @@ import org.kalypso.project.database.client.extension.database.handlers.ITranscen
 
 /**
  * @author kuch
- *
  */
 public class ProjectUIHandlerFabrication
 {
@@ -57,7 +56,7 @@ public class ProjectUIHandlerFabrication
   {
     if( handler instanceof ITranscendenceProject )
     {
-      return new TranscendenceUiHandler( (ITranscendenceProject)handler, module, locker );
+      return new TranscendenceUiHandler( (ITranscendenceProject) handler, module, locker );
     }
     else if( handler instanceof ILocalProject )
     {
@@ -67,7 +66,7 @@ public class ProjectUIHandlerFabrication
     {
       return new RemoteUiHandler( (IRemoteProject) handler, module, locker );
     }
-    
+
     throw new IllegalStateException();
   }
 }

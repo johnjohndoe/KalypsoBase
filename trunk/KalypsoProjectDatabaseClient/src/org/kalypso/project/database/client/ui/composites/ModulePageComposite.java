@@ -72,7 +72,6 @@ import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServ
 public class ModulePageComposite extends Composite
 {
 
-
   private static final Color COLOR_BOX = new Color( null, 0x7f, 0xb2, 0x99 );
 
   private final FormToolkit m_toolkit;
@@ -99,8 +98,7 @@ public class ModulePageComposite extends Composite
   public void update( )
   {
     final IKalypsoModulePage modulePage = m_module.getModulePage();
-    
-    
+
     /* header */
     // icon / button
     final ImageCanvas2 headerCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
@@ -141,7 +139,7 @@ public class ModulePageComposite extends Composite
   private void renderProjectInfo( final Composite body )
   {
     final IKalypsoModulePage modulePage = m_module.getModulePage();
-    
+
     final Browser browser = new Browser( body, SWT.NULL );
     browser.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
@@ -162,10 +160,10 @@ public class ModulePageComposite extends Composite
   private void renderListOfProjects( final Composite body )
   {
     final IKalypsoModulePage modulePage = m_module.getModulePage();
-    
+
     // list of projects
     final ScrolledSection sectionProjects = new ScrolledSection( body, m_toolkit, ExpandableComposite.TITLE_BAR, true );
-    final Composite bodyProjects = sectionProjects.setup( "Projects:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); 
+    final Composite bodyProjects = sectionProjects.setup( "Projects:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final GridLayout layout = new GridLayout( 2, true );
     layout.verticalSpacing = layout.marginWidth = 0;
     bodyProjects.setLayout( layout );
@@ -199,7 +197,7 @@ public class ModulePageComposite extends Composite
       }
     };
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Create new Project", bodyProjects, m_toolkit, projectDelegate ); 
+    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Create new Project", bodyProjects, m_toolkit, projectDelegate );
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, m_toolkit );
@@ -220,7 +218,7 @@ public class ModulePageComposite extends Composite
         public String getCommitType( )
         {
           final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
-          
+
           return settings.getModuleCommitType();
         }
 
@@ -231,7 +229,7 @@ public class ModulePageComposite extends Composite
         }
       };
 
-      final CreateProjectComposite demoProject = new CreateProjectComposite( "Extract Demo-Project", bodyProjects, m_toolkit, demoDelegate ); 
+      final CreateProjectComposite demoProject = new CreateProjectComposite( "Extract Demo-Project", bodyProjects, m_toolkit, demoDelegate );
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else

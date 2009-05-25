@@ -44,7 +44,6 @@ import org.kalypso.project.database.client.core.base.actions.IProjectAction;
 
 /**
  * @author kuch
- *
  */
 public interface IProjectUiHandler
 {
@@ -77,6 +76,5 @@ public interface IProjectUiHandler
    * project export action
    */
   IProjectAction getExportAction( );
-
 
 }

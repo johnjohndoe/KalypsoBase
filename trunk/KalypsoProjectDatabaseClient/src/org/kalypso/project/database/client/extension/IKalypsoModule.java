@@ -44,7 +44,6 @@ import org.kalypso.project.database.client.extension.database.IKalypsoModuleData
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
 
-
 /**
  * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
  * welcome page
@@ -56,7 +55,7 @@ public interface IKalypsoModule
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 
   public IKalypsoModulePage getModulePage( );
-  
+
   public IKalypsoModuleDatabaseSettings getDatabaseSettings( );
 
   public String getId( );

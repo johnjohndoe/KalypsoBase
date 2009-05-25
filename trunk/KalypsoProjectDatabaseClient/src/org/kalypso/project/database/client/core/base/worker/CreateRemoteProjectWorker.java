@@ -90,16 +90,16 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    
+
     final IProject project = m_handler.getProject();
     final String zipName = String.format( "%s.zip", project.getName() );
-    
+
     final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
     final File src = new File( urlTempDir, zipName ); //$NON-NLS-1$
-    
+
     try
     {
-      
+
       final ProjectExportWorker worker = new ProjectExportWorker( project, src );
       final IStatus status = worker.execute( monitor );
 
@@ -191,7 +191,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           return Status.OK_STATUS;
         }
       }.schedule( 250 );
-      
+
       // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
       // file.close() reestablish this http-connection
       destination.close();

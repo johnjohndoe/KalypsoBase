@@ -45,7 +45,6 @@ import java.util.ResourceBundle;
 
 /**
  * @author kimwerner
- *
  */
 public class Messages
 {

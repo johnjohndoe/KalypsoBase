@@ -79,7 +79,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.0"), 4 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.0" ), 4 ); //$NON-NLS-1$
 
     // remove local project lock
     final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
@@ -93,22 +93,21 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
     try
     {
-      monitor.subTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.4" ) ); //$NON-NLS-1$
       final ProjectExportWorker worker = new ProjectExportWorker( m_handler.getProject(), src );
       final IStatus status = worker.execute( monitor );
       monitor.worked( 1 );
 
       if( !status.isOK() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5" ) ) ); //$NON-NLS-1$
       }
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
       final String fileName = String.format( "%s.zip", m_handler.getName() );
-      
-      
+
       final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
       {
         @Override
@@ -119,7 +118,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
       }, fileName ); //$NON-NLS-1$
 
-      monitor.subTask( Messages.getString("org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7" ) ); //$NON-NLS-1$
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
 

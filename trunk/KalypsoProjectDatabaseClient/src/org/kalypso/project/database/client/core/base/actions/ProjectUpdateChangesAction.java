@@ -113,7 +113,7 @@ public class ProjectUpdateChangesAction implements IProjectAction
         {
           m_locker.acquireUiUpdateLock();
 
-       // delete local project
+          // delete local project
           final DeleteLocalProjectWorker delete = new DeleteLocalProjectWorker( m_handler.getProject() );
           final IStatus status = ProgressUtilities.busyCursorWhile( delete );
 

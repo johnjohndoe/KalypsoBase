@@ -59,7 +59,7 @@ import org.kalypso.project.database.client.extension.database.handlers.ILocalPro
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectUploadAction implements IProjectAction
 {
@@ -86,8 +86,7 @@ public class ProjectUploadAction implements IProjectAction
   public void render( final Composite body, final FormToolkit toolkit )
   {
     // TODO handling when database is offline
-    
-    
+
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_UPLOAD );

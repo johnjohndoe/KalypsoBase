@@ -32,7 +32,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
   private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
 
   private static List<IKalypsoModule> KALYPSO_MODULES = null;
-  
+
   private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
   private FormToolkit m_formToolkit;
@@ -113,7 +113,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
       m_formToolkit.dispose();
       m_formToolkit = null;
     }
-    
+
     plugin = null;
     super.stop( context );
   }
@@ -138,8 +138,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 
     return PROJECT_DATABASE_MODEL;
   }
-  
-  
+
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
@@ -193,7 +192,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 
     return KALYPSO_MODULES.toArray( new IKalypsoModule[] {} );
   }
-  
+
   /**
    * This function returns the form toolkit for the Planer-Client.
    * 
@@ -216,7 +215,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     {
       if( modulueId.equals( module.getId() ) )
         return module;
-          
+
     }
 
     return null;

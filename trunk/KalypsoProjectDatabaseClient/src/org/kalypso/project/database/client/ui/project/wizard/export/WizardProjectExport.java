@@ -95,7 +95,7 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
   public boolean performFinish( )
   {
     final ProjectExportWorker worker = new ProjectExportWorker( m_project, m_pageSelectZipFile.getSelectedFile() );
- 
+
     final IStatus result = ProgressUtilities.busyCursorWhile( worker );
     ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport.1" ), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport.2" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
 

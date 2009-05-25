@@ -73,8 +73,8 @@ public class ProjectExportWorker implements ICoreRunnableWithProgress
   {
     try
     {
-       m_project.close( monitor );
-      
+      m_project.close( monitor );
+
       ZipUtils.pack( m_target, m_project.getLocation().toFile() );
     }
     catch( final Exception e )

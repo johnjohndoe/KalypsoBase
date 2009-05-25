@@ -96,7 +96,7 @@ public class ImportProjectComposite extends Composite
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );
-    lnkImport.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.imp.ImportProjectComposite.1") ); //$NON-NLS-1$
+    lnkImport.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.imp.ImportProjectComposite.1" ) ); //$NON-NLS-1$
 
     lnkImport.addHyperlinkListener( new HyperlinkAdapter()
     {

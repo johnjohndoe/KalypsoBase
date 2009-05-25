@@ -226,7 +226,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       m_remote.addListener( listener );
     }
   }
-  
+
   public void removeRemoteListener( final IRemoteProjectsListener listener )
   {
     if( m_remote != null )
@@ -269,7 +269,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     if( m_remote != null )
       return m_remote.getRemoteConnectionState();
 
-    return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0") ); //$NON-NLS-1$
+    return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -330,14 +330,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     {
       unique = unique.substring( 1 );
     }
-    
+
     final IProjectHandler[] projects = getProjects();
     for( final IProjectHandler project : projects )
     {
       if( project.getUniqueName().equals( unique ) )
         return project;
     }
-    
+
     return null;
   }
 }

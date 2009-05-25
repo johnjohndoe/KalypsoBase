@@ -69,7 +69,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 public class ProjectUploadChangesAction implements IProjectAction
 {
   private static final Image IMG_COMMIT_CHANGES = new Image( null, ProjectUploadChangesAction.class.getResourceAsStream( "images/action_changes_commit.gif" ) );
-  
+
   protected final IKalypsoModule m_module;
 
   protected final ITranscendenceProject m_handler;
@@ -84,7 +84,8 @@ public class ProjectUploadChangesAction implements IProjectAction
   }
 
   /**
-   * @see org.kalypso.project.database.client.core.base.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.project.database.client.core.base.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
@@ -105,7 +106,7 @@ public class ProjectUploadChangesAction implements IProjectAction
         try
         {
           m_locker.acquireUiUpdateLock();
-          
+
           final WizardCommitProject wizard = new WizardCommitProject( m_handler );
           final WizardDialog2 dialog = new WizardDialog2( null, wizard );
           dialog.open();

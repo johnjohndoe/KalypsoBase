@@ -97,7 +97,7 @@ public class ProjectDatabaseServerUtils
         final IRemoteProjectPreferences preferences = transcendence.getRemotePreferences();
         if( preferences == null )
           return true;
-        
+
         final Integer localVersion = preferences.getVersion();
 
         final KalypsoProjectBean bean = transcendence.getBean();

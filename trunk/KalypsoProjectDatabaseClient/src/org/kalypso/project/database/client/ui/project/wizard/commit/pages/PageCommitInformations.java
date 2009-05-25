@@ -64,8 +64,8 @@ public class PageCommitInformations extends WizardPage
   {
     super( "pageCommitInformations" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -80,7 +80,7 @@ public class PageCommitInformations extends WizardPage
     final Group group = new Group( container, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    group.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.3" ) ); //$NON-NLS-1$
 
     final Text changes = new Text( group, SWT.MULTI | SWT.WRAP | SWT.BORDER );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );

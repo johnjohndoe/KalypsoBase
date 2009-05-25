@@ -55,13 +55,11 @@ public class ListRemoteProjectAction implements IProjectAction
 {
   private static final Image IMG_REMOTE_PROJECT = new Image( null, ListRemoteProjectAction.class.getResourceAsStream( "images/project_remote.gif" ) );
 
-
   protected final IRemoteProject m_handler;
-
 
   public ListRemoteProjectAction( final IRemoteProject handler )
   {
-   // TODO img handling if an remote project is locked
+    // TODO img handling if an remote project is locked
     m_handler = handler;
   }
 
@@ -77,7 +75,7 @@ public class ListRemoteProjectAction implements IProjectAction
     link.setImage( IMG_REMOTE_PROJECT );
     link.setToolTipText( String.format( "Projektdatenbank Projekt: %s", m_handler.getName() ) );
     link.setText( m_handler.getName() );
-    
+
     link.setEnabled( false );
     link.setUnderlined( false );
   }

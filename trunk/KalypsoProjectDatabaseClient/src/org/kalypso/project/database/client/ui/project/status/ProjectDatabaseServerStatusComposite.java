@@ -114,18 +114,18 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
 
     if( connectionState != null && connectionState.getSeverity() == IStatus.OK )
     {
-      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.0") ); //$NON-NLS-1$
+      img.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.0" ) ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_OK );
 
     }
     else if( connectionState != null && connectionState.getSeverity() == IStatus.WARNING )
     {
-      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.4") ); //$NON-NLS-1$
+      img.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.4" ) ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_WAITING );
     }
     else
     {
-      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.5") ); //$NON-NLS-1$
+      img.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.5" ) ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_ERROR );
     }
 
@@ -139,7 +139,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
         @Override
         public void linkActivated( final HyperlinkEvent e1 )
         {
-          final StatusDialog dialog = new StatusDialog( img.getShell(), connectionState, Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.6") ); //$NON-NLS-1$
+          final StatusDialog dialog = new StatusDialog( img.getShell(), connectionState, Messages.getString( "org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.6" ) ); //$NON-NLS-1$
           dialog.open();
         }
       } );

@@ -57,12 +57,11 @@ import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjec
 
 /**
  * @author kuch
- *
  */
 public class ProjectExportAction implements IProjectAction
 {
   private static final Image IMG_EXPORT = new Image( null, ProjectExportAction.class.getResourceAsStream( "images/action_export.gif" ) );
-  
+
   protected final ILocalProject m_handler;
 
   protected final IProjectDatabaseUiLocker m_locker;
@@ -74,7 +73,8 @@ public class ProjectExportAction implements IProjectAction
   }
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
@@ -83,7 +83,7 @@ public class ProjectExportAction implements IProjectAction
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_EXPORT );
     link.setToolTipText( "Exportiere lokales Projekt" );
-    
+
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       /**

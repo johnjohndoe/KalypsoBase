@@ -45,7 +45,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author kuch
- *
  */
 public interface IProjectAction
 {

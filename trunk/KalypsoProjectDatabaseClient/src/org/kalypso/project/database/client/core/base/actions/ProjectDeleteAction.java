@@ -56,7 +56,6 @@ import org.kalypso.project.database.client.extension.database.handlers.ILocalPro
 
 /**
  * @author kuch
- *
  */
 public class ProjectDeleteAction implements IProjectAction
 {
@@ -73,7 +72,8 @@ public class ProjectDeleteAction implements IProjectAction
   }
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
@@ -82,7 +82,7 @@ public class ProjectDeleteAction implements IProjectAction
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_DELETE );
     link.setToolTipText( "Lösche lokales Projekt" );
-    
+
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
       /**
@@ -92,7 +92,7 @@ public class ProjectDeleteAction implements IProjectAction
       public void linkActivated( final HyperlinkEvent e )
       {
         // FIXME if m_handler is ITranscendeProject and locally locked -> remove lock and then delete project
-        
+
         try
         {
           m_locker.acquireUiUpdateLock();
@@ -105,7 +105,7 @@ public class ProjectDeleteAction implements IProjectAction
         {
           m_locker.releaseUiUpdateLock();
         }
-        
+
       }
     } );
 

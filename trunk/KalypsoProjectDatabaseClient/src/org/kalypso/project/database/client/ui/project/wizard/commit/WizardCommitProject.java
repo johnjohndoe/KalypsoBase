@@ -63,7 +63,7 @@ public class WizardCommitProject extends Wizard implements IWorkbenchWizard
   public WizardCommitProject( final ITranscendenceProject handler )
   {
     m_handler = handler;
-    setWindowTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.0" ) ); //$NON-NLS-1$
 
     setHelpAvailable( false );
   }
@@ -86,7 +86,7 @@ public class WizardCommitProject extends Wizard implements IWorkbenchWizard
   {
     m_handler.getBean().setChanges( m_page.getChanges() );
     final IStatus commitStatus = ProjectDataBaseController.updateProject( m_handler );
-    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.1"), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.2"), commitStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.1" ), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject.2" ), commitStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !commitStatus.isOK() )
     {

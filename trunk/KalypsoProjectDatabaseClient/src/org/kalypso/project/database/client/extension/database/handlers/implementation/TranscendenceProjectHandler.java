@@ -91,7 +91,6 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
     return m_local.getRemotePreferences();
   }
 
-
   /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getName()
    */
