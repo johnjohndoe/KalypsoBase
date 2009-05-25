@@ -90,12 +90,16 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    
+    final IProject project = m_handler.getProject();
+    final String zipName = String.format( "%s.zip", project.getName() );
+    
     final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
-    final File src = new File( urlTempDir, "update.zip" ); //$NON-NLS-1$
-
+    final File src = new File( urlTempDir, zipName ); //$NON-NLS-1$
+    
     try
     {
-      final IProject project = m_handler.getProject();
+      
       final ProjectExportWorker worker = new ProjectExportWorker( project, src );
       final IStatus status = worker.execute( monitor );
 
@@ -113,7 +117,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
         }
 
-      }, "update.zip" ); //$NON-NLS-1$
+      }, zipName ); //$NON-NLS-1$
 
       FileObject destination = manager.resolveFile( urlDestination );
 
@@ -154,7 +158,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
         }
 
-      }, "update.zip" ); //$NON-NLS-1$
+      }, zipName ); //$NON-NLS-1$
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
