@@ -17,11 +17,11 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core,
- org.kalypso.project.database.client.core.helper,
  org.kalypso.project.database.client.core.model.interfaces,
  org.kalypso.project.database.client.core.utils,
  org.kalypso.project.database.client.extension,
  org.kalypso.project.database.client.extension.database,
+ org.kalypso.project.database.client.extension.database.handlers,
  org.kalypso.project.database.client.extension.pages.module,
  org.kalypso.project.database.client.extension.pages.welcome,
  org.kalypso.project.database.client.extension.project,

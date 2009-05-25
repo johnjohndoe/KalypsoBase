@@ -38,22 +38,27 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.database;
-
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
+package org.kalypso.project.database.client.extension.database.handlers;
 
 
 
 /**
- * Model Database Filter
- * 
  * @author Dirk Kuch
  */
-public interface IProjectDatabaseFilter
+public interface IProjectHandler
 {
+  boolean isLocal( );
+
+  boolean isRemote( );
+
   /**
-   * add this element?
+   * @return "label" name of project
    */
-  boolean select( IProjectHandler handler );
+  String getName( );
+
+  /**
+   * @return unique (bean unix name, iproject.name) of project
+   */
+  String getUniqueName( );
 
 }
