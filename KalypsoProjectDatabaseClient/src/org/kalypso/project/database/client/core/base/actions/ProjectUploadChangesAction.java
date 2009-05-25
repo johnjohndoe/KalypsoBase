@@ -89,7 +89,6 @@ public class ProjectUploadChangesAction implements IProjectAction
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    // FIXME changes available?!?
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_COMMIT_CHANGES );

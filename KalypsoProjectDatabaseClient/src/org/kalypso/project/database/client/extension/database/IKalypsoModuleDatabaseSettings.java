@@ -51,12 +51,16 @@ public interface IKalypsoModuleDatabaseSettings
    * @return commit type of "module project type"
    */
   String getModuleCommitType( );
-  
-  
+
   /**
    * @return a module handles only specific IProjects in workspace
    */
   IProjectDatabaseFilter getFilter( );
-  
+
   IKalypsoModuleProjectOpenAction getProjectOpenAction( );
+
+  /**
+   * @return a project lock is released? release action sets a local project dirty? (.preferences modified flag)
+   */
+  boolean modifyOnLockRelease( );
 }

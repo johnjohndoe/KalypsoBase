@@ -93,7 +93,7 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getEditAction( )
   {
-    return new ProjectLockRemoteAction( m_handler, m_locker );
+    return new ProjectLockRemoteAction( m_handler, m_locker, m_module );
   }
 
   /**
@@ -137,7 +137,12 @@ public class TranscendenceUiHandler implements IProjectUiHandler
       if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
         return new ProjectUpdateChangesAction( m_module, m_handler, m_locker );
       else if( preferences != null && preferences.isModified() && !preferences.getChangesCommited() )
-        return new ProjectUploadChangesAction( m_module, m_handler, m_locker );
+      {
+        if( !preferences.isLocked() )
+          return new ProjectUploadChangesAction( m_module, m_handler, m_locker );
+// else
+// return new EmptyProjectAction();
+      }
     }
     catch( final CoreException e )
     {

@@ -56,6 +56,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
@@ -74,10 +75,13 @@ public class ProjectLockRemoteAction implements IProjectAction
 
   protected final IProjectDatabaseUiLocker m_locker;
 
-  public ProjectLockRemoteAction( final ITranscendenceProject handler, final IProjectDatabaseUiLocker locker )
+  protected final IKalypsoModule m_module;
+
+  public ProjectLockRemoteAction( final ITranscendenceProject handler, final IProjectDatabaseUiLocker locker, final IKalypsoModule module )
   {
     m_handler = handler;
     m_locker = locker;
+    m_module = module;
   }
 
   /**
@@ -122,7 +126,7 @@ public class ProjectLockRemoteAction implements IProjectAction
         try
         {
           m_locker.acquireUiUpdateLock();
-          
+
           final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
           final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_handler );
@@ -133,8 +137,10 @@ public class ProjectLockRemoteAction implements IProjectAction
 
           try
           {
-            final IRemoteProjectPreferences preferences =m_handler.getRemotePreferences();
+            final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
             preferences.setChangesCommited( false );
+            if( m_module.getDatabaseSettings().modifyOnLockRelease() )
+              preferences.setModified( true );
           }
           catch( final CoreException e1 )
           {
