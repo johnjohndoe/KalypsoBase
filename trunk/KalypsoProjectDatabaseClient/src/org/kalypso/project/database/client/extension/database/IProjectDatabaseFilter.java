@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database;
 
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
+
 
 
 /**
