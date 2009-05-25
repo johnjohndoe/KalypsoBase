@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.project.create;
+package org.kalypso.project.database.client.core.base.worker;
 
 import java.io.File;
 import java.net.URL;
@@ -58,10 +58,9 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
@@ -97,7 +96,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
     try
     {
       final IProject project = m_handler.getProject();
-      final ProjectExportHandler worker = new ProjectExportHandler( project, src );
+      final ProjectExportWorker worker = new ProjectExportWorker( project, src );
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )

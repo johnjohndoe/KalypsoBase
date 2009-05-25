@@ -40,20 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
+import org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker;
+import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
-import org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker;
-import org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker;
-import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
-import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 
 /**
  * @author Dirk Kuch
@@ -104,11 +104,13 @@ public class ProjectDataBaseController
 
   public static IStatus updateProject( final ITranscendenceProject handler )
   {
-    final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
-    final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-    setDirty();
+// final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
+// final IStatus status = ProgressUtilities.busyCursorWhile( worker );
+// setDirty();
+//
+// return status;
 
-    return status;
+    throw new NotImplementedException();
   }
 
   public static IStatus releaseProjectLock( final ILocalProject handler )
@@ -118,6 +120,7 @@ public class ProjectDataBaseController
     setDirty();
 
     return status;
+
   }
 
   public static IStatus acquireProjectLock( final ILocalProject handler )
