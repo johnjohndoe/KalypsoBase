@@ -52,13 +52,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.base.handlers.IProjectUiHandler;
+import org.kalypso.project.database.client.core.base.handlers.ProjectUIHandlerFabrication;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
-import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.database.internal.ProjectRowBuilderFabrication;
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
@@ -132,7 +132,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     }
 
     m_body = m_toolkit.createComposite( this );
-    m_body.setLayout( new GridLayout() );
+    m_body.setLayout( new GridLayout( 6, false ) );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final IKalypsoModuleDatabaseSettings settings = m_module.getDatabaseSettings();
@@ -140,12 +140,25 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     final IProjectHandler[] projects = m_model.getProjects( settings.getFilter() );
     for( final IProjectHandler project : projects )
     {
-      final IProjectRowBuilder builder = ProjectRowBuilderFabrication.getBuilder( project, m_module, this );
-      builder.render( m_body, m_toolkit );
+      renderProject( m_body, project );
+      
+      
     }
 
     m_toolkit.adapt( this );
     this.layout();
+  }
+
+  private void renderProject( final Composite body, final IProjectHandler project )
+  {
+    final IProjectUiHandler handler = ProjectUIHandlerFabrication.getHandler( project, m_module, this );
+
+    handler.getOpenAction().render( body, m_toolkit );
+    handler.getInfoAction().render( body, m_toolkit );
+    handler.getEditAction().render( body, m_toolkit );
+    handler.getDeleteAction().render( body, m_toolkit );
+    handler.getDatabaseAction().render( body, m_toolkit );
+    handler.getExportAction().render( body, m_toolkit );
   }
 
   /**
