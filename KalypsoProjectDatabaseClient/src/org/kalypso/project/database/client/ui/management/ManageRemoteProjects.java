@@ -158,11 +158,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
-            final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
-
-            final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( head, false );
-
+            ProjectDataBaseController.releaseProjectLock( head, false );
           }
         } );
 

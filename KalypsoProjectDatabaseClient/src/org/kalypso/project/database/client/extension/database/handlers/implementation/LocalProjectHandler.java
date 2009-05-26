@@ -67,7 +67,7 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 public class LocalProjectHandler extends AbstractProjectHandler implements ILocalProject, IPreferenceChangeListener
 {
 
-  private final IProject m_project;
+  protected final IProject m_project;
 
   private final LocalWorkspaceModel m_model;
 

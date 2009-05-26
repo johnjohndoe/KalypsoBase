@@ -75,7 +75,6 @@ public class RemoteImportWorker
 
   private final Map<ProjectTemplate, KalypsoProjectBean> m_mapping;
 
-  private IProject m_project;
 
   public RemoteImportWorker( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
@@ -148,7 +147,6 @@ public class RemoteImportWorker
         preferences.setChangesCommited( true );
       }
 
-      m_project = project;
     }
 
     return Status.OK_STATUS;
