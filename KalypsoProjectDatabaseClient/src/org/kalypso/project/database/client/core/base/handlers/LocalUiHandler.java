@@ -83,7 +83,7 @@ public class LocalUiHandler implements IProjectUiHandler
     final IProjectDatabaseModel model = client.getProjectDatabaseModel();
     final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
 
-    if( remote.isDatabaseOnline() )
+    if( remote != null && remote.isDatabaseOnline() )
       return new ProjectUploadAction( m_handler, m_module, m_locker );
 
     return new EmptyProjectAction();
