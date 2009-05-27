@@ -214,4 +214,34 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
     m_model.fireLocalUpdateEvent();
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#isEditable()
+   */
+  @Override
+  public boolean isEditable( )
+  {
+    try
+    {
+      // special case: when the project db is offline all projects will be treated as local projects! (but not editable)
+      final IRemoteProjectPreferences preferences = getRemotePreferences();
+      if( preferences.isOnServer() )
+        return false;
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.ILocalProject#isLocked()
+   */
+  @Override
+  public boolean isLocked( )
+  {
+    return true;
+  }
+
 }

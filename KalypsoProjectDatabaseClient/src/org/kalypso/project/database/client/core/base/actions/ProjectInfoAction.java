@@ -89,12 +89,12 @@ public class ProjectInfoAction implements IProjectAction
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        if( m_handler.isRemote() )
+        if( m_handler instanceof IRemoteProject )
         {
           final RemoteInfoDialog dialog = new RemoteInfoDialog( (IRemoteProject) m_handler, link.getShell(), true );
           dialog.open();
         }
-        else if( m_handler.isLocal() )
+        else if( m_handler instanceof ILocalProject )
         {
           final LocalInfoDialog dialog = new LocalInfoDialog( (ILocalProject) m_handler, link.getShell() );
           dialog.open();

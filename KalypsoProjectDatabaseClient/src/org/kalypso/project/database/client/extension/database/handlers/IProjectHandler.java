@@ -45,10 +45,6 @@ package org.kalypso.project.database.client.extension.database.handlers;
  */
 public interface IProjectHandler
 {
-  boolean isLocal( );
-
-  boolean isRemote( );
-
   /**
    * @return "label" name of project
    */
@@ -58,5 +54,8 @@ public interface IProjectHandler
    * @return unique (bean unix name, iproject.name) of project
    */
   String getUniqueName( );
+  
+  
+  
 
 }
