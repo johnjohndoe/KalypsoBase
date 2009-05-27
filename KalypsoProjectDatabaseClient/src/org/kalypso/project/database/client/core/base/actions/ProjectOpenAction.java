@@ -56,6 +56,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
@@ -65,6 +66,8 @@ public class ProjectOpenAction implements IProjectAction
   protected static final Image IMG_PROJECT_LOCAL = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_local.gif" ) );
 
   protected static final Image IMG_PROJECT_TRANSCENDENCE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence.gif" ) );
+
+  protected static final Image iMG_PROJECT_TRANSCENDENCE_OFFLINE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence_offline.gif" ) );
 
   protected static final Image IMG_PROJECT_TRANSCENDENCE_REMOTE_LOCK = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_remote_locked.gif" ) );
 
@@ -79,6 +82,7 @@ public class ProjectOpenAction implements IProjectAction
   public enum OPEN_TYPE
   {
     eLocal,
+    eLocalOffline,
     eTranscendenceReadable,
     eTranscendenceReadableServerLocked,
     eTranscendenceWriteable;
@@ -88,12 +92,31 @@ public class ProjectOpenAction implements IProjectAction
       final OPEN_TYPE type = valueOf( name() );
       if( eLocal.equals( type ) )
         return IMG_PROJECT_LOCAL;
+      else if( eLocalOffline.equals( type ) )
+        return iMG_PROJECT_TRANSCENDENCE_OFFLINE;
       else if( eTranscendenceReadable.equals( type ) )
         return IMG_PROJECT_TRANSCENDENCE;
       else if( eTranscendenceReadableServerLocked.equals( type ) )
         return IMG_PROJECT_TRANSCENDENCE_REMOTE_LOCK;
       else if( eTranscendenceWriteable.equals( type ) )
         return IMG_PROJECT_TRANSCENDENCE_LOCAL_LOCK;
+
+      throw new NotImplementedException();
+    }
+
+    public String getStatus( )
+    {
+      final OPEN_TYPE type = valueOf( name() );
+      if( eLocal.equals( type ) )
+        return "Lokales Projekt";
+      else if( eLocalOffline.equals( type ) )
+        return "Lokales Datenbankprojekt - Achtung: Modelldatenbankserver ist nicht erreichbar!";
+      else if( eTranscendenceReadable.equals( type ) )
+        return "Lokales Datenbankprojekt im Lesemodus";
+      else if( eTranscendenceReadableServerLocked.equals( type ) )
+        return "Lokales Datenbankprojekt im Lesemodus - zur Zeit in Bearbeitung";
+      else if( eTranscendenceWriteable.equals( type ) )
+        return "Lokales Datenbankprojekt im Schreibmodus";
 
       throw new NotImplementedException();
     }
@@ -119,7 +142,15 @@ public class ProjectOpenAction implements IProjectAction
           m_type = OPEN_TYPE.eTranscendenceReadable;
       }
       else
-        m_type = OPEN_TYPE.eLocal;
+      {
+        final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
+        final boolean onServer = remotePreferences.isOnServer();
+        if( onServer )
+          m_type = OPEN_TYPE.eLocalOffline;
+        else
+          m_type = OPEN_TYPE.eLocal;
+      }
+
     }
     catch( final CoreException e )
     {
@@ -140,7 +171,7 @@ public class ProjectOpenAction implements IProjectAction
     link.setImage( m_type.getImage() );
     link.setText( m_handler.getName() );
 
-    link.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
+    link.setToolTipText( String.format( "Öffne Projekt: %s - Status: %s", m_handler.getName(), m_type.getStatus() ) );
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
