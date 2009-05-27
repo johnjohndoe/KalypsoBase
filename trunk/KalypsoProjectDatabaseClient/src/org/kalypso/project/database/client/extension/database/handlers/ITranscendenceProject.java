@@ -45,5 +45,5 @@ package org.kalypso.project.database.client.extension.database.handlers;
  */
 public interface ITranscendenceProject extends ILocalProject, IRemoteProject
 {
-
+  
 }

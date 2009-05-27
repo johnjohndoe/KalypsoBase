@@ -42,6 +42,8 @@ package org.kalypso.project.database.client.extension.database.handlers.implemen
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
@@ -53,7 +55,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class TranscendenceProjectHandler extends AbstractProjectHandler implements ITranscendenceProject
 {
-
   private final ILocalProject m_local;
 
   private final IRemoteProject m_remote;
@@ -134,6 +135,38 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   public KalypsoProjectBean getBean( )
   {
     return m_remote.getBean();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#isEditable()
+   */
+  @Override
+  public boolean isEditable( )
+  {
+    if( getBean().isProjectLockedForEditing() )
+      return false;
+
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.ILocalProject#isLocked()
+   */
+  @Override
+  public boolean isLocked( )
+  {
+    try
+    {
+      final IRemoteProjectPreferences preferences = this.getRemotePreferences();
+      return preferences.isLocked();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return false;
+
   }
 
 }
