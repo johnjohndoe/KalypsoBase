@@ -21,8 +21,5 @@
 		<property name="hibernate.show_sql">false</property>
 		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		<property name="hibernate.current_session_context_class">thread</property>
-
-		<property name=""></property>
-
 	</session-factory>
 </hibernate-configuration>
