@@ -91,7 +91,10 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getEditAction( )
   {
-    return new ProjectLockRemoteAction( m_handler, m_locker, m_module );
+    if( m_module.getDatabaseSettings().hasManagedDirtyState() )
+      return new ProjectLockRemoteAction( m_handler, m_locker, m_module );
+
+    return new EmptyProjectAction();
   }
 
   /**
@@ -127,24 +130,47 @@ public class TranscendenceUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDatabaseAction( )
   {
-    try
-    {
-      // TODO refactor - *brrrr....**
-      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
 
-      if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
-        return new ProjectUpdateChangesAction( m_module, m_handler, m_locker );
-      else if( preferences != null && preferences.isModified() && !preferences.getChangesCommited() )
+    if( m_module.getDatabaseSettings().hasManagedDirtyState() )
+    {
+      try
       {
-        if( !preferences.isLocked() )
-          return new ProjectUploadChangesAction( m_module, m_handler, m_locker );
-// else
-// return new EmptyProjectAction();
+        // TODO refactor - *brrrr....**
+        final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+
+        if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
+          return new ProjectUpdateChangesAction( m_module, m_handler, m_locker );
+        else if( preferences != null && preferences.isModified() && !preferences.getChangesCommited() )
+        {
+          if( !preferences.isLocked() )
+            return new ProjectUploadChangesAction( m_module, m_handler, m_locker );
+          // else
+          // return new EmptyProjectAction();
+        }
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-    catch( final CoreException e )
+    else
     {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      try
+      {
+        // TODO refactor - *brrrr....**
+        final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+
+        if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
+          return new ProjectUpdateChangesAction( m_module, m_handler, m_locker );
+        else if( !preferences.isLocked() )
+          return new ProjectUploadChangesAction( m_module, m_handler, m_locker );
+        // else
+        // return new EmptyProjectAction();
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return new EmptyProjectAction();

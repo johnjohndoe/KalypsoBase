@@ -139,8 +139,6 @@ public class ProjectLockRemoteAction implements IProjectAction
           {
             final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
             preferences.setChangesCommited( false );
-            if( m_module.getDatabaseSettings().modifyOnLockRelease() )
-              preferences.setModified( true );
           }
           catch( final CoreException e1 )
           {
