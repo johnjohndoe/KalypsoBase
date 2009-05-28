@@ -59,8 +59,5 @@ public interface IKalypsoModuleDatabaseSettings
 
   IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 
-  /**
-   * @return a project lock is released? release action sets a local project dirty? (.preferences modified flag)
-   */
-  boolean modifyOnLockRelease( );
+  boolean hasManagedDirtyState( );
 }

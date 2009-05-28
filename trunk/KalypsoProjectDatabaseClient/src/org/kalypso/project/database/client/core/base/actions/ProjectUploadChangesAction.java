@@ -93,7 +93,7 @@ public class ProjectUploadChangesAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_COMMIT_CHANGES );
-    link.setToolTipText( "Übermittle Änderungen in die Projektdatenbank" );
+    link.setToolTipText( "Aktualisiere Projekt in der Projektdatenbank" );
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
