@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.server;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -64,6 +65,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.IProjectDataBaseServerConstant;
+import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -80,16 +84,33 @@ public class ProjectDatabase implements IProjectDatabase
 
   public ProjectDatabase( )
   {
-    // FIXME configuration file -> system property!!!
-// final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
-    final AnnotationConfiguration configure = new AnnotationConfiguration().configure();
+    try
+    {
+      final AnnotationConfiguration configure;
 
-    configure.addAnnotatedClass( KalypsoProjectBean.class );
-    configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
-    FACTORY = configure.buildSessionFactory();
+      final String property = System.getProperty( IProjectDataBaseServerConstant.HIBERNATE_CONFIG_FILE );
+      if( property != null && !"".equals( property.trim() ) )
+      {
+        /* mphhh... url handling doesn't work -> file not found exception -> file://c/blah/blah */
+        final File url = new File( property );
+        configure = new AnnotationConfiguration().configure( url );
+      }
+      else
+      {
+        configure = new AnnotationConfiguration().configure();
+      }
+
+      configure.addAnnotatedClass( KalypsoProjectBean.class );
+      configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
+      FACTORY = configure.buildSessionFactory();
+    }
+    catch( final Exception e )
+    {
+      KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
-  public void dispose( ) // NO_UCD
+  public void dispose( ) // NO_Ufinal CD
   {
     if( FACTORY != null )
     {
@@ -99,7 +120,7 @@ public class ProjectDatabase implements IProjectDatabase
   }
 
   /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#getProjects()
+   * @see org.kalypso.projectfinal .database.sei.IProjectDatabase#getProjects()
    */
   @Override
   public KalypsoProjectBean[] getProjectHeads( final String projectType )
