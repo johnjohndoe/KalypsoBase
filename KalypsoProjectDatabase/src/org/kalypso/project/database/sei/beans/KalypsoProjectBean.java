@@ -262,7 +262,8 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
       final EqualsBuilder builder = new EqualsBuilder();
       builder.append( getUnixName(), other.getUnixName() );
       builder.append( getProjectVersion(), other.getProjectVersion() );
-
+      builder.append( getEditLockTicket(), other.getEditLockTicket() );
+      
       return builder.isEquals();
     }
 

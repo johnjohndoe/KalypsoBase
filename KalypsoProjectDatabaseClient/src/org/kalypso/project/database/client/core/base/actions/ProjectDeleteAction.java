@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.SWT;
@@ -51,8 +52,13 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author kuch
@@ -91,11 +97,28 @@ public class ProjectDeleteAction implements IProjectAction
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        // FIXME if m_handler is ITranscendeProject and locally locked -> remove lock and then delete project
 
         try
         {
           m_locker.acquireUiUpdateLock();
+
+          if( m_handler instanceof ITranscendenceProject )
+          {
+            try
+            {
+              final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+              final boolean locked = preferences.isLocked();
+              if( locked )
+              {
+                final ITranscendenceProject remote = (ITranscendenceProject) m_handler;
+                ProjectDataBaseController.releaseProjectLock( remote.getBean(), true );
+              }
+            }
+            catch( final CoreException e1 )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+            }     
+          }
 
           final DeleteResourceAction action = new DeleteResourceAction( new SameShellProvider( link.getShell() ) );
           action.selectionChanged( new StructuredSelection( m_handler.getProject() ) );
