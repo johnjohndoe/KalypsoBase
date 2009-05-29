@@ -93,11 +93,16 @@ public class FeatureCompositeGFTWrapper
 
   private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
+  /**
+   * @deprecated because of new commandable workspaces (how to resolve feature changes, aso)
+   */
+  @Deprecated
   public void show( final IFile file, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
   {
     show( file, new CommandableWorkspace( feature.getWorkspace() ), feature, composite, toolkit );
   }
 
+  
   public void show( final IFile file, final CommandableWorkspace workspace, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
   {
     /* Create a new FeatureComposite. */

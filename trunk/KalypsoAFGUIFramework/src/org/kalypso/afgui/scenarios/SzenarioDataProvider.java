@@ -444,6 +444,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   @SuppressWarnings("unchecked")
   protected static <T> T adaptModel( final Class<T> modelClass, final GMLWorkspace workspace )
   {
+    if( workspace == null )
+      return null;
+    
     final Feature rootFeature = workspace.getRootFeature();
     if( modelClass.isAssignableFrom( rootFeature.getClass() ) )
       return (T) rootFeature;
