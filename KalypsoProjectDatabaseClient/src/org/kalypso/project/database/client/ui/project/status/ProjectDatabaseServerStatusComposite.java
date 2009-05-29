@@ -81,7 +81,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
 
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     model.addRemoteListener( this );
 
     final GridLayout layout = new GridLayout();

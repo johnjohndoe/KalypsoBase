@@ -96,7 +96,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_toolkit = toolkit;
     m_module = module;
 
-    m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    m_model = KalypsoProjectDatabaseClient.getModel();
     m_model.addListener( this );
 
     update();

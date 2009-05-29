@@ -64,6 +64,11 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 
     return m_service;
   }
+  
+  public static IProjectDatabaseModel getModel( )
+  {
+    return getDefault().getProjectDatabaseModel();
+  }
 
   /**
    * Returns the database-service.<br>
@@ -128,7 +133,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return plugin;
   }
 
-  public IProjectDatabaseModel getProjectDatabaseModel( )
+  private IProjectDatabaseModel getProjectDatabaseModel( )
   {
     /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
     if( PROJECT_DATABASE_MODEL == null )

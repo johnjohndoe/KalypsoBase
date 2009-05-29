@@ -54,6 +54,8 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.WorkspaceResourceManager;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
@@ -241,6 +243,25 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   @Override
   public boolean isLocked( )
   {
+    /**
+     * special case: the project database is offline and this project exists onto the database -> the project is not
+     * editable and locked!!!
+     */
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
+    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
+    if( !remote.isDatabaseOnline() )
+    {
+      try
+      {
+        if( getRemotePreferences().isOnServer() )
+          return false;
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+    
     return true;
   }
 

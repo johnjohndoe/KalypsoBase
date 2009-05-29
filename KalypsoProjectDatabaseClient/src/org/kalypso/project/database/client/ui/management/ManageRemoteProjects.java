@@ -89,7 +89,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
     this.setLayout( new GridLayout() );
 
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     model.addRemoteListener( this );
 
     update();
@@ -101,7 +101,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   @Override
   public void dispose( )
   {
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     model.removeRemoteListener( this );
 
     super.dispose();
@@ -204,7 +204,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
             final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
 
             remoteModel.deleteBean( version );

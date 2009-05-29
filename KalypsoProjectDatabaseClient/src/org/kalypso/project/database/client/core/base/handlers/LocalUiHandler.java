@@ -79,8 +79,7 @@ public class LocalUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDatabaseAction( )
   {
-    final KalypsoProjectDatabaseClient client = KalypsoProjectDatabaseClient.getDefault();
-    final IProjectDatabaseModel model = client.getProjectDatabaseModel();
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
 
     if( remote != null && remote.isDatabaseOnline() )
