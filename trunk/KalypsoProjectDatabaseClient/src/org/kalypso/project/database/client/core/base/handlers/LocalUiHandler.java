@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.handlers;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
@@ -53,6 +55,7 @@ import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspac
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
@@ -94,7 +97,27 @@ public class LocalUiHandler implements IProjectUiHandler
   @Override
   public IProjectAction getDeleteAction( )
   {
-    return new ProjectDeleteAction( m_handler, m_locker );
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
+    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
+
+    try
+    {
+      if( !remote.isDatabaseOnline() )
+      {
+
+        final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+        if( preferences.isLocked() )
+          return new EmptyProjectAction();
+      }
+
+      return new ProjectDeleteAction( m_handler, m_locker );
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return new EmptyProjectAction();
   }
 
   /**
