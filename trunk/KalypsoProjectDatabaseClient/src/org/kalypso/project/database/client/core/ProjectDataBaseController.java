@@ -88,7 +88,7 @@ public class ProjectDataBaseController
         @Override
         public IStatus runInWorkspace( final IProgressMonitor monitor )
         {
-          final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+          final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
           model.setRemoteProjectsDirty();
 
           JOB = null;
