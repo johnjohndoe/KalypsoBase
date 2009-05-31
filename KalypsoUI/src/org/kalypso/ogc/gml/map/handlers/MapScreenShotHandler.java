@@ -57,6 +57,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.ExportableMap;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
 
@@ -99,7 +100,7 @@ public class MapScreenShotHandler extends AbstractHandler
     try
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
+      final IPreferenceStore preferences = KalypsoGisPlugin.getDefault().getPreferenceStore();
 
       final Object objShouldExecute = context.getVariable( MapScreenShotHandler.CONST_SHOULD_EXECUTE_BOOLEAN );
       if( (objShouldExecute != null) && ((Boolean) objShouldExecute == false) )

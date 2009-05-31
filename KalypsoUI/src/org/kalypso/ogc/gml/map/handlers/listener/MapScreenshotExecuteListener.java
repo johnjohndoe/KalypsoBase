@@ -38,7 +38,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#notHandled(java.lang.String,
    *      org.eclipse.core.commands.NotHandledException)
    */
-  public void notHandled( String commandId, NotHandledException exception )
+  public void notHandled( final String commandId, final NotHandledException exception )
   {
     if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
@@ -48,7 +48,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#postExecuteFailure(java.lang.String,
    *      org.eclipse.core.commands.ExecutionException)
    */
-  public void postExecuteFailure( String commandId, ExecutionException exception )
+  public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
     if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
@@ -63,7 +63,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
   /**
    * @see org.eclipse.core.commands.IExecutionListener#postExecuteSuccess(java.lang.String, java.lang.Object)
    */
-  public void postExecuteSuccess( String commandId, Object returnValue )
+  public void postExecuteSuccess( final String commandId, final Object returnValue )
   {
     if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
@@ -72,7 +72,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
       return;
 
     /* Cast to file. */
-    File file = (File) returnValue;
+    final File file = (File) returnValue;
 
     /* Show the user a success dialog. */
     MessageDialog.openInformation( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.5"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.6") + file.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -82,21 +82,21 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
    *      org.eclipse.core.commands.ExecutionEvent)
    */
-  public void preExecute( String commandId, ExecutionEvent event )
+  public void preExecute( final String commandId, final ExecutionEvent event )
   {
     if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
 
-    IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
-    String extension = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
-    String dir = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
+    final IPreferenceStore preferences = KalypsoGisPlugin.getDefault().getPreferenceStore();
+    final String extension = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
+    final String dir = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
 
     File file = null;
     if( dir != null && !dir.equals( "" ) ) //$NON-NLS-1$
       file = new File( dir );
 
     /* Create the file dialog. */
-    FileDialog dialog = new FileDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.NONE );
+    final FileDialog dialog = new FileDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.NONE );
 
     /* Set some dialog information. */
     dialog.setText( Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.9") ); //$NON-NLS-1$
@@ -110,7 +110,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     dialog.setFilterNames( new String[] { extension.toUpperCase() + " - Images" } ); //$NON-NLS-1$
 
     /* Show the dialog. */
-    String result = dialog.open();
+    final String result = dialog.open();
 
     /* If the user has canceled the dialog, do not execute the command. */
     if( result == null )
@@ -145,7 +145,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
       /* Create the empty file. */
       target.createNewFile();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       /* Show an error dialog. */
       ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.16"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.17") + target.getName() + Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.18"), StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -158,17 +158,17 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     }
 
     /* If everything is okay, set the target. */
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     context.addVariable( MapScreenShotHandler.CONST_TARGET_FILE, target );
   }
 
   /**
    * This function stops the execution of the command.
    */
-  private void stopIt( ExecutionEvent event )
+  private void stopIt( final ExecutionEvent event )
   {
     /* Say the command handler, he shoud not execute the command. */
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     context.addVariable( MapScreenShotHandler.CONST_SHOULD_EXECUTE_BOOLEAN, Boolean.FALSE );
   }
 }
