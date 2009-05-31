@@ -72,14 +72,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Dirk Kuch
  */
 public class KalypsoScreenshotPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-  private static final String KALYPSO_MAP_SCREENSHOT_SETTINGS = "kalypso.map.screenshot.settings"; //$NON-NLS-1$
-
   private static final String DEFAULT_SCREENSHOT_WIDTH = "400"; //$NON-NLS-1$
 
   public static final String KEY_SCREENSHOT_WIDTH = "kalypso_screenshot_width"; //$NON-NLS-1$
@@ -96,38 +95,38 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
   private static final String DEFAULT_SCREENSHOT_TARGET = "c:\\temp"; //$NON-NLS-1$
 
-  static public IPreferenceStore getPreferences( )
+  
+  private void checkValues( )
   {
-    try
-    {
-      final PreferenceStore mystore = new PreferenceStore( KalypsoScreenshotPreferencePage.KALYPSO_MAP_SCREENSHOT_SETTINGS );
-      mystore.load();
+    final IPreferenceStore store = getPreferenceStore();
+    final String width = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
+    if( (width == null) || "".equals( width ) ) //$NON-NLS-1$
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
 
-      KalypsoScreenshotPreferencePage.checkStore( mystore );
+    final String height = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
+    if( (height == null) || "".equals( height ) ) //$NON-NLS-1$
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
 
-      return mystore;
-    }
-    catch( final IOException e )
+    final String format = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
+    if( (format == null) || "".equals( format ) ) //$NON-NLS-1$
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
+
+    final String target = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
+    if( (target == null) || "".equals( target ) ) //$NON-NLS-1$
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
+
+    if( store instanceof PreferenceStore )
     {
+      final PreferenceStore pStrore = (PreferenceStore) store;
       try
       {
-        final PreferenceStore mystore = new PreferenceStore( KalypsoScreenshotPreferencePage.KALYPSO_MAP_SCREENSHOT_SETTINGS );
-
-        mystore.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_WIDTH );
-        mystore.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
-        mystore.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
-
-        mystore.save();
-
-        return mystore;
+        pStrore.save();
       }
-      catch( final IOException e1 )
+      catch( final IOException e )
       {
-        e1.printStackTrace();
+        e.printStackTrace();
       }
     }
-
-    throw new IllegalStateException();
   }
 
   private ComboViewer m_cmbFormat;
@@ -140,8 +139,9 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
   public KalypsoScreenshotPreferencePage( )
   {
-    super();
-
+    setPreferenceStore( KalypsoGisPlugin.getDefault().getPreferenceStore() );
+    checkValues();
+    
     setTitle( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.9") ); //$NON-NLS-1$
     setDescription( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.10") ); //$NON-NLS-1$
   }
@@ -390,77 +390,8 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     return composite;
   }
 
-  /**
-   * @see org.eclipse.jface.preference.PreferencePage#getPreferenceStore()
-   */
-  @Override
-  public IPreferenceStore getPreferenceStore( )
-  {
-    IPreferenceStore store = super.getPreferenceStore();
+ 
 
-    if( store == null )
-    {
-      final PreferenceStore mystore = new PreferenceStore( KalypsoScreenshotPreferencePage.KALYPSO_MAP_SCREENSHOT_SETTINGS );
-      try
-      {
-        mystore.load();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-
-      store = mystore;
-      setPreferenceStore( store );
-    }
-
-    KalypsoScreenshotPreferencePage.checkStore( store );
-
-    return store;
-  }
-
-  static private void checkStore( final IPreferenceStore store )
-  {
-    final String width = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
-    if( (width == null) || "".equals( width ) ) //$NON-NLS-1$
-      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
-
-    final String height = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
-    if( (height == null) || "".equals( height ) ) //$NON-NLS-1$
-      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
-
-    final String format = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
-    if( (format == null) || "".equals( format ) ) //$NON-NLS-1$
-      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
-
-    final String target = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
-    if( (target == null) || "".equals( target ) ) //$NON-NLS-1$
-      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
-
-    if( store instanceof PreferenceStore )
-    {
-      final PreferenceStore pStrore = (PreferenceStore) store;
-      try
-      {
-        pStrore.save();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-   */
-  public void init( final IWorkbench workbench )
-  {
-    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_WIDTH );
-    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
-    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
-    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
-  }
 
   /**
    * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
@@ -514,5 +445,16 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     }
 
     return super.performOk();
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+   */
+  public void init( final IWorkbench workbench )
+  {
+    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_WIDTH );
+    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
+    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
+    getPreferenceStore().setDefault( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
   }
 }
