@@ -99,12 +99,15 @@ public class LocalUiHandler implements IProjectUiHandler
   {
     final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
+    if( remote == null )
+    {
+      return new ProjectDeleteAction( m_handler, m_locker );
+    }
 
     try
     {
       if( !remote.isDatabaseOnline() )
       {
-
         final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
         if( preferences.isLocked() )
           return new EmptyProjectAction();
