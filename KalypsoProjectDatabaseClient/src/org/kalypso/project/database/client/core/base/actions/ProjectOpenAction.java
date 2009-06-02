@@ -144,11 +144,16 @@ public class ProjectOpenAction implements IProjectAction
       else
       {
         final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
-        final boolean onServer = remotePreferences.isOnServer();
-        if( onServer )
-          m_type = OPEN_TYPE.eLocalOffline;
-        else
+        if( remotePreferences == null )
           m_type = OPEN_TYPE.eLocal;
+        else
+        { 
+          final boolean onServer = remotePreferences.isOnServer();
+          if( onServer )
+            m_type = OPEN_TYPE.eLocalOffline;
+          else
+            m_type = OPEN_TYPE.eLocal;
+        }
       }
 
     }
