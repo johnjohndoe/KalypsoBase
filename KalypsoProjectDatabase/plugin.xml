@@ -6,7 +6,8 @@
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/projectdb"
-            class="org.kalypso.project.database.server.WSProxyServlet">
+            class="org.kalypso.project.database.server.WSProxyServlet"
+            load-on-startup="true">
       </servlet>
    </extension>
    <extension
