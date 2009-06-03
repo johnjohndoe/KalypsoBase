@@ -5,7 +5,8 @@
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/sp_debug"
-            class="org.kalypso.debug.servlet.DebugServlet"/>
+            class="org.kalypso.debug.servlet.DebugServlet"
+            load-on-startup="true"/>
    </extension>
    <extension
          point="org.eclipse.equinox.http.registry.resources">
