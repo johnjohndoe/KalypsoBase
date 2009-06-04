@@ -173,7 +173,7 @@ public final class KeyInfo extends Job
     {
       if( entry.getValue() )
       {
-        entry.setValue( Boolean.FALSE );
+// entry.setValue( Boolean.FALSE );
         isLocked = true;
       }
     }
@@ -276,12 +276,24 @@ public final class KeyInfo extends Job
   {
     synchronized( this )
     {
-      // Lock next load
-      for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
-        entry.setValue( Boolean.TRUE );
-      m_loader.save( m_key, monitor, m_object );
-      setDirty( false );
+      try
+      {
+        // Lock next load
+        // REMARK/TRICKY: we assume, that all resource-change-events will be
+        // sent in this very thread. So we can savely lock/unlock resource
+        // loading here. If resource change events will be sent in another thread,
+        // we may trigger a reload here... (how to avoid this?)
+        for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
+          entry.setValue( Boolean.TRUE );
+        m_loader.save( m_key, monitor, m_object );
+      }
+      finally
+      {
+        for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
+          entry.setValue( Boolean.FALSE );
+      }
     }
+    setDirty( false );
   }
 
   @Override
@@ -325,10 +337,12 @@ public final class KeyInfo extends Job
 
   public void setDirty( final boolean isDirty )
   {
-    if( m_isDirty == isDirty )
-      return;
-
-    m_isDirty = isDirty;
+    synchronized( this )
+    {
+      if( m_isDirty == isDirty )
+        return;
+      m_isDirty = isDirty;
+    }
 
     fireDirtyChanged( isDirty );
   }
