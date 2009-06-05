@@ -77,7 +77,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       }
       catch( ConfigChartNotFoundException e )
       {
-        setException( new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, e.getMessage(), "" ) );
+        setException( new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, e.getMessage(), "No chart available by NAME '" + reqName + "'" ) );
         return;
       }
       catch( ConfigurationException e )
