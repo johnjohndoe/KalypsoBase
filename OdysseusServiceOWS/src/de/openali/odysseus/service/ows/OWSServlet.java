@@ -94,7 +94,8 @@ public class OWSServlet extends HttpServlet// implements Servlet
 		// Service-Klasse laden
 		try
 		{
-			owsOperation = OWSOperationExtensionLoader.createOWSOperation(opRequest);
+			owsOperation = OWSOperationExtensionLoader
+			        .createOWSOperation(opRequest);
 		}
 		catch (CoreException e1)
 		{
@@ -111,7 +112,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
 			try
 			{
 				owsOperation.checkAndExecute(new RequestBean(request),
-				        new ResponseBean(response));
+				        new ResponseBean(response), getServletContext());
 			}
 			catch (OWSException e)
 			{

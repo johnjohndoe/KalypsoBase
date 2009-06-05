@@ -1,5 +1,7 @@
 package de.openali.odysseus.service.ows.extension;
 
+import javax.servlet.ServletContext;
+
 import de.openali.odysseus.service.ows.exception.OWSException;
 import de.openali.odysseus.service.ows.request.RequestBean;
 import de.openali.odysseus.service.ows.request.ResponseBean;
@@ -14,6 +16,7 @@ public interface IOWSOperation
 	 * starts ods operation - used for ods operation extension point
 	 */
 	public void checkAndExecute(RequestBean requestBean,
-	        ResponseBean responseBean) throws OWSException;
+	        ResponseBean responseBean, ServletContext context)
+	        throws OWSException;
 
 }
