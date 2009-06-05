@@ -34,7 +34,7 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
    */
   private EditableTestDataContainer getDataContainer( )
   {
-    final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "2000", new IntegerParser() );
+    final Integer dataSize = getParameterContainer().getParsedParameterValue( "size", "100", new IntegerParser() );
     final Integer maxVal = getParameterContainer().getParsedParameterValue( "max_val", "1", new IntegerParser() );
 
     final EditableTestDataContainer data = new EditableTestDataContainer( dataSize, maxVal );
