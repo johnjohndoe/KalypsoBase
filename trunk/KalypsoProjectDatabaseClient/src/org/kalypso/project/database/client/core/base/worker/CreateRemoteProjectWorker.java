@@ -109,12 +109,12 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       FileSystemManager manager = VFSUtilities.getManager();
       FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
-      final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
+      final String urlDestination = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
       {
         @Override
         public String getPath( )
         {
-          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
+          return System.getProperty( IProjectDataBaseClientConstant.SERVER_INCOMING_PATH );
         }
 
       }, zipName ); //$NON-NLS-1$
@@ -150,16 +150,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       if( uploaded == false )
         throw new CoreException( StatusUtilities.createErrorStatus( "Project server upload failed" ) );
 
-      final URL myDestinationUrl = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
-      {
-        @Override
-        public String getPath( )
-        {
-          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
-        }
-
-      }, zipName ); //$NON-NLS-1$
-
+     
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
       // always commit - download of projects assert nature!
@@ -170,7 +161,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       bean.setProjectVersion( 0 );
       bean.setProjectType( m_settings.getModuleCommitType() );
 
-      service.createProject( bean, myDestinationUrl );
+      service.createProject( bean, new URL( urlDestination ) );
 
       new WorkspaceJob( "" )
       {

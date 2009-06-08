@@ -68,4 +68,11 @@ public class ProjectModelUrlResolver
     return new URL( url );
   }
 
+  public static String getUrlAsFtp( final IResolverInterface delegate, final String localPath )
+  {
+    final String url = String.format( "%s%s", delegate.getPath(), localPath );
+
+    return url;
+  }
+
 }

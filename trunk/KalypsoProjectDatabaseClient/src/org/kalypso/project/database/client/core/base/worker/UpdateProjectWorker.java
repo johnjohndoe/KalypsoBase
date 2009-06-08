@@ -108,12 +108,12 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
       final String fileName = String.format( "%s.zip", m_handler.getName() );
 
-      final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
+      final String urlDestination = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
       {
         @Override
         public String getPath( )
         {
-          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
+          return System.getProperty( IProjectDataBaseClientConstant.SERVER_INCOMING_PATH );
         }
 
       }, fileName ); //$NON-NLS-1$
@@ -122,18 +122,10 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
 
-      final URL myDestinationUrl = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
-      {
-        @Override
-        public String getPath( )
-        {
-          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
-        }
-
-      }, fileName ); //$NON-NLS-1$
+     
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), myDestinationUrl );
+      final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), new URL( urlDestination ) );
       preferences.setVersion( bean.getProjectVersion() );
 
       destination.close();

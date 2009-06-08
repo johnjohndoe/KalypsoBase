@@ -57,12 +57,12 @@ class ProjectDatabaseHelper
 
   protected static String resolveDestinationUrl( final KalypsoProjectBean bean )
   {
-    return ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
+    return ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
     {
       @Override
       public String getPath( )
       {
-        return System.getProperty( IProjectDataBaseServerConstant.SERVER_WRITEABLE_PATH );
+        return System.getProperty( IProjectDataBaseServerConstant.SERVER_PROJECT_PATH );
       }
     }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
   }

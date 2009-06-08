@@ -139,10 +139,6 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       link.setFont( MyFonts.HEADING );
       link.setUnderlined( false );
 
-      final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-      lnkDeleteAll.setToolTipText( "Delete whole remote project" );
-      lnkDeleteAll.setImage( IMG_DELETE );
-
       // project locked in database?!?
       if( head.isProjectLockedForEditing() )
       {
@@ -165,9 +161,15 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       }
       else
       {
-        m_toolkit.createImageHyperlink( m_body, SWT.NULL ); // spacer
+        m_toolkit.createImageHyperlink( m_body, SWT.NULL ).setEnabled( false ); // spacer
       }
 
+      
+      final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
+      lnkDeleteAll.setToolTipText( "Delete whole remote project" );
+      lnkDeleteAll.setImage( IMG_DELETE );
+
+      
       final KalypsoProjectBean[] versions = KalypsoProjectBeanHelper.getSortedBeans( head );
 
       lnkDeleteAll.addHyperlinkListener( new HyperlinkAdapter()
@@ -213,7 +215,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
         } );
       }
 
-      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 2, 0 ) );
+      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 3, 0 ) );
     }
 
     m_toolkit.adapt( this );

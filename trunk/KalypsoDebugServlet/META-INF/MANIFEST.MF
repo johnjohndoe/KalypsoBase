@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.kalypso.debug.servlet;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.equinox.http.registry,
- org.kalypso.commons
+ org.eclipse.equinox.http.registry
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet,
  javax.servlet.http

@@ -1,6 +1,5 @@
 package org.kalypso.debug.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
@@ -14,13 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
@@ -325,30 +317,31 @@ public class DebugServlet extends HttpServlet
 
     try
     {
-      final PostMethod filePost = new PostMethod( "http://127.0.0.1:8080/sp_debug?info=testPostServer" );
-      final File file = new File( "C:/testfile.txt" );
-      final Part[] parts = { new StringPart( "param_name", "value" ), new FilePart( file.getName(), file ) };
-      filePost.setRequestEntity( new MultipartRequestEntity( parts, filePost.getParams() ) );
-      final HostConfiguration hc = new HostConfiguration();
+// final PostMethod filePost = new PostMethod( "http://127.0.0.1:8080/sp_debug?info=testPostServer" );
+// final File file = new File( "C:/testfile.txt" );
+// final Part[] parts = { new StringPart( "param_name", "value" ), new FilePart( file.getName(), file ) };
+// filePost.setRequestEntity( new MultipartRequestEntity( parts, filePost.getParams() ) );
+// final HostConfiguration hc = new HostConfiguration();
+//
+// final HttpClient client = new HttpClient();
+// client.setHostConfiguration( hc );
+// final int status = client.executeMethod( filePost );
+//
+// final byte[] responseBody = filePost.getResponseBody();
 
-      final HttpClient client = new HttpClient();
-      client.setHostConfiguration( hc );
-      final int status = client.executeMethod( filePost );
-
-      final byte[] responseBody = filePost.getResponseBody();
-
-      if( responseBody != null )
-      {
-        pw.print( "ResponseBody: " + responseBody.toString() + "<br>" );
-        for( final byte element : responseBody )
-          pw.print( element );
-        pw.print( "<br>" );
-      }
-      pw.print( "ResponseBody as String: <div style='border-width:1px;border-color:black;border-style:solid'>" + filePost.getResponseBodyAsString() + "</div>" );
-
-      pw.print( "HTTP status: " + status + "<br>" );
-
-      filePost.releaseConnection();
+// if( responseBody != null )
+// {
+// pw.print( "ResponseBody: " + responseBody.toString() + "<br>" );
+// for( final byte element : responseBody )
+// pw.print( element );
+// pw.print( "<br>" );
+// }
+// pw.print( "ResponseBody as String: <div style='border-width:1px;border-color:black;border-style:solid'>" +
+      // filePost.getResponseBodyAsString() + "</div>" );
+//
+// pw.print( "HTTP status: " + status + "<br>" );
+//
+// filePost.releaseConnection();
 
     }
     catch( final Exception e )
