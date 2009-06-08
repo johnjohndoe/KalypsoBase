@@ -93,7 +93,16 @@ public class ProjectDatabase implements IProjectDatabase
       {
         /* mphhh... url handling doesn't work -> file not found exception -> file://c/blah/blah */
         final File url = new File( property );
-        configure = new AnnotationConfiguration().configure( url );
+        if( !url.exists() )
+        {
+          System.out.println( String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s", property ) );
+          System.out.println( String.format( "Starting KalypsoProjectDatabase with default configuration!" ) );
+
+          configure = new AnnotationConfiguration().configure();
+        }
+        else
+          configure = new AnnotationConfiguration().configure( url );
+
       }
       else
       {
