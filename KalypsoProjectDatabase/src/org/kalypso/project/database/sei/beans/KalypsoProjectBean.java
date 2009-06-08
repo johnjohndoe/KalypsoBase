@@ -175,16 +175,16 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public URL getUrl( ) throws MalformedURLException
   {
     /* destination of incoming file */
-    final URL url = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
+    final String url = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
     {
       @Override
       public String getPath( )
       {
-        return System.getProperty( IProjectDataBaseServerConstant.SERVER_READABLE_PATH );
+        return System.getProperty( IProjectDataBaseServerConstant.SERVER_PROJECT_PATH );
       }
     }, String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() ) );
 
-    return url;
+    return new URL( url );
   }
 
   /**
