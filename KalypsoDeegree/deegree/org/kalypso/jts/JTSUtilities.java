@@ -74,8 +74,29 @@ public class JTSUtilities
 {
   private static final double FUZZINESS = 10E-04;
 
+  private static final String FUZZINESS_PROPERTY = "org.kalypso.jts.fuzziness";
+
   private JTSUtilities( )
   {
+  }
+
+  /**
+   * 
+   */
+  private static double getFuziness( )
+  {
+    String property = System.getProperty( FUZZINESS_PROPERTY );
+    if( property == null || "".equals( property.trim() ) )
+      return FUZZINESS;
+
+    try
+    {
+      return Double.valueOf( property );
+    }
+    catch( NumberFormatException e )
+    {
+      return FUZZINESS;
+    }
   }
 
   /**
@@ -117,7 +138,7 @@ public class JTSUtilities
   public static double pointDistanceOnLine( final LineString line, final Point point )
   {
     /* Check for intersection. */
-    if( point.distance( line ) >= FUZZINESS )
+    if( point.distance( line ) >= getFuziness() )
       throw new IllegalStateException( "The point does not lie on the line ..." );
 
     /* The needed factory. */
@@ -134,7 +155,7 @@ public class JTSUtilities
 
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
-      if( point.distance( ls ) >= FUZZINESS )
+      if( point.distance( ls ) >= getFuziness() )
         continue;
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
@@ -287,7 +308,7 @@ public class JTSUtilities
   public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
-    if( line.distance( start ) >= FUZZINESS || line.distance( end ) >= FUZZINESS )
+    if( line.distance( start ) >= getFuziness() || line.distance( end ) >= getFuziness() )
       return null;
 
     if( line instanceof LineString )
@@ -318,7 +339,7 @@ public class JTSUtilities
   public static boolean getLineOrientation( final LineString line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line. */
-    if( line.distance( start ) >= FUZZINESS || line.distance( end ) >= FUZZINESS )
+    if( line.distance( start ) >= getFuziness() || line.distance( end ) >= getFuziness() )
       throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
 
     boolean first = false;
@@ -331,10 +352,10 @@ public class JTSUtilities
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-      if( testLine.distance( start.getCoordinate() ) < FUZZINESS )
+      if( testLine.distance( start.getCoordinate() ) < getFuziness() )
         first = true;
 
-      if( testLine.distance( end.getCoordinate() ) < FUZZINESS )
+      if( testLine.distance( end.getCoordinate() ) < getFuziness() )
       {
         /* The direction is inverse. */
         if( !first )
@@ -381,10 +402,10 @@ public class JTSUtilities
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-      if( testLine.distance( start.getCoordinate() ) < FUZZINESS )
+      if( testLine.distance( start.getCoordinate() ) < getFuziness() )
         add = true;
 
-      if( testLine.distance( end.getCoordinate() ) < FUZZINESS )
+      if( testLine.distance( end.getCoordinate() ) < getFuziness() )
       {
         add = false;
         break;
@@ -452,10 +473,10 @@ public class JTSUtilities
         /* Build a line with the two points to check the flag. */
         final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-        if( testLine.distance( start.getCoordinate() ) < FUZZINESS )
+        if( testLine.distance( start.getCoordinate() ) < getFuziness() )
           add = true;
 
-        if( testLine.distance( end.getCoordinate() ) < FUZZINESS )
+        if( testLine.distance( end.getCoordinate() ) < getFuziness() )
         {
           add = false;
           endPointFound = true;
@@ -664,7 +685,7 @@ public class JTSUtilities
       final LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       /* If found, return it. */
-      if( segment.distance( point.getCoordinate() ) < FUZZINESS )
+      if( segment.distance( point.getCoordinate() ) < getFuziness() )
         return segment;
     }
 
@@ -690,7 +711,7 @@ public class JTSUtilities
     /* Check for intersection. */
     for( int i = 0; i < points.size(); i++ )
     {
-      if( points.get( i ).distance( line ) >= FUZZINESS )
+      if( points.get( i ).distance( line ) >= getFuziness() )
         throw new IllegalStateException( "One of the points does not lie on the line ..." );
     }
 
@@ -721,7 +742,7 @@ public class JTSUtilities
       for( int j = 0; j < points.size(); j++ )
       {
         final Point point = points.get( j );
-        if( point.distance( ls ) < FUZZINESS )
+        if( point.distance( ls ) < getFuziness() )
         {
           /* The point intersects, and has to be added. */
           newCoordinates.add( point.getCoordinate() );
