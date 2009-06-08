@@ -110,7 +110,7 @@ public class ProjectOpenAction implements IProjectAction
       if( eLocal.equals( type ) )
         return "Lokales Projekt";
       else if( eLocalOffline.equals( type ) )
-        return "Lokales Datenbankprojekt - Achtung: Modelldatenbankserver ist nicht erreichbar!";
+        return "Lokales Datenbankprojekt - Achtung: Modelldatenbankserver ist nicht verfügbar!";
       else if( eTranscendenceReadable.equals( type ) )
         return "Lokales Datenbankprojekt im Lesemodus";
       else if( eTranscendenceReadableServerLocked.equals( type ) )
