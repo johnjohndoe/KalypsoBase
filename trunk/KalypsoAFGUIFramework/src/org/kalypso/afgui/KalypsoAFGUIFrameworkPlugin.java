@@ -3,9 +3,11 @@ package org.kalypso.afgui;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -19,6 +21,7 @@ import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
+import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
@@ -148,6 +151,19 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
         evalService.addSourceProvider( m_szenarioSourceProvider );
+        
+        
+        new WorkspaceJob( "" )
+        {
+          @Override
+          public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
+          {
+            // register sceanrio listeners
+            ScenarioDataChangeListenerExtension.getInstance();
+            
+            return Status.OK_STATUS;
+          }
+        }.schedule( 5000 );
       }
     }
   }
