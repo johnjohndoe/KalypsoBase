@@ -111,7 +111,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
-  private void buildProjectList( )
+  synchronized private void buildProjectList( )
   {
     m_projects = new HashSet<IProjectHandler>();
 
