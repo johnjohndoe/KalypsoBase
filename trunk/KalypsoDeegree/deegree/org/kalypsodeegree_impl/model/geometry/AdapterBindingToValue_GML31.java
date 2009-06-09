@@ -49,6 +49,7 @@ import ogc31.www.opengis.net.gml.AbstractGeometryType;
 import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
 import ogc31.www.opengis.net.gml.AbstractRingType;
 import ogc31.www.opengis.net.gml.AbstractSurfacePatchType;
+import ogc31.www.opengis.net.gml.AbstractSurfaceType;
 import ogc31.www.opengis.net.gml.CoordType;
 import ogc31.www.opengis.net.gml.CoordinatesType;
 import ogc31.www.opengis.net.gml.DirectPositionListType;
@@ -60,12 +61,14 @@ import ogc31.www.opengis.net.gml.LinearRingType;
 import ogc31.www.opengis.net.gml.MultiLineStringType;
 import ogc31.www.opengis.net.gml.MultiPointType;
 import ogc31.www.opengis.net.gml.MultiPolygonType;
+import ogc31.www.opengis.net.gml.MultiSurfaceType;
 import ogc31.www.opengis.net.gml.PointArrayPropertyType;
 import ogc31.www.opengis.net.gml.PointPropertyType;
 import ogc31.www.opengis.net.gml.PointType;
 import ogc31.www.opengis.net.gml.PolygonPatchType;
 import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
+import ogc31.www.opengis.net.gml.SurfaceArrayPropertyType;
 import ogc31.www.opengis.net.gml.SurfacePatchArrayPropertyType;
 import ogc31.www.opengis.net.gml.SurfaceType;
 
@@ -227,6 +230,26 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     }
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
+  
+  private Object createGM_MultiSurface( final MultiSurfaceType type, final String cs ) throws GM_Exception
+  {
+    final String co = getCS_CoordinateSystem( cs, type );
+    
+    final List<GM_Surface<GM_SurfacePatch>> mySurfaces = new ArrayList<GM_Surface<GM_SurfacePatch>>();
+    
+    final SurfaceArrayPropertyType surfaceArrayPropertType = type.getSurfaceMembers();
+    final List<JAXBElement< ? extends AbstractSurfaceType>> surfaces = surfaceArrayPropertType.getSurface();
+
+    for( final JAXBElement< ? extends AbstractSurfaceType> surface : surfaces )
+    {
+      final GM_Surface<GM_SurfacePatch> patch = createGM_Surface( (SurfaceType) surface.getValue(), co );
+      mySurfaces.add( patch );
+    }
+    
+    return GeometryFactory.createGM_MultiSurface( mySurfaces.toArray( new GM_Surface[] {} ), co );
+  }
+
+  
 
   private GM_Surface<GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
   {
@@ -506,6 +529,8 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
       else if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
+      else if( bindingTypeObject instanceof MultiSurfaceType )
+        return createGM_MultiSurface( (MultiSurfaceType) bindingTypeObject, cs );
     }
     else if( bindingGeometry instanceof EnvelopeType )
     {
@@ -515,6 +540,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     throw new UnsupportedOperationException( bindingGeometry.getClass().getName() + " is not supported" );
   }
 
+  
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromElement(org.w3c.dom.Element)
    */
