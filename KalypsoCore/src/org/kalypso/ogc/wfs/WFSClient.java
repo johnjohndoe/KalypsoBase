@@ -1,7 +1,6 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -19,7 +18,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.model.filterencoding.capabilities.Operator;
@@ -407,9 +405,6 @@ public class WFSClient
         System.out.println( "Status Code: " + statusCode );
         throw new HttpException( "Connection error: " + statusCode );
       }
-
-      final String responseBodyAsString = getMethod.getResponseBodyAsString();
-      FileUtils.writeStringToFile( new File( "C:\\temp\\blubb.gml" ), responseBodyAsString, "UTF-8" );
 
       inputStream = new BufferedInputStream( getMethod.getResponseBodyAsStream() );
 
