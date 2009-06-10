@@ -60,7 +60,7 @@ public class ColorUtilities
    * This function returns an RGB color of the gicen html string.
    * 
    * @param html
-   *            The html string in the format #RGB.
+   *          The html string in the format #RGB.
    * @return The RGB color, or null, if string is not correct parsable.
    */
   public static RGB toRGBFromHTML( String html )
@@ -83,5 +83,29 @@ public class ColorUtilities
     rgb.blue = Integer.decode( "0x" + blue );
 
     return rgb;
+  }
+
+  /**
+   * Converts a rgb color to a W3C conform form.
+   * 
+   * @param rgb
+   *          The color in RGB format.
+   * @return The color in W3C conform form.
+   */
+  public static String toHTMLFromRGB( RGB rgb )
+  {
+    String red = Integer.toHexString( rgb.red );
+    if( red.length() < 2 )
+      red = "0" + red;
+
+    String green = Integer.toHexString( rgb.green );
+    if( green.length() < 2 )
+      green = "0" + green;
+
+    String blue = Integer.toHexString( rgb.blue );
+    if( blue.length() < 2 )
+      blue = "0" + blue;
+
+    return new String( "#" + red + green + blue );
   }
 }
