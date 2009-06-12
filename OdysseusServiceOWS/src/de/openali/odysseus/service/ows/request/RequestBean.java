@@ -14,7 +14,8 @@ public class RequestBean
 
 	public RequestBean(HttpServletRequest request)
 	{
-		m_url = request.getRequestURL().toString();
+		m_url = request.getRequestURL().toString() + "?"
+		        + request.getQueryString();
 		m_parameters = preprocessParameters(request.getParameterMap());
 	}
 

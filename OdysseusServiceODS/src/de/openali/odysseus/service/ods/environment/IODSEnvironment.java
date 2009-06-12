@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.Status;
 
 import de.openali.odysseus.service.ows.extension.IOWSOperation;
 
-public interface IODSEnvironment 
+public interface IODSEnvironment
 {
 
 	public ODSConfigurationLoader getConfigLoader();
@@ -16,7 +16,7 @@ public interface IODSEnvironment
 	public Status getStatus();
 
 	public Map<String, List<IODSChart>> getScenes();
-	
+
 	public String getDefaultSceneId();
 
 	public IOWSOperation[] getOperations();
@@ -26,4 +26,10 @@ public interface IODSEnvironment
 	public File getTmpDir();
 
 	public File getConfigDir();
+
+	boolean validateChartId(String sceneId, String chartId);
+
+	boolean validateSceneId(String sceneId);
+
+	boolean validateLayerId(String sceneId, String chartId, String layerId);
 }

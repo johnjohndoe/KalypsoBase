@@ -24,6 +24,7 @@ import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.service.ods.util.CapabilitiesLoader;
 import de.openali.odysseus.service.ods.util.IODSConstants;
 import de.openali.odysseus.service.ods.x020.ChartOfferingType;
@@ -48,6 +49,8 @@ public class ODSEnvironment implements IODSEnvironment
 
 	private final ServletContext m_context;
 
+	private String m_defaultSceneID;
+
 	private static ODSEnvironment m_instance = null;
 
 	private static Map<String, List<IODSChart>> m_scenes = new TreeMap<String, List<IODSChart>>();
@@ -59,6 +62,7 @@ public class ODSEnvironment implements IODSEnvironment
 		{
 			checkPaths();
 			m_ocl = new ODSConfigurationLoader(m_configDir, m_configFile);
+			m_defaultSceneID = m_ocl.getDefaultSceneId();
 			createScenes();
 		}
 		catch (final Throwable t)
@@ -194,6 +198,7 @@ public class ODSEnvironment implements IODSEnvironment
 	        XmlException
 	{
 		final String[] sceneIds = m_ocl.getSceneIds();
+
 		for (final String sceneId : sceneIds)
 		{
 			final File chartFile = getChartFile(sceneId);
@@ -272,8 +277,55 @@ public class ODSEnvironment implements IODSEnvironment
 	@Override
 	public String getDefaultSceneId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return m_defaultSceneID;
+	}
+
+	@Override
+	public boolean validateChartId(String sceneId, String chartId)
+	{
+		if (validateSceneId(sceneId))
+		{
+			ChartConfigurationDocument sceneById = m_ocl.getSceneById(sceneId);
+			ChartType[] chartArray = sceneById.getChartConfiguration()
+			        .getChartArray();
+			for (ChartType c : chartArray)
+				if (c.getId().equals(chartId))
+					return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean validateLayerId(String sceneId, String chartId,
+	        String layerId)
+	{
+		if (validateSceneId(sceneId) && validateChartId(sceneId, chartId))
+		{
+			ChartConfigurationDocument sceneById = m_ocl.getSceneById(sceneId);
+			ChartType[] chartArray = sceneById.getChartConfiguration()
+			        .getChartArray();
+			for (ChartType c : chartArray)
+				if (c.getId().equals(chartId))
+				{
+					LayerType[] layerArray = c.getLayers().getLayerArray();
+					for (LayerType l : layerArray)
+						if (l.getId().equals(layerId))
+							return true;
+				}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean validateSceneId(String sceneId)
+	{
+
+		for (String sId : m_ocl.getSceneIds())
+			if (sceneId.equals(sId))
+				return true;
+		return false;
 	}
 
 }

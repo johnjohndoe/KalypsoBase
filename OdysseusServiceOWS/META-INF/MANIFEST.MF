@@ -6,8 +6,7 @@ Bundle-Version: 0.2.0
 Bundle-Activator: de.openali.odysseus.service.ows.OdysseusServiceOWSPlugin
 Require-Bundle: 
  org.eclipse.core.runtime,
- org.kalypso.commons;visibility:=reexport,
- javax.servlet;bundle-version="2.4.0";visibility:=reexport
+ org.kalypso.commons;visibility:=reexport
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
