@@ -86,9 +86,11 @@ import com.vividsolutions.jts.geom.TopologyException;
 public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetDelegate
 {
 
+  private static final Color COLOR_VERTEX = new Color( 0x36, 0x7c, 0xc7 );
+
   static final IPointHighLighter POSSIBLE_VERTEX_POINT = new IPointHighLighter()
   {
-    Color cVertex = new Color( 0x36, 0x7c, 0xc7 );
+    Color cVertex = COLOR_VERTEX;
 
     final int size = 14;
 
