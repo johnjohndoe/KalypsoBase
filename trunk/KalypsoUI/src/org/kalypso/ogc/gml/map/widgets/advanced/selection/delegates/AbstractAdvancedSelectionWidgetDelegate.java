@@ -163,7 +163,6 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
