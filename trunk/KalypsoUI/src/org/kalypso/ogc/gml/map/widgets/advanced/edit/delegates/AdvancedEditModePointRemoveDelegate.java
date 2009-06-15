@@ -85,21 +85,21 @@ import com.vividsolutions.jts.geom.TopologyException;
 public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetDelegate
 {
 
+  protected static final Color COLOR_WHITE = new Color( 0xFF, 0xFF, 0xFF );
+
+  protected static final Color COLOR_VERTEX = new Color( 0xec, 0x44, 0x4a );
+
   static final IPointHighLighter REMOVABLE_VERTEX_POINT = new IPointHighLighter()
   {
-    Color cVertex = new Color( 0xec, 0x44, 0x4a );
-
-    Color cWhite = new Color( 0xFF, 0xFF, 0xFF );
-
     final int size = 14;
 
     @Override
     public void draw( final Graphics g, final java.awt.Point point )
     {
       final Color original = g.getColor();
-      g.setColor( cVertex );
+      g.setColor( COLOR_VERTEX );
       g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
-      g.setColor( cWhite );
+      g.setColor( COLOR_WHITE );
       g.fillOval( point.x - size / 2 + 3, point.y - size / 2 + 3, size - 6, size - 6 );
 
       g.setColor( original );
