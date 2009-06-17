@@ -67,7 +67,7 @@ public class Image extends Feature_Impl
 
   public void setUri( final URI uri )
   {
-    setProperty( QNAME_PROP_URI, uri.toASCIIString() );
+    setProperty( QNAME_PROP_URI, uri == null ? null : uri.toASCIIString() );
   }
 
   public URI getUri( )
