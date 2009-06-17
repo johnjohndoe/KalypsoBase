@@ -51,6 +51,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
@@ -94,8 +95,11 @@ public class SimulationThread extends Thread
 
   public void dispose( )
   {
-    m_resultPacker.disposeFiles();
-    FileUtilities.deleteRecursive( m_tmpDir );
+    if( !KalypsoSimulationCoreDebug.KEEP_SIMULATION_FILES.isEnabled() )
+    {
+      m_resultPacker.disposeFiles();
+      FileUtilities.deleteRecursive( m_tmpDir );
+    }
     m_inputData.dispose();
   }
 

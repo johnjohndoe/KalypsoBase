@@ -1,2 +1,5 @@
 # Debug output
 org.kalypso.simulation.core/debug/simulation/service = true
+
+# Keep simulation files after calculation
+org.kalypso.simulation.core/debug/keepSimulationFiles = true
