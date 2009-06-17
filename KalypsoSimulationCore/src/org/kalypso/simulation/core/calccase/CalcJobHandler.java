@@ -63,7 +63,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipResourceVisitor;
@@ -72,6 +71,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
+import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
@@ -81,7 +81,6 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
-import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
  * @author belger
@@ -216,7 +215,7 @@ public class CalcJobHandler
       {
         if( m_jobID != null )
         {
-          if( !Boolean.valueOf( Platform.getDebugOption( SimulationUtilitites.DEBUG_KEEP_SIM_FILES ) ) )
+          if( !KalypsoSimulationCoreDebug.KEEP_SIMULATION_FILES.isEnabled() )
           {
             m_calcService.disposeJob( m_jobID );
 
