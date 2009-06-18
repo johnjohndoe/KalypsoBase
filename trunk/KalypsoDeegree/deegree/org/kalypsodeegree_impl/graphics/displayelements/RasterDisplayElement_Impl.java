@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
@@ -177,7 +176,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor ) throws CoreException
   {
-    final TimeLogger timeLogger = new TimeLogger();
     try
     {
       final IGeoGrid grid = getGrid();
@@ -200,9 +198,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     finally
     {
       releaseGrid();
-
-      timeLogger.takeInterimTime();
-      timeLogger.printCurrentTotal( "Paint took: " );
     }
   }
 
