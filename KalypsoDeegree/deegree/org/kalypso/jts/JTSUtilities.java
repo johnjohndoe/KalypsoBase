@@ -71,7 +71,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for some geometry operations.
- *
+ * 
  * @author Holger Albert
  */
 public class JTSUtilities
@@ -82,7 +82,7 @@ public class JTSUtilities
 
   /**
    * This function delivers the first point from a line in another geometry.
-   *
+   * 
    * @param line
    *          The points of this line will be checked. The first, which lies in the given geometry is returned.
    * @param geometry_2nd
@@ -109,7 +109,7 @@ public class JTSUtilities
 
   /**
    * This function calculates the distance from the start point to a point, lying on the line.
-   *
+   * 
    * @param line
    *          The line.
    * @param point
@@ -162,7 +162,7 @@ public class JTSUtilities
 
   /**
    * This function calculates a point at a specific length of a line.
-   *
+   * 
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param distance
@@ -172,12 +172,10 @@ public class JTSUtilities
   public static Point pointOnLine( final LineString lineJTS, double distance )
   {
     final double length = lineJTS.getLength();
-
     if( distance < 0 || distance > length )
       return null;
 
     final int numPoints = lineJTS.getNumPoints();
-
     if( numPoints == 0 )
       return null;
 
@@ -192,16 +190,13 @@ public class JTSUtilities
       line = factory.createLineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) } );
       final double lineLength = line.getLength();
       if( distance - lineLength < 0 )
-      {
         break;
-      }
 
       distance -= lineLength;
     }
 
     /* Now calculate the rest of the line. */
     final double max = line.getLength();
-
     final Point startPoint = line.getStartPoint();
     final Point endPoint = line.getEndPoint();
 
@@ -255,7 +250,7 @@ public class JTSUtilities
 
   /**
    * This function calculates a point at a specific length of a line.
-   *
+   * 
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param percent
@@ -282,7 +277,7 @@ public class JTSUtilities
   /**
    * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
    * on the given line.
-   *
+   * 
    * @param line
    *          The original line.
    * @param start
@@ -314,7 +309,7 @@ public class JTSUtilities
 
   /**
    * Evaluates the two given points and returns true, if the direction is equal of that from line (its points).
-   *
+   * 
    * @param line
    *          The original LineString.
    * @param start
@@ -363,7 +358,7 @@ public class JTSUtilities
    * done before calling this method. Use {@link JTSUtilities#getLineOrientation(LineString, Point, Point)} for this
    * operation. Both points should have the same orientation than the line, otherwise the new line has only two points,
    * namly the start and end point.
-   *
+   * 
    * @param line
    *          The original LineString.
    * @param start
@@ -435,7 +430,7 @@ public class JTSUtilities
    * This class is strange, because creating a LineString part of a MultiLineString should be normally done by
    * dissolving the MultiLineString in one LineString-Object and getting the LineString part of it.<br>
    * There can not be quaranteed, that this function works error free!
-   *
+   * 
    * @param line
    *          The original MultiLineString.
    * @param start
@@ -505,7 +500,7 @@ public class JTSUtilities
 
   /**
    * Returns a vector of this line.
-   *
+   * 
    * @param start
    *          The start point of the line.
    * @param end
@@ -522,7 +517,7 @@ public class JTSUtilities
 
   /**
    * Calculates a normalized vector.
-   *
+   * 
    * @param vector
    *          The vector to be normalized.
    * @return The normalized vector.
@@ -543,7 +538,7 @@ public class JTSUtilities
   /**
    * This function creates a line segment with the two given points, calculates the length of the line segment and
    * returns the length.
-   *
+   * 
    * @param pointOne
    *          This point will be used as start point of the line segment.
    * @param pointTwo
@@ -558,7 +553,7 @@ public class JTSUtilities
   /**
    * This function creates a line segment with the two given coordinates, calculates the length of the line segment and
    * returns the length.
-   *
+   * 
    * @param coordinateOne
    *          This coordinate will be used as start point of the line segment.
    * @param coordinateTwo
@@ -587,7 +582,7 @@ public class JTSUtilities
   /**
    * TODO: move to helper class Given 3 coordinate this methode return the equation of a plan containing those points.
    * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
-   *
+   * 
    * @param coords
    *          coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
@@ -669,7 +664,7 @@ public class JTSUtilities
   /**
    * This function will check all line segments and return the one, in which the given point lies. If no segment is
    * found it will return null.
-   *
+   * 
    * @param curve
    *          The curve to check.
    * @param point
@@ -701,7 +696,7 @@ public class JTSUtilities
    * Not used at the moment and should only be used after a small refactoring.<br>
    * It can be very slow, in dependance of the amount of points to be added.<br>
    * Furthermore the given list of points is modified. It should be cloned here.
-   *
+   * 
    * @param line
    *          The line, to which the points are added to.
    * @param points
@@ -778,7 +773,7 @@ public class JTSUtilities
 
   /**
    * This function calculates points every x meter on the line.
-   *
+   * 
    * @param curve
    *          The curve with original points.
    * @param size
@@ -821,7 +816,7 @@ public class JTSUtilities
 
   /**
    * Inverts a given geometry.
-   *
+   * 
    * @param geometry
    *          The geometry, which should be inverted.
    */
@@ -850,7 +845,7 @@ public class JTSUtilities
    * This function adds a z-coordinate to each point of a line string. It interpolates the z-coordinate, using the
    * length of the line segment between the start point (parameter start) and the current point. The last point will get
    * the maximum as the z-coordinate (parameter end).
-   *
+   * 
    * @param lineString
    *          To each point on this line string the z-coordinate will be added.
    * @param start
@@ -903,7 +898,7 @@ public class JTSUtilities
 
   /**
    * This function calculates the center coordinate between two coordinates.
-   *
+   * 
    * @param coordinate_one
    *          The first coordinate.
    * @param coordinate_two
@@ -920,7 +915,7 @@ public class JTSUtilities
 
   /**
    * This function collects polygons from polygons (which will return itself in the list) or multi polygons.
-   *
+   * 
    * @param geometry
    *          The geometry to collect from. If it is no polygon, an empty list will be returned.
    * @return The list of contained polygons or an empty list.
@@ -956,7 +951,7 @@ public class JTSUtilities
 
   /**
    * This function inspects each coordinate of the given array and removes the z-coordinate from it (sets Double.NaN).
-   *
+   * 
    * @param coordinates
    *          The array of coordinates.
    * @return A new array of new coordinates without the z-coordinate.
@@ -991,7 +986,7 @@ public class JTSUtilities
 
   /**
    * Calculates the fractions some polygons are covering one base polygons.
-   *
+   * 
    * @see #fractionAreaOf(Polygon, Polygon)
    */
   public static double[] fractionAreasOf( final Polygon basePolygon, final Polygon[] coverPolygons )
@@ -1007,7 +1002,7 @@ public class JTSUtilities
 
   /**
    * Calculates the part (as fraction) of one polygon covering another.
-   *
+   * 
    * @param basePolygon
    *          The polygon, that is covered (by the calculated fraction) by the <code>coverPolygon</code>. May NOT be
    *          <code>null</code>.
@@ -1083,7 +1078,7 @@ public class JTSUtilities
 
   /**
    * Returns the minimal x-value of a sequence of coordinates.
-   *
+   * 
    * @return {@link Double#POSITIVE_INFINITY} if the sequence is empty
    */
   public static double getMinX( final CoordinateSequence seq )
@@ -1097,7 +1092,7 @@ public class JTSUtilities
 
   /**
    * Returns the maximal x-value of a sequence of coordinates.
-   *
+   * 
    * @return {@link Double#NEGATIVE_INFINITY} if the sequence is empty
    */
   public static double getMaxX( final CoordinateSequence seq )
