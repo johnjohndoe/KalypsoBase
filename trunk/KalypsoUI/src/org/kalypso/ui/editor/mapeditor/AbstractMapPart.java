@@ -104,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- *
+ * 
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
@@ -315,7 +315,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * The method starts a (user-)job, which loads the map.
    * </p>
    * .
-   *
+   * 
    * @param waitFor
    *          <code>true</code> if this method should return when the job has finished, if <code>false</code> returns
    *          immediately
@@ -350,6 +350,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
+    if( ObjectUtils.equals( m_file, storage ) )
+      return;
+
     if( m_saving )
       return;
 
@@ -612,7 +615,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void setFile( final IFile file )
   {
-    if( ObjectUtils.equals( m_file, file ))
+    if( ObjectUtils.equals( m_file, file ) )
       return;
 
     if( m_file != null )
