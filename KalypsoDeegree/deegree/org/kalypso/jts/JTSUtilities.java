@@ -68,6 +68,8 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.valid.IsValidOp;
+import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 /**
  * Utility class for some geometry operations.
@@ -1126,6 +1128,33 @@ public class JTSUtilities
       y[i] = seq.getY( i );
 
     return y;
+  }
+
+  /**
+   * @param msg
+   *          basic error message
+   * @param g
+   *          geometries to check
+   * @return if an error exists an error message will be returned
+   */
+  public static String validateGeometries( String msg, final Geometry... g )
+  {
+    boolean error = false;
+    for( final Geometry geometry : g )
+    {
+      final IsValidOp isValidOp = new IsValidOp( geometry );
+      final TopologyValidationError validationError = isValidOp.getValidationError();
+      if( validationError != null )
+      {
+        msg += String.format( " Error: %s", validationError.getMessage() );
+        error = true;
+      }
+    }
+
+    if( error )
+      return msg;
+
+    return null;
   }
 
 }
