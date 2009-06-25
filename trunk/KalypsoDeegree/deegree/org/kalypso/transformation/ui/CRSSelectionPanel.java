@@ -398,6 +398,9 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
   @Override
   public void done( final IJobChangeEvent event )
   {
+    if( isDisposed() )
+      return;
+
     /* Get the display. */
     Display display = getDisplay();
 
