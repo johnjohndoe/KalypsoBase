@@ -57,7 +57,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
   private IChartModel m_model;
 
-  public ChartEditorTreeContentProvider( IChartModel model )
+  public ChartEditorTreeContentProvider( final IChartModel model )
   {
     m_model = model;
   }
@@ -66,8 +66,8 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   {
     if( mngr == null )
       return new Object[] {};
-    IChartLayer[] layers = mngr.getLayers();
-    IChartLayer[] reverted = new IChartLayer[layers.length];
+    final IChartLayer[] layers = mngr.getLayers();
+    final IChartLayer[] reverted = new IChartLayer[layers.length];
     for( int i = 0; i < layers.length; i++ )
     {
       reverted[i] = layers[layers.length - 1 - i];
@@ -75,11 +75,17 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     }
     return reverted;
   }
+  
+  protected IChartModel getModel( )
+  {
+    return m_model;
+  }
+  
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object element )
+  public Object[] getChildren( final Object element )
   {
     if( element instanceof IChartModel )
     {
@@ -99,8 +105,8 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
     if( element instanceof IChartLayer )
     {
-      IChartLayer layer = (IChartLayer) element;
-      ILegendEntry[] entries = layer.getLegendEntries();
+      final IChartLayer layer = (IChartLayer) element;
+      final ILegendEntry[] entries = layer.getLegendEntries();
       if( entries != null && entries.length > 1 )
       {
         return entries;
@@ -117,7 +123,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     if( element instanceof IChartLayer )
     {
@@ -134,22 +140,22 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     if( element instanceof IChartModel )
     {
-      IChartModel model = (IChartModel) element;
+      final IChartModel model = (IChartModel) element;
       return (model.getLayerManager().getLayers().length > 0);
     }
     if( element instanceof IExpandableChartLayer )
     {
-      IExpandableChartLayer layer = (IExpandableChartLayer) element;
+      final IExpandableChartLayer layer = (IExpandableChartLayer) element;
       return (layer.getLayerManager().getLayers().length > 0);
     }
     if( element instanceof IChartLayer )
     {
-      IChartLayer layer = (IChartLayer) element;
-      ILegendEntry[] entries = layer.getLegendEntries();
+      final IChartLayer layer = (IChartLayer) element;
+      final ILegendEntry[] entries = layer.getLegendEntries();
       return entries == null ? false : entries.length > 1;
     }
     return false;
@@ -158,7 +164,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     return getChildren( inputElement );
   }
@@ -176,7 +182,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput == newInput )
       return;
