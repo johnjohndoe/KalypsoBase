@@ -119,6 +119,7 @@ public class AdapterPartListener<C> implements IPartListener2
   public void partBroughtToTop( final IWorkbenchPartReference partRef )
   {
   }
+  
 
   /**
    * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
