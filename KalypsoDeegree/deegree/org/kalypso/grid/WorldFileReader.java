@@ -80,7 +80,8 @@ public class WorldFileReader
       throw new UnsupportedOperationException( "Unknown image file extension: " + suffix );
 
     final String wfName = FileUtilities.nameWithoutExtension( imageFile.getAbsolutePath() ) + '.' + extName;
-    return readWorldFile( new File( wfName ) );
+    final File file = new File( wfName );
+    return readWorldFile( file );
   }
 
   public WorldFile readWorldFile( final File file ) throws IOException
@@ -102,14 +103,20 @@ public class WorldFileReader
   public WorldFile readWorldFile( final InputStream stream ) throws NumberFormatException, IOException
   {
     final BufferedReader br = new BufferedReader( new InputStreamReader( stream ) );
-
-    final double rasterXGeoX = Double.parseDouble( br.readLine().trim() );
-    final double rasterXGeoY = Double.parseDouble( br.readLine().trim() );
-    final double rasterYGeoX = Double.parseDouble( br.readLine().trim() );
-    final double rasterYGeoY = Double.parseDouble( br.readLine().trim() );
-    final double ulcx = Double.parseDouble( br.readLine().trim() );
-    final double ulcy = Double.parseDouble( br.readLine().trim() );
-
-    return new WorldFile( rasterXGeoX, rasterXGeoY, rasterYGeoX, rasterYGeoY, ulcx, ulcy );
+    try
+    {
+      final double rasterXGeoX = Double.parseDouble( br.readLine().trim() );
+      final double rasterXGeoY = Double.parseDouble( br.readLine().trim() );
+      final double rasterYGeoX = Double.parseDouble( br.readLine().trim() );
+      final double rasterYGeoY = Double.parseDouble( br.readLine().trim() );
+      final double ulcx = Double.parseDouble( br.readLine().trim() );
+      final double ulcy = Double.parseDouble( br.readLine().trim() );
+      
+      return new WorldFile( rasterXGeoX, rasterXGeoY, rasterYGeoX, rasterYGeoY, ulcx, ulcy );
+    }
+    finally
+    {
+      br.close();
+    }
   }
 }
