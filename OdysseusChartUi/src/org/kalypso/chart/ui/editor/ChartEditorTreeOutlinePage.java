@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -78,9 +77,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 {
-
-  protected IChartPart m_chartPart;
-
   protected ICheckStateListener m_checkStateListener = null;
 
   protected ChartEditorTreeContentProvider m_contentProvider = null;
@@ -91,10 +87,13 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected CheckboxTreeViewer m_treeViewer;
 
-  public ChartEditorTreeOutlinePage( final IChartPart editor )
+  protected final IChartModel m_model;
+
+  public ChartEditorTreeOutlinePage( final IChartModel model )
   {
-    m_chartPart = editor;
-    m_contentProvider = new ChartEditorTreeContentProvider( m_chartPart.getChartComposite().getChartModel() );
+    m_model = model;
+
+    m_contentProvider = new ChartEditorTreeContentProvider( model );
     m_eventListener = new AbstractLayerManagerEventListener()
     {
 
@@ -118,7 +117,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       public void onLayerContentChanged( final IChartLayer layer )
       {
         refreshItems( layer );
-
       }
 
       /**
@@ -174,7 +172,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   protected void addDropSupport( )
   {
     // Drag'n drop
-
     // add drag and drop support only for move operation
     final int ops = DND.DROP_MOVE;
 
@@ -214,19 +211,20 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public boolean performDrop( final Object data )
       {
-        if( data != null )
+        if( data != null && m_model != null )
         {
           final String id = (String) data;
-          ILayerManager lm = m_chartPart.getChartComposite().getChartModel().getLayerManager();
+          ILayerManager layerManager = m_model.getLayerManager();
+
           final Object targetLayer = getCurrentTarget();
           Object parent = null;
           // find dragged
-          IChartLayer draggedLayer = lm.getLayerById( id );
+          IChartLayer draggedLayer = layerManager.getLayerById( id );
           if( draggedLayer == null )
           {
             parent = m_contentProvider.getParent( targetLayer );
-            lm = parent instanceof IExpandableChartLayer ? ((IExpandableChartLayer) parent).getLayerManager() : null;
-            draggedLayer = lm == null ? null : lm.getLayerById( id );
+            layerManager = parent instanceof IExpandableChartLayer ? ((IExpandableChartLayer) parent).getLayerManager() : null;
+            draggedLayer = layerManager == null ? null : layerManager.getLayerById( id );
           }
           if( draggedLayer == null )
             return false;
@@ -234,10 +232,10 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
           // moved to its position
 
           if( targetLayer != null && targetLayer instanceof IChartLayer )
-            lm.moveLayerToPosition( draggedLayer, lm.getLayerPosition( (IChartLayer) targetLayer ) );
+            layerManager.moveLayerToPosition( draggedLayer, layerManager.getLayerPosition( (IChartLayer) targetLayer ) );
           // or it was dropped at the end of the list, then it will be moved to the lowest position
           else
-            lm.moveLayerToPosition( draggedLayer, 0 );
+            layerManager.moveLayerToPosition( draggedLayer, 0 );
 
           refreshItems( parent );
           return true;
@@ -284,12 +282,12 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer = new CheckboxTreeViewer( tree );
 
     m_treeViewer.setContentProvider( m_contentProvider );
-    m_treeViewer.setLabelProvider( new ChartTreeLabelProvider( m_chartPart ) );
+    m_treeViewer.setLabelProvider( new ChartTreeLabelProvider() );
     m_treeViewer.addCheckStateListener( m_checkStateListener );
 
     m_treeViewer.addSelectionChangedListener( m_selectionChangeListener );
 
-    m_chartPart.getChartComposite().getChartModel().getLayerManager().addListener( m_eventListener );
+    m_model.getLayerManager().addListener( m_eventListener );
 
     addDropSupport();
 
@@ -302,7 +300,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   @Override
   public void dispose( )
   {
-    m_chartPart.getChartComposite().getChartModel().getLayerManager().removeListener( m_eventListener );
+    m_model.getLayerManager().removeListener( m_eventListener );
     m_treeViewer.removeCheckStateListener( m_checkStateListener );
     m_treeViewer.removeSelectionChangedListener( m_selectionChangeListener );
   }
@@ -458,9 +456,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   public void updateControl( )
   {
-    final IChartModel model = m_chartPart.getChartComposite().getChartModel();
-    m_treeViewer.setInput( model );
-    setChecked( model.getLayerManager() );
+    m_treeViewer.setInput( m_model );
+    setChecked( m_model.getLayerManager() );
   }
 
 }
