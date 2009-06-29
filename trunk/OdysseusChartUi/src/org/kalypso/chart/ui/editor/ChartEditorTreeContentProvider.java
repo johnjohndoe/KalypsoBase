@@ -75,12 +75,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     }
     return reverted;
   }
-  
-  protected IChartModel getModel( )
-  {
-    return m_model;
-  }
-  
+ 
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
@@ -159,6 +154,11 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       return entries == null ? false : entries.length > 1;
     }
     return false;
+  }
+
+  protected final IChartModel getModel( )
+  {
+    return m_model;
   }
 
   /**
