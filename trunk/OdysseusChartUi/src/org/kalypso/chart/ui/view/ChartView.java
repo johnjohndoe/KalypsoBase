@@ -182,7 +182,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
         m_chartModel = new ChartModel();
 
         m_chartConfigurationLoader = new ChartConfigurationLoader( file );
-        IExtensionLoader el = ChartExtensionLoader.getInstance();
+        final IExtensionLoader el = ChartExtensionLoader.getInstance();
         ChartFactory.configureChartModel( m_chartModel, m_chartConfigurationLoader, m_chartType.getId(), el, context );
 
         if( m_chartModel != null )
@@ -285,7 +285,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     {
       if( m_outlinePage == null )
       {
-        m_outlinePage = new ChartEditorTreeOutlinePage( this );
+        final IChartModel model = this.getChartComposite().getChartModel();
+        m_outlinePage = new ChartEditorTreeOutlinePage( model );
       }
 
       return m_outlinePage;
@@ -316,28 +317,28 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IWorkbenchPart part, ISelection selection )
+  public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
 
     // TODO Auto-generated method stub
     if( selection instanceof ITreeSelection )
     {
 
-      ITreeSelection ts = (ITreeSelection) selection;
-      TreePath[] paths = ts.getPaths();
-      for( TreePath treePath : paths )
+      final ITreeSelection ts = (ITreeSelection) selection;
+      final TreePath[] paths = ts.getPaths();
+      for( final TreePath treePath : paths )
       {
-        Object ls = treePath.getLastSegment();
+        final Object ls = treePath.getLastSegment();
         if( ls instanceof IFile )
         {
-          IFile f = (IFile) ls;
+          final IFile f = (IFile) ls;
           if( f.getFileExtension().equals( "kod" ) )
           {
             try
             {
               f.refreshLocal( 1, null );
             }
-            catch( CoreException e )
+            catch( final CoreException e )
             {
               // TODO Auto-generated catch block
               e.printStackTrace();

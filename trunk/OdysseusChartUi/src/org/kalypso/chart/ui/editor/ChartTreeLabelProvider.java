@@ -51,7 +51,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.ui.IChartPart;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -66,14 +66,12 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
 
   private final Map<ILegendEntry, Image> m_legendEntryImages = new HashMap<ILegendEntry, Image>();
 
-  private final IChartPart m_chartPart;
-
   /** Default size for legend icons: use 16, this is default for all eclipse icons */
   private final Point m_defaultIconSize = new Point( 16, 16 );
 
-  public ChartTreeLabelProvider( final IChartPart editor )
+  // TODO: give display, not chart part
+  public ChartTreeLabelProvider( )
   {
-    m_chartPart = editor;
   }
 
   /**
@@ -124,6 +122,9 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   @Override
   public Image getImage( final Object element )
   {
+
+    final Display display = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay();
+
     if( element instanceof IChartLayer )
     {
       // Wenn nur ein Kind-Icon vorhanden ist, dann wird das verwendet
@@ -133,19 +134,21 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       {
         return null;
       }
+
       if( entries.length == 1 )
       {
-        final ImageData data =  entries[0].getSymbol( m_defaultIconSize );
-        if (data ==null)
+        final ImageData data = entries[0].getSymbol( m_defaultIconSize );
+        if( data == null )
           return null;
-        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(),data );
+
+        final Image img = new Image( display, data );
         m_layerImages.put( layer, img );
         return img;
       }
       else
       {
         // TODO: create image file instead of painting per source code
-        final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), m_defaultIconSize.x, m_defaultIconSize.y );
+        final Image img = new Image( display, m_defaultIconSize.x, m_defaultIconSize.y );
         final GC gc = new GC( img );
         gc.setAntialias( SWT.ON );
         gc.setForeground( Display.getDefault().getSystemColor( SWT.COLOR_GRAY ) );
@@ -202,7 +205,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         return m_legendEntryImages.get( le );
       }
 
-      final Image img = new Image( m_chartPart.getChartComposite().getDisplay(), le.getSymbol( m_defaultIconSize ) );
+      final Image img = new Image( display, le.getSymbol( m_defaultIconSize ) );
       m_legendEntryImages.put( le, img );
       return img;
     }
@@ -225,5 +228,4 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   {
     return getText( element );
   }
-
 }

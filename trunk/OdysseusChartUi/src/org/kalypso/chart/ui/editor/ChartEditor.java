@@ -492,7 +492,8 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       if( m_outlinePage == null )
       {
-        m_outlinePage = new ChartEditorTreeOutlinePage( this );
+        final IChartModel model = this.getChartComposite().getChartModel();
+        m_outlinePage = new ChartEditorTreeOutlinePage( model );
       }
 
       return m_outlinePage;
