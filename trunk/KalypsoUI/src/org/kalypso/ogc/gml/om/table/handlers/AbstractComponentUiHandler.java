@@ -64,7 +64,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 
   private final String m_nullFormat;
 
-  private final String m_parseFormat;
+  private final String m_parseFormat;  //TODO: is still in use ???
 
   private final String m_columnLabel;
 
