@@ -72,7 +72,7 @@ public class AbstractCachedFeature extends Feature_Impl
   @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
-    m_dirty.add( pt.getQName().getLocalPart() );
+    m_dirty.add( pt.getQName().toString() );
 
     super.setProperty( pt, value );
   }
@@ -83,7 +83,7 @@ public class AbstractCachedFeature extends Feature_Impl
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
-    m_dirty.add( propQName.getLocalPart() );
+    m_dirty.add( propQName.toString() );
 
     super.setProperty( propQName, value );
   }
@@ -111,14 +111,17 @@ public class AbstractCachedFeature extends Feature_Impl
 
   public boolean isDirty( final QName qname )
   {
-    return m_dirty.contains( qname.getLocalPart() );
+    if( m_dirty.contains( qname.toString() ) )
+      System.out.println( String.format( "dirty: %s", qname.toString() ) );
+
+    return m_dirty.contains( qname.toString() );
   }
 
   public boolean isDirty( final QName... qnames )
   {
     for( final QName qn : qnames )
     {
-      if( m_dirty.contains( qn.getLocalPart() ) )
+      if( isDirty( qn ) )
       {
         return true;
       }
@@ -129,14 +132,14 @@ public class AbstractCachedFeature extends Feature_Impl
 
   public void setValid( final QName qname )
   {
-    m_dirty.remove( qname.getLocalPart() );
+    m_dirty.remove( qname.toString() );
   }
 
   public void setValid( final QName... qnames )
   {
     for( final QName qn : qnames )
     {
-      m_dirty.remove( qn.getLocalPart() );
+      m_dirty.remove( qn.toString() );
     }
   }
 }
