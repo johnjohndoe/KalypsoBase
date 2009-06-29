@@ -75,11 +75,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This item displays map coordinates in the status line.
- *
+ * 
  * @author Dirk Kuch
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
 {
+
   private final class UpdateLabelJob extends UIJob
   {
     private GM_Point m_gmPoint;
@@ -97,8 +98,8 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( m_gmPoint != null && !m_label.isDisposed() ) // Have to check twice, because meanwhile it could have been
-        // disposed
+      /* Check twice, perhaps m_label was disposed */
+      if( m_gmPoint != null && !m_label.isDisposed() ) 
       {
         final double x = m_gmPoint.getX();
         final double y = m_gmPoint.getY();
@@ -113,11 +114,9 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
 
   protected static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
 
-  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private static final IAdapterFinder<IMapPanel> m_initFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
-
-  protected AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
+  protected final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_initFinder );
 
   protected Label m_label;
 
@@ -146,28 +145,24 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   @Override
   protected Control createControl( final Composite parent )
   {
-    /* The composite. */
     m_composite = new Composite( parent, SWT.NONE );
     final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     m_composite.setLayout( gridLayout );
 
-    /* The image. */
     final ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
     final Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
     lnk.setImage( image );
     lnk.setEnabled( false );
     lnk.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
 
-    /* The label. */
     m_label = new Label( m_composite, SWT.NONE );
-    m_label.setToolTipText( Messages.getString("org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1") ); //$NON-NLS-1$
+    m_label.setToolTipText( Messages.getString( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1" ) ); //$NON-NLS-1$
     final GridData gridData = new GridData( GridData.FILL, GridData.CENTER, true, true );
     gridData.widthHint = 175;
     m_label.setLayoutData( gridData );
 
-    /* Create the info image. */
     final Label imageLabel = new Label( m_composite, SWT.NONE );
     imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
     final Image infoImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_CRS_INFO );
@@ -189,7 +184,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     if( activePage != null )
       m_adapterListener.init( activePage );
 
-    m_updateLabelJob = new UpdateLabelJob( Messages.getString("org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2") ); //$NON-NLS-1$
+    m_updateLabelJob = new UpdateLabelJob( Messages.getString( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2" ) ); //$NON-NLS-1$
 
     return m_composite;
   }
