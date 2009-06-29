@@ -68,16 +68,15 @@ public class DeleteSelectedRowsHandler extends AbstractHandler
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-    Object firstElement = selection.getFirstElement();
-    int firstIndex = tupleResult.indexOf( firstElement );
+    final Object firstElement = selection.getFirstElement();
+    final int firstIndex = tupleResult.indexOf( firstElement );
 
     // TODO: we should force the table to stop editing first
-
     tupleResult.removeAll( selection.toList() );
 
     if( tupleResult.size() > 0 )
     {
-      int indexToSelect = Math.min( firstIndex, tupleResult.size() - 1 );
+      final int indexToSelect = Math.min( firstIndex, tupleResult.size() - 1 );
       viewer.setSelection( new StructuredSelection( tupleResult.get( indexToSelect ) ) );
     }
 
