@@ -89,7 +89,10 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
    */
   public void doSetValue( final IRecord record, final Object value )
   {
-    setValue( record, value );
+    if( value == null )
+      record.setValue( getComponent(), false );
+    else
+      setValue( record, value );
   }
 
   /**
@@ -137,7 +140,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
       final Date date = simpleDateFormat.parse( text );
       return DateUtilities.toXMLGregorianCalendar( date );
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       throw new IllegalArgumentException( e );
     }
@@ -149,6 +152,10 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-    record.setValue( getComponent(), value );
+    final int index = getComponent();
+    final Object oldValue = record.getValue( index );
+
+    if( !value.equals( oldValue ) )
+      record.setValue( index, value );
   }
 }

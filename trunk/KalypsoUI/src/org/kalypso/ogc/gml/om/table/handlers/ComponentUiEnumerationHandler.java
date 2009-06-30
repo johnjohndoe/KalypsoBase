@@ -82,7 +82,7 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         final IAnnotation annotation = m_items.get( element );
 
@@ -110,7 +110,10 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
    */
   public void doSetValue( final IRecord record, final Object value )
   {
-    setValue( record, value );
+    if( value == null )
+      record.setValue( getComponent(), false );
+    else
+      setValue( record, value );
   }
 
   /**
@@ -150,7 +153,11 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-    record.setValue( getComponent(), value );
+    final int index = getComponent();
+    final Object oldValue = record.getValue( index );
+
+    if( !value.equals( oldValue ) )
+      record.setValue( getComponent(), value );
   }
 
 }

@@ -79,11 +79,11 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         if( element instanceof Boolean )
         {
-          Boolean b = (Boolean) element;
+          final Boolean b = (Boolean) element;
 
           if( b == true )
             return "true"; //$NON-NLS-1$
@@ -124,7 +124,11 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-    record.setValue( getComponent(), value );
+    final int index = getComponent();
+    final Object oldValue = record.getValue( index );
+    
+    if( !value.equals( oldValue ) )
+      record.setValue( index, value );
   }
 
   /**
