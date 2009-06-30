@@ -20,7 +20,7 @@ public class CoordOrientation
 
     public static TYPE NEGATIV = new TYPE( "negativ" );
 
-    private String m_name;
+    private final String m_name;
 
     private TYPE( final String name )
     {
@@ -42,9 +42,10 @@ public class CoordOrientation
 
   /**
    * Orientation of 2D-Polygon, taken from http://geometryalgorithms.com/Archive/algorithm_0101/algorithm_0101.htm
-   * Original comment: orientation2D_Polygon(): tests the orientation of a simple polygon Input: int n = the number of
-   * vertices in the polygon Point* V = an array of n+1 vertices with V[n]=V[0] Return: >0 for counterclockwise =0 for
-   * none (degenerate) <0 for clockwise Note: this algorithm is faster than computing the signed area.
+   * Original comment: orientation2D_Polygon(): tests the orientation of a simple polygon<br>
+   * Input: int n = the number of vertices in the polygon Point* V = an array of n+1 vertices with V[n]=V[0]<br>
+   * Return: >0 for counterclockwise =0 for none (degenerate) <0 for clockwise Note: this algorithm is faster than
+   * computing the signed area.
    * 
    * @throws CoordOrientationException
    */
