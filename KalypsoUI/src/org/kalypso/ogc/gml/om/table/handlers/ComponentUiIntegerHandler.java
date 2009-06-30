@@ -106,7 +106,11 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-    record.setValue( getComponent(), value );
+    final int index = getComponent();
+    final Object oldValue = record.getValue( index );
+
+    if( !value.equals( oldValue ) )
+      record.setValue( getComponent(), value );
   }
 
 }

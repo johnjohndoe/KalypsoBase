@@ -72,6 +72,7 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final TableItem item = (TableItem) element;
     final IRecord record = (IRecord) item.getData();
+    
     modifyRecord( record, property, value );
   }
 

@@ -63,7 +63,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
 
   private final SimpleDateFormat m_df;
 
-  public ComponentUiSimpleDateHandler( int component, boolean editable, boolean resizeable, boolean moveable, String columnLabel, int columnStyle, int columnWidth, int columnWidthPercent, String displayFormat, String nullFormat, String parseFormat )
+  public ComponentUiSimpleDateHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     m_df = new SimpleDateFormat( "dd.MM.yyyy hh:mm" );
@@ -73,7 +73,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
   @Override
-  public CellEditor createCellEditor( Table table )
+  public CellEditor createCellEditor( final Table table )
   {
     return new TextCellEditor( table, SWT.NONE );
   }
@@ -82,7 +82,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#doGetValue(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public Object doGetValue( IRecord record )
+  public Object doGetValue( final IRecord record )
   {
     final Object value = record.getValue( getComponent() );
     if( value == null )
@@ -96,7 +96,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
    *      java.lang.Object)
    */
   @Override
-  public void doSetValue( IRecord record, Object value )
+  public void doSetValue( final IRecord record, final Object value )
   {
     if( (value == null) || (value.toString().trim().length() == 0) )
       setValue( record, null );
@@ -109,14 +109,14 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
    */
   @Override
-  public Object parseValue( String text )
+  public Object parseValue( final String text )
   {
     try
     {
-      Date date = m_df.parse( text );
+      final Date date = m_df.parse( text );
       return DateUtilities.toXMLGregorianCalendar( date );
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       throw new IllegalArgumentException( e );
     }
@@ -127,9 +127,13 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
    *      java.lang.Object)
    */
   @Override
-  public void setValue( IRecord record, Object value )
+  public void setValue( final IRecord record, final Object value )
   {
-    record.setValue( getComponent(), value );
+    final int index = getComponent();
+    final Object oldValue = record.getValue( index );
+
+    if( !value.equals( oldValue ) )
+      record.setValue( getComponent(), value );
   }
 
   @Override
