@@ -40,6 +40,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -632,7 +633,6 @@ public class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-
           - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
               + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
@@ -1027,8 +1027,8 @@ public class GeometryUtilities
    * converts two given curves into a position array of a ccw oriented polygon.<br>
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
    * inverse order.<br>
-   * <strong>The last point is missing, so they are not all positions for a closed polygon.</strong>
-   *
+   * Produces a closed ring.
+   * 
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1039,7 +1039,7 @@ public class GeometryUtilities
     // as a first guess, we assume that the curves build a non-intersecting polygon
     final GM_Position[] firstPoses = firstCurve.getAsLineString().getPositions();
     final GM_Position[] secondPoses = secondCurve.getAsLineString().getPositions();
-    final GM_Position[] polygonPositions = new GM_Position[firstPoses.length + secondPoses.length];
+    final GM_Position[] polygonPositions = new GM_Position[firstPoses.length + secondPoses.length + 1];
 
     for( int i = 0; i < firstPoses.length; i++ )
       polygonPositions[i] = firstPoses[i];
@@ -1047,6 +1047,8 @@ public class GeometryUtilities
     for( int i = 0; i < secondPoses.length; i++ )
       polygonPositions[i + firstPoses.length] = secondPoses[secondPoses.length - i - 1];
 
+    polygonPositions[polygonPositions.length - 1] = polygonPositions[0];
+    
     return orientateRing( polygonPositions );
   }
 
@@ -1079,18 +1081,9 @@ public class GeometryUtilities
   {
     // check orientation
     if( calcSignedAreaOfRing( polygonPositions ) < 0 )
-    {
-      /* orientation is cw */
-      // invert the direction
-      final GM_Position[] invertedPositions = new GM_Position[polygonPositions.length];
-      for( int i = 0; i < polygonPositions.length; i++ )
-      {
-        invertedPositions[i] = polygonPositions[polygonPositions.length - 1 - i];
-      }
-      return invertedPositions;
-    }
-    else
-      return polygonPositions;
+      ArrayUtils.reverse( polygonPositions );
+
+    return polygonPositions;
   }
 
   /**
