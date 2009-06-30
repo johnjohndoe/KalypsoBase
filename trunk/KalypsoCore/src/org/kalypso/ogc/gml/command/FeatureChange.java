@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.command;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,6 +59,8 @@ public class FeatureChange
 
   public FeatureChange( final Feature feature, final IPropertyType property, final Object newValue )
   {
+    Assert.isNotNull( property );
+    
     m_feature = feature;
     m_property = property;
     m_newValue = newValue;
