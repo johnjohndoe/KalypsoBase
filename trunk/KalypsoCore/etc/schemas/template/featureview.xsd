@@ -378,8 +378,8 @@
 					<xs:sequence>
 						<xs:element ref="tv:gistableview" />
 					</xs:sequence>
-					<xs:attribute name="showToolbar" type="xs:boolean" use="optional" default="false" />
-					<xs:attribute name="showContextMenu" type="xs:boolean" use="optional" default="true" />
+					<xs:attribute name="showToolbar" type="xs:boolean" use="optional" default="true" />
+					<xs:attribute name="showContextMenu" type="xs:boolean" use="optional" default="false" />
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
