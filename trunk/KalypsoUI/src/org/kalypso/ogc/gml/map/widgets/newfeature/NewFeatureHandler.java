@@ -91,6 +91,8 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
         {
           if( prop.getQName().equals( GML_LOCATION ) )
             continue;
+          if( prop.isVirtual() )
+            continue;
           geomPropertiesQName.add( prop.getQName() );
         }
         final NewFeatureWidget newFeatureWidget = new NewFeatureWidget( ft.getQName(), geomPropertiesQName.toArray( new QName[geomPropertiesQName.size()] ) );
