@@ -43,11 +43,7 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -95,8 +91,7 @@ public class AddFeatureCommand implements ICommand
   private final boolean m_doAddOnProcess;
 
   /**
-   * @param If
-   *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
+   * @param If dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
    */
   public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
@@ -185,18 +180,7 @@ public class AddFeatureCommand implements ICommand
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
-      new UIJob( "" )
-      {
-        /**
-         * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
-          return StatusUtilities.createOkStatus( "" );
-        }
-      }.schedule( 100 );
+      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
   }
 
   /**
@@ -217,7 +201,7 @@ public class AddFeatureCommand implements ICommand
 
     if( m_propName.isList() )
     {
-      final List< ? > list = (List< ? >) m_parentFeature.getProperty( m_propName );
+      final List<?> list = (List<?>) m_parentFeature.getProperty( m_propName );
       list.remove( m_newFeature );
     }
     else
@@ -231,7 +215,7 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0"); //$NON-NLS-1$
   }
 
   public Feature getNewFeature( )
@@ -246,5 +230,5 @@ public class AddFeatureCommand implements ICommand
   {
     m_dropSelection = dropSelection;
   }
-
+  
 }
