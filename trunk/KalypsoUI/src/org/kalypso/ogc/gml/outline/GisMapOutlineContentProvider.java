@@ -117,7 +117,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
-      refreshViewer( theme );
+      refreshViewer( null );
     }
 
     /**

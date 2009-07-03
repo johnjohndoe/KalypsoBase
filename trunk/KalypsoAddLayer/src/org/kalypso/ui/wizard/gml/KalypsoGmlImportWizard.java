@@ -145,6 +145,8 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
+      // TODO: this is very often not what is wanted...
+      // We should show a dialog to the user and ask what we really want to add here...
       for( final IFeatureType ft : associationFeatureTypes )
       {
         final String title = ft.getAnnotation().getLabel();
