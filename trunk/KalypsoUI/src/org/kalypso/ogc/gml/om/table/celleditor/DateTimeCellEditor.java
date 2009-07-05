@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.celleditor;
 
+import java.util.Date;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -47,6 +49,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Date Time Cell Editor for XMLGregorianCalendar Observation Components
@@ -68,7 +71,7 @@ public class DateTimeCellEditor extends CellEditor
   @Override
   protected Control createControl( final Composite parent )
   {
-    m_dialog = new DateTimeDialog( parent.getShell() );
+    m_dialog = new DateTimeDialog( parent.getShell(), KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
 
     return m_dialog.getShell();
   }
@@ -116,8 +119,8 @@ public class DateTimeCellEditor extends CellEditor
   {
     if( value instanceof XMLGregorianCalendar )
     {
-      final XMLGregorianCalendar calendar = (XMLGregorianCalendar) value;
-      m_dialog.setDateTime( calendar.toGregorianCalendar() );
+      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) value );
+      m_dialog.setDateTime( date );
     }
     else if( value == null )
     {
