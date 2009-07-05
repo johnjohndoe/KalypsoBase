@@ -57,7 +57,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Handles XMLGreogorianCalendar types.
- * 
+ *
  * @author Dirk Kuch
  */
 public class ComponentUiDateHandler extends AbstractComponentUiHandler
@@ -118,7 +118,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
 
       final String displayFormat = getDisplayFormat();
 
-      return String.format( displayFormat, instance, instance, instance );
+      return String.format( displayFormat, instance );
     }
 
     return Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.0" ); //$NON-NLS-1$
