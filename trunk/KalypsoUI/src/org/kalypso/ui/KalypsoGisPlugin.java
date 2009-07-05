@@ -42,6 +42,8 @@ package org.kalypso.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.Handler;
@@ -177,7 +179,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   * 
+   *
    * @param context
    * @throws Exception
    */
@@ -207,7 +209,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   * 
+   *
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
@@ -239,6 +241,23 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       return TimeZone.getDefault();
     }
+  }
+
+  /**
+   * Returns the global format for displaying dates + times.<br/>
+   * The format is preconfigured with the right display timezone (i.e. no need for extra call to
+   * {@link #getDisplayTimeZone()}.<br/>
+   * <br/>
+   * TODO: replace all static date format all around the place <br/>
+   * TODO: we should provide several versions: long/short, for String.format etc.<br/>
+   * TODO: Let user choose hiw own format in the kalypso preference page <br/>
+   */
+  public DateFormat getDisplayDateTimeFormat( )
+  {
+    // We recreate the date format in order to support change of preferences without restart of Kalypso
+    final DateFormat df = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
+    df.setTimeZone( getDisplayTimeZone() );
+    return df;
   }
 
   /**
