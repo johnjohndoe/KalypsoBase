@@ -64,7 +64,7 @@ public class SelectWidget extends AbstractDelegateWidget
     super( "select widget", "", new SelectFeatureWidget( "", "", new QName[] { Feature.QNAME_FEATURE }, null ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( "Selektieren Features in der Karte." );
+    m_toolTipRenderer.setTooltip( "Selektieren Sie Features in der Karte." );
   }
 
   /**
