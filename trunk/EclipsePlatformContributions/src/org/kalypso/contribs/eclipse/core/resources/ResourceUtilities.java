@@ -44,6 +44,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 
 /**
  * ResourceUtilities
@@ -339,5 +340,31 @@ public class ResourceUtilities
     {
       return new IFile[0];
     }
+  }
+
+  /**
+   * check if the child file can be expressed as a relative path regarding to the given parent folder.
+   *
+   * @return The relative path (possibly using '..' notation, or <code>terrainModelFile#toFullPath</code> an absolute
+   *         path if this is not possible.
+   */
+  public static IPath makeRelativ( final IContainer parentFolder, final IFile childFile )
+  {
+    final IContainer childFolder = childFile.getParent();
+
+    final IPath parentPath = parentFolder.getFullPath();
+    final IPath childFolderPath = childFolder.getFullPath();
+
+    final IPath relativPath = PathUtils.makeRelativ( parentPath, childFolderPath );
+
+    return relativPath.append( childFile.getName() );
+  }
+
+  /**
+   * Same as {@link #makeRelativ(IFile, IFile)}, using a {@link IFile} as parent.
+   */
+  public static IPath makeRelativ( final IFile parentFile, final IFile childFile )
+  {
+    return makeRelativ( parentFile.getParent(), childFile );
   }
 }
