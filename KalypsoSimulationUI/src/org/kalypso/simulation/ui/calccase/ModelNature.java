@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -120,6 +121,8 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 @SuppressWarnings("restriction")
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
+  public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED";
+
   public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
 
   // TODO Move this to KalypsoSimulationCore plugin
@@ -147,7 +150,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
 
-  private final Properties m_metadata = new Properties();
+  private final Properties m_defaultMetadata = new Properties();
+
+  private final Properties m_metadata = new Properties( m_defaultMetadata );
 
   private IProject m_project;
 
@@ -186,6 +191,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * &lt;pre&gt;
    */
   public static final String ANT_LAUNCH_CONFIGURATION_TYPE = IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE;
+
+  public ModelNature( )
+  {
+    // Set some default value for the metadata
+    m_defaultMetadata.put( METADATA_KEY_CALCCASE_CONTINUE_ALLOWED, Boolean.FALSE.toString() );
+  }
 
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -482,6 +493,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
     cal.setTime( now );
+    
+    attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) );
+    
     // erstmal auf die letzte Stunde runden
     cal.set( Calendar.MINUTE, 0 );
     cal.set( Calendar.SECOND, 0 );
@@ -500,12 +514,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
     }
 
-    final Date forecastTime = cal.getTime();
+    attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) );
 
     // standardzeit abziehen
     final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
-    final Date simTime = cal.getTime();
+    
+    attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) );
 
     attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() );
     attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() );
@@ -513,8 +528,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() );
 
     attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() );
-
-    attributes.setProperty( "kalypso.currentTime", Mapper.mapJavaValueToXml( now ) );
 
     attributes.setProperty( "simulation_project_loc", project.getLocation().toPortableString() );
 
@@ -534,9 +547,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // should never happen
       e.printStackTrace();
     }
-
-    attributes.setProperty( "kalypso.startforecast", Mapper.mapJavaValueToXml( forecastTime ) );
-    attributes.setProperty( "kalypso.startsim", Mapper.mapJavaValueToXml( simTime ) );
 
     return attributes;
   }
@@ -648,6 +658,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       IOUtils.closeQuietly( contents );
     }
+  }
+
+  /**
+   * Returns a metadatum associated with this nature.
+   * 
+   * @param key
+   *          One of the METADATA_KEY_ conmstants.
+   * @return The value of the given key; or <code>null</code> if not set.
+   */
+  public String getMetadata( final String key )
+  {
+    return m_metadata.getProperty( key );
   }
 
   private IFolder getModelFolder( )

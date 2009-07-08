@@ -51,10 +51,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
@@ -68,8 +72,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -77,12 +81,16 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -99,12 +107,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -120,6 +131,11 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolListener;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -141,13 +157,18 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.util.GisTemplateLoadedThread;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import org.kalypso.ogc.sensor.template.IObsViewEventListener;
+import org.kalypso.ogc.sensor.template.ObsViewEvent;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieFeatureProps;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -356,6 +377,36 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
+  /**
+   * Set of TableViewItem: all columns ever visited are kept in this map, in order to save them later.
+   */
+  private final Set<TableViewColumn> m_dirtyColumns = new HashSet<TableViewColumn>();
+
+  /**
+   * Does nothing, but makes sure that every shown observation is only released on dispose of the page. <br>
+   * Needed for save stuff.
+   */
+  private final IPoolListener m_poolListener = new IPoolListener()
+  {
+    public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
+    {
+    }
+
+    public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
+    {
+    }
+
+    public boolean isDisposed( )
+    {
+      return false;
+    }
+
+    @Override
+    public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
+    {
+    }
+  };
+
   private Arguments m_arguments = null;
 
   private IProject m_project = null;
@@ -459,6 +510,16 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
   private MapPanelSourceProvider m_sourceProvider;
 
+  protected final Runnable m_updateButtonsRunnable = new Runnable()
+  {
+    public void run( )
+    {
+      final IWizardContainer container = getContainer();
+      if( container != null )
+        container.updateButtons();
+    }
+  };
+
   public AbstractCalcWizardPage( final String name, final int selectSource )
   {
     super( name );
@@ -559,6 +620,9 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       m_mapPanel.removeSelectionChangedListener( this );
       m_mapPanel.dispose();
     }
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    pool.removePoolListener( m_poolListener );
 
     super.dispose();
   }
@@ -956,6 +1020,29 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       }
 
       m_tableView = new TableView();
+      m_tableView.addObsViewEventListener( new IObsViewEventListener()
+      {
+        /**
+         * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
+         */
+        public void onObsViewChanged( final ObsViewEvent evt )
+        {
+          if( evt.getType() == ObsViewEvent.TYPE_ITEM_DATA_CHANGED )
+          {
+            final Shell shell = getShell();
+            final Display display = shell == null ? null : shell.getDisplay();
+            if( display != null && !display.isDisposed() )
+              display.asyncExec( m_updateButtonsRunnable );
+          }
+        }
+
+        /**
+         * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
+         */
+        public void onPrintObsView( final ObsViewEvent evt )
+        {
+        }
+      } );
 
       m_table = new ObservationTable( m_tableView );
 
@@ -1119,11 +1206,14 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   {
     m_ignoreType = ignoreType;
 
-    // save observations else changes are lost
-    saveDirtyObservations( new NullProgressMonitor() );
+    // remember observation for save
+    if( m_tableView != null )
+      doKeepObservations( m_tableView.getItems() );
 
     refreshDiagram();
     refreshZMLTable();
+
+    getContainer().updateButtons();
   }
 
   protected Composite createIgnoreButtonPanel( final Composite parent )
@@ -1189,14 +1279,91 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   }
 
   /**
-   * Saves the dirty observations that were edited in the table.
+   * Remember given columns for later save; also add pool listener to its observation in order to prohibit release of
+   * the underlying observation.
    */
-  protected void saveDirtyObservations( final IProgressMonitor monitor )
+  private void doKeepObservations( final ObsViewItem[] items )
   {
-    if( m_table == null )
-      return;
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    for( final ObsViewItem item : items )
+    {
+      final TableViewColumn column = (TableViewColumn) item;
+      if( column.isDirty() )
+      {
+        final KeyInfo info = pool.getInfo( column.getObservation() );
+        final IPoolableObjectType key = info.getKey();
+        pool.addPoolListener( m_poolListener, key );
 
-    TableViewUtils.saveDirtyObservations( Arrays.asList( m_tableView.getItems() ), monitor );
+        m_dirtyColumns.add( column );
+      }
+    }
+  }
+
+  /**
+   * Saves the dirty observations that were edited in the table.
+   * 
+   * @return Status contains errors, when something goes wrong while saving the observations.
+   */
+  public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
+  {
+    monitor.beginTask( "Daten speichern", 2000 );
+
+    try
+    {
+      if( m_gisTableViewer != null )
+        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
+      else
+        monitor.worked( 1000 );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+
+    if( m_table == null )
+      return Status.OK_STATUS;
+
+    final TableViewColumn[] dirtyTableColumns = getDirtyTableColumns();
+    final IStatus status = TableViewUtils.saveDirtyColumns( dirtyTableColumns, new SubProgressMonitor( monitor, 1000 ) );
+
+    for( final TableViewColumn dirtyTableColumn : dirtyTableColumns )
+      dirtyTableColumn.setDirty( false, null );
+
+    // We may release any observation
+    m_dirtyColumns.clear();
+    KalypsoCorePlugin.getDefault().getPool().removePoolListener( m_poolListener );
+
+    return status;
+  }
+
+  /**
+   * Returns all columns potentially dirty in this page. <br>
+   * All columns in {@link #m_dirtyColumns}+ all current column of {@link #m_tableView}.
+   */
+  private TableViewColumn[] getDirtyTableColumns( )
+  {
+    final Set<ObsViewItem> columnSet = new HashSet<ObsViewItem>();
+
+    // All currently shown columns
+    if( m_tableView != null )
+    {
+      final ObsViewItem[] items = m_tableView.getItems();
+      for( final ObsViewItem item : items )
+      {
+        final TableViewColumn column = (TableViewColumn) item;
+        if( column.isDirty() )
+          columnSet.add( column );
+      }
+    }
+
+    // All previously shown items
+    for( final TableViewColumn column : m_dirtyColumns )
+    {
+      if( column.isDirty() )
+        columnSet.add( column );
+    }
+
+    return columnSet.toArray( new TableViewColumn[columnSet.size()] );
   }
 
   /**
@@ -1219,12 +1386,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
         }
       }
 
-      saveDirtyObservations( new SubProgressMonitor( monitor, 1000 ) );
-
-      if( m_gisTableViewer != null )
-        m_gisTableViewer.saveData( new SubProgressMonitor( monitor, 1000 ) );
-      else
-        monitor.worked( 1000 );
+      saveData( true, monitor );
     }
     finally
     {
@@ -1235,13 +1397,33 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.IModelWizardPage#restoreState(boolean)
    */
-  public void restoreState( final boolean clearState ) throws CoreException
+  public void restoreState( final boolean clearState )
   {
-    if( m_selectionRestorer != null )
-      m_selectionRestorer.restoreSelection();
+    final Job job = new Job( "Change selection" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          if( m_selectionRestorer != null )
+            m_selectionRestorer.restoreSelection();
 
-    if( clearState )
-      m_selectionRestorer = null;
+          if( clearState )
+            m_selectionRestorer = null;
+        }
+        catch( final CoreException e )
+        {
+          return e.getStatus();
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+    job.setUser( false );
+    job.setRule( getCalcFolder() );
+    job.schedule( 1000 );
+
   }
 
   /**
@@ -1279,6 +1461,12 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final CalcWizard calcWizard = (CalcWizard) wizard;
 
+    if( calcWizard.doAskForSave() )
+    {
+      if( !MessageDialog.openConfirm( getShell(), taskName, "Geänderte Daten müssen gespeichert werden." ) )
+        return;
+    }
+
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
@@ -1303,7 +1491,7 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 
-    StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, true );
+    StatusUtilities.openSpecialErrorDialog( getShell(), title, errorMessage, status, IStatus.WARNING | IStatus.ERROR, true );
 
     final Job job = new Job( "Stelle Wizard-Seiten wieder her" )
     {
@@ -1591,11 +1779,20 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
     refreshDiagram();
     if( "selected".equalsIgnoreCase( m_showZmlTable ) )
     {
-      // Save the observations before refreshing else changes are lost
-      saveDirtyObservations( new NullProgressMonitor() );
+      // remember observation for later save
+      if( m_tableView != null )
+        doKeepObservations( m_tableView.getItems() );
 
       refreshZMLTable();
     }
+
+    final Shell shell = getShell();
+    if( shell == null )
+      return;
+
+    final Display display = shell.getDisplay();
+    if( display != null && !display.isDisposed() )
+      display.asyncExec( m_updateButtonsRunnable );
   }
 
   /**
@@ -1661,6 +1858,82 @@ public abstract class AbstractCalcWizardPage extends WizardPage implements IMode
       final IWorkbenchPartSite site = view.getSite();
       m_sourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
     }
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IResetablePage#canReset()
+   */
+  public boolean canReset( )
+  {
+    final TableViewColumn[] dirtyTableColumns = getDirtyTableColumns();
+    return dirtyTableColumns != null && dirtyTableColumns.length > 0;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IResetablePage#performReset(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public IStatus performReset( final IProgressMonitor monitor )
+  {
+    // Find dirty columns, filter out columns with same observation
+    final TableViewColumn[] dirtyTableColumnsUnfiltered = getDirtyTableColumns();
+
+    final Comparator<TableViewColumn> comp = new Comparator<TableViewColumn>()
+    {
+      public int compare( final TableViewColumn c1, final TableViewColumn c2 )
+      {
+        if( c1.getObservation() == c2.getObservation() )
+          return 0;
+
+        return c1.getName().compareTo( c2.getName() );
+      }
+    };
+
+    final Set<TableViewColumn> dirtyColumns = new TreeSet<TableViewColumn>( comp );
+    dirtyColumns.addAll( Arrays.asList( dirtyTableColumnsUnfiltered ) );
+
+    final TableViewColumn[] dirtyTableColumns = dirtyColumns.toArray( new TableViewColumn[dirtyColumns.size()] );
+
+    // Show in List-Dialog
+    final LabelProvider labelProvider = new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        final TableViewColumn column = (TableViewColumn) element;
+        final String label = column.getName();
+
+        return label.replaceAll( "\\[.*\\]", "" );
+      }
+    };
+
+    final ListSelectionDialog dlg = new ListSelectionDialog( getShell(), dirtyTableColumns, new ArrayContentProvider(), labelProvider, "Bitte wählen Sie die Zeitreihen aus, die Sie zurücksetzen möchten: " );
+    if( dlg.open() == Window.CANCEL )
+      return Status.CANCEL_STATUS;
+
+    // reset all selected objects
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final Object[] result = dlg.getResult();
+    for( final Object element : result )
+    {
+      final TableViewColumn column = (TableViewColumn) element;
+      final IObservation obs = column.getObservation();
+      final KeyInfo info = pool.getInfo( obs );
+      if( info != null )
+      {
+        // Reload forced, as the pool is never dirty here.
+        info.reload( true );
+      }
+
+      column.setDirty( false, null );
+      m_dirtyColumns.remove( column );
+    }
+
+    getContainer().updateButtons();
+
+    return StatusUtilities.createStatus( IStatus.INFO, "Hallo", null );
   }
 
 }

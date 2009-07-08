@@ -97,10 +97,8 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
     // jobs can now run parallel
 
     // alle Rechenfälle aktualisieren
-    for( int i = 0; i < calcCases.length; i++ )
+    for( final IFolder calcCase : calcCases )
     {
-      final IFolder calcCase = calcCases[i];
-
       final Job job = new Job( "Aktualisiere Zeitreihen: " + calcCase.getName() )
       {
         /**
@@ -127,7 +125,7 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
       };
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false, true ) );
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false, IStatus.ERROR, true ) );
       job.setUser( true );
       job.setRule( calcCase.getProject() );
       job.schedule();

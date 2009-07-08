@@ -259,7 +259,7 @@ public class SumUpForecastTable
     if( row != null )
       writer.write( row.dumpRow( sep, nf, df, dates ) );
     else
-      writer.write( "<keine Daten vorhanden, Zeitreihe möglicherweise ungültig>" );
+      writer.write( "<keine Daten vorhanden, Zeitreihe enthält die erforderliche Datenachse nicht oder ist möglicherweise ungültig>" );
   }
 
   public void dispose( )
