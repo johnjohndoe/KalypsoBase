@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -221,6 +220,7 @@ public class ResourcePool
 
     // REMARK: we do not save inside the sync-block, because saving may cause acces to
     // the pool (Example: saving a GML might cause access to Xlinked properties)
+    // TODO: monitor handling wrong!
     for( final KeyInfo keyInfo : infosToSave )
       keyInfo.saveObject( monitor );
   }
@@ -235,14 +235,16 @@ public class ResourcePool
 
       final Collection<KeyInfo> values = m_keyInfos.values();
       for( final KeyInfo info : values )
+      {
         if( info.getObject() == object )
           return info;
+      }
 
       return null;
     }
   }
 
-  public KeyInfo[] getInfos( ) // TODO: synchronize
+  public KeyInfo[] getInfos( )
   {
     return m_keyInfos.values().toArray( new KeyInfo[0] );
   }
@@ -287,7 +289,7 @@ public class ResourcePool
       final ILoader loader = m_factory.getLoaderInstance( key.getType() );
       info2 = new KeyInfo( key, loader );
       final IStatus result = info2.loadObject( new NullProgressMonitor() );
-      if( (result.getSeverity() & Status.ERROR) == 1 )
+      if( (result.getSeverity() & IStatus.ERROR) == 1 )
         throw new CoreException( result );
 
       return info2.getObject();

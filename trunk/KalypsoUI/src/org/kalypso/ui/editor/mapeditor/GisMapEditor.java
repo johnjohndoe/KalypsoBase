@@ -87,17 +87,6 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
     }
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-   */
-  @Override
-  public void init( final IEditorSite site, final IEditorInput input )
-  {
-    super.init( site, input );
-
-    initMapPanel( site );
-  }
-
   @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )

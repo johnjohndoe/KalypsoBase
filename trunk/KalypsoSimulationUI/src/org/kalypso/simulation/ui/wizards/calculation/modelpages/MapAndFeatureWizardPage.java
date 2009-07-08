@@ -205,22 +205,30 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#saveState(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void saveState( final IProgressMonitor monitor ) throws CoreException
+  public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Daten speichern", 2 );
 
-    super.saveState( new SubProgressMonitor( monitor, 1 ) );
+    final IStatus superStatus = super.saveData( doSaveGml, new SubProgressMonitor( monitor, 1 ) );
+    if( !superStatus.isOK() )
+      return superStatus;
 
-    final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
-    if( !status.isOK() )
-      throw new CoreException( status );
+    // TODO: In this old version, saving gml leads to reload; so we will loose the selection.
+    // Directly restoring the selection does not work, as the gml might not yet be reloaded....
+    // Uncomment this in when updating to head.
+    if( doSaveGml )
+    {
+      final IStatus status = m_templateviewer.saveGML( new SubProgressMonitor( monitor, 1 ) );
+      return status;
+    }
+    return Status.OK_STATUS;
   }
 
   /**
    * @see org.kalypso.simulation.ui.wizards.calculation.modelpages.AbstractCalcWizardPage#restoreState(boolean)
    */
   @Override
-  public void restoreState( final boolean clearState ) throws CoreException
+  public void restoreState( final boolean clearState ) 
   {
     super.restoreState( clearState );
 
@@ -360,9 +368,6 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
     return list;
   }
 
-  /**
-   * @return
-   */
   private boolean getSelectionFromFeatureview( )
   {
     final String selectionFromFeatureviewString = getArguments().getProperty( PROP_SELECTION_FROM_FEATUREVIEW, "true" );

@@ -44,22 +44,32 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.contribs.eclipse.jface.wizard.IResetablePage;
 import org.kalypso.contribs.eclipse.jface.wizard.view.IHtmlWizardPage;
 
 /**
  * @author belger
  */
-public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage
+public interface IModelWizardPage extends ICalcWizardPage, IHtmlWizardPage, IResetablePage
 {
   public void init( final IProject project, final String pagetitle, final ImageDescriptor imagedesc, final Arguments arguments, final IFolder calcFolder );
 
-  /** Save all data of the pages and remember the state for the next call to refreshData */
+  /** Save all data of the pages and remember the state for the next call to restoreState */
   public void saveState( final IProgressMonitor monitor ) throws CoreException;
 
   /**
-   * Restore state to the last call of saveData<br>
+   * Save all data of the page
+   * 
+   * @param doSaveGml
+   *          Obscure and dangerous: flag, if gml should be saved; solves problem of deselection when pressing next
+   */
+  public IStatus saveData( boolean doSaveGml, final IProgressMonitor monitor );
+
+  /**
+   * Restore state to the last call of saveState<br>
    * 
    * @param clearState
    *          If <code>true</code>, any saved data can now savely be discarded. If <code>false</code>, pages should keep

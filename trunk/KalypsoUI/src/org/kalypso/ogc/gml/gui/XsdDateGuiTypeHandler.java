@@ -54,6 +54,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
@@ -67,7 +68,6 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
@@ -86,16 +86,16 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
 
   static
   {
-    DF_Date.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-    DF_DateTime.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-    DF_Time.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    DF_Date.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    DF_DateTime.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    DF_Time.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
   private final DateFormat m_df;
 
   private final boolean m_show_button;
 
-  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler handler, final DateFormat df, final boolean show_button )
+  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler< ? > handler, final DateFormat df, final boolean show_button )
   {
     super( handler );
     m_df = df;

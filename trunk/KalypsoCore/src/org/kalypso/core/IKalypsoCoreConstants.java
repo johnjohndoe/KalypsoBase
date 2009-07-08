@@ -47,6 +47,8 @@ public interface IKalypsoCoreConstants
 {
   public final static String PLUGIN_ID = "org.kalypso.core"; //$NON-NLS-1$
 
+  public static final String CONFIG_PROPERTY_TIMEZONE = "kalypso.timezone";//$NON-NLS-1$
+  
   /**
    * System property from which the locations of the kalypso-client.ini is read. If this property is set, it overwrites
    * (and sets) the user preferences.

@@ -201,13 +201,7 @@ public final class StatusUtilities
     }
 
     if( t instanceof InvocationTargetException )
-    {
-      if( message == null )
-        return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), null );
-
-      return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), String.format( message, args ) );
-    }
-
+      return statusFromThrowable( ((InvocationTargetException) t).getTargetException(), message );
     if( t instanceof CoreException )
       return ((CoreException) t).getStatus();
 
@@ -256,10 +250,10 @@ public final class StatusUtilities
   }
 
   /**
-   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
-   * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
-   * returned.
-   *
+   * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>.
+   * If the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus
+   * is returned.
+   * 
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -402,7 +396,8 @@ public final class StatusUtilities
    */
   public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs )
   {
-    return openSpecialErrorDialog( shell, title, message, status, IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR, showMultipleDialogs );
+    final int displayMask = IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR;
+    return openSpecialErrorDialog( shell, title, message, status, displayMask, showMultipleDialogs );
   }
 
   /**

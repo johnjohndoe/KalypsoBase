@@ -59,9 +59,9 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  */
 public class CalcCaseTableLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider
 {
-  private WorkbenchLabelProvider m_provider;
+  private final WorkbenchLabelProvider m_provider;
   
-  private DateFormat m_df = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
+  private final DateFormat m_df = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
 
   private final IFolder m_markedCalcCase;
 

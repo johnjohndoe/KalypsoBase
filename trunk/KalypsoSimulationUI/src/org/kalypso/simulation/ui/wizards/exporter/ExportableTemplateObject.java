@@ -97,6 +97,8 @@ public class ExportableTemplateObject implements IExportableObject
 
   private final String m_category;
 
+  private final Integer m_kennzifferIndex;
+
   private final String m_preferredFilename;
 
   private final DisposeHelper m_disposeHelper;
@@ -109,9 +111,9 @@ public class ExportableTemplateObject implements IExportableObject
    * constructor without replaceTokens. This constructor should be used when you want to parse the template and create
    * its corresponding exportable object without pattern-replacement: the whole template is used as-is.
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
-    this( arguments, context, documentName, documentTitle, templateUrl, null, identifierPrefix, category );
+    this( arguments, context, documentName, documentTitle, templateUrl, null, identifierPrefix, category, kennzifferIndex );
   }
 
   /**
@@ -126,7 +128,7 @@ public class ExportableTemplateObject implements IExportableObject
    * @param category
    *          the category of the document resulting from the export of this object
    */
-  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category )
+  public ExportableTemplateObject( final Arguments arguments, final URL context, final String documentName, final String documentTitle, final URL templateUrl, final Properties replaceTokens, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
     m_arguments = arguments;
     m_context = context;
@@ -134,6 +136,7 @@ public class ExportableTemplateObject implements IExportableObject
     m_replaceTokens = replaceTokens;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_kennzifferIndex = kennzifferIndex;
     m_status = null;
     m_disposeHelper = new DisposeHelper();
 
@@ -256,7 +259,7 @@ public class ExportableTemplateObject implements IExportableObject
       final int height = Integer.parseInt( m_arguments.getProperty( "height", "600" ) );
       final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
 
-      return new ExportableChart( chart, format, width, height, getIdentifier(), getCategory() );
+      return new ExportableChart( chart, format, width, height, getIdentifier(), getCategory(), getKennzifferIndex() );
     }
     catch( final Exception e )
     {
@@ -305,7 +308,7 @@ public class ExportableTemplateObject implements IExportableObject
       m_status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
       // We are using the documentTitle as preferredDocumentName here, it will be written as first line of the table
-      return new ExportableObservationTable( table, getIdentifier(), getCategory(), documentTitle );
+      return new ExportableObservationTable( table, getIdentifier(), getCategory(), documentTitle, getKennzifferIndex() );
     }
     catch( final Exception e )
     {
@@ -317,5 +320,10 @@ public class ExportableTemplateObject implements IExportableObject
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+  
+  private Integer getKennzifferIndex( )
+  {
+    return m_kennzifferIndex;
   }
 }

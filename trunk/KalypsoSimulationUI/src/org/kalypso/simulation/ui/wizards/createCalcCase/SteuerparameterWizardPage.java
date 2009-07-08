@@ -246,6 +246,14 @@ public class SteuerparameterWizardPage extends WizardPage
     }
   }
 
+  /**
+   * Returns the current calc case folder, <code>null</code>, if not yet set.
+   */
+  public IFolder getFolder( )
+  {
+    return m_currentCalcCase;
+  }
+  
   protected void createFeatureControl( final Composite panel )
   {
     // dispose old control

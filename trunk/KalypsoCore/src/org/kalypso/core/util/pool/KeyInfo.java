@@ -347,9 +347,24 @@ public final class KeyInfo extends Job
     fireDirtyChanged( isDirty );
   }
 
+
+  /**
+   * Reloads the pool object if it is dirty.
+   */
   public void reload( )
   {
-    if( !isDirty() )
+    reload( false );
+  }
+
+  /**
+   * Reloads the pool object.
+   * 
+   * @param force
+   *          If <code>false</code>, the object only is reloaded if it is dirty.
+   */
+  public void reload( final boolean force )
+  {
+    if( !force && !isDirty() )
       return;
 
     try
