@@ -481,7 +481,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final String columnProviderId = editorType.getColumnProviderId();
 
     final ColumnDescriptor[] descriptors = editorType.getColumnDescriptor().toArray( new ColumnDescriptor[] {} );
-
     if( descriptors.length == 0 )
       return KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
 
