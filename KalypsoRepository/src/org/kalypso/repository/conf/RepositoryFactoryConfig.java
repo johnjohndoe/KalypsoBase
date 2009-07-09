@@ -41,6 +41,7 @@
 package org.kalypso.repository.conf;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.factory.IRepositoryFactory;
@@ -78,7 +79,7 @@ public class RepositoryFactoryConfig
    * @param readOnly
    *          when true repository should be read only
    */
-  protected RepositoryFactoryConfig( String name, String factory, String conf, boolean readOnly, final IRepositoryFactory rf )
+  protected RepositoryFactoryConfig( final String name, final String factory, final String conf, final boolean readOnly, final IRepositoryFactory rf )
   {
     m_name = name;
     m_factory = factory;
@@ -99,7 +100,7 @@ public class RepositoryFactoryConfig
    * Shortcut constructor with factory. if createFactory() is called, it will return this given factory configured with
    * the given arguments.
    */
-  public RepositoryFactoryConfig( IRepositoryFactory rf, String name, String conf, boolean ro )
+  public RepositoryFactoryConfig( final IRepositoryFactory rf, final String name, final String conf, final boolean ro )
   {
     this( name, rf.getClass().getName(), conf, ro, rf );
   }
@@ -113,7 +114,9 @@ public class RepositoryFactoryConfig
       return m_rf;
 
     final IRepositoryFactory rf = RepositoriesExtensions.retrieveExtensionFor( m_factory );
-    
+    if( rf == null )
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) );
+
     rf.setReadOnly( m_readOnly );
     rf.setConfiguration( m_conf );
     rf.setRepositoryName( m_name );
@@ -141,7 +144,7 @@ public class RepositoryFactoryConfig
    * 
    * @return a repository config item
    */
-  public static RepositoryFactoryConfig restore( final String state ) 
+  public static RepositoryFactoryConfig restore( final String state )
   {
     final String[] splits = state.split( SEPARATOR );
 
