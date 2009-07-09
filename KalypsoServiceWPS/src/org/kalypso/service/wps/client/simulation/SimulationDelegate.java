@@ -600,7 +600,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not create the date inputs ...", ex ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not create the data inputs ...", ex ) );
     }
     finally
     {
