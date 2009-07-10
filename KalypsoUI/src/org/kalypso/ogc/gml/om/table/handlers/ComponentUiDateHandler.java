@@ -47,6 +47,7 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -155,7 +156,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !value.equals( oldValue ) )
+    if( !ObjectUtils.equals(value, oldValue ) )
       record.setValue( index, value );
   }
 }
