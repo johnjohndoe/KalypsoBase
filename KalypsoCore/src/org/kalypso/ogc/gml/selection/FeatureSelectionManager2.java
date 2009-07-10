@@ -94,14 +94,10 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     final Set<Feature> oldState = new HashSet<Feature>( m_map.keySet() );
 
     for( final Feature f : featuresToRemove )
-    {
       m_map.remove( f );
-    }
 
     for( final EasyFeatureWrapper wrapper : featuresToAdd )
-    {
       m_map.put( wrapper.getFeature(), wrapper );
-    }
 
     if( !m_map.keySet().equals( oldState ) )
       fireSelectionChanged();
