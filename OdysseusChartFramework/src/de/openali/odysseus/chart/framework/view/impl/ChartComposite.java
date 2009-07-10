@@ -113,7 +113,7 @@ public class ChartComposite extends Canvas implements IChartView
           final IAxis axis = (IAxis) mapper;
 
           final List<IChartLayer> layerList = getChartModel().getAxis2Layers().get( axis );
-          if (layerList!=null)
+          if( layerList != null )
           {
             final IChartLayer[] changedLayers = layerList.toArray( new IChartLayer[] {} );
             m_plot.invalidate( changedLayers );
@@ -239,8 +239,6 @@ public class ChartComposite extends Canvas implements IChartView
   @Override
   public void dispose( )
   {
-    super.dispose();
-
     m_plot.dispose();
 
     m_model.getMapperRegistry().removeListener( m_mapperListener );
@@ -249,11 +247,12 @@ public class ChartComposite extends Canvas implements IChartView
 
     m_axisPlaces.clear();
 
+    super.dispose();
   }
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   *
+   * 
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override

@@ -27,12 +27,11 @@ public class LayerManager implements ILayerManager
   {
     m_layers.add( layer );
     registerLayer( layer );
-   
 
     m_handler.fireLayerAdded( layer );
   }
-  
-  private void registerLayer(final IChartLayer layer)
+
+  private void registerLayer( final IChartLayer layer )
   {
     final ILayerEventListener lel = new AbstractLayerEventListener()
     {
@@ -65,7 +64,6 @@ public class LayerManager implements ILayerManager
     };
     layer.addListener( lel );
   }
-  
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
@@ -89,7 +87,7 @@ public class LayerManager implements ILayerManager
 
   public void clear( )
   {
-   
+
   }
 
   /**
@@ -183,12 +181,15 @@ public class LayerManager implements ILayerManager
     // dispose layers
     for( final IChartLayer layer : getLayers() )
     {
+      // TODO: this stinks! very dangerous and bug prone.
+      // Fire events in the dispose method is no good idea!
+      // Problem now: the chart-model listens to the event and removes this layer from
+      // its maps.... Solution: the layer manager MUST be managed by the chart model
+      // or the chart-model itself just contains the list of layers.
+      // m_layers.remove( layer );
       removeLayer( layer );
       layer.dispose();
     }
-
-    
-    
   }
 
   /**
