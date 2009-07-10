@@ -155,7 +155,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( executeMediator.getProcessId() );
     }
-    catch( CoreException e1 )
+    catch( final CoreException e1 )
     {
       throw new SimulationException( "Could not get process description", e1 );
     }
@@ -359,9 +359,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       if( relativePathToSource == null )
         throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
       final FileObject destination = m_vfsManager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
-      final FileObject source = m_vfsManager.toFileObject( sourceFile );
-      if( !source.equals( destination ) )
-        VFSUtilities.copy( source, destination );
+
+      /* assure old behavior - for none existing source files! */
+      if( sourceFile.exists() )
+      {
+        final FileObject source = m_vfsManager.toFileObject( sourceFile );
+        if( !source.equals( destination ) )
+          VFSUtilities.copy( source, destination );
+      }
 
       // keep track of file references
       m_references.put( sourceFile, destination );
@@ -389,10 +394,10 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          An object, which should be added.
    * @return A ComplexValueType with the given file.
    */
-  private ComplexValueType addComplexValueType( Object result, String format, String schema )
+  private ComplexValueType addComplexValueType( final Object result, final String format, final String schema )
   {
     // REMARK: hack/convention: the input must now be the raw input for the anyType element
-    List<Object> value = new ArrayList<Object>( 1 );
+    final List<Object> value = new ArrayList<Object>( 1 );
     value.add( result );
 
     /* Build the complex value. */
