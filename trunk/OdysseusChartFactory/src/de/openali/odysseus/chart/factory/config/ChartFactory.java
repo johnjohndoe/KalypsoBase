@@ -60,6 +60,7 @@ import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisType.PreferredAdjustment;
 import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
+import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
@@ -104,7 +105,6 @@ public class ChartFactory
       throw new ConfigChartNotFoundException( configChartName );
 
     doConfiguration( model, cl, dt, extLoader, context );
-
   }
 
   public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
@@ -113,14 +113,27 @@ public class ChartFactory
     model.setTitle( chartType.getTitle() );
     model.setDescription( chartType.getDescription() );
 
+    Mappers mappers = chartType.getMappers();
+    if( mappers != null )
+    {
+      AxisType[] axisTypes = mappers.getAxisArray();
+      for( AxisType axisType : axisTypes )
+        addAxis( model, rr, axisType, extLoader, context );
+    }
+
     final Layers layers = chartType.getLayers();
+    if( layers == null )
+      return;
+
     final LayerType[] layerRefArray = layers.getLayerArray();
+    if( layerRefArray == null )
+      return;
+
     for( final LayerType layerType : layerRefArray )
       if( layerType != null )
         addLayer( model, rr, context, layerType, extLoader );
       else
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
-
   }
 
   private static void addMapper( final IChartModel model, final MapperType mapperType, final IExtensionLoader extLoader, final URL context )
