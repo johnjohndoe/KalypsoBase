@@ -269,7 +269,7 @@ public class MapAndFeatureWizardPage extends AbstractCalcWizardPage
           {
             public void run( )
             {
-              m_templateviewer.createControls( parent, viewStyle );
+              m_templateviewer.createControls( parent, viewStyle | SWT.V_SCROLL );
             }
           } );
 
