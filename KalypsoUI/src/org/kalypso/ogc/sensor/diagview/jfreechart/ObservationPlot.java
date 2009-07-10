@@ -102,7 +102,6 @@ import org.kalypso.ogc.sensor.diagview.DiagViewCurve.AlarmLevel;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * A plot for IObservation.
@@ -150,9 +149,9 @@ public class ObservationPlot extends XYPlot
     final TimeZone timezone = viewzone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : viewzone;
     setTimezone( timezone );
 
-    final DiagramAxis[] diagAxes = view.getDiagramAxes();
-    for( final DiagramAxis diagAxis : diagAxes )
-      addDiagramAxis( diagAxis, null );
+// final DiagramAxis[] diagAxes = view.getDiagramAxes();
+// for( final DiagramAxis diagAxis : diagAxes )
+// addDiagramAxis( diagAxis, null );
 
     final ObsViewItem[] curves = view.getItems();
     for( final ObsViewItem element : curves )
@@ -179,14 +178,21 @@ public class ObservationPlot extends XYPlot
 
     try
     {
-      final String axisType = axis.getType();
+      final String axisType = axis == null ? null : axis.getType();
+      // FIXME
+// final String dataType = diagAxis.getIdentifier();
+//
+// if( axisType != null )
+// Assert.isTrue( axisType.equals( dataType ) );
+
+// final String axisDataType = axisType == null ? dataType : axisType;
       final String axisClass = TimeserieUtils.getAxisClassFor( axisType );
       if( axisClass == null )
       {
         final String msg = String.format( "No Axis-Class defined for type '%s'. Must be defined in timeseries.ini or /KalypsoCore/src/org/kalypso/ogc/sensor/timeseries/resource/config.properties", axisType );
         throw new SensorException( msg );
       }
-      
+
       final String axisLabel = diagAxis.toFullString();
       final ValueAxis vAxis = (ValueAxis) ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), new String[] { axisLabel } );
 
@@ -635,7 +641,7 @@ public class ObservationPlot extends XYPlot
           vac.annotation.setAngle( Math.toRadians( 20 ) );
         else
           vac.annotation.setAngle( Math.toRadians( 340 ) );
-        
+
         vac.annotation.draw( g2, this, dataArea, getDomainAxis(), axis );
       }
     }
