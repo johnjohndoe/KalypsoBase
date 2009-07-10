@@ -123,8 +123,8 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
     final String fromUnit = TimeserieUtils.getUnit( fromType );
     final String toUnit = TimeserieUtils.getUnit( toType );
 
-    final DiagramAxis diagramAxisFrom = new DiagramAxis( "from", "double", fromType, fromUnit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
-    final DiagramAxis diagramAxisTo = new DiagramAxis( "to", "double", toType, toUnit, DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false );
+    final DiagramAxis diagramAxisFrom = new DiagramAxis( fromType, "double", fromType, fromUnit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
+    final DiagramAxis diagramAxisTo = new DiagramAxis( toType, "double", toType, toUnit, DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false );
     m_diagView.addAxis( diagramAxisFrom );
     m_diagView.addAxis( diagramAxisTo );
     
