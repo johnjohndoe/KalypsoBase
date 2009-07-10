@@ -213,7 +213,7 @@ public class FeatureEditor extends EditorPart
   {
     parent.setLayout( new GridLayout() );
     parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final Composite composite = m_viewer.createControls( parent, SWT.NONE );
+    final Composite composite = m_viewer.createControls( parent, SWT.V_SCROLL );
     composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final IActionBars actionBars = getEditorSite().getActionBars();
