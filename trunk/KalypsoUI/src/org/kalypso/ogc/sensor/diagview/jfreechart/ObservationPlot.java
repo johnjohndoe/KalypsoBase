@@ -149,6 +149,7 @@ public class ObservationPlot extends XYPlot
     final TimeZone timezone = viewzone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : viewzone;
     setTimezone( timezone );
 
+    // FIXME
 // final DiagramAxis[] diagAxes = view.getDiagramAxes();
 // for( final DiagramAxis diagAxis : diagAxes )
 // addDiagramAxis( diagAxis, null );
