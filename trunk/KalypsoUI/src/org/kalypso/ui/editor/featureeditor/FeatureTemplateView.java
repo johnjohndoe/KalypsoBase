@@ -73,6 +73,18 @@ public class FeatureTemplateView extends ViewPart
 
   private String m_partName;
 
+  private final int m_style;
+
+  public FeatureTemplateView( )
+  {
+    this( SWT.V_SCROLL );
+  }
+
+  public FeatureTemplateView( int style )
+  {
+    m_style = style;
+  }
+
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
@@ -114,7 +126,7 @@ public class FeatureTemplateView extends ViewPart
   {
     // TODO: add listener to data, in order to show in title if data is dirty
 
-    m_templateviewer.createControls( parent, SWT.NONE );
+    m_templateviewer.createControls( parent, m_style );
 
 // // Stefan: Now we can restore the file if the view is configured to do so
 // final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );

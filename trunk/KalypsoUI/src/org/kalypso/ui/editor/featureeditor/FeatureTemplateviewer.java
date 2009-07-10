@@ -280,7 +280,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       }
     };
 
-    m_creator.createControl( parent, style | SWT.V_SCROLL, SWT.NONE );
+    m_creator.createControl( parent, style, SWT.NONE );
 
     m_panel = (Composite) m_creator.getContentControl();
 

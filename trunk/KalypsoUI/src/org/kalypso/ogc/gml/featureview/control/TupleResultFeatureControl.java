@@ -170,7 +170,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final Composite composite = new Composite( parent, style );
+    final Composite composite = new Composite( parent, SWT.NONE );
     final GridLayout compLayout = new GridLayout();
     compLayout.marginHeight = 0;
     compLayout.marginWidth = 0;
@@ -184,7 +184,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     // dem Editor beibringen, nur dann eine Zelle zu editieren, wenn der EditMode aktiviert ist
     final ColumnViewerEditorActivationStrategy eas = new ColumnViewerEditorActivationStrategy( m_viewer )
     {
-
       /**
        * @see org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy#isEditorActivationEvent(org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent)
        */
