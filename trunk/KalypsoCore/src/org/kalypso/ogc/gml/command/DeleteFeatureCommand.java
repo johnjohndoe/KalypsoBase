@@ -49,11 +49,13 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -130,9 +132,7 @@ public class DeleteFeatureCommand implements ICommand
       final IRelationType rt = featureToAdd.getParentRelation();
 
       if( workspace.contains( featureToAdd ) )
-      {
         continue;
-      }
 
       if( rt.isList() )
       {
@@ -140,15 +140,11 @@ public class DeleteFeatureCommand implements ICommand
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
       else
-      {
         workspace.addFeatureAsComposition( parentFeature, rt, 0, featureToAdd );
-      }
 
       // collect infos for event
       if( !parentMap.containsKey( parentFeature ) )
-      {
         parentMap.put( parentFeature, new ArrayList<Feature>() );
-      }
 
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToAdd );
@@ -165,9 +161,7 @@ public class DeleteFeatureCommand implements ICommand
     }
 
     for( final ICommand command : m_removeBrokenLinksCommands )
-    {
       command.undo();
-    }
   }
 
   /**
@@ -195,9 +189,7 @@ public class DeleteFeatureCommand implements ICommand
       final IRelationType parentRelationType = featureToRemove.getParentRelation();
 
       if( !workspace.contains( featureToRemove ) )
-      {
         continue; // was already removed
-      }
 
       touchedWorkspaces.add( workspace );
 
@@ -207,21 +199,25 @@ public class DeleteFeatureCommand implements ICommand
         final List< ? > list = (List< ? >) parentFeature.getProperty( parentRelationType );
         m_listIndexMap.put( featureToRemove, new Integer( list.indexOf( featureToRemove ) ) );
       }
-      // remove the feature
+
+      /* Remove from the selection, if it was selected. */
+      IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+      if( selectionManager.isSelected( featureToRemove ) )
+        selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
+
+      /* Remove the feature. */
       workspace.removeLinkedAsCompositionFeature( parentFeature, parentRelationType, featureToRemove );
 
       // collect infos for event
       if( !parentMap.containsKey( parentFeature ) )
-      {
         parentMap.put( parentFeature, new ArrayList<Feature>() );
-      }
 
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToRemove );
     }
 
     final List<ModellEvent> linkEvents = new ArrayList<ModellEvent>();
-    
+
     for( final GMLWorkspace workspace : touchedWorkspaces )
     {
       final FindLinksFeatureVisitor visitor = new FindLinksFeatureVisitor( workspace );
@@ -233,9 +229,7 @@ public class DeleteFeatureCommand implements ICommand
     }
 
     for( final ICommand command : m_removeBrokenLinksCommands )
-    {
       command.process();
-    }
 
     /* fire events for deletion */
     for( final Map.Entry<Feature, List<Feature>> entry : parentMap.entrySet() )
