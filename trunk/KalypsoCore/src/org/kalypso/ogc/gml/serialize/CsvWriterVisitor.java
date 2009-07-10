@@ -35,7 +35,16 @@ public final class CsvWriterVisitor implements FeatureVisitor
       final String prop = entry.getKey();
       final String def = entry.getValue();
 
-      final Object property = f.getProperty( prop );
+      Object property = null;
+      try
+      {
+        property = f.getProperty( prop );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        // @hack - if property not exists catch Exception and continue with processing
+// e.printStackTrace();
+      }
 
       m_writer.print( property == null ? def : propertyToString( property ) );
 
