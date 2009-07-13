@@ -111,9 +111,6 @@ public class AbstractCachedFeature extends Feature_Impl
 
   public boolean isDirty( final QName qname )
   {
-    if( m_dirty.contains( qname.toString() ) )
-      System.out.println( String.format( "dirty: %s", qname.toString() ) );
-
     return m_dirty.contains( qname.toString() );
   }
 
