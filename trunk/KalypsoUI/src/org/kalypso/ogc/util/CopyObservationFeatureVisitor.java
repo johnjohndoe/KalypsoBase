@@ -95,6 +95,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private static final ObjectFactory OF = new ObjectFactory();
 
+  private static final QName FID_QNAME = new QName( "FID" );
+
   private final Source[] m_sources;
 
   private final URL m_context;
@@ -210,9 +212,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       // put additional metadata that we got from outside
       final MetadataList resultMetadata = resultObs.getMetadataList();
       String metaName = null;
-      for( final Entry<Object,Object> element : m_metadata.entrySet() )
+      for( final Entry<Object, Object> element : m_metadata.entrySet() )
       {
-        final Entry<Object,Object> entry = element;
+        final Entry<Object, Object> entry = element;
         final String metaValue = replaceMetadata( f, (String) entry.getValue() );
         final String metaKey = (String) entry.getKey();
         resultMetadata.put( metaKey, metaValue );
@@ -275,6 +277,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       final String defaultValue = matcher.group( 2 );
       final QName propertyQName = createQName( propertyName );
 
+      if( FID_QNAME.equals( propertyQName ) )
+        return feature.getId();
+
       final Object property = feature.getProperty( propertyQName.getLocalPart() );
       if( property == null )
         return defaultValue;
@@ -293,13 +298,16 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    *         &lt;namespace&gt;#&lt;localpart&gt;
    * </pre>
    * 
-   * example: fragmentedFullQName = www.w3c.org#index.html <br/>If no '#' is given, a qname with only a localPart is
-   * created.
+   * example: fragmentedFullQName = www.w3c.org#index.html <br/>
+   * If no '#' is given, a qname with only a localPart is created.
    * 
    * @return qname from fragmentedFullQName
    */
-  public static QName createQName( final String fragmentedFullQName )
+  private static QName createQName( final String fragmentedFullQName )
   {
+    if( "FID".equals( fragmentedFullQName ) )
+      return FID_QNAME;
+
     final String[] parts = fragmentedFullQName.split( "#" );
     if( parts.length == 2 )
       return new QName( parts[0], parts[1] );
