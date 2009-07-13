@@ -65,7 +65,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  * <p>
  * Shows a map of all themes. The sources of the themes can be edited.
  * </p>
- *
+ * 
  * @author Stefan Kurzbach
  * @author Gernot Belger
  */
@@ -91,7 +91,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     // Stefan: Now we can restore the file if the map is configured to do so
     final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
-    if( (m_memento_file != null) && "true".equals( reloadOnOpen ) ) //$NON-NLS-1$
+    if( (m_memento_file != null) && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
     {
       setFile( m_memento_file );
       startLoadJob( m_memento_file );
@@ -139,7 +139,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     // FIXME: saving the map here causes dead-locks!
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
-    if( "true".equals( saveOnCloseString ) ) //$NON-NLS-1$
+    if( "true".equalsIgnoreCase( saveOnCloseString ) ) //$NON-NLS-1$
     {
       final IFile file = getFile();
       try
@@ -149,9 +149,9 @@ public class MapView extends AbstractMapPart implements IViewPart
       catch( final CoreException e )
       {
         KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-
       }
     }
+
     super.dispose();
   }
 

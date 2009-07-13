@@ -174,7 +174,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-
    * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   @Override
@@ -516,10 +515,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    if( m_mapModell == null || m_saving )
+    if( m_mapModell == null || m_saving || !file.exists() )
       return;
 
     m_saving = true;
+    
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.8" ), 2000 ); //$NON-NLS-1$
@@ -537,8 +537,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       m_saving = false;
       throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.9" ) ) ); //$NON-NLS-1$
     }
+    
     m_saving = false;
-
   }
 
   protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
