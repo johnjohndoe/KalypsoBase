@@ -397,6 +397,14 @@ public final class StatusUtilities
   public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs )
   {
     final int displayMask = IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR;
+    return openSpecialErrorDialog( shell, title, message, status, showMultipleDialogs, displayMask );
+  }
+
+  /**
+   * @see #openSpecialErrorDialog(Shell, String, String, IStatus, int, boolean)
+   */
+  public static int openSpecialErrorDialog( final Shell shell, final String title, final String message, final IStatus status, final boolean showMultipleDialogs, int displayMask )
+  {
     return openSpecialErrorDialog( shell, title, message, status, displayMask, showMultipleDialogs );
   }
 
@@ -442,7 +450,7 @@ public final class StatusUtilities
       else
         msg = message;
 
-      final int result = openSpecialErrorDialog( shell, title, msg, child, false );
+      final int result = openSpecialErrorDialog( shell, title, msg, child, false, displayMask );
       if( result == Window.CANCEL )
         return result;
     }
