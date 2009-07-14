@@ -188,10 +188,7 @@ public class ImportGridUtilities
     catch( final CoreException e )
     {
       if( destFile != null )
-      {
         destFile.delete();
-        destFile.deleteOnExit();
-      }
 
       throw e;
     }

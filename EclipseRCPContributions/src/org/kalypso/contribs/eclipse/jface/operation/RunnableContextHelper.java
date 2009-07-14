@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.operation;
 
@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * Helper-Class for IRunnableContext
- * 
+ *
  * @author belger
  */
 public final class RunnableContextHelper
@@ -75,6 +75,10 @@ public final class RunnableContextHelper
       m_context.run( fork, cancelable, runnable );
     }
     catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
+    }
+    catch( final InterruptedException ie )
     {
       return Status.CANCEL_STATUS;
     }
@@ -124,7 +128,7 @@ public final class RunnableContextHelper
 
   /**
    * Runs a runnable in a progress monitor dialog.
-   * 
+   *
    * @deprecated Use
    *             {@link org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)}
    *             instead.
