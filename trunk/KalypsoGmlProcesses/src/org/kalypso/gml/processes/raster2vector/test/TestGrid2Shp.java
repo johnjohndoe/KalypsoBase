@@ -56,6 +56,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -102,7 +103,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- * 
+ *
  * @author Thomas Jung
  */
 public class TestGrid2Shp extends TestCase
@@ -262,7 +263,7 @@ public class TestGrid2Shp extends TestCase
     return GeoGridUtilities.toGrid( coverage );
   }
 
-  private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException
+  private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException
   {
     final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );

@@ -417,12 +417,12 @@ public class PageSelectGeodataFile extends WizardPage
       return;
     }
 
-    tVectorXx.setText( reader.getVectorXx() );
-    tVectorYy.setText( reader.getVectorYy() );
-    tVectorXy.setText( reader.getVectorXy() );
-    tVectorYx.setText( reader.getVectorYx() );
-    tUlcX.setText( reader.getOriginCornerX() );
-    tUlcY.setText( reader.getOriginCornerY() );
+    tVectorXx.setText( Double.toString( reader.getVectorXx() ) );
+    tVectorYy.setText( Double.toString( reader.getVectorYy() ) );
+    tVectorXy.setText( Double.toString( reader.getVectorXy() ) );
+    tVectorYx.setText( Double.toString( reader.getVectorYx() ) );
+    tUlcX.setText( Double.toString( reader.getOriginCornerX() ) );
+    tUlcY.setText( Double.toString( reader.getOriginCornerY() ) );
   }
 
   protected void browseForFile( )

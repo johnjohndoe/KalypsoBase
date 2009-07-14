@@ -47,6 +47,8 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -56,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link IGridMetaReader} implementation for World-Files.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderWorldFile implements IGridMetaReader
@@ -96,49 +98,49 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getOriginCornerY( )
+  public double getOriginCornerY( )
   {
-    return new Double( m_world.getUlcy() ).toString();
+    return m_world.getUlcy();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
    */
-  public String getVectorXy( )
+  public double getVectorXy( )
   {
-    return new Double( m_world.getRasterXGeoY() ).toString();
+    return m_world.getRasterXGeoY();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
    */
-  public String getVectorYx( )
+  public double getVectorYx( )
   {
-    return new Double( m_world.getRasterYGeoX() ).toString();
+    return m_world.getRasterYGeoX();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
    */
-  public String getVectorXx( )
+  public double getVectorXx( )
   {
-    return new Double( m_world.getRasterXGeoX() ).toString();
+    return m_world.getRasterXGeoX();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
    */
-  public String getVectorYy( )
+  public double getVectorYy( )
   {
-    return new Double( m_world.getRasterYGeoY() ).toString();
+    return m_world.getRasterYGeoY();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getOriginCornerX( )
+  public double getOriginCornerX( )
   {
-    return new Double( m_world.getUlcx() ).toString();
+    return m_world.getUlcx();
   }
 
   /**
@@ -149,9 +151,7 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
     if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
-    {
-      throw (new IllegalStateException());
-    }
+      throw new IllegalStateException();
 
     final RenderedOp image = JAI.create( "url", m_image );
     final TiledImage tiledImage = new TiledImage( image, true );
@@ -165,5 +165,15 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
     final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner[0], upperLeftCorner[1], crs );
 
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGridMetaReader#isValid()
+   */
+  @Override
+  public IStatus isValid( )
+  {
+    // Not yet implemented, always return null for 'no problemo'
+    return Status.OK_STATUS;
   }
 }

@@ -41,14 +41,14 @@
 package org.kalypso.grid;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * YLLCENTER xxx | YLLCORNER xxx <br>
  * CELLSIZE xxx<br>
  * NODATA_VALUE xxx<br>
- * 
+ *
  * @author Dirk Kuch
  */
 public class AsciiGridReader
@@ -75,7 +75,7 @@ public class AsciiGridReader
 
   private String[] m_headerKeys;
 
-  public AsciiGridReader( final File input ) throws IOException
+  public AsciiGridReader( final URL input ) throws IOException
   {
     parseHeader( input );
   }
@@ -85,18 +85,15 @@ public class AsciiGridReader
     readAsciiGridHeader( scanner );
   }
 
-  private void parseHeader( final File input ) throws IOException
+  private void parseHeader( final URL input ) throws IOException
   {
     InputStream is = null;
 
     try
     {
-      is = new BufferedInputStream( new FileInputStream( input ) );
-
+      is = new BufferedInputStream( input.openStream() );
       readAsciiGridHeader( new Scanner( is ) );
-
       is.close();
-
     }
     finally
     {
@@ -104,7 +101,7 @@ public class AsciiGridReader
     }
   }
 
-  public void readAsciiGridHeader( Scanner scanner ) throws IOException
+  private void readAsciiGridHeader( final Scanner scanner ) throws IOException
   {
     m_headerKeys = new String[6];
     m_headerData = new String[6];
@@ -132,50 +129,47 @@ public class AsciiGridReader
       throw scanner.ioException();
   }
 
-  public String getCols( )
+  private String getCols( )
   {
     return m_headerData[0];
   }
 
-  public String getRows( )
+  private String getRows( )
   {
     return m_headerData[1];
   }
 
-  public Double getOriginCornerX( )
+  private double getOriginCornerX( )
   {
     if( "xllcorner".equals( m_headerKeys[2].toLowerCase() ) )
     {
-      final Double size = getCellSize() / 2.0;
+      final double size = getCellSize() / 2.0;
+      return NumberUtils.parseDouble( m_headerData[2] ) + size;
+    }
 
-      return new Double( m_headerData[2] ) + size;
-    }
-    else if( "xllcenter".equals( m_headerKeys[2].toLowerCase() ) )
-    {
-      return new Double( m_headerData[2] );
-    }
+    if( "xllcenter".equals( m_headerKeys[2].toLowerCase() ) )
+      return NumberUtils.parseDouble( m_headerData[2] );
 
     throw new NotImplementedException();
   }
 
-  public Double getOriginCornerY( )
+  private double getOriginCornerY( )
   {
     if( "yllcorner".equals( m_headerKeys[3].toLowerCase() ) )
     {
-      final Double size = getCellSize() / 2.0;
-      return new Double( m_headerData[3] ) - size;
+      final double size = getCellSize() / 2.0;
+      return NumberUtils.parseDouble( m_headerData[3] ) - size;
     }
-    else if( "yllcenter".equals( m_headerKeys[3].toLowerCase() ) )
-    {
-      return new Double( m_headerData[3] );
-    }
+
+    if( "yllcenter".equals( m_headerKeys[3].toLowerCase() ) )
+      return NumberUtils.parseDouble( m_headerData[3] );
 
     throw new NotImplementedException();
   }
 
-  public Double getCellSize( )
+  public double getCellSize( )
   {
-    return new Double( m_headerData[4] );
+    return NumberUtils.parseDouble( m_headerData[4] );
   }
 
   public String getNoDataValue( )
@@ -183,30 +177,22 @@ public class AsciiGridReader
     return m_headerData[5];
   }
 
-  public RectifiedGridDomain getGridDomain( final String cs )
+  public RectifiedGridDomain getGridDomain( final String cs ) throws Exception
   {
-    try
-    {
-      final int nCols = new Integer( getCols() ).intValue();
-      final int nRows = new Integer( getRows() ).intValue();
+    final int nCols = new Integer( getCols() ).intValue();
+    final int nRows = new Integer( getRows() ).intValue();
 
-      final OffsetVector offsetX = new OffsetVector( getCellSize(), 0 );
-      final OffsetVector offsetY = new OffsetVector( 0, -getCellSize() );
+    final OffsetVector offsetX = new OffsetVector( getCellSize(), 0 );
+    final OffsetVector offsetY = new OffsetVector( 0, -getCellSize() );
 
-      final Double adjustedCornerY = getOriginCornerY() + nRows * getCellSize();
+    final double adjustedCornerY = getOriginCornerY() + nRows * getCellSize();
 
-      final GM_Point origin = GeometryFactory.createGM_Point( getOriginCornerX(), adjustedCornerY, cs );
+    final GM_Point origin = GeometryFactory.createGM_Point( getOriginCornerX(), adjustedCornerY, cs );
 
-      final double[] low = { 0.0, 0.0 };
-      final double[] high = { nCols, nRows };
-      final GridRange gridRange = new GridRange_Impl( low, high );
+    final double[] low = { 0.0, 0.0 };
+    final double[] high = { nCols, nRows };
+    final GridRange gridRange = new GridRange_Impl( low, high );
 
-      return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
   }
 }

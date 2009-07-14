@@ -56,6 +56,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -111,7 +112,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- * 
+ *
  * @author Thomas Jung
  */
 public class TestInundationFrequenciesGrid2Shp extends TestCase
@@ -369,7 +370,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
 
       final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-      rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
+      rangeSetFile.setFileName( binFileName );
       rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
       covColl.add( coverage );
@@ -383,7 +384,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     return collections;
   }
 
-  private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException
+  private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException
   {
     final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );

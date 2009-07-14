@@ -774,6 +774,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void handleGenerateColorMap( final Event event )
   {
     final RasterSymbolizer symb = findRasterSymbolizer();
+    if( symb == null )
+    {
+      MessageDialog.openWarning( event.display.getActiveShell(), "Farbverlauf zuweisen", "Das Thema ist nicht mit einem Raster-Symbolizer konfiguriert.\nEs kann kein Farbverlauf definiert werden." );
+      return;
+    }
+
     final SortedMap<Double, ColorMapEntry> input = symb.getColorMap();
 
     if( input != null )
@@ -1157,7 +1163,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final RasterSymbolizer symb = findRasterSymbolizer();
     if( symb == null )
       return;
-    
+
     final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
     if( colorMap.isEmpty() )
     {

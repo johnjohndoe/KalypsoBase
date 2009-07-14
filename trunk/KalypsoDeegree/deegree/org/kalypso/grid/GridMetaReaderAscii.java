@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import java.io.File;
 import java.net.URL;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -52,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link IGridMetaReader} implementation for ESRI Ascii Grids.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderAscii implements IGridMetaReader
@@ -63,78 +65,65 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   private String m_noDataValue;
 
+  private IStatus m_valid = Status.OK_STATUS;
+
   public GridMetaReaderAscii( final URL urlImage, final String cs )
   {
     m_cs = cs;
 
     if( urlImage == null )
-      throw (new IllegalStateException());
+      throw new IllegalStateException();
 
     try
     {
-      final AsciiGridReader reader = new AsciiGridReader( new File( urlImage.getFile() ) );
+      final AsciiGridReader reader = new AsciiGridReader( urlImage );
       m_domain = reader.getGridDomain( m_cs );
       m_noDataValue = reader.getNoDataValue();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
+      final String msg = String.format( "Fehler beim Lesen des Headers von %s", urlImage );
+      m_valid = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
     }
 
   }
-
-  public GridMetaReaderAscii( final File image, final String cs )
-  {
-    m_cs = cs;
-
-    try
-    {
-      final AsciiGridReader reader = new AsciiGridReader( image );
-      m_domain = reader.getGridDomain( m_cs );
-      m_noDataValue = reader.getNoDataValue();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
    */
-  public String getVectorXy( )
+  public double getVectorXy( )
   {
-    return (new Double( m_domain.getOffsetX().getGeoY() ).toString());
+    return m_domain.getOffsetX().getGeoY();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
    */
-  public String getVectorYx( )
+  public double getVectorYx( )
   {
-    return (new Double( m_domain.getOffsetY().getGeoX() ).toString());
+    return m_domain.getOffsetY().getGeoX();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
    */
-  public String getVectorXx( )
+  public double getVectorXx( )
   {
-    return (new Double( m_domain.getOffsetX().getGeoX() ).toString());
+    return m_domain.getOffsetX().getGeoX();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
    */
-  public String getVectorYy( )
+  public double getVectorYy( )
   {
-    return (new Double( m_domain.getOffsetY().getGeoY() ).toString());
+    return m_domain.getOffsetY().getGeoY();
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getOriginCornerX( )
+  public double getOriginCornerX( )
   {
     try
     {
@@ -142,20 +131,20 @@ public class GridMetaReaderAscii implements IGridMetaReader
        * ASCII-Grid specification doesn't define an upper left corner, it has an origin point and we are returning this
        * point
        */
-      return new Double( m_domain.getOrigin( m_cs ).getX() ).toString();
+      return m_domain.getOrigin( m_cs ).getX();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-    return null;
+    return Double.NaN;
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getOriginCornerY( )
+  public double getOriginCornerY( )
   {
     try
     {
@@ -163,14 +152,14 @@ public class GridMetaReaderAscii implements IGridMetaReader
        * ASCII-Grid specification doesn't define an upper left corner, it has an origin point and we are returning this
        * point
        */
-      return new Double( m_domain.getOrigin( m_cs ).getY() ).toString();
+      return m_domain.getOrigin( m_cs ).getY();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-    return null;
+    return Double.NaN;
   }
 
   /**
@@ -195,5 +184,14 @@ public class GridMetaReaderAscii implements IGridMetaReader
   public String getNoDataValue( )
   {
     return m_noDataValue;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGridMetaReader#isValid()
+   */
+  @Override
+  public IStatus isValid( )
+  {
+    return m_valid;
   }
 }

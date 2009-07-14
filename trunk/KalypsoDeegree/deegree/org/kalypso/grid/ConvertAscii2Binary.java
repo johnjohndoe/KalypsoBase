@@ -48,10 +48,14 @@ import java.net.URL;
 import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.KalypsoDeegreeDebug;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -62,7 +66,7 @@ import com.vividsolutions.jts.util.Assert;
 
 /**
  * Converter which converts an ESRI Ascii Grid into a {@link BinaryGrid}.
- * 
+ *
  * @author Gernot Belger
  */
 public class ConvertAscii2Binary
@@ -87,7 +91,7 @@ public class ConvertAscii2Binary
     m_sourceCRS = sourceCRS;
   }
 
-  public void doConvert( final IProgressMonitor monitor )
+  public void doConvert( final IProgressMonitor monitor ) throws CoreException
   {
     KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -105,7 +109,7 @@ public class ConvertAscii2Binary
       final AsciiGridReader asciiGridReader = new AsciiGridReader( scanner );
 
       final String noData = asciiGridReader.getNoDataValue();
-      final Double cellSize = asciiGridReader.getCellSize();
+      final double cellSize = asciiGridReader.getCellSize();
       m_gridDomain = asciiGridReader.getGridDomain( m_sourceCRS );
 
       final GM_Point origin = m_gridDomain.getOrigin( m_sourceCRS );
@@ -126,7 +130,6 @@ public class ConvertAscii2Binary
       final String asciiFileURL = m_asciiFileURL.getPath();
       final String asciiFileName = FileUtilities.nameFromPath( asciiFileURL );
 
-      final Double nan = Double.NaN;
       for( int y = 0; y < sizeY; y++ )
       {
         if( y % 10 == 0 )
@@ -135,11 +138,13 @@ public class ConvertAscii2Binary
         for( int x = 0; x < sizeX; x++ )
         {
           final String next = scanner.next(); // do not use 'nextDouble' it is much too slow
-          final BigDecimal currentValue = new BigDecimal( next );
-          if( currentValue.toString().equals( noData ) )
-            binaryGrid.setValue( x, y, nan );
+          if( next.equals( noData ) )
+            binaryGrid.setValue( x, y, Double.NaN );
           else
+          {
+            final BigDecimal currentValue = NumberUtils.parseDecimal( next );
             binaryGrid.setValue( x, y, currentValue );
+          }
         }
 
         ProgressUtilities.worked( progress, 1 );
@@ -155,10 +160,18 @@ public class ConvertAscii2Binary
 
       KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   done.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+    catch( final CoreException ce )
+    {
+      throw ce;
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
       KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      final String message = String.format( "Failed to convert grid %s to %s:\n%s", m_asciiFileURL, m_ascbinFile, e.toString() );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, e ) );
+
     }
     finally
     {
