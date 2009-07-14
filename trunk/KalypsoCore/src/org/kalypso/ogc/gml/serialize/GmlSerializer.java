@@ -86,6 +86,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -238,11 +239,11 @@ public final class GmlSerializer
   {
     InputStream is = null;
     InputStream urlStream = null;
+    InputStream bis = null;
     try
     {
       urlStream = gmlURL.openStream();
 
-      InputStream bis;
       if( monitor == null )
       {
         bis = new BufferedInputStream( urlStream );
@@ -278,13 +279,11 @@ public final class GmlSerializer
     }
     finally
     {
-      IOUtils.closeQuietly( is );
       // also close <code>bis</code> separately, as GZipInputStream throws exception in constructor
+      IOUtils.closeQuietly( bis );
+      IOUtils.closeQuietly( is );
       IOUtils.closeQuietly( urlStream );
-      if( monitor != null )
-      {
-        monitor.done();
-      }
+      ProgressUtilities.done( monitor );
     }
   }
 
