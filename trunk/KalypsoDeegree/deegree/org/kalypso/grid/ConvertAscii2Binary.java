@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -99,6 +98,7 @@ public class ConvertAscii2Binary
 
     /* Convert to binary file */
     InputStream bis = null;
+    BinaryGeoGrid binaryGrid = null;
     try
     {
       bis = new BufferedInputStream( m_asciiFileURL.openStream() );
@@ -123,17 +123,14 @@ public class ConvertAscii2Binary
       progress.setWorkRemaining( sizeY + 2 );
 
       /* Write header */
-      final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, coordOrigin, offsetX, offsetY, m_sourceCRS, false );
+      binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, coordOrigin, offsetX, offsetY, m_sourceCRS, false );
       ProgressUtilities.worked( progress, 1 );
 
       /* The current filename - */
-      final String asciiFileURL = m_asciiFileURL.getPath();
-      final String asciiFileName = FileUtilities.nameFromPath( asciiFileURL );
-
       for( int y = 0; y < sizeY; y++ )
       {
         if( y % 10 == 0 )
-          progress.subTask( String.format( "%s  %d / %d", asciiFileName, y, sizeY ) );
+          progress.subTask( String.format( "%d / %d Zeilen", y, sizeY ) );
 
         for( int x = 0; x < sizeX; x++ )
         {
@@ -175,6 +172,8 @@ public class ConvertAscii2Binary
     }
     finally
     {
+      if( binaryGrid != null )
+        binaryGrid.dispose();
       IOUtils.closeQuietly( bis );
     }
   }

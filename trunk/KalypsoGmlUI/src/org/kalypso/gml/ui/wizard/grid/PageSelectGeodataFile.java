@@ -458,11 +458,6 @@ public class PageSelectGeodataFile extends WizardPage
 
   public String getProjection( )
   {
-// final Object element = m_comboSel.getFirstElement();
-// if( element instanceof String )
-// return (String) element;
-
-// return null;
     return m_crs;
   }
 

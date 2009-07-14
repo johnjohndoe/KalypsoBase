@@ -54,7 +54,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * Helper class for handling of grid files.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridFileVerifier
@@ -66,6 +66,7 @@ public class GridFileVerifier
     eAsciiGrid,
     eImage,
     eImageWorldFile,
+    eBinWorldFile,
     eImageGeo
   }
 
@@ -98,35 +99,34 @@ public class GridFileVerifier
     return true;
   }
 
-  public static IGridMetaReader getRasterMetaReader( final URL urlImage, final String cs )
+  public static IGridMetaReader getRasterMetaReader( final URL urlGrid, final String cs )
   {
-    final RASTER_TYPE raster_type = determineType( urlImage );
-    if( raster_type == null )
-      throw new IllegalStateException();
-
+    final RASTER_TYPE raster_type = determineType( urlGrid );
     switch( raster_type )
     {
       case eAsciiGrid:
-        return new GridMetaReaderAscii( urlImage, cs );
+        return new GridMetaReaderAscii( urlGrid, cs );
 
       case eImage:
         return null;
 
       case eImageGeo:
-        try
-        {
-          return new GridMetaReaderGeoTiff( urlImage, determineImageType( urlImage ) );
-        }
-        catch( final IOException e )
-        {
-          e.printStackTrace();
-        }
+          return new GridMetaReaderGeoTiff( urlGrid, determineImageType( urlGrid ) );
 
       case eImageWorldFile:
-        return new GridMetaReaderWorldFile( urlImage, getWorldFile( urlImage ) );
+      {
+        final URL worldFile = getWorldFile( urlGrid );
+        return new GridMetaReaderWorldFile( urlGrid, worldFile );
+      }
+
+      case eBinWorldFile:
+      {
+        final URL worldFile = getWorldFile( urlGrid );
+        return new GridMetaReaderBinWorldFile( urlGrid, worldFile );
+      }
 
       default:
-        return null;
+        throw new IllegalStateException( "Unknwon raster type, domain cannot be determined" );
     }
   }
 
@@ -155,7 +155,15 @@ public class GridFileVerifier
     if( isAsciGrid( urlImage ) )
       return RASTER_TYPE.eAsciiGrid;
 
+    if( isBinGrid( urlImage ) )
+      return RASTER_TYPE.eBinWorldFile;
+
     return null;
+  }
+
+  private static boolean isBinGrid( final URL urlImage )
+  {
+    return urlImage.getFile().toLowerCase().endsWith( ".bin" );
   }
 
   private static boolean isAsciGrid( final URL urlImage )
@@ -208,7 +216,7 @@ public class GridFileVerifier
     if( urlImage == null )
       throw new IllegalStateException();
 
-    final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw", "jgw", "pgw" };
+    final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw", "jgw", "pgw", "wld" };
 
     for( final String extension : worldFileExtensions )
     {
@@ -253,11 +261,14 @@ public class GridFileVerifier
 
     if( ArrayUtils.contains( jpgTypes, fileExtension ) )
       return IMAGE_TYPE.eJPG;
-    else if( ArrayUtils.contains( tifTypes, fileExtension ) )
+
+    if( ArrayUtils.contains( tifTypes, fileExtension ) )
       return IMAGE_TYPE.eTIFF;
-    else if( "gif".equals( fileExtension ) )
+
+    if( "gif".equals( fileExtension ) )
       return IMAGE_TYPE.eGIF;
-    else if( "png".equals( fileExtension ) )
+
+    if( "png".equals( fileExtension ) )
       return IMAGE_TYPE.ePNG;
 
     return IMAGE_TYPE.eNoImage;

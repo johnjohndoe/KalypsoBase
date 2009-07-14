@@ -43,8 +43,6 @@ package org.kalypso.gml.ui.wizard.grid;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -54,7 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -70,13 +67,11 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * extracted from RectifiedGridCoverageImportWizard
- * 
+ *
  * @author Dirk Kuch
  */
 public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWithProgress
 {
-  private final Shell m_shell;
-
   private final File m_inputGridFile;
 
   private final RectifiedGridDomain m_domain;
@@ -91,9 +86,8 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
 
   private final String m_sourceCRS;
 
-  public RectifiedGridCoverageImportFinishWorker( final Shell shell, final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder, final String sourceCRS )
+  public RectifiedGridCoverageImportFinishWorker( final File selectedFile, final ICoverageCollection coverages, final RectifiedGridDomain domain, final IFile gmlFile, final IContainer gridFolder, final String sourceCRS )
   {
-    m_shell = shell;
     m_inputGridFile = selectedFile;
     m_coverages = coverages;
     m_domain = domain;
@@ -114,15 +108,17 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     {
       monitor.subTask( "- importiere Daten in den Arbeitsbereich" );
 
-      final File[] convertedGrids = ImportGridUtilities.convertGrids( new File[] { m_inputGridFile }, m_sourceCRS, progress.newChild( 70 ) );
-      final IFile[] importedFiles = ImportGridUtilities.importExternalFiles( m_shell, convertedGrids, m_outputGridFolder, progress.newChild( 10 ) );
-
-      /* Fill workspace */
       final IContainer container = m_gmlFile == null ? null : m_gmlFile.getParent();
-
       final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
 
-      m_newCoverage = createGmlWorkspace( importedFiles[0], coverages, progress.newChild( 20 ) );
+      m_newCoverage = ImportGridUtilities.importGrid( coverages, m_inputGridFile, m_inputGridFile.getName(), m_sourceCRS, m_outputGridFolder, m_domain, monitor );
+
+      /* Fire model event */
+      final Feature coveragesFeature = coverages.getFeature();
+      final GMLWorkspace workspace = coveragesFeature.getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, m_newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+      saveGmlWorkspace( coverages, progress.newChild( 20 ) );
 
       return Status.OK_STATUS;
     }
@@ -146,20 +142,11 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     }
   }
 
-  private ICoverage createGmlWorkspace( final IFile outputGridFile, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
+  private void saveGmlWorkspace( final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1 + 10 );
 
-    final String mimeType = "image/" + outputGridFile.getFileExtension();
-
-    // TODO: make file path relative to gml path
-    final URL outputGridUrl = ResourceUtilities.createURL( outputGridFile );
-    final String fileName = outputGridUrl.toExternalForm();
-    final ICoverage newCoverage = CoverageCollection.addCoverage( coverages, m_domain, fileName, mimeType );
-    newCoverage.setName( m_inputGridFile.getName() );
-
-    ProgressUtilities.worked( progress, 1 );
-
+    // Save the gml workspace
     final Feature coveragesFeature = coverages.getFeature();
     if( m_coverages == null ) // do not save if coverages already exists
     {
@@ -174,12 +161,6 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
       contentHelper.setFileContents( m_gmlFile, false, true, new SubProgressMonitor( monitor, 1 ) );
       ProgressUtilities.worked( progress, 10 );
     }
-
-    /* Fire model event */
-    final GMLWorkspace workspace = coveragesFeature.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coveragesFeature, newCoverage.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-    return newCoverage;
   }
 
   public ICoverage getNewCoverage( )

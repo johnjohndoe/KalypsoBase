@@ -51,6 +51,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.geotiff.image.jai.GeoTIFFDirectory;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.GridFileVerifier.IMAGE_TYPE;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -120,7 +121,9 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
 
   private final URL m_urlImage;
 
-  public GridMetaReaderGeoTiff( final URL urlImage, final IMAGE_TYPE type ) throws IOException
+  private final IStatus m_valid;
+
+  public GridMetaReaderGeoTiff( final URL urlImage, final IMAGE_TYPE type )
   {
     m_urlImage = urlImage;
     if( urlImage == null || type == null )
@@ -129,35 +132,62 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
     if( !IMAGE_TYPE.eTIFF.equals( type ) )
       throw new IllegalStateException( urlImage.toString() + " isn't a geotiff file" );
 
-    discover();
+    m_valid = discover();
   }
 
   /**
    * discover geotiff settings - not completely implemented because lack of geotiff examples and tiff world file
    * representation
    */
-  private void discover( ) throws IOException
+  private IStatus discover( )
   {
-    final SeekableStream stream = SeekableStream.wrapInputStream( m_urlImage.openStream(), true );
-    final GeoTIFFDirectory directory = new GeoTIFFDirectory( stream, 0 );
+    SeekableStream stream = null;
+    try
+    {
+      stream = SeekableStream.wrapInputStream( m_urlImage.openStream(), true );
+      final GeoTIFFDirectory directory = new GeoTIFFDirectory( stream, 0 );
 
-    /* determine pixel is area or point */
-    final RASTER_TYPE rasterType = RASTER_TYPE.getRasterType( directory );
-    if( RASTER_TYPE.ePixelIsPoint.equals( rasterType ) )
-      throw new NotImplementedException();
+      /* determine pixel is area or point */
+      final RASTER_TYPE rasterType = RASTER_TYPE.getRasterType( directory );
+      if( RASTER_TYPE.ePixelIsPoint.equals( rasterType ) )
+        throw new NotImplementedException();
 
-    /* get tie points */
-    m_tiepoints = directory.getTiepoints();
+      /* get tie points */
+      m_tiepoints = directory.getTiepoints();
 
-    /* get pixel scale */
-    m_pixelScales = directory.getPixelScale();
+      /* get pixel scale */
+      m_pixelScales = directory.getPixelScale();
 
-    /* get transformationMatrix */
-    final double[] transformationMatrix = directory.getTransformationMatrix();
-    if( transformationMatrix != null )
-      throw new NotImplementedException();
+      /* get transformationMatrix */
+      final double[] transformationMatrix = directory.getTransformationMatrix();
+      if( transformationMatrix != null )
+        throw new NotImplementedException();
 
-    stream.close();
+      stream.close();
+
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+
+      final String message = String.format( "Failed to access %s", m_urlImage );
+      return StatusUtilities.createStatus( IStatus.ERROR, message, e );
+    }
+    finally
+    {
+      if( stream != null )
+      {
+        try
+        {
+          stream.close();
+        }
+        catch( final IOException e )
+        {
+          // silently ignore, the first exception is more important
+        }
+      }
+    }
   }
 
   /**
@@ -242,7 +272,6 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
   @Override
   public IStatus isValid( )
   {
-    // Not yet implemented, always return null for 'no problemo'
-    return Status.OK_STATUS;
+    return m_valid;
   }
 }

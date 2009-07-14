@@ -147,7 +147,7 @@ public class PageSelectGeodataFiles extends WizardPage
     /* Coordinate system combo */
     final CRSSelectionPanel crsPanel = new CRSSelectionPanel( container, SWT.NONE );
     crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    crsPanel.setToolTipText( "Koordinatensystem der Raster-Datei" );
+    crsPanel.setToolTipText( "Koordinatensystem der Raster-Datei(en)" );
     m_crs = getDialogSettings().get( SETTINGS_SRS_NAME );
     if( m_crs == null )
       m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();

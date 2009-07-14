@@ -151,16 +151,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
         evalService.addSourceProvider( m_szenarioSourceProvider );
-        
-        
+
+
         new WorkspaceJob( "" )
         {
           @Override
-          public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
+          public IStatus runInWorkspace( final IProgressMonitor monitor )
           {
             // register sceanrio listeners
             ScenarioDataChangeListenerExtension.getInstance();
-            
+
             return Status.OK_STATUS;
           }
         }.schedule( 5000 );

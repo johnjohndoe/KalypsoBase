@@ -41,13 +41,10 @@
 package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,7 +59,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * Dieser Wizard dient dazu, (mehrere) Rasterdateien in eine bestehende GML-Datei zu imporiteren.
@@ -131,41 +127,22 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
       final ICoverageCollection coverageCollection = m_coverages;
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
-        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, "Importiere Rasterdaten", 100 );
-          final RectifiedGridDomain[] domains = ImportGridUtilities.readDomains( selectedFiles, crs, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
+          final SubMonitor progress = SubMonitor.convert( monitor, "Importiere Rasterdaten", selectedFiles.length );
 
-          // TODO: one of the domains may be null, return a status with an warning message if this is the case
-          final File[] convertedGrids = ImportGridUtilities.convertGrids( selectedFiles, crs, progress.newChild( 80, SubMonitor.SUPPRESS_NONE ) );
-          final IFile[] importedFiles = ImportGridUtilities.importExternalFiles( getShell(), convertedGrids, gridFolder, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
-          final String[] names = new String[selectedFiles.length];
-          for( int i = 0; i < selectedFiles.length; i++ )
-            names[i] = selectedFiles[i].getName();
-          final ICoverage[] coverages = addCoverages( names, domains, importedFiles, coverageCollection, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
-          setCoverages( coverages );
+          final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( selectedFiles.length );
+          for( final File gridFile : selectedFiles )
+            newCoverages.add( ImportGridUtilities.importGrid( coverageCollection, gridFile, gridFile.getName(), crs, gridFolder, null, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) ) );
+
+          setCoverages( coverageCollection.toArray( new ICoverage[coverageCollection.size()] ) );
 
           return Status.OK_STATUS;
         }
-
-        public ICoverage[] addCoverages( final String[] names, final RectifiedGridDomain[] domains, final IFile[] gridFiles, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
-        {
-          Assert.isTrue( domains.length == gridFiles.length );
-
-          final Collection<ICoverage> result = new ArrayList<ICoverage>();
-          for( int i = 0; i < domains.length; i++ )
-          {
-            if( domains[i] != null )
-              result.add( ImportGridUtilities.addCoverage( names[i], domains[i], gridFiles[i], coverages, monitor ) );
-          }
-
-          return coverageCollection.toArray( new ICoverage[coverageCollection.size()] );
-        }
-
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Rasterdaten-Import", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Rasterdaten-Import", status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR );
       return status.isOK();
     }
     catch( final Exception e )
