@@ -48,9 +48,12 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -85,10 +88,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVec
  */
 public class ImportGridUtilities
 {
-  public static final String[] SUPPORTED_GRID_FILE_PATTERNS = new String[] { "*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat", "*.tif", "*.jpg", "*.gif", "*.asc;*.dat;*.asg", "*.*" };
+  public static final String[] SUPPORTED_GRID_FILE_PATTERNS = new String[] { "*.asc;*.asg;*.dat;*.bin", "*.asc;*.dat;*.asg", "*.bin", "*.*" };
 
-  public static final String[] SUPPORTED_GRID_FILE_NAMES = new String[] { "All supported files (*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat)", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF image (*.gif)",
-      "ASCII grid (*.asc, *.dat, *.asg)", "All files (*.*)" };
+  public static final String[] SUPPORTED_GRID_FILE_NAMES = new String[] { "All supported formats (*.asc;*.asg;*.dat;*.bin)", "ESRI ASCII Grid-Files (*.asc, *.dat, *.asg)",
+      "Kalypso Grid-Files (*.bin)", "All files (*.*)" };
 
   private ImportGridUtilities( )
   {
@@ -121,55 +124,77 @@ public class ImportGridUtilities
     return files;
   }
 
-  public static File[] convertGrids( final File[] gridFiles, final String sourceCRS, final IProgressMonitor monitor ) throws CoreException
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere binäres Format", gridFiles.length );
-
-    /* Convert to .bin if necessary */
-    final File[] convertedFiles = new File[gridFiles.length];
-    for( int i = 0; i < convertedFiles.length; i++ )
-    {
-      try
-      {
-        progress.subTask( gridFiles[i].getName() );
-        convertedFiles[i] = convertIfAsc( gridFiles[i], sourceCRS, progress.newChild( 1 ) );
-      }
-      finally
-      {
-        ProgressUtilities.worked( progress, 0 ); // only check for cancelled
-      }
-    }
-
-    return convertedFiles;
-  }
-
   /**
    * Converts .asc to an internal binary format.
    */
-  public static File convertIfAsc( final File gridFile, final String sourceCRS, final IProgressMonitor monitor ) throws CoreException
+  private static File convertIfAsc( final File gridFile, final File destDir, final String sourceCRS, final IProgressMonitor monitor ) throws CoreException
   {
-    if( gridFile.getName().toLowerCase().endsWith( ".asc" ) || gridFile.getName().toLowerCase().endsWith( ".asg" ) )
+    // ESRI-ASCII Files: convert to .ascbin
+    File destFile = null;
+
+    try
     {
-      File binFile;
-      try
+      final String gridFileName = gridFile.getName();
+      final String basename = FilenameUtils.getBaseName( gridFileName );
+      final String extension = FilenameUtils.getExtension( gridFileName ).toLowerCase();
+      if( "asc".equals( extension ) || "asg".equals( extension ) || "dat".equals( extension ) )
       {
-        binFile = File.createTempFile( gridFile.getName(), ".bin" );
-        binFile.deleteOnExit();
-
-        final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), binFile, 2, sourceCRS );
-        converter.doConvert( monitor );
+        try
+        {
+          final String destFileName = basename + ".bin";
+          destFile = new File( destDir, destFileName );
+          if( destFile.exists() )
+          {
+            destFile = null; // elese if will be deleted
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Destination file already exists: %s", destFileName ), null ) );
+          }
+          final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), destFile, 2, sourceCRS );
+          converter.doConvert( monitor );
+          return destFile;
+        }
+        catch( final MalformedURLException e )
+        {
+          e.printStackTrace();
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Konvertieren von .asc nach .bin", e );
+          throw new CoreException( status );
+        }
       }
-      catch( final IOException e )
+
+      // Kalypso-BIN Files: just copy
+      if( "bin".equals( extension ) )
       {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Erzeugen einer temporären Datei", e );
-        throw new CoreException( status );
+        try
+        {
+          destFile = new File( destDir, gridFileName );
+          if( destFile.exists() )
+          {
+            destFile = null; // elese if will be deleted
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Destination file already exists: %s", destFile ), null ) );
+          }
+          FileUtils.copyFile( gridFile, destFile );
+          return destFile;
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Kopieren der .bin Datei", e );
+          throw new CoreException( status );
+        }
       }
 
-      return binFile;
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, String.format( "Unknown grid format: %s", extension ), null );
+      throw new CoreException( status );
     }
+    catch( final CoreException e )
+    {
+      if( destFile != null )
+      {
+        destFile.delete();
+        destFile.deleteOnExit();
+      }
 
-    return gridFile;
+      throw e;
+    }
   }
 
   /**
@@ -206,6 +231,9 @@ public class ImportGridUtilities
     return result;
   }
 
+  /**
+   * Adds one coverage to a CoverageCollection
+   */
   public static ICoverage addCoverage( final String name, final RectifiedGridDomain domain, final IFile gridFile, final ICoverageCollection coverages, final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -260,32 +288,23 @@ public class ImportGridUtilities
     return outputGridUrl.toExternalForm();
   }
 
-  public static RectifiedGridDomain[] readDomains( final File[] selectedFiles, final String crs, final IProgressMonitor monitor ) throws CoreException
+  /**
+   * Reads the grid domain for a given grid file. Tries to determine its file-format (.asc, tif, etc.) and reads the
+   * world-information accoding to the format.
+   */
+  public static RectifiedGridDomain readDomain( final File gridFile, final String crs ) throws CoreException
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, "Lese Metadaten", selectedFiles.length );
+      final URL url = gridFile.toURI().toURL();
 
-      final RectifiedGridDomain[] domains = new RectifiedGridDomain[selectedFiles.length];
+      final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( url, crs );
 
-      for( int i = 0; i < domains.length; i++ )
-      {
-        final File file = selectedFiles[i];
-        progress.subTask( file.getName() );
-        final URL url = file.toURI().toURL();
+      final IStatus valid = reader.isValid();
+      if( !valid.isOK() )
+        throw new CoreException( valid );
 
-        final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( url, crs );
-
-        final IStatus valid = reader.isValid();
-        if( !valid.isOK() )
-          throw new CoreException( valid );
-
-        domains[i] = getDomain( reader, crs );
-
-        ProgressUtilities.worked( progress, 1 );
-      }
-
-      return domains;
+      return getDomain( reader, crs );
     }
     catch( final MalformedURLException e )
     {
@@ -321,6 +340,49 @@ public class ImportGridUtilities
     final OffsetVector offsetY = new OffsetVector( yx, yy );
 
     return reader.getCoverage( offsetX, offsetY, upperLeftCorner, crs );
+  }
+
+  /**
+   * Imports an external grid file into a coverage collection.<br>
+   * The file will be also imported into the workspace into the given {@link IFolder}.
+   *
+   * @param coverageCollection
+   *          A new coverage-feature will be added to this collection.
+   * @param gridFile
+   *          The input file
+   * @param name
+   *          The name which wil bet set to the coverage (gml:name)
+   * @param crs
+   *          The Coordinate system of the grid-input-file
+   * @param domain
+   *          Optional: if non-<code>null</code>, this domain will be used for adding the coverage.
+   * @param targetFolder
+   *          The input grid gets copied/converted into this targewt folder
+   */
+  public static ICoverage importGrid( final ICoverageCollection coverageCollection, final File gridFile, final String name, final String crs, final IContainer targetFolder, final RectifiedGridDomain domain, final IProgressMonitor monitor ) throws CoreException
+  {
+    final String taskName = String.format( "Importing %s", gridFile.getName() );
+    final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
+
+    IFile targetFile = null;
+    try
+    {
+      final RectifiedGridDomain rectDomain = domain == null ? ImportGridUtilities.readDomain( gridFile, crs ) : domain;
+      ProgressUtilities.worked( progress, 5 );
+
+      final File destDir = targetFolder.getLocation().toFile();
+      final File destFile = convertIfAsc( gridFile, destDir, crs, progress.newChild( 85 ) );
+      targetFile = targetFolder.getFile( new Path( destFile.getName() ) );
+
+      return ImportGridUtilities.addCoverage( name, rectDomain, targetFile, coverageCollection, progress.newChild( 5 ) );
+    }
+    finally
+    {
+      if( targetFile == null )
+        targetFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 5 ) );
+      else
+        targetFile.refreshLocal( IResource.DEPTH_ZERO, progress.newChild( 5 ) );
+    }
   }
 
 }

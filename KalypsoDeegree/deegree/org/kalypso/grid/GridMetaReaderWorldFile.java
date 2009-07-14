@@ -41,14 +41,17 @@
 package org.kalypso.grid;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -65,34 +68,45 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
 {
   private final URL m_worldFile;
 
-  private WorldFile m_world = null;
+  private WorldFile m_world;
 
   private final URL m_image;
+
+  private final IStatus m_valid;
 
   public GridMetaReaderWorldFile( final URL image, final URL worldFile )
   {
     m_image = image;
     m_worldFile = worldFile;
-    setup();
+    m_valid = setup();
   }
 
-  private void setup( )
+  IStatus setup( )
   {
-    if( (m_worldFile == null) )
+    if( m_worldFile == null )
     {
-      throw (new IllegalStateException());
+      final String msg = String.format( "No world file found for %s", m_image );
+      return StatusUtilities.createStatus( IStatus.ERROR, msg, null );
     }
 
-    final WorldFileReader reader = new WorldFileReader();
+    InputStream is = null;
     try
     {
-
-      m_world = reader.readWorldFile( m_worldFile.openStream() );
+      is = m_worldFile.openStream();
+      m_world = new WorldFileReader().readWorldFile( is );
+      return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
       e.printStackTrace();
+      final String msg = String.format( "Failed to access world file %s: %s", m_worldFile, e.toString() );
+      return StatusUtilities.createStatus( IStatus.ERROR, msg, e );
     }
+   finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
   }
 
   /**
@@ -173,7 +187,6 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
   @Override
   public IStatus isValid( )
   {
-    // Not yet implemented, always return null for 'no problemo'
-    return Status.OK_STATUS;
+    return m_valid;
   }
 }

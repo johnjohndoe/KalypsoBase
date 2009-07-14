@@ -49,10 +49,11 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * Reads the contents of a World-File (tfw, gfw, ...).
- * 
+ *
  * @author Gernot Belger
  */
 public class WorldFileReader
@@ -103,20 +104,13 @@ public class WorldFileReader
   public WorldFile readWorldFile( final InputStream stream ) throws NumberFormatException, IOException
   {
     final BufferedReader br = new BufferedReader( new InputStreamReader( stream ) );
-    try
-    {
-      final double rasterXGeoX = Double.parseDouble( br.readLine().trim() );
-      final double rasterXGeoY = Double.parseDouble( br.readLine().trim() );
-      final double rasterYGeoX = Double.parseDouble( br.readLine().trim() );
-      final double rasterYGeoY = Double.parseDouble( br.readLine().trim() );
-      final double ulcx = Double.parseDouble( br.readLine().trim() );
-      final double ulcy = Double.parseDouble( br.readLine().trim() );
-      
-      return new WorldFile( rasterXGeoX, rasterXGeoY, rasterYGeoX, rasterYGeoY, ulcx, ulcy );
-    }
-    finally
-    {
-      br.close();
-    }
+    final double rasterXGeoX = NumberUtils.parseDouble( br.readLine().trim() );
+    final double rasterXGeoY = NumberUtils.parseDouble( br.readLine().trim() );
+    final double rasterYGeoX = NumberUtils.parseDouble( br.readLine().trim() );
+    final double rasterYGeoY = NumberUtils.parseDouble( br.readLine().trim() );
+    final double ulcx = NumberUtils.parseDouble( br.readLine().trim() );
+    final double ulcy = NumberUtils.parseDouble( br.readLine().trim() );
+
+    return new WorldFile( rasterXGeoX, rasterXGeoY, rasterYGeoX, rasterYGeoY, ulcx, ulcy );
   }
 }

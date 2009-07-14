@@ -74,7 +74,10 @@ public interface KalypsoBaseFeature extends BaseFeature
   // use @link{FeatureDeegreeTwo}.getOwner() instead
   public Feature getParent( );
 
+  /**
+   * @deprecated Use FeatureDeegreeTwo.setEnvelopesUpdated() instead
+   * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
+   */
   @Deprecated
-  // use FeatureDeegreeTwo.setEnvelopesUpdated() instead
   public void invalidEnvelope( );
 }
