@@ -48,6 +48,8 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.geotiff.image.jai.GeoTIFFDirectory;
 import org.kalypso.grid.GridFileVerifier.IMAGE_TYPE;
 import org.kalypsodeegree.model.coverage.GridRange;
@@ -62,7 +64,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * {@link IGridMetaReader} implementation for Geo-Tiffs.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderGeoTiff implements IGridMetaReader
@@ -189,48 +191,58 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
    */
-  public String getOriginCornerX( )
+  public double getOriginCornerX( )
   {
-    return Double.toString( m_tiepoints[3] );
+    return m_tiepoints[3];
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
    */
-  public String getOriginCornerY( )
+  public double getOriginCornerY( )
   {
-    return Double.toString( m_tiepoints[4] );
+    return m_tiepoints[4];
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
    */
-  public String getVectorXx( )
+  public double getVectorXx( )
   {
-    return Double.toString( m_pixelScales[0] );
+    return m_pixelScales[0];
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
    */
-  public String getVectorXy( )
+  public double getVectorXy( )
   {
-    return Double.toString( 0 );
+    return 0.0;
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
    */
-  public String getVectorYx( )
+  public double getVectorYx( )
   {
-    return Double.toString( 0 );
+    return 0.0;
   }
 
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
    */
-  public String getVectorYy( )
+  public double getVectorYy( )
   {
-    return Double.toString( m_pixelScales[1] * -1.0 );
+    return m_pixelScales[1] * -1.0;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGridMetaReader#isValid()
+   */
+  @Override
+  public IStatus isValid( )
+  {
+    // Not yet implemented, always return null for 'no problemo'
+    return Status.OK_STATUS;
   }
 }

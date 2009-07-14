@@ -42,10 +42,11 @@ package org.kalypso.gml.ui.wizard.grid;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -124,7 +125,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     // read/copy input
     final File[] selectedFiles = m_pageSelect.getSelectedFiles();
     final String crs = m_pageSelect.getProjection();
-    final IFolder gridFolder = m_pageSelect.getGridFolder();
+    final IContainer gridFolder = m_pageSelect.getGridFolder();
     try
     {
       final ICoverageCollection coverageCollection = m_coverages;
@@ -134,6 +135,8 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
         {
           final SubMonitor progress = SubMonitor.convert( monitor, "Importiere Rasterdaten", 100 );
           final RectifiedGridDomain[] domains = ImportGridUtilities.readDomains( selectedFiles, crs, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
+
+          // TODO: one of the domains may be null, return a status with an warning message if this is the case
           final File[] convertedGrids = ImportGridUtilities.convertGrids( selectedFiles, crs, progress.newChild( 80, SubMonitor.SUPPRESS_NONE ) );
           final IFile[] importedFiles = ImportGridUtilities.importExternalFiles( getShell(), convertedGrids, gridFolder, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
           final String[] names = new String[selectedFiles.length];
@@ -149,11 +152,14 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
         {
           Assert.isTrue( domains.length == gridFiles.length );
 
-          final ICoverage[] result = new ICoverage[domains.length];
-          for( int i = 0; i < result.length; i++ )
-            result[i] = ImportGridUtilities.addCoverage( names[i], domains[i], gridFiles[i], coverages, monitor );
+          final Collection<ICoverage> result = new ArrayList<ICoverage>();
+          for( int i = 0; i < domains.length; i++ )
+          {
+            if( domains[i] != null )
+              result.add( ImportGridUtilities.addCoverage( names[i], domains[i], gridFiles[i], coverages, monitor ) );
+          }
 
-          return result;
+          return coverageCollection.toArray( new ICoverage[coverageCollection.size()] );
         }
 
       };

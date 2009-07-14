@@ -43,7 +43,8 @@ package org.kalypso.gml.ui.wizard.grid;
 import java.io.File;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -185,7 +186,6 @@ public class PageSelectGeodataFiles extends WizardPage
       public void modifyText( final ModifyEvent e )
       {
         handleFolderModified( tFolder.getText() );
-        updatePageComplete();
       }
     } );
     tFolder.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
@@ -215,11 +215,28 @@ public class PageSelectGeodataFiles extends WizardPage
   protected void handleFolderModified( final String text )
   {
     m_gridFolderPath = text;
+    updatePageComplete();
   }
 
   protected void browseForFolder( final Text tFolder )
   {
-    final IContainer initialRoot = m_gridFolderPath == null ? null : ResourcesPlugin.getWorkspace().getRoot().getFolder( new Path( m_gridFolderPath ) );
+    IContainer initialRoot = null;
+    if( m_gridFolderPath != null )
+    {
+      try
+      {
+        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        final IResource member = root.findMember( Path.fromPortableString( m_gridFolderPath ) );
+        if( member instanceof IContainer )
+          initialRoot = (IContainer) member;
+      }
+      catch( final IllegalArgumentException e )
+      {
+        // ignore htis exception, else we cannot continue if user enters rubbish
+        e.printStackTrace();
+      }
+    }
+
     final ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), initialRoot, false, "Wählen Sie das Zielverzeichnis:" );
     dialog.setTitle( "Zielverzeichnis" );
     if( dialog.open() == Window.OK )
@@ -282,9 +299,13 @@ public class PageSelectGeodataFiles extends WizardPage
     if( m_gridFolderPath == null || m_gridFolderPath.isEmpty() )
       return "Destination folder not specified";
 
-    final IPath path = new Path( m_gridFolderPath );
-    final IFolder gridFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
-    if( !gridFolder.exists() )
+    final IPath path = Path.fromPortableString( m_gridFolderPath );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IResource member = root.findMember( path );
+    if( !(member instanceof IContainer) )
+      return "Kein Verzeichnis";
+
+    if( !member.exists() )
       return "Zielverzeichnis existiert nicht";
 
 // final GridFileVerifier verifier = new GridFileVerifier();
@@ -336,10 +357,15 @@ public class PageSelectGeodataFiles extends WizardPage
     return m_rasterReader;
   }
 
-  public IFolder getGridFolder( )
+  public IContainer getGridFolder( )
   {
-    final IPath path = new Path( m_gridFolderPath );
-    return ResourcesPlugin.getWorkspace().getRoot().getFolder( path );
+    final IPath path = Path.fromPortableString( m_gridFolderPath );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IResource member = root.findMember( path );
+    if( member instanceof IContainer )
+      return (IContainer) member;
+
+    return null;
   }
 
 }

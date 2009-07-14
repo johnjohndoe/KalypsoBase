@@ -68,7 +68,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
@@ -89,7 +88,7 @@ public class ImportGridUtilities
   public static final String[] SUPPORTED_GRID_FILE_PATTERNS = new String[] { "*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat", "*.tif", "*.jpg", "*.gif", "*.asc;*.dat;*.asg", "*.*" };
 
   public static final String[] SUPPORTED_GRID_FILE_NAMES = new String[] { "All supported files (*.jpg;*.gif;*.tif;*.asc;*.asg;*.dat)", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF image (*.gif)",
-    "ASCII grid (*.asc, *.dat, *.asg)", "All files (*.*)" };
+      "ASCII grid (*.asc, *.dat, *.asg)", "All files (*.*)" };
 
   private ImportGridUtilities( )
   {
@@ -122,10 +121,9 @@ public class ImportGridUtilities
     return files;
   }
 
-
   public static File[] convertGrids( final File[] gridFiles, final String sourceCRS, final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere .asc Format in binäres Format", gridFiles.length );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere binäres Format", gridFiles.length );
 
     /* Convert to .bin if necessary */
     final File[] convertedFiles = new File[gridFiles.length];
@@ -136,12 +134,6 @@ public class ImportGridUtilities
         progress.subTask( gridFiles[i].getName() );
         convertedFiles[i] = convertIfAsc( gridFiles[i], sourceCRS, progress.newChild( 1 ) );
       }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Konvertieren der Rasterdaten", e );
-        throw new CoreException( status );
-      }
       finally
       {
         ProgressUtilities.worked( progress, 0 ); // only check for cancelled
@@ -151,19 +143,28 @@ public class ImportGridUtilities
     return convertedFiles;
   }
 
-
   /**
    * Converts .asc to an internal binary format.
    */
-  public static File convertIfAsc( final File gridFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException
+  public static File convertIfAsc( final File gridFile, final String sourceCRS, final IProgressMonitor monitor ) throws CoreException
   {
     if( gridFile.getName().toLowerCase().endsWith( ".asc" ) || gridFile.getName().toLowerCase().endsWith( ".asg" ) )
     {
-      final File binFile = File.createTempFile( gridFile.getName(), ".bin" );
-      binFile.deleteOnExit();
+      File binFile;
+      try
+      {
+        binFile = File.createTempFile( gridFile.getName(), ".bin" );
+        binFile.deleteOnExit();
 
-      final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), binFile, 2, sourceCRS );
-      converter.doConvert( monitor );
+        final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), binFile, 2, sourceCRS );
+        converter.doConvert( monitor );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Erzeugen einer temporären Datei", e );
+        throw new CoreException( status );
+      }
 
       return binFile;
     }
@@ -274,6 +275,11 @@ public class ImportGridUtilities
         final URL url = file.toURI().toURL();
 
         final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( url, crs );
+
+        final IStatus valid = reader.isValid();
+        if( !valid.isOK() )
+          throw new CoreException( valid );
+
         domains[i] = getDomain( reader, crs );
 
         ProgressUtilities.worked( progress, 1 );
@@ -302,19 +308,17 @@ public class ImportGridUtilities
    */
   public static RectifiedGridDomain getDomain( final IGridMetaReader reader, final String crs ) throws Exception
   {
-    final String originCornerX = reader.getOriginCornerX();
-    final String originCornerY = reader.getOriginCornerY();
-    final double oX = NumberUtils.parseDouble( originCornerX );
-    final double oY = NumberUtils.parseDouble( originCornerY );
+    final double oX = reader.getOriginCornerX();
+    final double oY = reader.getOriginCornerY();
 
     final Double[] upperLeftCorner = new Double[] { oX, oY };
 
-    final String xx = reader.getVectorXx();
-    final String xy = reader.getVectorXy();
-    final String yx = reader.getVectorYx();
-    final String yy = reader.getVectorYy();
-    final OffsetVector offsetX = new OffsetVector( NumberUtils.parseDouble( xx ), NumberUtils.parseDouble( xy ) );
-    final OffsetVector offsetY = new OffsetVector( NumberUtils.parseDouble( yx ), NumberUtils.parseDouble( yy ) );
+    final double xx = reader.getVectorXx();
+    final double xy = reader.getVectorXy();
+    final double yx = reader.getVectorYx();
+    final double yy = reader.getVectorYy();
+    final OffsetVector offsetX = new OffsetVector( xx, xy );
+    final OffsetVector offsetY = new OffsetVector( yx, yy );
 
     return reader.getCoverage( offsetX, offsetY, upperLeftCorner, crs );
   }
