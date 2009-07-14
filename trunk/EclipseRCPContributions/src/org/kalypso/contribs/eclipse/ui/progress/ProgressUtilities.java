@@ -55,7 +55,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Helper class with utility methods to handle progress.
- * 
+ *
  * @author Gernot Belger
  */
 public class ProgressUtilities
@@ -118,11 +118,14 @@ public class ProgressUtilities
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   * 
+   *
    * @see IProgressMonitor#worked(int)
    */
   public static void worked( final IProgressMonitor monitor, final int work ) throws CoreException
   {
+    if( monitor == null )
+      return;
+
     monitor.worked( work );
     if( monitor.isCanceled() )
       throw new CoreException( Status.CANCEL_STATUS );
@@ -134,11 +137,14 @@ public class ProgressUtilities
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   * 
+   *
    * @see IProgressMonitor#done())
    */
   public static void done( final IProgressMonitor monitor ) throws CoreException
   {
+    if( monitor == null )
+      return;
+
     monitor.done();
     if( monitor.isCanceled() )
       throw new CoreException( Status.CANCEL_STATUS );
