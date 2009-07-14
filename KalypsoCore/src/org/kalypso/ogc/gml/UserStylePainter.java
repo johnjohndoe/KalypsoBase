@@ -135,6 +135,9 @@ public class UserStylePainter
 
     for( final Object o : features )
     {
+      // TODO: would be nice to catch the exception here and, so other features may have the chance to get painted.
+      // However: be careful, too many exceptions are a performance problem, so we should stop after some dozens
+
       final SubMonitor childProgress = loopProgress.newChild( 1 );
       paintFeature( workspace, scale, selected, rule, o, qname, childProgress, delegate );
       ProgressUtilities.done( childProgress );
