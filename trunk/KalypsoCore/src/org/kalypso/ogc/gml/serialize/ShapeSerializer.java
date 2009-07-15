@@ -79,7 +79,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * Helper-Klasse zum lesen und schreiben von GML TODO: Problem: reading/writing a shape will change the precision/size
  * of the columns!
- *
+ * 
  * @author gernot
  */
 public class ShapeSerializer
@@ -135,7 +135,7 @@ public class ShapeSerializer
   /**
    * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
    * sondern nur die über ein vorher festgelegt Mapping.
-   *
+   * 
    * @param features
    *          Properties dieser Features werden geschrieben.
    * @param mapping
@@ -222,7 +222,7 @@ public class ShapeSerializer
   /**
    * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
    * sondern nur die über ein vorher festgelegt Mapping.
-   *
+   * 
    * @param features
    *          Properties dieser Features werden geschrieben.
    * @param mapping
@@ -238,7 +238,16 @@ public class ShapeSerializer
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.11" ) ); //$NON-NLS-1$
 
     final IFeatureType featureType = features[0].getFeatureType();
-    final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geomProperty );
+    QName geometryProperty = geomProperty;
+    IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geomProperty );
+
+    if( geoPt == null )
+    {
+      geoPt = featureType.getDefaultGeometryProperty();
+      geometryProperty = featureType.getDefaultGeometryProperty().getQName();
+    }
+    if( geoPt == null )
+      throw new GmlSerializeException( String.format( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.12" ), geomProperty.toString(), featureType.getQName().toString() ) ); //$NON-NLS-1$
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
@@ -278,9 +287,9 @@ public class ShapeSerializer
 
         final Object[] data = new Object[ftps.length];
 
-        final IPropertyType geomPT = kalypsoFeature.getFeatureType().getProperty( geomProperty );
+        final IPropertyType geomPT = kalypsoFeature.getFeatureType().getProperty( geometryProperty );
 
-        final Object geom = kalypsoFeature.getProperty( geomProperty );
+        final Object geom = kalypsoFeature.getProperty( geometryProperty );
         if( geomPT.isList() )
         {
           // HACK: if geomProperty is a list property, we just take the first element
@@ -351,7 +360,7 @@ public class ShapeSerializer
 
   /**
    * Creates to feature type for the root feature of a shape-file-based workspace.
-   *
+   * 
    * @param childFeatureType
    *          The feature type for the children (i.e. the shape-objects) of the root.
    * @return A newly created feature suitable for the root of a workspace. It has the following properties:
