@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Utility class for Number parsing etc.
- *
+ * 
  * @author belger
  */
 public final class NumberUtils
@@ -123,7 +123,7 @@ public final class NumberUtils
   /**
    * Tries to parse a {@link BigDecimal}.<br>
    * The decimal separator may be one of '.' or ','.
-   *
+   * 
    * @return A new BigDecimal parsed from the indicated string. <code>null</code>.
    * @throws NumberFormatException
    *           if the string is not parseable.
@@ -144,7 +144,7 @@ public final class NumberUtils
   /**
    * Tries to parse a {@link BigDecimal} from a part of a string and additionally sets the indicated scale.<br>
    * The decimal separator may be one of '.' or ','.
-   *
+   * 
    * @param line
    *          The string from which to parse the decimal.
    * @param beginIndex
@@ -166,7 +166,7 @@ public final class NumberUtils
   {
     Assert.isLegal( beginIndex < endIndex );
 
-    if( line.length() - 1 < endIndex )
+    if( line.length() < endIndex )
       return null;
 
     final String substring = line.substring( beginIndex, endIndex ).trim();
@@ -183,7 +183,7 @@ public final class NumberUtils
 
   /**
    * Returns the next bigger {@link BigDecimal} with the same scale.
-   *
+   * 
    * @see BigDecimal
    */
   public static BigDecimal increment( final BigDecimal decimal )
@@ -193,7 +193,7 @@ public final class NumberUtils
 
   /**
    * Returns the next smaller {@link BigDecimal} with the same scale.
-   *
+   * 
    * @see BigDecimal
    */
   public static BigDecimal decrement( final BigDecimal decimal )
