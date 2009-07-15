@@ -102,8 +102,11 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   public void setActive( final boolean isActive )
   {
-    m_isActive = isActive;
-    getEventHandler().fireActiveLayerChanged( this );
+    if( m_isActive != isActive )
+    {
+      m_isActive = isActive;
+      getEventHandler().fireActiveLayerChanged( this );
+    }
   }
 
   /**
@@ -135,8 +138,11 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   public void setVisible( final boolean isVisible )
   {
-    m_isVisible = isVisible;
-    m_handler.fireLayerVisibilityChanged( this );
+    if( m_isVisible != isVisible )
+    {
+      m_isVisible = isVisible;
+      m_handler.fireLayerVisibilityChanged( this );
+    }
   }
 
   /**
