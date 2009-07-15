@@ -128,7 +128,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
       if( Number.class.isAssignableFrom( axis.getDataClass() ) )
       {
         Number lower = new Double( Double.MAX_VALUE );
-        Number upper = new Double( Double.MIN_VALUE );
+        Number upper = new Double( -Double.MAX_VALUE );
 
         final DoubleComparator dc = new DoubleComparator( 0.000001 );
         for( int i = 0; i < getCount(); i++ )

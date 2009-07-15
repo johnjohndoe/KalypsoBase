@@ -46,7 +46,7 @@ public class MinMaxSurfacePatchVisitor<P extends GM_SurfacePatch> implements ISu
 {
   private double m_min = Double.MAX_VALUE;
 
-  private double m_max = Double.MIN_VALUE;
+  private double m_max = -Double.MAX_VALUE;
 
   /**
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,

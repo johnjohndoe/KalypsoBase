@@ -187,9 +187,9 @@ public abstract class Symbolizer_Impl implements Symbolizer
       resource.dispose();
   }
 
-  private double m_maxDenominator = 9E99;
+  private double m_maxDenominator = Double.MAX_VALUE;
 
-  private double m_minDenominator = 0;
+  private double m_minDenominator = -Double.MAX_VALUE;
 
   private Geometry m_geometry = null;
 

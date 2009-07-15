@@ -764,7 +764,7 @@ public class GeoGridUtilities
     final BigDecimal[] minmax = new BigDecimal[2];
 
     BigDecimal minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-    BigDecimal maxValue = new BigDecimal( Double.MIN_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxValue = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     for( final ICoverage coverage : covCollection )
     {

@@ -208,7 +208,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       m_sizeY = sizeY;
       m_scale = scale;
       m_min = BigDecimal.valueOf( Double.MAX_VALUE );
-      m_max = BigDecimal.valueOf( Double.MIN_VALUE );
+      m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
 
       /* Initialize grid */
       m_randomAccessFile.setLength( HEADER_SIZE + sizeX * sizeY * 4 + 2 * 4 );
