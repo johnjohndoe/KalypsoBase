@@ -369,7 +369,7 @@ public class GrafikLauncher
     Date xLower = null;
     Date xUpper = null;
     Number yLower = new Double( Double.MAX_VALUE );
-    Number yUpper = new Double( Double.MIN_VALUE );
+    Number yUpper = new Double( -Double.MAX_VALUE );
     final Set<XLine> xLines = new TreeSet<XLine>();
     final Map<Double, ValueAndColor> yLines = new HashMap<Double, ValueAndColor>();
 

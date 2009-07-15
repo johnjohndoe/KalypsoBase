@@ -116,6 +116,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   private double m_min;
 
   private double m_max;
+  
+  // TODO m_min and m_max values are calculated, but that values are never used
+  
 
   @SuppressWarnings("unchecked")
   RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
@@ -138,7 +141,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     if( m_values.length == 0 )
     {
       m_min = Double.MAX_VALUE;
-      m_max = Double.MIN_VALUE;
+      m_max = -Double.MAX_VALUE;
     }
     else
     {

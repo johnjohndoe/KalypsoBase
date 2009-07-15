@@ -163,7 +163,7 @@ public class SHPPolyLinez implements ISHPGeometry
     double ymin = curve[0].getEnvelope().getMin().getY();
     double ymax = curve[0].getEnvelope().getMax().getY();
     double zmin = Double.MAX_VALUE;
-    double zmax = Double.MIN_VALUE;
+    double zmax = -Double.MAX_VALUE;
 
     numParts = curve.length;
 

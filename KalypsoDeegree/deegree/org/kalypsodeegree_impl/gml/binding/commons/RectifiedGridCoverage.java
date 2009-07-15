@@ -65,7 +65,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
 
   public static String getNameStatic( )
   {
-    return "RectifiedGridCoverage2";
+    return "RectifiedGridCoverage";
   }
 
   /**
@@ -91,7 +91,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
     {
       final GM_Envelope envelope = gridDomain.getGM_Envelope( gridDomain.getCoordinateSystem() );
       feature.setProperty( QNAME_PROP_BOUNDED_BY, envelope );
-      feature.invalidEnvelope();
+      feature.setEnvelopesUpdated();
     }
     catch( final Exception e )
     {

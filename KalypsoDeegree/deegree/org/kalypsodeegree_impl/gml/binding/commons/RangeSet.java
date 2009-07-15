@@ -136,7 +136,7 @@ public class RangeSet
    */
   public double getMaxValue( )
   {
-    double max = Double.MIN_VALUE;
+    double max = -Double.MAX_VALUE;
     for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
       final Vector rowData = m_rangeSetData.get( i );
