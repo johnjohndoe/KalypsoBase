@@ -772,8 +772,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       ((AbstractKalypsoTheme) m_theme).setStatus( status );
-
-    super.setStatus( status );
+    else
+      super.setStatus( status );
   }
 
   public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
@@ -876,7 +876,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void styleChanged( final KalypsoUserStyle source )
   {
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**
@@ -953,7 +953,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   protected void handleStatusChanged( )
   {
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   protected void handleVisibilityChanged( final boolean newVisibility )

@@ -73,9 +73,7 @@ public class RulePainter
     {
       final Symbolizer[] symbolizers = rule.getSymbolizers();
       for( final Symbolizer symbolizer : symbolizers )
-      {
         symbolizer.paint( gc, feature );
-      }
     }
   }
 

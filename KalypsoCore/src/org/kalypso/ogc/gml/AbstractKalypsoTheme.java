@@ -242,8 +242,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Fire the given event to my registered listeners.
    */
-  protected void fireStatusChanged( )
+  protected void fireStatusChanged( final IKalypsoTheme theme )
   {
+    // TODO: this is also used to fire events for child-themes
+    // we should get the child-theme as parameter and give this instead of myself to the statusChanged event
+
+    final IKalypsoTheme changedTheme = theme == null ? this : theme;
+
     acceptListenersRunnable( new IListenerRunnable()
     {
       public void visit( final IKalypsoThemeListener l )
@@ -251,7 +256,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
         if( l == null )
           return;
 
-        l.statusChanged( AbstractKalypsoTheme.this );
+        l.statusChanged( changedTheme );
       }
     } );
   }
@@ -677,7 +682,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     m_name = name;
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**
@@ -688,7 +693,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_properties.put( name, value );
 
     // REMARK: we use status changed at the moment, maybe we should fire a special event for properties?
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   public void setStatus( final IStatus status )
@@ -699,14 +704,14 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     m_status = status;
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   public void setType( final String type )
   {
     m_type = type;
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**
@@ -771,7 +776,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       m_externIcon = null;
     }
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**
@@ -802,7 +807,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     m_showLegendChildren = showChildren;
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**

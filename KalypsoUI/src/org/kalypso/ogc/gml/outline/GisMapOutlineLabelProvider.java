@@ -57,15 +57,6 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
     super.fireLabelProviderChanged( new LabelProviderChangedEvent( this, elements ) );
   }
 
-  /**
-   * @see org.eclipse.ui.model.WorkbenchLabelProvider#decorateText(java.lang.String, java.lang.Object)
-   */
-  @Override
-  protected String decorateText( final String input, final Object element )
-  {
-    return input;
-  }
-
   public boolean isChecked( final Object element )
   {
     final ICheckStateProvider provider = getCheckStateProvider( element );
