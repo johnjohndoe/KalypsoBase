@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
@@ -104,7 +105,7 @@ public final class KeyInfo extends Job
     }
 
     setPriority( Job.LONG );
-// setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
+    setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
   }
 
   public void dispose( )
@@ -260,7 +261,6 @@ public final class KeyInfo extends Job
         e.printStackTrace();
 
         return StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), null );
-//        return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
       }
     }
 
@@ -346,7 +346,6 @@ public final class KeyInfo extends Job
 
     fireDirtyChanged( isDirty );
   }
-
 
   /**
    * Reloads the pool object if it is dirty.
