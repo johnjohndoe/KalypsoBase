@@ -259,15 +259,6 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     super.fireContextChanged();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#fireStatusChanged()
-   */
-  @Override
-  protected void fireStatusChanged( )
-  {
-    super.fireStatusChanged();
-  }
-
   protected void handleResourceChanged( final IResourceChangeEvent event )
   {
     if( m_file == null )

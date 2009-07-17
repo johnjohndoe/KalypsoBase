@@ -81,7 +81,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
-      handleThemeActivated();
+      handleThemeActivated( nowActive );
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
       if( isVisible() )
         doFireRepaintRequested( null/* theme.getFullExtent() */);
 
-      handleThemeStatusChanged();
+      handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     public void themeOrderChanged( final IMapModell source )
     {
       doFireRepaintRequested( getFullExtent() );
-      handleThemeStatusChanged();
+      handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
 
     /**
@@ -130,7 +130,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
       if( lastVisibility )
         doFireRepaintRequested( theme.getFullExtent() );
 
-      handleThemeStatusChanged();
+      handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-      handleThemeStatusChanged();
+      handleThemeStatusChanged( theme );
     }
 
     /**
@@ -347,9 +347,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     return m_innerMapModel.getThemeSize();
   }
 
-  protected void handleThemeActivated( )
+  protected void handleThemeActivated( final IKalypsoTheme theme )
   {
-    fireStatusChanged();
+    fireStatusChanged( theme );
   }
 
   protected void handleThemeContextChanged( )
@@ -357,9 +357,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     fireContextChanged();
   }
 
-  protected void handleThemeStatusChanged( )
+  protected void handleThemeStatusChanged( IKalypsoTheme theme )
   {
-    fireStatusChanged();
+    fireStatusChanged( theme );
   }
 
   /**

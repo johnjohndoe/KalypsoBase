@@ -108,12 +108,16 @@ public class TreeObjectImage
     if( m_width == 16 && m_height == 16 )
     {
       final ImageData imageData = m_image.getImageData();
-      return ImageDescriptor.createFromImageData( imageData );
+      // REMARK: we are using this special image descriptor, in order to overwrite the hash-code behavior of
+      // image-data.
+      // This fixes a out-of-handles error, when used in combination with WorkbenchLabelProvider, which caches the image
+      // descriptors.
+      return new UniqueImageDescriptor( imageData );
     }
 
     /* Resize, if the image is not 16 / 16. */
     final ImageData imageData = resize( m_image, 16, 16 );
-    return ImageDescriptor.createFromImageData( imageData );
+    return new UniqueImageDescriptor( imageData );
   }
 
   /**

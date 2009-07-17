@@ -326,7 +326,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_styleMap.put( style, styleDisplayMap );
     style.addStyleListener( this );
 
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   public void removeStyle( final KalypsoUserStyle style )
@@ -584,7 +584,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void styleChanged( final KalypsoUserStyle source )
   {
     setDirty();
-    fireStatusChanged();
+    fireStatusChanged( this );
   }
 
   /**
