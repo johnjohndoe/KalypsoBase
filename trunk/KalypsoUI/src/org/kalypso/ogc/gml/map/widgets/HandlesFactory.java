@@ -84,7 +84,7 @@ public class HandlesFactory
     return collector;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private static void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
   {
     if( geometry instanceof GM_Point )
@@ -118,7 +118,7 @@ public class HandlesFactory
 
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
@@ -138,15 +138,26 @@ public class HandlesFactory
 
   private static void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Position[] positions, final List<Handle> collector, final GM_Envelope envelope )
   {
+    final boolean isRingGeometry = positions.length > 3 && positions[0].equals( positions[positions.length - 1] );
+
+    // without ring handling, this method causes that rings (surfaces) are broken if the first/last position of the ring
+    // is selected - because only the handle for the first position will be created, and not for the last as well (same
+    // coordinates, but different GM_Position object)
+
     final Set<GM_Position> pos = new HashSet<GM_Position>();
     for( final GM_Position position : positions )
     {
       if( envelope.contains( position ) )
       {
+        // GM_Position 'equals' operation compares coordinates, it is not strict object equality! 
         if( !pos.contains( position ) )
         {
           collector.add( new Handle( feature, propType, position ) );
           pos.add( position );
+        }
+        else if( isRingGeometry )
+        {
+          collector.add( new Handle( feature, propType, position ) );
         }
       }
     }

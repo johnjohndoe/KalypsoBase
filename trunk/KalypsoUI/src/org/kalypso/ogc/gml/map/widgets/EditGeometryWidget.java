@@ -99,6 +99,11 @@ public class EditGeometryWidget extends AbstractWidget
     super( "edit geometry", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  protected int getBoxRadiusDrawnHandle( )
+  {
+    return m_boxRadiusDrawnHandle;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
@@ -251,7 +256,7 @@ public class EditGeometryWidget extends AbstractWidget
    * 
    * @return filteres handles
    */
-  private List<Handle> filter( final List<Handle> handles, final Point pointOfInterest, List<Handle> collector )
+  protected List<Handle> filter( final List<Handle> handles, final Point pointOfInterest, List<Handle> collector )
   {
     if( collector == null )
       collector = new ArrayList<Handle>();
@@ -264,7 +269,8 @@ public class EditGeometryWidget extends AbstractWidget
     final double gisX = transform.getSourceX( pointOfInterest.getX() );
     final double gisY = transform.getSourceY( pointOfInterest.getY() );
     final GM_Position positionOfInterest = GeometryFactory.createGM_Position( gisX, gisY );
-
+    
+    // todo checkForTopology is not used, check it
     final List<Handle> checkForTopology = new ArrayList<Handle>();
     // 1. select nearest handle
     Handle nearest = null;
@@ -282,7 +288,8 @@ public class EditGeometryWidget extends AbstractWidget
       {
         // filter also for topologyCheck
         if( m_careTopology )
-          checkForTopology.add( handle );
+          if( !checkForTopology.contains( handle ) )
+            checkForTopology.add( handle );
         final double distance = positionOfInterest.getDistance( handlePosition );
         if( nearest == null || distance < minDistance )
         {
@@ -296,7 +303,8 @@ public class EditGeometryWidget extends AbstractWidget
       return collector;
     if( !m_careTopology )
     {
-      collector.add( nearest );
+      if( !collector.contains( nearest ) )
+        collector.add( nearest );
       return collector;
     }
     // 2. care for topology...
@@ -306,7 +314,8 @@ public class EditGeometryWidget extends AbstractWidget
       final GM_Position position = handle.getPosition();
       final double distance = nearestPosition.getDistance( position );
       if( distance <= m_gisRadiusTopology )
-        collector.add( handle );
+        if( !collector.contains( handle ) )
+          collector.add( handle );
     }
 
     return collector;
