@@ -105,6 +105,14 @@ public class WPSSimulationManager
   }
 
   /**
+   * This function returns the information of job according to given jobId
+   * 
+   */
+  public WPSSimulationInfo getJob( final String pStrJobId ) throws SimulationException{
+    return m_service.getJob( pStrJobId );
+  }
+  
+  /**
    * This function starts a simulation.
    * 
    * @param typeID
