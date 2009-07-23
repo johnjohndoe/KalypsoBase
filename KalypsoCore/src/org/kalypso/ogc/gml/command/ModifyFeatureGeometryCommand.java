@@ -57,6 +57,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author Gernot Belger
@@ -151,6 +153,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
       final Feature feature = (Feature) key.get(0);
       final IValuePropertyType propertyType = (IValuePropertyType) key.get(1);
       final GM_Object value = (GM_Object) feature.getProperty( propertyType );
+      
       value.invalidate();
       feature.setProperty( propertyType, value );
 
