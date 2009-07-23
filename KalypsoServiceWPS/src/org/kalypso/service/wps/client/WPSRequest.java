@@ -81,6 +81,10 @@ import org.kalypso.service.wps.utils.WPSUtilities;
  * @deprecated currently working on a refactoring of the wps service see
  *             {@link org.kalypso.service.wps.refactoring.IWPSProcess}
  */
+/**
+ * @author ilya
+ *
+ */
 @Deprecated
 public class WPSRequest
 {
@@ -174,6 +178,18 @@ public class WPSRequest
     return wpsRequest.getProcessDescription( null );
   }
 
+  
+  /**
+   * this function forwards the functionality of cancel of active job from the member wpsRequest
+   * 
+   * fixes the bug #242, in actual situation works only with local jobs
+   * and was tested only on windows machine.
+   * this class is already signed as deprecated, so complete functionality test will not be done  
+   */
+  public IStatus cancelActualJob(){
+    return wpsRequest.cancelJob();
+  }
+  
   public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
   {
     monitor = SubMonitor.convert( monitor );

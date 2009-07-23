@@ -116,6 +116,8 @@ public class NonBlockingWPSRequest
    * The identifier of the service to be called.
    */
   private final String m_identifier;
+  
+  private String m_jobId = "";
 
   /**
    * The address of the service.
@@ -229,8 +231,25 @@ public class NonBlockingWPSRequest
       /* We will always take the first one. */
       m_processDescription = processDescriptionList.get( 0 );
     }
+  } 
+  
+  /**
+   * this function forwards the functionality of cancel of active job from the member wpsRequest
+   * 
+   * fixes the bug #242, in actual situation works only with local jobs
+   * and was tested only on windows machine.
+   * this class is already signed as deprecated, so complete functionality test will not be done  
+   */
+  public IStatus cancelJob(){
+    try{
+      if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) ) 
+        WPSSimulationManager.getInstance().getJob( m_jobId ).cancel();
+    }
+    catch (Exception e) {
+      return Status.CANCEL_STATUS;
+    }
+    return Status.OK_STATUS;
   }
-
   /**
    * Starts the simulation.
    * 
@@ -274,6 +293,7 @@ public class NonBlockingWPSRequest
           final ExecuteMediator executeMediator = new ExecuteMediator( execute );
           final WPSSimulationInfo info = manager.startSimulation( executeMediator );
 
+          m_jobId = info.getId();
           /* Prepare the execute response. */
           final FileObject resultDir = manager.getResultDir( info.getId() );
           resultFile = resultDir.resolveFile( "executeResponse.xml" );
