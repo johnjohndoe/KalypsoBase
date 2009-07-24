@@ -152,6 +152,8 @@ public final class KeyInfo extends Job
     if( isLocked() )
       return;
 
+    System.out.println( "Reloading " + getKey() + "..." );
+
     synchronized( this )
     {
       if( DO_LOG )
