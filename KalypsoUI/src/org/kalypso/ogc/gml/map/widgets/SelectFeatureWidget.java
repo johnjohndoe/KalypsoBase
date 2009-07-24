@@ -90,7 +90,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * ADD (on via pressed 'SHIFT' key):<br>
  * the new selection is added to the current selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
  * If pressed selection is done by using INTERSECT-method.
- *
+ * 
  * @author Thomas Jung
  */
 public class SelectFeatureWidget extends AbstractWidget
@@ -490,6 +490,13 @@ public class SelectFeatureWidget extends AbstractWidget
     final List<Feature> toRemove = new ArrayList<Feature>();
     final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
 
+    // FIXME: This only works, because there is mostly one theme, hence one workspace.
+    // The selected features comes from this theme (normally the active one on the map).
+    //
+    // If once there are features of different themes (and workspaces) selected,
+    // they will all be added with the workspace of the first theme,
+    // then they will all be added again with the workspace of the second theme, and so on.
+    // So all features will be multiple selected with their right and wrong workspaces.
     for( final IKalypsoFeatureTheme theme : themes )
     {
       /* consider the selection modes */
@@ -550,7 +557,7 @@ public class SelectFeatureWidget extends AbstractWidget
 
           if( pt.isList() )
           {
-            final List<?> list = (List< ? >) property;
+            final List< ? > list = (List< ? >) property;
             for( final Object elmt : list )
             {
               if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
