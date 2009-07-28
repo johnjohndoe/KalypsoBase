@@ -338,7 +338,7 @@ public class GisMapOutlineContentProvider extends BaseWorkbenchContentProvider
     if( viewer == null || control.isDisposed() )
       return;
     final Object elementToRefresh = element == null ? m_viewer.getInput() : element;
-    System.out.println( "refreshViewer: " + element );
+    //System.out.println( "refreshViewer: " + element );
 
     control.getDisplay().asyncExec( new Runnable()
     {
