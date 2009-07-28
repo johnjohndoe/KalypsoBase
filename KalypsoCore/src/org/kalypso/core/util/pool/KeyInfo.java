@@ -175,10 +175,7 @@ public final class KeyInfo extends Job
     for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
     {
       if( entry.getValue() )
-      {
-// entry.setValue( Boolean.FALSE );
         isLocked = true;
-      }
     }
 
     return isLocked;
@@ -287,6 +284,7 @@ public final class KeyInfo extends Job
         // we may trigger a reload here... (how to avoid this?)
         for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
           entry.setValue( Boolean.TRUE );
+
         m_loader.save( m_key, monitor, m_object );
       }
       finally
@@ -295,6 +293,7 @@ public final class KeyInfo extends Job
           entry.setValue( Boolean.FALSE );
       }
     }
+
     setDirty( false );
   }
 
