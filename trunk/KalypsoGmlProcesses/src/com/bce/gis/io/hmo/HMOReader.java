@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 
 import com.bce.util.MessageFormatUtility;
@@ -201,9 +202,9 @@ public class HMOReader
       if( m_points.size() > n && m_points.get( n ) != null )
         throw new ParseException( MessageFormatUtility.formatMessage( ERROR_POINT_DOUBLE, lineNumber ) );
 
-      final double x = Double.parseDouble( sT.nextToken() );
-      final double y = Double.parseDouble( sT.nextToken() );
-      final double z = Double.parseDouble( sT.nextToken() );
+      final double x = NumberUtils.parseDouble( sT.nextToken() );
+      final double y = NumberUtils.parseDouble( sT.nextToken() );
+      final double z = NumberUtils.parseDouble( sT.nextToken() );
 
       final Coordinate p = new Coordinate( x, y, z );
 
