@@ -623,6 +623,47 @@ public class JTSUtilities
   }
 
   /**
+   * TODO: move to helper class Given 3 coordinate this methode return the equation of a plan containing those points.
+   * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
+   * 
+   * @param coords
+   *          coordinate of 3 plane points
+   * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
+   */
+  public static double[] calculateRelativeTrianglePlaneEquation( final Coordinate[] coords )
+  {
+    Assert.isNotNull( coords, "coords" );
+    Assert.isTrue( coords.length >= 3, "Param coord which represent the point of a triangle must have a minimum length of 3" );
+
+    final double x1 = 0;
+    final double y1 = 0;
+    final double z1 = coords[0].z;
+
+    final double x2 = coords[1].x - coords[0].x;
+    final double y2 = coords[1].y - coords[0].y;
+    final double z2 = coords[1].z;
+
+    final double x3 = coords[2].x - coords[0].x;
+    final double y3 = coords[2].y - coords[0].y;
+    final double z3 = coords[2].z;
+    if( z1 == z2 && z2 == z3 )
+      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
+      return new double[] { 0, 0, z1 };
+    else
+    {
+      // build the equation Ax + By + Cz - D = 0
+      final double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+      final double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+      final double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+      final double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
+
+      // C=-C;
+      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
+      return new double[] { -A / C, -B / C, D / C };
+    }
+  }
+
+  /**
    * @param planarEquation
    *          Previously obtained by {@link #calculateTrianglePlaneEquation(Coordinate[])}. If <code>null</code>,
    *          <code>Double.NaN</code> will be returned.
