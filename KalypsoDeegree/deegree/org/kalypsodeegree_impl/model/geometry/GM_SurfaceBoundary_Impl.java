@@ -217,7 +217,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
       {
         for( final GM_Ring element : m_interior )
         {
-          if( element.intersects( gmo ) )
+          if( element.contains( gmo ) )
           {
             con = false;
             break;
