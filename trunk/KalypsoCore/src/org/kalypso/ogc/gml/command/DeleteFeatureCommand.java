@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author Gernot Belger
- * @author Monika Thül
+ * @author Monika Thï¿½l
  */
 public class DeleteFeatureCommand implements ICommand
 {
@@ -89,9 +89,7 @@ public class DeleteFeatureCommand implements ICommand
   {
     m_featuresToDelete = new Feature[wrappers.length];
     for( int i = 0; i < wrappers.length; i++ )
-    {
       m_featuresToDelete[i] = wrappers[i].getFeature();
-    }
   }
 
   /**
@@ -201,7 +199,7 @@ public class DeleteFeatureCommand implements ICommand
       }
 
       /* Remove from the selection, if it was selected. */
-      IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+      final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
       if( selectionManager.isSelected( featureToRemove ) )
         selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
 
@@ -285,7 +283,6 @@ public class DeleteFeatureCommand implements ICommand
       final IFeatureType ft = f.getFeatureType();
       final IPropertyType[] ftps = ft.getProperties();
       for( final IPropertyType ftp : ftps )
-      {
         if( ftp instanceof IRelationType )
         {
           final IRelationType linkftp = (IRelationType) ftp;
@@ -294,25 +291,19 @@ public class DeleteFeatureCommand implements ICommand
             final List< ? > propList = (List< ? >) f.getProperty( linkftp );
             // important: count down not up
             for( int k = propList.size() - 1; k >= 0; k-- )
-            {
               if( m_workspace.isBrokenLink( f, linkftp, k ) )
               {
                 m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, (String) propList.get( k ), k ) );
                 m_structureEvents.put( f, new FeatureStructureChangeModellEvent( m_workspace, f, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
               }
-            }
           }
-          else
+          else if( m_workspace.isBrokenLink( f, linkftp, 1 ) )
           {
-            if( m_workspace.isBrokenLink( f, linkftp, 1 ) )
-            {
-              final String childID = (String) f.getProperty( linkftp );
-              m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, childID, 1 ) );
-              m_changedFeatures.add( f );
-            }
+            final String childID = (String) f.getProperty( linkftp );
+            m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, childID, 1 ) );
+            m_changedFeatures.add( f );
           }
         }
-      }
       return true;
     }
   }
