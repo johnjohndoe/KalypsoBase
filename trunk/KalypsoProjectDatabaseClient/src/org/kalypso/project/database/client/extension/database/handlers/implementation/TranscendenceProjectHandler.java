@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -169,4 +169,13 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
 
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return m_remote.getDescription();
+  }
+  
 }

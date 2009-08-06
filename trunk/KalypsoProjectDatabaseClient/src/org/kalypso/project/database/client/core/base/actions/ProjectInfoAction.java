@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -48,6 +48,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
@@ -63,9 +64,12 @@ public class ProjectInfoAction implements IProjectAction
 
   protected final IProjectHandler m_handler;
 
-  public ProjectInfoAction( final IProjectHandler handler )
+  private final IProjectDatabaseUiLocker m_locker;
+
+  public ProjectInfoAction( final IProjectHandler handler, final IProjectDatabaseUiLocker locker )
   {
     m_handler = handler;
+    m_locker = locker;
   }
 
   /**
@@ -91,7 +95,7 @@ public class ProjectInfoAction implements IProjectAction
       {
         if( m_handler instanceof IRemoteProject )
         {
-          final RemoteInfoDialog dialog = new RemoteInfoDialog( (IRemoteProject) m_handler, link.getShell(), true );
+          final RemoteInfoDialog dialog = new RemoteInfoDialog( (IRemoteProject) m_handler, link.getShell(), m_locker, true );
           dialog.open();
         }
         else if( m_handler instanceof ILocalProject )

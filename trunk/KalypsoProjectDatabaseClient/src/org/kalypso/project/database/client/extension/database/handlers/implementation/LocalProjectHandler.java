@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -184,7 +184,6 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
         // encountered in 1df2d when switching from fenet to result map
         int count = 0;
         while( job.getState() != Job.NONE && count < 100 )
-        {
           try
           {
             Thread.sleep( 200 );
@@ -194,7 +193,6 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
           {
             KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
           }
-        }
       }
 
       final RemoteProjectNature myNature = (RemoteProjectNature) m_project.getNature( RemoteProjectNature.NATURE_ID );
@@ -250,7 +248,6 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
     final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
     final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
     if( !remote.isDatabaseOnline() )
-    {
       try
       {
         if( getRemotePreferences().isOnServer() )
@@ -260,9 +257,26 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
       {
         KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
-    }
     
     return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    try
+    {
+      return m_project.getDescription().getComment();
+    }
+    catch( final CoreException ex )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
+    }
+    
+    return null;
   }
 
 }

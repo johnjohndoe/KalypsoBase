@@ -291,7 +291,6 @@ public class ProjectDatabase implements IProjectDatabase
   public String acquireProjectEditLock( final String projectUnixName )
   {
     // TODO lock already acquired
-
     final Session mySession = FACTORY.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
 
@@ -415,6 +414,20 @@ public class ProjectDatabase implements IProjectDatabase
     final String unixName = bean.getUnixName();
 
     mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate();
+    myTx.commit();
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#setProjectDescription(org.kalypso.project.database.sei.beans.KalypsoProjectBean,
+   *      java.lang.String)
+   */
+  @Override
+  public void setProjectDescription( final KalypsoProjectBean bean, final String description )
+  {
+    final Session mySession = FACTORY.getCurrentSession();
+    final Transaction myTx = mySession.beginTransaction();
+
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate();
     myTx.commit();
   }
 }
