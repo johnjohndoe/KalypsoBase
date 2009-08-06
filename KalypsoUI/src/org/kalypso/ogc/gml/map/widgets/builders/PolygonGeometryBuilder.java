@@ -74,7 +74,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   private GM_Object m_result;
 
   private final ToolTipRenderer m_renderer;
- 
+
   final java.awt.Cursor CROSSHAIR_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
 
   final java.awt.Cursor DEFAULT_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
@@ -125,11 +125,11 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     m_renderer = new ToolTipRenderer( m_extender );
 
     if( m_extender != null && m_updateCursor )
-      m_extender.setCursor( CROSSHAIR_CURSOR ); 
+      m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Position)
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
    */
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
@@ -175,7 +175,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#finish()
    */
   public GM_Object finish( ) throws Exception
   {
@@ -233,8 +233,8 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
@@ -266,7 +266,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
    */
   public void reset( )
   {
@@ -279,5 +279,15 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   public int size( )
   {
     return m_points.size();
+  }
+
+  /**
+   * This function returns the number of points.
+   * 
+   * @return The number of points, at which the geometry should be finished. <= 2 if no rule will be used.
+   */
+  public int getCntPoints( )
+  {
+    return m_cnt_points;
   }
 }
