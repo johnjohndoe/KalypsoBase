@@ -75,7 +75,16 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
           {
             for( final KalypsoProjectBean bean : remote )
             {
-              if( !ArrayUtils.contains( m_beans, bean ) )
+              final int index = ArrayUtils.indexOf( m_beans, bean );
+              
+              if( index == -1 ) // not found
+              {
+                m_beans = remote;
+                fireWorkspaceChanged();
+
+                return Status.OK_STATUS;
+              }
+              else if( !m_beans[index].equals( bean ) ) // perhaps different project description?
               {
                 m_beans = remote;
                 fireWorkspaceChanged();

@@ -91,7 +91,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
   protected final IRemoteProject m_handler;
 
-  private final IProjectDatabaseUiLocker m_locker;
+  protected final IProjectDatabaseUiLocker m_locker;
 
   public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
@@ -306,7 +306,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         final InputDialog input = new InputDialog( changeDescription.getShell(), "Projektbeschreibung", "Projektbeschreibung", m_handler.getBean().getDescription(), null );
         if( input.open() == Window.OK )
         {
-          final String description = input.getValue();
+          final String inputDescription = input.getValue();
 
           /* update local description */
           if( m_handler instanceof ILocalProject ) // Transcendence!
@@ -316,7 +316,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
               final IProject localProject = ((ILocalProject) m_handler).getProject();
 
               final IProjectDescription project = localProject.getDescription();
-              project.setComment( description );
+              project.setComment( inputDescription );
               localProject.setDescription( project, new NullProgressMonitor() );
             }
             catch( final CoreException e1 )
@@ -325,48 +325,23 @@ public class RemoteInfoDialog extends TitleAreaDialog
             }
           }
 
-
-          
           try
           {
             m_locker.acquireUiUpdateLock();
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
-            final IStatus lockStatus = ProjectDataBaseController.updateProjectDescription( m_handler, description );
+            final IStatus lockStatus = ProjectDataBaseController.updateProjectDescription( m_handler, inputDescription );
             if( !shell.isDisposed() )
               ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
-
           }
           finally
           {
             m_locker.releaseUiUpdateLock();
           }
-          
-          // description.addModifyListener( new ModifyListener()
-          // {
-          // @Override
-          // public void modifyText( final ModifyEvent e )
-          // {
-          // if( !(m_handler instanceof ITranscendenceProject) )
-          // return;
-          //
-          // try
-          // {
-          // f
-          // }
-          // catch( final CoreException e1 )
-          // {
-          // KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-          // }
-          // }
-          // } );
-
         }
-
       }
     } );
-
   }
 
   @Override
@@ -374,7 +349,5 @@ public class RemoteInfoDialog extends TitleAreaDialog
   {
     // create OK and Cancel buttons by default
     createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
-// createButton(parent, IDialogConstants.CANCEL_ID,
-// IDialogConstants.CANCEL_LABEL, false);
   }
 }
