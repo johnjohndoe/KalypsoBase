@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -59,7 +59,6 @@ import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 /**
  * @author Dirk Kuch
  */
-
 @Entity
 @Table(name = "PROJECT")
 @IdClass(KalypsoProjectBeanPrimaryKey.class)
@@ -90,8 +89,14 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Column(name = "creation_date", updatable = false, nullable = false)
   private Date m_creationDate;
 
+  @Column(name = "creator")
+  private String m_creator;
+
   @Column(name = "edit_lock_ticket")
   private String m_editLockTicket;
+
+  @Column(name = "edit_lock_date")
+  private Date m_editLockDate;
 
   @Column(name = "project_changes")
   private String m_changes;
@@ -103,9 +108,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public KalypsoProjectBean[] getChildren( )
   {
     if( m_children == null )
-    {
       m_children = new KalypsoProjectBean[] {};
-    }
 
     return m_children;
   }
@@ -120,11 +123,28 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   }
 
   /**
+   * @param date
+   *          time when the edit lock was created
+   */
+  public void setEditLockDate( final Date date )
+  {
+    m_editLockDate = date;
+  }
+
+  /**
    * @return is project locked for editing?
    */
   public String getEditLockTicket( )
   {
     return m_editLockTicket;
+  }
+
+  /**
+   * @return is project locked for editing?
+   */
+  public Date getEditLockDate( )
+  {
+    return m_editLockDate;
   }
 
   public Boolean isProjectLockedForEditing( )
@@ -263,7 +283,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
       builder.append( getUnixName(), other.getUnixName() );
       builder.append( getProjectVersion(), other.getProjectVersion() );
       builder.append( getEditLockTicket(), other.getEditLockTicket() );
-      
+
       return builder.isEquals();
     }
 
@@ -301,6 +321,14 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   }
 
   /**
+   * @return creators name of this project
+   */
+  public String getCreator( )
+  {
+    return m_creator;
+  }
+
+  /**
    * @param creationDate
    *          date of creation. will be automatically set by {@link org.kalypso.project.database.server.ProjectDatabase}
    *          .createProject()
@@ -308,6 +336,15 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public void setCreationDate( final Date creationDate )
   {
     m_creationDate = creationDate;
+  }
+
+  /**
+   * @param creator
+   *          creator of the project
+   */
+  public void getCreator( final String creator )
+  {
+    m_creator = creator;
   }
 
   public void setChanges( final String changes )
