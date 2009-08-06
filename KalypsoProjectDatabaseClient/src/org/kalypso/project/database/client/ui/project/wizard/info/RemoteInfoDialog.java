@@ -339,6 +339,8 @@ public class RemoteInfoDialog extends TitleAreaDialog
           {
             m_locker.releaseUiUpdateLock();
           }
+          
+          description.setText( inputDescription );
         }
       }
     } );

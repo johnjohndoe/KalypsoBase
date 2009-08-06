@@ -158,10 +158,19 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     handler.getExportAction().render( body, m_toolkit );
 
     /* second row - enshorted project description */
-    final String description = project.getDescription();
+     String description = project.getDescription();
     if( description != null )
       if( !description.trim().equalsIgnoreCase( project.getName().trim() ) )
-        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
+      {
+        if( description.length() > 50 )
+        {
+          description = description.substring( 0, 50 );
+        }
+
+        m_toolkit.createLabel( body, String.format( "     %s...", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
+      }
+        
+        
     
     // FIXME enshort description
     
