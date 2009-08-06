@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -61,6 +65,7 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseUi
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author kuch
@@ -113,7 +118,23 @@ public class ProjectLockRemoteAction implements IProjectAction
   private void releaseProjectLock( final ImageHyperlink link )
   {
     link.setImage( IMG_RELEASE_LOCK );
-    link.setToolTipText( "Entsperre Projekt" );
+
+    String tooltip;
+
+    final KalypsoProjectBean bean = m_handler.getBean();
+    if( bean != null )
+    {
+      final Date editLockDate = bean.getEditLockDate() == null ? new Date() : bean.getEditLockDate();
+
+      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" );
+      final String date = sdf.format( editLockDate );
+
+      tooltip = String.format( "Entsperre Projekt (gesperrt am %s)", date );
+    }
+    else
+      tooltip = "Entsperre Projekt";
+
+    link.setToolTipText( tooltip );
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -131,9 +152,7 @@ public class ProjectLockRemoteAction implements IProjectAction
 
           final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_handler );
           if( !shell.isDisposed() )
-          {
             ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
-          }
 
           try
           {
@@ -157,7 +176,7 @@ public class ProjectLockRemoteAction implements IProjectAction
   private void acquireProjectLock( final ImageHyperlink link )
   {
     link.setImage( IMG_AQUIRE_LOCK );
-    link.setToolTipText( "Sperre Projekt für die Bearbeitung" );
+    link.setToolTipText( "Sperre Projekt fï¿½r die Bearbeitung" );
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -178,9 +197,7 @@ public class ProjectLockRemoteAction implements IProjectAction
             return;
 
           if( !shell.isDisposed() )
-          {
             ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.25" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.26" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
-          }
         }
         finally
         {
