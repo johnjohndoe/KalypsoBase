@@ -38,27 +38,45 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.database.handlers;
+package org.kalypso.project.database.client.core.base.worker;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
+ * Acquires a project lock (lock ticket) in the model base and update
+ * {@link org.kalypso.project.database.common.nature.RemoteProjectNature} lock settings
+ * 
  * @author Dirk Kuch
  */
-public interface IProjectHandler
+public class UpdateProjectDescriptionWorker implements ICoreRunnableWithProgress
 {
-  /**
-   * @return "label" name of project
-   */
-  String getName( );
+  private final IRemoteProject m_handler;
+  private final String m_description;
+
+
+
+  public UpdateProjectDescriptionWorker( final IRemoteProject handler, final String description )
+  {
+    m_handler = handler;
+    m_description = description;
+  }
 
   /**
-   * @return unique (bean unix name, iproject.name) of project
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  String getUniqueName( );
-
-  /**
-   * @return description of the project
-   */
-  String getDescription( );
-
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  {
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    service.setProjectDescription( m_handler.getBean(), m_description );
+    
+    return Status.OK_STATUS;
+  }
 }

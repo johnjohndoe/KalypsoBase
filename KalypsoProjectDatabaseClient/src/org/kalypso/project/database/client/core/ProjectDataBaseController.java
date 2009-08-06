@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -52,10 +52,12 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWorker;
+import org.kalypso.project.database.client.core.base.worker.UpdateProjectDescriptionWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectWorker;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -137,7 +139,7 @@ public class ProjectDataBaseController
   public static IStatus acquireProjectLock( final ILocalProject handler )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    if( MessageDialog.openQuestion( shell, "Projekt zur Bearbeitung sperren", "Sie sind im Begriff, dass Projekt zur Bearbeitung zu sperren. Diese Sperre wirkt sich auf alle Nutzer im System aus.\n\nMöchten Sie das Projekt wirklich sperren / editieren?" ) )
+    if( MessageDialog.openQuestion( shell, "Projekt zur Bearbeitung sperren", "Sie sind im Begriff, dass Projekt zur Bearbeitung zu sperren. Diese Sperre wirkt sich auf alle Nutzer im System aus.\n\nMï¿½chten Sie das Projekt wirklich sperren / editieren?" ) )
     {
       final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
       final IStatus status = ProgressUtilities.busyCursorWhile( worker );
@@ -148,6 +150,15 @@ public class ProjectDataBaseController
 
     return Status.CANCEL_STATUS;
 
+  }
+
+  public static IStatus updateProjectDescription( final IRemoteProject handler, final String description )
+  {
+    final UpdateProjectDescriptionWorker worker = new UpdateProjectDescriptionWorker( handler, description );
+    final IStatus status = ProgressUtilities.busyCursorWhile( worker );
+    setDirty();
+
+    return status;
   }
 
 }

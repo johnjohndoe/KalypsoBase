@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -43,8 +43,11 @@ package org.kalypso.project.database.client.ui.project.wizard.info;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -53,22 +56,27 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -83,10 +91,13 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
   protected final IRemoteProject m_handler;
 
-  public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final boolean isExpert )
+  private final IProjectDatabaseUiLocker m_locker;
+
+  public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
     super( parentShell );
     m_handler = handler;
+    m_locker = locker;
     m_isExpert = isExpert;
 
     setBlockOnOpen( true );
@@ -210,7 +221,6 @@ public class RemoteInfoDialog extends TitleAreaDialog
           final Object element = selection.getFirstElement();
 
           if( element instanceof KalypsoProjectBean )
-          {
             try
             {
               final KalypsoProjectBean project = (KalypsoProjectBean) element;
@@ -223,7 +233,6 @@ public class RemoteInfoDialog extends TitleAreaDialog
             {
               KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
             }
-          }
         }
       } );
     }
@@ -236,9 +245,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     if( m_handler.getBean().getChanges() != null )
-    {
       changes.setText( m_handler.getBean().getChanges() );
-    }
 
     /* change listener */
     viewerVersions.addSelectionChangedListener( new ISelectionChangedListener()
@@ -256,9 +263,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
           version.setText( String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9" ), project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
 
           if( project.getChanges() != null )
-          {
             changes.setText( m_handler.getBean().getChanges() );
-          }
         }
       }
     } );
@@ -280,34 +285,88 @@ public class RemoteInfoDialog extends TitleAreaDialog
     labelDescription.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.11" ) ); //$NON-NLS-1$
     labelDescription.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
+    final Text description = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY );
     description.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-    description.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        if( !(m_handler instanceof ITranscendenceProject) )
-          return;
-
-        try
-        {
-          final IProject myProject = ((ITranscendenceProject) m_handler).getProject();
-          final IProjectDescription project = myProject.getDescription();
-          project.setComment( description.getText() );
-
-          myProject.setDescription( project, new NullProgressMonitor() );
-        }
-        catch( final CoreException e1 )
-        {
-          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-        }
-      }
-    } );
 
     name.setText( m_handler.getName() );
     description.setText( m_handler.getBean().getDescription() );
+
+    /* change description */
+    final Button changeDescription = new Button( parent, SWT.PUSH );
+    changeDescription.setText( "Ã„ndere Projektbeschreibung" );
+
+    changeDescription.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final InputDialog input = new InputDialog( changeDescription.getShell(), "Projektbeschreibung", "Projektbeschreibung", m_handler.getBean().getDescription(), null );
+        if( input.open() == Window.OK )
+        {
+          final String description = input.getValue();
+
+          /* update local description */
+          if( m_handler instanceof ILocalProject ) // Transcendence!
+          {
+            try
+            {
+              final IProject localProject = ((ILocalProject) m_handler).getProject();
+
+              final IProjectDescription project = localProject.getDescription();
+              project.setComment( description );
+              localProject.setDescription( project, new NullProgressMonitor() );
+            }
+            catch( final CoreException e1 )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+            }
+          }
+
+
+          
+          try
+          {
+            m_locker.acquireUiUpdateLock();
+
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+
+            final IStatus lockStatus = ProjectDataBaseController.updateProjectDescription( m_handler, description );
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+
+          }
+          finally
+          {
+            m_locker.releaseUiUpdateLock();
+          }
+          
+          // description.addModifyListener( new ModifyListener()
+          // {
+          // @Override
+          // public void modifyText( final ModifyEvent e )
+          // {
+          // if( !(m_handler instanceof ITranscendenceProject) )
+          // return;
+          //
+          // try
+          // {
+          // f
+          // }
+          // catch( final CoreException e1 )
+          // {
+          // KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          // }
+          // }
+          // } );
+
+        }
+
+      }
+    } );
+
   }
 
   @Override

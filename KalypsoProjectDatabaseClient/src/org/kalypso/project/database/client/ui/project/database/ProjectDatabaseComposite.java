@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -139,10 +139,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
     final IProjectHandler[] projects = m_model.getProjects( settings.getFilter() );
     for( final IProjectHandler project : projects )
-    {
       renderProject( m_body, project );
-
-    }
 
     m_toolkit.adapt( this );
     this.layout();
@@ -152,12 +149,22 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   {
     final IProjectUiHandler handler = ProjectUIHandlerFabrication.getHandler( project, m_module, this );
 
+    /* first row - project actions */
     handler.getOpenAction().render( body, m_toolkit );
     handler.getInfoAction().render( body, m_toolkit );
     handler.getEditAction().render( body, m_toolkit );
     handler.getDeleteAction().render( body, m_toolkit );
     handler.getDatabaseAction().render( body, m_toolkit );
     handler.getExportAction().render( body, m_toolkit );
+
+    /* second row - enshorted project description */
+    final String description = project.getDescription();
+    if( description != null )
+      if( !description.trim().equalsIgnoreCase( project.getName().trim() ) )
+        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
+    
+    // FIXME enshort description
+    
   }
 
   /**
