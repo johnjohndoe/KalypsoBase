@@ -297,7 +297,7 @@ public class ProjectDatabase implements IProjectDatabase
 
     final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() );
     
-    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh24:mi:ss" );
+    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" );
     final String now = sdf.format( new Date() );
     
     final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate();
