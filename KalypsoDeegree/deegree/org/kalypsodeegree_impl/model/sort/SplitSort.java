@@ -182,12 +182,10 @@ public class SplitSort implements FeatureList
       {
         final Envelope env = getEnvelope( item );
         if( env != null )
-        {
           if( bbox == null )
             bbox = new Envelope( env );
           else
             bbox.expandToInclude( env );
-        }
       }
 
       synchronized( m_lock )
@@ -214,9 +212,7 @@ public class SplitSort implements FeatureList
     synchronized( m_lock )
     {
       if( m_index != null )
-      {
         m_index.insert( env, object );
-      }
       return m_items.add( object );
     }
   }
@@ -232,15 +228,11 @@ public class SplitSort implements FeatureList
     synchronized( m_lock )
     {
       if( result == null )
-      {
         result = new ArrayList();
-      }
       final Envelope env = JTSAdapter.export( queryEnv );
       final List list = m_index.query( env );
       for( final Object object : list )
-      {
         result.add( object );
-      }
       return result;
     }
   }
@@ -252,9 +244,7 @@ public class SplitSort implements FeatureList
   public List query( final GM_Position pos, List result )
   {
     if( result == null )
-    {
       result = new ArrayList();
-    }
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
 
@@ -265,16 +255,25 @@ public class SplitSort implements FeatureList
    */
   public boolean remove( final Object object )
   {
-    final Envelope env = getEnvelope( object );
+    Envelope env = null;
+    
+    try
+    {
+      env = getEnvelope( object );
+    }
+    catch( final IllegalStateException ex )
+    {
+      ex.printStackTrace();
+    }
 
     synchronized( m_lock )
     {
       // TODO: slow!
       final boolean removed = m_items.remove( object );
-      if( m_index != null )
-      {
+      
+      if( m_index != null && env != null )
         m_index.remove( env, object );
-      }
+      
       return removed;
     }
   }
@@ -384,10 +383,8 @@ public class SplitSort implements FeatureList
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
-      {
         // We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
         m_index.remove( null, removedItem );
-      }
       return removedItem;
     }
   }
@@ -405,9 +402,7 @@ public class SplitSort implements FeatureList
     {
       m_items.add( index, item );
       if( m_index != null )
-      {
         m_index.insert( env, item );
-      }
     }
   }
 
@@ -469,12 +464,8 @@ public class SplitSort implements FeatureList
     {
       final boolean added = m_items.addAll( index, c );
       if( m_index != null )
-      {
         for( final Entry<Object, Envelope> entry : newItems.entrySet() )
-        {
           m_index.insert( entry.getValue(), entry.getKey() );
-        }
-      }
       return added;
     }
   }
@@ -496,12 +487,8 @@ public class SplitSort implements FeatureList
     {
       final boolean added = m_items.addAll( c );
       if( m_index != null )
-      {
         for( final Entry<Object, Envelope> entry : newItems.entrySet() )
-        {
           m_index.insert( entry.getValue(), entry.getKey() );
-        }
-      }
       return added;
     }
   }
@@ -525,10 +512,8 @@ public class SplitSort implements FeatureList
     {
       // TODO: see contains()
       for( final Entry<Object, Envelope> entry : newItems.entrySet() )
-      {
         if( !m_index.contains( entry.getValue(), entry.getKey() ) )
           return false;
-      }
       return true;
     }
   }
@@ -542,9 +527,7 @@ public class SplitSort implements FeatureList
   {
     boolean result = false;
     for( final Object object : c )
-    {
       result |= remove( object );
-    }
 
     return result;
   }
@@ -667,17 +650,13 @@ public class SplitSort implements FeatureList
     final Feature parentFeature = getParentFeature();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : m_items )
-    {
       if( workspace != null && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
         final Feature linkedFeature = FeatureHelper.resolveLinkedFeature( workspace, object );
         visitor.visit( linkedFeature );
       }
       else if( object instanceof Feature )
-      {
         visitor.visit( (Feature) object );
-      }
-    }
   }
 
   /**
