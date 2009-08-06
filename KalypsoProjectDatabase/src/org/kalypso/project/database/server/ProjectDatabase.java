@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -105,9 +106,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       }
       else
-      {
         configure = new AnnotationConfiguration().configure();
-      }
 
       configure.addAnnotatedClass( KalypsoProjectBean.class );
       configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
@@ -122,9 +121,7 @@ public class ProjectDatabase implements IProjectDatabase
   public void dispose( ) // NO_Ufinal CD
   {
     if( FACTORY != null )
-    {
       FACTORY.close();
-    }
 
   }
 
@@ -149,9 +146,7 @@ public class ProjectDatabase implements IProjectDatabase
     for( final Object object : names )
     {
       if( !(object instanceof String) )
-      {
         continue;
-      }
 
       final String name = object.toString();
       projects.add( name );
@@ -171,9 +166,7 @@ public class ProjectDatabase implements IProjectDatabase
       for( final Object object : beans )
       {
         if( !(object instanceof KalypsoProjectBean) )
-        {
           continue;
-        }
 
         final KalypsoProjectBean b = (KalypsoProjectBean) object;
         myBeans.put( b.getProjectVersion(), b );
@@ -228,9 +221,7 @@ public class ProjectDatabase implements IProjectDatabase
 
     final List<KalypsoProjectBean> beans = new ArrayList<KalypsoProjectBean>();
     for( int i = 1; i < projects.size(); i++ )
-    {
       beans.add( (KalypsoProjectBean) projects.get( i ) );
-    }
 
     head.setChildren( beans.toArray( new KalypsoProjectBean[] {} ) );
 
@@ -268,9 +259,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       final IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
       if( confElementTrigger != null )
-      {
         TriggerHelper.handleBean( bean, confElementTrigger );
-      }
 
       return bean;
     }
@@ -305,7 +294,9 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction myTx = mySession.beginTransaction();
 
     final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() );
-    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s' where m_unixName = '%s'", ticket, projectUnixName ) ).executeUpdate();
+    final Date now = Calendar.getInstance().getTime();
+
+    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now.toString(), projectUnixName ) ).executeUpdate();
     myTx.commit();
 
     if( updated == 0 )
@@ -317,11 +308,11 @@ public class ProjectDatabase implements IProjectDatabase
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
-    {
       if( !child.isProjectLockedForEditing() )
         throw new IllegalStateException( "Updating edit lock of projects failed." );
-    }
 
+    
+    
     return ticket;
   }
 
@@ -345,10 +336,8 @@ public class ProjectDatabase implements IProjectDatabase
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
-    {
       if( child.isProjectLockedForEditing() )
         return false;
-    }
 
     return true;
   }
@@ -386,9 +375,7 @@ public class ProjectDatabase implements IProjectDatabase
     {
       final KalypsoProjectBean[] beans = getProjectHeads( type );
       for( final KalypsoProjectBean bean : beans )
-      {
         myBeans.add( bean );
-      }
     }
 
     return myBeans.toArray( new KalypsoProjectBean[] {} );
