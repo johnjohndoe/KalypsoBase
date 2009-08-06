@@ -44,6 +44,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -294,9 +296,11 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction myTx = mySession.beginTransaction();
 
     final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() );
-    final Date now = Calendar.getInstance().getTime();
-
-    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now.toString(), projectUnixName ) ).executeUpdate();
+    
+    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh24:mi:ss" );
+    final String now = sdf.format( new Date() );
+    
+    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate();
     myTx.commit();
 
     if( updated == 0 )
