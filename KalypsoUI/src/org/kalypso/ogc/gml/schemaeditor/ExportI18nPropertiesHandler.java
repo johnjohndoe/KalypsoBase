@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.schemaeditor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -69,14 +68,13 @@ import org.kalypso.gmlschema.property.restriction.IRestriction;
  */
 public class ExportI18nPropertiesHandler extends AbstractHandler
 {
-
-  private final Properties m_properties = new Properties();
+  private final SortedProperties m_properties = new SortedProperties();
 
   private String m_fileName = null;
 
   private void formatInternal( final String prefix, final String key, final String kind, final String val )
   {
-    if( val == null || key == null || key == "" )//|| key.equals( val ) )
+    if( val == null || key == null || key == "" )// || key.equals( val ) )
       return;
 
     m_properties.setProperty( prefix + "_" + key + "_" + kind, val );
@@ -185,8 +183,9 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     }
     try
     {
-      m_properties.store( new FileOutputStream( m_fileName ), schema.getContext().toString() );
 
+
+      m_properties.store( new FileOutputStream( m_fileName ), schema.getContext().toString() );
     }
     catch( final IOException e )
     {
