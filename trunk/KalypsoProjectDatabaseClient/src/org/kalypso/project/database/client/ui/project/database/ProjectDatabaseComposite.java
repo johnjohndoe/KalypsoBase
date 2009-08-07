@@ -84,9 +84,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param parent
    *          composite
    * @param localProjectNatures
-   *          handle project with these project nature ids TODO perhaps delegate.getProjects()
+   *          handle project with these project nature id's
    * @param remoteProjectTypes
-   *          handle remote projects with these type ids //TODO filter
+   *          handle remote projects with these type id's
    * @param isExpert
    *          show expert debug informations?
    */
@@ -158,22 +158,18 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     handler.getExportAction().render( body, m_toolkit );
 
     /* second row - enshorted project description */
-     String description = project.getDescription();
+    String description = project.getDescription();
     if( description != null )
       if( !description.trim().equalsIgnoreCase( project.getName().trim() ) )
       {
         if( description.length() > 50 )
         {
-          description = description.substring( 0, 50 );
+          description = description.substring( 0, 50 ) + "...";
         }
 
-        m_toolkit.createLabel( body, String.format( "     %s...", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
+        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
       }
-        
-        
-    
-    // FIXME enshort description
-    
+
   }
 
   /**
