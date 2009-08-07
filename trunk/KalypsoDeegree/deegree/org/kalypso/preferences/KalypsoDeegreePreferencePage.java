@@ -277,7 +277,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     /* Get the preference store. */
     IPreferenceStore store = getPreferenceStore();
 
-    /* Set the new value. */
+    /* Set the new values. */
     store.setValue( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, m_coordinateSystem );
     store.setValue( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, m_availableCoordinateSystems );
 
@@ -300,7 +300,6 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
 
     if( m_crsPanel != null && !m_crsPanel.isDisposed() )
       m_crsPanel.setSelectedCRS( store.getDefaultString( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING ) );
-
   }
 
   /**
