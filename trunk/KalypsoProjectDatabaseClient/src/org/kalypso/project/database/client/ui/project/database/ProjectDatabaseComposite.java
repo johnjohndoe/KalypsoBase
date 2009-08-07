@@ -159,7 +159,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
     /* second row - enshorted project description */
     String description = project.getDescription();
-    if( description != null )
+    if( description != null && !description.isEmpty() )
       if( !description.trim().equalsIgnoreCase( project.getName().trim() ) )
       {
         if( description.length() > 50 )
