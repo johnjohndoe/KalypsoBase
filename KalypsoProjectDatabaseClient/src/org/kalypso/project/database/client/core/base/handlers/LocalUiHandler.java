@@ -109,7 +109,7 @@ public class LocalUiHandler implements IProjectUiHandler
       if( !remote.isDatabaseOnline() )
       {
         final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-        if( preferences.isLocked() )
+        if( preferences == null || preferences.isLocked() )
           return new EmptyProjectAction();
       }
 
