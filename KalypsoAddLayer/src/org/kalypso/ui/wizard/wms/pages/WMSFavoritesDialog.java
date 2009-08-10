@@ -43,7 +43,7 @@ package org.kalypso.ui.wizard.wms.pages;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -74,7 +74,7 @@ import org.kalypso.ui.ImageProvider;
  * 
  * @author Holger Albert
  */
-public class WMSFavoritesDialog extends TrayDialog
+public class WMSFavoritesDialog extends Dialog
 {
   /**
    * The last successfull used service URL.
@@ -100,11 +100,11 @@ public class WMSFavoritesDialog extends TrayDialog
    * The constructor.
    * 
    * @param shell
-   *            The parent shell, or null to create a top-level shell.
+   *          The parent shell, or null to create a top-level shell.
    * @param lastService
-   *            The last successfull used service URL.
+   *          The last successfull used service URL.
    * @param lastServices
-   *            The last successfull used services. The favorites, to call them another way.
+   *          The last successfull used services. The favorites, to call them another way.
    */
   public WMSFavoritesDialog( Shell shell, String lastService, List<String> lastServices )
   {
@@ -118,11 +118,11 @@ public class WMSFavoritesDialog extends TrayDialog
    * The constructor.
    * 
    * @param parentShell
-   *            The object that returns the current parent shell.
+   *          The object that returns the current parent shell.
    * @param lastService
-   *            The last successfull used service URL.
+   *          The last successfull used service URL.
    * @param lastServices
-   *            The last successfull used services. The favorites, to call them another way.
+   *          The last successfull used services. The favorites, to call them another way.
    */
   public WMSFavoritesDialog( IShellProvider parentShell, String lastService, List<String> lastServices )
   {
@@ -136,9 +136,9 @@ public class WMSFavoritesDialog extends TrayDialog
    * This function initializes the dialog.
    * 
    * @param lastService
-   *            The last successfull used service URL.
+   *          The last successfull used service URL.
    * @param lastServices
-   *            The last successfull used services. The favorites, to call them another way.
+   *          The last successfull used services. The favorites, to call them another way.
    */
   private void init( String lastService, List<String> lastServices )
   {
