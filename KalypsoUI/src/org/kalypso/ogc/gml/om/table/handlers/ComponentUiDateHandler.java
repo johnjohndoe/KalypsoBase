@@ -51,14 +51,14 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Handles XMLGreogorianCalendar types.
- *
+ * 
  * @author Dirk Kuch
  */
 public class ComponentUiDateHandler extends AbstractComponentUiHandler
@@ -114,7 +114,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
       if( date == null )
         return String.format( getNullFormat() );
 
-      final Calendar instance = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      final Calendar instance = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       instance.setTime( date );
 
       final String displayFormat = getDisplayFormat();
@@ -130,12 +130,13 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final String text )
   {
-    // TODO:
-    // use parseFormat if set
-    // use some predefined sample formats
+    // DO NOT set a default format here! either configure correctly the table templates or set the
+    // correct default parse format that fits to the default out-format in the default-handler-factory
+    final String parseFormat = getParseFormat();
+    if( parseFormat == null )
+      return null;
 
-    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-mm-dd hh:MM" );
-// final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( getParseFormat() );
+    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( parseFormat );
     try
     {
       final Date date = simpleDateFormat.parse( text );
@@ -156,7 +157,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals(value, oldValue ) )
+    if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( index, value );
   }
 }

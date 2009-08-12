@@ -42,23 +42,22 @@ package org.kalypso.ogc.gml.om.table.command;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Collection;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.kalypso.contribs.java.util.DateUtilities;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -68,16 +67,15 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
 import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
-import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.swt.StatusDialog;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
-import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
-import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 
 /**
  * Pastes the contents of the clipboard to the TupleResult
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class PasteFromClipboardHandler extends AbstractHandler
@@ -88,8 +86,8 @@ public class PasteFromClipboardHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = HandlerUtil.getActiveShell( event );
+
     String trstring = null;
     try
     {
@@ -108,116 +106,108 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
 
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
-    // store existing records temporarily, if paste command fails
-    final List<IRecord> oldTuplesList = new ArrayList<IRecord>( tupleResult.size() );
-    for( final IRecord record : tupleResult )
-      oldTuplesList.add( record );
 
-    try
+    final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
+    if( tupleResultViewer == null )
     {
-      final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
-      if( tupleResultViewer == null )
-      {
-        MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.4" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        return null;
-      }
-      final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
-      TupleResultContentProvider resultContentProvider = null;
-      if( contentProvider instanceof TupleResultContentProvider )
-        resultContentProvider = (TupleResultContentProvider) contentProvider;
-      else if( contentProvider instanceof LastLineContentProvider )
-      {
-        final IStructuredContentProvider wrappedProvider = ((LastLineContentProvider) contentProvider).getWrappedProvider();
-        if( wrappedProvider instanceof TupleResultContentProvider )
-          resultContentProvider = (TupleResultContentProvider) wrappedProvider;
-      }
-      if( resultContentProvider == null )
-        return null;
-      final IComponentUiHandlerProvider factory = resultContentProvider.getFactory();
-      if( !(factory instanceof TupleResultFeatureControlHandlerProvider) )
-        return null;
-      final TupleResultFeatureControlHandlerProvider controlHandlerProvider = (TupleResultFeatureControlHandlerProvider) factory;
-      final ColumnDescriptor[] descriptors = controlHandlerProvider.getDescriptors();
-
-      tupleResult.clear();
-      final IComponent[] components = tupleResult.getComponents();
-      final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
-
-      final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
-      int ordinalNumber = 0;
-      while( st1.hasMoreTokens() )
-      {
-        final String nextToken = st1.nextToken();
-        if( nextToken.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
-          break;
-        final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" ); //$NON-NLS-1$
-        final IRecord record = tupleResult.createRecord();
-        for( int i = 0; i < components.length; i++ )
-        {
-          int descriptorIndex = -1;
-          final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
-          for( int j = 0; j < descriptors.length; j++ )
-          {
-            if( components[i].getId().equals( descriptors[j].getComponent() ) )
-            {
-              descriptorIndex = j;
-              break;
-            }
-          }
-          if( descriptorIndex < 0 )
-          {
-            if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
-            {
-              record.setValue( i, handler.convertToJavaValue( new Integer( ++ordinalNumber ).toString() ) );
-            }
-            else
-              record.setValue( i, components[i].getDefaultValue() );
-          }
-          else
-          {
-            final String token = st2.nextToken();
-            try
-            {
-              if( handler instanceof XsdBaseTypeHandlerString )
-              {
-                final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-                record.setValue( i, myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ) ); //$NON-NLS-1$
-              }
-              else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-              {
-                final SimpleDateFormat dateFormat = new SimpleDateFormat( descriptors[descriptorIndex].getParseFormat() );
-                final GregorianCalendar calendar = new GregorianCalendar( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-                calendar.setTime( dateFormat.parse( token ) );
-
-                record.setValue( i, DateUtilities.toXMLGregorianCalendar( calendar ) );
-              }
-              else if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
-              {
-                record.setValue( i, handler.convertToJavaValue( token ) );
-                // record.setValue( i, new Integer(++ordinalNumber) );
-              }
-              else
-                record.setValue( i, handler.convertToJavaValue( token ) );
-            }
-            catch( final Exception e )
-            {
-              e.printStackTrace();
-              record.setValue( i, components[i].getDefaultValue() );
-            }
-
-          }
-        }
-        tupleResult.add( record );
-      }
+      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.4" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return null;
     }
-    catch( final Exception ex )
+    final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
+    TupleResultContentProvider resultContentProvider = null;
+    if( contentProvider instanceof TupleResultContentProvider )
+      resultContentProvider = (TupleResultContentProvider) contentProvider;
+    else if( contentProvider instanceof LastLineContentProvider )
     {
-      tupleResult.clear();
-      for( final IRecord record : oldTuplesList )
-        tupleResult.add( record );
-      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.12" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-// ex.printStackTrace();
+      final IStructuredContentProvider wrappedProvider = ((LastLineContentProvider) contentProvider).getWrappedProvider();
+      if( wrappedProvider instanceof TupleResultContentProvider )
+        resultContentProvider = (TupleResultContentProvider) wrappedProvider;
     }
+    if( resultContentProvider == null )
+      return null;
+    final IComponentUiHandlerProvider factory = resultContentProvider.getFactory();
+    if( !(factory instanceof TupleResultFeatureControlHandlerProvider) )
+      return null;
+
+    final IComponent[] components = tupleResult.getComponents();
+    final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
+
+    final IRecord[] records = parseRecords( shell, trstring, tupleResult, components, typeHandlers, resultContentProvider );
+    if( records == null )
+      return null;
+
+    // TODO: Instead clear, we could replace the current selection
+    tupleResult.clear();
+    for( final IRecord record : records )
+      tupleResult.add( record );
+
     return null;
+  }
+
+  private IRecord[] parseRecords( final Shell shell, final String trstring, final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final TupleResultContentProvider contentProvider )
+  {
+    final Collection<IRecord> records = new ArrayList<IRecord>();
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
+
+    final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
+    int ordinalNumber = 0;
+    while( st1.hasMoreTokens() )
+    {
+      final String nextToken = st1.nextToken();
+      if( nextToken.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
+        break;
+
+      ++ordinalNumber;
+
+      final IRecord record = tupleResult.createRecord();
+
+      // Prepare for parse exception: fill row with default values
+      for( int i = 0; i < components.length; i++ )
+      {
+        final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
+        final IComponent component = components[i];
+        if( component.getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
+          record.setValue( i, handler.convertToJavaValue( new Integer( ordinalNumber ).toString() ) );
+        else
+          record.setValue( i, component.getDefaultValue() );
+      }
+
+      // directly add record: we may get empty lines when parsing fails, but better than nothing
+      records.add( record );
+
+      final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" ); //$NON-NLS-1$
+      for( int i = 0; st2.hasMoreTokens(); i++ )
+      {
+        final String token = st2.nextToken();
+
+        try
+        {
+          final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i );
+          if( compHandler != null )
+            compHandler.setValue( record, compHandler.parseValue( token ) );
+        }
+        catch( final Exception e )
+        {
+          final String msg = String.format( "(Line %2d): %s", ordinalNumber, e.getLocalizedMessage() );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+          stati.add( status );
+        }
+      }
+    }
+
+    // TODO: move error handling out of this method
+    if( stati.size() > 0 )
+    {
+      final IStatus[] array = stati.toArray( new IStatus[stati.size()] );
+      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, "Errors during parsing: ", null );
+      if( !multiStatus.isOK() )
+      {
+        final int open = new StatusDialog( shell, multiStatus, "Paste", new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open();
+        if( open != StatusDialog.OK )
+          return null;
+      }
+    }
+
+    return records.toArray( new IRecord[records.size()] );
   }
 }

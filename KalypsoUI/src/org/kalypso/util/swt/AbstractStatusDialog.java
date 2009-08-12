@@ -44,7 +44,6 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -56,7 +55,12 @@ public class AbstractStatusDialog extends MessageDialog
 
   public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
-    super( parentShell, dialogTitle, null, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), new String[] { IDialogConstants.OK_LABEL }, 0 );
+    this( parentShell, status, dialogTitle, new String[] { IDialogConstants.OK_LABEL }, 0 );
+  }
+
+  public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
+  {
+    super( parentShell, dialogTitle, null, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), dialogButtonLabels, defaultIndex );
 
     m_status = status;
   }
@@ -90,12 +94,12 @@ public class AbstractStatusDialog extends MessageDialog
     }
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createButtonsForButtonBar( final Composite parent )
-  {
-    createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
-  }
+// /**
+// * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+// */
+// @Override
+// protected void createButtonsForButtonBar( final Composite parent )
+// {
+// createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
+// }
 }
