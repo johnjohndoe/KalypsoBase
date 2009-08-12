@@ -64,7 +64,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 
   private final String m_nullFormat;
 
-  private final String m_parseFormat;  //TODO: is still in use ???
+  private final String m_parseFormat;
 
   private final String m_columnLabel;
 
@@ -115,9 +115,9 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
         return String.format( m_nullFormat );
       return String.format( m_displayFormat, value );
     }
-    catch( IndexOutOfBoundsException e )
+    catch( final IndexOutOfBoundsException e )
     {
-     
+
       return String.format( m_nullFormat );
     }
   }

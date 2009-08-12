@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.observation.result.IRecord;
@@ -70,9 +71,16 @@ public class TupleResultCellModifier implements ICellModifier
 
   public void modify( final Object element, final String property, final Object value )
   {
-    final TableItem item = (TableItem) element;
-    final IRecord record = (IRecord) item.getData();
-    
+    IRecord record;
+    if( element instanceof TableItem )
+      record = (IRecord) ((TableItem) element).getData();
+    else if( element instanceof IRecord )
+      record = (IRecord) element;
+    else
+      record = null;
+
+    Assert.isNotNull( record );
+
     modifyRecord( record, property, value );
   }
 
