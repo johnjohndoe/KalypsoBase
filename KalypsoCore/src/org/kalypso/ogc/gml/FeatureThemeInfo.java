@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -56,6 +56,11 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
+ * {@link IKalypsoThemeInfo} implementation for {@link IKalypsoFeatureTheme}s.<br>
+ * This implementation is based on a formatstring tha may contain the <code>${property:XXX}</code> notations.<br>
+ * <br>
+ * This class is intended to be overwritten by specialized implementations.
+ *
  * @author Gernot Belger
  */
 public class FeatureThemeInfo implements IKalypsoThemeInfo
@@ -66,6 +71,9 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
 
   private QName m_geom;
 
+  /**
+   * Needed for construction via extension-point.
+   */
   public FeatureThemeInfo( )
   {
     // empty
@@ -78,7 +86,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
 
   /**
    * Final, because called from a constructor.
-   * 
+   *
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public final void init( final IKalypsoTheme theme, final Properties props )
@@ -98,7 +106,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.2") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.getString( "org.kalypso.ogc.gml.FeatureThemeInfo.2" ) ); //$NON-NLS-1$
 
     // not yet implemented
     appendQuickInfo( formatter, pos );
@@ -108,15 +116,15 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.4") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.getString( "org.kalypso.ogc.gml.FeatureThemeInfo.4" ) ); //$NON-NLS-1$
 
     final FeatureList featureList = m_theme.getFeatureList();
     if( featureList == null )
     {
-      formatter.format( Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.5") ); //$NON-NLS-1$
+      formatter.format( Messages.getString( "org.kalypso.ogc.gml.FeatureThemeInfo.5" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -126,13 +134,12 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
       formatter.format( "-" ); //$NON-NLS-1$
       return;
     }
-    
-    /** 
-     * explanation: it is possible (with ATKIS data) that one shape covers the part 
-     * of another's shape area, without intersecting (one shape "inside" another)
-     * If several such features contains the same position, 
-     * the topmost is actually drawn - and that feature is the last in the query list.
-     * That is the reason why we are here searching for the last one. 
+
+    /**
+     * explanation: it is possible (with ATKIS data) that one shape covers the part of another's shape area, without
+     * intersecting (one shape "inside" another) If several such features contains the same position, the topmost is
+     * actually drawn - and that feature is the last in the query list. That is the reason why we are here searching for
+     * the last one.
      */
     Feature feature = null;
     for( int i = foundFeatures.size() - 1; i >= 0; i-- )
@@ -151,18 +158,33 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
       }
       feature = null;
     }
-    if( feature == null )
-    {
-      formatter.format( "-" ); //$NON-NLS-1$
-      return;
-    }
-    final String label;
-    if( m_format == null )
-      label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-    else
-      label = FeatureHelper.tokenReplace( feature, m_format );
 
+    formatInfo( formatter, feature );
+  }
+
+  /**
+   * Writes the info into the formatter for the given feature<br>
+   * Intended to be overwritten by specialized implementations.
+   */
+  protected void formatInfo( final Formatter formatter, final Feature feature )
+  {
+    final String label = getInfo( feature );
     formatter.format( "%s", label ); //$NON-NLS-1$
+  }
+
+  /**
+   * Returns the format-string (for the formatter) for the given feature.<br>
+   * Intended to be overwritten by specialized implementations.
+   */
+  protected String getInfo( final Feature feature )
+  {
+    if( feature == null )
+      return "-"; //$NON-NLS-1$
+
+    if( m_format == null )
+      return FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+
+    return FeatureHelper.tokenReplace( feature, m_format );
   }
 
 }
