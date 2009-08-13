@@ -88,11 +88,13 @@ public class OpenOutlineHandler extends AbstractHandler
         return Status.OK_STATUS;
       }
 
+      // TODO should not be necessary: better: VIEW_SHOW instead and fix the outline, so it directly finds the map
+      // itself.
       /* Open the outline. */
-      page.showView( MapOutline.ID );
+      page.showView( MapOutline.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
 
       /* Focus the part. If it is a map view, the outline will be filled. */
-      part.setFocus();
+      page.activate( part );
 
       return Status.OK_STATUS;
     }
