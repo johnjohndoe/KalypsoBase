@@ -331,8 +331,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
-      final boolean dummy )
+  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused") final boolean dummy )
   {
     m_isApplyTemplate = true;
 
@@ -972,7 +971,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       // as result==null does not explicitly mean that
       // the value is invalid, we have to ask the celleditor for invalidity
       final int columnID = getColumnID( property );
-      if( !getCellEditors()[columnID].isValueValid() )
+      if( columnID < 0 )
+        return;
+      final CellEditor[] editors = getCellEditors();
+      if( editors == null || editors.length < columnID )
+        return;
+      if( !editors[columnID].isValueValid() )
         return;
 
       final Object object = modifier.parseInput( feature, value );
