@@ -604,10 +604,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    */
   public Color getColor( final double value )
   {
-//    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
-//    m_min = symbolizer.getMinScaleDenominator();
-//    m_max = symbolizer.getMaxScaleDenominator();
-
     if( value < m_min )
       return null;
 
