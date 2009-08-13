@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.gmlschema.property.relation;
@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * TODO: insert type comment here
- * 
+ *
  * @author doemming
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
@@ -93,14 +93,19 @@ public abstract class RelationContentType implements IRelationContentType, IInit
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
       {
+        if( m_complexType.getName().equals( "SoilLayerAssociationType" ) )
+        {
+          System.out.println();
+        }
+
         final List<FeatureType> result = new ArrayList<FeatureType>();
         final List<ElementWithOccurs> localElements = getSequence();
         final ElementWithOccurs[] elementArray = localElements.toArray( new ElementWithOccurs[localElements.size()] );
+        GMLSchema schema = null;
         for( final ElementWithOccurs elementWithOccurs : elementArray )
         {
           final QName ref = elementWithOccurs.getElement().getRef();
           final Element element;
-          final GMLSchema schema;
           if( ref == null )
           {
             element = elementWithOccurs.getElement();
@@ -135,6 +140,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
 // System.out.println( "schema error: links not to a feature:" + element );
           }
         }
+
         if( result.size() != 1 )
         {
           // This happens for gml:ReferenceType which is sometimes used (for example by xplan)
@@ -151,6 +157,8 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           final QName ref = ag.getRef();
           // TODO: what about gml2, probably it is different there? Maybe just look for xlink:href
           if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) )
+            m_linkable = true;
+          else if( ref != null && QNameUtilities.equals( ref, NS.XLINK, "simpleLink" ) && schema != null && "2.1.2".equals( schema.getGMLVersion() ) )
             m_linkable = true;
         }
 
@@ -173,7 +181,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         }
 
       }
-      break;
+        break;
     }
   }
 
