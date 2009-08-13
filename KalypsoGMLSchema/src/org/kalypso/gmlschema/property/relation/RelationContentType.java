@@ -93,11 +93,6 @@ public abstract class RelationContentType implements IRelationContentType, IInit
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
       {
-        if( m_complexType.getName().equals( "SoilLayerAssociationType" ) )
-        {
-          System.out.println();
-        }
-
         final List<FeatureType> result = new ArrayList<FeatureType>();
         final List<ElementWithOccurs> localElements = getSequence();
         final ElementWithOccurs[] elementArray = localElements.toArray( new ElementWithOccurs[localElements.size()] );
