@@ -162,7 +162,7 @@ public class LocalInfoDialog extends TitleAreaDialog
       
       /* change description */
       final Button changeDescription = new Button( parent, SWT.PUSH );
-      changeDescription.setText( "Ã„ndere Projektbeschreibung" );
+      changeDescription.setText( "Ändere Projektbeschreibung" );
 
       changeDescription.addSelectionListener( new SelectionAdapter()
       {
