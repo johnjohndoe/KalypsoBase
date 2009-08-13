@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- * 
+ *
  * @author belger
  */
 public class KalypsoCoreExtensions
@@ -231,6 +231,9 @@ public class KalypsoCoreExtensions
     try
     {
       final IConfigurationElement element = THE_THEME_INFO_MAP.get( id );
+      if( element == null )
+        return null;
+
       final IKalypsoThemeInfo info = (IKalypsoThemeInfo) element.createExecutableExtension( "class" ); //$NON-NLS-1$
       info.init( theme, props );
       return info;
