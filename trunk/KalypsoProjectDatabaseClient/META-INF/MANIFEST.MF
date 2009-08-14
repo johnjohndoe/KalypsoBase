@@ -30,3 +30,4 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.ui.project.status,
  org.kalypso.project.database.client.ui.project.wizard.create,
  org.kalypso.project.database.client.ui.view
+Bundle-ClassPath: .
