@@ -138,7 +138,9 @@ public class TableView extends ObsView
             // if axis has no name, default name will be generated (defined by tokenizedName)
             // otherwise, user defined axis name should take precedence
             String name = valueAxis.getName();
-            if( name == null || name.length() == 0 )
+            // FIXME: the next line was probably introduced for Sachsen, but makes no sense...
+            // Check where we need that for Sachsen and fix it there
+//            if( name == null || name.length() == 0 )
               name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis );
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
 
