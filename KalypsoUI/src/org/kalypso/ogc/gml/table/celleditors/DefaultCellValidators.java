@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,15 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class DefaultCellValidators
 {
@@ -72,7 +73,6 @@ public class DefaultCellValidators
         return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
       }
     }
-
   }
 
   public static final class DoubleCellValidator implements ICellEditorValidator
@@ -84,8 +84,14 @@ public class DefaultCellValidators
     {
       try
       {
-        if( value != null )
-          Double.parseDouble( value.toString() );
+        if( value == null )
+          return null;
+
+        final String string = value.toString();
+        if( string.isEmpty() )
+          return null;
+
+        NumberUtils.parseDouble( string );
 
         return null;
       }
@@ -94,7 +100,6 @@ public class DefaultCellValidators
         return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
       }
     }
-
   }
 
   public static final class IntegerCellValidator implements ICellEditorValidator
@@ -106,8 +111,14 @@ public class DefaultCellValidators
     {
       try
       {
-        if( value != null )
-          Integer.parseInt( value.toString() );
+        if( value == null )
+          return null;
+
+        final String string = value.toString();
+        if( string.isEmpty() )
+          return null;
+
+        Integer.parseInt( value.toString() );
 
         return null;
       }
@@ -116,7 +127,5 @@ public class DefaultCellValidators
         return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
       }
     }
-
   }
-
 }

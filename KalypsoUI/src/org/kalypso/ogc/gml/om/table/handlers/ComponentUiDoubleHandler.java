@@ -50,10 +50,11 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles double values.
- * 
+ *
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -71,7 +72,9 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public CellEditor createCellEditor( final Table table )
   {
-    return new TextCellEditor( table, SWT.NONE );
+    final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.NONE );
+    textCellEditor.setValidator( DefaultCellValidators.DOUBLE_VALIDATOR );
+    return textCellEditor;
   }
 
   /**

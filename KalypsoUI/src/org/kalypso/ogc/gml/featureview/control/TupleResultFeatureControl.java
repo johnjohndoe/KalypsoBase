@@ -223,7 +223,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     if( isEditMode() )
     {
-
       m_cursor = new ExcelTableCursor( m_viewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
       m_controlEditor = new ControlEditor( m_cursor );
       m_controlEditor.grabHorizontal = true;
@@ -231,7 +230,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
       m_cursor.setVisible( true );
       m_cursor.setEnabled( true );
-      // m_viewer.getColumnViewerEditor().addEditorActivationListener( m_cveal );
     }
 
     return composite;

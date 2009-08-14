@@ -48,10 +48,11 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles integer (xml) values (i.e. BigInteger in java).
- * 
+ *
  * @author Gernot Belger
  */
 public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
@@ -66,7 +67,9 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
    */
   public CellEditor createCellEditor( final Table table )
   {
-    return new TextCellEditor( table, SWT.NONE );
+    final TextCellEditor textCellEditor = new TextCellEditor( table, SWT.NONE );
+    textCellEditor.setValidator( DefaultCellValidators.INTEGER_VALIDATOR );
+    return textCellEditor;
   }
 
   /**
