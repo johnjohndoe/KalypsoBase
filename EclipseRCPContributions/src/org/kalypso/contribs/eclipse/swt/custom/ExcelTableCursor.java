@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: merge code with TableCursor-Copy
- * 
+ *
  * @author Gernot Belger
  */
 public class ExcelTableCursor extends TableCursor
@@ -483,29 +483,56 @@ public class ExcelTableCursor extends TableCursor
 
   /**
    * Advances the cursor position by the given delta.
-   * 
+   *
    * @param control
    *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
   protected void advanceCursor( final Control control, final int dx, final int dy )
   {
-    if( (dx != 0) || (dy != 0) )
+    if( dx == 0 && dy == 0 )
+      return;
+
+    stopEditing( control );
+
+    // The stopEditing (above) probably triggered a ui-event that potentially removes the focus from the cursor
+    // re-focus in an asynchronous display-event, forces the focus back to me
+    getDisplay().asyncExec( new Runnable()
     {
-      stopEditing( control );
+      @Override
+      public void run( )
+      {
+        if( isDisposed() )
+          return;
 
-      final Table table = getViewer().getTable();
-      final TableItem row2 = getRow();
+        final Table table = getViewer().getTable();
+        final TableItem row2 = getRow();
 
-      if( row2 == null )
-        return;
+        if( row2 == null )
+          return;
 
-      final int row = table.indexOf( row2 ) + dy;
-      final int col = getColumn() + dx;
-      final int rowCount = table.getItemCount();
-      final int columnCount = table.getColumnCount();
+        final int row = table.indexOf( row2 ) + dy;
+        final int col = getColumn() + dx;
+        final int rowCount = table.getItemCount();
+        final int columnCount = table.getColumnCount();
 
-      if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
-        setSelection( row, col, true );
-    }
+        if( (col >= 0) && (col < columnCount) && (row >= 0) && (row < rowCount) )
+          setSelection( row, col, true );
+
+        setFocus();
+
+        // a bit wild... but still sometimes we lose the focus. So just do it once again...
+        getDisplay().asyncExec( new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            if( isDisposed() )
+              return;
+
+            setFocus();
+          }
+        } );
+      }
+    } );
   }
 }
