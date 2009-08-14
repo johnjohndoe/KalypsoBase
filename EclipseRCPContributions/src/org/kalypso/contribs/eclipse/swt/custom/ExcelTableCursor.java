@@ -116,7 +116,7 @@ public class ExcelTableCursor extends TableCursor
         // cellEditor.performUndo();
       }
       /* On enter, stop editing and move either forwards or downwards */
-      else if( e.keyCode == SWT.CR )
+      else if( e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR )
         switch( getAdvanceMode() )
         {
           case RIGHT:
@@ -163,7 +163,7 @@ public class ExcelTableCursor extends TableCursor
       /*
        * Special case: checkbox: always toggle? TODO: shouldn't handle this the CheckboxCellEditor??
        */
-      if( (e.keyCode != SWT.CR) && (e.getSource() instanceof CheckboxCellEditor) )
+      if( (e.keyCode != SWT.CR || e.keyCode == SWT.KEYPAD_CR) && (e.getSource() instanceof CheckboxCellEditor) )
       {
         // toggle checkbox
         final CheckboxCellEditor ce = (CheckboxCellEditor) e.getSource();
