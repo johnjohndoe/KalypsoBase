@@ -123,7 +123,6 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
       final String ftNamespaceURI = ftName.getNamespaceURI();
       if( ftNamespaceURI.equals( targetNamespace ) )
       {
-
         final String ftLocalPart = ftName.getLocalPart();
         final String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
 
@@ -144,11 +143,16 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
         {
           final QName ptName = propertyType.getQName();
 
+          final String ptNamespaceURI = ptName.getNamespaceURI();
+          final String ptPrefix = nsMapper.getPreferredPrefix( ptNamespaceURI, null );
+          final String nsptURI2 = ptNamespaceURI.replace( ':', '_' ).replace( '/', '_' );
+          m_properties.setProperty( nsptURI2, ptPrefix );
+          
           final IAnnotation pAnno = propertyType.getAnnotation();
 
           final String pLabel = pAnno.getLabel();
           final String pTooltip = pAnno.getTooltip();
-          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ftPrefix;
+          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptPrefix;
 
           formatInternal( prefix, ptName.getLocalPart(), "label", pLabel );
           formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip );
@@ -172,9 +176,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
                   final String enumPrefix = prefix + '_' + ptName.getLocalPart();
                   formatInternal( enumPrefix, key, "label", aLabel );
                   formatInternal( enumPrefix, key, "tooltip", aTooltip );
-
                 }
-
               }
             }
           }
