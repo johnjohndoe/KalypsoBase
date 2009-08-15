@@ -215,7 +215,7 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0"); //$NON-NLS-1$
   }
 
   public Feature getNewFeature( )

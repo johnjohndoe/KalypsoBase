@@ -387,7 +387,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" ), operationElement, feature ); //$NON-NLS-1$
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.get( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" ), operationElement, feature ); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -400,7 +400,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" ), result ); //$NON-NLS-1$
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.get( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" ), result ); //$NON-NLS-1$
 
             return result;
           }
@@ -483,7 +483,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
-        System.out.println( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.5" ) ); //$NON-NLS-1$
+        System.out.println( Messages.get( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.5" ) ); //$NON-NLS-1$
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
@@ -689,7 +689,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           }
           catch( final ParseException e )
           {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse" ) + any ); //$NON-NLS-1$
+            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse" ) + any ); //$NON-NLS-1$
             KalypsoGisPlugin.getDefault().getLog().log( status );
           }
         }
@@ -811,7 +811,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ) ); //$NON-NLS-1$
+    label.setText( Messages.get( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ) ); //$NON-NLS-1$
 
     return label;
   }

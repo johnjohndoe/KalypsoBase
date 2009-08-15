@@ -114,8 +114,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.0") ); //$NON-NLS-1$
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.1") ); //$NON-NLS-1$
+    Assert.isNotNull( m_delegate, Messages.get("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.0") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.get("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.1") ); //$NON-NLS-1$
 
     m_delegate.appendInfo( formatter, pos );
   }
@@ -126,8 +126,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.2") ); //$NON-NLS-1$
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.3") ); //$NON-NLS-1$
+    Assert.isNotNull( m_delegate, Messages.get("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.2") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.get("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.3") ); //$NON-NLS-1$
 
     m_delegate.appendQuickInfo( formatter, pos );
   }

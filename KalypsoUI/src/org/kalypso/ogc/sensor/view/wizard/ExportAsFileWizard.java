@@ -131,7 +131,7 @@ public class ExportAsFileWizard extends Wizard
   {
     //super.createPageControls( pageContainer );
 
-    setWindowTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.5") ); //$NON-NLS-1$
+    setWindowTitle( Messages.get("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.5") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -157,7 +157,7 @@ public class ExportAsFileWizard extends Wizard
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.get("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
     }
@@ -168,7 +168,7 @@ public class ExportAsFileWizard extends Wizard
 
     if( m_project != null )
     {
-      final Job refreshJob = new Job( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.7") + m_project.getName() + Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.8") ) //$NON-NLS-1$ //$NON-NLS-2$
+      final Job refreshJob = new Job( Messages.get("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.7") + m_project.getName() + Messages.get("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.8") ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         @Override
         protected IStatus run( IProgressMonitor monitor )

@@ -85,7 +85,7 @@ public class FeatureActionUtilities
 
     protected ListFullAction( final int occurs )
     {
-      super( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.0" ) ); //$NON-NLS-1$
+      super( Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.0" ) ); //$NON-NLS-1$
 
       final ImageKey[] overlays = new ImageKey[] { null, DESCRIPTORS.FORBIDDEN_OVR, null, null, null };
       final ImageDescriptor forbiddenImgDesc = KalypsoGisPlugin.getImageProvider().getDecoratedImageDescriptor( DESCRIPTORS.FEATURE, overlays );
@@ -101,8 +101,8 @@ public class FeatureActionUtilities
     public void runWithEvent( final Event event )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.1" ), Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.2" ) + m_occurs //$NON-NLS-1$ //$NON-NLS-2$
-          + Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.3" ) ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.1" ), Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.2" ) + m_occurs //$NON-NLS-1$ //$NON-NLS-2$
+          + Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.3" ) ); //$NON-NLS-1$
     }
   }
 
@@ -115,7 +115,7 @@ public class FeatureActionUtilities
   {
     protected NewFeatureFromExternalSchemaAction( )
     {
-      super( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.4" ) ); //$NON-NLS-1$
+      super( Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.4" ) ); //$NON-NLS-1$
     }
 
     /**
@@ -125,7 +125,7 @@ public class FeatureActionUtilities
     public void runWithEvent( final Event event )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.5" ), Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( shell, Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.5" ), Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -141,7 +141,7 @@ public class FeatureActionUtilities
    */
   public static IMenuManager createFeatureNewMenu( final IStructuredSelection selection, final IFeatureSelectionManager selectionManager )
   {
-    final IMenuManager newMenuManager = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) ); //$NON-NLS-1$
+    final IMenuManager newMenuManager = new MenuManager( Messages.get( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) ); //$NON-NLS-1$
 
     if( selection.size() != 1 )
       return newMenuManager;

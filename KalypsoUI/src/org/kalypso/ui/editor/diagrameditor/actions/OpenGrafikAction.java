@@ -85,17 +85,17 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
       if( input instanceof IFileEditorInput )
       {
         final IContainer parent = ( (IFileEditorInput)input ).getFile().getParent();
-        dest = parent.getFolder( new Path( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ) ); //$NON-NLS-1$
+        dest = parent.getFolder( new Path( Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ) ); //$NON-NLS-1$
       }
       else
       {
         final IProject[] projects = ProjectUtilities.getSelectedProjects();
         if( projects.length > 0 )
-          dest = projects[0].getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.1") ); //$NON-NLS-1$
+          dest = projects[0].getFolder( Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.1") ); //$NON-NLS-1$
         else
         {
           final ResourceSelectionDialog dlg = new ResourceSelectionDialog( getShell(), ResourcesPlugin.getWorkspace()
-              .getRoot(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.2") ); //$NON-NLS-1$
+              .getRoot(), Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.2") ); //$NON-NLS-1$
 
           if( dlg.open() != Window.OK )
             return;
@@ -105,12 +105,12 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
             return;
 
           if( results[0] instanceof IFolder )
-            dest = ( (IFolder)results[0] ).getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.3") ); //$NON-NLS-1$
+            dest = ( (IFolder)results[0] ).getFolder( Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.3") ); //$NON-NLS-1$
           else
           {
-            MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4"), //$NON-NLS-1$
-                Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5") //$NON-NLS-1$
-                    + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.6") + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog.openInformation( getShell(), Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4"), //$NON-NLS-1$
+                Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5") //$NON-NLS-1$
+                    + Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.6") + Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
         }
@@ -122,7 +122,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
     {
       e.printStackTrace();
       
-      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.8"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.9") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( getShell(), Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.8"), Messages.get("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.9") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

@@ -75,7 +75,7 @@ public final class CommandJob extends Job
 
   public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule, final Runnable runnable, final TYPE type )
   {
-    super( Messages.getString("org.kalypso.util.command.CommandJob.3") + getCommandDescription( commandManager, command, type ) ); //$NON-NLS-1$
+    super( Messages.get("org.kalypso.util.command.CommandJob.3") + getCommandDescription( commandManager, command, type ) ); //$NON-NLS-1$
 
     Assert.isNotNull( commandManager );
     Assert.isNotNull( command );
@@ -119,7 +119,7 @@ public final class CommandJob extends Job
 
 //      LOGGER.warning( Messages.getString("org.kalypso.util.command.CommandJob.5") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.util.command.CommandJob.7") + m_type + ": " + description, e ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.get("org.kalypso.util.command.CommandJob.7") + m_type + ": " + description, e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 //    LOGGER.info( Messages.getString("org.kalypso.util.command.CommandJob.9") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$

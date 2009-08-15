@@ -60,7 +60,7 @@ public class RemoveThemeAction extends FullAction
 
   public RemoveThemeAction( final ObservationEditorOutlinePage page )
   {
-    super( Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.0"), ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.0"), ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_page = page;
   }
@@ -76,8 +76,8 @@ public class RemoveThemeAction extends FullAction
     if( items.length > 0 )
     {
       final String str = ArrayUtils.toString( items, ", " ); //$NON-NLS-1$
-      final String msg = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.3") + ( items.length > 1 ? "n " : " " ) + str + Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.6"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      if( MessageDialog.openConfirm( m_page.getSite().getShell(), Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.7"), msg ) ) //$NON-NLS-1$
+      final String msg = Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.3") + ( items.length > 1 ? "n " : " " ) + str + Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.6"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      if( MessageDialog.openConfirm( m_page.getSite().getShell(), Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.7"), msg ) ) //$NON-NLS-1$
       {
         for( int i = 0; i < items.length; i++ )
         {

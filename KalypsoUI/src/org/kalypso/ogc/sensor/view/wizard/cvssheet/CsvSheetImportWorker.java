@@ -265,7 +265,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final File senke = new File( destination, name + ".zml" ); //$NON-NLS-1$
     ZmlFactory.writeToFile( simple, senke );
 
-    new UIJob( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportWorker.19") ) //$NON-NLS-1$
+    new UIJob( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportWorker.19") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

@@ -85,12 +85,12 @@ public class GrafikEditorLauncher implements IEditorLauncher
       {
         IStatus status = Status.OK_STATUS;
 
-        monitor.beginTask( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+        monitor.beginTask( Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
         try
         {
           final IContainer parent = file.getParent();
 
-          final IFolder folder = parent.getFolder( new Path( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.1" ) ) ); //$NON-NLS-1$
+          final IFolder folder = parent.getFolder( new Path( Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.1" ) ) ); //$NON-NLS-1$
 
           if( path.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikODT( file, folder, monitor );
@@ -99,11 +99,11 @@ public class GrafikEditorLauncher implements IEditorLauncher
           else if( file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
             status = GrafikLauncher.startGrafikZML( file, folder, monitor );
           else
-            status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3" ) ); //$NON-NLS-1$
+            status = StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3" ) ); //$NON-NLS-1$
         }
         catch( final SensorException e )
         {
-          status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.4" ) ); //$NON-NLS-1$
+          status = StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.4" ) ); //$NON-NLS-1$
         }
         finally
         {
@@ -124,7 +124,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5" ), Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7" ), status );
+      ErrorDialog.openError( shell, Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5" ), Messages.get( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7" ), status );
     }
   }
 }

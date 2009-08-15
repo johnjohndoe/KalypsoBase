@@ -113,7 +113,7 @@ public class SetColumnVisibleCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0") + m_propertyName + "' " + (m_bVisible ? Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2") : Messages.getString("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    return Messages.get("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0") + m_propertyName + "' " + (m_bVisible ? Messages.get("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2") : Messages.get("org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final String alignment, final String format, final boolean editable )

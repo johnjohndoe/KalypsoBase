@@ -139,7 +139,7 @@ public class ConvertAscii2Binary
             binaryGrid.setValue( x, y, Double.NaN );
           else
           {
-            final BigDecimal currentValue = NumberUtils.parseDecimal( next );
+            final BigDecimal currentValue = NumberUtils.parseQuietDecimal( next );
             binaryGrid.setValue( x, y, currentValue );
           }
         }

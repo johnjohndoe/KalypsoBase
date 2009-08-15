@@ -85,10 +85,10 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
     visitor.visit( f1 );
     boolean exists = visitor.relationExistsTo( f2 );
     if( !isAddMode )
-      return exists ? null : Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0"); //$NON-NLS-1$
+      return exists ? null : Messages.get("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0"); //$NON-NLS-1$
     // is addmode:
     if( exists )
-      return Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1"); //$NON-NLS-1$
+      return Messages.get("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1"); //$NON-NLS-1$
     return m_relationType1.getFitProblemsfromOccurency( f1, isAddMode );
   }
 

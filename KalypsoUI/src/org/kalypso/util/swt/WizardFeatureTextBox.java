@@ -204,7 +204,7 @@ public class WizardFeatureTextBox
   {
     m_text = text;
 
-    new UIJob( Messages.getString( "org.kalypso.util.swt.WizardFeatureTextBox.4" ) ) //$NON-NLS-1$
+    new UIJob( Messages.get( "org.kalypso.util.swt.WizardFeatureTextBox.4" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

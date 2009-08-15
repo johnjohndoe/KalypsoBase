@@ -101,7 +101,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput.0") + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension; //$NON-NLS-1$
+    return Messages.get("org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput.0") + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension; //$NON-NLS-1$
   }
 
   /**

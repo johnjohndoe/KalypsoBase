@@ -158,7 +158,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     lnk.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
 
     m_label = new Label( m_composite, SWT.NONE );
-    m_label.setToolTipText( Messages.getString( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1" ) ); //$NON-NLS-1$
+    m_label.setToolTipText( Messages.get( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1" ) ); //$NON-NLS-1$
     final GridData gridData = new GridData( GridData.FILL, GridData.CENTER, true, true );
     gridData.widthHint = 175;
     m_label.setLayoutData( gridData );
@@ -184,7 +184,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     if( activePage != null )
       m_adapterListener.init( activePage );
 
-    m_updateLabelJob = new UpdateLabelJob( Messages.getString( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2" ) ); //$NON-NLS-1$
+    m_updateLabelJob = new UpdateLabelJob( Messages.get( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2" ) ); //$NON-NLS-1$
 
     return m_composite;
   }

@@ -155,7 +155,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
       return String.format( displayFormat, instance );
     }
 
-    return Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.0" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.0" ); //$NON-NLS-1$
   }
 
   /**

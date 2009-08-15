@@ -99,7 +99,7 @@ public class GrafikAchsen
         if( gAchse != null )
           m_name2grafikAxis.put( ta.getId(), gAchse );
         else
-          Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.5" ) + name + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.6" ) + axisnr + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          Logger.getLogger( getClass().getName() ).warning( Messages.get( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.5" ) + name + Messages.get( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.6" ) + axisnr + Messages.get( "org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       else if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();

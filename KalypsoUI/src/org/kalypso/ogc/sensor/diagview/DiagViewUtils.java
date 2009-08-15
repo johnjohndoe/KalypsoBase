@@ -410,7 +410,7 @@ public class DiagViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( DiagViewUtils.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.16" ) + href ); //$NON-NLS-1$
+        Logger.getLogger( DiagViewUtils.class.getName() ).warning( Messages.get( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.16" ) + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -418,7 +418,7 @@ public class DiagViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.17" ) ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.get( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.17" ) ); //$NON-NLS-1$
   }
 
   /**

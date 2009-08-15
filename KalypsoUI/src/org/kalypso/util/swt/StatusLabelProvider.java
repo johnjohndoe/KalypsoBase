@@ -86,9 +86,9 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
    */
   public static void configureTableViewer( final DefaultTableViewer tableViewer )
   {
-    tableViewer.addColumn( SEVERITY, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.3"), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
-    tableViewer.addColumn( MESSAGE, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.4"), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
-    tableViewer.addColumn( TIME, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.5"), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
+    tableViewer.addColumn( SEVERITY, Messages.get("org.kalypso.util.swt.StatusLabelProvider.3"), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
+    tableViewer.addColumn( MESSAGE, Messages.get("org.kalypso.util.swt.StatusLabelProvider.4"), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
+    tableViewer.addColumn( TIME, Messages.get("org.kalypso.util.swt.StatusLabelProvider.5"), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
 
     tableViewer.setLabelProvider( new StatusLabelProvider( tableViewer.getColumnProperties() ) );
   }

@@ -292,7 +292,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.3"), status ); //$NON-NLS-1$
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.get("org.kalypso.ui.GenericCommandActionDelegate.3"), status ); //$NON-NLS-1$
       }
     }
   }
@@ -351,7 +351,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     final String actionId = m_action.getId();
     final IActionBars actionBars = m_actionBars;
 
-    final UIJob job = new UpdateActionbarsJob( Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.5"), actionBars, actionId, enabledState ); //$NON-NLS-1$
+    final UIJob job = new UpdateActionbarsJob( Messages.get("org.kalypso.ui.GenericCommandActionDelegate.5"), actionBars, actionId, enabledState ); //$NON-NLS-1$
     job.setPriority( UIJob.INTERACTIVE );
 // job.schedule();
     job.schedule( 200 );

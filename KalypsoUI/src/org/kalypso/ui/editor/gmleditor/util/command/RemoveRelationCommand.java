@@ -126,6 +126,6 @@ public class RemoveRelationCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0"); //$NON-NLS-1$
   }
 }

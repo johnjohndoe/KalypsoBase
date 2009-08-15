@@ -73,7 +73,7 @@ public class TableView extends ObsView
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.ogc.sensor.tableview.TableView.0" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.sensor.tableview.TableView.0" ); //$NON-NLS-1$
   }
 
   public ITableViewRules getRules( )

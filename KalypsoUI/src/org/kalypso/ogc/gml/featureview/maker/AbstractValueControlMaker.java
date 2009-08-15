@@ -154,7 +154,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       validatorLabel.setVisible( true );
 
       if( property == null )
-        System.out.println( Messages.getString( "org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker.2" ) + ftp ); //$NON-NLS-1$
+        System.out.println( Messages.get( "org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker.2" ) + ftp ); //$NON-NLS-1$
       validatorLabel.setProperty( property );
 
       final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();

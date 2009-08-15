@@ -108,7 +108,7 @@ public class BooleanModifier implements IFeatureModifier
     if( value instanceof Boolean )
       return null;
 
-    return Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool" ); //$NON-NLS-1$
   }
 
   /**

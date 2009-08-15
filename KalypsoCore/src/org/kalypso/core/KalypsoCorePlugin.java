@@ -157,7 +157,7 @@ public class KalypsoCorePlugin extends Plugin
 
     return m_selectionManager;
   }
-
+  
   /**
    * Gets the kalypso timezone (to be used to display any dates in the UI).<br>
    * The timezone is set in the user-preferences. If the preference is not set, the value of the system property

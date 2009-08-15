@@ -62,6 +62,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -70,14 +71,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Utility class for {@link IMapModell} associated functions.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapModellHelper
 {
   public MapModellHelper( )
   {
-    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModellHelper.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -106,7 +107,7 @@ public class MapModellHelper
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
       {
-        monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.1"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModellHelper.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
         Thread.sleep( 250 );
 
@@ -208,9 +209,9 @@ public class MapModellHelper
 
   /**
    * Calculates the common extent of all given themes.
-   *
+   * 
    * @param predicate
-   *            If not <code>null</code>, only themes applying to the predicate are considered.
+   *          If not <code>null</code>, only themes applying to the predicate are considered.
    * @return <code>null</code>, if the array of themes is empty or null.
    */
   public static GM_Envelope calculateExtent( final IKalypsoTheme[] themes, final IKalypsoThemePredicate predicate )
@@ -283,6 +284,33 @@ public class MapModellHelper
     model.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
     return visitor.isLoaded();
+  }
+
+  /**
+   * Finds all themes with the given theme property from the map model.
+   * 
+   *@param depth
+   *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
+   * @param mapModell
+   *          This model is searched
+   * @param themeProperty
+   *          This where this property is set are found
+   */
+  public static final IKalypsoTheme[] findThemeByProperty( final IMapModell mapModell, final String themeProperty, final int depth )
+  {
+    final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
+    {
+      @Override
+      public boolean decide( final IKalypsoTheme theme )
+      {
+        final String property = theme.getProperty( themeProperty, null );
+        return property != null;
+      }
+    };
+
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+    mapModell.accept( visitor, depth );
+    return visitor.getFoundThemes();
   }
 
 }

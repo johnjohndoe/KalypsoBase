@@ -119,6 +119,6 @@ public class DropZmlCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0"); //$NON-NLS-1$
   }
 }

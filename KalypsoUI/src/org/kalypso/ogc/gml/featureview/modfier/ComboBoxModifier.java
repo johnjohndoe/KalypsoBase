@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class ComboBoxModifier implements IFeatureModifier
 {
-  private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
+  private static final String NO_LINK_STRING = Messages.get("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
 
   private final List<Object> m_entries = new ArrayList<Object>();
 

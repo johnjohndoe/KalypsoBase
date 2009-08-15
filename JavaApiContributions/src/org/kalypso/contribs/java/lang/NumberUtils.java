@@ -129,7 +129,7 @@ public final class NumberUtils
    *           if the string is not parseable.
    * @see BigDecimal
    */
-  public static BigDecimal parseDecimal( final String string )
+  public static BigDecimal parseQuietDecimal( final String string )
   {
     try
     {
@@ -200,4 +200,5 @@ public final class NumberUtils
   {
     return decimal.subtract( decimal.ulp() );
   }
+
 }

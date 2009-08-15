@@ -80,7 +80,7 @@ public class DumpStructureHandler extends AbstractHandler
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
-        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.0"), 1000 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.get("org.kalypso.ogc.sensor.view.DumpStructureHandler.0"), 1000 ); //$NON-NLS-1$
 
         try
         {
@@ -116,7 +116,7 @@ public class DumpStructureHandler extends AbstractHandler
     {
       e.printStackTrace();
 
-      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, Messages.get("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final InterruptedException ignored )
     {

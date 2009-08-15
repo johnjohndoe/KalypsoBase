@@ -87,12 +87,12 @@ public class EnvelopeDialog extends Dialog
 
     /* Configuring the composite. */
     final Shell shell = panel.getShell();
-    shell.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.data" ) ); //$NON-NLS-1$
+    shell.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.data" ) ); //$NON-NLS-1$
 
     /* The label for the input data. */
     Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.fillin" ) ); //$NON-NLS-1$
+    label.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.fillin" ) ); //$NON-NLS-1$
     label.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
@@ -105,7 +105,7 @@ public class EnvelopeDialog extends Dialog
     /* The label for the input data. */
     Label label1 = new Label( group, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label1.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.rvalue" ) + " " + Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.min" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    label1.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.rvalue" ) + " " + Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.min" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     label1.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
@@ -116,7 +116,7 @@ public class EnvelopeDialog extends Dialog
     /* The label for the input data. */
     Label label2 = new Label( group, SWT.NONE );
     label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label2.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.hvalue" ) + " " + Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.min" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    label2.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.hvalue" ) + " " + Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.min" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     label2.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
@@ -127,7 +127,7 @@ public class EnvelopeDialog extends Dialog
     /* The label for the input data. */
     Label label3 = new Label( group, SWT.NONE );
     label3.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label3.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.rvalue" ) + " " + Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.max" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    label3.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.rvalue" ) + " " + Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.max" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     label3.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */
@@ -138,7 +138,7 @@ public class EnvelopeDialog extends Dialog
     /* The label for the input data. */
     Label label4 = new Label( group, SWT.NONE );
     label4.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label4.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.hvalue" ) + " " + Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.max" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    label4.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.hvalue" ) + " " + Messages.get( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeDialog.max" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     label4.setAlignment( SWT.LEFT );
 
     /* The text for the input data. */

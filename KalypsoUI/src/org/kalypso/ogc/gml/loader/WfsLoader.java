@@ -147,8 +147,8 @@ public class WfsLoader extends WorkspaceLoader
     if( data instanceof CommandableWorkspace )
     {
       final Display display = new Display();
-      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.8" ), (ImageProvider.IMAGE_STYLEEDITOR_SAVE).createImage(), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.9" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-      Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.10" ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.11" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.8" ), (ImageProvider.IMAGE_STYLEEDITOR_SAVE).createImage(), Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.9" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+      Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.10" ), Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.11" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
       final int result = md.open();
       try
       {
@@ -165,7 +165,7 @@ public class WfsLoader extends WorkspaceLoader
         }
         else if( result == 1 )
         {
-          MessageDialog.openError( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.12" ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( new Shell( display ), Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.12" ), Messages.get( "org.kalypso.ogc.gml.loader.WfsLoader.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       catch( final IOException e )

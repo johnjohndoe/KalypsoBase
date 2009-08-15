@@ -118,6 +118,6 @@ public class PointFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values" ); //$NON-NLS-1$
   }
 }

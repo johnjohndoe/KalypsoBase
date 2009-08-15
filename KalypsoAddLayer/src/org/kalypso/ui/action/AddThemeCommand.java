@@ -40,21 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 
 public class AddThemeCommand implements IThemeCommand
 {
+  private final Collection<Style> m_styles = new ArrayList<Style>();
+
   private final Map<String, String> m_properties = new HashMap<String, String>();
 
   private IKalypsoLayerModell m_mapModell;
@@ -69,23 +73,10 @@ public class AddThemeCommand implements IThemeCommand
 
   private final String m_source;
 
-  private final String m_stylelinktype;
-
-  private final String m_style;
-
-  private final String m_styleLocation;
-
-  private final String m_styleType;
-
   private StyledLayerType m_layer;
 
-  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source )
-  {
-    this( model, name, type, featurePath, source, null, null, null, null );
-  }
-
   /**
-   * This command adds a new layer to
+   * This command adds a new theme to a map.
    * 
    * @param model
    *          active GisTemplateMapModell from the active Map
@@ -97,37 +88,36 @@ public class AddThemeCommand implements IThemeCommand
    *          the feature path in the gml workspace
    * @param source
    *          a String having keywords and (paired values) depending on the Loader context
-   * @param stylelinktype
-   *          keyword for the used style type (normally sld)
    * @param style
    *          name of the style
    * @param styleLocation
-   *          a valid resouce path (of the used plugin or a valid URL )
-   * @param styleType
-   *          sets the type simple or complex
-   * @deprecated use constrtuctor without style information TODO separate AddTheme from AddStyle, at the moment AddTheme
-   *             is both
+   *          a valid resource path (of the used plug-in or a valid URL )
    */
-  @Deprecated
-  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source, final String stylelinktype, final String style, final String styleLocation, final String styleType )
+  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source )
   {
     m_mapModell = model;
     m_name = name;
     m_type = type;
     m_featurePath = featurePath;
     m_source = source;
-    m_stylelinktype = stylelinktype;
-    m_style = style;
-    m_styleLocation = styleLocation;
-    m_styleType = styleType;
   }
 
   /**
-   * Add properties to this command which will be added to the theme after creation.
+   * Adds properties to this command which will be added to the theme after creation.<br>
+   * Must be called before {@link #process()}
    */
   public void addProperties( final Map<String, String> properties )
   {
     m_properties.putAll( properties );
+  }
+
+  /**
+   * Adds a property to this command which will be added to the theme after creation.<br>
+   * Must be called before {@link #process()}
+   */
+  public void addProperty( final String key, final String value )
+  {
+    m_properties.put( key, value );
   }
 
   /**
@@ -141,31 +131,22 @@ public class AddThemeCommand implements IThemeCommand
   private StyledLayerType init( )
   {
     final int id = m_mapModell.getThemeSize() + 1;
-    final ObjectFactory factory = new ObjectFactory();
 
-    final StyledLayerType layer = factory.createStyledLayerType();
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
     layer.setHref( m_source );
     layer.setFeaturePath( m_featurePath );
     layer.setName( m_name );
     layer.setLinktype( m_type );
     layer.setId( "ID_" + id );
     layer.setVisible( true );
-    if( m_stylelinktype != null && m_style != null && m_styleLocation != null && m_styleType != null )
-    {
-      final List<Style> styleList = layer.getStyle();
-      // Style Type
-      final StyledLayerType.Style layertype = factory.createStyledLayerTypeStyle();
-      layertype.setLinktype( m_stylelinktype );
-      layertype.setStyle( m_style );
-      layertype.setHref( m_styleLocation );
-      layertype.setActuate( "onRequest" );
-      layertype.setType( m_styleType );
-      styleList.add( layertype );
-    }
+
+    final List<Style> styleList = layer.getStyle();
+    for( final Style style : m_styles )
+      styleList.add( style );
 
     for( final Entry<String, String> entry : m_properties.entrySet() )
     {
-      final Property property = factory.createStyledLayerTypeProperty();
+      final Property property = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
       property.setName( entry.getKey() );
       property.setValue( entry.getValue() );
 
@@ -221,5 +202,21 @@ public class AddThemeCommand implements IThemeCommand
   public StyledLayerType toStyledLayerType( )
   {
     return init();
+  }
+
+  /**
+   * Adds a style to this command which will be added to the theme after creation.<br>
+   * Must be called before {@link #process()}
+   */
+  public void addStyle( final String style, final String location )
+  {
+    final StyledLayerType.Style layertype = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerTypeStyle();
+    layertype.setLinktype( "sld" );
+    layertype.setStyle( style );
+    layertype.setHref( location );
+    layertype.setActuate( "onRequest" );
+    layertype.setType( "simple" );
+
+    m_styles.add( layertype );
   }
 }

@@ -75,7 +75,7 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
 
       manager.remove( "selectionMenuManager" ); //$NON-NLS-1$
 
-      final IMenuManager newSmm = new MenuManager( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2"), "selectionMenuManager" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IMenuManager newSmm = new MenuManager( Messages.get("org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2"), "selectionMenuManager" ); //$NON-NLS-1$ //$NON-NLS-2$
       manager.appendToGroup( "selection", newSmm ); //$NON-NLS-1$
       return newSmm;
     }

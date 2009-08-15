@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Marshalls a {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface} into a sax content handler.
- *
+ * 
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceMarshaller
@@ -185,10 +185,14 @@ public class TriangulatedSurfaceMarshaller
     final double[] asArray = position.getAsArray();
     for( final double d : asArray )
     {
-      final String dString = Double.toString( d );
-      final char[] charArray = dString.toCharArray();
-      contentHandler.characters( charArray, 0, charArray.length );
-      contentHandler.characters( WHITESPACE, 0, 1 );
+      // do not write the third coordinate if not set
+      if( !Double.isNaN( d ) )
+      {
+        final String dString = Double.toString( d );
+        final char[] charArray = dString.toCharArray();
+        contentHandler.characters( charArray, 0, charArray.length );
+        contentHandler.characters( WHITESPACE, 0, 1 );
+      }
     }
 
     contentHandler.endElement( NS.GML3, TAG_POS, QNAME_POS );

@@ -110,7 +110,7 @@ public class GMLSchemaEditor extends EditorPart
 
   private void load( )
   {
-    new Job( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.0" ) ) //$NON-NLS-1$
+    new Job( Messages.get( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.0" ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -131,7 +131,7 @@ public class GMLSchemaEditor extends EditorPart
         }
         catch( final Exception e )
         {
-          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.1" ) ); //$NON-NLS-1$
+          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.1" ) ); //$NON-NLS-1$
 
           KalypsoGisPlugin.getDefault().getLog().log( statusFromThrowable );
 
@@ -178,7 +178,7 @@ public class GMLSchemaEditor extends EditorPart
       }
       catch( final IOException e )
       {
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2" ), e ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.get( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2" ), e ); //$NON-NLS-1$
       }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
@@ -223,7 +223,7 @@ public class GMLSchemaEditor extends EditorPart
       IOUtils.closeQuietly( contents );
     }
 
-    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3" ) ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.get( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3" ) ); //$NON-NLS-1$
   }
 
   public IGMLSchema getSchema( )

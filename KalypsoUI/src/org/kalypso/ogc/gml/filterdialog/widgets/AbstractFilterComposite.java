@@ -161,18 +161,18 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
             final String geomString = clazz.getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
             if( newText.equals( geomString ) )
             {
-              return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.3"); //$NON-NLS-1$
+              return Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.3"); //$NON-NLS-1$
             }
           }
           if( clazz == String.class )
           {
             if( newText == null || newText.length() == 0 )
-              return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.4"); //$NON-NLS-1$
+              return Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.4"); //$NON-NLS-1$
           }
         }
         catch( final NumberFormatException e )
         {
-          return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.5") + clazz.getName().replaceAll( ".+\\.", "" ) + Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.8"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          return Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.5") + clazz.getName().replaceAll( ".+\\.", "" ) + Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.8"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         }
         return null;
       }

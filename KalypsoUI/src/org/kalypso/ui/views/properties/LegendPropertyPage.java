@@ -84,7 +84,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* If there is no theme, no legend could be shown. */
     if( theme == null )
-      return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
+      return createError( composite, Messages.get( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
 
     /* Get the legend graphic. */
 
@@ -95,7 +95,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       final Image legendGraphic = theme.getLegendGraphic( font );
       /* No legend available. */
       if( legendGraphic == null )
-        return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
+        return createError( composite, Messages.get( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
 
       /* Create a group. */
       final Composite group = new Composite( composite, SWT.BORDER );

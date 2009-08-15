@@ -96,7 +96,7 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
         // we are in the ui-thread so we get a shell here
         final Shell shell = Display.getCurrent().getActiveShell();
         if( shell != null )
-          ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureAddActionDelegate.1"), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, action.getText(), Messages.get("org.kalypso.ui.editor.actions.FeatureAddActionDelegate.1"), status ); //$NON-NLS-1$
       }
     }
   }

@@ -104,15 +104,15 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
         tableColumn.dispose();
 
       final TableColumn quantityColumn = new TableColumn( table, SWT.NONE );
-      quantityColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.1") ); //$NON-NLS-1$
+      quantityColumn.setText( Messages.get("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.1") ); //$NON-NLS-1$
       quantityColumn.setWidth( 100 );
 
       final TableColumn opacityColumn = new TableColumn( table, SWT.NONE );
-      opacityColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.2") ); //$NON-NLS-1$
+      opacityColumn.setText( Messages.get("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.2") ); //$NON-NLS-1$
       opacityColumn.setWidth( 50 );
 
       final TableColumn colorColumn = new TableColumn( table, SWT.NONE );
-      colorColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.3") ); //$NON-NLS-1$
+      colorColumn.setText( Messages.get("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.3") ); //$NON-NLS-1$
       colorColumn.setWidth( 50 );
 
       final PROPS[] propValues = PROPS.values();

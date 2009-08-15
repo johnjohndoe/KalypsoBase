@@ -112,7 +112,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     final ICommandTarget outlineviewer = m_outlineviewer;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         try
         {
@@ -126,7 +126,8 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
           final String themeName = filePath.lastSegment();
           final String type = "gml";
           final String featurePath = "";
-          final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, type, featurePath, source, "sld", styleName, stylePath, "simple" );
+          final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, type, featurePath, source );
+          command.addStyle( styleName, stylePath );
           outlineviewer.postCommand( command, null );
         }
         catch( final Throwable t )

@@ -301,9 +301,9 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   @Override
   public String getToolTip( )
   {
-    final StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
+    final StringBuffer sb = new StringBuffer().append( Messages.get( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
 
-    sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) );
+    sb.append( Messages.get( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) );
 
     return sb.toString();
   }

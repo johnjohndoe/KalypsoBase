@@ -154,7 +154,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       else if( property instanceof Feature )
         linkedFeature = (Feature) property;
       else
-        return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        return new NotImplementedFeatureDialog( Messages.get( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.get( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return new JumpToFeatureDialog( listener, linkedFeature, null );
     }

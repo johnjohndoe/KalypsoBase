@@ -147,7 +147,7 @@ public class FeatureEditor extends EditorPart
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
-      throw new PartInitException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.0") ); //$NON-NLS-1$
+      throw new PartInitException( Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.0") ); //$NON-NLS-1$
 
     setSite( site );
 
@@ -161,7 +161,7 @@ public class FeatureEditor extends EditorPart
   protected final void setInput( final IEditorInput input )
   {
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.1") ); //$NON-NLS-1$
 
     super.setInput( input );
 
@@ -183,7 +183,7 @@ public class FeatureEditor extends EditorPart
       e.printStackTrace();
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.2"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.3"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getSite().getShell(), Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.2"), Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.3"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -259,7 +259,7 @@ public class FeatureEditor extends EditorPart
         status = StatusUtilities.statusFromThrowable( targetException, msg );
       }
 
-      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.5"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.5"), Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final InterruptedException e )
     {
@@ -269,7 +269,7 @@ public class FeatureEditor extends EditorPart
 
   protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.7"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.7"), 1000 ); //$NON-NLS-1$
 
     InputStream contents = null;
     try
@@ -289,7 +289,7 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.8") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.8") ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -301,7 +301,7 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.9") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get("org.kalypso.ui.editor.featureeditor.FeatureEditor.9") ) ); //$NON-NLS-1$
     }
     finally
     {

@@ -131,7 +131,7 @@ public class FilterLabelProvider extends LabelProvider
         if( element instanceof SpatialOperation )
         {
           if( type == OperationDefines.UNKNOWN )
-            return Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.4"); //$NON-NLS-1$
+            return Messages.get("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.4"); //$NON-NLS-1$
 
           return operation.getOperatorName();
         }
@@ -155,7 +155,7 @@ public class FilterLabelProvider extends LabelProvider
           final Expression firstExpression = ((PropertyIsCOMPOperation) operation).getFirstExpression();
           final Expression secondExpression = ((PropertyIsCOMPOperation) operation).getSecondExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
-            return Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.5"); //$NON-NLS-1$
+            return Messages.get("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.5"); //$NON-NLS-1$
           else if( firstExpression == null || secondExpression == null )
             return OperationDefines.getNameById( id ) + " *";// "X = VALUE"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
@@ -179,7 +179,7 @@ public class FilterLabelProvider extends LabelProvider
         {
           final Literal literal = ((PropertyIsLikeOperation) operation).getLiteral();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
-            return Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.6"); //$NON-NLS-1$
+            return Messages.get("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.6"); //$NON-NLS-1$
           else if( literal == null )
             return OperationDefines.getNameById( id ) + " *";// "TEXT isLike"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
@@ -189,7 +189,7 @@ public class FilterLabelProvider extends LabelProvider
         {
           final Expression expression = ((PropertyIsNullOperation) operation).getExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
-            return Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.7"); //$NON-NLS-1$
+            return Messages.get("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.7"); //$NON-NLS-1$
           else if( expression == null )
             return OperationDefines.getNameById( id ) + " *";// "X = NULL"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );
@@ -199,7 +199,7 @@ public class FilterLabelProvider extends LabelProvider
           final Expression upperBoundary = ((PropertyIsBetweenOperation) operation).getUpperBoundary();
           final Expression lowerBoundary = ((PropertyIsBetweenOperation) operation).getLowerBoundary();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
-            return Messages.getString("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.8"); //$NON-NLS-1$
+            return Messages.get("org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.8"); //$NON-NLS-1$
           else if( upperBoundary == null || lowerBoundary == null )
             return OperationDefines.getNameById( id ) + " *"; //$NON-NLS-1$
           return OperationDefines.getNameById( id );// "VALUE1 < X < VALUE2";
