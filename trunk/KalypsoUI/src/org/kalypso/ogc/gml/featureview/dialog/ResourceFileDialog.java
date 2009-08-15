@@ -109,7 +109,7 @@ public class ResourceFileDialog implements IFeatureDialog
 
   public String getLabel( )
   {
-    String label = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$
+    String label = Messages.get("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$
     if( getResourceFile() != null )
       label = getResourceFile().toString();
     return label;

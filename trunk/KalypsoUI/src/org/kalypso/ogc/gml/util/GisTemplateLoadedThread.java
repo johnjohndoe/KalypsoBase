@@ -88,7 +88,7 @@ public class GisTemplateLoadedThread extends Thread
       }
       if( maxWait-- < 0 ) // do not wait for ever
       {
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.util.GisTemplateLoadedThread.0") ); //$NON-NLS-1$
+        System.out.println( Messages.get("org.kalypso.ogc.gml.util.GisTemplateLoadedThread.0") ); //$NON-NLS-1$
         break;
       }
     }

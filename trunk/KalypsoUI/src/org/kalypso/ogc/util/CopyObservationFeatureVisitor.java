@@ -183,13 +183,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       if( targetlink == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() );//$NON-NLS-1$
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.get( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() );//$NON-NLS-1$
         return true;
       }
 
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.2" ) + f.getId() );//$NON-NLS-1$
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.get( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.2" ) + f.getId() );//$NON-NLS-1$
         return true;
       }
 
@@ -254,7 +254,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + f.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ $NON-NLS-2$
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.get( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + f.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ $NON-NLS-2$
     }
 
     return true;
@@ -364,7 +364,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
-          m_logger.log( Level.WARNING, LoggerUtilities.CODE_NONE, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.9" ) );//$NON-NLS-1$
+          m_logger.log( Level.WARNING, LoggerUtilities.CODE_NONE, Messages.get( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.9" ) );//$NON-NLS-1$
         else
           throw new SensorException( e );
       }
@@ -405,7 +405,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     catch( final SensorException e )
     {
       // tricky: wrap the exception with timeserie-link as text to have a better error message
-      throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + sourceref, e );//$NON-NLS-1$
+      throw new SensorException( Messages.get( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + sourceref, e );//$NON-NLS-1$
     }
   }
 

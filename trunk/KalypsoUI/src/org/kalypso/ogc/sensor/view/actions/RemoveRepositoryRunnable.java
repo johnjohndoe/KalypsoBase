@@ -73,7 +73,7 @@ public class RemoveRepositoryRunnable implements Runnable
     if( m_repository == null )
       return;
 
-    if( !MessageDialog.openConfirm( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.0"), Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.1") + m_repository.toString() + Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    if( !MessageDialog.openConfirm( m_shell, Messages.get("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.0"), Messages.get("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.1") + m_repository.toString() + Messages.get("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       return;
 
     m_container.removeRepository( m_repository );

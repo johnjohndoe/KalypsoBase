@@ -69,10 +69,10 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
 
   public GMLSchemaSelectionPage( )
   {
-    super( "gmlschemaSelectionPage", Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "gmlschemaSelectionPage", Messages.get("org.kalypso.ui.wizard.GMLSchemaSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     
     setPageComplete( false );
-    setMessage( Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.2") ); //$NON-NLS-1$
+    setMessage( Messages.get("org.kalypso.ui.wizard.GMLSchemaSelectionPage.2") ); //$NON-NLS-1$
   }
 
   /**

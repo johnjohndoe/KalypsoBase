@@ -207,18 +207,18 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   {
     /* A one value scale makes no sense. */
     if( values.size() <= 1 )
-      return new ScaleUnit( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.0"), 1 ); //$NON-NLS-1$
+      return new ScaleUnit( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.0"), 1 ); //$NON-NLS-1$
 
     /* Need for kilometers? */
     final Double firstValue = values.get( 0 );
     if( firstValue.doubleValue() > 1000 )
-      return new ScaleUnit( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.1"), 1000 ); //$NON-NLS-1$
+      return new ScaleUnit( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.1"), 1000 ); //$NON-NLS-1$
 
     final Double secondValue = values.get( 1 );
     if( secondValue.doubleValue() > 1000 )
-      return new ScaleUnit( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.2"), 1000 ); //$NON-NLS-1$
+      return new ScaleUnit( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.2"), 1000 ); //$NON-NLS-1$
 
-    return new ScaleUnit( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.3"), 1 ); //$NON-NLS-1$
+    return new ScaleUnit( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.3"), 1 ); //$NON-NLS-1$
   }
 
   /**
@@ -244,7 +244,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   {
     /* Setup the graphics context. */
     g.setColor( Color.BLACK );
-    g.setFont( new Font( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.4"), Font.PLAIN, 10 ) ); //$NON-NLS-1$
+    g.setFont( new Font( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.4"), Font.PLAIN, 10 ) ); //$NON-NLS-1$
 
     /* If it is the right graphic type, setup it further. */
     if( g instanceof Graphics2D )
@@ -300,7 +300,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     final LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
     for( int i = 0; i < values.size(); i++ )
     {
-      final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5"), (values.get( i ) / scaleUnit.getFactor()) ), g ); //$NON-NLS-1$
+      final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5"), (values.get( i ) / scaleUnit.getFactor()) ), g ); //$NON-NLS-1$
 
       final int x = START_X + (i * WIDTH_SUB_RECT) - (int) stringBounds.getWidth() / 2;
       final int y = START_Y + MAX_HEIGHT;
@@ -320,7 +320,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
       /* Calculate some things for the scale string. */
       final BigDecimal bigScale = new BigDecimal( scale, new MathContext( 3, RoundingMode.HALF_UP ) );
-      final String scaleString = Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.6") + bigScale.toPlainString(); //$NON-NLS-1$
+      final String scaleString = Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.6") + bigScale.toPlainString(); //$NON-NLS-1$
       final int scaleWidth = g.getFontMetrics().stringWidth( scaleString );
       final int startScaleString = START_X + WIDTH_SCALE - scaleWidth;
 
@@ -362,7 +362,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       if( ((stringBounds.getX() > endPointDrawnText + 5) && (stringBounds.getMaxX() < startPointLastText - 5)) || i == values.size() - 1 )
       {
         /* Draw the text. */
-        g.drawString( String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7"), values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() ); //$NON-NLS-1$
+        g.drawString( String.format( Messages.get("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7"), values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() ); //$NON-NLS-1$
 
         /* Store the last point to see, if the next text is overlapping. */
         endPointDrawnText = stringBounds.getX() + stringBounds.getWidth();

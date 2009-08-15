@@ -133,7 +133,7 @@ public class DumpExtendedHandler extends AbstractHandler
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), "Struktur konnte nicht exportiert werden", status ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, Messages.get("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), "Struktur konnte nicht exportiert werden", status ); //$NON-NLS-1$
     
     return null;
   }

@@ -179,15 +179,15 @@ public class ButtonModifier implements IFeatureModifier
           return handler.getText( value );
       }
       if( value instanceof Feature )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.element"); //$NON-NLS-1$
+        return Messages.get("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.element"); //$NON-NLS-1$
       else if( value instanceof FeatureList )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.elements"); //$NON-NLS-1$
+        return Messages.get("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.elements"); //$NON-NLS-1$
       else if( value instanceof GM_Object )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.geometry"); //$NON-NLS-1$
+        return Messages.get("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.geometry"); //$NON-NLS-1$
       else if( ftp instanceof IRelationType )
-        return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.link"); //$NON-NLS-1$
+        return Messages.get("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.link"); //$NON-NLS-1$
     }
-    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.edit"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ogc.gml.featureview.modfier.ButtonModifier.edit"); //$NON-NLS-1$
   }
 
   /**

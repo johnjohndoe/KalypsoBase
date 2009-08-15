@@ -83,7 +83,7 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name? JA: mapModell.getName()!
-    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
+    return FileUtilities.validateName( Messages.get( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
   }
 
   /**
@@ -94,19 +94,19 @@ public class ExportableMap implements IExportableObject
   {
     try
     {
-      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.get( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
 
       final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
 
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.get( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.get( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -131,7 +131,7 @@ public class ExportableMap implements IExportableObject
   public String getCategory( )
   {
     // TODO bessere category
-    return Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.4" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ui.editor.mapeditor.ExportableMap.4" ); //$NON-NLS-1$
   }
 
   /**

@@ -104,7 +104,7 @@ class XYCurveSerie extends Series
 
     final IObservation obs = m_curve.getObservation();
     if( obs == null )
-      logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0") + m_curve.getName() ); //$NON-NLS-1$
+      logger.warning( Messages.get("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0") + m_curve.getName() ); //$NON-NLS-1$
     else
     {
       m_values = obs.getValues( m_curve.getArguments() );
@@ -121,7 +121,7 @@ class XYCurveSerie extends Series
         }
       }
       else
-        logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1") + obs ); //$NON-NLS-1$
+        logger.warning( Messages.get("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1") + obs ); //$NON-NLS-1$
     }
   }
 

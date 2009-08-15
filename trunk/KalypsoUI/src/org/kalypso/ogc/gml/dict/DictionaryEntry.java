@@ -66,7 +66,7 @@ public class DictionaryEntry extends Job implements IPoolListener
 
   public DictionaryEntry( final IPoolableObjectType key )
   {
-    super( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.waitingforresource") + key.getLocation() ); //$NON-NLS-1$
+    super( Messages.get("org.kalypso.ogc.gml.dict.DictionaryEntry.waitingforresource") + key.getLocation() ); //$NON-NLS-1$
 
     m_key = key;
 
@@ -126,7 +126,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   protected IStatus run( final IProgressMonitor monitor )
   {
     if( isDisposed() )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.alreadyDisposed") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.get("org.kalypso.ogc.gml.dict.DictionaryEntry.alreadyDisposed") ); //$NON-NLS-1$
 
     // Just waits until we first where called from the pool.
     while( m_status == null )

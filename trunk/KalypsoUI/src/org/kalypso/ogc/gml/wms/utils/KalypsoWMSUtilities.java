@@ -127,7 +127,7 @@ public class KalypsoWMSUtilities
         catch( final Throwable t )
         {
           // protect against bad extensions
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities.3") + id, t ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.get("org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities.3") + id, t ); //$NON-NLS-1$
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
           return getDefaultImageProvider( themeName, layers, styles, service, localSRS );

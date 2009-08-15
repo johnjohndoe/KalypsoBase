@@ -170,7 +170,7 @@ public class MapView extends AbstractMapPart implements IViewPart
       }
       catch( final CoreException e )
       {
-        ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.views.map.MapView.6" ), Messages.getString( "org.kalypso.ui.views.map.MapView.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( getSite().getShell(), Messages.get( "org.kalypso.ui.views.map.MapView.6" ), Messages.get( "org.kalypso.ui.views.map.MapView.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 

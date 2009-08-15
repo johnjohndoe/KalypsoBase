@@ -94,7 +94,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     /* Theme name */
     final Label nameLabel = new Label( composite, SWT.NONE );
-    nameLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.0" ) ); //$NON-NLS-1$
+    nameLabel.setText( Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.0" ) ); //$NON-NLS-1$
 
     final Text nameText = new Text( composite, SWT.BORDER );
     nameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -110,7 +110,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     /* Theme visibility */
     final Label visibilityLabel = new Label( composite, SWT.NONE );
-    visibilityLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.2" ) ); //$NON-NLS-1$
+    visibilityLabel.setText( Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.2" ) ); //$NON-NLS-1$
 
     final Button visibilityButton = new Button( composite, SWT.CHECK );
     visibilityButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
@@ -154,7 +154,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
     if( theme == null )
       return false;
 
-    final CompositeCommand allCommands = new CompositeCommand( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
+    final CompositeCommand allCommands = new CompositeCommand( Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
     if( m_themeName != null )
       allCommands.addCommand( new RenameThemeCommand( theme, new I10nString( m_themeName ) ) );
 
@@ -200,7 +200,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     /* No empty 'name' allowed */
     if( m_themeName != null && m_themeName.trim().isEmpty() )
-      return Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.3" );
+      return Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.3" );
 
     // everything else is valid
     return null;

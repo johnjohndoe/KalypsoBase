@@ -173,7 +173,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     m_text = null;
 
-    m_updateScaleJob = new UpdateScaleJob(Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.0")); //$NON-NLS-1$
+    m_updateScaleJob = new UpdateScaleJob(Messages.get("org.kalypso.ui.views.map.MapScaleStatusLineItem.0")); //$NON-NLS-1$
   }
 
   /**
@@ -194,7 +194,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     /* Create the label. */
     final Label label = new Label( m_composite, SWT.NONE );
     label.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, true ) );
-    label.setText( Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.1") ); //$NON-NLS-1$
+    label.setText( Messages.get("org.kalypso.ui.views.map.MapScaleStatusLineItem.1") ); //$NON-NLS-1$
 
     /* Create the text. */
     m_text = new Text( m_composite, SWT.BORDER );
@@ -228,7 +228,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
         catch( final NumberFormatException ex )
         {
           /* Tell the user. */
-          ErrorDialog.openError( source.getShell(), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.5"), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.6"), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( source.getShell(), Messages.get("org.kalypso.ui.views.map.MapScaleStatusLineItem.5"), Messages.get("org.kalypso.ui.views.map.MapScaleStatusLineItem.6"), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );

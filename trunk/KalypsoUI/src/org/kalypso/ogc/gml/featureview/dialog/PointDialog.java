@@ -93,12 +93,12 @@ public class PointDialog extends Dialog
 
     /* Configuring the composite. */
     Shell shell = panel.getShell();
-    shell.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.data" ) ); //$NON-NLS-1$
+    shell.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.data" ) ); //$NON-NLS-1$
 
     /* The label for the input data. */
     Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin" ) ); //$NON-NLS-1$
+    label.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin" ) ); //$NON-NLS-1$
     label.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
@@ -123,7 +123,7 @@ public class PointDialog extends Dialog
       m_label[i] = new Label( group, SWT.NONE );
       m_label[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      m_label[i].setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) ); //$NON-NLS-1$
+      m_label[i].setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) ); //$NON-NLS-1$
       m_label[i].setToolTipText( "" ); //$NON-NLS-1$
 
       m_label[i].setAlignment( SWT.LEFT );
@@ -140,7 +140,7 @@ public class PointDialog extends Dialog
     /* The label for the input data. */
     Label label1 = new Label( panel, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label1.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs" ) ); //$NON-NLS-1$
+    label1.setText( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs" ) ); //$NON-NLS-1$
     label1.setAlignment( SWT.LEFT );
 
     /* A new composite for the coordinate system panel. */

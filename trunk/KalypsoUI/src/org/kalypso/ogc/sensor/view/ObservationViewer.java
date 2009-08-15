@@ -195,7 +195,7 @@ public class ObservationViewer extends Composite
 
     // 1. HREF
     m_lblObs = new Label( header, SWT.LEFT );
-    m_lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
+    m_lblObs.setText( Messages.get( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
     m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
     m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
@@ -217,7 +217,7 @@ public class ObservationViewer extends Composite
     } );
 
     m_btnSelectObsLocal = new Button( header, SWT.NONE );
-    m_btnSelectObsLocal.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.1" ) ); //$NON-NLS-1$
+    m_btnSelectObsLocal.setText( Messages.get( "org.kalypso.ogc.sensor.view.ObservationViewer.1" ) ); //$NON-NLS-1$
     m_btnSelectObsLocal.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsLocal.addSelectionListener( new SelectionListener()
     {
@@ -244,7 +244,7 @@ public class ObservationViewer extends Composite
 
                 final String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.3" ) ); //$NON-NLS-1$
+                  m_txtHref.setText( Messages.get( "org.kalypso.ogc.sensor.view.ObservationViewer.3" ) ); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
@@ -312,7 +312,7 @@ public class ObservationViewer extends Composite
     } );
     // 2. Anzeige
     showRadioButton = new Button( header, SWT.CHECK );
-    showRadioButton.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.8" ) ); //$NON-NLS-1$
+    showRadioButton.setText( Messages.get( "org.kalypso.ogc.sensor.view.ObservationViewer.8" ) ); //$NON-NLS-1$
     showRadioButton.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     showRadioButton.setSelection( false );
     showRadioButton.addSelectionListener( new SelectionListener()

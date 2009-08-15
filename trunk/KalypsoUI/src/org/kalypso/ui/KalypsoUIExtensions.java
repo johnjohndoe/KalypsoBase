@@ -79,7 +79,7 @@ public class KalypsoUIExtensions
 
     final IConfigurationElement factoryElement = map.get( id );
     if( factoryElement == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.KalypsoUIExtensions.1" ) + id ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ui.KalypsoUIExtensions.1" ) + id ) ); //$NON-NLS-1$
 
     return (IFeatureviewControlFactory) factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
@@ -132,7 +132,7 @@ public class KalypsoUIExtensions
       }
     }
 
-    final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.KalypsoUIExtensions.8" ) + componentUiHandlerProviderId ); //$NON-NLS-1$
+    final IStatus status = StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ui.KalypsoUIExtensions.8" ) + componentUiHandlerProviderId ); //$NON-NLS-1$
     KalypsoGisPlugin.getDefault().getLog().log( status );
 
     return null;

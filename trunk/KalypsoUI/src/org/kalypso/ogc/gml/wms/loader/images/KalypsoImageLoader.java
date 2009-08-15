@@ -116,18 +116,18 @@ public class KalypsoImageLoader extends Job
   public IStatus run( final IProgressMonitor monitor )
   {
     /* Start the task. */
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.get("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0"), 1000 ); //$NON-NLS-1$
 
     try
     {
       /* If the provider is missing, tell the user. */
       if( m_provider == null )
-        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1") ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( Messages.get("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1") ); //$NON-NLS-1$
 
       /* Load the image. This could take a while. */
       m_buffer = m_provider.getImage( m_width, m_height, m_bbox );
 
-      return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2") ); //$NON-NLS-1$
+      return StatusUtilities.createOkStatus( Messages.get("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2") ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

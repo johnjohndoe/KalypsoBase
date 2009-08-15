@@ -117,7 +117,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
           // we are in the ui-thread so we get a shell here
           final Shell shell = m_targetPart.getSite().getShell();
           if( shell != null )
-            ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate.1"), status ); //$NON-NLS-1$
+            ErrorDialog.openError( shell, action.getText(), Messages.get("org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate.1"), status ); //$NON-NLS-1$
         }
       }
     }

@@ -65,7 +65,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
    */
   public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule, final boolean bUndo )
   {
-    super( bUndo ? "Undo" : "Redo", null, bUndo ? Messages.getString("org.kalypso.util.command.UndoRedoAction.2") : Messages.getString("org.kalypso.util.command.UndoRedoAction.3") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( bUndo ? "Undo" : "Redo", null, bUndo ? Messages.get("org.kalypso.util.command.UndoRedoAction.2") : Messages.get("org.kalypso.util.command.UndoRedoAction.3") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_commandManager = commandManager;
     m_rule = rule;

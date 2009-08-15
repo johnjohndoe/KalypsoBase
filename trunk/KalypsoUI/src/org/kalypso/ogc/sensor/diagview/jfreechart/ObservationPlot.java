@@ -158,7 +158,7 @@ public class ObservationPlot extends XYPlot
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
 
-    setNoDataMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
+    setNoDataMessage( Messages.get( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
   }
 
   public void dispose( )
@@ -351,7 +351,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.get( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + Messages.get( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
@@ -436,7 +436,7 @@ public class ObservationPlot extends XYPlot
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.4" ), e ); //$NON-NLS-1$
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.get( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.4" ), e ); //$NON-NLS-1$
             }
           }
         }

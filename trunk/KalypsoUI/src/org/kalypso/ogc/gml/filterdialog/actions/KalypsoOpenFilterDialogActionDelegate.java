@@ -65,7 +65,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( ft != null )
       open = dialog.open();
     else
-      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.dialog" ), Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.invalid" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.get( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.dialog" ), Messages.get( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.invalid" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if( open == Window.OK )
     {
 
@@ -91,7 +91,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       }
       if( multiStatus != null )
       {
-        MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.error" ) + multiStatus.getSeverity(), multiStatus.getException().getMessage() ); //$NON-NLS-1$
+        MessageDialog.openWarning( shell, Messages.get( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.error" ) + multiStatus.getSeverity(), multiStatus.getException().getMessage() ); //$NON-NLS-1$
         return;
       }
       // handle the new selection

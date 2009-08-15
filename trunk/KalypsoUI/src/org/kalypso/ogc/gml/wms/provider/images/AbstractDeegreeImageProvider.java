@@ -187,7 +187,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     if( m_wms == null )
     {
       if( m_service == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.1" ) ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.1" ) ) ); //$NON-NLS-1$
 
       /* Create the service URL. */
       final URL serviceURL = parseServiceUrl( m_service );
@@ -230,7 +230,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.3" ), service, e.getLocalizedMessage() ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( Messages.get( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.3" ), service, e.getLocalizedMessage() ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -274,7 +274,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
     catch( final Exception ex )
     {
-      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.5" ) ) ); //$NON-NLS-1$
+      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, Messages.get( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.5" ) ) ); //$NON-NLS-1$
     }
 
     return null;
@@ -371,9 +371,9 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         final OGCWebServiceRequest mapRequest = mapResponse.getRequest();
         final OGCWebServiceException exception = mapResponse.getException();
 
-        final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.1" ), null ); //$NON-NLS-1$
-        status.add( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.2" ) + mapRequest + "'" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        status.add( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.4" ) ) ); //$NON-NLS-1$
+        final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, Messages.get( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.1" ), null ); //$NON-NLS-1$
+        status.add( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.2" ) + mapRequest + "'" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        status.add( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.4" ) ) ); //$NON-NLS-1$
         status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, exception.toString(), "\n", null ) ); //$NON-NLS-1$
 
         throw new CoreException( status );

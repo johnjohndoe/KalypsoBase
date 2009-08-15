@@ -156,7 +156,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   public void createControl( final Composite parent )
   {
     if( parent.isDisposed() )
-      System.out.println( Messages.getString( "org.kalypso.ui.editor.mapeditor.GisMapOutlinePage.0" ) ); //$NON-NLS-1$
+      System.out.println( Messages.get( "org.kalypso.ui.editor.mapeditor.GisMapOutlinePage.0" ) ); //$NON-NLS-1$
 
     m_outlineViewer.createControl( parent );
 

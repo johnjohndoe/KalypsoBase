@@ -95,7 +95,7 @@ public class SaveThemeHandler extends AbstractHandler
             // only save if map is dirty
             if( workspace != null && workspace.isDirty() )
             {
-              if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+              if( !MessageDialog.openConfirm( shell, Messages.get( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1" ), Messages.get( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
                 return null;
 
               final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme) activeTheme;
@@ -120,7 +120,7 @@ public class SaveThemeHandler extends AbstractHandler
                 e.printStackTrace();
 
                 final CoreException ce = (CoreException) e.getTargetException();
-                ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+                ErrorDialog.openError( shell, Messages.get( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3" ), Messages.get( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               catch( final InterruptedException e )
               {

@@ -83,10 +83,10 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.1" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.1" ) ); //$NON-NLS-1$
 
     final Shell shell = part.getSite().getShell();
-    final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
+    final String title = Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
 
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
@@ -94,7 +94,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null || featureList.size() == 0 )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
@@ -107,7 +107,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final String fileName = theme.getLabel();
     final String[] filterExtensions = new String[] { "*.shp", "*.dbf" }; //$NON-NLS-1$ //$NON-NLS-2$
     final String[] filterNames = new String[] {
-        Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9" ), Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$
 
     final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gml2shapeExport", filterExtensions, filterNames );
     if( file == null )

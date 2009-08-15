@@ -103,21 +103,21 @@ public class CascadingThemeHelper
   }
 
   /**
-   * Finds Cascading theme with the given theme property from the map model. Searches only for instances of
+   * Finds Cascading theme where the property 'themeId' is set to the given value. Searches only for instances of
    * CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeProperty
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
    */
-  public static final CascadingKalypsoTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeProperty )
+  public static final CascadingKalypsoTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeID )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
       final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
 
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeProperty ) )
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeID ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;

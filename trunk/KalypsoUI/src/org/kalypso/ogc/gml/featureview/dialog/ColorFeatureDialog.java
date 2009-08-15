@@ -84,7 +84,7 @@ public class ColorFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.ColorPropertyDialog.editvalues" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.gml.featureview.dialog.ColorPropertyDialog.editvalues" ); //$NON-NLS-1$
   }
 
   /**

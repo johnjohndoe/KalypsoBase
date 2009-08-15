@@ -117,7 +117,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
     if( m_widgetClass == null || m_context == null || m_pluginId == null )
     {
       final String id = config.getAttribute( "id" ); //$NON-NLS-1$
-      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.2") + id + Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, Messages.get("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.2") + id + Messages.get("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new CoreException( status );
     }
   }

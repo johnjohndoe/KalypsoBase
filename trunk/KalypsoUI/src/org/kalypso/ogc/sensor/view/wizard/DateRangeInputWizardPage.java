@@ -89,8 +89,8 @@ public class DateRangeInputWizardPage extends WizardPage
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
 
-    setTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.2") ); //$NON-NLS-1$
+    setTitle( Messages.get("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.get("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.2") ); //$NON-NLS-1$
   }
 
   public DateRange getDateRange()
@@ -123,7 +123,7 @@ public class DateRangeInputWizardPage extends WizardPage
     }
 
     // else inform user about invalid input
-    MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.3"), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.4") + err ); //$NON-NLS-1$ //$NON-NLS-2$
+    MessageDialog.openInformation( getShell(), Messages.get("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.3"), Messages.get("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.4") + err ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

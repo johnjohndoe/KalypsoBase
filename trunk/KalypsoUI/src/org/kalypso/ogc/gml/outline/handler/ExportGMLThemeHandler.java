@@ -78,10 +78,10 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.1") ); //$NON-NLS-1$
 
     final Shell shell = part.getSite().getShell();
-    final String title = Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.2"); //$NON-NLS-1$
+    final String title = Messages.get("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.2"); //$NON-NLS-1$
 
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
@@ -89,14 +89,14 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.3") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.get("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.3") ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
     /* ask user for file */
     final String fileName = theme.getLabel();
     final String[] filterExtensions = new String[] { "*.gml" }; //$NON-NLS-1$
-    final String[] filterNames = new String[] { Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ) }; //$NON-NLS-1$
+    final String[] filterNames = new String[] { Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ) }; //$NON-NLS-1$
 
     final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gmlExport", filterExtensions, filterNames );
     if( file == null )

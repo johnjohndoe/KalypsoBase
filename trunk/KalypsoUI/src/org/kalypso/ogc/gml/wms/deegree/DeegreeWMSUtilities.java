@@ -120,7 +120,7 @@ public class DeegreeWMSUtilities
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
-        throw new Exception( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ) ); //$NON-NLS-1$
+        throw new Exception( Messages.get( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ) ); //$NON-NLS-1$
 
       return capabilities;
     }
@@ -238,7 +238,7 @@ public class DeegreeWMSUtilities
     catch( final Exception ex )
     {
       /* Create the error status. */
-      final IStatus status = StatusUtilities.statusFromThrowable( ex, Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.35" ) ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( ex, Messages.get( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.35" ) ); //$NON-NLS-1$
 
       throw new CoreException( status );
     }
@@ -320,7 +320,7 @@ public class DeegreeWMSUtilities
   {
     final Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44" ) + name ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44" ) + name ) ); //$NON-NLS-1$
 
     return operation;
   }

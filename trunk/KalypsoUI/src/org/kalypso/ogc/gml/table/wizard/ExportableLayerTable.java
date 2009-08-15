@@ -123,7 +123,7 @@ public class ExportableLayerTable implements IExportableObject
   public String getCategory( )
   {
     // TODO bessere Category zurückgeben
-    return Messages.getString( "org.kalypso.ogc.gml.table.command.ExportableLayerTable.1" ); //$NON-NLS-1$
+    return Messages.get( "org.kalypso.ogc.gml.table.command.ExportableLayerTable.1" ); //$NON-NLS-1$
   }
 
   /**

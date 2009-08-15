@@ -58,7 +58,7 @@ public final class PasteFeatureAction extends Action
 
   private Clipboard m_clipboard = null;
 
-  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0"); //$NON-NLS-1$
+  public static final String NAME = Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0"); //$NON-NLS-1$
 
   public PasteFeatureAction(final  CommandableWorkspace workspace, final Feature parentFeature, IRelationType propertyName,
       Clipboard clipboard )

@@ -134,7 +134,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.1" ), Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.get( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.1" ), Messages.get( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   };
@@ -230,12 +230,12 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
     if( !(input instanceof IFileEditorInput) )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.3" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.get( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.3" ) ); //$NON-NLS-1$
 
     if( m_layerTable == null )
       return;
 
-    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.4" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.get( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.4" ), 1000 ); //$NON-NLS-1$
 
     final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
 
@@ -334,7 +334,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
-    final IWizardPage page = new ExportTableOptionsPage( "optionPage", Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.6" ), ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IWizardPage page = new ExportTableOptionsPage( "optionPage", Messages.get( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.6" ), ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
   }

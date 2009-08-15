@@ -123,7 +123,7 @@ public class MoveFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand.0"); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked") //$NON-NLS-1$

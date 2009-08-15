@@ -87,7 +87,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
     final InputSource source = new InputSource( pbr );
     if( systemId == null )
     {
-      throw new NullPointerException( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument.0" ) ); //$NON-NLS-1$
+      throw new NullPointerException( Messages.get( "org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument.0" ) ); //$NON-NLS-1$
     }
     setSystemId( systemId );
     final DocumentBuilder builder = getDocumentBuilder();

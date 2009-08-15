@@ -118,7 +118,7 @@ public class FillEditorComposite extends Composite
         updatePreview();
 
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       e.printStackTrace();
     }
@@ -132,7 +132,8 @@ public class FillEditorComposite extends Composite
 
     createOpacityControl();
 
-    createTypeControl();
+    // uncommenten until we support different fill types
+// createTypeControl();
 
     if( m_previewVisible == true )
       createPreviewControl();
@@ -143,17 +144,17 @@ public class FillEditorComposite extends Composite
   {
     /* Color */
     final Label colorTextLabel = new Label( this, SWT.NONE );
-    colorTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.0") ); //$NON-NLS-1$
+    colorTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.0") ); //$NON-NLS-1$
 
     m_colorLabel = new Label( this, SWT.BORDER );
     m_colorLabel.setText( "     " ); //$NON-NLS-1$
-    GridData gridData = new GridData( SWT.END, SWT.CENTER, true, false );
+    final GridData gridData = new GridData( SWT.END, SWT.CENTER, true, false );
     gridData.widthHint = 16;
     gridData.heightHint = 16;
 
     m_colorLabel.setLayoutData( gridData );
 
-    java.awt.Color fillColor = m_fill.getFill( null );
+    final java.awt.Color fillColor = m_fill.getFill( null );
     m_color = new Color( m_colorLabel.getDisplay(), fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue() );
 
     m_colorLabel.setBackground( m_color );
@@ -163,7 +164,7 @@ public class FillEditorComposite extends Composite
     {
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         final ColorDialog colorDialog = new ColorDialog( FillEditorComposite.this.getShell() );
         final RGB chosenColor = colorDialog.open();
@@ -184,7 +185,7 @@ public class FillEditorComposite extends Composite
        * @see org.eclipse.swt.events.MouseTrackAdapter#mouseEnter(org.eclipse.swt.events.MouseEvent)
        */
       @Override
-      public void mouseEnter( MouseEvent e )
+      public void mouseEnter( final MouseEvent e )
       {
         setCursor( new Cursor( null, SWT.CURSOR_HAND ) );
       }
@@ -193,7 +194,7 @@ public class FillEditorComposite extends Composite
        * @see org.eclipse.swt.events.MouseTrackAdapter#mouseExit(org.eclipse.swt.events.MouseEvent)
        */
       @Override
-      public void mouseExit( MouseEvent e )
+      public void mouseExit( final MouseEvent e )
       {
         setCursor( new Cursor( null, SWT.CURSOR_ARROW ) );
       }
@@ -205,19 +206,19 @@ public class FillEditorComposite extends Composite
     /* fill type combo */
     // combo text
     final Label comboTextLabel = new Label( this, SWT.NONE );
-    comboTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.3") ); //$NON-NLS-1$
+    comboTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.3") ); //$NON-NLS-1$
 
     final ComboViewer fillTypeCombo = new ComboViewer( this, SWT.READ_ONLY );
-    GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
+    final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
 
     fillTypeCombo.getControl().setLayoutData( comboGridData );
     fillTypeCombo.setContentProvider( new ArrayContentProvider() );
 
-    String[] types = new String[4];
-    types[0] = Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.4"); //$NON-NLS-1$
-    types[1] = Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.5"); //$NON-NLS-1$
-    types[2] = Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.6"); //$NON-NLS-1$
-    types[3] = Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.7"); //$NON-NLS-1$
+    final String[] types = new String[4];
+    types[0] = Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.4"); //$NON-NLS-1$
+    types[1] = Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.5"); //$NON-NLS-1$
+    types[2] = Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.6"); //$NON-NLS-1$
+    types[3] = Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.7"); //$NON-NLS-1$
     fillTypeCombo.setInput( types );
     fillTypeCombo.setSelection( new StructuredSelection( fillTypeCombo.getElementAt( 0 ) ) );
     fillTypeCombo.getControl().setEnabled( false );
@@ -228,9 +229,8 @@ public class FillEditorComposite extends Composite
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-
         return super.getText( element );
       }
     } );
@@ -238,7 +238,6 @@ public class FillEditorComposite extends Composite
     // selection listener
     fillTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -250,19 +249,19 @@ public class FillEditorComposite extends Composite
         // TODO: get the GraphicFill from a GraphicFill editor.
         // right now, there is just possible a plain fill .
 
-        GraphicFill graphicFill = null;
+        final GraphicFill graphicFill = null;
 
-        if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.9") ) //$NON-NLS-1$
+        if( string == Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.9") ) //$NON-NLS-1$
         {
           m_fill.setGraphicFill( null );
         }
-        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.10") ) //$NON-NLS-1$
+        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.10") ) //$NON-NLS-1$
         {
         }
-        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.11") ) //$NON-NLS-1$
+        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.11") ) //$NON-NLS-1$
         {
         }
-        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.12") ) //$NON-NLS-1$
+        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.12") ) //$NON-NLS-1$
         {
         }
         m_fill.setGraphicFill( graphicFill );
@@ -272,11 +271,11 @@ public class FillEditorComposite extends Composite
     } );
 
     final Label addGraphicLabel = new Label( this, SWT.NONE );
-    addGraphicLabel.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    addGraphicLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.13") ); //$NON-NLS-1$
+    addGraphicLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
+    addGraphicLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.13") ); //$NON-NLS-1$
 
     final Button addGraphicButton = new Button( this, SWT.NONE );
-    GridData addGraphicData = new GridData( SWT.END, SWT.CENTER, true, false );
+    final GridData addGraphicData = new GridData( SWT.END, SWT.CENTER, true, false );
     addGraphicData.widthHint = 20;
 
     addGraphicButton.setLayoutData( addGraphicData );
@@ -291,7 +290,7 @@ public class FillEditorComposite extends Composite
     /* color opacity */
     // spinner text
     final Label opacityTextLabel = new Label( this, SWT.NONE );
-    opacityTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.14") ); //$NON-NLS-1$
+    opacityTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.14") ); //$NON-NLS-1$
 
     final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
     opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
@@ -307,9 +306,9 @@ public class FillEditorComposite extends Composite
 
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        double opac = new BigDecimal( opacitySpinner.getSelection() ).setScale( 2, BigDecimal.ROUND_HALF_UP ).divide( new BigDecimal( 100 ), BigDecimal.ROUND_HALF_UP ).doubleValue();
+        final double opac = new BigDecimal( opacitySpinner.getSelection() ).setScale( 2, BigDecimal.ROUND_HALF_UP ).divide( new BigDecimal( 100 ), BigDecimal.ROUND_HALF_UP ).doubleValue();
         m_fill.setOpacity( opac );
         contentChanged();
       }
@@ -320,21 +319,21 @@ public class FillEditorComposite extends Composite
   {
     final Group previewGroup = new Group( this, SWT.NONE );
     previewGroup.setLayout( new GridLayout() );
-    GridData previewGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData previewGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     previewGridData.horizontalSpan = 2;
     previewGridData.heightHint = 30;
     previewGroup.setLayoutData( previewGridData );
-    previewGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.16") ); //$NON-NLS-1$
+    previewGroup.setText( Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.16") ); //$NON-NLS-1$
 
     /* preview */
     m_previewComp = new Composite( previewGroup, SWT.NONE );
-    GridData previewCompData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData previewCompData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     previewCompData.heightHint = 22;
     m_previewComp.setLayoutData( previewCompData );
 
     this.addDisposeListener( new DisposeListener()
     {
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         disposeControl();
       }
@@ -345,7 +344,7 @@ public class FillEditorComposite extends Composite
     {
       @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         if( m_previewVisible == true )
           updatePreview();
@@ -356,16 +355,16 @@ public class FillEditorComposite extends Composite
   @SuppressWarnings("static-access") //$NON-NLS-1$
   private void updatePreview( )
   {
-    Point point = m_previewComp.getSize();
+    final Point point = m_previewComp.getSize();
     final BigDecimal width = new BigDecimal( point.x ).setScale( 0 );
     final BigDecimal height = new BigDecimal( point.y ).setScale( 0 );
 
     if( width.intValue() == 0 || height.intValue() == 0 )
       return;
 
-    BufferedImage bufferedImage = new BufferedImage( width.intValue(), height.intValue(), BufferedImage.TYPE_INT_RGB );
+    final BufferedImage bufferedImage = new BufferedImage( width.intValue(), height.intValue(), BufferedImage.TYPE_INT_RGB );
 
-    Graphics2D g2D = bufferedImage.createGraphics();
+    final Graphics2D g2D = bufferedImage.createGraphics();
     g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
     g2D.setPaintMode();
@@ -374,11 +373,11 @@ public class FillEditorComposite extends Composite
     g2D.fillRect( 0, 0, width.intValue(), height.intValue() );
 
     g2D.setColor( java.awt.Color.BLACK );
-    Font font = new Font( "SansSerif", Font.BOLD, height.intValue() ); //$NON-NLS-1$
+    final Font font = new Font( "SansSerif", Font.BOLD, height.intValue() ); //$NON-NLS-1$
     g2D.setFont( font );
 
     /* demo text */
-    final String title = Messages.getString("org.kalypso.ui.editor.sldEditor.FillEditorComposite.20"); //$NON-NLS-1$
+    final String title = Messages.get("org.kalypso.ui.editor.sldEditor.FillEditorComposite.20"); //$NON-NLS-1$
     g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() );
 
     FillPainter painter;
@@ -390,15 +389,15 @@ public class FillEditorComposite extends Composite
       painter.prepareGraphics( g2D );
       g2D.fillRect( 0, 0, width.intValue(), height.intValue() );
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       e.printStackTrace();
     }
 
-    ImageConverter converter = new ImageConverter();
+    final ImageConverter converter = new ImageConverter();
     final ImageData convertToSWT = converter.convertToSWT( bufferedImage );
 
-    Image preview = new Image( getDisplay(), convertToSWT );
+    final Image preview = new Image( getDisplay(), convertToSWT );
     if( preview != null )
     {
       m_preview = preview;

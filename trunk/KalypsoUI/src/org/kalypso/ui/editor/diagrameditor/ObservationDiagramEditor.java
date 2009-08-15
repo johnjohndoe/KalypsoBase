@@ -195,7 +195,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
         ExportableChart.DEFAULT_FORMAT ),
         conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
-            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1" ), null ) }; //$NON-NLS-1$
+            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.get( "org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1" ), null ) }; //$NON-NLS-1$
   }
 
   /**
@@ -205,7 +205,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
         "icons/util/img_props.gif" ); //$NON-NLS-1$
-    final IWizardPage page = new ImageExportPage( configuration, "diagprops", Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.4"), imgDesc, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IWizardPage page = new ImageExportPage( configuration, "diagprops", Messages.get("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.4"), imgDesc, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[]
     { page };

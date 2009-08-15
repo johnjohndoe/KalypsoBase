@@ -92,6 +92,6 @@ public class SetShownCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.0") + m_item.getName() + Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.1"); //$NON-NLS-1$ //$NON-NLS-2$
+    return Messages.get("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.0") + m_item.getName() + Messages.get("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.1"); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

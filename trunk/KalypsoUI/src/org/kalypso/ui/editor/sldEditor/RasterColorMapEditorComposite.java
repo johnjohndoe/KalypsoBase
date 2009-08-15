@@ -132,12 +132,12 @@ public abstract class RasterColorMapEditorComposite extends Composite
     final Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fromColorMapGroup.setText( Messages.getString("RasterColorMapEditorComposite.3") ); //$NON-NLS-1$
+    fromColorMapGroup.setText( Messages.get("RasterColorMapEditorComposite.3") ); //$NON-NLS-1$
 
     final Group toColorMapGroup = new Group( this, SWT.NONE );
     toColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    toColorMapGroup.setText( Messages.getString("RasterColorMapEditorComposite.4") ); //$NON-NLS-1$
+    toColorMapGroup.setText( Messages.get("RasterColorMapEditorComposite.4") ); //$NON-NLS-1$
 
     /*
      * Group nodataColorMapGroup = new Group( this, SWT.NONE ); nodataColorMapGroup.setLayoutData( new GridData(
@@ -181,7 +181,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 2, true ) );
-    propertyGroup.setText( Messages.getString("RasterColorMapEditorComposite.5") ); //$NON-NLS-1$
+    propertyGroup.setText( Messages.get("RasterColorMapEditorComposite.5") ); //$NON-NLS-1$
 
     final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
     final GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -197,7 +197,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.UP, false, false );
     gridDataGlobalMax.heightHint = 15;
     globalMaxLabel.setLayoutData( gridDataGlobalMax );
-    globalMaxLabel.setText( Messages.getString("RasterColorMapEditorComposite.6") ); //$NON-NLS-1$
+    globalMaxLabel.setText( Messages.get("RasterColorMapEditorComposite.6") ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -209,13 +209,13 @@ public abstract class RasterColorMapEditorComposite extends Composite
     if( m_globalMax.toString() != null )
       max = m_globalMax.toString();
     else
-      max = Messages.getString("RasterColorMapEditorComposite.7"); //$NON-NLS-1$
+      max = Messages.get("RasterColorMapEditorComposite.7"); //$NON-NLS-1$
     globalMaxValueLabel.setText( max );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
     globalMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
-    globalMinLabel.setText( Messages.getString("RasterColorMapEditorComposite.8") ); //$NON-NLS-1$
+    globalMinLabel.setText( Messages.get("RasterColorMapEditorComposite.8") ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -226,7 +226,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     if( m_globalMin.toString() != null )
       min = m_globalMin.toString();
     else
-      min = Messages.getString("RasterColorMapEditorComposite.9"); //$NON-NLS-1$
+      min = Messages.get("RasterColorMapEditorComposite.9"); //$NON-NLS-1$
 
     globalMinValueLabel.setText( min );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
@@ -234,7 +234,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     /* max value to display */
     final Label displayMaxLabel = new Label( displayComposite, SWT.NONE );
     displayMaxLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    displayMaxLabel.setText( Messages.getString("RasterColorMapEditorComposite.10") ); //$NON-NLS-1$
+    displayMaxLabel.setText( Messages.get("RasterColorMapEditorComposite.10") ); //$NON-NLS-1$
 
     final Text maxValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
@@ -248,7 +248,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     /* min value to display */
     final Label displayMinLabel = new Label( displayComposite, SWT.NONE );
     displayMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    displayMinLabel.setText( Messages.getString("RasterColorMapEditorComposite.11") ); //$NON-NLS-1$
+    displayMinLabel.setText( Messages.get("RasterColorMapEditorComposite.11") ); //$NON-NLS-1$
 
     final Text minValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMinText = new GridData( SWT.END, SWT.UP, true, false );
@@ -380,7 +380,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     // step width spinner
     final Label labelWithSpinner = new Label( displayComposite, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    labelWithSpinner.setText( Messages.getString("RasterColorMapEditorComposite.24") ); //$NON-NLS-1$
+    labelWithSpinner.setText( Messages.get("RasterColorMapEditorComposite.24") ); //$NON-NLS-1$
 
     final Text stepWidthText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataStepWidthText = new GridData( SWT.END, SWT.UP, true, false );

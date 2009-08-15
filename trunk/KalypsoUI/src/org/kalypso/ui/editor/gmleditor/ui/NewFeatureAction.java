@@ -94,7 +94,7 @@ public class NewFeatureAction extends Action
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString("org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.get("org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0"), status ); //$NON-NLS-1$
     }
 
   }

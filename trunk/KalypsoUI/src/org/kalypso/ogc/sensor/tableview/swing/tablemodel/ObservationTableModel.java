@@ -162,7 +162,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         if( m_sharedAxis.getDataClass() != keyAxis.getDataClass() || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() ) || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
         {
           throw new SensorException( m_sharedAxis
-              + Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.0" ) + keyAxis + Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+              + Messages.get( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.0" ) + keyAxis + Messages.get( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -271,7 +271,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     synchronized( m_columns )
     {
       if( m_columns.size() == 0 )
-        return Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.2" ); //$NON-NLS-1$
+        return Messages.get( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.2" ); //$NON-NLS-1$
 
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
@@ -409,7 +409,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           }
         }
         else
-          m_logger.info( Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.3" ) ); //$NON-NLS-1$
+          m_logger.info( Messages.get( "org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.3" ) ); //$NON-NLS-1$
       }
       catch( final SensorException e )
       {

@@ -90,7 +90,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.0" ) + context + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.1" ) + viewRefUrl ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.0" ) + context + Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.1" ) + viewRefUrl ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -126,7 +126,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       startLoadJob();
     }
     else
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
@@ -212,7 +212,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   protected void startLoadJob( )
   {
     final IFile file = m_file;
-    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -235,7 +235,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         }
         catch( final Throwable e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.get( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           setStatus( status );
           return status;
         }

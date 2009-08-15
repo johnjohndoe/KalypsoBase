@@ -87,9 +87,9 @@ public class SwingEclipseUtilities
       final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.0"), t.toString() ); //$NON-NLS-1$
+        MessageDialog.openError( shell, Messages.get("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.0"), t.toString() ); //$NON-NLS-1$
       else
-        JOptionPane.showMessageDialog( null, t.toString(), Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.1"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
+        JOptionPane.showMessageDialog( null, t.toString(), Messages.get("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.1"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
     }
   }
 }

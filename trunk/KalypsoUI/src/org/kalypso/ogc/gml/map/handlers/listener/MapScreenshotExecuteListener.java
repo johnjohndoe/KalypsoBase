@@ -57,7 +57,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( exception ) );
 
     /* Show an error dialog. */
-    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.2"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.3"), StatusUtilities.statusFromThrowable( exception ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.2"), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.3"), StatusUtilities.statusFromThrowable( exception ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -75,7 +75,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     File file = (File) returnValue;
 
     /* Show the user a success dialog. */
-    MessageDialog.openInformation( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.5"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.6") + file.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
+    MessageDialog.openInformation( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.5"), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.6") + file.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -99,7 +99,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     FileDialog dialog = new FileDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.NONE );
 
     /* Set some dialog information. */
-    dialog.setText( Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.9") ); //$NON-NLS-1$
+    dialog.setText( Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.9") ); //$NON-NLS-1$
 
     /* Set the initialize path, if available. */
     if( file != null )
@@ -130,7 +130,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     if( target.exists() )
     {
       /* Ask the user. */
-      boolean confirmed = MessageDialog.openConfirm( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.14"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.15") ); //$NON-NLS-1$ //$NON-NLS-2$
+      boolean confirmed = MessageDialog.openConfirm( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.14"), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.15") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* If he has not confirmed, do not execute the command. */
       if( !confirmed )
@@ -148,7 +148,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     catch( IOException e )
     {
       /* Show an error dialog. */
-      ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.16"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.17") + target.getName() + Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.18"), StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.16"), Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.17") + target.getName() + Messages.get("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.18"), StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       /* Stop executing ... */
       stopIt( event );

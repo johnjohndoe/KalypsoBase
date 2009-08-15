@@ -132,11 +132,11 @@ public class ViewEditorLauncherHelper
     final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, workbenchLabelProvider );
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
-    dialog.setEmptyListMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.0") ); //$NON-NLS-1$
-    dialog.setMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.1") ); //$NON-NLS-1$
+    dialog.setEmptyListMessage( Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.0") ); //$NON-NLS-1$
+    dialog.setMessage( Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.1") ); //$NON-NLS-1$
     dialog.setMultipleSelection( true );
-    dialog.setTitle( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.2") ); //$NON-NLS-1$
-    dialog.setEmptySelectionMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.3") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.2") ); //$NON-NLS-1$
+    dialog.setEmptySelectionMessage( Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.3") ); //$NON-NLS-1$
     dialog.setStatusLineAboveButtons( true );
 
     // klappt nicht?
@@ -182,7 +182,7 @@ public class ViewEditorLauncherHelper
           e.printStackTrace();
 
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.4"), Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( shell, Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.4"), Messages.get("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }

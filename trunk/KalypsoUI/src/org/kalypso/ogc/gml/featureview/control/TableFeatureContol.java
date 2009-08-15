@@ -132,8 +132,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       // TODO: consider the case, where multiple feature-types substitute the target feature type
       final IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
-      final String actionLabel = parentRelation == null ? Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.0") : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() ); //$NON-NLS-1$
-      final IAction addAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.1"), ImageProvider.IMAGE_FEATURE_NEW ) //$NON-NLS-1$
+      final String actionLabel = parentRelation == null ? Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.0") : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() ); //$NON-NLS-1$
+      final IAction addAction = new Action( actionLabel + Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.1"), ImageProvider.IMAGE_FEATURE_NEW ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -144,7 +144,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           if( checkMaxCount() == false )
           {
             final Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.2"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog.openInformation( shell, Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.2"), Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.3") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 
@@ -187,7 +187,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager.add( addAction );
 
       /* IAction for removing a feature. */
-      final IAction removeAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.4"), ImageProvider.IMAGE_FEATURE_DELETE ) //$NON-NLS-1$
+      final IAction removeAction = new Action( actionLabel + Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.4"), ImageProvider.IMAGE_FEATURE_DELETE ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -198,7 +198,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           if( canDelete() == false )
           {
             final Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog.openInformation( shell, actionLabel + Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5"), Messages.get("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 

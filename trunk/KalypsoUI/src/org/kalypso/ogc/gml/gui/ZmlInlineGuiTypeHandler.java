@@ -118,7 +118,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     // if( o == null )
     // return prefix + "-";
     // return prefix + ( (IObservation)o ).getName();
-    return Messages.getString("org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler.1"); //$NON-NLS-1$
+    return Messages.get("org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler.1"); //$NON-NLS-1$
   }
 
   /**
