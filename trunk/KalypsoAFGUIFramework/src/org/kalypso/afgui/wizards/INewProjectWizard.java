@@ -41,17 +41,13 @@
 package org.kalypso.afgui.wizards;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.INewWizard;
 
 /**
  * @author Dirk Kuch
  */
-public interface INewProjectWizard extends IWizard
+public interface INewProjectWizard extends INewWizard
 {
-  public void init( IWorkbench workbench, IStructuredSelection currentSelection );
-
   public void setActivateScenarioOnPerformFinish( boolean b );
 
   public IProject getNewProject( );
