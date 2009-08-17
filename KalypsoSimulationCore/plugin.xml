@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="simulation" name="simulation" schema="schema/simulation.exsd"/>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.simulation.core.internal.local.LocalURLCatalog"
+            id="localSimulationCatalog"/>
+   </extension>
+
+</plugin>
