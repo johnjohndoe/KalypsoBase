@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,6 +56,7 @@ import org.kalypso.project.database.client.extension.database.IProjectDataBaseCl
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.common.utils.FileSystemManagerHandler;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -103,7 +103,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
         throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5" ) ) ); //$NON-NLS-1$
       }
 
-      final FileSystemManager manager = VFSUtilities.getManager();
+      final FileSystemManagerHandler manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
       final String fileName = String.format( "%s.zip", m_handler.getName() );
@@ -119,11 +119,11 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       }, fileName ); //$NON-NLS-1$
 
       monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7" ) ); //$NON-NLS-1$
+
+  
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
-
-     
-
+      
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
       final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), new URL( urlDestination ) );
       preferences.setVersion( bean.getProjectVersion() );

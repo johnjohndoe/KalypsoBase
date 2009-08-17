@@ -158,7 +158,7 @@ public class WPSUtilities
     Debug.println( "Calling " + url + " ..." );
 
     /* Create the client. */
-    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( Integer.MAX_VALUE, new URL( url ), 0 );
 
     /* Build the method. */
     final PostMethod post = new PostMethod( url );

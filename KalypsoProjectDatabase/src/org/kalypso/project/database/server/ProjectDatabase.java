@@ -61,7 +61,6 @@ import javax.jws.WebService;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,6 +71,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
+import org.kalypso.project.database.common.utils.FileSystemManagerHandler;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
@@ -236,7 +236,7 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
-    final FileSystemManager manager = VFSUtilities.getManager();
+    final FileSystemManagerHandler manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
     final FileObject src = manager.resolveFile( incoming.toExternalForm() );
 
     try

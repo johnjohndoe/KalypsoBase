@@ -29,8 +29,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 {
-  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
-
   private static List<IKalypsoModule> KALYPSO_MODULES = null;
 
   private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
@@ -156,7 +154,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
       KALYPSO_MODULES = new ArrayList<IKalypsoModule>();
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( KALYPSO_MODULES_EXTENSION_POINT );
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKalypsoModule.EXTENSION_POINT_ID );
 
       for( final IConfigurationElement element : elements )
       {
