@@ -523,6 +523,12 @@ public class VFSUtilities
       }
     }
 
+    /** @hack enable ftp passive mode */
+    if( absoluteFile.toLowerCase().startsWith( "ftp" ) )
+    {
+      return fsManager.resolveFile( absoluteFile, VFSUtilities.setFtpPassiveMode() );
+    }
+    
     return fsManager.resolveFile( absoluteFile );
   }
 
