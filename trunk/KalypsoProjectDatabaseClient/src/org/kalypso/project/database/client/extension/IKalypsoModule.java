@@ -52,6 +52,8 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
  */
 public interface IKalypsoModule
 {
+  public String EXTENSION_POINT_ID = "org.kalypso.project.database.client.kalypsoModule";
+  
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 
   public IKalypsoModulePage getModulePage( );

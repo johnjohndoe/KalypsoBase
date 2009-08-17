@@ -66,6 +66,7 @@ import org.apache.commons.vfs.VFSProviderExtension;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
@@ -94,6 +95,8 @@ public class VFSUtilities
 {
   private static final FileSystemOptions THE_WEBDAV_OPTIONS = new FileSystemOptions();
 
+  private static final FileSystemOptions THE_FTP_OPTIONS = new FileSystemOptions();
+  
   private static final FileSystemOptions THE_HTTP_OPTIONS = new FileSystemOptions();
 
   private static final FileSystemOptions THE_HTTPS_OPTIONS = new FileSystemOptions();
@@ -514,7 +517,7 @@ public class VFSUtilities
             final UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
             HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
           }
-
+          
           return fsManager.resolveFile( absoluteFile, THE_HTTPS_OPTIONS );
         }
       }
@@ -571,5 +574,16 @@ public class VFSUtilities
 
       return 0;
     }
+  }
+
+  /**
+   * return passive ftp client FileSystemOptions
+   */
+  public static FileSystemOptions setFtpPassiveMode( )
+  {
+    final FileSystemOptions ftpOptions = new FileSystemOptions();
+    FtpFileSystemConfigBuilder.getInstance().setPassiveMode( ftpOptions, true );
+
+    return ftpOptions;
   }
 }
