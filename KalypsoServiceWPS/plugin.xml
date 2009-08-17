@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="org.kalypso.service.wps"
+         name="WPS"
+         point="org.kalypso.service.ogc.ogcService">
+      <service
+            class="org.kalypso.service.wps.server.WPSService"
+            serviceName="WPS">
+         <parameter parameterName="Service"/>
+         <parameter parameterName="Request"/>
+         <parameter parameterName="Version"/>
+      </service>
+   </extension>
+   <extension
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.literals.LiteralsJob"
+            typeID="LiteralsV1.0">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.sendmail.SendMailJob"
+            typeID="SendMailV1.0">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.complex.ComplexJob"
+            typeID="org.kalypso.service.wps.complexJob">
+      </simulation>
+   </extension>
+
+</plugin>
