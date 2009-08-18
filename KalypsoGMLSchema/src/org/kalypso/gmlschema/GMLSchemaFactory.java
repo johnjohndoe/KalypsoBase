@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2RelationContentTypeBuilder;
@@ -217,6 +218,12 @@ public class GMLSchemaFactory
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema, final QName subsFTQname )
   {
     return new CustomFeatureType( schema, qName, properties, subsFTQname );
+  }
+
+  public static IValuePropertyType createValuePropertyType( final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable, final IAnnotation annotation )
+  {
+    final IPropertyContentType pct = new CustomPropertyContentType( typeHandler );
+    return new CustomValuePropertyType( name, pct, new IRestriction[] {}, minOccurs, maxOccurs, isNillable, annotation );
   }
 
   public static IValuePropertyType createValuePropertyType( final QName name, final IMarshallingTypeHandler typeHandler, final int minOccurs, final int maxOccurs, final boolean isNillable )
