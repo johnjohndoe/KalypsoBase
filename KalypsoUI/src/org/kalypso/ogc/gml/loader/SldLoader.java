@@ -184,7 +184,6 @@ public class SldLoader extends AbstractLoader
     };
 
     // Try to load the fts from the catalog
-
     final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
     if( fts == null )
       throw new LoaderException( String.format( "Failed to resolve urn %s", source ) );
