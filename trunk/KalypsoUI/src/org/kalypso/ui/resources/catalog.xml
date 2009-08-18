@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<!-- Default styles, used when gmt-theme is configured without style information -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:default:default:sld:selected" uri="default_selected.sld" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:default:default:sld:default" uri="default_default.sld" />
+</catalog:catalog>
+

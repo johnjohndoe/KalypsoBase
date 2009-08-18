@@ -568,11 +568,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       final KalypsoUserStyle kus = (KalypsoUserStyle) style;
       // We do not show selection-styles
-      // TODO: optinally...
+      // TODO: optionally...
       if( !kus.isUsedForSelection() )
-      {
         treeObjects.add( new UserStyleTreeObject( this, kus ) );
-      }
     }
 
     return treeObjects.toArray( new UserStyleTreeObject[treeObjects.size()] );

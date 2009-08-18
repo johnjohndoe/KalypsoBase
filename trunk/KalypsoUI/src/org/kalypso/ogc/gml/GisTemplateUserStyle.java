@@ -41,6 +41,8 @@
 package org.kalypso.ogc.gml;
 
 import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,7 +57,9 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
+import org.kalypso.loader.ILoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ogc.gml.loader.SldLoader;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -75,6 +79,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
   private boolean m_dirty;
 
+  private ResourceBundle m_resourceBundle = null;
+
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName, final boolean usedForSelection )
   {
     super( createDummyStyle( Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.0" ) ), styleName, usedForSelection ); //$NON-NLS-1$
@@ -91,13 +97,6 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     return StyleFactory.createUserStyle( name, "title", "abstract", false, new FeatureTypeStyle[0] ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public GisTemplateUserStyle( final UserStyle style, final String name, final boolean usedForSelected )
-  {
-    super( style, name, usedForSelected );
-    m_styleKey = null;
-    m_loaded = true;
-  }
-
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
@@ -112,14 +111,22 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       {
         final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
         m_userStyle = sld.findUserStyle( m_styleName );
+
         if( m_userStyle == null )
           m_userStyle = sld.getDefaultUserStyle();
+
         if( m_userStyle == null )
         {
           final String msg = Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.1" ) + m_styleName + Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.2" ); //$NON-NLS-1$ //$NON-NLS-2$
           System.out.println( msg );
           m_userStyle = createDummyStyle( msg );
         }
+
+        final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+        final KeyInfo info = pool.getInfoForKey( key );
+        final ILoader loader = info == null ? null : info.getLoader();
+        if( loader instanceof SldLoader )
+          m_resourceBundle = ((SldLoader) loader).getResourceBundle();
       }
       catch( final Exception e )
       {
@@ -249,5 +256,36 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       if( info != null )
         info.setDirty( isDirty );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.KalypsoUserStyle#resolveI18nString(java.lang.String)
+   */
+  @Override
+  public String resolveI18nString( final String text )
+  {
+    if( text == null )
+      return null;
+
+    if( text.isEmpty() )
+      return text;
+
+    if( text.charAt( 0 ) == '%' )
+    {
+      final String key = text.substring( 1 );
+      if( m_resourceBundle == null )
+        return String.format( "No resource bundle for key %s", key );
+
+      try
+      {
+        return m_resourceBundle.getString( key );
+      }
+      catch( final MissingResourceException e )
+      {
+        return String.format( "!%s!", key );
+      }
+    }
+
+    return text;
   }
 }

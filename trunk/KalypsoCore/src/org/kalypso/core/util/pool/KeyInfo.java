@@ -358,7 +358,7 @@ public final class KeyInfo extends Job
 
   /**
    * Reloads the pool object.
-   * 
+   *
    * @param force
    *          If <code>false</code>, the object only is reloaded if it is dirty.
    */
@@ -433,6 +433,11 @@ public final class KeyInfo extends Job
     }
 
     return;
+  }
+
+  public ILoader getLoader( )
+  {
+    return m_loader;
   }
 
 }

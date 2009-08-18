@@ -113,13 +113,14 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateDefaultURNForRelated( final Object related )
   {
-    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
-    final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
-    if( generator == null )
-      return null;
-    final String baseURN = generator.generateURNFor( related );
-    if( baseURN == null )
-      return null;
-    return baseURN + ":" + BASETYPE + ":default"; //$NON-NLS-1$ //$NON-NLS-2$
+    return generateURNPatternForRelated( related ) + "default";
+  }
+
+  /**
+   * @see org.kalypso.core.catalog.IURNGenerator#generateDefaultURNForRelated(java.lang.Object)
+   */
+  public String generateSelectedURNForRelated( final Object related )
+  {
+    return generateURNPatternForRelated( related ) + "selected";
   }
 }

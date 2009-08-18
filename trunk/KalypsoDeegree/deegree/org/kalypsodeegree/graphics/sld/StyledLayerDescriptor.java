@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -43,7 +43,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -57,7 +57,7 @@ public interface StyledLayerDescriptor extends Marshallable
 
   /**
    * Sets Layers
-   * 
+   *
    * @param layers
    *          the Layers as Array
    */
@@ -65,7 +65,7 @@ public interface StyledLayerDescriptor extends Marshallable
 
   /**
    * Adds a Layer
-   * 
+   *
    * @param Layer
    *          a Layer to add
    */
@@ -73,7 +73,7 @@ public interface StyledLayerDescriptor extends Marshallable
 
   /**
    * Removes a Layer
-   * 
+   *
    * @param Layer
    *          a Layer to remvoe
    */
@@ -84,7 +84,7 @@ public interface StyledLayerDescriptor extends Marshallable
    * data. Multiple feature types can be included in a UserLayer, since this is semantically equivalent to a Layer. All
    * feature types of a UserLayer come from the same WFS. The WFS can be named explicitly with the "wfs" attribute or it
    * can be implied by context.
-   * 
+   *
    * @return the UserLayers as Array
    */
   UserLayer[] getUserLayers( );
@@ -92,7 +92,7 @@ public interface StyledLayerDescriptor extends Marshallable
   /**
    * A NamedLayer uses the "name" attribute to identify a layer known to the WMS and can contain zero or more styles,
    * either NamedStyles or UserStyles. In the absence of any styles the default style for the layer is used.
-   * 
+   *
    * @return the NamedLayers as Array
    */
   NamedLayer[] getNamedLayers( );
@@ -102,14 +102,14 @@ public interface StyledLayerDescriptor extends Marshallable
    * documents stored in various different versions of the SLD spec. The string has the format x.y.z, the same as in
    * other OpenGIS Web Server specs. For example, an SLD document stored according to this spec would have the version
    * string 0.7.2.
-   * 
+   *
    * @return the version of the SLD as String
    */
   String getVersion( );
 
   /**
    * Sets the Version.
-   * 
+   *
    * @param version
    *          the version of the SLD
    */
@@ -117,7 +117,7 @@ public interface StyledLayerDescriptor extends Marshallable
 
   /** Finds a user style by its name */
   public UserStyle findUserStyle( final String name );
-  
+
   public NamedLayer getNamedLayer( String layerName );
 
   /** Returns the first user style with 'default' set to <code>true</code>. */
