@@ -46,6 +46,7 @@ import java.net.URL;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -63,7 +64,6 @@ import org.kalypso.project.database.client.extension.database.handlers.ILocalPro
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
-import org.kalypso.project.database.common.utils.FileSystemManagerHandler;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -106,7 +106,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       if( !status.isOK() )
         throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2" ) ) ); //$NON-NLS-1$
 
-      FileSystemManagerHandler manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
+      FileSystemManager manager = VFSUtilities.getManager();
       FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
       final String urlDestination = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
@@ -141,7 +141,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           Thread.sleep( 100 );
 
           // reinit components
-          manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
+          manager = VFSUtilities.getManager();
           source = manager.resolveFile( src.getAbsolutePath() );
           destination = manager.resolveFile( urlDestination );
         }
@@ -185,7 +185,6 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
       // file.close() reestablish this http-connection
       destination.close();
-      destination.delete();
     }
     catch( final Exception e )
     {

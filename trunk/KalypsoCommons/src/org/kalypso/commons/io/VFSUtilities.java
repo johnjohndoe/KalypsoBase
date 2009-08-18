@@ -66,7 +66,6 @@ import org.apache.commons.vfs.VFSProviderExtension;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
-import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
@@ -95,13 +94,13 @@ public class VFSUtilities
 {
   private static final FileSystemOptions THE_WEBDAV_OPTIONS = new FileSystemOptions();
 
-  private static final FileSystemOptions THE_FTP_OPTIONS = new FileSystemOptions();
-  
   private static final FileSystemOptions THE_HTTP_OPTIONS = new FileSystemOptions();
 
   private static final FileSystemOptions THE_HTTPS_OPTIONS = new FileSystemOptions();
 
   private static final String EXTENSION_POINT_ID = "org.apache.commons.vfs.provider";
+
+  private static StandardFileSystemManager CUSTOM_FILE_SYSTEM_MANAGER = null;
 
   /**
    * The constructor.
@@ -115,8 +114,10 @@ public class VFSUtilities
    */
   public static FileSystemManager getManager( ) throws FileSystemException
   {
-    final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
+    if( CUSTOM_FILE_SYSTEM_MANAGER != null )
+      return CUSTOM_FILE_SYSTEM_MANAGER;
 
+    final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
     configureManager( fsManager );
 
     return fsManager;
@@ -128,9 +129,11 @@ public class VFSUtilities
    */
   public static StandardFileSystemManager getNewManager( ) throws FileSystemException
   {
+    if( CUSTOM_FILE_SYSTEM_MANAGER != null )
+      return CUSTOM_FILE_SYSTEM_MANAGER;
+
     // create new file system manager
     final StandardFileSystemManager fsManager = new StandardFileSystemManager();
-
     fsManager.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
     fsManager.init();
 
@@ -517,18 +520,12 @@ public class VFSUtilities
             final UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
             HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
           }
-          
+
           return fsManager.resolveFile( absoluteFile, THE_HTTPS_OPTIONS );
         }
       }
     }
 
-    /** @hack enable ftp passive mode */
-    if( absoluteFile.toLowerCase().startsWith( "ftp" ) )
-    {
-      return fsManager.resolveFile( absoluteFile, VFSUtilities.setFtpPassiveMode() );
-    }
-    
     return fsManager.resolveFile( absoluteFile );
   }
 
@@ -583,13 +580,14 @@ public class VFSUtilities
   }
 
   /**
-   * return passive ftp client FileSystemOptions
+   * bad hack - set a custom file system manager to ensure custom file system settings of the given file system manager
    */
-  public static FileSystemOptions setFtpPassiveMode( )
+  public static void setCustomFileSystemManager( final StandardFileSystemManager manager ) throws FileSystemException
   {
-    final FileSystemOptions ftpOptions = new FileSystemOptions();
-    FtpFileSystemConfigBuilder.getInstance().setPassiveMode( ftpOptions, true );
+    CUSTOM_FILE_SYSTEM_MANAGER = manager;
+    CUSTOM_FILE_SYSTEM_MANAGER.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
+    CUSTOM_FILE_SYSTEM_MANAGER.init();
 
-    return ftpOptions;
+    configureManager( manager );
   }
 }

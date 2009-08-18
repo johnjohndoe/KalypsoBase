@@ -43,12 +43,12 @@ package org.kalypso.project.database.server.trigger;
 import java.lang.reflect.Constructor;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseTrigger;
-import org.kalypso.project.database.common.utils.FileSystemManagerHandler;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.osgi.framework.Bundle;
 
@@ -69,7 +69,7 @@ public class TriggerHelper
 
     final IProjectDatabaseTrigger trigger = (IProjectDatabaseTrigger) constructor.newInstance();
 
-    final FileSystemManagerHandler manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
+    final FileSystemManager manager = VFSUtilities.getManager();
 
     /* resolve global dir */
     final String urlGlobalPath = System.getProperty( IProjectDataBaseServerConstant.SERVER_GLOBAL_DATA_PATH );
