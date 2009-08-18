@@ -40,18 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.utils;
 
+import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
+import org.kalypso.commons.io.IFileSystemManagerResolveDelegate;
 
 /**
  * @author Dirk Kuch
  */
-public class PlanerClientFileSystemManager extends StandardFileSystemManager
+public class PlanerClientFileSystemManager implements IFileSystemManagerResolveDelegate
 {
 
   private final FileSystemOptions m_ftpOptions;
@@ -66,13 +69,19 @@ public class PlanerClientFileSystemManager extends StandardFileSystemManager
    * @see org.apache.commons.vfs.impl.DefaultFileSystemManager#resolveFile(org.apache.commons.vfs.FileObject,
    *      java.lang.String, org.apache.commons.vfs.FileSystemOptions)
    */
-  @Override
-  public FileObject resolveFile( final FileObject baseFile, final String uri, final FileSystemOptions fileSystemOptions ) throws FileSystemException
+  public FileObject resolveFile( final FileSystemManager manager, final FileObject baseFile, final String uri, final FileSystemOptions fileSystemOptions ) throws FileSystemException
   {
     if( isFtpProtocol( baseFile, uri ) )
       configurePassiveMode( fileSystemOptions );
 
-    return super.resolveFile( baseFile, uri, fileSystemOptions );
+    if( manager instanceof DefaultFileSystemManager )
+    {
+      final DefaultFileSystemManager def = (DefaultFileSystemManager) manager;
+
+      return def.resolveFile( baseFile, uri, m_ftpOptions );
+    }
+
+    return manager.resolveFile( baseFile, uri );
   }
 
   private void configurePassiveMode( final FileSystemOptions options )
@@ -85,24 +94,32 @@ public class PlanerClientFileSystemManager extends StandardFileSystemManager
    *      java.lang.String)
    */
   @Override
-  public FileObject resolveFile( final FileObject baseFile, final String uri ) throws FileSystemException
+  public FileObject resolveFile( final FileSystemManager manager, final FileObject baseFile, final String uri ) throws FileSystemException
   {
-    if( isFtpProtocol( baseFile, uri ) )
-      return super.resolveFile( baseFile, uri, m_ftpOptions );
+    if( isFtpProtocol( baseFile, uri ) ) 
+    {
+      if( manager instanceof DefaultFileSystemManager )
+      {
+        final DefaultFileSystemManager def = (DefaultFileSystemManager) manager;
 
-    return super.resolveFile( baseFile, uri );
+        return def.resolveFile( baseFile, uri, m_ftpOptions );
+      }
+    }
+     
+
+    return manager.resolveFile( baseFile, uri );
   }
 
   /**
    * @see org.apache.commons.vfs.impl.DefaultFileSystemManager#resolveFile(java.lang.String)
    */
   @Override
-  public FileObject resolveFile( final String uri ) throws FileSystemException
+  public FileObject resolveFile( final FileSystemManager manager, final String uri ) throws FileSystemException
   {
     if( isFtpProtocol( uri ) )
-      return super.resolveFile( uri, m_ftpOptions );
+      return manager.resolveFile( uri, m_ftpOptions );
 
-    return super.resolveFile( uri );
+    return manager.resolveFile( uri );
   }
 
   /**
@@ -110,12 +127,12 @@ public class PlanerClientFileSystemManager extends StandardFileSystemManager
    *      org.apache.commons.vfs.FileSystemOptions)
    */
   @Override
-  public FileObject resolveFile( final String uri, final FileSystemOptions fileSystemOptions ) throws FileSystemException
+  public FileObject resolveFile( final FileSystemManager manager, final String uri, final FileSystemOptions fileSystemOptions ) throws FileSystemException
   {
     if( isFtpProtocol( uri ) )
       configurePassiveMode( fileSystemOptions );
 
-    return super.resolveFile( uri, fileSystemOptions );
+    return manager.resolveFile( uri, fileSystemOptions );
   }
 
   private boolean isFtpProtocol( final String uri )
@@ -133,5 +150,15 @@ public class PlanerClientFileSystemManager extends StandardFileSystemManager
     }
 
     return isFtpProtocol( uri );
+  }
+
+  /**
+   * @see org.kalypso.commons.io.IFileSystemManagerResolveDelegate#resolveFile(org.apache.commons.vfs.FileSystemManager,
+   *      java.io.File, java.lang.String)
+   */
+  @Override
+  public FileObject resolveFile( final FileSystemManager manager, final File baseFile, final String name ) throws FileSystemException
+  {
+    return manager.resolveFile( baseFile, name );
   }
 }
