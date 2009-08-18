@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-net-2.0.jar" sourcepath="lib/commons-vfs/commons-net-2.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-net-ftp-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-vfs-20070822.jar" sourcepath="lib/commons-vfs/commons-vfs-20070822-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
@@ -15,7 +17,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-logging-1.1.jar" sourcepath="ApacheCommonsVFSsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-logging-adapters-1.1.jar" sourcepath="ApacheCommonsVFSsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-logging-api-1.1.jar" sourcepath="ApacheCommonsVFSsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/commons-net-1.4.1.jar" sourcepath="ApacheCommonsVFSsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-vfs/jakarta-oro-2.0.8.jar" sourcepath="ApacheCommonsVFSsrc.zip"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-2.0.2.jar" sourcepath="lib/commons-httpclient-2.0.2-src.zip"/>
 	<classpathentry kind="output" path="build/bin"/>
