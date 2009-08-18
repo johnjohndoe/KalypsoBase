@@ -47,9 +47,9 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.IFileSystemManagerResolveDelegate;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
-import org.kalypso.commons.io.IFileSystemManagerResolveDelegate;
 
 /**
  * @author Dirk Kuch

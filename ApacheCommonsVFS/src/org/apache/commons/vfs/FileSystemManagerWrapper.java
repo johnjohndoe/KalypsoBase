@@ -38,30 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.io;
+package org.apache.commons.vfs;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.vfs.CacheStrategy;
-import org.apache.commons.vfs.FileContentInfoFactory;
-import org.apache.commons.vfs.FileName;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystem;
-import org.apache.commons.vfs.FileSystemConfigBuilder;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.FilesCache;
-import org.apache.commons.vfs.NameScope;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.apache.commons.vfs.operations.FileOperationProvider;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FileSystemManagerWrapper implements FileSystemManager
 {
@@ -336,7 +324,7 @@ public class FileSystemManagerWrapper implements FileSystemManager
    * @see org.apache.commons.vfs.FileSystemManager#setLogger(org.apache.commons.logging.Log)
    */
   @Override
-  public void setLogger( final Log log )
+  public void setLogger( final org.apache.commons.logging.Log log )
   {
     m_manager.setLogger( log );
   }

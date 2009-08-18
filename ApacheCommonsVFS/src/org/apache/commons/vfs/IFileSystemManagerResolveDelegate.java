@@ -38,17 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.io;
+package org.apache.commons.vfs;
 
 import java.io.File;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileSystemOptions;
-
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IFileSystemManagerResolveDelegate
 {
