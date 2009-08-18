@@ -358,7 +358,9 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
       if( relativePathToSource == null )
         throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
-      final FileObject destination = m_vfsManager.resolveFile( m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource );
+      final String uri = m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource;
+
+      final FileObject destination = m_vfsManager.resolveFile( uri );
 
       /* assure old behavior - for none existing source files! */
       if( sourceFile.exists() )

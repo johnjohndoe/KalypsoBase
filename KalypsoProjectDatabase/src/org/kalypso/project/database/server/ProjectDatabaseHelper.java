@@ -42,13 +42,13 @@ package org.kalypso.project.database.server;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.KalypsoProjectDatabase;
-import org.kalypso.project.database.common.utils.FileSystemManagerHandler;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -71,7 +71,7 @@ class ProjectDatabaseHelper
   {
     try
     {
-      final FileSystemManagerHandler manager = new FileSystemManagerHandler( VFSUtilities.getManager() );
+      final FileSystemManager manager = VFSUtilities.getManager();
 
       /* remove file from server */
       // destination webdav url of bean
