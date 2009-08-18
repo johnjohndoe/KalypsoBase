@@ -201,15 +201,15 @@ public class Mark_Impl implements Mark, Marshallable
 
   private void drawImage( final Graphics2D g2D, final int size, final StrokePainter strokePainter, final FillPainter fillPainter )
   {
-    if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
+    if( "circle".equalsIgnoreCase( m_wellKnownName ) )
       drawCircle( g2D, size, strokePainter, fillPainter );
-    else if( m_wellKnownName.equalsIgnoreCase( "triangle" ) )
+    else if( "triangle".equalsIgnoreCase( m_wellKnownName ) )
       drawTriangle( g2D, size, strokePainter, fillPainter );
-    else if( m_wellKnownName.equalsIgnoreCase( "cross" ) )
+    else if( "cross".equalsIgnoreCase( m_wellKnownName ) )
       drawCross1( g2D, size, strokePainter );
-    else if( m_wellKnownName.equalsIgnoreCase( "x" ) )
+    else if( "x".equalsIgnoreCase( m_wellKnownName ) )
       drawCross2( g2D, size, strokePainter );
-    else if( m_wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
+    else if( "kalypsoArrow".equalsIgnoreCase( m_wellKnownName ) )
       drawArrow( g2D, size, strokePainter, fillPainter );
     else
       drawSquare( g2D, size, strokePainter, fillPainter );
