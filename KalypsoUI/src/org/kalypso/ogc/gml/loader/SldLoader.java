@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
@@ -53,6 +54,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -79,6 +81,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 public class SldLoader extends AbstractLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
+  private ResourceBundle m_resourceBundle;
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
@@ -174,23 +177,38 @@ public class SldLoader extends AbstractLoader
        * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
        */
       @Override
-      public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
       {
         return UrlResolverSingleton.resolveUrl( context, relativeOrAbsolute );
       }
     };
 
-    /* HACK: Use the name of the feature type style in the GMT for referencing this style. */
+    // Try to load the fts from the catalog
+
     final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
     if( fts == null )
       throw new LoaderException( String.format( "Failed to resolve urn %s", source ) );
 
+    // Load resource bundle
+    URL sldURL = null;
+    try
+    {
+      // get the url, should be the same used for loading the sld
+      sldURL = catalog.getURL( resolver, source, source );
+      loadResourceBundle( sldURL );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+
+    /* HACK: Use the name of the feature type style in the GMT for referencing this style. */
     final UserStyle userStyle = StyleFactory.createUserStyle( fts.getName(), fts.getTitle(), fts.getAbstract(), true, new FeatureTypeStyle[] { fts } );
     final NamedLayer namedLayer = SLDFactory.createNamedLayer( "", null, new Style[] { userStyle } );
     return SLDFactory.createStyledLayerDescriptor( "", "", "", new Layer[] { namedLayer } );
   }
 
-  private StyledLayerDescriptor loadFromUrl( URL context, String source ) throws IOException, XMLParsingException
+  private StyledLayerDescriptor loadFromUrl( final URL context, final String source ) throws IOException, XMLParsingException
   {
     InputStream is = null;
     try
@@ -208,6 +226,8 @@ public class SldLoader extends AbstractLoader
       final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
 
       is.close();
+
+      loadResourceBundle( url );
 
       return styledLayerDescriptor;
     }
@@ -284,5 +304,18 @@ public class SldLoader extends AbstractLoader
   @Override
   public void release( final Object object )
   {
+  }
+
+  private void loadResourceBundle( final URL sldURL )
+  {
+    m_resourceBundle = ResourceBundleUtils.loadResourceBundle( sldURL );
+  }
+
+  /**
+   * Try to find a resource bundle for the styled layer descriptor.
+   */
+  public ResourceBundle getResourceBundle( )
+  {
+    return m_resourceBundle;
   }
 }

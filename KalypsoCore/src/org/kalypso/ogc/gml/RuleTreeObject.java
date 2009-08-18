@@ -171,13 +171,15 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       throw new IllegalStateException();
 
     if( m_rule == null )
-      return "<no styles set>"; //$NON-NLS-1$
+      return "<no styles set>";
 
-    if( m_rule.getTitle() != null )
-      return m_rule.getTitle();
+    final String title = m_rule.getTitle();
+    if( title != null )
+      return resolveI18nString( title );
 
-    if( m_rule.getName() != null )
-      return m_rule.getName();
+    final String name = m_rule.getName();
+    if( name != null )
+      return name;
 
     return Messages.getString( "org.kalypso.ogc.gml.RuleTreeObject.3" ); //$NON-NLS-1$
   }
@@ -201,21 +203,27 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( element != this )
       throw new IllegalStateException();
 
-    return m_rule.getAbstract();
+    final String tooltip = m_rule.getAbstract();
+    return resolveI18nString( tooltip );
   }
 
-  public static RuleTreeObject findObject( Object[] objects, String ruleName )
+  public static RuleTreeObject findObject( final Object[] objects, final String ruleName )
   {
-    for( Object object : objects )
+    for( final Object object : objects )
     {
       if( object instanceof RuleTreeObject )
       {
-        RuleTreeObject rto = (RuleTreeObject) object;
+        final RuleTreeObject rto = (RuleTreeObject) object;
         if( rto.getRule().getName().equals( ruleName ) )
           return rto;
       }
     }
 
     return null;
+  }
+
+  public String resolveI18nString( final String text )
+  {
+    return m_parent.resolveI18nString( text );
   }
 }

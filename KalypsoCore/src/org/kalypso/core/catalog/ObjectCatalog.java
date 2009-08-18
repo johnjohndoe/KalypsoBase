@@ -80,15 +80,11 @@ public abstract class ObjectCatalog<O> extends Storage
     InputStream is = null;
     try
     {
-      final ICatalog baseCatalog = m_manager.getBaseCatalog();
-      final String uri = baseCatalog.resolve( systemID, publicID );
-      // BUGFIX: if uri now start with 'urn', the id was not resolved, so we just return
-      // Maybe there is a better way to handle that?
-      if( uri.startsWith( "urn" ) ) //$NON-NLS-1$
+      final URL urlFeatureStyle = getURL( resolver, systemID, publicID );
+      if( urlFeatureStyle == null )
         return null;
 
-      final URL urlFeatureStyle = resolver.resolveURL( uri );
-
+      final ICatalog baseCatalog = m_manager.getBaseCatalog();
       final IUrlResolver2 catalogResolver = new IUrlResolver2()
       {
         public URL resolveURL( final String href ) throws MalformedURLException
@@ -113,6 +109,18 @@ public abstract class ObjectCatalog<O> extends Storage
     {
       IOUtils.closeQuietly( is );
     }
+  }
+
+  public URL getURL( final IUrlResolver2 resolver, final String systemID, final String publicID ) throws MalformedURLException
+  {
+    final ICatalog baseCatalog = m_manager.getBaseCatalog();
+    final String uri = baseCatalog.resolve( systemID, publicID );
+    // BUGFIX: if uri now start with 'urn', the id was not resolved, so we just return
+    // Maybe there is a better way to handle that?
+    if( uri.startsWith( "urn" ) ) //$NON-NLS-1$
+      return null;
+
+    return resolver.resolveURL( uri );
   }
 
   public URI getStore(  )

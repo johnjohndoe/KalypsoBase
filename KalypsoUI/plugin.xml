@@ -1398,6 +1398,13 @@
            id="org.kalypso.ui.featureview.filters.featureFilter">
      </filter>
   </extension>
+  <extension
+        point="org.kalypso.core.catalogContribution">
+     <catalogContribution
+           class="org.kalypso.ui.KalypsoUICatalogContribution"
+           name="Catalog Contribution for KalypsoUI">
+     </catalogContribution>
+  </extension>
    
    
 </plugin>

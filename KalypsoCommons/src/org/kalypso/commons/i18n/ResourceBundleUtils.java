@@ -68,6 +68,8 @@ public final class ResourceBundleUtils
    *          If <code>baseUrl</code> is something like <code>http://somehost/myfile.txt</code>, we try to load
    *          properties like <code>http://somehost/myfile.properties</code>.<br>
    *          Urls with query part or anchor are not supported.
+   * @return <code>null</code>, if no such resource bundle is found. Any exceptions are reported to the
+   *         {@link org.eclipse.core.runtime.ILog}-facilities.
    */
   public static ResourceBundle loadResourceBundle( final URL baseURL )
   {

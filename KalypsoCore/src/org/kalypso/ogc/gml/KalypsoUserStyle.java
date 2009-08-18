@@ -58,7 +58,7 @@ import org.kalypsodeegree.xml.Marshallable;
  *
  * @author bce
  */
-public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdapter
+public abstract class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdapter
 {
   private final Collection<IKalypsoUserStyleListener> m_listeners = new HashSet<IKalypsoUserStyleListener>();
 
@@ -259,4 +259,11 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
     return m_isUsedForSelection;
   }
 
+  /**
+   * Resolves an international string against the (possibly exsiting) internal resource bundle of thisa style.<br>
+   * 
+   * @return If <code>text</code> startswith '%', the text is assumed to be a key of the internal reource bundle and is
+   *         resolved against it. Else, <code>text</code> is returned.
+   */
+  public abstract String resolveI18nString( String text );
 }

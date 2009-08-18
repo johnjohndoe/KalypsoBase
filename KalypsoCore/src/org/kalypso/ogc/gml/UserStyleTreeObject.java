@@ -129,8 +129,9 @@ public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       throw new IllegalStateException();
 
     final KalypsoUserStyle userStyle = getStyle();
+    final String label = userStyle.getLabel( userStyle );
 
-    return userStyle.getLabel( userStyle );
+    return resolveI18nString( label );
   }
 
   /**
@@ -152,23 +153,28 @@ public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( element != this )
       throw new IllegalStateException();
 
-    return getStyle().getAbstract();
+    final String tooltip = getStyle().getAbstract();
+
+    return resolveI18nString( tooltip );
   }
 
-  public static UserStyleTreeObject findObject( Object[] objects, String styleName )
+  public static UserStyleTreeObject findObject( final Object[] objects, final String styleName )
   {
-    for( Object object : objects )
+    for( final Object object : objects )
     {
       if( object instanceof UserStyleTreeObject )
       {
-        UserStyleTreeObject usto = (UserStyleTreeObject) object;
+        final UserStyleTreeObject usto = (UserStyleTreeObject) object;
         if( usto.getStyle().getName().equals( styleName ) )
           return usto;
       }
     }
-    
+
     return null;
   }
-  
-  
+
+  public String resolveI18nString( final String label )
+  {
+    return m_style.resolveI18nString( label );
+  }
 }

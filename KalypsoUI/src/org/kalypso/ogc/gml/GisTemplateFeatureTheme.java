@@ -85,15 +85,10 @@ import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.graphics.sld.StyleNotDefinedException;
-import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * <p>
@@ -119,7 +114,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final IKalypsoThemeListener m_themeListener = new IKalypsoThemeListener()
   {
-
     @Override
     public void contextChanged( final IKalypsoTheme source )
     {
@@ -171,20 +165,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final String featurePath = layerType.getFeaturePath();
     m_layerKey = new PoolableObjectType( type, source, context );
     m_featurePath = featurePath;
+    setType( type.toUpperCase() );
+
     if( layerType instanceof StyledLayerType )
     {
       final StyledLayerType mapLayerType = (StyledLayerType) layerType;
-      setType( type.toUpperCase() );
-
-      final List<Style> stylesList = mapLayerType.getStyle();
-      for( final Style style : stylesList )
-      {
-        final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( style.getLinktype(), style.getHref(), context );
-        final boolean usedForSelection = style.isSelection();
-        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, style.getStyle(), usedForSelection );
-        m_gisTemplateUserStyles.add( gisTemplateUserStyle );
-      }
-
+      initStyles( context, mapLayerType );
       GisTemplateFeatureTheme.configureProperties( this, mapLayerType );
     }
 
@@ -196,6 +182,21 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     // they will soon will call setVisible( true )
     if( !isLazyLoading )
       startLoading();
+  }
+
+  /**
+   * Called from constructor, initialized (and starts loading) of all configured styles of this theme.
+   */
+  private void initStyles( final URL context, final StyledLayerType mapLayerType )
+  {
+    final List<Style> stylesList = mapLayerType.getStyle();
+    for( final Style style : stylesList )
+    {
+      final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( style.getLinktype(), style.getHref(), context );
+      final boolean usedForSelection = style.isSelection();
+      final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, style.getStyle(), usedForSelection );
+      m_gisTemplateUserStyles.add( gisTemplateUserStyle );
+    }
   }
 
   private void startLoading( )
@@ -238,6 +239,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.dispose();
       m_theme = null;
     }
+
     // remove styles
     final GisTemplateUserStyle[] templateStyles = m_gisTemplateUserStyles.toArray( new GisTemplateUserStyle[m_gisTemplateUserStyles.size()] );
     for( final GisTemplateUserStyle style : templateStyles )
@@ -357,94 +359,114 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
    *      org.eclipse.core.runtime.IStatus)
    */
-  public void objectLoaded( final IPoolableObjectType key, final Object newValue, IStatus status )
+  public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    m_loaded = true;
-
-    try
+    if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
-      if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
+      m_loaded = true;
+
+      try
       {
-        // clear the theme
-        if( m_theme != null )
-        {
-          m_theme.dispose();
-          m_theme = null;
-        }
+        setTheme( null );
+
         if( newValue != null )
         {
           final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
 
           /* Get current property set */
-          final String legendIcon = getLegendIcon();
-          final boolean shouldShowLegendChildren = shouldShowLegendChildren();
-          final String[] propertyNames = getPropertyNames();
-          final Map<String, String> properties = new HashMap<String, String>();
-          for( final String propName : propertyNames )
-          {
-            final String value = getProperty( propName, null );
-            properties.put( propName, value );
-          }
-
-          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
-          /* Put current property set into m_theme */
-          m_theme.setLegendIcon( legendIcon, getContext() );
-          m_theme.setShowLegendChildren( shouldShowLegendChildren );
-          for( final String propName : propertyNames )
-            m_theme.setProperty( propName, properties.get( propName ) );
-
-          m_theme.addKalypsoThemeListener( m_themeListener );
-          if( !m_theme.getStatus().isOK() )
-            status = m_theme.getStatus();
-
-          m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
-
-          boolean hasSelectionStyle = false;
-          for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
-          {
-            addStyle( style );
-            if( style.isUsedForSelection() )
-              hasSelectionStyle = true;
-          }
-
-          final IFeatureType featureType = getFeatureType();
-          final URL context = m_layerKey.getContext();
-          if( m_gisTemplateUserStyles.isEmpty() )
-          {
-            final UserStyle userStyle = createDefaultStyle( featureType, context, false );
-            if( userStyle != null )
-              addStyle( new GisTemplateUserStyle( userStyle, userStyle.getTitle(), false ) );
-          }
-
-          if( !hasSelectionStyle )
-          {
-            final UserStyle userStyle = createDefaultStyle( featureType, context, true );
-            if( userStyle != null )
-              addStyle( new GisTemplateUserStyle( userStyle, userStyle.getTitle(), true ) );
-          }
-
+          final KalypsoFeatureTheme kalypsoFeatureTheme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
+          setTheme( kalypsoFeatureTheme );
         }
       }
+      catch( final Throwable e )
+      {
+        final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
+        KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
+        return;
+      }
+      finally
+      {
+        // REMARK: accessing the full extent here may cause dead lock due to access to pool via x-linked features at
+        // this
+        // point.
+        // Also: Causes the map to hang during loading, so we don't do it, even if now the map always gets repaintet,
+        // even
+        // if the theme extent does not cover the map. invalidate( getFullExtent() );
+        fireRepaintRequested( null );
+        fireContextChanged();
+
+        if( m_theme != null && !m_theme.getStatus().isOK() )
+          setStatus( m_theme.getStatus() );
+        else
+          setStatus( status );
+      }
     }
-    catch( final Throwable e )
+  }
+
+  private void setTheme( final KalypsoFeatureTheme theme )
+  {
+    if( theme == null )
     {
-      final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
-      KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
-      setStatus( status );
+      // clear the old theme
+      if( m_theme != null )
+      {
+        m_theme.dispose();
+        m_theme = null;
+      }
+
       return;
     }
 
-    // REMARK: accessing the full extent here may cause dead lock due to access to pool via x-linked features at this
-    // point.
-    // Also: Causes the map to hang during loading, so we don't do it, even if now the map always gets repaintet, even
-    // if the theme extent does not cover the map. invalidate( getFullExtent() );
-    fireRepaintRequested( null );
-    fireContextChanged();
 
-    setStatus( status );
+    // Get some properties from myself (as long as m_theme == null )
+    final String legendIcon = getLegendIcon();
+    final boolean shouldShowLegendChildren = shouldShowLegendChildren();
+    final String[] propertyNames = getPropertyNames();
+    final Map<String, String> properties = new HashMap<String, String>();
+    for( final String propName : propertyNames )
+    {
+      final String value = getProperty( propName, null );
+      properties.put( propName, value );
+    }
+
+    m_theme = theme;
+
+    /* Put current property set into m_theme */
+    m_theme.setLegendIcon( legendIcon, getContext() );
+    m_theme.setShowLegendChildren( shouldShowLegendChildren );
+    for( final String propName : propertyNames )
+      m_theme.setProperty( propName, properties.get( propName ) );
+
+    m_theme.addKalypsoThemeListener( m_themeListener );
+
+    m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
+
+    boolean hasSelectionStyle = false;
+    for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
+    {
+      addStyle( style );
+      if( style.isUsedForSelection() )
+        hasSelectionStyle = true;
+    }
+
+    final IFeatureType featureType = getFeatureType();
+    final URL context = m_layerKey.getContext();
+    if( m_gisTemplateUserStyles.isEmpty() )
+    {
+      final GisTemplateUserStyle style = createDefaultStyle( featureType, context, false );
+      if( style != null )
+        addStyle( style );
+    }
+
+    if( !hasSelectionStyle )
+    {
+      final GisTemplateUserStyle style = createDefaultStyle( featureType, context, true );
+      if( style != null )
+        addStyle( style );
+    }
   }
 
-  private static UserStyle createDefaultStyle( final IFeatureType featureType, final URL context, final boolean usedForSelection )
+  private static GisTemplateUserStyle createDefaultStyle( final IFeatureType featureType, final URL context, final boolean usedForSelection )
   {
     if( featureType == null )
       return null;
@@ -459,40 +481,40 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       }
     };
 
-    final FeatureTypeStyle fts;
+    String ftsURN;
     if( usedForSelection )
-      fts = null; // TODO: get from catalog
+      ftsURN = CatalogSLD.getSelectedURN( featureType );
     else
-      fts = styleCatalog.getDefault( resolver, featureType );
+      ftsURN = CatalogSLD.getDefaultURN( featureType );
 
-    if( fts == null )
+    // check, if this urn resolves in the catalog
+    URL ftsURL = null;
+    try
     {
-      /* No generic default style for selection */
+      ftsURL = styleCatalog.getURL( resolver, ftsURN, ftsURN );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+
+    if( ftsURL == null )
+    {
+      // if not, we set the general default user style
       if( usedForSelection )
-        return null;
-
-      try
       {
+        ftsURN = CatalogSLD.DEFAULT_STYLE_SELECTED;
         System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
-        return DefaultStyleFactory.createUserStyle( featureType, " - " //$NON-NLS-1$
-            + Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.generatedstyle" ) //$NON-NLS-1$
-            + " -" ); //$NON-NLS-1$
       }
-      catch( final StyleNotDefinedException e )
+      else
       {
-        e.printStackTrace();
-
-        return null;
+        ftsURN = CatalogSLD.DEFAULT_STYLE_DEFAULT;
+        System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
       }
     }
 
-    /*
-     * Create a user style that wraps the catalog-based Feature Type Style. Inherit name, title and abstract.
-     */
-    final String name = fts.getName();
-    final String title = fts.getTitle();
-    final String description = fts.getAbstract();
-    return (UserStyle_Impl) StyleFactory.createStyle( name, title, description, fts );
+    final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( "sld", ftsURN, context );
+    return new GisTemplateUserStyle( sldPoolableObjectType, "style", usedForSelection );
   }
 
   /**

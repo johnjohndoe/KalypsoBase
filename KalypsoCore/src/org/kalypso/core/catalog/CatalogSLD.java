@@ -54,6 +54,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.core.catalog.urn.URNGeneratorFeatureTypeStyle;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -65,11 +67,28 @@ import org.w3c.dom.Element;
  */
 public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
 {
+  public static final String DEFAULT_STYLE_SELECTED = "urn:ogc:gml:featuretype:default:default:sld:selected";
+
+  public static final String DEFAULT_STYLE_DEFAULT = "urn:ogc:gml:featuretype:default:default:sld:default";
+
   /** Do not call this yourself but rather get the catalog via {@link KalypsoCorePlugin#}*/
   public CatalogSLD( final CatalogManager cManager, final File repositoryBase )
   {
     super( repositoryBase, cManager, FeatureTypeStyle.class );
   }
+
+  public static String getDefaultURN( final IFeatureType featureType )
+  {
+    final URNGeneratorFeatureTypeStyle generatorFeatureTypeStyle = new URNGeneratorFeatureTypeStyle();
+    return generatorFeatureTypeStyle.generateDefaultURNForRelated( featureType );
+  }
+
+  public static String getSelectedURN( final IFeatureType featureType )
+  {
+    final URNGeneratorFeatureTypeStyle generatorFeatureTypeStyle = new URNGeneratorFeatureTypeStyle();
+    return generatorFeatureTypeStyle.generateSelectedURNForRelated( featureType );
+  }
+
 
   /**
    * @see org.kalypso.commons.serializer.ISerializer#read(java.io.InputStream)
