@@ -72,8 +72,8 @@ import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -94,7 +94,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class WPSSimulationResultEater implements ISimulationResultEater
 {
-  private final StandardFileSystemManager m_vfsManager;
+  private final FileSystemManagerWrapper m_vfsManager;
 
   /**
    * The process descriptions are containing the output data.

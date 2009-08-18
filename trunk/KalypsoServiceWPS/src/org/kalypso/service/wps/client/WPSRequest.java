@@ -60,12 +60,12 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.io.FileSystemManagerWrapper;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.exceptions.WPSException;
@@ -83,7 +83,6 @@ import org.kalypso.service.wps.utils.WPSUtilities;
  */
 /**
  * @author ilya
- *
  */
 @Deprecated
 public class WPSRequest
@@ -138,11 +137,11 @@ public class WPSRequest
    * After this period of time, the job gives up, waiting for a result of the service.
    */
   private final long m_timeout;
-  
+
   /**
-   *  My file system manager. Initialized in the run() method and available during callbacks
+   * My file system manager. Initialized in the run() method and available during callbacks
    */
-  private StandardFileSystemManager m_manager = null;
+  private FileSystemManagerWrapper m_manager = null;
 
   public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {
@@ -178,18 +177,16 @@ public class WPSRequest
     return wpsRequest.getProcessDescription( null );
   }
 
-  
   /**
-   * this function forwards the functionality of cancel of active job from the member wpsRequest
-   * 
-   * fixes the bug #242, in actual situation works only with local jobs
-   * and was tested only on windows machine.
-   * this class is already signed as deprecated, so complete functionality test will not be done  
+   * this function forwards the functionality of cancel of active job from the member wpsRequest fixes the bug #242, in
+   * actual situation works only with local jobs and was tested only on windows machine. this class is already signed as
+   * deprecated, so complete functionality test will not be done
    */
-  public IStatus cancelActualJob(){
+  public IStatus cancelActualJob( )
+  {
     return wpsRequest.cancelJob();
   }
-  
+
   public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
   {
     monitor = SubMonitor.convert( monitor );
@@ -218,14 +215,14 @@ public class WPSRequest
       return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
     }
 
-    FileObject statusFile = null;
+    final FileObject statusFile = null;
     try
     {
       Debug.println( "Checking state file of the server ..." );
       ExecuteResponseType exState = null;
 
       /* Poll to update the status. */
-      boolean run = true;
+      final boolean run = true;
       long executed = 0;
 
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
@@ -309,7 +306,7 @@ public class WPSRequest
     }
 
     // never reach this line
-    return StatusUtilities.createErrorStatus( "Unknown state." );
+// return StatusUtilities.createErrorStatus( "Unknown state." );
   }
 
   protected IStatus doTimeout( )

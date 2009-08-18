@@ -100,7 +100,7 @@ public class VFSUtilities
 
   private static final String EXTENSION_POINT_ID = "org.apache.commons.vfs.provider";
 
-  private static StandardFileSystemManager CUSTOM_FILE_SYSTEM_MANAGER = null;
+  private static IFileSystemManagerResolveDelegate FILE_SYSTEM_MANAGER_DELEGATE = null;
 
   /**
    * The constructor.
@@ -114,24 +114,18 @@ public class VFSUtilities
    */
   public static FileSystemManager getManager( ) throws FileSystemException
   {
-    if( CUSTOM_FILE_SYSTEM_MANAGER != null )
-      return CUSTOM_FILE_SYSTEM_MANAGER;
-
     final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
     configureManager( fsManager );
 
-    return fsManager;
+    return new FileSystemManagerWrapper( fsManager, FILE_SYSTEM_MANAGER_DELEGATE );
   }
 
   /**
    * This function returns a new private StandardFileSystemManager. It is the caller's responsibility to close the
    * manager and release any resources associated with its file systems.
    */
-  public static StandardFileSystemManager getNewManager( ) throws FileSystemException
+  public static FileSystemManagerWrapper getNewManager( ) throws FileSystemException
   {
-    if( CUSTOM_FILE_SYSTEM_MANAGER != null )
-      return CUSTOM_FILE_SYSTEM_MANAGER;
-
     // create new file system manager
     final StandardFileSystemManager fsManager = new StandardFileSystemManager();
     fsManager.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
@@ -139,7 +133,7 @@ public class VFSUtilities
 
     configureManager( fsManager );
 
-    return fsManager;
+    return new FileSystemManagerWrapper( fsManager, FILE_SYSTEM_MANAGER_DELEGATE );
   }
 
   /**
@@ -582,12 +576,8 @@ public class VFSUtilities
   /**
    * bad hack - set a custom file system manager to ensure custom file system settings of the given file system manager
    */
-  public static void setCustomFileSystemManager( final StandardFileSystemManager manager ) throws FileSystemException
+  public static void setCustomFileSystemManager( final IFileSystemManagerResolveDelegate delegate ) throws FileSystemException
   {
-    CUSTOM_FILE_SYSTEM_MANAGER = manager;
-    CUSTOM_FILE_SYSTEM_MANAGER.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
-    CUSTOM_FILE_SYSTEM_MANAGER.init();
-
-    configureManager( manager );
+    FILE_SYSTEM_MANAGER_DELEGATE = delegate;
   }
 }
