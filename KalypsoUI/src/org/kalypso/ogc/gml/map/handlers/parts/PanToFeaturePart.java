@@ -88,7 +88,7 @@ public class PanToFeaturePart
     if( geometries.length == 0 )
       return;
 
-    /* If there are some geometrys, zoom to the first one. */
+    /* If there are some geometries, pan to the first one. */
     final GM_Object geometry = geometries[0];
 
     /* The center point. */
