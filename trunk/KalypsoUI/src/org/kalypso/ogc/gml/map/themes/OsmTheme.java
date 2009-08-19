@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
  * Theme showing maps from Open-StreetMap.<br>
  * At the moment just using {@link KalypsoWMSTheme} implementation.
  * 
- * @author Genrot Belger
+ * @author Gernot Belger
  */
 public class OsmTheme extends KalypsoWMSTheme
 {
