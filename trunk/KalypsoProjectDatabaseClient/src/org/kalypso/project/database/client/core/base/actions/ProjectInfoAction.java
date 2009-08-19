@@ -52,6 +52,7 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseUi
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 
@@ -60,7 +61,7 @@ import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDial
  */
 public class ProjectInfoAction implements IProjectAction
 {
-  private static final Image IMG_INFO = new Image( null, ProjectInfoAction.class.getResourceAsStream( "images/action_info.gif" ) );
+  private static final Image IMG_INFO = new Image( null, ProjectInfoAction.class.getResourceAsStream( "images/action_info.gif" ) ); //$NON-NLS-1$
 
   protected final IProjectHandler m_handler;
 
@@ -83,7 +84,7 @@ public class ProjectInfoAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_INFO );
-    link.setToolTipText( "Projektinformationen abrufen" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectInfoAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

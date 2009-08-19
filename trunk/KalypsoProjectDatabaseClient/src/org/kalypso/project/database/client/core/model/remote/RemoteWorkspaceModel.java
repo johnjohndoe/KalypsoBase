@@ -133,7 +133,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected void fireWorkspaceChanged( )
   {
-    new WorkspaceJob( "" )
+    new WorkspaceJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -150,7 +150,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected void fireConnectionStatusChanged( )
   {
-    new WorkspaceJob( "" )
+    new WorkspaceJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )

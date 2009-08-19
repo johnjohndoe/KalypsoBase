@@ -59,6 +59,7 @@ import org.kalypso.project.database.client.extension.database.IKalypsoModuleData
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -139,7 +140,7 @@ public class ProjectDataBaseController
   public static IStatus acquireProjectLock( final ILocalProject handler )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    if( MessageDialog.openQuestion( shell, "Projekt zur Bearbeitung sperren", "Sie sind im Begriff, dass Projekt zur Bearbeitung zu sperren. Diese Sperre wirkt sich auf alle Nutzer im System aus.\n\nM�chten Sie das Projekt wirklich sperren / editieren?" ) )
+    if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.0"), Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
       final IStatus status = ProgressUtilities.busyCursorWhile( worker );

@@ -58,6 +58,7 @@ import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
@@ -65,7 +66,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
  */
 public class ProjectDeleteAction implements IProjectAction
 {
-  private static final Image IMG_DELETE = new Image( null, ProjectInfoAction.class.getResourceAsStream( "images/action_delete.gif" ) );
+  private static final Image IMG_DELETE = new Image( null, ProjectInfoAction.class.getResourceAsStream( "images/action_delete.gif" ) ); //$NON-NLS-1$
 
   protected final ILocalProject m_handler;
 
@@ -87,7 +88,7 @@ public class ProjectDeleteAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_DELETE );
-    link.setToolTipText( "Lösche lokales Projekt" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectDeleteAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

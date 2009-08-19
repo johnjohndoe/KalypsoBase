@@ -56,7 +56,7 @@ public class EmptyProjectAction implements IProjectAction
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    toolkit.createLabel( body, "" ).setVisible( false ); // spacer
+    toolkit.createLabel( body, "" ).setVisible( false ); // spacer //$NON-NLS-1$
   }
 
 }

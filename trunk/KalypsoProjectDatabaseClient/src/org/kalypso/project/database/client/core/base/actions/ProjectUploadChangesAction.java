@@ -68,7 +68,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
  */
 public class ProjectUploadChangesAction implements IProjectAction
 {
-  private static final Image IMG_COMMIT_CHANGES = new Image( null, ProjectUploadChangesAction.class.getResourceAsStream( "images/action_changes_commit.gif" ) );
+  private static final Image IMG_COMMIT_CHANGES = new Image( null, ProjectUploadChangesAction.class.getResourceAsStream( "images/action_changes_commit.gif" ) ); //$NON-NLS-1$
 
   protected final IKalypsoModule m_module;
 
@@ -93,7 +93,7 @@ public class ProjectUploadChangesAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_COMMIT_CHANGES );
-    link.setToolTipText( "Aktualisiere Projekt in der Projektdatenbank" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

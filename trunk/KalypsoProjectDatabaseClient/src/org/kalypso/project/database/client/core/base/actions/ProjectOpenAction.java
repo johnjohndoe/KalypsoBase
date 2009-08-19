@@ -56,6 +56,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
@@ -63,15 +64,15 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
  */
 public class ProjectOpenAction implements IProjectAction
 {
-  protected static final Image IMG_PROJECT_LOCAL = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_local.gif" ) );
+  protected static final Image IMG_PROJECT_LOCAL = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_local.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_PROJECT_TRANSCENDENCE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence.gif" ) );
+  protected static final Image IMG_PROJECT_TRANSCENDENCE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image iMG_PROJECT_TRANSCENDENCE_OFFLINE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence_offline.gif" ) );
+  protected static final Image iMG_PROJECT_TRANSCENDENCE_OFFLINE = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence_offline.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_PROJECT_TRANSCENDENCE_REMOTE_LOCK = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_remote_locked.gif" ) );
+  protected static final Image IMG_PROJECT_TRANSCENDENCE_REMOTE_LOCK = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_remote_locked.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_PROJECT_TRANSCENDENCE_LOCAL_LOCK = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence_local_lock.gif" ) );
+  protected static final Image IMG_PROJECT_TRANSCENDENCE_LOCAL_LOCK = new Image( null, ProjectOpenAction.class.getResourceAsStream( "images/project_transcendence_local_lock.gif" ) ); //$NON-NLS-1$
 
   private OPEN_TYPE m_type = null;
 
@@ -108,15 +109,15 @@ public class ProjectOpenAction implements IProjectAction
     {
       final OPEN_TYPE type = valueOf( name() );
       if( eLocal.equals( type ) )
-        return "Lokales Projekt";
+        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.5"); //$NON-NLS-1$
       else if( eLocalOffline.equals( type ) )
-        return "Lokales Datenbankprojekt - Achtung: Modelldatenbankserver ist nicht verfügbar!";
+        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.6"); //$NON-NLS-1$
       else if( eTranscendenceReadable.equals( type ) )
-        return "Lokales Datenbankprojekt im Lesemodus";
+        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.7"); //$NON-NLS-1$
       else if( eTranscendenceReadableServerLocked.equals( type ) )
-        return "Lokales Datenbankprojekt im Lesemodus - zur Zeit in Bearbeitung";
+        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.8"); //$NON-NLS-1$
       else if( eTranscendenceWriteable.equals( type ) )
-        return "Lokales Datenbankprojekt im Schreibmodus";
+        return Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.9"); //$NON-NLS-1$
 
       throw new NotImplementedException();
     }
@@ -176,7 +177,7 @@ public class ProjectOpenAction implements IProjectAction
     link.setImage( m_type.getImage() );
     link.setText( m_handler.getName() );
 
-    link.setToolTipText( String.format( "Öffne Projekt: %s - Status: %s", m_handler.getName(), m_type.getStatus() ) );
+    link.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10"), m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

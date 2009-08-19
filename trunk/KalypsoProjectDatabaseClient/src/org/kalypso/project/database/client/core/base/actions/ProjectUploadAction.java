@@ -63,7 +63,7 @@ import org.kalypso.project.database.client.i18n.Messages;
  */
 public class ProjectUploadAction implements IProjectAction
 {
-  private static final Image IMG_UPLOAD = new Image( null, ProjectUploadAction.class.getResourceAsStream( "images/action_upload.gif" ) );
+  private static final Image IMG_UPLOAD = new Image( null, ProjectUploadAction.class.getResourceAsStream( "images/action_upload.gif" ) ); //$NON-NLS-1$
 
   protected final ILocalProject m_handler;
 
@@ -90,7 +90,7 @@ public class ProjectUploadAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_UPLOAD );
-    link.setToolTipText( "Übertrage lokales Projekt in die Modelldatenbank" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectUploadAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

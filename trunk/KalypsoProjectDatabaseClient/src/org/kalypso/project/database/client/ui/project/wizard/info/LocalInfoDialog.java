@@ -162,7 +162,7 @@ public class LocalInfoDialog extends TitleAreaDialog
       
       /* change description */
       final Button changeDescription = new Button( parent, SWT.PUSH );
-      changeDescription.setText( "Ändere Projektbeschreibung" );
+      changeDescription.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.3") ); //$NON-NLS-1$
 
       changeDescription.addSelectionListener( new SelectionAdapter()
       {
@@ -172,7 +172,7 @@ public class LocalInfoDialog extends TitleAreaDialog
         @Override
         public void widgetSelected( final SelectionEvent e )
         {
-          final InputDialog input = new InputDialog( changeDescription.getShell(), "Projektbeschreibung", "Projektbeschreibung", project.getComment(), null );
+          final InputDialog input = new InputDialog( changeDescription.getShell(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.4"), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog.5"), project.getComment(), null ); //$NON-NLS-1$ //$NON-NLS-2$
           if( input.open() == Window.OK )
           {
             final String inputDescription = input.getValue();
