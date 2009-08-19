@@ -93,10 +93,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
     return null;
   }
 
-  /**
-   * @see org.kalypso.core.catalog.IURNGenerator#generateURNPatternForRelated(java.lang.Object)
-   */
-  public String generateURNPatternForRelated( final Object related )
+  private String generateBaseURNPattern( final Object related )
   {
     final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
@@ -105,7 +102,15 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
     final String baseURN = generator.generateURNFor( related );
     if( baseURN == null )
       return null;
-    return baseURN + ":" + BASETYPE + ":*"; //$NON-NLS-1$ //$NON-NLS-2$
+    return baseURN + ":" + BASETYPE + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  /**
+   * @see org.kalypso.core.catalog.IURNGenerator#generateURNPatternForRelated(java.lang.Object)
+   */
+  public String generateURNPatternForRelated( final Object related )
+  {
+    return generateBaseURNPattern( related ) + "*";//$NON-NLS-1$
   }
 
   /**
@@ -113,7 +118,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateDefaultURNForRelated( final Object related )
   {
-    return generateURNPatternForRelated( related ) + "default";
+    return generateBaseURNPattern( related ) + "default";
   }
 
   /**
@@ -121,6 +126,6 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateSelectedURNForRelated( final Object related )
   {
-    return generateURNPatternForRelated( related ) + "selected";
+    return generateBaseURNPattern( related ) + "selected";
   }
 }
