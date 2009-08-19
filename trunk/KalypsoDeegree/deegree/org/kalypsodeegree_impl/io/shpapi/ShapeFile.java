@@ -766,7 +766,7 @@ public class ShapeFile
 
         final Class clazz = ivp.getValueClass();
         if( (clazz == Integer.class) || (clazz == Byte.class) || (clazz == Character.class) || (clazz == Float.class) || (clazz == Double.class) || (clazz == Number.class) || (clazz == Date.class)
-            || (clazz == Long.class) || (clazz == String.class) )
+            || (clazz == Long.class) || (clazz == String.class) || (clazz == Boolean.class) )
         {
           vec.add( value );
         }
