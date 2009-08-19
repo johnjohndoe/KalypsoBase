@@ -47,13 +47,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * @author kuch
  */
 public class ListRemoteProjectAction implements IProjectAction
 {
-  private static final Image IMG_REMOTE_PROJECT = new Image( null, ListRemoteProjectAction.class.getResourceAsStream( "images/project_remote.gif" ) );
+  private static final Image IMG_REMOTE_PROJECT = new Image( null, ListRemoteProjectAction.class.getResourceAsStream( "images/project_remote.gif" ) ); //$NON-NLS-1$
 
   protected final IRemoteProject m_handler;
 
@@ -73,7 +74,7 @@ public class ListRemoteProjectAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     link.setImage( IMG_REMOTE_PROJECT );
-    link.setToolTipText( String.format( "Projektdatenbank Projekt: %s", m_handler.getName() ) );
+    link.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction.1"), m_handler.getName() ) ); //$NON-NLS-1$
     link.setText( m_handler.getName() );
 
     link.setEnabled( false );

@@ -326,7 +326,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   @Override
   public IProjectHandler getProject( String unique )
   {
-    if( unique.startsWith( "/" ) )
+    if( unique.startsWith( "/" ) ) //$NON-NLS-1$
     {
       unique = unique.substring( 1 );
     }

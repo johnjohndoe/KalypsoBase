@@ -50,15 +50,15 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ProjectDatabaseTest
 {
-  private static final String PROJECT_TYPE = "PlanerClientProject";
+  private static final String PROJECT_TYPE = "PlanerClientProject"; //$NON-NLS-1$
 
   @Test
   public void testCreateProjects( )
   {
     for( int i = 0; i < 10; i++ )
     {
-      createProject( "project_one", i );
-      createProject( "project_two", i );
+      createProject( "project_one", i ); //$NON-NLS-1$
+      createProject( "project_two", i ); //$NON-NLS-1$
     }
   }
 
@@ -127,7 +127,7 @@ public class ProjectDatabaseTest
 
     for( final KalypsoProjectBean project : projects )
     {
-      System.out.println( String.format( "Project: %s ", project.getName() ) );
+      System.out.println( String.format( "Project: %s ", project.getName() ) ); //$NON-NLS-1$
     }
   }
 

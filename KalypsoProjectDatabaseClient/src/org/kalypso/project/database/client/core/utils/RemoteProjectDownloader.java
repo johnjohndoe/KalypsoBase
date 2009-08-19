@@ -52,6 +52,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -95,7 +96,7 @@ public class RemoteProjectDownloader implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Downloading of remote project failed - %s", m_project.getUniqueName() ), e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString("org.kalypso.project.database.client.core.utils.RemoteProjectDownloader.0"), m_project.getUniqueName() ), e ) ); //$NON-NLS-1$
     }
   }
 

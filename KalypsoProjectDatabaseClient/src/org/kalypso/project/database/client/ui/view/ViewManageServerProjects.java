@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.management.ManageRemoteProjects;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -69,7 +70,7 @@ public class ViewManageServerProjects extends ViewPart
 {
   protected String m_selectedType = null;
 
-  public static final String ID = "org.kalypso.project.database.client.ui.view.ViewManageServerProjects";
+  public static final String ID = "org.kalypso.project.database.client.ui.view.ViewManageServerProjects"; //$NON-NLS-1$
 
   private Composite m_parent;
 
@@ -107,7 +108,7 @@ public class ViewManageServerProjects extends ViewPart
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final Group grModelType = new Group( m_body, SWT.NONE );
-    grModelType.setText( "Remote Database Model Type" );
+    grModelType.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.1") ); //$NON-NLS-1$
     grModelType.setLayout( new GridLayout() );
     grModelType.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     toolkit.adapt( grModelType );
@@ -120,7 +121,7 @@ public class ViewManageServerProjects extends ViewPart
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     if( service == null )
     {
-      toolkit.createLabel( m_body, "Project database is offline..." );
+      toolkit.createLabel( m_body, Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.2") ); //$NON-NLS-1$
       return;
     }
 
@@ -133,7 +134,7 @@ public class ViewManageServerProjects extends ViewPart
       viewerType.setSelection( new StructuredSelection( m_selectedType ) );
 
       final Group grDetails = new Group( m_body, SWT.NONE );
-      grDetails.setText( "Details" );
+      grDetails.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.3") ); //$NON-NLS-1$
       grDetails.setLayout( new GridLayout() );
       grDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       toolkit.adapt( grDetails );
@@ -158,7 +159,7 @@ public class ViewManageServerProjects extends ViewPart
         {
           m_selectedType = (String) element;
 
-          new UIJob( "" )
+          new UIJob( "" ) //$NON-NLS-1$
           {
             @Override
             public IStatus runInUIThread( final IProgressMonitor monitor )

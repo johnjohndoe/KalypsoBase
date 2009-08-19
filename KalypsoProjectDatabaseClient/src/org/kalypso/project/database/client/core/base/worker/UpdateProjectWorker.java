@@ -106,7 +106,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
-      final String fileName = String.format( "%s.zip", m_handler.getName() );
+      final String fileName = String.format( "%s.zip", m_handler.getName() ); //$NON-NLS-1$
 
       final String urlDestination = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
       {

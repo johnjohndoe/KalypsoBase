@@ -146,7 +146,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
   @Override
   public ILocalProject getProject( final String projectReference )
   {
-    if( projectReference == null || "".equals( projectReference.trim() ) )
+    if( projectReference == null || "".equals( projectReference.trim() ) ) //$NON-NLS-1$
       return null;
 
     final ILocalProject[] projects = getProjects();

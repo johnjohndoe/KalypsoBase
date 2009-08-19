@@ -52,7 +52,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
  */
 public interface IKalypsoModule
 {
-  public String EXTENSION_POINT_ID = "org.kalypso.project.database.client.kalypsoModule";
+  public String EXTENSION_POINT_ID = "org.kalypso.project.database.client.kalypsoModule"; //$NON-NLS-1$
   
   public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
 

@@ -164,10 +164,10 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
       {
         if( description.length() > 50 )
         {
-          description = description.substring( 0, 50 ) + "...";
+          description = description.substring( 0, 50 ) + "..."; //$NON-NLS-1$
         }
 
-        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) );
+        m_toolkit.createLabel( body, String.format( "     %s", description ) ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 6, 0 ) ); //$NON-NLS-1$
       }
 
   }

@@ -92,7 +92,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
   {
 
     final IProject project = m_handler.getProject();
-    final String zipName = String.format( "%s.zip", project.getName() );
+    final String zipName = String.format( "%s.zip", project.getName() ); //$NON-NLS-1$
 
     final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
     final File src = new File( urlTempDir, zipName ); //$NON-NLS-1$
@@ -148,7 +148,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       }
 
       if( uploaded == false )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Project server upload failed" ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker.1") ) ); //$NON-NLS-1$
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
@@ -162,7 +162,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       service.createProject( bean, new URL( urlDestination ) );
 
-      new WorkspaceJob( "" )
+      new WorkspaceJob( "" ) //$NON-NLS-1$
       {
 
         @Override

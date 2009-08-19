@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
 /**
@@ -60,7 +61,7 @@ import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjec
  */
 public class ProjectExportAction implements IProjectAction
 {
-  private static final Image IMG_EXPORT = new Image( null, ProjectExportAction.class.getResourceAsStream( "images/action_export.gif" ) );
+  private static final Image IMG_EXPORT = new Image( null, ProjectExportAction.class.getResourceAsStream( "images/action_export.gif" ) ); //$NON-NLS-1$
 
   protected final ILocalProject m_handler;
 
@@ -82,7 +83,7 @@ public class ProjectExportAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_EXPORT );
-    link.setToolTipText( "Exportiere lokales Projekt" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectExportAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

@@ -59,6 +59,7 @@ import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabas
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
 import org.kalypso.project.database.sei.IProjectDatabase;
@@ -69,11 +70,11 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ManageRemoteProjects extends Composite implements IRemoteProjectsListener
 {
-  private static final Image IMG_DELETE = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/delete.gif" ) );
+  private static final Image IMG_DELETE = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/delete.gif" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_REMOTE_PROJECT = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/remote_project.gif" ) );
+  private static final Image IMG_REMOTE_PROJECT = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/remote_project.gif" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_UNLOCK = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/unlock.gif" ) );
+  private static final Image IMG_UNLOCK = new Image( null, ManageRemoteProjects.class.getResourceAsStream( "icons/unlock.gif" ) ); //$NON-NLS-1$
 
   private final String m_type;
 
@@ -143,7 +144,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       if( head.isProjectLockedForEditing() )
       {
         final ImageHyperlink lnkReleaseLock = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        lnkReleaseLock.setToolTipText( "Remove lock from remote project" );
+        lnkReleaseLock.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.3") ); //$NON-NLS-1$
         lnkReleaseLock.setImage( IMG_UNLOCK );
 
         lnkReleaseLock.addHyperlinkListener( new HyperlinkAdapter()
@@ -166,7 +167,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
       
       final ImageHyperlink lnkDeleteAll = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-      lnkDeleteAll.setToolTipText( "Delete whole remote project" );
+      lnkDeleteAll.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.4") ); //$NON-NLS-1$
       lnkDeleteAll.setImage( IMG_DELETE );
 
       
@@ -186,7 +187,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
       for( final KalypsoProjectBean version : versions )
       {
-        final String text = String.format( "Version: %d", version.getProjectVersion() );
+        final String text = String.format( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.5"), version.getProjectVersion() ); //$NON-NLS-1$
 
         final ImageHyperlink linkVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
         linkVersion.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false, 2, 0 ) );
@@ -195,7 +196,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
         linkVersion.setUnderlined( false );
 
         final ImageHyperlink lnkDeleteVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        lnkDeleteVersion.setToolTipText( String.format( "Delete %s", text ) );
+        lnkDeleteVersion.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.6"), text ) ); //$NON-NLS-1$
         lnkDeleteVersion.setImage( IMG_DELETE );
 
         lnkDeleteVersion.addHyperlinkListener( new HyperlinkAdapter()
@@ -215,7 +216,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
         } );
       }
 
-      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 3, 0 ) );
+      m_toolkit.createLabel( m_body, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 3, 0 ) ); //$NON-NLS-1$
     }
 
     m_toolkit.adapt( this );
@@ -237,7 +238,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   @Override
   public void remoteWorkspaceChanged( )
   {
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
 
       @Override

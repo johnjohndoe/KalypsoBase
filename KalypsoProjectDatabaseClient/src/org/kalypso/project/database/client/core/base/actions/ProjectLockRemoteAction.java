@@ -72,9 +72,9 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ProjectLockRemoteAction implements IProjectAction
 {
-  private static final Image IMG_AQUIRE_LOCK = new Image( null, ProjectLockRemoteAction.class.getResourceAsStream( "images/action_lock_acquire.gif" ) );
+  private static final Image IMG_AQUIRE_LOCK = new Image( null, ProjectLockRemoteAction.class.getResourceAsStream( "images/action_lock_acquire.gif" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_RELEASE_LOCK = new Image( null, ProjectLockRemoteAction.class.getResourceAsStream( "images/action_lock_release.gif" ) );
+  private static final Image IMG_RELEASE_LOCK = new Image( null, ProjectLockRemoteAction.class.getResourceAsStream( "images/action_lock_release.gif" ) ); //$NON-NLS-1$
 
   protected final ITranscendenceProject m_handler;
 
@@ -126,13 +126,13 @@ public class ProjectLockRemoteAction implements IProjectAction
     {
       final Date editLockDate = bean.getEditLockDate() == null ? new Date() : bean.getEditLockDate();
 
-      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" );
+      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
       final String date = sdf.format( editLockDate );
 
-      tooltip = String.format( "Entsperre Projekt (gesperrt am %s)", date );
+      tooltip = String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.3"), date ); //$NON-NLS-1$
     }
     else
-      tooltip = "Entsperre Projekt";
+      tooltip = Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.4"); //$NON-NLS-1$
 
     link.setToolTipText( tooltip );
 
@@ -176,7 +176,7 @@ public class ProjectLockRemoteAction implements IProjectAction
   private void acquireProjectLock( final ImageHyperlink link )
   {
     link.setImage( IMG_AQUIRE_LOCK );
-    link.setToolTipText( "Sperre Projekt f�r die Bearbeitung" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.5") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

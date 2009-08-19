@@ -61,6 +61,7 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.module.IModulePageWizardDelegate;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.MyColors;
 import org.kalypso.project.database.client.ui.MyFonts;
 import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseComposite;
@@ -163,7 +164,7 @@ public class ModulePageComposite extends Composite
 
     // list of projects
     final ScrolledSection sectionProjects = new ScrolledSection( body, m_toolkit, ExpandableComposite.TITLE_BAR, true );
-    final Composite bodyProjects = sectionProjects.setup( "Projects:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    final Composite bodyProjects = sectionProjects.setup( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.0"), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
     final GridLayout layout = new GridLayout( 2, true );
     layout.verticalSpacing = layout.marginWidth = 0;
     bodyProjects.setLayout( layout );
@@ -197,7 +198,7 @@ public class ModulePageComposite extends Composite
       }
     };
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Create new Project", bodyProjects, m_toolkit, projectDelegate );
+    final CreateProjectComposite projectTemplate = new CreateProjectComposite( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.1"), bodyProjects, m_toolkit, projectDelegate ); //$NON-NLS-1$
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, m_toolkit );
@@ -229,7 +230,7 @@ public class ModulePageComposite extends Composite
         }
       };
 
-      final CreateProjectComposite demoProject = new CreateProjectComposite( "Extract Demo-Project", bodyProjects, m_toolkit, demoDelegate );
+      final CreateProjectComposite demoProject = new CreateProjectComposite( Messages.getString("org.kalypso.project.database.client.ui.composites.ModulePageComposite.2"), bodyProjects, m_toolkit, demoDelegate ); //$NON-NLS-1$
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else

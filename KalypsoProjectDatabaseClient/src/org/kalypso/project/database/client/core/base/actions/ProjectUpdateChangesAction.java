@@ -72,7 +72,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ProjectUpdateChangesAction implements IProjectAction
 {
-  private static final Image IMG_UPDATE_CHANGES = new Image( null, ProjectUpdateChangesAction.class.getResourceAsStream( "images/action_changes_update.gif" ) );
+  private static final Image IMG_UPDATE_CHANGES = new Image( null, ProjectUpdateChangesAction.class.getResourceAsStream( "images/action_changes_update.gif" ) ); //$NON-NLS-1$
 
   protected final IKalypsoModule m_module;
 
@@ -99,7 +99,7 @@ public class ProjectUpdateChangesAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_UPDATE_CHANGES );
-    link.setToolTipText( "Aktualisere lokales Projekt" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectUpdateChangesAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

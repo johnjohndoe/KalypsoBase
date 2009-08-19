@@ -58,6 +58,7 @@ import org.kalypso.project.database.client.core.base.worker.RemoteImportWorker;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -65,7 +66,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ProjectDownloadAction implements IProjectAction
 {
-  private static final Image IMG_DOWNLOAD = new Image( null, ProjectDownloadAction.class.getResourceAsStream( "images/action_download.gif" ) );
+  private static final Image IMG_DOWNLOAD = new Image( null, ProjectDownloadAction.class.getResourceAsStream( "images/action_download.gif" ) ); //$NON-NLS-1$
 
   protected final IKalypsoModule m_module;
 
@@ -90,7 +91,7 @@ public class ProjectDownloadAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_DOWNLOAD );
-    link.setToolTipText( "Laden entferntes Projekt" );
+    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction.1") ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
