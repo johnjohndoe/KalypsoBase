@@ -159,9 +159,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Set<KalypsoUserStyle> set = m_styleMap.keySet();
     final KalypsoUserStyle[] styles = set.toArray( new KalypsoUserStyle[set.size()] );
     for( final KalypsoUserStyle element : styles )
-    {
       removeStyle( element );
-    }
 
     if( m_workspace != null )
     {
@@ -170,9 +168,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     if( m_featureThemeIcon != null )
-    {
       m_featureThemeIcon.dispose();
-    }
 
     super.dispose();
   }
