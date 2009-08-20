@@ -43,6 +43,9 @@ package org.kalypso.ogc.gml.map.themes;
 import java.net.URL;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -52,6 +55,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link KalypsoWMSTheme}s.
@@ -66,7 +70,7 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
   @Override
-  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) 
+  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
   {
     final String source = layerType.getHref();
     final String linktype = layerType.getLinktype();
@@ -88,4 +92,13 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
     return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, mapModell );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, int,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
+   */
+  @Override
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, int count, GM_Envelope bbox, String srsName )
+  {
+    throw new NotImplementedException();
+  }
 }

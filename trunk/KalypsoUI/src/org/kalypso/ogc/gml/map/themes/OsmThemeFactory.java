@@ -42,6 +42,9 @@ package org.kalypso.ogc.gml.map.themes;
 
 import java.net.URL;
 
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFactory;
@@ -50,6 +53,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.OsmImageProvider;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link OsmTheme}s.
@@ -64,12 +68,22 @@ public class OsmThemeFactory implements IKalypsoThemeFactory
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
   @Override
-  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) 
+  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
   {
     final String source = layerType.getHref();
     final String linkType = layerType.getLinktype();
     final IKalypsoImageProvider imageProvider = new OsmImageProvider();
-    
+
     return new OsmTheme( source, linkType, layerName, imageProvider, mapModell );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, int,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
+   */
+  @Override
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, int count, GM_Envelope bbox, String srsName )
+  {
+    throw new NotImplementedException();
   }
 }

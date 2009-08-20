@@ -114,7 +114,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- *
+ * 
  * @author Belger
  */
 public class GisTemplateHelper
@@ -268,7 +268,7 @@ public class GisTemplateHelper
   /**
    * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
    * value ersetzt. Funktioniert nur zeilenweise, d.h.
-   *
+   * 
    * @param file
    * @param replaceProps
    * @return Gistableview
@@ -338,7 +338,7 @@ public class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   *
+   * 
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
@@ -486,7 +486,10 @@ public class GisTemplateHelper
     final String themeNameKey = theme.getName().getKey();
 
     if( theme instanceof GisTemplateFeatureTheme )
+    {
       ((GisTemplateFeatureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() );//$NON-NLS-1$
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+    }
     else if( theme instanceof KalypsoWMSTheme )
     {
       layer.setName( themeNameKey );
@@ -506,10 +509,12 @@ public class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoPictureTheme )
     {
       ((KalypsoPictureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof CascadingKalypsoTheme )
     {
@@ -517,6 +522,7 @@ public class GisTemplateHelper
       cascadingKalypsoTheme.fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
 
       cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, monitor );
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoLegendTheme )
     {
@@ -536,6 +542,7 @@ public class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoScaleTheme )
     {
@@ -552,16 +559,20 @@ public class GisTemplateHelper
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+      return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else
     {
-      // Return null for unknown themes, else we produce invalid XML
-      return null;
+      final String type = theme.getType();
+      final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
+      if( themeFactory == null )
+      {
+        // Return null for unknown themes, else we produce invalid XML
+        return null;
+      }
+
+      return themeFactory.configureLayer( theme, count, bbox, srsName );
     }
-
-    monitor.done();
-
-    return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
   }
 
   public static Filter getFilter( final Layer layer ) throws FilterConstructionException
