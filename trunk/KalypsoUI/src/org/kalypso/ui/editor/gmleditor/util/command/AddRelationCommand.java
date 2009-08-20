@@ -1,13 +1,3 @@
-package org.kalypso.ui.editor.gmleditor.util.command;
-
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -48,6 +38,16 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.editor.gmleditor.util.command;
+
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
 
 public class AddRelationCommand implements ICommand
 {
