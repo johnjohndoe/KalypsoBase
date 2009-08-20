@@ -174,7 +174,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       GisTemplateFeatureTheme.configureProperties( this, mapLayerType );
     }
 
-    setStatus( StatusUtilities.createInfoStatus( Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.3" ) ) ); //$NON-NLS-1$
+    setStatus( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.3" ) ) ); //$NON-NLS-1$
 
     final boolean isLazyLoading = false;
     // TODO: get from preferences or properties or ....
@@ -203,14 +203,14 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     try
     {
-      setStatus( StatusUtilities.createInfoStatus( Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.0" ) ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.0" ) ) ); //$NON-NLS-1$
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       pool.addPoolListener( this, m_layerKey );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e );
       setStatus( status );
     }
   }
@@ -380,7 +380,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       }
       catch( final Throwable e )
       {
-        final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
+        final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
         KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
         return;
       }
@@ -525,7 +525,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
-      setStatus( StatusUtilities.createWarningStatus( Messages.get( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.2" ) ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.2" ) ) ); //$NON-NLS-1$
       m_theme.dispose();
       m_theme = null;
     }

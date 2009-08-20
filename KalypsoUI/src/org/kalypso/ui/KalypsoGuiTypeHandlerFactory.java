@@ -82,7 +82,7 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
       // this method is also used in headless mode
       if( PlatformUI.isWorkbenchRunning() )
       {
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get("org.kalypso.ui.KalypsoGuiTypeHandlerFactory.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.KalypsoGuiTypeHandlerFactory.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
   }

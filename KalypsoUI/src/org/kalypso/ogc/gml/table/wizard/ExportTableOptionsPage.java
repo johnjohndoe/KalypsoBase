@@ -93,15 +93,15 @@ public class ExportTableOptionsPage extends WizardPage
     final GridLayout layout = new GridLayout();
     optionsGroup.setLayout( layout );
     optionsGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    optionsGroup.setText( Messages.get("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.0") ); //$NON-NLS-1$
+    optionsGroup.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.0") ); //$NON-NLS-1$
     optionsGroup.setFont( parent.getFont() );
 
     m_radioAll = new Button( optionsGroup, SWT.RADIO );
-    m_radioAll.setText( Messages.get("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.1") ); //$NON-NLS-1$
+    m_radioAll.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.1") ); //$NON-NLS-1$
     m_radioAll.setSelection( true );
 
     m_radioSelection = new Button( optionsGroup, SWT.RADIO );
-    m_radioSelection.setText( Messages.get("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.2") ); //$NON-NLS-1$
+    m_radioSelection.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.2") ); //$NON-NLS-1$
   }
 
   public boolean getOnlySelected()

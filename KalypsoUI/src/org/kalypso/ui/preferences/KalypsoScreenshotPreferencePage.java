@@ -142,8 +142,8 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
   {
     super();
 
-    setTitle( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.9") ); //$NON-NLS-1$
-    setDescription( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.10") ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.9") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.10") ); //$NON-NLS-1$
   }
 
   protected void checkPage( )
@@ -157,7 +157,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( (sHeight == null) || m.matches() )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.13") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.13") ); //$NON-NLS-1$
 
       return;
     }
@@ -166,7 +166,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( iHeight <= 0 )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.15") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.15") ); //$NON-NLS-1$
 
       return;
     }
@@ -178,7 +178,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( (sWidth == null) || m.matches() )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.18") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.18") ); //$NON-NLS-1$
 
       return;
     }
@@ -188,7 +188,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( iWidth <= 0 )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.20") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.20") ); //$NON-NLS-1$
 
       return;
     }
@@ -197,7 +197,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( selection == null )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.22") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.22") ); //$NON-NLS-1$
 
       return;
     }
@@ -206,7 +206,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( (text == null) || "".equals( text ) ) //$NON-NLS-1$
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.25") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.25") ); //$NON-NLS-1$
 
       return;
     }
@@ -215,7 +215,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( !file.exists() )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.27") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.27") ); //$NON-NLS-1$
 
       return;
     }
@@ -223,7 +223,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     if( !file.isDirectory() )
     {
       setMessage( "" ); //$NON-NLS-1$
-      setErrorMessage( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.29") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.29") ); //$NON-NLS-1$
 
       return;
     }
@@ -248,7 +248,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
      * SCREENSHOTS
      ******************************************************************************************************************/
     final Group grScreen = new Group( composite, SWT.NONE );
-    grScreen.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.30") ); //$NON-NLS-1$
+    grScreen.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.30") ); //$NON-NLS-1$
     grScreen.setLayout( new GridLayout() );
     grScreen.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -258,7 +258,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot width */
     final Label lWidth = new Label( cgrScreen, SWT.NONE );
-    lWidth.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.31") ); //$NON-NLS-1$
+    lWidth.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.31") ); //$NON-NLS-1$
 
     m_width = new Text( cgrScreen, SWT.BORDER );
     m_width.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -279,7 +279,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot height */
     final Label lHeight = new Label( cgrScreen, SWT.NONE );
-    lHeight.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.32") ); //$NON-NLS-1$
+    lHeight.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.32") ); //$NON-NLS-1$
 
     m_height = new Text( cgrScreen, SWT.BORDER );
     m_height.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -300,7 +300,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot format */
     final Label lFormat = new Label( cgrScreen, SWT.NONE );
-    lFormat.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.33") ); //$NON-NLS-1$
+    lFormat.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.33") ); //$NON-NLS-1$
 
     final String[] formats = new String[] { "jpg", "png" }; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -346,12 +346,12 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* target folder */
     final Group grTarget = new Group( composite, SWT.NONE );
-    grTarget.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.40") ); //$NON-NLS-1$
+    grTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.40") ); //$NON-NLS-1$
     grTarget.setLayout( new GridLayout( 3, false ) );
     grTarget.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Label lTarget = new Label( grTarget, SWT.NONE );
-    lTarget.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.41") ); //$NON-NLS-1$
+    lTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.41") ); //$NON-NLS-1$
 
     m_target = new Text( grTarget, SWT.READ_ONLY | SWT.BORDER );
     m_target.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -364,7 +364,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     } );
 
     final Button bTarget = new Button( grTarget, SWT.NONE );
-    bTarget.setText( Messages.get("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.42") ); //$NON-NLS-1$
+    bTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.42") ); //$NON-NLS-1$
 
     bTarget.addSelectionListener( new SelectionAdapter()
     {

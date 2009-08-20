@@ -108,7 +108,7 @@ public class StatusComposite extends Composite
     if( (style & DETAILS) != 0 )
     {
       m_detailsButton = new Button( this, SWT.PUSH );
-      m_detailsButton.setText( Messages.get( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
+      m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
       m_detailsButton.addSelectionListener( new SelectionAdapter()
       {
         /**
@@ -130,7 +130,7 @@ public class StatusComposite extends Composite
     if( m_status == null )
       return;
 
-    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.get( "org.kalypso.util.swt.StatusComposite.2" ) ); //$NON-NLS-1$
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString( "org.kalypso.util.swt.StatusComposite.2" ) ); //$NON-NLS-1$
     statusTableDialog.open();
   }
 
@@ -140,7 +140,7 @@ public class StatusComposite extends Composite
   @Override
   public void setLayout( final Layout layout )
   {
-    throw new UnsupportedOperationException( Messages.get( "org.kalypso.util.swt.StatusComposite.3" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.util.swt.StatusComposite.3" ) ); //$NON-NLS-1$
   }
 
   /**

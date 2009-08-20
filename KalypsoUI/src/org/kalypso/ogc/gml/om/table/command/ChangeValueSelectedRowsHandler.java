@@ -62,7 +62,7 @@ public class ChangeValueSelectedRowsHandler extends AbstractHandler
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.om.table.command.ChangeValueSelectedRowsHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.ChangeValueSelectedRowsHandler.0") ); //$NON-NLS-1$
 
    //TODO show dialog
     return null;

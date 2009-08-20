@@ -99,6 +99,6 @@ public class RemoveThemeCommand implements ICommand
    */
   public String getDescription()
   {
-    return Messages.get("org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0"); //$NON-NLS-1$
   }
 }

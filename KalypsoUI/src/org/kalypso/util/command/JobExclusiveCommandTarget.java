@@ -118,7 +118,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     if( m_commandManager == null )
     {
       // TODO: error handling
-      System.out.println( Messages.get("org.kalypso.util.command.JobExclusiveCommandTarget.0") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.util.command.JobExclusiveCommandTarget.0") ); //$NON-NLS-1$
     }
     else
     {

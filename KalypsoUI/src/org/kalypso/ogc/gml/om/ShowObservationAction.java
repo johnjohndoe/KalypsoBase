@@ -68,7 +68,7 @@ public class ShowObservationAction extends ActionDelegate
     }
     catch( final PartInitException e )
     {
-      ErrorDialog.openError( event.display.getActiveShell(), Messages.get("org.kalypso.ogc.gml.om.ShowObservationAction.1"), Messages.get("org.kalypso.ogc.gml.om.ShowObservationAction.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.1"), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

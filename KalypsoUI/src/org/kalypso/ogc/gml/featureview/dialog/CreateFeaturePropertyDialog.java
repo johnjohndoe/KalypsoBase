@@ -117,8 +117,8 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
     }
 
     // TODO: the other cases (choosing a feature) are not supported yet
-    final String userMessage = Messages.get( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ); //$NON-NLS-1$
-    MessageDialog.openInformation( shell, Messages.get( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit" ), userMessage ); //$NON-NLS-1$
+    final String userMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ); //$NON-NLS-1$
+    MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit" ), userMessage ); //$NON-NLS-1$
 
     return Window.CANCEL;
   }
@@ -144,13 +144,13 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
     msg.append( "\' " ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() )
-      msg.append( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.2" ) ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.2" ) ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() && m_relationType.isLinkAble() )
-      msg.append( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.3" ) ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.3" ) ); //$NON-NLS-1$
 
     if( m_relationType.isLinkAble() )
-      msg.append( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.4" ) ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.4" ) ); //$NON-NLS-1$
 
     return msg.toString();
   }

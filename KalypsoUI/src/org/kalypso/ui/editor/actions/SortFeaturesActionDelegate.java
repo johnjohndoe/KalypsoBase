@@ -81,7 +81,7 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
 {
   private FeatureAssociationTypeElement m_fate;
 
-  private static final String STR_TITLE = Messages.get( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.0" ); //$NON-NLS-1$
+  private static final String STR_TITLE = Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.0" ); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
@@ -144,7 +144,7 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
     catch( final Throwable e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, STR_TITLE, Messages.get( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.1" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, STR_TITLE, Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.1" ), status ); //$NON-NLS-1$
     }
   }
 
@@ -160,13 +160,13 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
 
     if( props.size() == 0 )
     {
-      MessageDialog.openInformation( shell, STR_TITLE, Messages.get( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.2" ) ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, STR_TITLE, Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.2" ) ); //$NON-NLS-1$
       return null;
     }
 
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( STR_TITLE );
-    dialog.setMessage( Messages.get( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.3" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.3" ) ); //$NON-NLS-1$
     dialog.setAddCancelButton( true );
     // dialog.setDialogBoundsSettings( settings, strategy );
 
@@ -201,7 +201,7 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
   private void sort( final FeatureList list, final IPropertyType propertyToSort )
   {
     if( !(propertyToSort instanceof IValuePropertyType) )
-      throw new IllegalArgumentException( Messages.get( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.5" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.5" ) ); //$NON-NLS-1$
 
     // TODO: undoable!
 

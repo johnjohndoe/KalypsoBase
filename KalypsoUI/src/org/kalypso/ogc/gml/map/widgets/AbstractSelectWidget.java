@@ -355,7 +355,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
         toAdd = new EasyFeatureWrapper[0];
 
       default:
-        throw new UnsupportedOperationException( Messages.get( "org.kalypso.ogc.gml.map.MapPanel.18" ) + selectionMode ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.18" ) + selectionMode ); //$NON-NLS-1$
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );

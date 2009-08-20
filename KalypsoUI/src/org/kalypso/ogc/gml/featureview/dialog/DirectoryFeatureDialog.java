@@ -84,7 +84,7 @@ public class DirectoryFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.get( "org.kalypso.ogc.gml.featureview.dialog.DirectoryPropertyDialog.editvalues" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.DirectoryPropertyDialog.editvalues" ); //$NON-NLS-1$
   }
 
   /**
@@ -93,7 +93,7 @@ public class DirectoryFeatureDialog implements IFeatureDialog
   public int open( Shell shell )
   {
     DirectoryDialog dialog = new DirectoryDialog( shell );
-    dialog.setMessage( Messages.get( "org.kalypso.ogc.gml.featureview.dialog.DirectoryPropertyDialog.text" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.DirectoryPropertyDialog.text" ) ); //$NON-NLS-1$
 
     File file = (File) m_feature.getProperty( m_ftp );
 

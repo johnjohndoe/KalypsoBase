@@ -84,7 +84,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 
   public EditFeatureGeometryWidget( )
   {
-    this( Messages.get( "org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.0" ), Messages.get( "org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.1" ), null, null, null ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString( "org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.1" ), null, null, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

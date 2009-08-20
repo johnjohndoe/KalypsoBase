@@ -68,15 +68,15 @@ public class OpenOutlineHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.0") ); //$NON-NLS-1$
 
     final IWorkbenchPartSite site = part.getSite();
     if( site == null )
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.1") ); //$NON-NLS-1$
 
     final IWorkbenchPage page = site.getPage();
     if( page == null )
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.2") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.2") ); //$NON-NLS-1$
 
     try
     {
@@ -100,7 +100,7 @@ public class OpenOutlineHandler extends AbstractHandler
     }
     catch( final Exception e )
     {
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.3"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.3"), e ); //$NON-NLS-1$
     }
   }
 }

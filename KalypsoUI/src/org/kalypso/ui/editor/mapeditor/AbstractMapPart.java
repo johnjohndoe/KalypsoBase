@@ -207,7 +207,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final JobExclusiveCommandTarget commandTarget = getCommandTarget();
 
-    m_statusBar.setText( Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.4" ) ); //$NON-NLS-1$
+    m_statusBar.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.4" ) ); //$NON-NLS-1$
 
     // both IViewSite und IEditorSite give access to actionBars
     final IActionBars actionBars = getActionBars( site );
@@ -270,7 +270,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
     if( m_mapModell == null )
-      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
@@ -357,7 +357,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public void startLoadJob( final IStorage storage )
   {
-    final Job job = new Job( Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.5" ) + storage.getName() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.5" ) + storage.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus run( final IProgressMonitor monitor )
@@ -391,7 +391,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_saving )
       return;
 
-    monitor.beginTask( Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
     try
     {
@@ -414,7 +414,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       showBusy( true );
 
       if( m_mapPanel != null )
-        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -449,7 +449,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setFile( null );
 
       if( m_mapPanel != null )
-        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) ); //$NON-NLS-1$
+        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) ); //$NON-NLS-1$
 
       throw new CoreException( status );
     }
@@ -460,7 +460,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       final IFile file = getFile();
       if( m_partName == null )
       {
-        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
+        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
         setCustomName( fileName );
       }
       // TODO: always call in SWT thread (or move into setCustomName)
@@ -522,7 +522,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     
     try
     {
-      monitor.beginTask( Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.8" ), 2000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.8" ), 2000 ); //$NON-NLS-1$
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
       final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       m_mapModell.saveGismapTemplate( boundingBox, srsName, monitor, file );
@@ -535,7 +535,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     catch( final Throwable e )
     {
       m_saving = false;
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.9" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.9" ) ) ); //$NON-NLS-1$
     }
     
     m_saving = false;
@@ -551,7 +551,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     final String partName;
     if( m_mapModell == null )
-      partName = Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
+      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
     else
       partName = m_mapModell.getLabel( m_mapModell );
     setCustomName( partName );
@@ -662,7 +662,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final double width = bounds.width;
     final double height = bounds.height;
     final double actualWidthToHeigthRatio = width / height;
-    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.get( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.16" ), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.16" ), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
   }

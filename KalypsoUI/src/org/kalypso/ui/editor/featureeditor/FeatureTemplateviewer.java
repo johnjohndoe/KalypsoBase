@@ -119,7 +119,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.get( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1" ), Messages.get( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       // getLayerTable().setFocusedFeature( feature, ftp );
@@ -178,7 +178,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -301,7 +301,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
     final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
 
-    final String errorMessage = Messages.get( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
+    final String errorMessage = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
 
     try
     {
@@ -320,7 +320,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       if( m_workspace == null )
       {
         m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( Messages.get( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
+        m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }

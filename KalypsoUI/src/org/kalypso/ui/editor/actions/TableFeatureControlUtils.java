@@ -107,11 +107,11 @@ public class TableFeatureControlUtils
       {
         String msg;
         if( allFeatures.length == 1 )
-          msg = Messages.get("org.kalypso.ui.editor.actions.TableFeatureControlUtils.0"); //$NON-NLS-1$
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.0"); //$NON-NLS-1$
         else
-          msg = Messages.get("org.kalypso.ui.editor.actions.TableFeatureControlUtils.1"); //$NON-NLS-1$
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.1"); //$NON-NLS-1$
 
-        MessageDialog dialog = new MessageDialog( shell, Messages.get("org.kalypso.ui.editor.actions.TableFeatureControlUtils.2"), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
+        MessageDialog dialog = new MessageDialog( shell, Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.2"), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
         {
           /**
            * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)

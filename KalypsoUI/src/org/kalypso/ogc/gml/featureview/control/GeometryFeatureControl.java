@@ -99,9 +99,9 @@ public class GeometryFeatureControl extends AbstractFeatureControl
       final IPropertyType ftp = getFeatureTypeProperty();
 
       if( feature.getProperty( ftp ) != null )
-        m_label.setText( Messages.get("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.0") ); //$NON-NLS-1$
+        m_label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.0") ); //$NON-NLS-1$
       else
-        m_label.setText( Messages.get("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.1") ); //$NON-NLS-1$
+        m_label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.1") ); //$NON-NLS-1$
     }
   }
 

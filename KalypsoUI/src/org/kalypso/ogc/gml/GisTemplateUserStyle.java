@@ -83,7 +83,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName, final boolean usedForSelection )
   {
-    super( createDummyStyle( Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.0" ) ), styleName, usedForSelection ); //$NON-NLS-1$
+    super( createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.0" ) ), styleName, usedForSelection ); //$NON-NLS-1$
     m_styleKey = poolableStyleKey;
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.addPoolListener( this, m_styleKey );
@@ -117,7 +117,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
         if( m_userStyle == null )
         {
-          final String msg = Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.1" ) + m_styleName + Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.2" ); //$NON-NLS-1$ //$NON-NLS-2$
+          final String msg = Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.1" ) + m_styleName + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.2" ); //$NON-NLS-1$ //$NON-NLS-2$
           System.out.println( msg );
           m_userStyle = createDummyStyle( msg );
         }
@@ -145,7 +145,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
-      m_userStyle = createDummyStyle( Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ) ); //$NON-NLS-1$
+      m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ) ); //$NON-NLS-1$
 
       fireStyleChanged();
       setDirty( false );
@@ -159,7 +159,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.removePoolListener( this );
-    m_userStyle = createDummyStyle( Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.4" ) ); //$NON-NLS-1$
+    m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.4" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -209,7 +209,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     final String label = super.getLabel( o );
 
     if( !isLoaded() )
-      return label + Messages.get( "org.kalypso.ogc.gml.GisTemplateUserStyle.5" ); //$NON-NLS-1$
+      return label + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.5" ); //$NON-NLS-1$
 
     if( m_dirty )
       return label + "*"; //$NON-NLS-1$

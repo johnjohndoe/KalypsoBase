@@ -104,12 +104,12 @@ public class AxisRangeDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
-    getShell().setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.0") ); //$NON-NLS-1$
     Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 2, true ) );
     // Name
     Label label6 = new Label( group, SWT.NONE );
-    label6.setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.1") ); //$NON-NLS-1$
+    label6.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.1") ); //$NON-NLS-1$
     m_nameText = new Text( group, 2050 );
     m_nameText.setText( "" ); //$NON-NLS-1$
     GridData m_nameData = new GridData( GridData.END );
@@ -117,7 +117,7 @@ public class AxisRangeDialog extends ResizableDialog
     m_nameText.setLayoutData( m_nameData );
     // MIN
     Label label = new Label( group, SWT.NONE );
-    label.setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.3") ); //$NON-NLS-1$
+    label.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.3") ); //$NON-NLS-1$
     m_minText = new Text( group, 2050 );
     m_minText.setText( "0" ); //$NON-NLS-1$
     GridData m_minData = new GridData( GridData.END );
@@ -125,7 +125,7 @@ public class AxisRangeDialog extends ResizableDialog
     m_minText.setLayoutData( m_minData );
     // Intervall
     Label label2 = new Label( group, SWT.NONE );
-    label2.setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.5") ); //$NON-NLS-1$
+    label2.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.5") ); //$NON-NLS-1$
     m_intText = new Text( group, 2050 );
     m_intText.setText( "1" ); //$NON-NLS-1$
     GridData m_intData = new GridData( GridData.END );
@@ -133,7 +133,7 @@ public class AxisRangeDialog extends ResizableDialog
     m_intText.setLayoutData( m_intData );
     // ANZAHL
     Label label3 = new Label( group, SWT.NONE );
-    label3.setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.7") ); //$NON-NLS-1$
+    label3.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.7") ); //$NON-NLS-1$
     m_countText = new Text( group, 2050 );
     m_countText.setText( "10" ); //$NON-NLS-1$
     GridData m_countData = new GridData( GridData.END );
@@ -141,7 +141,7 @@ public class AxisRangeDialog extends ResizableDialog
     m_countText.setLayoutData( m_countData );
     //Default Wert
     Label label5 = new Label( group, SWT.NONE );
-    label5.setText( Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.9") ); //$NON-NLS-1$
+    label5.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.9") ); //$NON-NLS-1$
     m_defaultText = new Text( group, 2050 );
     m_defaultText.setText( "10" ); //$NON-NLS-1$
     GridData m_defaultData = new GridData( GridData.END );
@@ -198,18 +198,18 @@ public class AxisRangeDialog extends ResizableDialog
     String message = ""; //$NON-NLS-1$
     try
     {
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.13"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.13"); //$NON-NLS-1$
       m_name = m_nameText.getText();
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.14"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.14"); //$NON-NLS-1$
       m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.15"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.15"); //$NON-NLS-1$
       m_int = SpecialPropertyMapper.cast( m_intText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.16"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.16"); //$NON-NLS-1$
       m_count = ( (Integer)SpecialPropertyMapper.cast( m_countText.getText(), Integer.class, false, true ) ).intValue();
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.17"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.17"); //$NON-NLS-1$
       m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeserieUtils.getDataClass( m_axisType ),
           false, true );
-      message = Messages.get("org.kalypso.ogc.sensor.view.AxisRangeDialog.18"); //$NON-NLS-1$
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.18"); //$NON-NLS-1$
       m_valid = true;
     }
     catch( Exception e )

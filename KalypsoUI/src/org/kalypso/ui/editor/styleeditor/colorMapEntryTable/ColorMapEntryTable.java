@@ -436,7 +436,7 @@ public class ColorMapEntryTable
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( table.getShell(), "Error", Messages.get("org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( table.getShell(), "Error", Messages.getString("org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

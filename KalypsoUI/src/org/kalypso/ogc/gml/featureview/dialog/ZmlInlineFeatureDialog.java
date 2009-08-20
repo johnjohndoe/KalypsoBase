@@ -119,6 +119,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.get("org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog.diagram"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ZmlInlineFeatureDialog.diagram"); //$NON-NLS-1$
   }
 }

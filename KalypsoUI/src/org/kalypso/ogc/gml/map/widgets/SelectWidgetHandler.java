@@ -87,7 +87,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     if( widget == null )
     {
-      final String msg = String.format( Messages.get( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" ), pluginParameter, widgetParameter ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" ), pluginParameter, widgetParameter ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;
@@ -99,7 +99,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final AbstractMapPart abstractMapPart = findMapPart( window );
     final IMapPanel mapPanel = abstractMapPart == null ? null : abstractMapPart.getMapPanel();
     if( mapPanel == null )
-      return StatusUtilities.createStatus( IStatus.WARNING, Messages.get( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
@@ -111,7 +111,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         return null;
     }
 
-    final UIJob job = new ActivateWidgetJob( Messages.get( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart.getSite().getPage() ); //$NON-NLS-1$
+    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart.getSite().getPage() ); //$NON-NLS-1$
     // Probably not necessary
     job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
     job.schedule();

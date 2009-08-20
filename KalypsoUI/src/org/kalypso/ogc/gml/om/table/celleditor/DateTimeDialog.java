@@ -89,7 +89,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
 
-    newShell.setText( Messages.get( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.0" ) ); //$NON-NLS-1$
+    newShell.setText( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -100,7 +100,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( Messages.get( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.1" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.1" ) ); //$NON-NLS-1$
     setMessage( null );
 
     return contents;
@@ -139,7 +139,7 @@ public class DateTimeDialog extends TitleAreaDialog
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
-    lTime.setText( Messages.get( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.2" ) ); //$NON-NLS-1$
+    lTime.setText( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.2" ) ); //$NON-NLS-1$
 
     final DateTime time = new DateTime( composite, SWT.TIME );
 

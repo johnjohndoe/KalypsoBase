@@ -97,7 +97,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
 
     /* Location */
     final Label locationLabel = new Label( composite, SWT.NONE );
-    locationLabel.setText( Messages.get( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.locationLabel" ) ); //$NON-NLS-1$
+    locationLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.locationLabel" ) ); //$NON-NLS-1$
 
     // Yet read only, as Feature-Theme does not support changing the location yet
     final Text sourceText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
@@ -116,7 +116,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
 
     /* Location */
     final Label typeLabel = new Label( composite, SWT.NONE );
-    typeLabel.setText( Messages.get( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.typeLabel" ) ); //$NON-NLS-1$
+    typeLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.typeLabel" ) ); //$NON-NLS-1$
 
     // Yet read only, as Feature-Theme does not support changing the type yet
     final Text typeText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
@@ -137,7 +137,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     final Label fpathLabel = new Label( composite, SWT.NONE );
     final GridData fpathLabelData = new GridData();
     fpathLabel.setLayoutData( fpathLabelData );
-    fpathLabel.setText( Messages.get( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.fpathLabel" ) ); //$NON-NLS-1$
+    fpathLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.fpathLabel" ) ); //$NON-NLS-1$
 
     // Yet read only, as Feature-Theme does not support changing the fpath yet
     final Text fpathText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
@@ -158,7 +158,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     final Label ftypeLabel = new Label( composite, SWT.NONE );
     final GridData ftypeLabelData = new GridData();
     ftypeLabel.setLayoutData( ftypeLabelData );
-    ftypeLabel.setText( Messages.get( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.ftypeLabel" ) ); //$NON-NLS-1$
+    ftypeLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.FeatureThemePropertyPage.ftypeLabel" ) ); //$NON-NLS-1$
 
     // Read only, as FeatureType cannot be changed, it is determined by the path
     final Text ftypeText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
@@ -203,7 +203,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
     if( theme == null )
       return false;
 
-    final CompositeCommand allCommands = new CompositeCommand( Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
+    final CompositeCommand allCommands = new CompositeCommand( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
 
     // TODO: we do not know yet how to change the source
     try

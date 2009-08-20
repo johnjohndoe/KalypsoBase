@@ -124,7 +124,7 @@ public class AddLinkAction extends Action
     {
       final String msg = e.getMessage();
       final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GmlEditor", 0, msg == null ? "" : msg, null ); //$NON-NLS-1$ //$NON-NLS-2$
-      ErrorDialog.openError( m_shell, Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.3"), e.getMessage(), status ); //$NON-NLS-1$
+      ErrorDialog.openError( m_shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.3"), e.getMessage(), status ); //$NON-NLS-1$
       e.printStackTrace();
     }
   }
@@ -149,7 +149,7 @@ public class AddLinkAction extends Action
     {
       final Composite area = new Composite( parent, SWT.NULL );
 
-      area.getShell().setText( Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.4") ); //$NON-NLS-1$
+      area.getShell().setText( Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.4") ); //$NON-NLS-1$
 
       final GridLayout gridLayout = new GridLayout();
       gridLayout.marginWidth = 15;

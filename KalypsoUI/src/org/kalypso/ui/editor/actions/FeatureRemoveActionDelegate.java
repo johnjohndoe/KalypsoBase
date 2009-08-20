@@ -133,7 +133,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
 
         IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
 
-        ErrorDialog.openError( shell, action.getText(), Messages.get("org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.5"), status ); //$NON-NLS-1$
+        ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.5"), status ); //$NON-NLS-1$
       }
       finally
       {

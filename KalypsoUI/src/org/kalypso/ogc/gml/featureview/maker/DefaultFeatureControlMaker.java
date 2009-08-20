@@ -175,10 +175,10 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   {
     final QName qname = ftp.getQName();
     if( Feature.QN_DESCRIPTION.equals( qname ) )
-      return new DefaultAnnotation( "de", Messages.get( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.desc" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DefaultAnnotation( "de", Messages.getString( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.desc" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( Feature.QN_NAME.equals( qname ) )
-      return new DefaultAnnotation( "de", Messages.get( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.name" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DefaultAnnotation( "de", Messages.getString( "org.kalypso.ogc.gml.featureview.maker.DefaultFeatureControlMaker.name" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return super.getAnnotation( ftp );
   }

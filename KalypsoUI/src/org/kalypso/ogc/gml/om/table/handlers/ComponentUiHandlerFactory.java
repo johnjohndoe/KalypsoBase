@@ -86,6 +86,6 @@ public class ComponentUiHandlerFactory
     else if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
-    throw new NotImplementedException( Messages.get( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
+    throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
   }
 }

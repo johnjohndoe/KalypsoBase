@@ -149,7 +149,7 @@ public class StrokeEditorComposite extends Composite
     previewGridData.horizontalSpan = 2;
     previewGridData.heightHint = 30;
     previewGroup.setLayoutData( previewGridData );
-    previewGroup.setText( Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.0") ); //$NON-NLS-1$
+    previewGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.0") ); //$NON-NLS-1$
 
     /* preview */
     m_previewComp = new Composite( previewGroup, SWT.NONE );
@@ -183,7 +183,7 @@ public class StrokeEditorComposite extends Composite
     /* line type combo */
     // combo text
     final Label comboTextLabel = new Label( this, SWT.NONE );
-    comboTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2") ); //$NON-NLS-1$
+    comboTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2") ); //$NON-NLS-1$
 
     final ComboViewer lineTypeCombo = new ComboViewer( this, SWT.READ_ONLY );
     final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -192,10 +192,10 @@ public class StrokeEditorComposite extends Composite
     lineTypeCombo.setContentProvider( new ArrayContentProvider() );
 
     final String[] types = new String[4];
-    types[0] = Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.3"); //$NON-NLS-1$
-    types[1] = Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.4"); //$NON-NLS-1$
-    types[2] = Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.5"); //$NON-NLS-1$
-    types[3] = Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.6"); //$NON-NLS-1$
+    types[0] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.3"); //$NON-NLS-1$
+    types[1] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.4"); //$NON-NLS-1$
+    types[2] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.5"); //$NON-NLS-1$
+    types[3] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.6"); //$NON-NLS-1$
     lineTypeCombo.setInput( types );
     lineTypeCombo.setSelection( new StructuredSelection( lineTypeCombo.getElementAt( 0 ) ) );
 
@@ -222,28 +222,28 @@ public class StrokeEditorComposite extends Composite
 
         final String string = (String) element;
 
-        if( string == Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.8") ) //$NON-NLS-1$
+        if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.8") ) //$NON-NLS-1$
         {
           final float[] dashArray = new float[2];
           dashArray[0] = 1;
           dashArray[1] = 0;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.9") ) //$NON-NLS-1$
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.9") ) //$NON-NLS-1$
         {
           final float[] dashArray = new float[2];
           dashArray[0] = 10f;
           dashArray[1] = 5f;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.10") ) //$NON-NLS-1$
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.10") ) //$NON-NLS-1$
         {
           final float[] dashArray = new float[2];
           dashArray[0] = 2f;
           dashArray[1] = 1.9f;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.11") ) //$NON-NLS-1$
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.11") ) //$NON-NLS-1$
         {
           final float[] dashArray = new float[4];
           dashArray[0] = 10f;
@@ -262,7 +262,7 @@ public class StrokeEditorComposite extends Composite
     /* color width */
     // spinner text
     final Label widthTextLabel = new Label( this, SWT.NONE );
-    widthTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.12") ); //$NON-NLS-1$
+    widthTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.12") ); //$NON-NLS-1$
 
     final Spinner widthSpinner = new Spinner( this, SWT.NONE );
     widthSpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
@@ -288,7 +288,7 @@ public class StrokeEditorComposite extends Composite
     /* color opacity */
     // spinner text
     final Label opacityTextLabel = new Label( this, SWT.NONE );
-    opacityTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.14") ); //$NON-NLS-1$
+    opacityTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.14") ); //$NON-NLS-1$
 
     final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
     opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
@@ -314,7 +314,7 @@ public class StrokeEditorComposite extends Composite
   {
     /* Color */
     final Label colorTextLabel = new Label( this, SWT.NONE );
-    colorTextLabel.setText( Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.16") ); //$NON-NLS-1$
+    colorTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.16") ); //$NON-NLS-1$
 
     m_colorLabel = new Label( this, SWT.BORDER );
     m_colorLabel.setText( "     " ); //$NON-NLS-1$
@@ -393,7 +393,7 @@ public class StrokeEditorComposite extends Composite
     g2D.setFont( font );
 
     /* demo text */
-    final String title = Messages.get("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.21"); //$NON-NLS-1$
+    final String title = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.21"); //$NON-NLS-1$
     g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_CEILING ).intValue() );
 
     StrokePainter painter;

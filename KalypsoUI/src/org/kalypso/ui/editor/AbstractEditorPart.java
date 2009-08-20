@@ -173,7 +173,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( getSite().getShell(), Messages.get( "org.kalypso.ui.editor.AbstractEditorPart.5" ), Messages.get( "org.kalypso.ui.editor.AbstractEditorPart.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.5" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
@@ -238,7 +238,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       {
         try
         {
-          monitor.beginTask( Messages.get( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
           final IFileEditorInput newInput = new FileEditorInput( file );
           doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
           commandTarget.resetDirty();
@@ -293,7 +293,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     setSite( site );
 
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.get( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
     setInput( (IStorageEditorInput) input );
     load();
   }
@@ -335,7 +335,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.get( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status );
+      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status );
     }
 
     m_commandTarget.resetDirty();

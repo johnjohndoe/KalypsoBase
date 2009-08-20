@@ -183,7 +183,7 @@ public class MapWidgetView extends ViewPart
     m_stackLayout = new StackLayout();
     m_group.setLayout( m_stackLayout );
 
-    m_noWidgetText = m_toolkit.createText( m_group, Messages.get( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2" ), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
+    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2" ), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
 
     m_stackLayout.topControl = m_noWidgetText;
 
@@ -243,7 +243,7 @@ public class MapWidgetView extends ViewPart
       {
         // no widget at all active, just show a message
         controlToShow = m_noWidgetText;
-        m_group.setText( Messages.get( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3" ) ); //$NON-NLS-1$
+        m_group.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3" ) ); //$NON-NLS-1$
         m_group.setToolTipText( null );
         // TODO: Evt. reset part name.
       }
@@ -318,7 +318,7 @@ public class MapWidgetView extends ViewPart
       final WidgetInfo info = m_widgetInfos.get( panel );
       final IWidgetWithOptions widget = info == null ? null : info.getWidget();
       if( newWidget == null || !newWidget.equals( widget ) )
-        setContentDescription( Messages.get( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4" ) ); //$NON-NLS-1$
+        setContentDescription( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4" ) ); //$NON-NLS-1$
       else
         setContentDescription( "" ); //$NON-NLS-1$
     }

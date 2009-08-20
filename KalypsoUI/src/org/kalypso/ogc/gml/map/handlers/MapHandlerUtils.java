@@ -300,7 +300,7 @@ public class MapHandlerUtils
   {
     final String[] result = new String[filterNames.length + 1];
     System.arraycopy( filterNames, 0, result, 0, filterNames.length );
-    result[filterNames.length] = Messages.get( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.8" ); //$NON-NLS-1$
+    result[filterNames.length] = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.8" ); //$NON-NLS-1$
     return result;
   }
 

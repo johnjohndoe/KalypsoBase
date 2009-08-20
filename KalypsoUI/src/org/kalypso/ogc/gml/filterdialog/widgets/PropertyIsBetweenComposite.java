@@ -124,7 +124,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       m_operation.setLowerBoundary( lowerBoundary );
     }
     m_propertyComboLabel = new Label( this, SWT.NULL );
-    m_propertyComboLabel.setText( Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.0") ); //$NON-NLS-1$
+    m_propertyComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.0") ); //$NON-NLS-1$
     Combo propertyCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -152,7 +152,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
 
     // lower boundary
     m_lowerBComboLabel = new Label( this, SWT.NULL );
-    m_lowerBComboLabel.setText( Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.1") ); //$NON-NLS-1$
+    m_lowerBComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.1") ); //$NON-NLS-1$
     m_lowerBText = new Text( this, SWT.FILL );
     final GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -198,7 +198,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     } );
     // upper boundary
     m_upperBComboLabel = new Label( this, SWT.NULL );
-    m_upperBComboLabel.setText( Messages.get("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.2") ); //$NON-NLS-1$
+    m_upperBComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.2") ); //$NON-NLS-1$
     m_upperBText = new Text( this, SWT.FILL );
     final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;

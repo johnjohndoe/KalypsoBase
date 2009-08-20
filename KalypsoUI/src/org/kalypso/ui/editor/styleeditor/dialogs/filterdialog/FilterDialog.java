@@ -959,7 +959,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
         default:
         {
-          System.out.println( Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.21") ); //$NON-NLS-1$
+          System.out.println( Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.21") ); //$NON-NLS-1$
         }
       }
     }
@@ -1107,7 +1107,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           final Button radio = (Button) o;
           m_drawGeomSelection = radio.getSelection();
           if( m_drawGeomSelection )
-            MessageDialog.openInformation( getShell(), Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.24"), Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.25") ); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.24"), Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.25") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -1134,7 +1134,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( m_loadGeomSelection )
           {
             final IProject project = ProjectUtilities.getSelectedProjects()[0];
-            final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), project, Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.26"), new String[] { "shp", "gml" }, project, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), project, Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.26"), new String[] { "shp", "gml" }, project, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             final int open = dialog.open();
             if( open == Window.OK )
             {
@@ -1143,7 +1143,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
               // ;
               // if( result.getFileExtension().equals( "gml" ) )
               // ;
-              System.out.println( Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.29") + result ); //$NON-NLS-1$
+              System.out.println( Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.29") + result ); //$NON-NLS-1$
             }
           }
         }
@@ -1182,7 +1182,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
         else
         {
-          MessageDialog.openError( getShell(), Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.30"), Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.31") + OperationDefines.getNameById( subType ) + Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.32") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.30"), Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.31") + OperationDefines.getNameById( subType ) + Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.32") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           return;
         }
 
@@ -1203,7 +1203,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( getCurrentNode().getData() != null )
           {
             // TODO was passiert hier
-            System.out.println( Messages.get("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.34") ); //$NON-NLS-1$
+            System.out.println( Messages.getString("org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.34") ); //$NON-NLS-1$
           }
         }
       }

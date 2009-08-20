@@ -100,7 +100,7 @@ public class ExportableObservationTable implements IExportableObject
    */
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.get( "ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
 
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
@@ -127,7 +127,7 @@ public class ExportableObservationTable implements IExportableObject
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.get( "ExportableObservationTable.5" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "ExportableObservationTable.5" ), e ); //$NON-NLS-1$
     }
     finally
     {

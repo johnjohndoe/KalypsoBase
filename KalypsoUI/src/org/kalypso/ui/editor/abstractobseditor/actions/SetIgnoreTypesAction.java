@@ -61,15 +61,15 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  */
 public class SetIgnoreTypesAction extends FullAction
 {
-  private static final String TITLE = Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.0"); //$NON-NLS-1$
+  private static final String TITLE = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.0"); //$NON-NLS-1$
 
-  private final static String MSG = Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.1"); //$NON-NLS-1$
+  private final static String MSG = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.1"); //$NON-NLS-1$
 
   private final ObservationEditorOutlinePage m_page;
 
   public SetIgnoreTypesAction( final ObservationEditorOutlinePage page )
   {
-    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER, Messages.get("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.2") ); //$NON-NLS-1$
+    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER, Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.2") ); //$NON-NLS-1$
 
     m_page = page;
   }

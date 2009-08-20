@@ -97,7 +97,7 @@ public class CopyFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return Messages.get("org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0"); //$NON-NLS-1$
   }
 
   private void copyFeature() throws Exception

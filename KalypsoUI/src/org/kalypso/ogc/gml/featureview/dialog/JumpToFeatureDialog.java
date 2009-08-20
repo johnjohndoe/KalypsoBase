@@ -98,11 +98,11 @@ public class JumpToFeatureDialog implements IFeatureDialog
   public String getLabel( )
   {
     if( m_feature == null )
-      return "<" + Messages.get("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link") + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return "<" + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link") + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final String label = FeatureHelper.getAnnotationValue( m_feature, IAnnotation.ANNO_LABEL );
 
-    return "'" + label + "' " + Messages.get("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.edit"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return "'" + label + "' " + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.edit"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // return m_feature == null ? "<Link nicht gesetzt oder nicht gültig>" : "Link zu Feature: " + m_feature.getId();
   }

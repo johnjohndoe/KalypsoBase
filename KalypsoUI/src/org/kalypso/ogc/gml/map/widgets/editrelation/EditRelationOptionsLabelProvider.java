@@ -93,7 +93,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();
-      return context == null ? Messages.get( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1" ) : context.toExternalForm(); //$NON-NLS-1$
+      return context == null ? Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1" ) : context.toExternalForm(); //$NON-NLS-1$
     }
     if( element instanceof IFeatureType )
     {

@@ -315,7 +315,7 @@ public final class TableViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.get("org.kalypso.ogc.sensor.tableview.TableViewUtils.4") + href ); //$NON-NLS-1$
+        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.4") + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -323,7 +323,7 @@ public final class TableViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.get("org.kalypso.ogc.sensor.tableview.TableViewUtils.5") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.5") ); //$NON-NLS-1$
   }
 
   /**
@@ -351,9 +351,9 @@ public final class TableViewUtils
    */
   public static IStatus saveDirtyColumns( final TableViewColumn[] columns, final IProgressMonitor monitor )
   {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.get("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.get( "org.kalypso.ogc.sensor.tableview.TableViewUtils.7" ), columns.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.7" ), columns.length ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     for( final TableViewColumn column : columns )
@@ -366,7 +366,7 @@ public final class TableViewUtils
       catch( final LoaderException e )
       {
         e.printStackTrace();
-        status.addMessage( Messages.get( "org.kalypso.ogc.sensor.tableview.TableViewUtils.8" ) + column, e );//$NON-NLS-1$
+        status.addMessage( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.8" ) + column, e );//$NON-NLS-1$
       }
 
       monitor.worked( 1 );

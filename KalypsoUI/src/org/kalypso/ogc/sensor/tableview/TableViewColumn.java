@@ -90,7 +90,7 @@ public class TableViewColumn extends ObsViewItem
     super( view, provider, name );
 
     if( format == null )
-      throw new IllegalArgumentException( Messages.get("org.kalypso.ogc.sensor.tableview.TableViewColumn.0") + name + Messages.get("org.kalypso.ogc.sensor.tableview.TableViewColumn.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.0") + name + Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_isEditable = isEditable;
     m_width = width;

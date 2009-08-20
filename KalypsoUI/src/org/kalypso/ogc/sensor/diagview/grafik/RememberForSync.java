@@ -80,18 +80,18 @@ final class RememberForSync
   @Override
   public String toString()
   {
-    return Messages.get("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.0") + m_datFile.getName() + "-" + m_zmlFile.getName() + Messages.get("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.2") + m_numberAxis; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.0") + m_datFile.getName() + "-" + m_zmlFile.getName() + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.2") + m_numberAxis; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public void synchronizeZml() throws Exception
   {
     if( isInSync() )
     {
-      Logger.getLogger( getClass().getName() ).info( Messages.get("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.3") + toString() ); //$NON-NLS-1$
+      Logger.getLogger( getClass().getName() ).info( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.3") + toString() ); //$NON-NLS-1$
       return;
     }
 
-    Logger.getLogger( getClass().getName() ).info( Messages.get("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.4") + toString() ); //$NON-NLS-1$
+    Logger.getLogger( getClass().getName() ).info( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.4") + toString() ); //$NON-NLS-1$
 
     Reader datReader = null;
     Reader zmlReader = null;

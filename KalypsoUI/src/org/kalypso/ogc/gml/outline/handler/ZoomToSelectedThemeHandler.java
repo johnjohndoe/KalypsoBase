@@ -75,7 +75,7 @@ public class ZoomToSelectedThemeHandler extends AbstractHandler
     final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
     if( zoomBox == null )
     {
-      MessageDialog.openWarning( shell, "Zum Thema springen", Messages.get( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) );
+      MessageDialog.openWarning( shell, "Zum Thema springen", Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) );
       return null;
     }
 
