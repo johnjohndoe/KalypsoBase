@@ -42,6 +42,9 @@ package org.kalypso.ogc.gml.map.themes;
 
 import java.net.URL;
 
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFactory;
@@ -49,10 +52,11 @@ import org.kalypso.ogc.gml.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link org.kalypso.ogc.gml.KalypsoLegendTheme}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class LegendThemeFactory implements IKalypsoThemeFactory
@@ -68,4 +72,13 @@ public class LegendThemeFactory implements IKalypsoThemeFactory
     return new KalypsoLegendTheme( layerName, mapModell );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, int,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
+   */
+  @Override
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, int count, GM_Envelope bbox, String srsName )
+  {
+    throw new NotImplementedException();
+  }
 }
