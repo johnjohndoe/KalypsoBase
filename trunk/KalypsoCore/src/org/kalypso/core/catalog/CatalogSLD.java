@@ -67,9 +67,9 @@ import org.w3c.dom.Element;
  */
 public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
 {
-  public static final String DEFAULT_STYLE_SELECTED = "urn:ogc:gml:featuretype:default:default:sld:selected";
+  public static final String DEFAULT_STYLE_SELECTED = "urn:ogc:gml:featuretype:default:%s:sld:selected";
 
-  public static final String DEFAULT_STYLE_DEFAULT = "urn:ogc:gml:featuretype:default:default:sld:default";
+  public static final String DEFAULT_STYLE_DEFAULT = "urn:ogc:gml:featuretype:default:%s:sld:default";
 
   /** Do not call this yourself but rather get the catalog via {@link KalypsoCorePlugin#}*/
   public CatalogSLD( final CatalogManager cManager, final File repositoryBase )

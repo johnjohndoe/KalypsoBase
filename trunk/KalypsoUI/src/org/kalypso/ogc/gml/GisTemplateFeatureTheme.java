@@ -72,6 +72,7 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -417,7 +418,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return;
     }
 
-
     // Get some properties from myself (as long as m_theme == null )
     final String legendIcon = getLegendIcon();
     final boolean shouldShowLegendChildren = shouldShowLegendChildren();
@@ -500,16 +500,22 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( ftsURL == null )
     {
-      // if not, we set the general default user style
-      if( usedForSelection )
+      // we could not find a definition for this feature type. So we use a global default style
+      String styleType = "default";
+      final IValuePropertyType defaultGeometryProperty = featureType.getDefaultGeometryProperty();
+      if( defaultGeometryProperty != null )
       {
-        ftsURN = CatalogSLD.DEFAULT_STYLE_SELECTED;
-        System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
-      }
-      else
-      {
-        ftsURN = CatalogSLD.DEFAULT_STYLE_DEFAULT;
-        System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
+        // if we have a default geometry (which will be used by the display element)
+        // we try to use a geometrie-specific default-style
+        final String localPart = defaultGeometryProperty.getValueQName().getLocalPart().toLowerCase();
+        if( localPart.endsWith( "point" ) )
+          styleType = "point";
+        else if( localPart.endsWith( "curve" ) || localPart.endsWith( "linestring" ) )
+          styleType = "curve";
+        else if( localPart.endsWith( "surface" ) || localPart.endsWith( "polygon" ) )
+          styleType = "surface";
+        final String styleName = usedForSelection ? CatalogSLD.DEFAULT_STYLE_SELECTED : CatalogSLD.DEFAULT_STYLE_DEFAULT;
+        ftsURN = String.format( styleName, styleType );
       }
     }
 
