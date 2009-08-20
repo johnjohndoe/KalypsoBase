@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
@@ -76,7 +77,7 @@ public class ScenarioDataChangeListenerExtension
     {
       try
       {
-        final IScenarioDataListener listener = (IScenarioDataListener) element.createExecutableExtension( "listener" );
+        final IScenarioDataListener listener = (IScenarioDataListener) element.createExecutableExtension( "listener" ); //$NON-NLS-1$
         provider.addScenarioDataListener( listener );
       }
       catch( final Exception e )

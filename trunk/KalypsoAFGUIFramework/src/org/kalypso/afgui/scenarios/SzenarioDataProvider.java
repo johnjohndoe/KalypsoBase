@@ -105,7 +105,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
-      System.out.println( "Object invalid: " + key );
+      System.out.println( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.2") + key ); //$NON-NLS-1$
     }
 
     /**
