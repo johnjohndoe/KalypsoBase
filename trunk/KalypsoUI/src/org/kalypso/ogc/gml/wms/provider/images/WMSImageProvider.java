@@ -80,6 +80,6 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    */
   public String getLabel( )
   {
-    return Messages.get("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6") + getService(); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6") + getService(); //$NON-NLS-1$
   }
 }

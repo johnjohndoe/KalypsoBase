@@ -159,12 +159,12 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     final Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fromColorMapGroup.setText( Messages.get("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.4") ); //$NON-NLS-1$
+    fromColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.4") ); //$NON-NLS-1$
 
     final Group toColorMapGroup = new Group( this, SWT.NONE );
     toColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    toColorMapGroup.setText( Messages.get("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.5") ); //$NON-NLS-1$
+    toColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.5") ); //$NON-NLS-1$
 
     final PolygonColorMapEntryEditorComposite fromEntryComposite = new PolygonColorMapEntryEditorComposite( fromColorMapGroup, SWT.NONE, m_fromEntry );
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -188,7 +188,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     final Button checkStrokeFrom = new Button( this, SWT.CHECK );
     checkStrokeFrom.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false, 2, 1 ) );
-    checkStrokeFrom.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.9" ) ); //$NON-NLS-1$
+    checkStrokeFrom.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.9" ) ); //$NON-NLS-1$
 
     if( m_fromEntry.getStroke() != null )
     {
@@ -222,21 +222,21 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 3, false ) );
-    propertyGroup.setText( Messages.get("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.6") ); //$NON-NLS-1$
+    propertyGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.6") ); //$NON-NLS-1$
 
     final Label globalMinLabel = new Label( propertyGroup, SWT.BEGINNING );
     globalMinLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
-    globalMinLabel.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.8", m_globalMin ) ); //$NON-NLS-1$
-    globalMinLabel.setToolTipText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.12", m_globalMin ) ); //$NON-NLS-1$
+    globalMinLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.8", m_globalMin ) ); //$NON-NLS-1$
+    globalMinLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.12", m_globalMin ) ); //$NON-NLS-1$
 
     final Label globalMaxLabel = new Label( propertyGroup, SWT.BEGINNING );
     globalMaxLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
-    globalMaxLabel.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.7", m_globalMax ) ); //$NON-NLS-1$
-    globalMaxLabel.setToolTipText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.11", m_globalMax ) ); //$NON-NLS-1$
+    globalMaxLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.7", m_globalMax ) ); //$NON-NLS-1$
+    globalMaxLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.11", m_globalMax ) ); //$NON-NLS-1$
 
     final Label labelWithSpinner = new Label( propertyGroup, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
-    labelWithSpinner.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.25" ) ); //$NON-NLS-1$
+    labelWithSpinner.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.25" ) ); //$NON-NLS-1$
 
     final Text minValueText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData minValueTextData = new GridData( SWT.FILL, SWT.CENTER, true, false );

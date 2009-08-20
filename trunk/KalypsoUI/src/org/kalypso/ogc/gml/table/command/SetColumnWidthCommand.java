@@ -104,7 +104,7 @@ public class SetColumnWidthCommand implements ICommand
    */
   public String getDescription()
   {
-    return Messages.get("org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0"); //$NON-NLS-1$
   }
 
   private void setWidth( final int width, final boolean bSetControlWidth )

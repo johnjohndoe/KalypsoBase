@@ -102,13 +102,13 @@ public class MapUtils
 
   public static void removeFeature( final CommandableWorkspace workspace, final IMapPanel panel, final Feature[] selectedFeatures ) throws Exception
   {
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.get("org.kalypso.ogc.gml.util.MapUtils.0"), Messages.get("org.kalypso.ogc.gml.util.MapUtils.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.0"), Messages.getString("org.kalypso.ogc.gml.util.MapUtils.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = panel.getSelectionManager();
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.get("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
     for( final Feature featureToRemove : selectedFeatures )
     {
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );

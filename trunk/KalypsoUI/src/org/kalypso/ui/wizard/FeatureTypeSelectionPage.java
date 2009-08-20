@@ -85,10 +85,10 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
 
   public FeatureTypeSelectionPage( )
   {
-    super( "FeatureTypeSelectionPage", Messages.get("org.kalypso.ui.wizard.FeatureTypeSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "FeatureTypeSelectionPage", Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setPageComplete( false );
-    setMessage( Messages.get("org.kalypso.ui.wizard.FeatureTypeSelectionPage.2") ); //$NON-NLS-1$
+    setMessage( Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.2") ); //$NON-NLS-1$
   }
 
   /**

@@ -89,7 +89,7 @@ public class ViewWQRelationHandler extends AbstractHandler
       final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
       reader.close();
 
-      final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.get("org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler.0") + obs.getName(), set ); //$NON-NLS-1$
+      final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler.0") + obs.getName(), set ); //$NON-NLS-1$
       dlg.open();
     }
     catch( final WQException e )

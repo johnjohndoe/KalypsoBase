@@ -67,7 +67,7 @@ public class EditFeature implements IActionDelegate
      {
        e.printStackTrace();
        final Shell shell = window.getShell();
-       ErrorDialog.openError( shell, Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.1"), Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+       ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.1"), Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
      }
    }
 

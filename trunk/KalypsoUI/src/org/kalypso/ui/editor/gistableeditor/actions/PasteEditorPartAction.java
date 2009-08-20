@@ -61,6 +61,6 @@ public class PasteEditorPartAction extends AbstractEditorPartAction
     // - types of insertes cell must be considered
 
     // - we may have a choice (ask user?): overwrite cells or insert new features?
-    MessageDialog.openInformation( event.display.getActiveShell(), Messages.get("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_0"), Messages.get("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    MessageDialog.openInformation( event.display.getActiveShell(), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_0"), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

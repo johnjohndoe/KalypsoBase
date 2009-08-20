@@ -87,7 +87,7 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** ComboBox Mode Panel
 
-    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, Messages.get("org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout.0"), 0 ); //$NON-NLS-1$
+    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, Messages.getString("org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout.0"), 0 ); //$NON-NLS-1$
     modeComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( final PanelEvent event )

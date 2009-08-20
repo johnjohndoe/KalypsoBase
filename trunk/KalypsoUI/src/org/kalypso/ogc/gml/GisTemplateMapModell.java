@@ -95,7 +95,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
 
-    setName( new I10nString( Messages.get( "org.kalypso.ogc.gml.GisTemplateMapModell.0" ), null ) ); //$NON-NLS-1$
+    setName( new I10nString( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.0" ), null ) ); //$NON-NLS-1$
   }
 
   /**
@@ -224,7 +224,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     try
     {
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
-      monitor.beginTask( Messages.get( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
 
       final Gismapview gismapview = GisTemplateHelper.OF_GISMAPVIEW.createGismapview();
       final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
@@ -298,7 +298,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     try
     {
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
-      monitor.beginTask( Messages.get( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
 
       final Gismapview gismapview = createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 100 ) );
 
@@ -316,7 +316,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.GisTemplateMapModell.11" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.11" ) ) ); //$NON-NLS-1$
     }
     finally
     {

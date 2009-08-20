@@ -64,7 +64,7 @@ public class TupleResultCommandUtils
 
   private TupleResultCommandUtils( )
   {
-    throw new UnsupportedOperationException( Messages.get( "org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils.2" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils.2" ) ); //$NON-NLS-1$
   }
 
   /**

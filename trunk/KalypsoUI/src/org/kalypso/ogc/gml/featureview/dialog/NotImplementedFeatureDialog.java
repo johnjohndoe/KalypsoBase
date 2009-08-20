@@ -65,8 +65,8 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
 
   public NotImplementedFeatureDialog()
   {
-    m_userInfoMessage = Messages.get("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
-    m_cellInfoMessage = Messages.get("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable"); //$NON-NLS-1$
+    m_userInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
+    m_cellInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable"); //$NON-NLS-1$
   }
 
   /**
@@ -74,7 +74,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    MessageDialog.openInformation( shell, Messages.get("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit"), m_userInfoMessage ); //$NON-NLS-1$
+    MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit"), m_userInfoMessage ); //$NON-NLS-1$
     return Window.CANCEL;
   }
 

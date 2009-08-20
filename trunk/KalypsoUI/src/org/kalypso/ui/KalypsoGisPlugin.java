@@ -214,7 +214,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // m_plugin should be set in the constructor
     if( KalypsoGisPlugin.THE_PLUGIN == null )
     {
-      throw new NullPointerException( Messages.get( "org.kalypso.ui.KalypsoGisPlugin.20" ) ); //$NON-NLS-1$
+      throw new NullPointerException( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.20" ) ); //$NON-NLS-1$
     }
 
     return KalypsoGisPlugin.THE_PLUGIN;

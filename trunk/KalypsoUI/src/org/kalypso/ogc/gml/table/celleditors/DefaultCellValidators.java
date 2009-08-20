@@ -70,7 +70,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.get("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
       }
     }
   }
@@ -97,7 +97,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.get("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
       }
     }
   }
@@ -124,7 +124,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return Messages.get("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
       }
     }
   }

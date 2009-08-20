@@ -163,7 +163,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
     String tooltip = null;
 
     if( imgPath == null )
-      problemMessage = Messages.get( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2" ) + pt; //$NON-NLS-1$
+      problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2" ) + pt; //$NON-NLS-1$
     else if( imgPath.length() == 0 )
       problemMessage = ""; //$NON-NLS-1$
     else
@@ -179,7 +179,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
         // TODO: create image, so it fits into the current control
 
         if( image == null )
-          problemMessage = Messages.get( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
+          problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
         else
           tooltip = url.toExternalForm();
       }
@@ -187,7 +187,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
       {
         e.printStackTrace();
 
-        problemMessage = Messages.get( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5" ) + imgPath; //$NON-NLS-1$
+        problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5" ) + imgPath; //$NON-NLS-1$
       }
     }
 

@@ -65,8 +65,8 @@ public class PageCSVDetails extends WizardPage
     super( "pageCsvDetails" ); //$NON-NLS-1$
     m_model = model;
 
-    setTitle( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.1") ); //$NON-NLS-1$
-    setDescription( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.2") ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.2") ); //$NON-NLS-1$
   }
 
   protected void checkPage( )
@@ -75,7 +75,7 @@ public class PageCSVDetails extends WizardPage
     if( (name == null) || (name.length() <= 0) )
     {
       setMessage( null );
-      setErrorMessage( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.3") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.3") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -100,7 +100,7 @@ public class PageCSVDetails extends WizardPage
 
     /* name */
     final Label lName = new Label( container, SWT.NONE );
-    lName.setText( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.4") ); //$NON-NLS-1$
+    lName.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.4") ); //$NON-NLS-1$
 
     final Text tName = new Text( container, SWT.BORDER );
     tName.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -117,7 +117,7 @@ public class PageCSVDetails extends WizardPage
 
     /* desciption */
     final Label lDescription = new Label( container, SWT.NONE );
-    lDescription.setText( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.5") ); //$NON-NLS-1$
+    lDescription.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.5") ); //$NON-NLS-1$
     lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     final Text tDescription = new Text( container, SWT.BORDER | SWT.MULTI | SWT.WRAP );
@@ -133,7 +133,7 @@ public class PageCSVDetails extends WizardPage
 
     /* river */
     final Label lRiver = new Label( container, SWT.NONE );
-    lRiver.setText( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.6") ); //$NON-NLS-1$
+    lRiver.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.6") ); //$NON-NLS-1$
 
     final Text tRiver = new Text( container, SWT.BORDER );
     tRiver.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -148,7 +148,7 @@ public class PageCSVDetails extends WizardPage
 
     /* river positioning */
     final Label lPosition = new Label( container, SWT.NONE );
-    lPosition.setText( Messages.get("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.7") ); //$NON-NLS-1$
+    lPosition.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVDetails.7") ); //$NON-NLS-1$
 
     final Text tPosition = new Text( container, SWT.BORDER );
     tPosition.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

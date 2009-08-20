@@ -180,7 +180,7 @@ public class DragPointsWidget extends AbstractWidget
       return;
     }
 
-    getMapPanel().setMessage( Messages.get("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.0") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.0") ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     final GeoTransform projection = getMapPanel().getProjection();
@@ -207,7 +207,7 @@ public class DragPointsWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( Messages.get("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -231,7 +231,7 @@ public class DragPointsWidget extends AbstractWidget
         if( handle.isSelectable( p, getMapPanel().getProjection() ) )
         {
           handle.setActive( true );
-          getMapPanel().setMessage( Messages.get("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.2") ); //$NON-NLS-1$
+          getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.2") ); //$NON-NLS-1$
         }
         else
           handle.setActive( false );
@@ -327,7 +327,7 @@ public class DragPointsWidget extends AbstractWidget
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
 
-    getMapPanel().setMessage( Messages.get("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.4") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.4") ); //$NON-NLS-1$
     return;
   }
 

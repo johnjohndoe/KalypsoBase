@@ -84,7 +84,7 @@ public class ZmlLoader extends AbstractLoader
     {
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( Messages.get( "org.kalypso.ogc.sensor.loaders.ZmlLoader.0" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.0" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       return ZmlFactory.parseXML( url, url.getFile() );
     }
@@ -116,11 +116,11 @@ public class ZmlLoader extends AbstractLoader
         return;
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( Messages.get( "org.kalypso.ogc.sensor.loaders.ZmlLoader.1" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.1" ) + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
-        throw new IllegalArgumentException( Messages.get( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
 
       final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
 

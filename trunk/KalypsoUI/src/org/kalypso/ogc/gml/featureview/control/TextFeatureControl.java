@@ -169,7 +169,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     final Feature feature = getFeature();
 
     if( feature == null || getFeatureTypeProperty() == null )
-      m_text.setText( Messages.get( "org.kalypso.ogc.gml.featureview.control.TextFeatureControl.nodata" ) ); //$NON-NLS-1$
+      m_text.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.TextFeatureControl.nodata" ) ); //$NON-NLS-1$
     else
     {
       // compare with old to prevent loop

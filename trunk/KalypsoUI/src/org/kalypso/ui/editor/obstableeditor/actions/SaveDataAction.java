@@ -79,7 +79,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
   {
     boolean atLeastOneDirty = false;
 
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.0") ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.0") ); //$NON-NLS-1$
 
     final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
 
@@ -102,16 +102,16 @@ public class SaveDataAction extends AbstractEditorActionDelegate
         {
           atLeastOneDirty = true;
 
-          final String msg = Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.1") + obs.getName() + Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.2") + Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final String msg = Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.1") + obs.getName() + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.2") + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-          final boolean bConfirm = MessageDialog.openQuestion( getShell(), Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.4"), msg ); //$NON-NLS-1$
+          final boolean bConfirm = MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.4"), msg ); //$NON-NLS-1$
 
           if( !bConfirm )
             break;
 
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
-          final Job job = new Job( Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.5") + obs.getName() ) //$NON-NLS-1$
+          final Job job = new Job( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.5") + obs.getName() ) //$NON-NLS-1$
           {
             @Override
             public IStatus run( final IProgressMonitor monitor )
@@ -123,7 +123,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
               catch( final Exception e )
               {
                 e.printStackTrace();
-                status.addMessage( Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.6") + obs, e ); //$NON-NLS-1$
+                status.addMessage( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.6") + obs, e ); //$NON-NLS-1$
               }
 
               return Status.OK_STATUS;
@@ -141,9 +141,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     }
 
     if( !atLeastOneDirty )
-      MessageDialog.openInformation( getShell(), Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.7"), Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.8") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.7"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.8") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !status.isOK() )
-      ErrorDialog.openError( getShell(), Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9"), Messages.get("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.10"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.10"), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -187,12 +187,12 @@ public class LineColorMapEditorComposite extends Composite
     final Group propertyGroup = new Group( this, SWT.NONE );
     propertyGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     propertyGroup.setLayout( new GridLayout( 2, false ) );
-    propertyGroup.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.1" ) ); //$NON-NLS-1$
+    propertyGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.1" ) ); //$NON-NLS-1$
 
     final Label fromLabel = new Label( propertyGroup, SWT.NONE );
     fromLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    fromLabel.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.9", m_globalMin ) ); //$NON-NLS-1$
-    fromLabel.setToolTipText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.11" ) ); //$NON-NLS-1$
+    fromLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.9", m_globalMin ) ); //$NON-NLS-1$
+    fromLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.11" ) ); //$NON-NLS-1$
 
     final Text minValueText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMinText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -202,8 +202,8 @@ public class LineColorMapEditorComposite extends Composite
 
     final Label toLabel = new Label( propertyGroup, SWT.NONE );
     toLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    toLabel.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.10", m_globalMax ) ); //$NON-NLS-1$
-    toLabel.setToolTipText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.12" ) ); //$NON-NLS-1$
+    toLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.10", m_globalMax ) ); //$NON-NLS-1$
+    toLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.12" ) ); //$NON-NLS-1$
 
     final Text maxValueText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMaxText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -250,7 +250,7 @@ public class LineColorMapEditorComposite extends Composite
     // step width spinner
     final Label labelWithSpinner = new Label( propertyGroup, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    labelWithSpinner.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.2" ) ); //$NON-NLS-1$
+    labelWithSpinner.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.2" ) ); //$NON-NLS-1$
 
     final Text stepWidthText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     stepWidthText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -278,7 +278,7 @@ public class LineColorMapEditorComposite extends Composite
     // fat step spinner
     final Label labelFatStepSpinner = new Label( propertyGroup, SWT.NONE );
     labelFatStepSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    labelFatStepSpinner.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.5" ) ); //$NON-NLS-1$
+    labelFatStepSpinner.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.5" ) ); //$NON-NLS-1$
 
     final Spinner fatStepSpinner = new Spinner( propertyGroup, SWT.NONE );
     fatStepSpinner.setLayoutData( new GridData( SWT.TRAIL, SWT.CENTER, true, false ) );
@@ -298,7 +298,7 @@ public class LineColorMapEditorComposite extends Composite
     // bold width spinner
     final Label labelboldWidthSpinner = new Label( propertyGroup, SWT.NONE );
     labelboldWidthSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    labelboldWidthSpinner.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.6" ) ); //$NON-NLS-1$
+    labelboldWidthSpinner.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.6" ) ); //$NON-NLS-1$
 
     final Spinner boldWidthSpinner = new Spinner( propertyGroup, SWT.NONE );
     boldWidthSpinner.setLayoutData( new GridData( SWT.TRAIL, SWT.CENTER, true, false ) );
@@ -321,7 +321,7 @@ public class LineColorMapEditorComposite extends Composite
     final Group normalColorMapGroup = new Group( this, SWT.NONE );
     normalColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     normalColorMapGroup.setLayout( new FillLayout() );
-    normalColorMapGroup.setText( Messages.get( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.7" ) ); //$NON-NLS-1$
+    normalColorMapGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.7" ) ); //$NON-NLS-1$
 
     m_entry = m_colorMap.getColorMap()[0];
     final LineColorMapEntryEditorComposite fromEntryComposite = new LineColorMapEntryEditorComposite( normalColorMapGroup, SWT.NONE, m_entry );

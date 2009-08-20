@@ -78,7 +78,7 @@ public class KalypsoWMSEntityResolver implements EntityResolver
     String path = m_entities.get( systemId );
     if( path != null )
     {
-      System.out.println( Messages.get("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSEntityResolver.4") + systemId ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSEntityResolver.4") + systemId ); //$NON-NLS-1$
       URL resource = getClass().getResource( path );
 
       if( resource != null )

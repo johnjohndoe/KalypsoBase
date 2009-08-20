@@ -96,7 +96,7 @@ public class WQRelationDialog extends ResizableDialog
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.get("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
     getShell().setText( m_title );

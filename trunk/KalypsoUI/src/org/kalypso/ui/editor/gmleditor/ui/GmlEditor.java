@@ -107,7 +107,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
-    monitor.beginTask( Messages.get("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.1"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.1"), 1000 ); //$NON-NLS-1$
     try
     {
       final IStorage storage = input.getStorage();
@@ -142,19 +142,19 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.2") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.2") ) ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.3") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.3") ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.4") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.4") ) ); //$NON-NLS-1$
     }
     finally
     {

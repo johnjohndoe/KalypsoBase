@@ -86,7 +86,7 @@ public abstract class DialogCellEditor extends CellEditor
   protected Control createControl( final Composite parent )
   {
     final Text text = new Text( parent, SWT.CENTER );
-    text.setText( Messages.get("org.kalypso.ogc.gml.table.celleditors.DialogCellEditor.0") ); //$NON-NLS-1$
+    text.setText( Messages.getString("org.kalypso.ogc.gml.table.celleditors.DialogCellEditor.0") ); //$NON-NLS-1$
     text.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
     return text;
   }

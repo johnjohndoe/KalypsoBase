@@ -75,7 +75,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 {
   private static final String DUMMY = "dummy"; //$NON-NLS-1$
 
-  final UIJob m_updateColumnsJob = new UIJob( Messages.get( "org.kalypso.ogc.gml.om.table.TupleResultContentProvider.1" ) ) //$NON-NLS-1$
+  final UIJob m_updateColumnsJob = new UIJob( Messages.getString( "org.kalypso.ogc.gml.om.table.TupleResultContentProvider.1" ) ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )

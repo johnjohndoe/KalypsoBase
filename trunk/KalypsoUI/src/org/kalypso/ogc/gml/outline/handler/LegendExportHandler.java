@@ -82,17 +82,17 @@ public class LegendExportHandler extends AbstractHandler
     /* Get the active workbench part. */
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.1" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.1" ) ); //$NON-NLS-1$
 
     /* Need a shell. */
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final String title = Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2" ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2" ); //$NON-NLS-1$
 
     /* Get the selected elements. */
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     if( sel.isEmpty() )
     {
-      MessageDialog.openWarning( shell, title, Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.3" ) ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.3" ) ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
@@ -107,7 +107,7 @@ public class LegendExportHandler extends AbstractHandler
       fileName = ((IMapModell) themes[0].getParent( themes[0] )).getName().getValue();
     final String[] filterExtensions = new String[] { "*.png", "*.jpg", "*.gif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final String[] filterNames = new String[] {
-        Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), Messages.get( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File legendFile = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, getClass().getName(), filterExtensions, filterNames );
     if( legendFile == null )

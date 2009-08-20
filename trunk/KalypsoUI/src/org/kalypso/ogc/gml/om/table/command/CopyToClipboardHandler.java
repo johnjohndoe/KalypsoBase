@@ -65,7 +65,7 @@ public class CopyToClipboardHandler extends AbstractHandler
   {
     final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
     if( tupleResultViewer == null )
-      throw new ExecutionException( Messages.get("org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler.0") ); //$NON-NLS-1$
 
     /* clip board copy function */
     final Table table = tupleResultViewer.getTable();

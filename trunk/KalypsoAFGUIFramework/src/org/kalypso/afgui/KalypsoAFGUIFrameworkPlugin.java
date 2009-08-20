@@ -153,7 +153,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         evalService.addSourceProvider( m_szenarioSourceProvider );
 
 
-        new WorkspaceJob( "" )
+        new WorkspaceJob( "" ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInWorkspace( final IProgressMonitor monitor )

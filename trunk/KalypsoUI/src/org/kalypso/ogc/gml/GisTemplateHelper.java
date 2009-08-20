@@ -154,7 +154,7 @@ public class GisTemplateHelper
 
   public final static Featuretemplate loadGisFeatureTemplate( final URL url, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.get( "org.kalypso.ogc.gml.GisTemplateHelper.0" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.0" ), 1000 ); //$NON-NLS-1$
 
     InputStream inputStream = null;
     try
@@ -169,11 +169,11 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.get( "org.kalypso.ogc.gml.GisTemplateHelper.2" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.2" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -184,7 +184,7 @@ public class GisTemplateHelper
 
   public final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.get( "org.kalypso.ogc.gml.GisTemplateHelper.3" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.3" ), 1000 ); //$NON-NLS-1$
     try
     {
       final InputSource is = new InputSource( inputStream );
@@ -192,7 +192,7 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.get( "org.kalypso.ogc.gml.GisTemplateHelper.4" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.4" ) ) ); //$NON-NLS-1$
     }
     finally
     {

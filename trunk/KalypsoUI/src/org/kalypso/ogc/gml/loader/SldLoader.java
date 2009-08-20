@@ -103,7 +103,7 @@ public class SldLoader extends AbstractLoader
 
     try
     {
-      monitor.beginTask( Messages.get( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
       if( source.startsWith( "urn" ) )
         return loadFromCatalog( context, source );
@@ -264,18 +264,18 @@ public class SldLoader extends AbstractLoader
 // sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
 // }
         else
-          throw new LoaderException( Messages.get( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
+          throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
 
-        throw new LoaderException( Messages.get( "org.kalypso.ogc.gml.loader.SldLoader.7" ) + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.7" ) + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Throwable e )
       {
         e.printStackTrace();
-        throw new LoaderException( Messages.get( "org.kalypso.ogc.gml.loader.SldLoader.9" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.9" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
       }
     }
   }

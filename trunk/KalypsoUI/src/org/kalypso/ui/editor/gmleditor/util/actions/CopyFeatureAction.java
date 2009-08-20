@@ -53,7 +53,7 @@ public final class CopyFeatureAction extends Action
 
   private Feature m_originalFeature;
 
-  public static final String NAME = Messages.get("org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0"); //$NON-NLS-1$
+  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0"); //$NON-NLS-1$
 
   private Clipboard m_clipboard;
 

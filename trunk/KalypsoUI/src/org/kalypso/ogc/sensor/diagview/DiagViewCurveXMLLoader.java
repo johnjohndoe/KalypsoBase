@@ -129,7 +129,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         catch( final NoSuchElementException e )
         {
           Logger.getLogger( getClass().getName() ).warning(
-              Messages.get("org.kalypso.ogc.sensor.diagview.DiagViewCurveXMLLoader.0") + e.getLocalizedMessage() ); //$NON-NLS-1$
+              Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewCurveXMLLoader.0") + e.getLocalizedMessage() ); //$NON-NLS-1$
 
           useThisCurve = false;
           break;

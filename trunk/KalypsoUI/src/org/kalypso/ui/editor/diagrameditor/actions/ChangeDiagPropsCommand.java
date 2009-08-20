@@ -127,6 +127,6 @@ public class ChangeDiagPropsCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.get("org.kalypso.ui.editor.diagrameditor.actions.ChangeDiagPropsCommand.0"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.ChangeDiagPropsCommand.0"); //$NON-NLS-1$
   }
 }

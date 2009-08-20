@@ -89,7 +89,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
 
     /* Theme name */
     final Label sourceLabel = new Label( composite, SWT.NONE );
-    sourceLabel.setText( Messages.get( "org.kalypso.ui.views.properties.WMSThemePropertyPage.sourceLabel" ) ); //$NON-NLS-1$
+    sourceLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.WMSThemePropertyPage.sourceLabel" ) ); //$NON-NLS-1$
 
     // Yet read only, as WMS-Theme does not support changing the source yet
     final Text sourceText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
@@ -132,7 +132,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     if( theme == null )
       return false;
 
-    final CompositeCommand allCommands = new CompositeCommand( Messages.get( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
+    final CompositeCommand allCommands = new CompositeCommand( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
 
     // TODO: we do not know yet how to change the source
 

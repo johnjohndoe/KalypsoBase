@@ -98,6 +98,6 @@ public class HoverSelectionWidget extends AbstractWidget
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( Messages.get("org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1") ); //$NON-NLS-1$
   }
 }

@@ -165,6 +165,6 @@ public class RemoveHeavyRelationCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.get("org.kalypso.ui.editor.gmleditor.util.command.RemoveHeavyRelationCommand.0"); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.RemoveHeavyRelationCommand.0"); //$NON-NLS-1$
   }
 }

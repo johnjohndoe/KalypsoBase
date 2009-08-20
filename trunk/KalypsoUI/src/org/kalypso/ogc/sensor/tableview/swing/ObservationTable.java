@@ -370,7 +370,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.get( "org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3" ), e ); //$NON-NLS-1$
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3" ), e ); //$NON-NLS-1$
             }
           }
 

@@ -133,7 +133,7 @@ public class ObservationViewerDialog extends Dialog
     m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable, createButtonControls() );
     updateViewer();
     // TODO label
-    getShell().setText( Messages.get( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
     return composite;
   }
 
@@ -180,7 +180,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( removeListener, Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.1"), Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.2"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( removeListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.1"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.2"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_NEW) == BUTTON_NEW )
     {
@@ -216,7 +216,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.3"), Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.4"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.3"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.4"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
     {
@@ -224,7 +224,7 @@ public class ObservationViewerDialog extends Dialog
       {
         public void widgetSelected( SelectionEvent e )
         {
-          final String name = Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
+          final String name = Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
           final Calendar startDate = Calendar.getInstance();
           startDate.set( 2000, 11, 15 );
           final Calendar idealMonth = Calendar.getInstance();
@@ -250,7 +250,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.6"), Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.7"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.6"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.7"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_IMPORT) == BUTTON_EXEL_IMPORT )
     {
@@ -276,7 +276,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.8"), Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.9"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( exelImportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.8"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.9"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_EXPORT) == BUTTON_EXEL_EXPORT )
     {
@@ -306,7 +306,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.10"), Messages.get("org.kalypso.ogc.sensor.view.ObservationViewerDialog.11"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( exelExportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.10"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.11"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return result.toArray( new ButtonControl[result.size()] );
   }

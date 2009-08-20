@@ -105,7 +105,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
    */
   public void setElement( int index, Object element, IAxis axis ) throws SensorException
   {
-    throw new SensorException( Messages.get("org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0") ); //$NON-NLS-1$
+    throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0") ); //$NON-NLS-1$
   }
 
   /**

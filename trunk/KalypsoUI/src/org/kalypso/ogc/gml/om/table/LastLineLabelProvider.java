@@ -57,7 +57,7 @@ import org.kalypso.i18n.Messages;
  */
 public class LastLineLabelProvider implements ITableLabelProvider, IColorProvider
 {
-  public static final String DUMMY_ELEMENT_TEXT = Messages.get("org.kalypso.ogc.gml.om.table.LastLineLabelProvider.0"); //$NON-NLS-1$
+  public static final String DUMMY_ELEMENT_TEXT = Messages.getString("org.kalypso.ogc.gml.om.table.LastLineLabelProvider.0"); //$NON-NLS-1$
   private final ITableLabelProvider m_provider;
   private Color m_backgroundColor;
 

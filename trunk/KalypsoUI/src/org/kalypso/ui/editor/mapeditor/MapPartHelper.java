@@ -247,7 +247,7 @@ public class MapPartHelper
         {
         }
       };
-      final IMenuManager themeManager = new MenuManager( Messages.get( "org.kalypso.ui.editor.mapeditor.MapPartHelper.2" ), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IMenuManager themeManager = new MenuManager( Messages.getString( "org.kalypso.ui.editor.mapeditor.MapPartHelper.2" ), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
       ObjectActionContributorManager.getManager().contributeObjectActions( part, themeManager, selectionProvider );
       manager.add( themeManager );
     }
