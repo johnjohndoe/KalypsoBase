@@ -2,6 +2,8 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -81,6 +83,7 @@ public class AddRelationCommand implements ICommand
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
     workspace.addFeatureAsAggregation( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_propName, null ) } ) );
   }
 
   /**

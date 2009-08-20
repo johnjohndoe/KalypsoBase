@@ -43,6 +43,8 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -50,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveRelationCommand Command to remove a normal relation created by
- * 
+ *
  * @author doemming (13.05.2005)
  */
 public class RemoveRelationCommand implements ICommand
@@ -96,6 +98,7 @@ public class RemoveRelationCommand implements ICommand
       workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_linkPropName, null ) } ) );
   }
 
   /**
