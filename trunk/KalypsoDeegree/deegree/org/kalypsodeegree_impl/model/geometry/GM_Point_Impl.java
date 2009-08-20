@@ -68,7 +68,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor. initializes a point to the coordinate 0/0
    * 
    * @param crs
-   *            spatial reference system of the point
+   *          spatial reference system of the point
    */
   public GM_Point_Impl( final String crs )
   {
@@ -79,11 +79,11 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor for initializing a point within a two-dimensional coordinate system
    * 
    * @param x
-   *            x-value of the point
+   *          x-value of the point
    * @param y
-   *            y-value of the point
+   *          y-value of the point
    * @param crs
-   *            spatial reference system of the point
+   *          spatial reference system of the point
    */
   public GM_Point_Impl( final double x, final double y, final String crs )
   {
@@ -94,13 +94,13 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor for initializing a point within a three-dimensional coordinate system
    * 
    * @param x
-   *            x-value of the point
+   *          x-value of the point
    * @param y
-   *            y-value of the point
+   *          y-value of the point
    * @param z
-   *            z-value of the point
+   *          z-value of the point
    * @param crs
-   *            spatial reference system of the point
+   *          spatial reference system of the point
    */
   public GM_Point_Impl( final double x, final double y, final double z, final String crs )
   {
@@ -111,7 +111,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor
    * 
    * @param gmo
-   *            existing GM_Point
+   *          existing GM_Point
    */
   public GM_Point_Impl( final GM_Point gmo )
   {
@@ -122,9 +122,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * constructor
    * 
    * @param gmo
-   *            existing GM_Point
+   *          existing GM_Point
    * @param crs
-   *            spatial reference system of the point
+   *          spatial reference system of the point
    */
   public GM_Point_Impl( final GM_Position gmo, final String crs )
   {
@@ -329,9 +329,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   protected void calculateParam( )
   {
+    setEnvelope( GeometryFactory.createGM_Envelope( getPosition(), getPosition(), getCoordinateSystem() ) );
+
     setValid( true );
-    
-    // TODO: why does the point does not calculate its envelope?!
   }
 
   @Override
