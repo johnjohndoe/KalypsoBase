@@ -84,6 +84,12 @@ public final class KeyInfo extends Job
 
   private final Map<IResource, Boolean> m_resources = new HashMap<IResource, Boolean>();
 
+  /**
+   * This flag becomes true, if the saving process is started and the resources are locked. It will be resetted after
+   * the first reloading was blocked.
+   */
+  private boolean m_hasNothingBlocked = false;
+
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
     super( Messages.format( "org.kalypso.util.pool.KeyInfo.1", key.getLocation() ) ); //$NON-NLS-1$
@@ -170,15 +176,27 @@ public final class KeyInfo extends Job
 
   private boolean isLocked( )
   {
-    boolean isLocked = false;
+    if( m_hasNothingBlocked )
+    {
+      System.out.println( "Locked due to reloading event state ..." );
+
+      /* The first call on this function after locking the resources will reset the state of the first reloading event. */
+      m_hasNothingBlocked = false;
+
+      /* This time, it counts still as locked. */
+      return true;
+    }
 
     for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
     {
       if( entry.getValue() )
-        isLocked = true;
+      {
+        System.out.println( "Locked due to resource state ..." );
+        return true;
+      }
     }
 
-    return isLocked;
+    return false;
   }
 
   private void fireObjectLoaded( final Object o, final IStatus status )
@@ -285,10 +303,20 @@ public final class KeyInfo extends Job
         for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
           entry.setValue( Boolean.TRUE );
 
+        /* The first reloading event should always be blocked, regardless the locking state. */
+        m_hasNothingBlocked = true;
+
+        /* Save. */
         m_loader.save( m_key, monitor, m_object );
       }
       finally
       {
+        /* The state of the first reloading event is not resetted here, but on the first reloading event. */
+        /* This makes sure, that at least one reloading process was blocked. */
+        /* This makes sense, if the resource change event, which initiates the reloading process, */
+        /* comes, after the resources were already unlocked. */
+
+        /* Unlock the next load. */
         for( final Entry<IResource, Boolean> entry : m_resources.entrySet() )
           entry.setValue( Boolean.FALSE );
       }
