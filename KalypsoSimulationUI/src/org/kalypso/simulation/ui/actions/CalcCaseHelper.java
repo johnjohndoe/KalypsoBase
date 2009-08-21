@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -59,7 +61,7 @@ import org.kalypso.simulation.ui.calccase.CalcCaseCollector;
 
 /**
  * Helper Klasse für die Calc-Case Actions
- * 
+ *
  * @author belger
  */
 public class CalcCaseHelper
@@ -72,11 +74,11 @@ public class CalcCaseHelper
   /**
    * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden alle Rechenfälle angezeigt, welche sich in
    * oder unterhalb der angegebenen Selection von Resourcen befinden.
-   * 
+   *
    * @param shell
    * @param selection
    * @param title
-   * 
+   *
    * @param message
    * @return null bei Abbruch
    */
@@ -98,7 +100,7 @@ public class CalcCaseHelper
           ( (IContainer)sel ).accept( visitor );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
 
@@ -120,5 +122,20 @@ public class CalcCaseHelper
 
     final Object[] calcCasesToCalc = dlg.getResult();
     return Arrays.castArray( calcCasesToCalc, new IFolder[calcCasesToCalc.length] );
+  }
+
+  public static Map<String, Object> configureAntProperties( final IFolder mergeCaseFolder )
+  {
+    final Map<String, Object> map = new HashMap<String, Object>();
+
+    final String mergeRelPath;
+    if( mergeCaseFolder == null )
+      mergeRelPath = "";
+    else
+      mergeRelPath = mergeCaseFolder.getProjectRelativePath().toOSString();
+
+    map.put( "calc.merge.relpath", mergeRelPath );
+
+    return map;
   }
 }

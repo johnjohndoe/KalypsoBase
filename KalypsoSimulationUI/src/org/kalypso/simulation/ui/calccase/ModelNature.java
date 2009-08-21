@@ -100,7 +100,6 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.simulation.SimulationDelegate;
@@ -109,7 +108,6 @@ import org.kalypso.simulation.core.calccase.CalcJobHandler;
 import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -493,9 +491,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // auf x stunden vorher runden! hängt von der Modellspec ab
     final Calendar cal = Calendar.getInstance();
     cal.setTime( now );
-    
+
     attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) );
-    
+
     // erstmal auf die letzte Stunde runden
     cal.set( Calendar.MINUTE, 0 );
     cal.set( Calendar.SECOND, 0 );
@@ -519,7 +517,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     // standardzeit abziehen
     final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
-    
+
     attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) );
 
     attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() );
@@ -652,7 +650,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Error loading Metadata", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Error loading Metadata", e ) );
     }
     finally
     {
@@ -662,7 +660,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Returns a metadatum associated with this nature.
-   * 
+   *
    * @param key
    *          One of the METADATA_KEY_ conmstants.
    * @return The value of the given key; or <code>null</code> if not set.
@@ -713,7 +711,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
     }
   }
 
@@ -762,28 +760,28 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     /**
      * FIXME refactoring
-     * 
+     *
      * <pre>
-     * 
+     *
      * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
      * runner.getSpec();
-     * 
+     *
      * final String typeID = modeldata.getTypeID();
-     * 
+     *
      * // Übersetzung modeldata -&gt; hashmap
      * // - Ableich modelspec/modeldata
-     * 
+     *
      * // modelspec -&gt; Map&lt;String, Object&gt;
      * // - Literal: String, Double, Integer
      * // - ComplexValueType: Feature/Image
      * // - ComplexReferenceType: URL/URI
-     * 
+     *
      * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
-     * 
+     *
      * </pre>
      */
-    
-    
+
+
     final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 1000 );
 
     try
