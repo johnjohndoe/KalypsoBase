@@ -120,7 +120,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -135,7 +135,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -250,13 +250,13 @@ public class SplitSort implements FeatureList
 
   /**
    * This is slow: TODO: better comment
-   *
+   * 
    * @see java.util.List#remove(java.lang.Object)
    */
   public boolean remove( final Object object )
   {
     Envelope env = null;
-    
+
     try
     {
       env = getEnvelope( object );
@@ -270,10 +270,10 @@ public class SplitSort implements FeatureList
     {
       // TODO: slow!
       final boolean removed = m_items.remove( object );
-      
+
       if( m_index != null && env != null )
         m_index.remove( env, object );
-      
+
       return removed;
     }
   }
@@ -534,7 +534,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   *
+   * 
    * @see java.util.List#retainAll(java.util.Collection)
    */
   public boolean retainAll( final Collection c )
@@ -546,7 +546,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
+   * 
    * @see java.util.List#iterator()
    */
   public Iterator iterator( )
@@ -558,7 +558,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   *
+   * 
    * @see java.util.List#subList(int, int)
    */
   public List subList( final int fromIndex, final int toIndex )
@@ -569,7 +569,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
+   * 
    * @see java.util.List#listIterator()
    */
   public ListIterator listIterator( )
@@ -581,7 +581,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
+   * 
    * @see java.util.List#listIterator(int)
    */
   public ListIterator listIterator( final int index )
@@ -691,12 +691,11 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    final Envelope envelope = getEnvelope( o );
-
     synchronized( m_lock )
     {
       if( m_index != null )
       {
+        final Envelope envelope = getEnvelope( o );
         m_index.remove( null, o );
 
         m_index.insert( envelope, o );
