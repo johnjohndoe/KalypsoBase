@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.loader;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -108,6 +110,7 @@ public class ShapeLoader extends WorkspaceLoader
       final URL shpURL = new URL( sourceURL.toExternalForm() + ".shp" );//$NON-NLS-1$
       final URL dbfURL = new URL( sourceURL.toExternalForm() + ".dbf" ); //$NON-NLS-1$
       final URL shxURL = new URL( sourceURL.toExternalForm() + ".shx" ); //$NON-NLS-1$
+      final URL prjURL = new URL( sourceURL.toExternalForm() + ".prj" ); //$NON-NLS-1$
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       final File sourceFile;
@@ -143,7 +146,7 @@ public class ShapeLoader extends WorkspaceLoader
         throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.10" ) + shpSource ); //$NON-NLS-1$
 
       /* Loading Shape */
-      final String sourceCrs = sourceSrs;
+      final String sourceCrs = loadCrs( prjURL, sourceSrs );
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
@@ -173,6 +176,36 @@ public class ShapeLoader extends WorkspaceLoader
     {
       for( final File file : filesToDelete )
         file.delete();
+    }
+  }
+
+  /**
+   * This function tries to load a prj file, which contains the coordinate system. If it exists and is a valid one, this
+   * coordinate system is returned. If it is not found, the source coordinate system is returned (this should be the one
+   * in the gmt). If it does also not exist, null will be returned.
+   * 
+   * @param prjURL
+   *          The prj url.
+   * @param sourceSrs
+   *          The source coordinate system (of the gmt).
+   * @return The coordinate system, which should be used to load the shape.
+   */
+  private String loadCrs( URL prjURL, String sourceSrs )
+  {
+    try
+    {
+      // TODO: Should in the first instance interpret the prj content ...
+      // Does not work now because we must create a coordinate system instance then, but we use string codes right now
+      String prjString = UrlUtilities.toString( prjURL, "UTF-8" );
+      if( prjString.startsWith( "EPSG:" ) )
+        return prjString;
+
+      return sourceSrs;
+    }
+    catch( IOException ex )
+    {
+      System.out.println( "No prj file found for: " + prjURL.toString() );
+      return sourceSrs;
     }
   }
 
@@ -220,6 +253,7 @@ public class ShapeLoader extends WorkspaceLoader
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
       {
+        // FIXME: Must be saved in the source coordinate system (map or prj), not in the kalypso coordinate system.
         ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
       }
       else
@@ -251,6 +285,7 @@ public class ShapeLoader extends WorkspaceLoader
     IResource shpResource = null;
     IResource dbfResource = null;
     IResource shxResource = null;
+    IResource prjResource = null;
     final IPath resource = ResourceUtilities.findPathFromURL( sourceURL );
 
     if( resource != null )
@@ -258,12 +293,14 @@ public class ShapeLoader extends WorkspaceLoader
       final URL shpURL = new URL( sourceURL.toExternalForm() + ".shp" );//$NON-NLS-1$
       final URL dbfURL = new URL( sourceURL.toExternalForm() + ".dbf" ); //$NON-NLS-1$
       final URL shxURL = new URL( sourceURL.toExternalForm() + ".shx" ); //$NON-NLS-1$
+      final URL prjURL = new URL( sourceURL.toExternalForm() + ".prj" ); //$NON-NLS-1$
 
       shpResource = ResourceUtilities.findFileFromURL( shpURL );
       dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
       shxResource = ResourceUtilities.findFileFromURL( shxURL );
+      prjResource = ResourceUtilities.findFileFromURL( prjURL );
 
-      return new IResource[] { shpResource, dbfResource, shxResource };
+      return new IResource[] { shpResource, dbfResource, shxResource, prjResource };
     }
 
     return new IResource[] {};
