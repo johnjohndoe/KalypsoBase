@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,58 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
+public class UpdateCalcCaseTimeseries extends AbstractHandler
 {
-  private IWorkbenchWindow m_window;
-
   /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public void dispose( )
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    // nix tun
-  }
+    final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void init( final IWorkbenchWindow window )
-  {
-    m_window = window;
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
-  {
-    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
+    final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     // Rechenfälle raussuchen
-    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( shell, selection, "Zeitreihen aktualisieren", "Folgende Rechenvarianten werden aktualisiert:" );
 
     if( calcCases == null )
-      return;
+      return null;
 
     // die Rechenfälle sollen nacheinander aktualisiert werden
     // parallelität macht hier keinen Sinn
@@ -125,19 +115,12 @@ public class UpdateCalcCaseTimeseries implements IWorkbenchWindowActionDelegate
       };
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Zeitreihen aktualisieren", "Siehe Details:", false, IStatus.ERROR, true ) );
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, "Zeitreihen aktualisieren", "Siehe Details:", false, IStatus.ERROR, true ) );
       job.setUser( true );
       job.setRule( calcCase.getProject() );
       job.schedule();
     }
-  }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-    // mir wurscht
+    return null;
   }
 }

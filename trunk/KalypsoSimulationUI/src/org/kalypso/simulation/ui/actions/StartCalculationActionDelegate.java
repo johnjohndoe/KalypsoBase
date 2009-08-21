@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,76 +36,55 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.simulation.ui.calccase.CalcCaseJob;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class StartCalculationActionDelegate implements IWorkbenchWindowActionDelegate
+public class StartCalculationActionDelegate extends AbstractHandler
 {
-  private IWorkbenchWindow m_window;
-
   /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public void dispose()
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-  // nix zu tun?
-  }
+    final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void init( final IWorkbenchWindow window )
-  {
-    m_window = window;
-  }
+    final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
-  {
-    final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
-
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
+    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( shell, selection,
         "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
     if( calcCasesToCalc == null )
-      return;
+      return null;
 
-    for( int i = 0; i < calcCasesToCalc.length; i++ )
+    for( final IFolder folder : calcCasesToCalc )
     {
-      final IFolder folder = calcCasesToCalc[i];
       final Job calcJob = new CalcCaseJob( folder );
 
       //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( m_window.getShell(), "Berechnung durchführen: "
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, "Berechnung durchführen: "
           + folder.getName(), "Berechnung beendet: ", false, true ) );
       calcJob.schedule();
     }
+
+    return null;
   }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-  // mir doch egal!
-
-  // wir nehmen immer die selektion des navigators, nicht die hier gesetzte
-  }
-
 }

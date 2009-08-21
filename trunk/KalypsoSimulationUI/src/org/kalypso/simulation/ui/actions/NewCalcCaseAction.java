@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,75 +36,66 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
 
 /**
  * @author belger
  */
-public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
+public class NewCalcCaseAction extends AbstractHandler
 {
-  private IWorkbenchWindow m_window;
-
   /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public void dispose()
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-  // nichts zu tun
-  }
+    final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void init( final IWorkbenchWindow window )
-  {
-    m_window = window;
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run( final IAction action )
-  {
     // selektiertes verzeichnis finden
-    final IWorkbenchPage activePage = m_window.getActivePage();
+    final IWorkbenchPage activePage = window.getActivePage();
     // REMARK: there seems to be a eclipse bug, so we cant use the next line
     // because the internal selection tracker has no reference to the (existing!)
     // navigator
     // final ISelection selection = activePage.getSelection( IPageLayout.ID_RES_NAV );
-    
+
     // instead we directly access the navigator and its selection
     final IViewPart part = activePage.findView( IPageLayout.ID_RES_NAV );
     // selection may never be null, else we get a NullPointerExceltion in the Wizard-Pages
-    final ISelection selection = part == null ? new StructuredSelection() {} : part.getViewSite().getSelectionProvider().getSelection();
-    
+    final ISelection selection = part == null ? new StructuredSelection()
+    {
+    } : part.getViewSite().getSelectionProvider().getSelection();
+
     // NewCalcCaseWizard starten
     final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard();
-    wizard.init( m_window.getWorkbench(), (IStructuredSelection)selection );
+    wizard.init( window.getWorkbench(), (IStructuredSelection) selection );
 
-    final WizardDialog dlg = new WizardDialog( m_window.getShell(), wizard )
+    final WizardDialog dlg = new WizardDialog( shell, wizard )
     {
       /**
        * @see org.eclipse.jface.wizard.WizardDialog#updateButtons()
        */
       @Override
-      public void updateButtons()
+      public void updateButtons( )
       {
         super.updateButtons();
 
@@ -114,14 +105,6 @@ public class NewCalcCaseAction implements IWorkbenchWindowActionDelegate
     };
 
     dlg.open();
-  }
-
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged( final IAction action, final ISelection selection )
-  {
-  // mir egal
+    return null;
   }
 }
