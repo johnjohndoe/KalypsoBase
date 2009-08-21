@@ -85,7 +85,8 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     final String styleName = m_page.getStyleName();
 
     final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName );
-    command.addStyle( styleName, styleLocation );
+    if( styleName != null && styleLocation != null )
+      command.addStyle( styleName, styleLocation );
     m_outlineviewer.postCommand( command, null );
 
     m_page.removeListeners();
