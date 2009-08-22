@@ -155,7 +155,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            ProjectDataBaseController.releaseProjectLock( head, false );
+            ProjectDataBaseController.releaseProjectLock( head, true );
           }
         } );
 
