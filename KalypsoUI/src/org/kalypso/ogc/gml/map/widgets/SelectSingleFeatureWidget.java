@@ -134,6 +134,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     m_geomQName = geomQName;
   }
 
+  protected Feature getDiscoveredFeature( )
+  {
+    return m_foundFeature;
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
