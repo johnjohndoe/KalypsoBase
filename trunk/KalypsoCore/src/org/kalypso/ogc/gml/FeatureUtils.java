@@ -190,6 +190,15 @@ public class FeatureUtils
 
     return changes.toArray( new FeatureChange[] {} );
   }
+  
+  public static FeatureChange[] getAsFeatureChange( final Feature feature, final QName qname, final Object value )
+  {
+    final Map<QName, Object> map = new HashMap<QName, Object>();
+    map.put( qname, value );
+
+    return getAsFeatureChange( feature, map );
+  }
+  
 
   public static void updateProperty( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
   {
