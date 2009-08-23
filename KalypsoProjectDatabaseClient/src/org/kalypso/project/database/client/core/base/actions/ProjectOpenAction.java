@@ -133,14 +133,19 @@ public class ProjectOpenAction implements IProjectAction
       if( handler instanceof ITranscendenceProject )
       {
         final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
-        final boolean localLock = transcendence.getRemotePreferences().isLocked();
-        final Boolean serverLock = transcendence.getBean().isProjectLockedForEditing();
-        if( localLock )
-          m_type = OPEN_TYPE.eTranscendenceWriteable;
-        else if( serverLock )
-          m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
-        else
-          m_type = OPEN_TYPE.eTranscendenceReadable;
+        final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
+        if( remotePreferences == null )
+          m_type = OPEN_TYPE.eLocal;
+        else{
+          final boolean localLock = remotePreferences.isLocked();
+          final Boolean serverLock = transcendence.getBean().isProjectLockedForEditing();
+          if( localLock )
+            m_type = OPEN_TYPE.eTranscendenceWriteable;
+          else if( serverLock )
+            m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
+          else
+            m_type = OPEN_TYPE.eTranscendenceReadable;
+        }
       }
       else
       {
