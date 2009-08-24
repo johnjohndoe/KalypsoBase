@@ -112,7 +112,7 @@ public class TextInputPanel
     textData.horizontalSpan = m_parentColumns - 2;
     textControl.setLayoutData( textData );
 
-    final Button getCurrentScaleButton = m_toolkit.createButton( m_parent, "", SWT.PUSH | SWT.FLAT );
+    final Button getCurrentScaleButton = m_toolkit.createButton( m_parent, "", SWT.PUSH | SWT.FLAT ); //$NON-NLS-1$
     getCurrentScaleButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     getCurrentScaleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE.createImage() );
     getCurrentScaleButton.setToolTipText( MessageBundle.STYLE_EDITOR_SCALE );

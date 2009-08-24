@@ -91,7 +91,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     try
     {
       /* Get the legend graphic. */
-      final Font font = new Font( display, "Arial", 10, SWT.NORMAL );
+      final Font font = new Font( display, "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
       final Image legendGraphic = theme.getLegendGraphic( font );
       /* No legend available. */
       if( legendGraphic == null )

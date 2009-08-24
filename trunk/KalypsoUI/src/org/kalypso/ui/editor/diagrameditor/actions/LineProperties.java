@@ -59,7 +59,7 @@ public final class LineProperties
   public static final Integer SIZE_UNDEF = new Integer( -999 );
 
   /** A dash defining the undefined state. */
-  public static final DashType DASH_UNDEF = new DashType( "", "", null );
+  public static final DashType DASH_UNDEF = new DashType( "", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
   /** A stroke defining the undefined state. */
   public static final Stroke STROKE_UNDEF = new BasicStroke();

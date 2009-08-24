@@ -200,7 +200,7 @@ public class RulePatternTabItem
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
-          return "" + tmpRule.getMinScaleDenominator();
+          return "" + tmpRule.getMinScaleDenominator(); //$NON-NLS-1$
         }
 
         for( int i = 0; i < ruleCollection.size(); i++ )
@@ -241,7 +241,7 @@ public class RulePatternTabItem
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
-          return "" + tmpRule.getMaxScaleDenominator();
+          return "" + tmpRule.getMaxScaleDenominator(); //$NON-NLS-1$
         }
 
         // add a minimum to max in order to be a little bit larger than the

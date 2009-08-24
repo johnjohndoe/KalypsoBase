@@ -171,7 +171,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
   {
     // If nothing changed, not valid, but also no message
     if( m_themeSource == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     // TODO: check validity of source-URL; reuse code of add WMS theme functionality (refaktor!)
 

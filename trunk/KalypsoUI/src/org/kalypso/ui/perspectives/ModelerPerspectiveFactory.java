@@ -78,7 +78,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     if( layout instanceof PageLayout )
       ((PageLayout) layout).getActionSets().clear();
     
-    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" );
+    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$

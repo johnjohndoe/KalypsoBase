@@ -196,11 +196,11 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
   {
     // If nothing changed, not valid, but also no mesage
     if( m_themeName == null && m_themeVisibility == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     /* No empty 'name' allowed */
     if( m_themeName != null && m_themeName.trim().isEmpty() )
-      return Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.3" );
+      return Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.3" ); //$NON-NLS-1$
 
     // everything else is valid
     return null;

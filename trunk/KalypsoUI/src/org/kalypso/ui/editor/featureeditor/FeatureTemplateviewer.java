@@ -342,14 +342,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
           // FIXME ask gernot for an existing helper which can interpret swt-flags
           final String swtflag = m_template.getSwtflags();
-          final String[] flags = swtflag.split( " | " );
+          final String[] flags = swtflag.split( " | " ); //$NON-NLS-1$
           for( final String flag : flags )
           {
             if( flag.length() < 1 )
               continue;
 
             final String f = flag.trim();
-            if( "SWT.BORDER".equals( f ) )
+            if( "SWT.BORDER".equals( f ) ) //$NON-NLS-1$
             {
               style = style | SWT.BORDER;
             }

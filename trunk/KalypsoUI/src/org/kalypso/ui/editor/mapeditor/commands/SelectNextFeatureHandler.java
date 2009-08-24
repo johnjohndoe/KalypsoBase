@@ -82,8 +82,8 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
     if( data instanceof Map )
     {
       final Map<String, String> m_map = (Map<String, String>) data;
-      m_forward = Boolean.valueOf( m_map.get( "forward" ) ).booleanValue();
-      m_rotate = Boolean.valueOf( m_map.get( "rotate" ) ).booleanValue();
+      m_forward = Boolean.valueOf( m_map.get( "forward" ) ).booleanValue(); //$NON-NLS-1$
+      m_rotate = Boolean.valueOf( m_map.get( "rotate" ) ).booleanValue(); //$NON-NLS-1$
     }
   }
 

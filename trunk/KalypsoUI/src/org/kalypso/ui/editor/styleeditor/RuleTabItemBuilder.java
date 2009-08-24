@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
@@ -259,7 +260,7 @@ public class RuleTabItemBuilder
     m_ruleTabFolder.setSelection( index );
   }
 
-  private final IAction m_addRuleAction = new Action( "Add rule", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE )
+  private final IAction m_addRuleAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.0"), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE ) //$NON-NLS-1$
   {
     // ADD_RULE
     /**
@@ -272,7 +273,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_removeRuleAction = new Action( "Remove rule", ImageProvider.IMAGE_STYLEEDITOR_REMOVE )
+  private final IAction m_removeRuleAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.1"), ImageProvider.IMAGE_STYLEEDITOR_REMOVE ) //$NON-NLS-1$
   {
     // REM_RULE
     /**
@@ -285,7 +286,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_addPatternAction = new Action( "Add pattern rule", ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE_PATTERN )
+  private final IAction m_addPatternAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.2"), ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE_PATTERN ) //$NON-NLS-1$
   {
     // ADD_PATTERN_RULE
     /**
@@ -298,7 +299,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_backwardAction = new Action( "Move backwards", ImageProvider.IMAGE_STYLEEDITOR_BACKWARD )
+  private final IAction m_backwardAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.3"), ImageProvider.IMAGE_STYLEEDITOR_BACKWARD ) //$NON-NLS-1$
   {
     // BAK_RULE
     /**
@@ -311,7 +312,7 @@ public class RuleTabItemBuilder
     }
   };
 
-  private final IAction m_forwardAction = new Action( "Move forwards", ImageProvider.IMAGE_STYLEEDITOR_FORWARD )
+  private final IAction m_forwardAction = new Action( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.4"), ImageProvider.IMAGE_STYLEEDITOR_FORWARD ) //$NON-NLS-1$
   {
     // FOR_RULE
     /**
@@ -370,8 +371,8 @@ public class RuleTabItemBuilder
     {
       final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( new PropertyName( (String) geometryObjects.get( 0 ) ), "Point", m_featureType ); //$NON-NLS-1$
       final String patternName = "-name-" + new Date().getTime(); //$NON-NLS-1$
-      final BoundaryExpression upperBoundary = new BoundaryExpression( "1" );
-      final BoundaryExpression lowerBoundary = new BoundaryExpression( "0" );
+      final BoundaryExpression upperBoundary = new BoundaryExpression( "1" ); //$NON-NLS-1$
+      final BoundaryExpression lowerBoundary = new BoundaryExpression( "0" ); //$NON-NLS-1$
       final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
       final ArrayList<Rule> ruleList = new ArrayList<Rule>();
       ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) ); //$NON-NLS-1$ //$NON-NLS-2$

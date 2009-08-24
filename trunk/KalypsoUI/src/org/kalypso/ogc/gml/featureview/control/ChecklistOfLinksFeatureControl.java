@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
@@ -284,7 +285,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
 
     final Object checkedElement = event.getElement();
-    final CompositeCommand compositeCommand = new CompositeCommand( org.kalypso.i18n.WorkbenchMessages.getString("org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.2") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand(Messages.getString("org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0")) ; //$NON-NLS-1$
     if( event.getChecked() )
     {
       // TODO: implement case for external features

@@ -126,8 +126,8 @@ public class LineColorMapEditorComposite extends Composite
       m_maxValue = new BigDecimal( colorMapEntries[colorMapEntries.length - 1].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     }
 
-    m_globalMin = globalMin == null ? "<Unknown>" : globalMin.toPlainString();
-    m_globalMax = globalMax == null ? "<Unknown>" : globalMax.toPlainString();
+    m_globalMin = globalMin == null ? "<Unknown>" : globalMin.toPlainString(); //$NON-NLS-1$
+    m_globalMax = globalMax == null ? "<Unknown>" : globalMax.toPlainString(); //$NON-NLS-1$
 
     
     /* default parameter */

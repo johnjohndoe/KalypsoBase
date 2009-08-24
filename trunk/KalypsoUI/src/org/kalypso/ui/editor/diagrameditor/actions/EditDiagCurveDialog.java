@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * Edits the properties of a observation diagram curve.
@@ -86,7 +87,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   /** Indicates the undefined state for the name property. */
   public static final String NAME_UNDEF = EditDiagCurveDialog.class.getName();
 
-  private final static String MSG_UNDEF = "Undefiniert";
+  private final static String MSG_UNDEF = Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.0"); //$NON-NLS-1$
 
   private String m_name;
 
@@ -117,7 +118,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
 
-    newShell.setText( "Kurveneigenschaften" );
+    newShell.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -132,8 +133,8 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setTitle( "Eigenschaften editieren" );
-    setMessage( "Ändern Sie die Eigenschaften einer oder mehrerer Kurven\nAlle Änderungen werden sofort wirksam." );
+    setTitle( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.2") ); //$NON-NLS-1$
+    setMessage( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.3") ); //$NON-NLS-1$
 
     final Group composite = new Group( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 3, false ) );
@@ -143,7 +144,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Name
     final Label nameLabel = new Label( composite, SWT.NONE );
-    nameLabel.setText( "Name" );
+    nameLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.4") ); //$NON-NLS-1$
 
     final Text nameText = new Text( composite, SWT.BORDER );
     final GridData nameData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -152,7 +153,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Color
     final Label colorLabel = new Label( composite, SWT.NONE );
-    colorLabel.setText( "Farbe/Transparenz" );
+    colorLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.5") ); //$NON-NLS-1$
 
     final Button colorButton = new Button( composite, SWT.PUSH );
     final GridData colorData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -169,7 +170,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Stroke
     final Label sizeLabel = new Label( composite, SWT.NONE );
-    sizeLabel.setText( "Strichart / -stärke" );
+    sizeLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.6") ); //$NON-NLS-1$
 
     final ComboViewer dashCombo = new ComboViewer( composite, SWT.DROP_DOWN | SWT.READ_ONLY );
     dashCombo.getControl().setFont( composite.getDisplay().getSystemFont() );
@@ -330,8 +331,8 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     }
     else
     {
-      alphaSlider.setToolTipText( "" + m_alpha );
-      colorButton.setText( "" );
+      alphaSlider.setToolTipText( "" + m_alpha ); //$NON-NLS-1$
+      colorButton.setText( "" ); //$NON-NLS-1$
       colorButton.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
 
       final int widht = 32;
@@ -359,7 +360,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     {
       sizeSlider.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
       sizeSlider.setSelection( m_size.intValue() );
-      sizeSlider.setToolTipText( "" + m_size );
+      sizeSlider.setToolTipText( "" + m_size ); //$NON-NLS-1$
     }
 
     if( m_dash == LineProperties.DASH_UNDEF )

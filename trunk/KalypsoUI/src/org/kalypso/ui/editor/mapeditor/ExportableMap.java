@@ -83,7 +83,7 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name? JA: mapModell.getName()!
-    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
+    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -139,6 +139,6 @@ public class ExportableMap implements IExportableObject
    */
   public String getStationIDs( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

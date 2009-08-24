@@ -92,7 +92,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
     
-    newShell.setText( "Diagramm Eigenschaften" );
+    newShell.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.5") ); //$NON-NLS-1$
   }
   
   /**

@@ -91,7 +91,7 @@ public class PrintMapHandler extends AbstractHandler
 
     final Printer printer = new Printer( printerData );
 
-    final Job job = new Job( Messages.getString(Messages.getString("org.kalypso.ogc.gml.map.handlers.PrintMapHandler.0") , mapName ))  //$NON-NLS-1$
+    final Job job = new Job(Messages.getString("org.kalypso.ogc.gml.map.handlers.PrintMapHandler.0" , mapName ))  //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

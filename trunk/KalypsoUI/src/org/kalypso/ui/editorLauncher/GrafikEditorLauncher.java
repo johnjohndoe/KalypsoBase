@@ -124,7 +124,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5" ), Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7" ), status );
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5" ), Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

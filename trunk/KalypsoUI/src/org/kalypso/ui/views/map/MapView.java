@@ -189,10 +189,10 @@ public class MapView extends AbstractMapPart implements IViewPart
       // REMARK: We are using the id under which this view was registered under in the plugin.xml
       // The same view may have been registered under different view-id's. In order to have different
       // actions, re-register this view under another id and add items view the org.eclipse.ui.menus extension.point.
-      final String baseUri = getSite().getId() + ".outline";
-      page.addActionURI( "toolbar:" + baseUri );
-      page.addActionURI( "menu:" + baseUri );
-      page.addActionURI( "popup:" + baseUri );
+      final String baseUri = getSite().getId() + ".outline"; //$NON-NLS-1$
+      page.addActionURI( "toolbar:" + baseUri ); //$NON-NLS-1$
+      page.addActionURI( "menu:" + baseUri ); //$NON-NLS-1$
+      page.addActionURI( "popup:" + baseUri ); //$NON-NLS-1$
       page.setMapPanel( getMapPanel() );
 
       return page;
