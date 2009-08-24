@@ -211,7 +211,7 @@ public class ObservationViewer extends Composite
 
       public void focusLost( final FocusEvent e )
       {
-        final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText();
+        final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText(); //$NON-NLS-1$
         setInput( m_txtHref.getText(), filterText, getShow() );
       }
     } );

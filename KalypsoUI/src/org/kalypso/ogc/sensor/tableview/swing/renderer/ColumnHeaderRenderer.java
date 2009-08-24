@@ -53,6 +53,7 @@ import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -82,7 +83,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   {
     m_pressedColumn = -1;
 
-    final Border border = UIManager.getBorder( "TableHeader.cellBorder" );
+    final Border border = UIManager.getBorder( "TableHeader.cellBorder" ); //$NON-NLS-1$
 
     m_normalButton = new JButton();
     m_normalButton.setMargin( new Insets( 0, 0, 0, 0 ) );
@@ -123,7 +124,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     final String text = getText( value );
     final Icon icon = getIcon( value );
 
-    m_normalButton.setText( text == null ? "" : text.toString() );
+    m_normalButton.setText( text == null ? "" : text.toString() ); //$NON-NLS-1$
     m_normalButton.setIcon( icon );
     m_normalButton.setPressedIcon( icon );
 
@@ -133,7 +134,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   private String getText( final Object tvc )
   {
     if( tvc == null )
-      return "Keine Daten...";
+      return Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.2"); //$NON-NLS-1$
 
     return tvc.toString();
   }
@@ -156,7 +157,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
       final int mergedStatus = KalypsoStatusUtils.getStatus( values, valueAxis );
       final String tooltip = KalypsoStatusUtils.getTooltipFor( mergedStatus );
       if( tooltip != null )
-        return text + " - " + tooltip;
+        return text + " - " + tooltip; //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
@@ -201,11 +202,11 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     final IAxis valueAxis = tvc.getAxis();
 
     final StringBuffer msg = new StringBuffer();
-    msg.append( "Zeitreihe: " );
+    msg.append( Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.4") ); //$NON-NLS-1$
     msg.append( observation.getName() );
     msg.append( '\n' );
 
-    msg.append( "Achse: " );
+    msg.append( Messages.getString("org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer.5") ); //$NON-NLS-1$
     msg.append( valueAxis.getName() );
     msg.append( '\n' );
 

@@ -175,7 +175,7 @@ public class ObservationPlot extends XYPlot
   private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
     if( diagAxis == null )
-      throw new IllegalArgumentException( "DiagramAxis is null" );
+      throw new IllegalArgumentException( "DiagramAxis is null" ); //$NON-NLS-1$
 
     try
     {
@@ -190,7 +190,7 @@ public class ObservationPlot extends XYPlot
       final String axisClass = TimeserieUtils.getAxisClassFor( axisType );
       if( axisClass == null )
       {
-        final String msg = String.format( "No Axis-Class defined for type '%s'. Must be defined in timeseries.ini or /KalypsoCore/src/org/kalypso/ogc/sensor/timeseries/resource/config.properties", axisType );
+        final String msg = String.format( "No Axis-Class defined for type '%s'. Must be defined in timeseries.ini or /KalypsoCore/src/org/kalypso/ogc/sensor/timeseries/resource/config.properties", axisType ); //$NON-NLS-1$
         throw new SensorException( msg );
       }
 
@@ -351,7 +351,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
@@ -710,7 +710,7 @@ public class ObservationPlot extends XYPlot
   {
     if( zone == null )
     {
-      throw new IllegalArgumentException( "Null 'zone' argument." );
+      throw new IllegalArgumentException( "Null 'zone' argument." ); //$NON-NLS-1$
     }
     final TickUnits units = new TickUnits();
 
@@ -723,13 +723,13 @@ public class ObservationPlot extends XYPlot
     // DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
     // DateFormat f7 = new SimpleDateFormat("yyyy");
 
-    final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
-    final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
-    final DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
-    final DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
-    final DateFormat f5 = new SimpleDateFormat( "dd.MM" );
-    final DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
-    final DateFormat f7 = new SimpleDateFormat( "yyyy" );
+    final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" ); //$NON-NLS-1$
+    final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" ); //$NON-NLS-1$
+    final DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" ); //$NON-NLS-1$
+    final DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" ); //$NON-NLS-1$
+    final DateFormat f5 = new SimpleDateFormat( "dd.MM" ); //$NON-NLS-1$
+    final DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" ); //$NON-NLS-1$
+    final DateFormat f7 = new SimpleDateFormat( "yyyy" ); //$NON-NLS-1$
 
     f1.setTimeZone( zone );
     f2.setTimeZone( zone );

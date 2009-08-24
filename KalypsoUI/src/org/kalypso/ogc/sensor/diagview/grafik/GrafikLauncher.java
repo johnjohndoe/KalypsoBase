@@ -445,7 +445,7 @@ public class GrafikLauncher
         // create a corresponding dat-File for the current observation file
         final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
             .getName() )
-            + "-" + cc + ".dat";
+            + "-" + cc + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
         final String datFileName = datFileProtoName.replace( ' ', '_' );
         final IFile datFile = dest.getFile( datFileName );
 

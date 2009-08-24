@@ -93,7 +93,7 @@ public class ExportUtilities
     }
 
     /* Memory for the result. */
-    String stationIDs = "";
+    String stationIDs = ""; //$NON-NLS-1$
     for( int i = 0; i < stations.size(); i++ )
     {
       final String kennz = stations.get( i );
@@ -105,7 +105,7 @@ public class ExportUtilities
         continue;
       }
 
-      stationIDs = stationIDs + ";" + kennz;
+      stationIDs = stationIDs + ";" + kennz; //$NON-NLS-1$
     }
 
     return stationIDs;

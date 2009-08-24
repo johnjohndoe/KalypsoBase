@@ -332,12 +332,12 @@ public class DiagViewUtils
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
-      return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false ); //$NON-NLS-1$
     
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils //$NON-NLS-1$
           .getTopMargin( axisType ) ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )

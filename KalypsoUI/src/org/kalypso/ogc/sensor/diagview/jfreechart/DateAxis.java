@@ -92,7 +92,7 @@ public class DateAxis extends org.jfree.chart.axis.DateAxis
   public static TickUnitSource createStandardDateTickUnits( final TimeZone zone )
   {
     if( zone == null )
-      throw new IllegalArgumentException( "Null 'zone' argument." );
+      throw new IllegalArgumentException( "Null 'zone' argument." ); //$NON-NLS-1$
 
     final TickUnits units = new TickUnits();
 
@@ -105,13 +105,13 @@ public class DateAxis extends org.jfree.chart.axis.DateAxis
     //      DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
     //      DateFormat f7 = new SimpleDateFormat("yyyy");
 
-    final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
-    final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
-    final DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
-    final DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
-    final DateFormat f5 = new SimpleDateFormat( "dd.MM" );
-    final DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
-    final DateFormat f7 = new SimpleDateFormat( "yyyy" );
+    final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" ); //$NON-NLS-1$
+    final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" ); //$NON-NLS-1$
+    final DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" ); //$NON-NLS-1$
+    final DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" ); //$NON-NLS-1$
+    final DateFormat f5 = new SimpleDateFormat( "dd.MM" ); //$NON-NLS-1$
+    final DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" ); //$NON-NLS-1$
+    final DateFormat f7 = new SimpleDateFormat( "yyyy" ); //$NON-NLS-1$
 
     f1.setTimeZone( zone );
     f2.setTimeZone( zone );

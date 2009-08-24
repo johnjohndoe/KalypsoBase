@@ -97,7 +97,7 @@ public class ExportableChart implements IExportableObject
     // more the 30000 iteration and couldn't detect any memory grow. Furthermore I did a test run with
     // ImageEncoderFactory.setImageEncoder("png","org.jfree.chart.encoders.KeypointPNGEncoderAdapter"); Also here the
     // bug disappear.
-    ImageEncoderFactory.setImageEncoder( "png", "org.jfree.chart.encoders.KeypointPNGEncoderAdapter" );
+    ImageEncoderFactory.setImageEncoder( "png", "org.jfree.chart.encoders.KeypointPNGEncoderAdapter" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
