@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Stroke;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 
@@ -129,6 +130,6 @@ public class ChangeThemePropertiesCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Kurveneigenschaften verändern";
+    return Messages.getString("org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand.0"); //$NON-NLS-1$
   }
 }

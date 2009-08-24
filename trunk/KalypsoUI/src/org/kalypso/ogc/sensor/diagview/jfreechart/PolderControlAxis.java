@@ -80,7 +80,7 @@ public class PolderControlAxis extends NumberAxis
   {
     final TickUnits units = new TickUnits();
 
-    final NumberTickUnit unit = new NumberTickUnit( 1, new DecimalFormat( "0" ) )
+    final NumberTickUnit unit = new NumberTickUnit( 1, new DecimalFormat( "0" ) ) //$NON-NLS-1$
     {
       /**
        * @see org.jfree.chart.axis.NumberTickUnit#valueToString(double)
@@ -89,12 +89,12 @@ public class PolderControlAxis extends NumberAxis
       public String valueToString( final double value )
       {
         if( value > 1.5 )
-          return "";
+          return ""; //$NON-NLS-1$
         
         if( value < 0.5 )
-          return "zu";
+          return "zu"; //$NON-NLS-1$
 
-        return "auf";
+        return "auf"; //$NON-NLS-1$
       }
     };
 

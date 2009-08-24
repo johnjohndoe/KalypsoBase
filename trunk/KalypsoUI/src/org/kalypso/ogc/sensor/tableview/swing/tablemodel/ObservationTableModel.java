@@ -621,9 +621,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       final TimeZone timeZone = df.getTimeZone();
       if( timeZone != null )
       {
-        writer.write( " (" );
+        writer.write( " (" ); //$NON-NLS-1$
         writer.write( timeZone.getID() );
-        writer.write( ")" );
+        writer.write( ")" ); //$NON-NLS-1$
       }
     }
 

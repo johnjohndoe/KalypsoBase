@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -93,14 +94,14 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
     }
     String wqTabelle = null;
     String wqWechmann = null;
-    String obsName = "-";
+    String obsName = "-"; //$NON-NLS-1$
 
     if( file != null )
     {
       try
       {
         final URL url = ResourceUtilities.createURL( file );
-        final IObservation obs = ZmlFactory.parseXML( url, "" );
+        final IObservation obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
         obsName = obs.getName();
         wqTabelle = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
         wqWechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
@@ -116,9 +117,9 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 
     if( wqTabelle == null )
     {
-      String msg = "Datei enthält keine WQ-Tabelle";
+      String msg = Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.2"); //$NON-NLS-1$
       if( wqWechmann != null )
-        msg += " (Anzeige von Wechmannparametern nicht möglich)";
+        msg += Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.3"); //$NON-NLS-1$
       
       MessageDialog.openWarning( shell, action.getText(), msg );
       return;
@@ -155,7 +156,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       if( object instanceof IFile )
       {
         final IFile file = (IFile) object;
-        action.setEnabled( file.getFileExtension().equalsIgnoreCase( "zml" ) );
+        action.setEnabled( file.getFileExtension().equalsIgnoreCase( "zml" ) ); //$NON-NLS-1$
       }
     }
   }

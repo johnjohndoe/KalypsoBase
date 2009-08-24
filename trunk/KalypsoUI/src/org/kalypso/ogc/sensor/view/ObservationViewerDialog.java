@@ -263,8 +263,8 @@ public class ObservationViewerDialog extends Dialog
           if( content != null && content instanceof String )
           {
             final IObservation inputObs = (IObservation) m_input;
-            final String name = inputObs == null ? "" : inputObs.getName();
-            setInput( ZmlFactory.createZMLFromClipboardString( name, "" + content, axis ) );
+            final String name = inputObs == null ? "" : inputObs.getName(); //$NON-NLS-1$
+            setInput( ZmlFactory.createZMLFromClipboardString( name, "" + content, axis ) ); //$NON-NLS-1$
           }
           // else
           // TODO messagebox

@@ -70,7 +70,7 @@ public class WQRelationDialog extends ResizableDialog
 
     final String fromType = wqs.getFromType();
     final String toType = wqs.getToType();
-    final String title = fromType + toType + "-Beziehung für " + obsName;
+    final String title = Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.1", fromType ,toType ,  obsName);  //$NON-NLS-1$
 
     m_title = title;
     m_wqs = wqs;

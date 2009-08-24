@@ -208,17 +208,17 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     {
       public void keyPressed( final KeyEvent e )
       {
-        System.out.println( "keyPressed" );
+        System.out.println( "keyPressed" ); //$NON-NLS-1$
       }
 
       public void keyReleased( final KeyEvent e )
       {
-        System.out.println( "keyReleased" );
+        System.out.println( "keyReleased" ); //$NON-NLS-1$
       }
 
       public void keyTyped( final KeyEvent e )
       {
-        System.out.println( "keyTyped" );
+        System.out.println( "keyTyped" ); //$NON-NLS-1$
       }
     } );
   }

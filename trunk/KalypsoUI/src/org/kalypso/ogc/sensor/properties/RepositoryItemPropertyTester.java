@@ -52,7 +52,7 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class RepositoryItemPropertyTester extends PropertyTester
 {
-  private static final String PROPERTY_HASWQTABLE = "repositoryItemHasWQTable";
+  private static final String PROPERTY_HASWQTABLE = "repositoryItemHasWQTable"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)

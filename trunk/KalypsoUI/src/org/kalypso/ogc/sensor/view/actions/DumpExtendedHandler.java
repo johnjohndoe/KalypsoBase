@@ -89,10 +89,10 @@ public class DumpExtendedHandler extends AbstractHandler
     }
 
     /* If the 'structure.txt' exists already, ask the user, if he want to delete it. */
-    File structureFile = new File( directory, "structure.txt" );
+    File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
     if( structureFile.exists() )
     {
-      boolean ok = MessageDialog.openConfirm( shell, "Bestätigung", "Sie haben einen Pfad ausgewählt, in dem bereits ein Export liegt. Wenn Sie fortfahren, wird der komplette Inhalt des Verzeichnisses gelöscht, bevor der neue Export durchgeführt wird. Sind Sie damit einverstanden?" );
+      boolean ok = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.0"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.2") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !ok )
         return null;
@@ -103,7 +103,7 @@ public class DumpExtendedHandler extends AbstractHandler
       /* Create the directory again. */
       if( !directory.mkdir() )
       {
-        MessageDialog.openError( shell, "Fehler", "Konnte das Verzeichnis für den Export nicht wieder neu anlegen ..." );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.3"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.4") ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
     }
@@ -113,7 +113,7 @@ public class DumpExtendedHandler extends AbstractHandler
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Struktur exportieren", IProgressMonitor.UNKNOWN );
+        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.5"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
         try
         {
@@ -133,7 +133,7 @@ public class DumpExtendedHandler extends AbstractHandler
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), "Struktur konnte nicht exportiert werden", status ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     
     return null;
   }
