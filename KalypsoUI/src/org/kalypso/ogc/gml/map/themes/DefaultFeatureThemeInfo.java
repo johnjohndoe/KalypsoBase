@@ -95,7 +95,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
         m_delegate = KalypsoCoreExtensions.createThemeInfo( infoId, theme );
         if( m_delegate == null )
         {
-          final String msg = String.format( "Failed to create theme info with id '%s' for theme '%s'", theme.getLabel(), infoId );
+          final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4"), theme.getLabel(), infoId ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
         }
 
@@ -114,8 +114,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.0") ); //$NON-NLS-1$
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.1") ); //$NON-NLS-1$
+    Assert.isNotNull( m_delegate, "call init first" ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, "call init first" ); //$NON-NLS-1$
 
     m_delegate.appendInfo( formatter, pos );
   }
@@ -126,8 +126,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.2") ); //$NON-NLS-1$
-    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.3") ); //$NON-NLS-1$
+    Assert.isNotNull( m_delegate, "call init first" ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, "call init first" ); //$NON-NLS-1$
 
     m_delegate.appendQuickInfo( formatter, pos );
   }

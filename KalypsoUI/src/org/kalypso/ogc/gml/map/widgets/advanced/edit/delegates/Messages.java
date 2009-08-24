@@ -38,35 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.filterdialog.model;
+package org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates;
 
-import java.io.InputStream;
-
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterConstructionException;
-import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Utility class to read filters from somewhere...
- * 
- * @author Gernot Belger
+ * @author kimwerner
+ *
  */
-public class FilterReader
+public class Messages
 {
-  private FilterReader( )
+  private static final String BUNDLE_NAME = "org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" ); //$NON-NLS-1$
   }
 
-  public static Filter readFilter( final InputStream reader ) throws FilterConstructionException, Exception
+  public static String getString( String key )
   {
-    final Document asDOM = XMLHelper.getAsDOM( reader, true );
-    final Element element = asDOM.getDocumentElement();
-    return AbstractFilter.buildFromDOM( element );
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
-
-  
 }

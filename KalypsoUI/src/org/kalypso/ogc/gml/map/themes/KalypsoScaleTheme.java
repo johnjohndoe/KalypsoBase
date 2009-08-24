@@ -300,7 +300,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     final LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
     for( int i = 0; i < values.size(); i++ )
     {
-      final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5"), (values.get( i ) / scaleUnit.getFactor()) ), g ); //$NON-NLS-1$
+      final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5", (values.get( i ) / scaleUnit.getFactor()) ), g ); //$NON-NLS-1$
 
       final int x = START_X + (i * WIDTH_SUB_RECT) - (int) stringBounds.getWidth() / 2;
       final int y = START_Y + MAX_HEIGHT;
@@ -362,7 +362,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       if( ((stringBounds.getX() > endPointDrawnText + 5) && (stringBounds.getMaxX() < startPointLastText - 5)) || i == values.size() - 1 )
       {
         /* Draw the text. */
-        g.drawString( String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7"), values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() ); //$NON-NLS-1$
+        g.drawString(  Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7", values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() ); //$NON-NLS-1$
 
         /* Store the last point to see, if the next text is overlapping. */
         endPointDrawnText = stringBounds.getX() + stringBounds.getWidth();

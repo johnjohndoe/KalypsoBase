@@ -230,7 +230,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.3" ), service, e.getLocalizedMessage() ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e,  Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.3" , service, e.getLocalizedMessage() ) ) ); //$NON-NLS-1$
     }
   }
 

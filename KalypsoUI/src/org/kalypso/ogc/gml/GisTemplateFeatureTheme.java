@@ -211,7 +211,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e ); //$NON-NLS-1$
       setStatus( status );
     }
   }
@@ -519,8 +519,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       }
     }
 
-    final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( "sld", ftsURN, context );
-    return new GisTemplateUserStyle( sldPoolableObjectType, "style", usedForSelection );
+    final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( "sld", ftsURN, context ); //$NON-NLS-1$
+    return new GisTemplateUserStyle( sldPoolableObjectType, "style", usedForSelection ); //$NON-NLS-1$
   }
 
   /**

@@ -105,7 +105,7 @@ public class SldLoader extends AbstractLoader
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
-      if( source.startsWith( "urn" ) )
+      if( source.startsWith( "urn" ) ) //$NON-NLS-1$
         return loadFromCatalog( context, source );
 
       return loadFromUrl( context, source );
@@ -186,7 +186,7 @@ public class SldLoader extends AbstractLoader
     // Try to load the fts from the catalog
     final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
     if( fts == null )
-      throw new LoaderException( String.format( "Failed to resolve urn %s", source ) );
+      throw new LoaderException( String.format( "Failed to resolve urn %s", source ) ); //$NON-NLS-1$
 
     // Load resource bundle
     URL sldURL = null;
@@ -203,8 +203,8 @@ public class SldLoader extends AbstractLoader
 
     /* HACK: Use the name of the feature type style in the GMT for referencing this style. */
     final UserStyle userStyle = StyleFactory.createUserStyle( fts.getName(), fts.getTitle(), fts.getAbstract(), true, new FeatureTypeStyle[] { fts } );
-    final NamedLayer namedLayer = SLDFactory.createNamedLayer( "", null, new Style[] { userStyle } );
-    return SLDFactory.createStyledLayerDescriptor( "", "", "", new Layer[] { namedLayer } );
+    final NamedLayer namedLayer = SLDFactory.createNamedLayer( "", null, new Style[] { userStyle } ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( "", "", "", new Layer[] { namedLayer } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   private StyledLayerDescriptor loadFromUrl( final URL context, final String source ) throws IOException, XMLParsingException
@@ -289,7 +289,7 @@ public class SldLoader extends AbstractLoader
     final String source = key.getLocation();
     final URL context = key.getContext();
 
-    if( source.startsWith( "urn" ) )
+    if( source.startsWith( "urn" ) ) //$NON-NLS-1$
       return new IResource[] {};
 
     final URL url = m_urlResolver.resolveURL( context, source );

@@ -274,7 +274,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     {
       final String key = text.substring( 1 );
       if( m_resourceBundle == null )
-        return String.format( "No resource bundle for key %s", key );
+        return  Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.6", key ); //$NON-NLS-1$
 
       try
       {
@@ -282,7 +282,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       }
       catch( final MissingResourceException e )
       {
-        return String.format( "!%s!", key );
+        return String.format( "!%s!", key ); //$NON-NLS-1$
       }
     }
 

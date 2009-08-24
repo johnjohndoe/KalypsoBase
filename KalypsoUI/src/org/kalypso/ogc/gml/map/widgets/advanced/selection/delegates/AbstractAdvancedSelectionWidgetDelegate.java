@@ -172,7 +172,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     if( EDIT_MODE.eAdd.equals( mode ) )
     {
       if( SLD_ADD == null )
-        SLD_ADD = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/add.sld" ) );
+        SLD_ADD = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/add.sld" ) ); //$NON-NLS-1$
 
       return SLD_ADD;
 
@@ -180,7 +180,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     else if( EDIT_MODE.eRemove.equals( mode ) )
     {
       if( SLD_REMOVE == null )
-        SLD_REMOVE = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/remove.sld" ) );
+        SLD_REMOVE = XMLTools.parse( AbstractAdvancedSelectionWidgetDelegate.class.getResource( "slds/remove.sld" ) ); //$NON-NLS-1$
 
       return SLD_REMOVE;
     }

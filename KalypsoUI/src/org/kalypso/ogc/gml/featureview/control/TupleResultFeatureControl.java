@@ -162,7 +162,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final IMenuService service = (IMenuService) serviceLocator.getService( IMenuService.class );
 
     if( m_toolbar != null )
-      service.populateContributionManager( m_toolbar, "toolbar:" + uri );
+      service.populateContributionManager( m_toolbar, "toolbar:" + uri ); //$NON-NLS-1$
   }
 
   /**

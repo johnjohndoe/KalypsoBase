@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NewFeatureToolbarContribution extends DropDownToolbarItem
 {
-  public static final String CMD_ID_NEW_FEATURE = "org.kalypso.gis.newFeature.command";
+  public static final String CMD_ID_NEW_FEATURE = "org.kalypso.gis.newFeature.command"; //$NON-NLS-1$
 
   private Command m_rootCommand;
 

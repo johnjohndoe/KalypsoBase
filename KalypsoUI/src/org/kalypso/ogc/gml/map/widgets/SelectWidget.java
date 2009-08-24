@@ -47,6 +47,7 @@ import java.awt.Rectangle;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -61,10 +62,10 @@ public class SelectWidget extends AbstractDelegateWidget
 
   public SelectWidget( )
   {
-    super( "select widget", "", new SelectFeatureWidget( "", "", new QName[] { Feature.QNAME_FEATURE }, null ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "select widget", "", new SelectFeatureWidget( "", "", new QName[] { Feature.QNAME_FEATURE }, null ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( "Selektieren Sie Features in der Karte." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidget.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -82,7 +83,7 @@ public class SelectWidget extends AbstractDelegateWidget
     final Rectangle bounds = mapPanel.getScreenBounds();
     final IWidget delegate = getDelegate();
     if( delegate == null )
-      m_toolTipRenderer.setTooltip( "Kein Thema aktiv, Selektion nicht möglich.\nAktivieren Sie ein Thema in der Gliederung" );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidget.3") ); //$NON-NLS-1$
     else
     {
       final String delegateTooltip = delegate.getToolTip();

@@ -48,6 +48,7 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointInsertDelegate;
@@ -89,7 +90,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
   public AdvancedPolygonEditWidget( final IAdvancedEditWidgetDataProvider provider )
   {
-    super( "Editiere städtebauliche Elemente" );
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.0") ); //$NON-NLS-1$
     m_provider = provider;
 
     m_delegates.put( EDIT_MODE.eMulti, new AdvancedEditModeMultiDelegate( this, provider ) );
@@ -165,7 +166,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public String getToolTip( )
   {
-    return String.format( "%s <SPACE>", getCurrentDelegate().getToolTip() );
+    return String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.1"), getCurrentDelegate().getToolTip() ); //$NON-NLS-1$
   }
 
   /**

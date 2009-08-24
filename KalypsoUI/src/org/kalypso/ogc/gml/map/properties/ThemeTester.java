@@ -59,25 +59,25 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class ThemeTester extends PropertyTester
 {
   /** Property 'activeThemeNotNull': tests, returns <code>true</code>, if an active theme is set. */
-  private final static String PROPERTY_NOTNULL = "isNotNull";
+  private final static String PROPERTY_NOTNULL = "isNotNull"; //$NON-NLS-1$
 
   /**
    * Property 'activeThemeQName': compares the given argument to the toString of the qname of the active theme. Returns
    * <code>false</code>, if the active theme is not an feature theme.
    */
-  private final static String PROPERTY_QNAME = "qname";
+  private final static String PROPERTY_QNAME = "qname"; //$NON-NLS-1$
 
   /** Property 'activeThemeNotNull': tests, returns <code>true</code>, if the active theme has a non trivial extent. */
-  private final static String PROPERTY_HASEXTENT = "hasExtent";
+  private final static String PROPERTY_HASEXTENT = "hasExtent"; //$NON-NLS-1$
 
   /**
    * Property 'activeThemeNotNull': tests, returns <code>true</code>, if the active theme is a feature theme (i.e.
    * inherits from {@link IKalypsoFeatureTheme}).
    */
-  private final static String PROPERTY_ISFEATURETHEME = "isFeatureTheme";
+  private final static String PROPERTY_ISFEATURETHEME = "isFeatureTheme"; //$NON-NLS-1$
 
   /** Property 'themeProperty': tests a theme for the value of a given (theme-)property. */
-  private final static String PROPERTY_THEME_PROPERTY = "property";
+  private final static String PROPERTY_THEME_PROPERTY = "property"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
@@ -92,7 +92,7 @@ public class ThemeTester extends PropertyTester
 
     final boolean result = test( theme, property, args, expectedValue );
 
-    KalypsoUIDebug.PROPERTY_TESTER.printf( "Testing property '%s' for expectedValue '%s' on theme '%s': %s%n", property, expectedValue, theme, result );
+    KalypsoUIDebug.PROPERTY_TESTER.printf( "Testing property '%s' for expectedValue '%s' on theme '%s': %s%n", property, expectedValue, theme, result ); //$NON-NLS-1$
 
     return result;
   }

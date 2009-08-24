@@ -201,7 +201,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
     final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
     if( themeFactory == null )
-      throw new NotImplementedException( String.format( "Could not load theme '%', linktype unknown: %s", layerName.getValue(), linktype ) );
+      throw new NotImplementedException(  Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
     if( theme instanceof AbstractKalypsoTheme )

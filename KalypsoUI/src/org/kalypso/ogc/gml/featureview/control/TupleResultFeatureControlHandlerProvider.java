@@ -108,7 +108,7 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
       if( component == null && !optional )
       {
         /* Non-optional columns must exists: throw error message */
-        final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider.0"), componentId ); //$NON-NLS-1$
+        final String msg = Messages.getString("org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider.0", componentId ); //$NON-NLS-1$
         throw new IllegalArgumentException( msg );
       }
     }

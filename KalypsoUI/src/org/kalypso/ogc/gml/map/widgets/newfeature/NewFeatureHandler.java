@@ -25,9 +25,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 public class NewFeatureHandler extends AbstractHandler implements IHandler
 {
-  public static final String PARAMETER_FEATURE_TYPE = "org.kalypso.gis.newFeature.type";
+  public static final String PARAMETER_FEATURE_TYPE = "org.kalypso.gis.newFeature.type"; //$NON-NLS-1$
 
-  private static final QName GML_LOCATION = new QName( "http://www.opengis.net/gml", "location" );
+  private static final QName GML_LOCATION = new QName( "http://www.opengis.net/gml", "location" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {

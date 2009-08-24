@@ -88,7 +88,7 @@ public class MapHandlerUtils
 
   private MapHandlerUtils( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -98,7 +98,7 @@ public class MapHandlerUtils
   {
     final ICommandTarget commandTarget = findCommandTarget( context );
     if( commandTarget == null )
-      throw new ExecutionException( "Cannot execute command: unable to find outline or map" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.MapHandlerUtils.1") ); //$NON-NLS-1$
 
     commandTarget.postCommand( command, runnnable );
   }
@@ -308,7 +308,7 @@ public class MapHandlerUtils
   {
     final String[] result = new String[filterExtensions.length + 1];
     System.arraycopy( filterExtensions, 0, result, 0, filterExtensions.length );
-    result[filterExtensions.length] = "*.*";
+    result[filterExtensions.length] = "*.*"; //$NON-NLS-1$
     return result;
   }
 }

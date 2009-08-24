@@ -18,6 +18,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -69,7 +70,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
    */
   public AbstractCreateGeometryWidget( final QName qname, final QName[] geomProperties )
   {
-    super( "New Feature", "Creates a new Feature" );
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_qname = qname;
     m_geomProperties = geomProperties;
@@ -290,7 +291,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {
