@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
@@ -87,7 +88,7 @@ public class MoveThemeDownHandler extends AbstractHandler
       return null;
 
     /* Move down in reverse order, else it wont happen. */
-    final CompositeCommand compositeCommand = new CompositeCommand( "Move theme(s) down" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler.0") ); //$NON-NLS-1$
     for( int i = selectedThemesInOrder.length; i > 0; i-- )
     {
       final IKalypsoTheme kalypsoTheme = selectedThemesInOrder[i - 1];

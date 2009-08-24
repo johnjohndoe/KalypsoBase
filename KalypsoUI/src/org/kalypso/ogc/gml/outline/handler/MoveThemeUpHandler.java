@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
@@ -83,7 +84,7 @@ public class MoveThemeUpHandler extends AbstractHandler
     if( selectedThemesInOrder[0].getMapModell().getAllThemes()[0] == selectedThemesInOrder[0] )
       return null;
 
-    final CompositeCommand compositeCommand = new CompositeCommand( "Move theme(s) up" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.MoveThemeUpHandler.0") ); //$NON-NLS-1$
     for( final IKalypsoTheme kalypsoTheme : selectedThemesInOrder )
     {
       final IMapModell themeMapModell = kalypsoTheme.getMapModell();

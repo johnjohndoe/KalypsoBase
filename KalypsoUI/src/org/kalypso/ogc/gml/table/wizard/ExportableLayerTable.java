@@ -80,7 +80,7 @@ public class ExportableLayerTable implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name zurückgeben
-    return FileUtilities.validateName( "GisTabelle.csv", "_" ); //$NON-NLS-1$ $NON-NLS-2$
+    return FileUtilities.validateName( "GisTabelle.csv", "_" ); //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
   }
 
   /**
@@ -131,6 +131,6 @@ public class ExportableLayerTable implements IExportableObject
    */
   public String getStationIDs( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

@@ -210,7 +210,7 @@ public class GMLSchemaEditor extends EditorPart
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
         final GMLSchema schema = schemaCatalog.getSchema( null, context );
         if( schema == null )
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Unable to load schema: " + context.toExternalForm(), null ) );
+          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.4") + context.toExternalForm(), null ) ); //$NON-NLS-1$
         return schema;
       }
       else if( contents != null )

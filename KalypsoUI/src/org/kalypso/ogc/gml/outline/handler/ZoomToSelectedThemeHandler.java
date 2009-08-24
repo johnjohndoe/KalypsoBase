@@ -70,12 +70,12 @@ public class ZoomToSelectedThemeHandler extends AbstractHandler
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     if( selectedThemes.length == 0 )
-      throw new ExecutionException( "Kein Thema ausgewählt" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.2") ); //$NON-NLS-1$
 
     final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
     if( zoomBox == null )
     {
-      MessageDialog.openWarning( shell, "Zum Thema springen", Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.1"), Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 

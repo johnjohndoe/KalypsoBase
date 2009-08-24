@@ -98,7 +98,7 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     final String[] filterExtensions = new String[] { "*.gml" }; //$NON-NLS-1$
     final String[] filterNames = new String[] { Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ) }; //$NON-NLS-1$
 
-    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gmlExport", filterExtensions, filterNames );
+    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gmlExport", filterExtensions, filterNames ); //$NON-NLS-1$
     if( file == null )
       return null;
 

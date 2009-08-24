@@ -109,7 +109,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final String[] filterNames = new String[] {
         Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gml2shapeExport", filterExtensions, filterNames );
+    final File file = MapHandlerUtils.showSaveFileDialog( shell, title, fileName, "gml2shapeExport", filterExtensions, filterNames ); //$NON-NLS-1$
     if( file == null )
       return null;
 

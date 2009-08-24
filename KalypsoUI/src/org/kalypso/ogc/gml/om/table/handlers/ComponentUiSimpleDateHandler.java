@@ -67,7 +67,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
   public ComponentUiSimpleDateHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
-    m_df = new SimpleDateFormat( "dd.MM.yyyy hh:mm" );
+    m_df = new SimpleDateFormat( "dd.MM.yyyy hh:mm" ); //$NON-NLS-1$
   }
 
   /**

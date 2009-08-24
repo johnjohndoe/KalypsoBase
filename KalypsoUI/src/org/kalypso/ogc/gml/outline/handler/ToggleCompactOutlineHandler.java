@@ -57,7 +57,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  */
 public class ToggleCompactOutlineHandler extends AbstractHandler implements IElementUpdater
 {
-  public static final String CMD_ID = "org.kalypso.ui.map.outline.command.ToggleCompactOutline";
+  public static final String CMD_ID = "org.kalypso.ui.map.outline.command.ToggleCompactOutline"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)

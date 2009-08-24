@@ -71,7 +71,7 @@ public class AddRowHandler extends AbstractHandler
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     if( selection==null)
-      throw new ExecutionException(  "no selection in tuple result viewer available"  ); 
+      throw new ExecutionException(  Messages.getString("org.kalypso.ogc.gml.om.table.command.AddRowHandler.1")  );  //$NON-NLS-1$
 
     final Object obj = selection.getFirstElement();
     final int index =  tupleResult.indexOf( obj );
@@ -86,7 +86,7 @@ public class AddRowHandler extends AbstractHandler
       tupleResult.add( row );
 
     // select the new row; in ui job, as table is also updated in an ui event
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

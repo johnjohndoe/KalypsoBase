@@ -112,7 +112,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     {
       final Object value = record.getValue( m_component );
       if( value == null )
-        return m_nullFormat == null ? "" : String.format( m_nullFormat );
+        return m_nullFormat == null ? "" : String.format( m_nullFormat ); //$NON-NLS-1$
       return String.format( m_displayFormat, value );
     }
     catch( final IndexOutOfBoundsException e )

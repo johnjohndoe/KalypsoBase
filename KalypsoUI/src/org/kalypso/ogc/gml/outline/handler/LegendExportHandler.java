@@ -114,7 +114,7 @@ public class LegendExportHandler extends AbstractHandler
       return null;
 
     /* Create the export job. */
-    final Job job = new UIJob( "Export" )
+    final Job job = new UIJob( "Export" ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)

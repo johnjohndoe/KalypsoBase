@@ -198,11 +198,11 @@ public class DeegreeWMSUtilities
     {
       final HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" ); //$NON-NLS-1$
 
-      final String layerParam = Arrays.toString( layers, "," );
+      final String layerParam = Arrays.toString( layers, "," ); //$NON-NLS-1$
       wmsParameter.put( "LAYERS", layerParam ); //$NON-NLS-1$
       if( styles != null )
       {
-        final String styleParam = Arrays.toString( styles, "," );
+        final String styleParam = Arrays.toString( styles, "," ); //$NON-NLS-1$
         wmsParameter.put( "STYLES", styleParam ); //$NON-NLS-1$
       }
 

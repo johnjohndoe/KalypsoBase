@@ -113,17 +113,17 @@ public class SldExportHandler extends AbstractHandler
     final DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
     dateTimeInstance.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     final String dateString = dateTimeInstance.format( new Date() );
-    final String abstract_ = String.format( "Exported by Kalypso %s", dateString );
+    final String abstract_ = String.format( "Exported by Kalypso %s", dateString ); //$NON-NLS-1$
     final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( fileName, fileName, abstract_, layers );
 
     /* Open file dialog and save the file */
     final String[] filterExtensions = new String[] { "*.sld" }; //$NON-NLS-1$
     final String[] filterNames = new String[] { "Styled Layer Descriptors (*.sld)" }; //$NON-NLS-1$
-    final File file = MapHandlerUtils.showSaveFileDialog( shell, "SLD-Export", fileName, getClass().getName(), filterExtensions, filterNames );
+    final File file = MapHandlerUtils.showSaveFileDialog( shell, "SLD-Export", fileName, getClass().getName(), filterExtensions, filterNames ); //$NON-NLS-1$
     if( file == null )
       return null;
 
-    writeFile( file, sld, "UTF-8" );
+    writeFile( file, sld, "UTF-8" ); //$NON-NLS-1$
     return null;
   }
 
@@ -143,7 +143,7 @@ public class SldExportHandler extends AbstractHandler
     }
     catch( final IOException e )
     {
-      throw new ExecutionException( "Failed to write sld", e );
+      throw new ExecutionException( "Failed to write sld", e ); //$NON-NLS-1$
     }
     finally
     {
@@ -169,7 +169,7 @@ public class SldExportHandler extends AbstractHandler
     if( element instanceof UserStyle )
     {
       final UserStyle style = (UserStyle) element;
-      return SLDFactory.createNamedLayer( style.getName() + "_style", null, new Style[] { style } );
+      return SLDFactory.createNamedLayer( style.getName() + "_style", null, new Style[] { style } ); //$NON-NLS-1$
     }
 
     return null;
