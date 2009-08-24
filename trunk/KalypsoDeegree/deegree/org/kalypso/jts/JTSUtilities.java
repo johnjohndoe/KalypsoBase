@@ -78,6 +78,14 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
  */
 public class JTSUtilities
 {
+  /**
+   * The allowed tolerance.
+   */
+  private static final double TOLERANCE = 10E-04;
+
+  /**
+   * The constructor.
+   */
   private JTSUtilities( )
   {
   }
@@ -121,7 +129,7 @@ public class JTSUtilities
   public static double pointDistanceOnLine( final LineString line, final Point point )
   {
     /* Check for intersection. */
-    if( point.distance( line ) >= 10E-06 )
+    if( point.distance( line ) >= TOLERANCE )
       throw new IllegalStateException( "The point does not lie on the line ..." );
 
     /* The needed factory. */
@@ -138,10 +146,8 @@ public class JTSUtilities
 
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
-      if( point.distance( ls ) >= 10E-06 )
-      {
+      if( point.distance( ls ) >= TOLERANCE )
         continue;
-      }
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
       final LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
@@ -292,7 +298,7 @@ public class JTSUtilities
   public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
-    if( line.distance( start ) >= 10E-06 || line.distance( end ) >= 10E-06 )
+    if( line.distance( start ) >= TOLERANCE || line.distance( end ) >= TOLERANCE )
       return null;
 
     if( line instanceof LineString )
@@ -323,7 +329,7 @@ public class JTSUtilities
   public static boolean getLineOrientation( final LineString line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line. */
-    if( line.distance( start ) >= 10E-06 || line.distance( end ) >= 10E-06 )
+    if( line.distance( start ) >= TOLERANCE || line.distance( end ) >= TOLERANCE )
       throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
 
     boolean first = false;
@@ -336,12 +342,10 @@ public class JTSUtilities
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-      if( testLine.distance( start.getCoordinate() ) < 10E-06 )
-      {
+      if( testLine.distance( start.getCoordinate() ) < TOLERANCE )
         first = true;
-      }
 
-      if( testLine.distance( end.getCoordinate() ) < 10E-06 )
+      if( testLine.distance( end.getCoordinate() ) < TOLERANCE )
       {
         /* The direction is inverse. */
         if( !first )
@@ -390,12 +394,10 @@ public class JTSUtilities
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-      if( testLine.distance( start.getCoordinate() ) < 10E-06 )
-      {
+      if( testLine.distance( start.getCoordinate() ) < TOLERANCE )
         add = true;
-      }
 
-      if( testLine.distance( end.getCoordinate() ) < 10E-06 )
+      if( testLine.distance( end.getCoordinate() ) < TOLERANCE )
       {
         add = false;
         break;
@@ -467,12 +469,10 @@ public class JTSUtilities
         /* Build a line with the two points to check the flag. */
         final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
-        if( testLine.distance( start.getCoordinate() ) < 10E-06 )
-        {
+        if( testLine.distance( start.getCoordinate() ) < TOLERANCE )
           add = true;
-        }
 
-        if( testLine.distance( end.getCoordinate() ) < 10E-06 )
+        if( testLine.distance( end.getCoordinate() ) < TOLERANCE )
         {
           add = false;
           endPointFound = true;
@@ -725,7 +725,7 @@ public class JTSUtilities
       final LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       /* If found, return it. */
-      if( segment.distance( point.getCoordinate() ) < 10E-06 )
+      if( segment.distance( point.getCoordinate() ) < TOLERANCE )
         return segment;
     }
 
@@ -752,7 +752,7 @@ public class JTSUtilities
     for( final Point point : points )
     {
       final double distance = point.distance( line );
-      if( distance >= 10E-06 )
+      if( distance >= TOLERANCE )
         throw new IllegalStateException( String.format( "One of the points does not lie on the line. Distance from line: %s", distance ) );
     }
 
@@ -783,7 +783,7 @@ public class JTSUtilities
       for( int j = 0; j < points.size(); j++ )
       {
         final Point point = points.get( j );
-        if( point.distance( ls ) < 10E-06 )
+        if( point.distance( ls ) < TOLERANCE )
         {
           /* The point intersects, and has to be added. */
           newCoordinates.add( point.getCoordinate() );
@@ -1197,5 +1197,4 @@ public class JTSUtilities
 
     return null;
   }
-
 }
