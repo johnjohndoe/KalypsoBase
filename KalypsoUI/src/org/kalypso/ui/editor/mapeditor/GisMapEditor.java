@@ -59,11 +59,11 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
   public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor"; //$NON-NLS-1$
 
-  private static final String OUTLINE_URI_TOOLBAR = "toolbar:org.kalypso.map.outline.GisMapEditor";
+  private static final String OUTLINE_URI_TOOLBAR = "toolbar:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
-  private static final String OUTLINE_URI_MENU = "menu:org.kalypso.map.outline.GisMapEditor";
+  private static final String OUTLINE_URI_MENU = "menu:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
-  private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor";
+  private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#createPartControl(org.eclipse.swt.widgets.Composite)

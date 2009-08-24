@@ -48,6 +48,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
@@ -66,8 +67,8 @@ public class EditDiagCurveAction extends FullAction
 
   public EditDiagCurveAction( final ObservationEditorOutlinePage page )
   {
-    super( "Eigenschaften", ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES,
-        "Erlaubt die Eigenschaften des Themas zu bearbeiten" );
+    super( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.0"), ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES, //$NON-NLS-1$
+        Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.1") ); //$NON-NLS-1$
 
     m_page = page;
   }
@@ -82,7 +83,7 @@ public class EditDiagCurveAction extends FullAction
     
     if( items.length == 0 )
     {
-      MessageDialog.openWarning(shell, "Kurveneigenschaften", "Bitte wählen Sie eine oder mehrere Kurven in der Gliederungsansicht.");
+      MessageDialog.openWarning(shell, Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.2"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.3")); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     
@@ -127,7 +128,7 @@ public class EditDiagCurveAction extends FullAction
       size = new Integer( (int)basicStroke.getLineWidth() );
 
       final float[] curveDash = basicStroke.getDashArray();
-      final DashType userDash = new DashType( "User defined", "Benutzerdefiniert", curveDash == null ? new float[] {}
+      final DashType userDash = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.4"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.5"), curveDash == null ? new float[] {} //$NON-NLS-1$ //$NON-NLS-2$
           : curveDash );
       if( DashType.isKnownDash( userDash ) )
         dash = DashType.findKnownDash( userDash );

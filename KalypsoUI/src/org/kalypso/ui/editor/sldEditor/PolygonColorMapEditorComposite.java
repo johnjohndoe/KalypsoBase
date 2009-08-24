@@ -110,8 +110,8 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     final BigDecimal globalMin = minGlobalValue == null ? new BigDecimal( m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP ) : minGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
     final BigDecimal globalMax = maxGlobalValue == null ? new BigDecimal( m_toEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP ) : maxGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
 
-    m_globalMin = minGlobalValue == null ? "<Unknown>" : globalMin.toPlainString();
-    m_globalMax = minGlobalValue == null ? "<Unknown>" : globalMax.toPlainString();
+    m_globalMin = minGlobalValue == null ? "<Unknown>" : globalMin.toPlainString(); //$NON-NLS-1$
+    m_globalMax = minGlobalValue == null ? "<Unknown>" : globalMax.toPlainString(); //$NON-NLS-1$
     
     // check if an entry is null. If that is the case, create both entries.
     if( m_fromEntry == null || m_toEntry == null )

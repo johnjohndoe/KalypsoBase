@@ -43,6 +43,8 @@ package org.kalypso.ui.editor.diagrameditor.actions;
 
 import java.util.Arrays;
 
+import org.kalypso.i18n.Messages;
+
 /**
  * Represents dash arrays for awt-strokes.
  * 
@@ -50,11 +52,11 @@ import java.util.Arrays;
  */
 public class DashType
 {
-  public static DashType NONE = new DashType( "<ohne>", "---------", new float[] {} );
-  public static DashType SIMPLE_1 = new DashType( "Einfach gestrichet", "- - - - -", new float[] {10f, 10f} );
-  public static DashType SIMPLE_2 = new DashType( "Fein gestrichet", ". . . . .", new float[] {5f, 5f} );
-  public static DashType SIMPLE_3 = new DashType( "Kurze Zwischenpunkte gestrichet", "-- -- -- ", new float[] {10f, 2f} );
-  public static DashType SIMPLE_4 = new DashType( "Gepunktet", ".........", new float[] {2f, 1f} );
+  public static DashType NONE = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.0"), "---------", new float[] {} ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static DashType SIMPLE_1 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.2"), "- - - - -", new float[] {10f, 10f} ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static DashType SIMPLE_2 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.4"), ". . . . .", new float[] {5f, 5f} ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static DashType SIMPLE_3 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.6"), "-- -- -- ", new float[] {10f, 2f} ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static DashType SIMPLE_4 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.8"), ".........", new float[] {2f, 1f} ); //$NON-NLS-1$ //$NON-NLS-2$
   
   public static DashType[] KNOWN_DASHS = new DashType[] { NONE, SIMPLE_1, SIMPLE_2, SIMPLE_3, SIMPLE_4 };
   

@@ -52,6 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
@@ -97,10 +98,10 @@ public class RepositoryDumper
     try
     {
       /* Create the structure file. */
-      File structureFile = new File( directory, "structure.txt" );
+      File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
 
       /* The writer to save the file. */
-      structureWriter = new OutputStreamWriter( new FileOutputStream( structureFile ), "UTF-8" );
+      structureWriter = new OutputStreamWriter( new FileOutputStream( structureFile ), "UTF-8" ); //$NON-NLS-1$
 
       /* Do the dump into the filesystem. */
       dumpExtendedRecursive( directory, structureWriter, directory, root, monitor );
@@ -164,7 +165,7 @@ public class RepositoryDumper
       {
         /* Only create directory of that name, if children exist */
         if( !newDirectory.mkdir() )
-          throw new RepositoryException( "Could not create the directory '" + newDirectory.getAbsolutePath() + "' ..." );
+          throw new RepositoryException( Messages.getString("org.kalypso.ui.repository.RepositoryDumper.2",newDirectory.getAbsolutePath())); //$NON-NLS-1$
       }
 
       item.getRepository().getProperties();
@@ -172,7 +173,7 @@ public class RepositoryDumper
       final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
       if( observation != null )
       {
-        final File zmlFile = new File( directory, name + ".zml" );
+        final File zmlFile = new File( directory, name + ".zml" ); //$NON-NLS-1$
 
         structureWriter.write( FileUtilities.getRelativePathTo( baseDirectory, zmlFile ) );
         structureWriter.write( ';' );
@@ -188,7 +189,7 @@ public class RepositoryDumper
         writer.close();
       }
 
-      structureWriter.write( "\n" );
+      structureWriter.write( "\n" ); //$NON-NLS-1$
 
       if( items == null )
         return;

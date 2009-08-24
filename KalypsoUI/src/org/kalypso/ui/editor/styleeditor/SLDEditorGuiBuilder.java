@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
@@ -77,7 +78,7 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
  */
 public class SLDEditorGuiBuilder
 {
-  private final Action m_saveAction = new Action( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE )
+  private final Action m_saveAction = new Action( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE ) //$NON-NLS-1$
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -119,7 +120,7 @@ public class SLDEditorGuiBuilder
     m_parent = parent;
 
     m_form = toolkit.createScrolledForm( m_parent );
-    m_form.setText( "Style Editor" );
+    m_form.setText( Messages.getString("org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder.1") ); //$NON-NLS-1$
     m_form.getBody().setLayout( new GridLayout() );
 
     final IToolBarManager toolBarManager = m_form.getForm().getToolBarManager();

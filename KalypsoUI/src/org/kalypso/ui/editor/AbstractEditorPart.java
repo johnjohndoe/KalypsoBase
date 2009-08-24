@@ -229,7 +229,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().getFile( filePath );
     final JobExclusiveCommandTarget commandTarget = m_commandTarget;
-    final Job job = new Job( "Save As: " + filePath.toPortableString() )
+    final Job job = new Job( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.0") + filePath.toPortableString() ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       // ignore: we do not want to make it more public
@@ -335,7 +335,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status );
+      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status ); //$NON-NLS-1$
     }
 
     m_commandTarget.resetDirty();
@@ -396,7 +396,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   public void fireDirty( )
   {
-    final UIJob job = new UIJob( "Fire Dirty" )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.1") ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override

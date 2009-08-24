@@ -169,7 +169,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
 
 
     /* Hide things, that make no sense for shapes */
-    if( themeType.equals( "shape" ) )
+    if( themeType.equals( "shape" ) ) //$NON-NLS-1$
     {
       fpathLabelData.exclude = true;
       fpathData.exclude = true;
@@ -240,7 +240,7 @@ public class FeatureThemePropertyPage extends PropertyPage implements IWorkbench
   {
     // If nothing changed, not valid, but also no message
     if( m_themeLocation == null && m_themeType == null && m_themeFeaturePath == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     // TODO: check validity of data; reuse code of GisTemplate theme functionality (refaktor!)
 

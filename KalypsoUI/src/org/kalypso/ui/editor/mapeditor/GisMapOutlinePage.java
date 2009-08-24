@@ -167,14 +167,14 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
-    m_popupMgr = new MenuManager( "#MapOutlineContextMenu" );
+    m_popupMgr = new MenuManager( "#MapOutlineContextMenu" ); //$NON-NLS-1$
 
     final Menu menu = m_popupMgr.createContextMenu( m_outlineViewer.getControl() );
     m_outlineViewer.getControl().setMenu( menu );
 
 
     // Refresh updateable element later, else they won't find this page
-    final UIJob job = new UIJob( "Update outline action bars" )
+    final UIJob job = new UIJob( "Update outline action bars" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -206,17 +206,17 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
     for( final String uri : m_actionURIs )
     {
-      if( uri.startsWith( "toolbar" ) )
+      if( uri.startsWith( "toolbar" ) ) //$NON-NLS-1$
         ContributionUtils.populateContributionManager( site, toolBarManager, uri );
-      else if( uri.startsWith( "menu" ) )
+      else if( uri.startsWith( "menu" ) ) //$NON-NLS-1$
         ContributionUtils.populateContributionManager( site, menuManager, uri );
-      else if( uri.startsWith( "popup" ) )
+      else if( uri.startsWith( "popup" ) ) //$NON-NLS-1$
       {
         if( m_popupMgr != null )
           ContributionUtils.populateContributionManager( site, m_popupMgr, uri );
       }
       else
-        System.out.println( String.format( "Unable to add uri '%s' to outline action bars. Unknown prefix.", uri ) );
+        System.out.println( String.format( "Unable to add uri '%s' to outline action bars. Unknown prefix.", uri ) ); //$NON-NLS-1$
     }
 
     actionBars.updateActionBars();
