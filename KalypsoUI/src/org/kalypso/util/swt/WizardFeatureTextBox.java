@@ -188,10 +188,10 @@ public class WizardFeatureTextBox
   public Double getAsDouble( ) throws NumberFormatException
   {
     final String text = getText();
-    if( text == null || "".equals( text.trim() ) )
+    if( text == null || "".equals( text.trim() ) ) //$NON-NLS-1$
       return null;
 
-    return Double.valueOf( getText().replaceAll( ",", "." ) );
+    return Double.valueOf( getText().replaceAll( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void processListener( )

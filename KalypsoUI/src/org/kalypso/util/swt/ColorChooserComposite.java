@@ -141,7 +141,7 @@ public class ColorChooserComposite extends Composite
 
     /* color chooser */
     final Button bColor = new Button( m_body, SWT.NONE );
-    bColor.setText( "..." );
+    bColor.setText( "..." ); //$NON-NLS-1$
 
     bColor.addSelectionListener( new SelectionAdapter()
     {

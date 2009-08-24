@@ -149,9 +149,9 @@ public class URLGetter implements ICoreRunnableWithProgress
             KalypsoGisPlugin.getDefault().getLog().log( status2 );
           }
 
-          String message = Messages.getString( "org.kalypso.util.net.URLGetter.2" ) + urlAsString;
+          String message = Messages.getString( "org.kalypso.util.net.URLGetter.2" ) + urlAsString; //$NON-NLS-1$
           if( responseBodyAsString != null && !responseBodyAsString.isEmpty() )
-            message += "\n" + responseBodyAsString;
+            message += "\n" + responseBodyAsString; //$NON-NLS-1$
 
           status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, message, e );
           setStatus( status );
