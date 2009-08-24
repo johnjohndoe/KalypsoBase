@@ -48,52 +48,73 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
 
 /**
- * Utility class for snapping a point to geometrys.
- *
+ * Utility class for snapping a point to geometries.
+ * 
  * @author Holger Albert, Dirk Kuch
  */
 public class SnapUtilities
 {
+  /**
+   * The snap type.
+   * 
+   * @author Holger Albert
+   */
   public static enum SNAP_TYPE
   {
     /**
      * Snaps the GM_Point to the next possible point.
      */
     SNAP_TO_POINT,
+
     /**
      * Snaps the GM_Point to the line, if points are near, one of this points will be used.
      */
     SNAP_AUTO,
+
     /**
      * Only snaps to the line, ignoring all points.
      */
     SNAP_TO_LINE;
   }
 
+  /**
+   * The constructor.
+   */
   private SnapUtilities( )
   {
   }
 
   /**
-   * Returns an Point representing the point.
+   * This function returns a point representing the point.
+   * 
+   * @param pointJTS
+   *          The point.
+   * @return A new point, representing the point.
    */
-  public static Point snapPoint( final Point pointJTS )
+  public static Point snapPoint( Point pointJTS )
   {
-    final GeometryFactory factory = new GeometryFactory( pointJTS.getPrecisionModel(), pointJTS.getSRID() );
+    GeometryFactory factory = new GeometryFactory( pointJTS.getPrecisionModel(), pointJTS.getSRID() );
     return factory.createPoint( pointJTS.getCoordinate() );
   }
 
   /**
-   * Returns an Point snapped to the line.
+   * This function returns a point snapped to the line.
+   * 
+   * @param geometryJTS
+   *          The line.
+   * @param pointBuffer
+   *          The buffered point.
+   * @param type
+   *          The snap type.
+   * @return A point snapped to the line.
    */
-  public static Point snapLine( final LineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
+  public static Point snapLine( LineString geometryJTS, Geometry pointBuffer, SNAP_TYPE type )
   {
     try
     {
       if( type.equals( SNAP_TYPE.SNAP_TO_POINT ) )
       {
-        final Point point = JTSUtilities.linePointInGeometry( geometryJTS, pointBuffer );
-
+        Point point = JTSUtilities.linePointInGeometry( geometryJTS, pointBuffer );
         if( point != null )
           return point;
 
@@ -101,8 +122,7 @@ public class SnapUtilities
       }
       else if( type.equals( SNAP_TYPE.SNAP_AUTO ) )
       {
-        final Point point = snapLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
-
+        Point point = snapLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
         if( point != null )
           return point;
 
@@ -110,38 +130,43 @@ public class SnapUtilities
       }
       else if( type.equals( SNAP_TYPE.SNAP_TO_LINE ) )
       {
-        final Geometry geometryIntersection = pointBuffer.intersection( geometryJTS );
-
+        Geometry geometryIntersection = pointBuffer.intersection( geometryJTS );
         if( !(geometryIntersection instanceof LineString) )
           return null;
 
-        final Point point = JTSUtilities.pointOnLinePercent( (LineString) geometryIntersection, 50 );
-
+        Point point = JTSUtilities.pointOnLinePercent( (LineString) geometryIntersection, 50 );
         if( point == null )
           return null;
 
         return point;
       }
     }
-    catch( final TopologyException e )
+    catch( TopologyException ex )
     {
-      e.printStackTrace();
+      ex.printStackTrace();
     }
 
     return null;
   }
 
   /**
-   * Returns an Point snapped to the polygon at the outside.
+   * This function returns a point snapped to the polygon at the outside.
+   * 
+   * @param geometryJTS
+   *          The polygon.
+   * @param pointBuffer
+   *          The buffered point.
+   * @param type
+   *          The snap type.
+   * @return A point snapped to the polygon at the outside.
    */
-  public static Point snapPolygon( final Polygon geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
+  public static Point snapPolygon( Polygon geometryJTS, Geometry pointBuffer, SNAP_TYPE type )
   {
-    final LineString exteriorRing = geometryJTS.getExteriorRing();
+    LineString exteriorRing = geometryJTS.getExteriorRing();
 
     if( type.equals( SNAP_TYPE.SNAP_TO_POINT ) )
     {
-      final Point point = JTSUtilities.linePointInGeometry( exteriorRing, pointBuffer );
-
+      Point point = JTSUtilities.linePointInGeometry( exteriorRing, pointBuffer );
       if( point != null )
         return point;
 
@@ -149,8 +174,7 @@ public class SnapUtilities
     }
     else if( type.equals( SNAP_TYPE.SNAP_AUTO ) )
     {
-      final Point point = snapPolygon( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
-
+      Point point = snapPolygon( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
       if( point != null )
         return point;
 
@@ -158,13 +182,11 @@ public class SnapUtilities
     }
     else if( type.equals( SNAP_TYPE.SNAP_TO_LINE ) )
     {
-      final Geometry geometryIntersection = pointBuffer.intersection( exteriorRing );
-
+      Geometry geometryIntersection = pointBuffer.intersection( exteriorRing );
       if( !(geometryIntersection instanceof LineString) )
         return null;
 
-      final com.vividsolutions.jts.geom.Point point = JTSUtilities.pointOnLinePercent( (LineString) geometryIntersection, 50 );
-
+      Point point = JTSUtilities.pointOnLinePercent( (LineString) geometryIntersection, 50 );
       if( point == null )
         return null;
 
