@@ -568,7 +568,7 @@ public class SortedProperties extends TreeMap<String, String>
                 value = (value << 4) + 10 + aChar - 'A';
                 break;
               default:
-                throw new IllegalArgumentException( "Malformed \\uxxxx encoding." );
+                throw new IllegalArgumentException( "Malformed \\uxxxx encoding." ); //$NON-NLS-1$
             }
           }
           out[outLen++] = (char) value;
@@ -674,7 +674,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   private static void writeComments( BufferedWriter bw, String comments ) throws IOException
   {
-    bw.write( "#" );
+    bw.write( "#" ); //$NON-NLS-1$
     int len = comments.length();
     int current = 0;
     int last = 0;
@@ -704,7 +704,7 @@ public class SortedProperties extends TreeMap<String, String>
             current++;
           }
           if( current == len - 1 || (comments.charAt( current + 1 ) != '#' && comments.charAt( current + 1 ) != '!') )
-            bw.write( "#" );
+            bw.write( "#" ); //$NON-NLS-1$
         }
         last = current + 1;
       }
@@ -823,7 +823,7 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public void store( OutputStream out, String comments ) throws IOException
   {
-    store0( new BufferedWriter( new OutputStreamWriter( out, "8859_1" ) ), comments, true );
+    store0( new BufferedWriter( new OutputStreamWriter( out, "8859_1" ) ), comments, true ); //$NON-NLS-1$
   }
 
   private void store0( BufferedWriter bw, String comments, boolean escUnicode ) throws IOException
@@ -832,7 +832,7 @@ public class SortedProperties extends TreeMap<String, String>
     {
       writeComments( bw, comments );
     }
-    bw.write( "#" + new Date().toString() );
+    bw.write( "#" + new Date().toString() ); //$NON-NLS-1$
     bw.newLine();
     synchronized( this )
     {
@@ -845,7 +845,7 @@ public class SortedProperties extends TreeMap<String, String>
          * No need to escape embedded and trailing spaces for value, hence pass false to flag.
          */
         val = saveConvert( val, false, escUnicode );
-        bw.write( key + "=" + val );
+        bw.write( key + "=" + val ); //$NON-NLS-1$
         bw.newLine();
       }
     }
@@ -937,7 +937,7 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public void list( PrintStream out )
   {
-    out.println( "-- listing properties --" );
+    out.println( "-- listing properties --" ); //$NON-NLS-1$
     Hashtable h = new Hashtable();
     enumerate( h );
     for( Enumeration e = h.keys(); e.hasMoreElements(); )
@@ -946,9 +946,9 @@ public class SortedProperties extends TreeMap<String, String>
       String val = (String) h.get( key );
       if( val.length() > 40 )
       {
-        val = val.substring( 0, 37 ) + "...";
+        val = val.substring( 0, 37 ) + "..."; //$NON-NLS-1$
       }
-      out.println( key + "=" + val );
+      out.println( key + "=" + val ); //$NON-NLS-1$
     }
   }
 
@@ -967,7 +967,7 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public void list( PrintWriter out )
   {
-    out.println( "-- listing properties --" );
+    out.println( "-- listing properties --" ); //$NON-NLS-1$
     Hashtable h = new Hashtable();
     enumerate( h );
     for( Enumeration e = h.keys(); e.hasMoreElements(); )
@@ -976,9 +976,9 @@ public class SortedProperties extends TreeMap<String, String>
       String val = (String) h.get( key );
       if( val.length() > 40 )
       {
-        val = val.substring( 0, 37 ) + "...";
+        val = val.substring( 0, 37 ) + "..."; //$NON-NLS-1$
       }
-      out.println( key + "=" + val );
+      out.println( key + "=" + val ); //$NON-NLS-1$
     }
   }
 

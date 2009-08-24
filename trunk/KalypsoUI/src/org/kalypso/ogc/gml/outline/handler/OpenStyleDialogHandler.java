@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -103,7 +104,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
     }
     catch( final PartInitException e )
     {
-      throw new ExecutionException( "Unable to open Style Editor", e );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler.0"), e ); //$NON-NLS-1$
     }
 
     return null;

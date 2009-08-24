@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 
@@ -71,7 +72,7 @@ public class ThemePropertiesHandler extends AbstractHandler
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     if( selectedThemes.length != 1 )
-      throw new ExecutionException( "Please select exactly one theme" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ThemePropertiesHandler.0") ); //$NON-NLS-1$
 
     final PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn( shell, selectedThemes[0], null, null, null );
     dialog.open();

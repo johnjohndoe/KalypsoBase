@@ -51,7 +51,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  */
 public class MapOutline extends ContentOutline
 {
-  public static final String ID = "org.kalypso.ui.views.outline";
+  public static final String ID = "org.kalypso.ui.views.outline"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.views.contentoutline.ContentOutline#isImportant(org.eclipse.ui.IWorkbenchPart)

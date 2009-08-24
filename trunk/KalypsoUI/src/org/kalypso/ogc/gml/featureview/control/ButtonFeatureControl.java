@@ -146,7 +146,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 // return new NotImplementedFeatureDialog(
 // Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"),
 // Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$
-// //$NON-NLS-2$
 
         final GMLWorkspace workspace = feature.getWorkspace();
         linkedFeature = workspace.getFeature( (String) property );

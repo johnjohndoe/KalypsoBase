@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISources;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
@@ -66,7 +67,7 @@ public class RemoveThemeHandler extends AbstractHandler
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
-    final CompositeCommand compositeCommand = new CompositeCommand( "Remove Themes" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.RemoveThemeHandler.0") ); //$NON-NLS-1$
     for( final IKalypsoTheme theme : selectedThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( theme.getMapModell(), theme ) );
 

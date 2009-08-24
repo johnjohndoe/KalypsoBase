@@ -182,13 +182,13 @@ public class PasteFromClipboardHandler extends AbstractHandler
 
         try
         {
-          final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i );
+          final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
           if( compHandler != null )
             compHandler.setValue( record, compHandler.parseValue( token ) );
         }
         catch( final Exception e )
         {
-          final String msg = String.format( "(Line %2d): %s", ordinalNumber, e.getLocalizedMessage() );
+          final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8"), ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
           final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
           stati.add( status );
         }
@@ -199,10 +199,10 @@ public class PasteFromClipboardHandler extends AbstractHandler
     if( stati.size() > 0 )
     {
       final IStatus[] array = stati.toArray( new IStatus[stati.size()] );
-      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, "Errors during parsing: ", null );
+      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.6"), null ); //$NON-NLS-1$
       if( !multiStatus.isOK() )
       {
-        final int open = new StatusDialog( shell, multiStatus, "Paste", new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open();
+        final int open = new StatusDialog( shell, multiStatus, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.7"), new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open(); //$NON-NLS-1$
         if( open != StatusDialog.OK )
           return null;
       }

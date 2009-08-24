@@ -74,10 +74,10 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
   private void formatInternal( final String prefix, final String key, final String kind, final String val )
   {
-    if( val == null || key == null || key == "" )// || key.equals( val ) )
+    if( val == null || key == null || key == "" )// || key.equals( val ) ) //$NON-NLS-1$
       return;
 
-    m_properties.setProperty( prefix + "_" + key + "_" + kind, val );
+    m_properties.setProperty( prefix + "_" + key + "_" + kind, val ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -98,21 +98,21 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
     final FileDialog dlg = new FileDialog( editor.getEditorSite().getShell(), SWT.SAVE );
 
-    dlg.setFilterExtensions( new String[] { "*.properties", "*.*" } );
-    dlg.setFilterNames( new String[] { "Property Files", "all Files" } );
+    dlg.setFilterExtensions( new String[] { "*.properties", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
+    dlg.setFilterNames( new String[] { "Property Files", "all Files" } ); //$NON-NLS-1$ //$NON-NLS-2$
     dlg.setOverwrite( true );
 
-    final String[] url = schema.getContext().getFile().split( "\\/" );
+    final String[] url = schema.getContext().getFile().split( "\\/" ); //$NON-NLS-1$
 
-    dlg.setFileName( url[url.length - 1].split( "\\." )[0] + "_" + System.getProperty( "org.osgi.framework.language" ) );
+    dlg.setFileName( url[url.length - 1].split( "\\." )[0] + "_" + System.getProperty( "org.osgi.framework.language" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     dlg.open();
     String fName = dlg.getFileName();
     if( fName == null )
       return null;
-    if( !fName.contains( "." ) )
-      fName = fName + ".properties";
-    m_fileName = dlg.getFilterPath() + "\\" + fName;
+    if( !fName.contains( "." ) ) //$NON-NLS-1$
+      fName = fName + ".properties"; //$NON-NLS-1$
+    m_fileName = dlg.getFilterPath() + "\\" + fName; //$NON-NLS-1$
 
     final NSPrefixProvider nsMapper = NSUtilities.getNSProvider();
 
@@ -135,8 +135,8 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
         final String ftLabel = ftAnno.getLabel();
         final String ftDescripion = ftAnno.getDescription();
 
-        formatInternal( ftPrefix, ftLocalPart, "label", ftLabel );
-        formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion );
+        formatInternal( ftPrefix, ftLocalPart, "label", ftLabel ); //$NON-NLS-1$
+        formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion ); //$NON-NLS-1$
 
         final IPropertyType[] properties = featureType.getProperties();
         for( final IPropertyType propertyType : properties )
@@ -152,10 +152,10 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
           final String pLabel = pAnno.getLabel();
           final String pTooltip = pAnno.getTooltip();
-          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptPrefix;
+          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptPrefix; //$NON-NLS-1$ //$NON-NLS-2$
 
-          formatInternal( prefix, ptName.getLocalPart(), "label", pLabel );
-          formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip );
+          formatInternal( prefix, ptName.getLocalPart(), "label", pLabel ); //$NON-NLS-1$
+          formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip ); //$NON-NLS-1$
 
           if( propertyType instanceof IValuePropertyType )
           {
@@ -174,8 +174,8 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
                   final String aLabel = anno.getLabel();
                   final String aTooltip = anno.getTooltip();
                   final String enumPrefix = prefix + '_' + ptName.getLocalPart();
-                  formatInternal( enumPrefix, key, "label", aLabel );
-                  formatInternal( enumPrefix, key, "tooltip", aTooltip );
+                  formatInternal( enumPrefix, key, "label", aLabel ); //$NON-NLS-1$
+                  formatInternal( enumPrefix, key, "tooltip", aTooltip ); //$NON-NLS-1$
                 }
               }
             }
@@ -193,7 +193,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     {
       e.printStackTrace();
 
-      throw new ExecutionException( "Failed to export schema", e );
+      throw new ExecutionException( "Failed to export schema", e ); //$NON-NLS-1$
     }
     return null;
   }

@@ -77,7 +77,7 @@ public class OsmImageProvider implements IKalypsoImageProvider
   @Override
   public String getLabel( )
   {
-    return "OpenStreeMap";
+    return "OpenStreeMap"; //$NON-NLS-1$
   }
 
   /**

@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISources;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -67,7 +68,7 @@ public class ActivateThemeHandler extends AbstractHandler
 
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
     if( selectedThemes.length == 0 )
-      throw new ExecutionException( "Please select one theme" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ActivateThemeHandler.0") ); //$NON-NLS-1$
 
     final IKalypsoTheme themeToActivate = selectedThemes[0];
     final IMapModell mapModell = MapHandlerUtils.getMapModell( context );
