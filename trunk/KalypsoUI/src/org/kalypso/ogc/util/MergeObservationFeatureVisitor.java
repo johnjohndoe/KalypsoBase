@@ -53,6 +53,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -111,14 +112,14 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final TimeseriesLinkType obsLink = (TimeseriesLinkType) f.getProperty( m_observationProperty );
       if( obsLink == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Keine Verknüpfung gefunden für Feature mit ID: " + featureId + " und property: " + m_observationProperty );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.0", featureId, m_observationProperty )); //$NON-NLS-1$ 
         return true;
       }
 
       final String href = obsLink.getHref();
       if( href == null || href.length() == 0 )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Verknüpfung leer für Feature mit ID: " + featureId );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.2", featureId) ); //$NON-NLS-1$
         return true;
       }
 
@@ -127,7 +128,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final IObservation sourceObs = ZmlFactory.parseXML( sourceURL, featureId );
       if( sourceObs == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Quell-Zeitreihe nicht vorhanden für Feature mit ID: " + featureId );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.3", featureId )); //$NON-NLS-1$
         return true;
       }
 
@@ -136,7 +137,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final IObservation targetObs = ZmlFactory.parseXML( targetURL, featureId );
       if( targetObs == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Ziel-Zeitreihe nicht vorhanden für Feature mit ID: " + featureId );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.4", featureId )); //$NON-NLS-1$
         return true;
       }
 
@@ -156,13 +157,13 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       e.printStackTrace();
 
       // tricky: wrap the exception with timeserie-link as text to have a better error message
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Fehler beim Kopieren der Zeitreihen für Feature: " + featureId + "\t" + "Konnte Zeitreihe nicht laden" );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.5", featureId ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Fehler beim Kopieren der Zeitreihen für Feature: " + featureId + "\t" + e.getLocalizedMessage() );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.8", featureId, e.getLocalizedMessage() )); //$NON-NLS-1$
     }
 
     return true;
@@ -257,7 +258,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final IAxis sourceAxis = findSourceAxis( sourceAxes, targetAxis );
       final IAxis sourceStatusAxis = KalypsoStatusUtils.findStatusAxisFor( sourceAxes, sourceAxis );
       if( sourceStatusAxis == null )
-        throw new IllegalArgumentException( "No status axis for sourceAxis with name: " + sourceAxis.getName() );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.10", sourceAxis.getName() )); //$NON-NLS-1$
 
       final IAxis[] targets = new IAxis[] { targetAxis, targetStatusAxis };
       final IAxis[] sources = new IAxis[] { sourceAxis, sourceStatusAxis };
@@ -280,7 +281,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
     final String targetName = targetAxis.getName();
     final IAxis sourceAxis = ObservationUtilities.findAxisByTypeNoEx( sourceAxes, targetType );
     if( sourceAxis == null )
-      throw new IllegalArgumentException( "No source axis for target axis with name: " + targetName );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.11",targetName )); //$NON-NLS-1$
 
     return sourceAxis;
   }
@@ -289,7 +290,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
   {
     final IAxis[] axes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
     if( axes.length == 0 || axes.length > 1 )
-      throw new IllegalArgumentException( "MergeObservationFeatureVisitor: observation must have exactly one key-axis" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.util.MergeObservationFeatureVisitor.12") ); //$NON-NLS-1$
 
     return axes[0];
   }

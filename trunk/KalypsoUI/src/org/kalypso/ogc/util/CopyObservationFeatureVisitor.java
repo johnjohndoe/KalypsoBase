@@ -91,11 +91,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CopyObservationFeatureVisitor implements FeatureVisitor
 {
   /** Used to search/replace metadata content with properties of the visited feature */
-  private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" );
+  private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" ); //$NON-NLS-1$
 
   private static final ObjectFactory OF = new ObjectFactory();
 
-  private static final QName FID_QNAME = new QName( "FID" );
+  private static final QName FID_QNAME = new QName( "FID" ); //$NON-NLS-1$
 
   private final Source[] m_sources;
 
@@ -254,7 +254,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + f.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ $NON-NLS-2$
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + f.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
     }
 
     return true;
@@ -305,10 +305,10 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    */
   private static QName createQName( final String fragmentedFullQName )
   {
-    if( "FID".equals( fragmentedFullQName ) )
+    if( "FID".equals( fragmentedFullQName ) ) //$NON-NLS-1$
       return FID_QNAME;
 
-    final String[] parts = fragmentedFullQName.split( "#" );
+    final String[] parts = fragmentedFullQName.split( "#" ); //$NON-NLS-1$
     if( parts.length == 2 )
       return new QName( parts[0], parts[1] );
 
@@ -319,11 +319,11 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     if( m_targetobservationDir != null )
     {
-      String name = (String) f.getProperty( "name" );
+      String name = (String) f.getProperty( "name" ); //$NON-NLS-1$
       if( name == null || name.length() < 1 )
         name = f.getId();
       if( name == null || name.length() < 1 )
-        name = "generated";
+        name = "generated"; //$NON-NLS-1$
       final File file = getValidFile( name, 0 );
       final TimeseriesLinkType link = OF.createTimeseriesLinkType();
       final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
@@ -339,9 +339,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     String newName = name;
     if( index > 0 )
-      newName = newName + "_" + Integer.toString( index );
-    final String newName2 = org.kalypso.contribs.java.io.FileUtilities.validateName( newName, "_" );
-    final File file = new File( m_targetobservationDir, newName2 + ".zml" );
+      newName = newName + "_" + Integer.toString( index ); //$NON-NLS-1$
+    final String newName2 = org.kalypso.contribs.java.io.FileUtilities.validateName( newName, "_" ); //$NON-NLS-1$
+    final File file = new File( m_targetobservationDir, newName2 + ".zml" ); //$NON-NLS-1$
     if( file.exists() )
     {
       index++;
