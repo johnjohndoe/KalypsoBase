@@ -170,4 +170,9 @@ public class RepositoryFactoryConfig
 
     return m_name;
   }
+
+  public String getName( )
+  {
+    return toString();
+  }
 }

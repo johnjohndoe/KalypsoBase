@@ -3,5 +3,14 @@
 <plugin>
 
      <extension-point id="factories" name="RepositoryFactories" schema="schema/repfactories.exsd"/>
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+              class="org.kalypso.repository.proxy.preferences.page.KalypsoRepositoryPreferencePage"
+              id="org.kalypso.repository.proxy.preferences.page.KalypsoRepositoryPreferencePage"
+              name="Kalypso Repositories">
+        </page>
+     </extension>
 
 </plugin>
