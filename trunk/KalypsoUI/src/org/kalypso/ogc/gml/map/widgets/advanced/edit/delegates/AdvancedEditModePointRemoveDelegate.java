@@ -264,7 +264,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
   @Override
   public String getToolTip( )
   {
-    return "Editiermodus: Punkte entfernen";
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointRemoveDelegate.0"); //$NON-NLS-1$
   }
 
   /**

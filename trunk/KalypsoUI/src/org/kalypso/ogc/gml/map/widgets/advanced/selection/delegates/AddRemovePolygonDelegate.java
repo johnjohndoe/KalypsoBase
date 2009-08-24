@@ -52,6 +52,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
@@ -142,7 +143,7 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public String[] getTooltip( )
   {
-    return new String[] { "Editiermodus: Hinzufügen / Entfernen von Elementen" };
+    return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AddRemovePolygonDelegate.0") }; //$NON-NLS-1$
   }
 
   /**
@@ -154,17 +155,17 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     try
     {
       if( IMG_CURSOR_ADD == null )
-        IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) );
+        IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) ); //$NON-NLS-1$
 
       if( IMG_CURSOR_REMOVE == null )
-        IMG_CURSOR_REMOVE = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
+        IMG_CURSOR_REMOVE = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) ); //$NON-NLS-1$
 
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
       if( ADD_CURSOR == null )
-        ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" );
+        ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" ); //$NON-NLS-1$
 
       if( REMOVE_CURSOR == null )
-        REMOVE_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_REMOVE, new Point( 2, 1 ), "selection remove cursor" );
+        REMOVE_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_REMOVE, new Point( 2, 1 ), "selection remove cursor" ); //$NON-NLS-1$
 
       return getCursor( getEditMode() );
     }

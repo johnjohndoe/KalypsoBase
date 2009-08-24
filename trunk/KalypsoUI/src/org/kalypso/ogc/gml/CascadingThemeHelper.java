@@ -91,7 +91,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
+      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
@@ -115,7 +115,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
+      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeID ) )
         return (CascadingKalypsoTheme) kalypsoTheme;

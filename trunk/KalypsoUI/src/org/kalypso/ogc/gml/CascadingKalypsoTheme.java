@@ -278,7 +278,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
       case IResourceDelta.REMOVED:
         // TODO: release map and file
-        setStatus( StatusUtilities.createWarningStatus( "File was removed: " + m_file.getFullPath() ) );
+        setStatus( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.2") + m_file.getFullPath() ) ); //$NON-NLS-1$
         break;
     }
   }

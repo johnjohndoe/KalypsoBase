@@ -85,8 +85,8 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
     final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
     /* Create the image provider. */
-    final String[] layers = layerProp == null ? null : layerProp.split( "," );
-    final String[] styles = styleProp == null ? null : styleProp.split( "," );
+    final String[] layers = layerProp == null ? null : layerProp.split( "," ); //$NON-NLS-1$
+    final String[] styles = styleProp == null ? null : styleProp.split( "," ); //$NON-NLS-1$
     final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
 
     return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, mapModell );

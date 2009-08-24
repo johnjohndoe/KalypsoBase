@@ -61,6 +61,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -83,7 +84,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 {
   public static final String MAP_CONTEXT = "org.kalypso.ogc.gml.map.context"; //$NON-NLS-1$
 
-  public static final String ACTIVE_MAPPANEL_NAME = "activeMapPanel";
+  public static final String ACTIVE_MAPPANEL_NAME = "activeMapPanel"; //$NON-NLS-1$
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_MAPPANEL_NAME };
 
@@ -230,7 +231,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   protected void activateThemeContext( final IKalypsoTheme activeTheme )
   {
-    final UIJob job = new UIJob( "Activate theme context job" )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.ogc.gml.map.MapPanelSourceProvider.1") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

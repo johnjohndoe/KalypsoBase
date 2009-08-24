@@ -118,7 +118,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
 
   public SelectSingleFeatureWidget( )
   {
-    this( "single select widget", "", new QName[] { Feature.QNAME_FEATURE }, null );
+    this( "single select widget", "", new QName[] { Feature.QNAME_FEATURE }, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -308,7 +308,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   {
     final StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
 
-    sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) );
+    sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
 
     return sb.toString();
   }

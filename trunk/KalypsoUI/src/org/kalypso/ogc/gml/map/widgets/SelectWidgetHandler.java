@@ -87,7 +87,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     if( widget == null )
     {
-      final String msg = String.format( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" ), pluginParameter, widgetParameter ); //$NON-NLS-1$
+      final String msg =  Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" , pluginParameter, widgetParameter ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;

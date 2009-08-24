@@ -176,7 +176,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
   @Override
   public String getToolTip( )
   {
-    return "Editiermodus: Gemeinsames verschieben";
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate.0"); //$NON-NLS-1$
   }
 
 

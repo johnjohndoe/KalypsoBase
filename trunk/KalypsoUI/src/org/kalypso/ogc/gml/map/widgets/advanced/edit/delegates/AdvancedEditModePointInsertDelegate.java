@@ -281,7 +281,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   @Override
   public String getToolTip( )
   {
-    return "Editiermodus: Punkte einfügen";
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointInsertDelegate.0"); //$NON-NLS-1$
   }
 
   /**

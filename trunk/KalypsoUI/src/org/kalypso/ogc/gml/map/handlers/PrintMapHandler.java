@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -90,7 +91,7 @@ public class PrintMapHandler extends AbstractHandler
 
     final Printer printer = new Printer( printerData );
 
-    final Job job = new Job( "'" + mapName + "' wird gedruckt" )
+    final Job job = new Job( "%s' wird gedruckt" + mapName + "' wird gedruckt" ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -143,7 +144,7 @@ public class PrintMapHandler extends AbstractHandler
           printer.endJob();
         }
 
-        return StatusUtilities.createStatus( IStatus.INFO, "Karte erfolgreich gedruckt", null );
+        return StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ogc.gml.map.handlers.PrintMapHandler.2"), null ); //$NON-NLS-1$
       }
     };
 

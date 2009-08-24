@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AddRemovePolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate;
@@ -67,7 +68,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
   
   public AdvancedPolygonSelectionWidget( final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
-    super( "AdvancedPolygonSelectionWidget" );
+    super( "AdvancedPolygonSelectionWidget" ); //$NON-NLS-1$
 
     m_delegates.add( new AddRemovePolygonDelegate( this, provider, geometryProvider ) );
     m_delegates.add( new RectanglePolygonDelegate( this, provider, geometryProvider ) );
@@ -75,7 +76,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
     
     m_current = m_delegates.get( 0 );
     
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -140,7 +141,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
   {
     final String[] tip = m_current.getTooltip();
 
-    return String.format( "%s <SPACE>", tip[0] );
+    return String.format( Messages.getString("AdvancedPolygonSelectionWidget.2"), tip[0] ); //$NON-NLS-1$
   }
 
   /**

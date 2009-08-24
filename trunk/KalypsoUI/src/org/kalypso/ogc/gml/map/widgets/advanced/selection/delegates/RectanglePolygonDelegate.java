@@ -52,6 +52,7 @@ import javax.imageio.ImageIO;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
@@ -151,7 +152,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public String[] getTooltip( )
   {
-    return new String[] { "Editiermodus: Umrande neue Elemente" };
+    return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate.0") }; //$NON-NLS-1$
   }
   
   /**
@@ -163,10 +164,10 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     try
     {
       if( IMG_CURSOR == null )
-        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) );
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) ); //$NON-NLS-1$
 
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {

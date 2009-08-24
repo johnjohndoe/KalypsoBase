@@ -58,7 +58,7 @@ public class FilterReader
 {
   private FilterReader( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+    throw new UnsupportedOperationException( "Do not instantiate this helper class" ); //$NON-NLS-1$
   }
 
   public static Filter readFilter( final InputStream reader ) throws FilterConstructionException, Exception

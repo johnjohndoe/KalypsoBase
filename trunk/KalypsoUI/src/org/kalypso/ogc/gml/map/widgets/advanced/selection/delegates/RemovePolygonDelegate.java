@@ -119,10 +119,10 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
     try
     {
       if( IMG_CURSOR == null )
-        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) );
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) ); //$NON-NLS-1$
 
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" );
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {

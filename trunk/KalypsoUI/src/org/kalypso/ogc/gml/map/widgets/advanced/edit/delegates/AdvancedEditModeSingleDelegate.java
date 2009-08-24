@@ -50,6 +50,7 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetSnapper;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidget;
@@ -175,7 +176,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
   @Override
   public String getToolTip( )
   {
-    return "Editiermodus: Einzelnes verschieben";
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate.0"); //$NON-NLS-1$
   }
 
 
