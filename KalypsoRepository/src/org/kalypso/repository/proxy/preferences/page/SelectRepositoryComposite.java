@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository.proxy.preferences.page;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -54,6 +57,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.repository.proxy.ProxyRepositoryFactory;
 import org.kalypso.repository.proxy.preferences.IKalypsoRepositoryPreferences;
 
 /**
@@ -104,7 +109,7 @@ public class SelectRepositoryComposite extends Composite
 
     // TODO add selection change listener and perhaps update ui (settings of the (newly) selected repository)
 
-    final RepositoryFactoryConfig[] extensions = RepositoriesExtensions.retrieveExtensions();
+    final RepositoryFactoryConfig[] extensions = resolveInput();
     m_viewer.setInput( extensions );
 
     /* set selection */
@@ -117,6 +122,24 @@ public class SelectRepositoryComposite extends Composite
           break;
         }
 
+  }
+
+  /** @return remove proxy factory from list of RepositoryFactory Configurations */
+  private RepositoryFactoryConfig[] resolveInput( ) throws CoreException
+  {
+    final List<RepositoryFactoryConfig> myExtensions = new ArrayList<RepositoryFactoryConfig>();
+
+    final RepositoryFactoryConfig[] extensions = RepositoriesExtensions.retrieveExtensions();
+    for( final RepositoryFactoryConfig config : extensions )
+    {
+      final IRepositoryFactory factory = config.getFactory();
+      if( factory.getClass().equals( ProxyRepositoryFactory.class ) )
+        continue;
+
+      myExtensions.add( config );
+    }
+
+    return myExtensions.toArray( new RepositoryFactoryConfig[] {} );
   }
 
   public String getConnector( )
