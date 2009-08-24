@@ -152,9 +152,7 @@ public class JTSUtilities
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
       final LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
       for( int j = 0; j < coords.length - 1; j++ )
-      {
         lineCoords.add( coords[j] );
-      }
 
       /* ... and add the point as last one. */
       lineCoords.add( point.getCoordinate() );
