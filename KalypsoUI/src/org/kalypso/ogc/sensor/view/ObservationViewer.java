@@ -244,7 +244,7 @@ public class ObservationViewer extends Composite
 
                 final String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.3" ) ); //$NON-NLS-1$
+                  m_txtHref.setText( ""); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
