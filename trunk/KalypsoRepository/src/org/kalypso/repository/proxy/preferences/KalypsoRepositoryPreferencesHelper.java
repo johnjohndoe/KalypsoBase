@@ -38,72 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository.proxy;
+package org.kalypso.repository.proxy.preferences;
 
-import org.kalypso.repository.AbstractRepository;
-import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.kalypso.repository.KalypsoRepositoryPlugin;
+import org.kalypso.repository.RepositoriesExtensions;
+import org.kalypso.repository.conf.RepositoryFactoryConfig;
+import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
- * @author Dirk Kuch
- *
+ * @author kuch
  */
-public class ProxyRepository extends AbstractRepository
+public class KalypsoRepositoryPreferencesHelper
 {
 
-  public ProxyRepository( String name, String factory, String conf, boolean readOnly )
+  public static IRepositoryFactory resolveFactory( ) throws CoreException
   {
-    super( name, factory, conf, readOnly );
-  }
+    final IPreferenceStore store = KalypsoRepositoryPlugin.getDefault().getPreferenceStore();
+    final String repository = store.getString( IKalypsoRepositoryPreferences.CONNECTOR );
+    if( repository == null || "".equals( repository.trim() ) )
+      return null;
 
-  /**
-   * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
-   */
-  @Override
-  public IRepositoryItem findItem( String id ) throws RepositoryException
-  {
-    // TODO Auto-generated method stub
+    final RepositoryFactoryConfig[] extensions = RepositoriesExtensions.retrieveExtensions();
+    for( final RepositoryFactoryConfig extension : extensions )
+      if (extension.getName().equals( repository ))
+        return extension.getFactory();
+
     return null;
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepository#reload()
-   */
-  @Override
-  public void reload( ) throws RepositoryException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getChildren()
-   */
-  @Override
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
-   */
-  @Override
-  public boolean hasChildren( ) throws RepositoryException
-  {
-    // TODO Auto-generated method stub
-    return false;
   }
 
 }
