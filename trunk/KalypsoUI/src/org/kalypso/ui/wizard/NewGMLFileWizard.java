@@ -113,7 +113,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final IResource resource = root.findMember( containerName );
         if( !resource.exists() || !(resource instanceof IContainer) )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.2") + containerName + Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.2", containerName ) ); //$NON-NLS-1$
 
         final IContainer container = (IContainer) resource;
         final IFile file = container.getFile( new Path( fileName ) );
