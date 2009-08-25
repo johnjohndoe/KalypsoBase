@@ -56,8 +56,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
@@ -77,7 +76,7 @@ public class RuleTabItem
 {
   private final TabFolder m_ruleTabFolder;
 
-  private final KalypsoUserStyle m_userStyle;
+  private final IKalypsoUserStyle m_userStyle;
 
   private int m_focusedRuleItem = -1;
 
@@ -87,7 +86,7 @@ public class RuleTabItem
 
   private final FormToolkit m_toolkit;
 
-  public RuleTabItem( final FormToolkit toolkit, final TabFolder ruleTabFolder, final KalypsoUserStyle userStyle, final IFeatureType featureType )
+  public RuleTabItem( final FormToolkit toolkit, final TabFolder ruleTabFolder, final IKalypsoUserStyle userStyle, final IFeatureType featureType )
   {
     m_toolkit = toolkit;
     m_ruleTabFolder = ruleTabFolder;
@@ -141,7 +140,7 @@ public class RuleTabItem
     } );
 
     /* Text Panel for Rule-Abstract */
-    rowBuilder.createTextRow( Messages.getString("org.kalypso.ui.editor.styleeditor.RuleTabItem.0"), rule.getAbstract(), new ModifyListener() //$NON-NLS-1$
+    rowBuilder.createTextRow( "Beschreibung", rule.getAbstract(), new ModifyListener()
     {
       /**
        * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
@@ -167,7 +166,7 @@ public class RuleTabItem
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
-          return "" + rule.getMinScaleDenominator(); //$NON-NLS-1$
+          return "" + rule.getMinScaleDenominator();
         }
 
         rule.setMinScaleDenominator( min );
@@ -203,7 +202,7 @@ public class RuleTabItem
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
-          return "" + rule.getMaxScaleDenominator(); //$NON-NLS-1$
+          return "" + rule.getMaxScaleDenominator();
         }
 
         // add a minimum to max in order to be a little bit larger than the
@@ -403,7 +402,7 @@ public class RuleTabItem
     }
   }
 
-  public KalypsoUserStyle getUserStyle( )
+  public IKalypsoUserStyle getUserStyle( )
   {
     return m_userStyle;
   }

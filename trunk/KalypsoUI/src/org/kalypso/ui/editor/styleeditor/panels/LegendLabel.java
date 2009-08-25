@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendElementCollection;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -66,11 +66,11 @@ public class LegendLabel
 {
   private final Label m_label;
 
-  private final KalypsoUserStyle m_userStyle;
+  private final IKalypsoUserStyle m_userStyle;
 
   private int m_ruleIndex = -1;
 
-  public LegendLabel( final Label legendLabel, final KalypsoUserStyle userStyle, final int ruleIndex )
+  public LegendLabel( final Label legendLabel, final IKalypsoUserStyle userStyle, final int ruleIndex )
   {
     m_ruleIndex = ruleIndex;
     m_label = legendLabel;

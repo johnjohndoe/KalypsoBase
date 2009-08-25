@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -94,22 +94,22 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
   private int selectionIndex = 0;
 
-  public PointSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
+  public PointSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
+    super( composite, symbolizer, userStyle );
   }
 
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    final PointSymbolizer pointSymbolizer = (PointSymbolizer) symbolizer;
+    final PointSymbolizer pointSymbolizer = (PointSymbolizer) m_symbolizer;
     final Graphic graphic = pointSymbolizer.getGraphic();
     markCounter = 1;
     extGraphicCounter = 1;
 
     if( tabFolderComposite != null )
       tabFolderComposite.dispose();
-    tabFolderComposite = new Composite( composite, SWT.NULL );
+    tabFolderComposite = new Composite( m_composite, SWT.NULL );
     tabFolderComposite.setLayout( new FormLayout() );
     tabFolderComposite.layout();
 
@@ -155,7 +155,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double size = ((SliderPanel) event.getSource()).getSelection();
         graphic.setSize( size );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -180,7 +180,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double rotation = ((SliderPanel) event.getSource()).getSelection();
         graphic.setRotation( rotation );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -198,7 +198,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
-            userStyle.fireStyleChanged();
+            m_userStyle.fireStyleChanged();
           }
           catch( final FilterEvaluationException e )
           {
@@ -215,7 +215,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             setSelectionIndex( index - 1 );
             if( getSelectionIndex() < 0 )
               setSelectionIndex( 0 );
-            userStyle.fireStyleChanged();
+            m_userStyle.fireStyleChanged();
             try
             {
               draw();
@@ -244,7 +244,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index + 1 );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
           try
           {
             draw();
@@ -272,7 +272,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index - 1 );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
           try
           {
             draw();
@@ -325,7 +325,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final int index = ((ComboPanel) event.getSource()).getSelection();
           mark.setWellKnownName( WellKnownNameComboPanel.getWellKnownNameByIndex( index ) );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -341,7 +341,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markFill.setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -352,7 +352,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markFill.setOpacity( opacity );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -368,7 +368,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -393,7 +393,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markStroke.setOpacity( opacity );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
     }
@@ -412,7 +412,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           {
             final URL url = ((UrlInputPanel) event.getSource()).getURL();
             externalGraphic.setOnlineResource( url.toString() );
-            userStyle.fireStyleChanged();
+            m_userStyle.fireStyleChanged();
           }
         } );
       }

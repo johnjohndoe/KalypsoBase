@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
@@ -74,7 +74,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
 
   ColorPalettePanel colorPalettePanel = null;
 
-  public FilterPatternPolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
+  public FilterPatternPolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final IKalypsoUserStyle m_userStyle, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
   {
     super( m_composite, m_symbolizer, m_userStyle );
     this.ruleCollection = m_ruleCollection;
@@ -87,7 +87,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
     final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
     // ***** group
-    final Group group = new Group( composite, SWT.NULL );
+    final Group group = new Group( m_composite, SWT.NULL );
     final GridData groupData = new GridData();
     groupData.widthHint = 210;
     groupData.heightHint = 215;
@@ -135,12 +135,12 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
               ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
     }
     else
-      colorPalettePanel.draw( composite );
+      colorPalettePanel.draw( m_composite );
   }
 
   public int getSelectionIndex( )

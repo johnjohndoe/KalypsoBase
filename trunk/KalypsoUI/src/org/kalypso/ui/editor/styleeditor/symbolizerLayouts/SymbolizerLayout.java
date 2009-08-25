@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -45,21 +45,21 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
- *  
+ *
  */
 public class SymbolizerLayout extends AbstractSymbolizerLayout
 {
-  public SymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  public SymbolizerLayout( final Composite parent, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    super( m_parent, m_symbolizer, m_userStyle );
+    super( parent, symbolizer, userStyle );
   }
 
-  public SymbolizerLayout( Composite parent )
+  public SymbolizerLayout( final Composite parent )
   {
     super( parent );
   }
@@ -67,12 +67,12 @@ public class SymbolizerLayout extends AbstractSymbolizerLayout
   @Override
   public void draw( )
   {
-    GridLayout compositeLayout = new GridLayout();
+    final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** Label Group
-    Group labelGroup = new Group( composite, SWT.NULL );
-    GridData labelGroupData = new GridData();
+    final Group labelGroup = new Group( m_composite, SWT.NULL );
+    final GridData labelGroupData = new GridData();
     labelGroupData.widthHint = 210;
     labelGroupData.heightHint = 246;
     labelGroup.setLayoutData( labelGroupData );

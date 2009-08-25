@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -83,7 +83,7 @@ public class ColorMapEntryTable
 
   public ColorMapEntryList m_colorMapEntryList = null;
 
-  KalypsoUserStyle m_userStyle = null;
+  IKalypsoUserStyle m_userStyle = null;
 
   RasterSymbolizer m_rasterSymbolizer = null;
 
@@ -123,7 +123,7 @@ public class ColorMapEntryTable
     this.addChildControls( parent );
   }
 
-  public ColorMapEntryTable( final Composite parent, final KalypsoUserStyle userStyle, final RasterSymbolizer rasterSymbolizer )
+  public ColorMapEntryTable( final Composite parent, final IKalypsoUserStyle userStyle, final RasterSymbolizer rasterSymbolizer )
   {
     m_userStyle = userStyle;
     m_rasterSymbolizer = rasterSymbolizer;
@@ -310,7 +310,7 @@ public class ColorMapEntryTable
 
   /**
    * Add the "Add", "Delete" and "Analyse","Refresh" buttons
-   * 
+   *
    * @param parent
    *            the parent composite
    */
@@ -388,7 +388,7 @@ public class ColorMapEntryTable
 
   /**
    * Return the column names in a collection
-   * 
+   *
    * @return List containing column names
    */
   public java.util.List<String> getColumnNames( )

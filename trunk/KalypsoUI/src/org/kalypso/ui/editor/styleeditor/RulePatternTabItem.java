@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
@@ -90,7 +90,7 @@ public class RulePatternTabItem
 {
   private TabFolder ruleTabFolder = null;
 
-  private KalypsoUserStyle userStyle = null;
+  private IKalypsoUserStyle userStyle = null;
 
   private IFeatureType featureType = null;
 
@@ -104,7 +104,7 @@ public class RulePatternTabItem
 
   private final FormToolkit m_toolkit;
 
-  public RulePatternTabItem( final FormToolkit toolkit, final TabFolder m_ruleTabFolder, final KalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final List<IPropertyType> m_numericFeatureTypePropertylist )
+  public RulePatternTabItem( final FormToolkit toolkit, final TabFolder m_ruleTabFolder, final IKalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final List<IPropertyType> m_numericFeatureTypePropertylist )
   {
     m_toolkit = toolkit;
     this.ruleTabFolder = m_ruleTabFolder;
@@ -661,12 +661,12 @@ public class RulePatternTabItem
     this.numericFeatureTypePropertylist = tmpList;
   }
 
-  public KalypsoUserStyle getUserStyle( )
+  public IKalypsoUserStyle getUserStyle( )
   {
     return userStyle;
   }
 
-  public void setUserStyle( final KalypsoUserStyle m_userStyle )
+  public void setUserStyle( final IKalypsoUserStyle m_userStyle )
   {
     this.userStyle = m_userStyle;
   }

@@ -48,9 +48,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.FeatureTypeStyleTreeObject;
+import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.RuleTreeObject;
 import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
@@ -100,12 +101,12 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     m_guiBuilder = new SLDEditorGuiBuilder( m_formToolkit, parent );
   }
 
-  private void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
+  private void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
   {
     m_guiBuilder.setStyle( userStyle, theme, index );
   }
 
-  public void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
+  public void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
   {
     m_guiBuilder.setStyle( userStyle, theme );
   }
@@ -131,8 +132,8 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       // Reset style-editor, but the styles are not unique, so do not set anything
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
       final UserStyle[] styles = theme.getStyles();
-      if( styles != null && styles.length == 1 && styles[0] instanceof KalypsoUserStyle )
-        setStyle( (KalypsoUserStyle) styles[0], theme );
+      if( styles != null && styles.length == 1 && styles[0] instanceof GisTemplateUserStyle )
+        setStyle( (GisTemplateUserStyle) styles[0], theme );
       else
         setStyle( null, null );
     }
@@ -143,7 +144,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
+        final IKalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
         setStyle( kalypsoStyle, (IKalypsoFeatureTheme) theme );
       }
       else
@@ -153,7 +154,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     {
       final FeatureTypeStyleTreeObject ftsNode = (FeatureTypeStyleTreeObject) o;
       final UserStyleTreeObject userStyleNode = ftsNode.getParent();
-      final KalypsoUserStyle userStyle = userStyleNode.getStyle();
+      final IKalypsoUserStyle userStyle = userStyleNode.getStyle();
       final IKalypsoTheme theme = userStyleNode.getParent();
       if( theme instanceof IKalypsoFeatureTheme )
       {
@@ -183,7 +184,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       }
 
       final UserStyleTreeObject userStyleNode = ftsNode.getParent();
-      final KalypsoUserStyle userStyle = userStyleNode.getStyle();
+      final IKalypsoUserStyle userStyle = userStyleNode.getStyle();
       setStyle( userStyle, userStyleNode.getParent(), index );
     }
   }

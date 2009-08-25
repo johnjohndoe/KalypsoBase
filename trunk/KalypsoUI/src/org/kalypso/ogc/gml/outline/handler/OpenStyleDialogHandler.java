@@ -51,7 +51,7 @@ import org.eclipse.ui.PartInitException;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
@@ -82,7 +82,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
         final Object[] children = theme.getChildren( theme );
         if( children instanceof UserStyleTreeObject[] && children.length != 0 )
         {
-          final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) children[0]).getStyle();
+          final IKalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) children[0]).getStyle();
           part.setStyle( kalypsoStyle, theme );
           return null;
         }
@@ -93,7 +93,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
         final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
         if( part != null && theme instanceof IKalypsoFeatureTheme )
         {
-          final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
+          final IKalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
           part.setStyle( kalypsoStyle, (IKalypsoFeatureTheme) theme );
           return null;
         }

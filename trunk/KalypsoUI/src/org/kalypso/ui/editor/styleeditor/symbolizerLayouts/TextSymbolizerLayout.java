@@ -54,7 +54,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
@@ -113,7 +113,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   private final FormToolkit m_toolkit;
 
-  public TextSymbolizerLayout( final FormToolkit toolkit, final Composite comp, final Symbolizer symb, final KalypsoUserStyle style, final IFeatureType featureType )
+  public TextSymbolizerLayout( final FormToolkit toolkit, final Composite comp, final Symbolizer symb, final IKalypsoUserStyle style, final IFeatureType featureType )
   {
     super( comp, symb, style );
     m_toolkit = toolkit;
@@ -123,13 +123,13 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    final TextSymbolizer textSymbolizer = (TextSymbolizer) symbolizer;
+    final TextSymbolizer textSymbolizer = (TextSymbolizer) m_symbolizer;
 
     final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** Font group
-    final Group fontGroup = new Group( composite, SWT.NULL );
+    final Group fontGroup = new Group( m_composite, SWT.NULL );
     final GridData fontGroupData = new GridData();
     fontGroupData.widthHint = 210;
     fontGroupData.heightHint = 244;
@@ -174,7 +174,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         final PropertyName propName = new PropertyName( ftpString );
         final Expression exp[] = { propName };
         textSymbolizer.setLabel( StyleFactory.createParameterValueType( exp ) );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -188,7 +188,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
       {
         textSymbolizer.setLabel( StyleFactory.createParameterValueType( newValue ) );
         getTextLabelComboPanel().reset();
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
         return null;
       }
     } );
@@ -202,7 +202,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         final FontChooserPanel source = (FontChooserPanel) event.getSource();
         final Font m_font = source.getFont();
         textSymbolizer.setFont( m_font );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -223,7 +223,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         getHalo().getFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -238,7 +238,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         getHalo().getFill().setOpacity( opacity );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -253,7 +253,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         getHalo().getStroke().setOpacity( opacity );
         if( textSymbolizer.getHalo() == null )
           textSymbolizer.setHalo( getHalo() );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -282,7 +282,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
           getLabelPlacement().getLinePlacement().setPlacementType( type );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -295,7 +295,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
           getLabelPlacement().getLinePlacement().setGap( (int) gap );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -316,7 +316,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
           getLabelPlacement().getPointPlacement().setDisplacement( disp );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
 
@@ -330,7 +330,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
           getLabelPlacement().getPointPlacement().setRotation( rotation );
           if( textSymbolizer.getLabelPlacement() == null )
             textSymbolizer.setLabelPlacement( getLabelPlacement() );
-          userStyle.fireStyleChanged();
+          m_userStyle.fireStyleChanged();
         }
       } );
     }

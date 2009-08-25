@@ -574,7 +574,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void addStyle( final KalypsoUserStyle style )
+  public void addStyle( final IKalypsoUserStyle style )
   {
     style.addStyleListener( this );
 
@@ -585,7 +585,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void removeStyle( final KalypsoUserStyle style )
+  public void removeStyle( final IKalypsoUserStyle style )
   {
     if( m_theme != null )
       m_theme.removeStyle( style );
@@ -902,7 +902,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void styleChanged( final KalypsoUserStyle source )
+  public void styleChanged( final IKalypsoUserStyle source )
   {
     fireStatusChanged( this );
   }

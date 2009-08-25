@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -77,21 +77,21 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
 
   private Fill polygonFill = null;
 
-  public PolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
+  public PolygonSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
+    super( composite, symbolizer, userStyle );
   }
 
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    final PolygonSymbolizer polygonSymbolizer = (PolygonSymbolizer) symbolizer;
+    final PolygonSymbolizer polygonSymbolizer = (PolygonSymbolizer) m_symbolizer;
 
     GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** Fill Group
-    final Group fillGroup = new Group( composite, SWT.NULL );
+    final Group fillGroup = new Group( m_composite, SWT.NULL );
     fillGroup.setText( MessageBundle.STYLE_EDITOR_FILL );
     final GridData fillGroupData = new GridData();
     fillGroupData.widthHint = 210;
@@ -112,7 +112,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         getPolygonFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -123,7 +123,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         getPolygonFill().setOpacity( opacity );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -131,7 +131,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
     compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
-    final Group strokeGroup = new Group( composite, SWT.NULL );
+    final Group strokeGroup = new Group( m_composite, SWT.NULL );
     strokeGroup.setText( MessageBundle.STYLE_EDITOR_STROKE );
     final GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
@@ -148,7 +148,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         polygonStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -159,7 +159,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setWidth( width );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -170,7 +170,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setOpacity( opacity );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -183,7 +183,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineJoin( lineJoin );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -196,7 +196,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineCap( lineCap );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -208,7 +208,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         polygonStroke.setDashOffset( dashOffset );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -220,7 +220,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         polygonStroke.setDashArray( dashArray );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
   }

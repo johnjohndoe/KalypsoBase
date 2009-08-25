@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor;
 
@@ -49,7 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternLineSymbolizerLayout;
@@ -64,18 +64,18 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
- *  
+ *
  */
 public class FilterPatternSymbolizerTabItemBuilder
 {
 
-  public FilterPatternSymbolizerTabItemBuilder( TabFolder tabFolder, Symbolizer symbolizer, KalypsoUserStyle userStyle,
-      RuleCollection ruleCollection, int symbolizerIndex )
+  public FilterPatternSymbolizerTabItemBuilder( final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle,
+      final RuleCollection ruleCollection, final int symbolizerIndex )
   {
-    TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
+    final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 
-    Composite composite = new Composite( tabFolder, SWT.NULL );
-    GridLayout compositeLayout = new GridLayout();
+    final Composite composite = new Composite( tabFolder, SWT.NULL );
+    final GridLayout compositeLayout = new GridLayout();
     composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
     compositeLayout.marginHeight = 0;
@@ -113,7 +113,7 @@ public class FilterPatternSymbolizerTabItemBuilder
       {
         symbolizerLayout.draw();
       }
-      catch( FilterEvaluationException e )
+      catch( final FilterEvaluationException e )
       {
         e.printStackTrace();
       }

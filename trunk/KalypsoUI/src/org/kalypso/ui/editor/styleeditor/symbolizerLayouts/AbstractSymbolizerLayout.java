@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,38 +36,37 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
  * @author F.Lindemann
- *  
+ *
  */
 public abstract class AbstractSymbolizerLayout
 {
+  protected Composite m_composite = null;
 
-  protected Composite composite = null;
+  protected Symbolizer m_symbolizer = null;
 
-  protected Symbolizer symbolizer = null;
+  protected IKalypsoUserStyle m_userStyle = null;
 
-  protected KalypsoUserStyle userStyle = null;
-
-  protected AbstractSymbolizerLayout( Composite m_parent, Symbolizer m_symbolizer, KalypsoUserStyle m_userStyle )
+  protected AbstractSymbolizerLayout( final Composite parent, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    this.composite = m_parent;
-    this.symbolizer = m_symbolizer;
-    this.userStyle = m_userStyle;
+    m_composite = parent;
+    m_symbolizer = symbolizer;
+    m_userStyle = userStyle;
   }
 
-  protected AbstractSymbolizerLayout( Composite parent )
+  protected AbstractSymbolizerLayout( final Composite parent )
   {
-    this.composite = parent;
+    this.m_composite = parent;
   }
 
   public abstract void draw() throws FilterEvaluationException;
