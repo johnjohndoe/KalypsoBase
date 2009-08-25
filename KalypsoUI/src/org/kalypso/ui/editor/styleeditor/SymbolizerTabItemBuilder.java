@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.LineSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.PointSymbolizerLayout;
@@ -74,7 +74,7 @@ public class SymbolizerTabItemBuilder
 {
   private final FormToolkit m_toolkit;
 
-  public SymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final KalypsoUserStyle userStyle, final IFeatureType featureType )
+  public SymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle, final IFeatureType featureType )
   {
     m_toolkit = toolkit;
     final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );

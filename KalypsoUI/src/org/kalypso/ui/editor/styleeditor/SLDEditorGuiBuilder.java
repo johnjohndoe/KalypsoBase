@@ -62,7 +62,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -108,7 +108,7 @@ public class SLDEditorGuiBuilder
 
   private final ScrolledForm m_form;
 
-  private KalypsoUserStyle m_userStyle;
+  private IKalypsoUserStyle m_userStyle;
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -142,12 +142,12 @@ public class SLDEditorGuiBuilder
     return m_form;
   }
 
-  public void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
+  public void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
   {
     setStyle( userStyle, theme, -1 );
   }
 
-  public void setStyle( final KalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
+  public void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
   {
     // TODO: missing level: FeatureTypeStyle between UserStyle and Rule! Must also be added to outline
 
@@ -179,7 +179,7 @@ public class SLDEditorGuiBuilder
     m_form.reflow( true );
   }
 
-  private void updateRuleTabs( final KalypsoUserStyle userStyle, final Composite mainComposite )
+  private void updateRuleTabs( final IKalypsoUserStyle userStyle, final Composite mainComposite )
   {
     if( userStyle == null )
       return;

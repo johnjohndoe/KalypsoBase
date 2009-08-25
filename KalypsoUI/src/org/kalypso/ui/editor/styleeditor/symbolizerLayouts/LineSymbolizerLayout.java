@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -68,22 +68,21 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
-  public LineSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
+  public LineSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
+    super( composite, symbolizer, userStyle );
   }
 
   @Override
   public void draw( ) throws FilterEvaluationException
   {
-    final LineSymbolizer lineSymbolizer = (LineSymbolizer) symbolizer;
+    final LineSymbolizer lineSymbolizer = (LineSymbolizer) m_symbolizer;
     final Stroke stroke = lineSymbolizer.getStroke();
 
     final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
-    final Group strokeGroup = new Group( composite, SWT.NULL );
+    final Group strokeGroup = new Group( m_composite, SWT.NULL );
     final GridData strokeGroupData = new GridData();
     strokeGroupData.widthHint = 210;
     strokeGroupData.heightHint = 244;
@@ -100,7 +99,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         stroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -112,7 +111,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
         stroke.setWidth( width );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -124,7 +123,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         stroke.setOpacity( opacity );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -137,7 +136,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         stroke.setLineJoin( lineJoin );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -150,7 +149,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         stroke.setLineCap( lineCap );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -162,7 +161,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         stroke.setDashOffset( dashOffset );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
@@ -174,7 +173,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         stroke.setDashArray( dashArray );
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
   }

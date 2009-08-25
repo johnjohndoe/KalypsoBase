@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
 import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
@@ -62,21 +62,21 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
 
-  public RasterSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final KalypsoUserStyle m_userStyle )
+  public RasterSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
+    super( composite, symbolizer, userStyle );
   }
 
   @Override
   public void draw( )
   {
-    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer) symbolizer;
+    final RasterSymbolizer rasterSymbolizer = (RasterSymbolizer) m_symbolizer;
 
     final GridLayout compositeLayout = new GridLayout();
     compositeLayout.marginHeight = 2;
 
     // ***** ColorMap Group
-    final Group colorMapGroup = new Group( composite, SWT.NULL );
+    final Group colorMapGroup = new Group( m_composite, SWT.NULL );
     final GridData colorMapGroupData = new GridData();
     colorMapGroupData.widthHint = 210;
     colorMapGroupData.heightHint = 246;
@@ -92,12 +92,12 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( final PanelEvent event )
       {
-        userStyle.fireStyleChanged();
+        m_userStyle.fireStyleChanged();
       }
     } );
 
     // ***** Table
     final Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
-    new ColorMapEntryTable( tableComposite, userStyle, rasterSymbolizer );
+    new ColorMapEntryTable( tableComposite, m_userStyle, rasterSymbolizer );
   }
 }

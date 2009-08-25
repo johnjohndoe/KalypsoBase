@@ -67,7 +67,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -101,7 +101,7 @@ public class RuleTabItemBuilder
 
   private final Composite m_globalComposite;
 
-  private final KalypsoUserStyle m_userStyle;
+  private final IKalypsoUserStyle m_userStyle;
 
   private final IFeatureType m_featureType;
 
@@ -119,7 +119,7 @@ public class RuleTabItemBuilder
 
   private final FormToolkit m_toolkit;
 
-  public RuleTabItemBuilder( final FormToolkit toolkit, final Composite parent, final RuleFilterCollection rulePatternCollection, final KalypsoUserStyle userStyle, final IFeatureType featureType, final List<IPropertyType> numericFeatureTypePropertylist )
+  public RuleTabItemBuilder( final FormToolkit toolkit, final Composite parent, final RuleFilterCollection rulePatternCollection, final IKalypsoUserStyle userStyle, final IFeatureType featureType, final List<IPropertyType> numericFeatureTypePropertylist )
   {
     m_toolkit = toolkit;
     m_userStyle = userStyle;

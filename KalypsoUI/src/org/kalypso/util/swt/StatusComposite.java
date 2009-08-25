@@ -65,7 +65,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- * 
+ *
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
@@ -91,7 +91,7 @@ public class StatusComposite extends Composite
     init( style );
   }
 
-  protected void init( int style )
+  protected void init( final int style )
   {
 
     final GridLayout gridLayout = new GridLayout( 3, false );
@@ -145,7 +145,7 @@ public class StatusComposite extends Composite
 
   /**
    * Sets the status of this composites and updates it to show it in the composite.
-   * 
+   *
    * @exception SWTException
    *              <ul>
    *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -184,7 +184,7 @@ public class StatusComposite extends Composite
 
   /**
    * Get the IDE image at path.
-   * 
+   *
    * @param path
    * @return Image
    */
@@ -193,16 +193,12 @@ public class StatusComposite extends Composite
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
   }
 
-  @SuppressWarnings("restriction")
   public static Image getStatusImage( final IStatus status )
   {
     switch( status.getSeverity() )
     {
       case IStatus.OK:
         return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
-
-        // case IGeoStatus.CANCEL:
-        // return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INCOMPLETE_TSK );
 
       case IStatus.ERROR:
         return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
