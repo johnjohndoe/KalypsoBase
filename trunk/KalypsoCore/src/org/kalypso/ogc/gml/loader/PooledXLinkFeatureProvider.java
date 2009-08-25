@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -55,7 +56,6 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
@@ -70,7 +70,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
   /**
    * @param context
-   *            The context is used to find the feature.
+   *          The context is used to find the feature.
    */
   public PooledXLinkFeatureProvider( final GMLWorkspace context, final String uri )
   {
@@ -91,6 +91,9 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    */
   public GMLWorkspace getWorkspace( )
   {
+    if( m_workspace != null )
+      return m_workspace;
+
     KeyInfo info = null;
 
     synchronized( this )
@@ -131,8 +134,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         if( uri.toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
         {
           type = "shape"; //$NON-NLS-1$
-          // TODO: get the crs from somewhere...
-          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoDeegreePlugin.getDefault().getCoordinateSystem(); //$NON-NLS-1$
+          source = FileUtilities.nameWithoutExtension( uri );
         }
         else
         {
@@ -146,17 +148,30 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
         info = pool.addPoolListener( this, m_key );
       }
-    }
 
-    try
-    {
-      if( info != null )
-        info.join();
-    }
-    catch( final InterruptedException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoCorePlugin.getDefault().getLog().log( status );
+      try
+      {
+        if( info != null )
+        {
+          int timer = 0;
+          while( timer < 1000 )
+          {
+            int state = info.getState();
+            if( state != Job.WAITING )
+              break;
+
+            Thread.sleep( 100 );
+            timer += 100;
+          }
+
+          info.join();
+        }
+      }
+      catch( final InterruptedException e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+      }
     }
 
     return m_workspace;

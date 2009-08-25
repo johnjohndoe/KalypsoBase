@@ -421,6 +421,9 @@ public class DynamicCatalog implements ICatalog
     {
       for( final Object entry : entries )
       {
+        if( entry == null )
+          java.lang.System.out.println("Oups...");
+        
         final Object item = ((JAXBElement<Object>) entry).getValue();
         switch( step )
         {
