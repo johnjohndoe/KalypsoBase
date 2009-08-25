@@ -77,7 +77,7 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- *
+ * 
  * @author doemming
  */
 public class CatalogManager
@@ -107,7 +107,7 @@ public class CatalogManager
   {
     final Class< ? > key = urnGenerator.getSupportingClass();
     if( m_urnGenerators.containsKey( key ) )
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogManager.0") + key.toString() ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogManager.0" ) + key.toString() ); //$NON-NLS-1$
     m_urnGenerators.put( key, urnGenerator );
   }
 
@@ -158,6 +158,10 @@ public class CatalogManager
 
         final Catalog catalog = object.getValue();
 
+        System.out.println( "Oups" + catalogURL );
+        if( catalog.getPublicOrSystemOrUri().contains( null ) )
+          System.out.println( "Oups" );
+
         final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
         m_openCatalogs.put( catalogURI, newOpenCatalog );
       }
@@ -206,7 +210,7 @@ public class CatalogManager
   public void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogManager.6") + baseURN ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogManager.6" ) + baseURN ); //$NON-NLS-1$
 
     final String href = CatalogUtilities.getPathForCatalog( baseURN );
     final URL catalogURL = new URL( m_baseDir.toURI().toURL(), href );
