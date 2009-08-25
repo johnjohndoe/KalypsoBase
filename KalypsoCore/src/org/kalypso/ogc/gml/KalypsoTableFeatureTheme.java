@@ -171,12 +171,12 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     throw new UnsupportedOperationException();
   }
 
-  public void addStyle( final KalypsoUserStyle style )
+  public void addStyle( final IKalypsoUserStyle style )
   {
     throw new UnsupportedOperationException();
   }
 
-  public void removeStyle( final KalypsoUserStyle style )
+  public void removeStyle( final IKalypsoUserStyle style )
   {
     throw new UnsupportedOperationException();
   }
@@ -329,9 +329,9 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
+   * @see org.kalypso.ogc.gml.IIKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.IKalypsoUserStyle)
    */
-  public void styleChanged( final KalypsoUserStyle source )
+  public void styleChanged( final IKalypsoUserStyle source )
   {
     throw new UnsupportedOperationException();
   }
