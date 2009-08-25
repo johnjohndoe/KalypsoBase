@@ -52,17 +52,17 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
-  private final KalypsoUserStyle m_style;
+  private final IKalypsoUserStyle m_style;
 
   private final IKalypsoFeatureTheme m_parent;
 
-  public UserStyleTreeObject( final IKalypsoFeatureTheme theme, final KalypsoUserStyle style )
+  public UserStyleTreeObject( final IKalypsoFeatureTheme theme, final IKalypsoUserStyle style )
   {
     m_parent = theme;
     m_style = style;
   }
 
-  public KalypsoUserStyle getStyle( )
+  public IKalypsoUserStyle getStyle( )
   {
     return m_style;
   }
@@ -115,9 +115,7 @@ public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( children.length > 0 && children[0] instanceof IWorkbenchAdapter )
       return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
 
-    final KalypsoUserStyle userStyle = getStyle();
-
-    return userStyle.getImageDescriptor( userStyle );
+    return null;
   }
 
   /**
@@ -128,8 +126,8 @@ public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( o != this )
       throw new IllegalStateException();
 
-    final KalypsoUserStyle userStyle = getStyle();
-    final String label = userStyle.getLabel( userStyle );
+    final IKalypsoUserStyle userStyle = getStyle();
+    final String label = userStyle.getLabel();
 
     return resolveI18nString( label );
   }

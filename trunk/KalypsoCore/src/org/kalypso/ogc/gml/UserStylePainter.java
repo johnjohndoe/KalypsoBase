@@ -73,11 +73,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class UserStylePainter
 {
-  private final KalypsoUserStyle m_style;
+  private final IKalypsoUserStyle m_style;
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public UserStylePainter( final KalypsoUserStyle style, final IFeatureSelectionManager selectionManager )
+  public UserStylePainter( final IKalypsoUserStyle style, final IFeatureSelectionManager selectionManager )
   {
     m_style = style;
     m_selectionManager = selectionManager;

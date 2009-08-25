@@ -64,9 +64,9 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public String getFeaturePath();
 
-  public void addStyle( final KalypsoUserStyle style );
+  public void addStyle( final IKalypsoUserStyle style );
 
-  public void removeStyle( final KalypsoUserStyle style );
+  public void removeStyle( final IKalypsoUserStyle style );
 
   public UserStyle[] getStyles( );
 

@@ -95,7 +95,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
 {
   /* Preserve order of styles. */
-  private final Map<KalypsoUserStyle, UserStylePainter> m_styleMap = new LinkedHashMap<KalypsoUserStyle, UserStylePainter>();
+  private final Map<IKalypsoUserStyle, UserStylePainter> m_styleMap = new LinkedHashMap<IKalypsoUserStyle, UserStylePainter>();
 
   private CommandableWorkspace m_workspace;
 
@@ -156,9 +156,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void dispose( )
   {
-    final Set<KalypsoUserStyle> set = m_styleMap.keySet();
-    final KalypsoUserStyle[] styles = set.toArray( new KalypsoUserStyle[set.size()] );
-    for( final KalypsoUserStyle element : styles )
+    final Set<IKalypsoUserStyle> set = m_styleMap.keySet();
+    final IKalypsoUserStyle[] styles = set.toArray( new IKalypsoUserStyle[set.size()] );
+    for( final IKalypsoUserStyle element : styles )
       removeStyle( element );
 
     if( m_workspace != null )
@@ -259,7 +259,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return g;
 
     boolean hasSelectionStyle = false;
-    for( final KalypsoUserStyle style : m_styleMap.keySet() )
+    for( final IKalypsoUserStyle style : m_styleMap.keySet() )
     {
       if( style.isUsedForSelection() )
       {
@@ -297,7 +297,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     final List<UserStylePainter> normalStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
     final List<UserStylePainter> selectionStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
-    for( final Entry<KalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
+    for( final Entry<IKalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
     {
       if( entry.getKey().isUsedForSelection() )
       {
@@ -316,7 +316,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return selectionStyles.toArray( new UserStylePainter[selectionStyles.size()] );
   }
 
-  public void addStyle( final KalypsoUserStyle style )
+  public void addStyle( final IKalypsoUserStyle style )
   {
     final UserStylePainter styleDisplayMap = new UserStylePainter( style, m_selectionManager );
     m_styleMap.put( style, styleDisplayMap );
@@ -325,7 +325,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireStatusChanged( this );
   }
 
-  public void removeStyle( final KalypsoUserStyle style )
+  public void removeStyle( final IKalypsoUserStyle style )
   {
     style.removeStyleListener( this );
     m_styleMap.remove( style );
@@ -333,7 +333,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public UserStyle[] getStyles( )
   {
-    final Set<KalypsoUserStyle> set = m_styleMap.keySet();
+    final Set<IKalypsoUserStyle> set = m_styleMap.keySet();
     return set.toArray( new UserStyle[set.size()] );
   }
 
@@ -468,9 +468,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     final IProgressMonitor monitor = new NullProgressMonitor();
 
-    for( final Entry<KalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
+    for( final Entry<IKalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
     {
-      final KalypsoUserStyle style = entry.getKey();
+      final IKalypsoUserStyle style = entry.getKey();
       if( style.isUsedForSelection() )
       {
         continue;
@@ -562,7 +562,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final List<UserStyleTreeObject> treeObjects = new ArrayList<UserStyleTreeObject>( styles.length );
     for( final UserStyle style : styles )
     {
-      final KalypsoUserStyle kus = (KalypsoUserStyle) style;
+      final IKalypsoUserStyle kus = (IKalypsoUserStyle) style;
       // We do not show selection-styles
       // TODO: optionally...
       if( !kus.isUsedForSelection() )
@@ -573,9 +573,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
+   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.IKalypsoUserStyle)
    */
-  public void styleChanged( final KalypsoUserStyle source )
+  public void styleChanged( final IKalypsoUserStyle source )
   {
     setDirty();
     fireStatusChanged( this );
