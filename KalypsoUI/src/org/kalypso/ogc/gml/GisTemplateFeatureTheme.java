@@ -500,6 +500,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( ftsURL == null )
     {
+      // REMARK: in theorie, we could also create a default selection style, but this
+      // breaks too much old projects. So in this case the HighlightGraphics will still
+      // be used
+      if( usedForSelection )
+        return null;
+
       // we could not find a definition for this feature type. So we use a global default style
       String styleType = "default"; //$NON-NLS-1$
       final IValuePropertyType defaultGeometryProperty = featureType.getDefaultGeometryProperty();
@@ -637,10 +643,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public boolean isLoaded( )
   {
     for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
-    {
       if( !style.isLoaded() )
         return false;
-    }
 
     return m_loaded;
   }
@@ -937,13 +941,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       if( !checkPoolListener )
         startLoading();
     }
-    else
-    {
-      // HM: this will probably cause problems, as the theme is not really loaded
-      // But else, the stuff waiting for the map to load will wait forever...
-      if( !checkPoolListener )
-        m_loaded = true;
-    }
+    else // HM: this will probably cause problems, as the theme is not really loaded
+    // But else, the stuff waiting for the map to load will wait forever...
+    if( !checkPoolListener )
+      m_loaded = true;
 
     super.setVisible( visible );
   }
@@ -961,10 +962,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     // Check, if we are really in the list of listeners, maybe someone else has already fetched this object
     final IPoolListener[] listeners = info.getPoolListeners();
     for( final IPoolListener poolListener : listeners )
-    {
       if( poolListener == this )
         return true;
-    }
 
     return false;
   }
