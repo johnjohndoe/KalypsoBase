@@ -24,7 +24,7 @@ public class ProcessControlJob extends Job
 
   public ProcessControlJob( final Process proc, final ICancelable cancelable, final long lTimeout )
   {
-    super( "Process-Control" );
+    super( "Process-Control" ); //$NON-NLS-1$
 
     m_proc = proc;
     m_cancelable = cancelable;
@@ -54,7 +54,7 @@ public class ProcessControlJob extends Job
             if( processDuration > m_lTimeout )
             {
               m_proc.destroy();
-              return StatusUtilities.createStatus( IStatus.ERROR, "Timeout reached", null );
+              return StatusUtilities.createStatus( IStatus.ERROR, "Timeout reached", null ); //$NON-NLS-1$
             }
           }
 

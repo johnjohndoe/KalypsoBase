@@ -61,7 +61,7 @@ public abstract class AbstractTupleModel<R extends IRowKey, C extends IColumnKey
   public void setValue( final Object value, final R rowKey, final C columnKey )
   {
     if( value != null && !((IColumnKey) columnKey).getValueClass().isAssignableFrom( value.getClass() ) )
-      throw new IllegalArgumentException( "Incompatible classes" );
+      throw new IllegalArgumentException( "Incompatible classes" ); //$NON-NLS-1$
 
     setValueIntern( value, rowKey, columnKey );
     

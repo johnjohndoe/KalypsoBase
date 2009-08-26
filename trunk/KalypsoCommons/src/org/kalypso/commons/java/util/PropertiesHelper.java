@@ -62,7 +62,7 @@ public class PropertiesHelper
     final Properties props = new Properties();
     if( source != null )
     {
-      final String[] strings = source.split( "" + separator );
+      final String[] strings = source.split( "" + separator ); //$NON-NLS-1$
       for( final String string : strings )
       {
         final int pos = string.indexOf( ENTRY_SEPARATOR );
@@ -80,7 +80,7 @@ public class PropertiesHelper
   {
     final StringBuffer sb = new StringBuffer();
     for( final Entry<Object, Object> entry : source.entrySet() )
-      sb.append( "" + entry.getKey() + ENTRY_SEPARATOR + entry.getValue() + separator );
+      sb.append( "" + entry.getKey() + ENTRY_SEPARATOR + entry.getValue() + separator ); //$NON-NLS-1$
 
     return sb.toString();
   }
@@ -106,7 +106,7 @@ public class PropertiesHelper
 
   public static String writePropertiesToString( final Properties properties, final char separator )
   {
-    String result = "" + separator;
+    String result = "" + separator; //$NON-NLS-1$
     final Set<Object> keySet = properties.keySet();
     int size = keySet.size();
     for( final Object key : keySet )

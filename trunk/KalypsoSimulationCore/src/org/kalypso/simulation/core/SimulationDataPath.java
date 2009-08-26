@@ -97,6 +97,6 @@ public class SimulationDataPath implements Serializable
   @Override
   public String toString( )
   {
-    return super.toString() + "\n ID: " + m_id + "\n PATH: " + m_path;
+    return super.toString() + "\n ID: " + m_id + "\n PATH: " + m_path; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

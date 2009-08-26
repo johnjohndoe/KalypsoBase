@@ -36,6 +36,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypso.view.gazetter.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -160,9 +161,9 @@ public class GazetterView extends ViewPart
         final Composite searchBase = toolkit.createComposite( base );
         searchBase.setLayoutData( new GridData( GridData.CENTER | GridData.GRAB_HORIZONTAL ) );
         searchBase.setLayout( new GridLayout( 1, false ) );
-        final Label label = toolkit.createLabel( searchBase, "Recherche: " + gLocation.getLabel(), SWT.FLAT );
+        final Label label = toolkit.createLabel( searchBase, Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.0") + gLocation.getLabel(), SWT.FLAT ); //$NON-NLS-1$
         label.setLayoutData( new GridData( GridData.BEGINNING ) );
-        final Text text = toolkit.createText( searchBase, "...", SWT.BORDER );
+        final Text text = toolkit.createText( searchBase, "...", SWT.BORDER ); //$NON-NLS-1$
         text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
         text.addKeyListener( new KeyAdapter()
         {
@@ -209,7 +210,7 @@ public class GazetterView extends ViewPart
       combo.addSelectionChangedListener( gControl );
 
       combo.setLabelProvider( new GazetteerLabelProvider( gLocation.getLabelProperty() ) );
-      final Button button = toolkit.createButton( comboBase, "GOTO", SWT.NONE );
+      final Button button = toolkit.createButton( comboBase, Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.1"), SWT.NONE ); //$NON-NLS-1$
       button.setLayoutData( new GridData( GridData.CENTER ) );
       button.addSelectionListener( new SelectionAdapter()
       {
@@ -231,7 +232,7 @@ public class GazetterView extends ViewPart
               if( property instanceof GM_Point )
               {
                 // TODO
-                System.out.println( "TODO" );
+                System.out.println( "TODO" ); //$NON-NLS-1$
               }
               else if( property instanceof GM_Object)
               {
@@ -242,21 +243,21 @@ public class GazetterView extends ViewPart
                 ((ICommandTarget) activeEditor).postCommand( command, null );
               }
               else
-                MessageDialog.openInformation( getSite().getShell(), "Gazetteer-Info", "Gazetter lierferte keinen Raumbezug" );
+                MessageDialog.openInformation( getSite().getShell(), Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.2"), Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.3") ); //$NON-NLS-1$ //$NON-NLS-2$
 
             }
             // mapEditor.postCommand(command, runnable);
 
           }
           else
-            MessageDialog.openInformation( getSite().getShell(), "Gazetteer-Info", "Die Aktion kann keiner Karte zugeordnet werden, bitte aktivieren Sie vorher eine Kartenansicht" );
+            MessageDialog.openInformation( getSite().getShell(), Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.4"), Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.5") ); //$NON-NLS-1$ //$NON-NLS-2$
           // get active map:
         }
 
       } );
 
       gControl.setViewer( combo, button );
-      combo.setInput( new String[] { "...auswaehlen", "test" } );
+      combo.setInput( new String[] { Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.6"), Messages.getString("org.kalypso.ui.gazetter.view.GazetterView.7") } ); //$NON-NLS-1$ //$NON-NLS-2$
       // childs
       if( !childs.isEmpty() )
       {
@@ -280,7 +281,7 @@ public class GazetterView extends ViewPart
   {
 //    final URL resource = getClass().getResource( "resources/gazetteerView.xml" );
 //    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS.xml" );
-    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS_8081.xml" );
+    final URL resource = getClass().getResource( "resources/gazetteerViewFLOWS_8081.xml" ); //$NON-NLS-1$
     final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
     try
     {

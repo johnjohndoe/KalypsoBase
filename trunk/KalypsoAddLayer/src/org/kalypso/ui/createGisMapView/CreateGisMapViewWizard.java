@@ -35,6 +35,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
+import org.kalypso.ui.i18n.Messages;
 
 public class CreateGisMapViewWizard extends Wizard implements INewWizard
 {
@@ -93,7 +94,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     catch( InvocationTargetException e )
     {
       Throwable realException = e.getTargetException();
-      MessageDialog.openError( getShell(), "Error", realException.getMessage() );
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.0"), realException.getMessage() ); //$NON-NLS-1$
       return false;
     }
     return true;
@@ -101,12 +102,12 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
 
   void doFinish( String containerName, String fileName, IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Creating " + fileName, 2 );
+    monitor.beginTask( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.1") + fileName, 2 ); //$NON-NLS-1$
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IResource resource = root.findMember( new Path( containerName ) );
     if( !resource.exists() || !(resource instanceof IContainer) )
     {
-      throwCoreException( "Container \"" + containerName + "\" does not exist." );
+      throwCoreException( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.2") + containerName + "\" does not exist." ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     IContainer container = (IContainer) resource;
     final IFile file = container.getFile( new Path( fileName ) );
@@ -128,7 +129,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
     monitor.worked( 1 );
-    monitor.setTaskName( "Opening file for editing..." );
+    monitor.setTaskName( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.4") ); //$NON-NLS-1$
     getShell().getDisplay().asyncExec( new Runnable()
     {
       public void run( )
@@ -164,7 +165,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
 
   private void throwCoreException( String message ) throws CoreException
   {
-    IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message, null );
+    IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.createGisMapView", IStatus.OK, message, null ); //$NON-NLS-1$
     throw new CoreException( status );
   }
 

@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.i18n.Messages;
 
 /**
  * Utilities around the String class.
@@ -86,9 +87,9 @@ public final class StringUtilities
   public static Color stringToColor( final String s ) throws IllegalArgumentException
   {
     if( s == null )
-      throw new IllegalArgumentException( "Color String is null" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.0") ); //$NON-NLS-1$
 
-    final String[] sc = s.split( ";" );
+    final String[] sc = s.split( ";" ); //$NON-NLS-1$
 
     if( sc.length == 3 )
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
@@ -96,7 +97,7 @@ public final class StringUtilities
     if( sc.length == 4 )
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
 
-    throw new IllegalArgumentException( "Color String has wrong format: " + s );
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.2") + s ); //$NON-NLS-1$
   }
 
   /**
@@ -111,15 +112,15 @@ public final class StringUtilities
   public static String colorToString( final Color c )
   {
     if( c == null )
-      throw new IllegalArgumentException( "Color is null" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.1") ); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
-    buf.append( c.getRed() ).append( ";" ).append( c.getGreen() ).append( ";" ).append( c.getBlue() );
+    buf.append( c.getRed() ).append( ";" ).append( c.getGreen() ).append( ";" ).append( c.getBlue() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // alpha component is optional
     if( c.getAlpha() != 255 )
-      buf.append( ";" ).append( c.getAlpha() );
+      buf.append( ";" ).append( c.getAlpha() ); //$NON-NLS-1$
 
     return buf.toString();
   }
@@ -148,12 +149,12 @@ public final class StringUtilities
   public static Font stringToFont( final String s )
   {
     if( s == null )
-      throw new IllegalArgumentException( "Font String is null" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.3") ); //$NON-NLS-1$
 
-    final String[] sc = s.split( ";" );
+    final String[] sc = s.split( ";" ); //$NON-NLS-1$
 
     if( sc.length != 3 )
-      throw new IllegalArgumentException( "Font String has wrong format" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.4") ); //$NON-NLS-1$
 
     final Font f = new Font( sc[0], Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
@@ -170,11 +171,11 @@ public final class StringUtilities
   public static String fontToString( final Font f )
   {
     if( f == null )
-      throw new IllegalArgumentException( "Font is null" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.java.util.StringUtilities.5") ); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
-    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" ).append( f.getSize() );
+    buf.append( f.getName() ).append( ";" ).append( f.getStyle() ).append( ";" ).append( f.getSize() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return buf.toString();
   }
@@ -221,7 +222,7 @@ public final class StringUtilities
     if( lineLength == 0 )
       return str;
 
-    str.replaceAll( "\\n", "" );
+    str.replaceAll( "\\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final StringBuffer bf = new StringBuffer();
     int i = 0;
@@ -264,7 +265,7 @@ public final class StringUtilities
         line = StringUtils.leftPad( line, lineLength );
       }
 
-      bf.append( line ).append( System.getProperty( "line.separator" ) );
+      bf.append( line ).append( System.getProperty( "line.separator" ) ); //$NON-NLS-1$
 
       i = i + curLineLength;
     }

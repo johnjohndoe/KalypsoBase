@@ -10,6 +10,7 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -78,13 +79,13 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     // Add Layer to mapModell
     final IKalypsoLayerModell mapModell = m_modell;
     final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
-    final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS();
+    final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS(); //$NON-NLS-1$
 
     final IPath stylePath = m_page.getStylePath();
     final String styleLocation = stylePath == null ? null : stylePath.toString();
     final String styleName = m_page.getStyleName();
 
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName ); //$NON-NLS-1$
     if( styleName != null && styleLocation != null )
       command.addStyle( styleName, styleLocation );
     m_outlineviewer.postCommand( command, null );
@@ -105,7 +106,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   @Override
   public void addPages( )
   {
-    m_page = new ImportShapeFileImportPage( "shapefileimport", "ESRI(tm) ein Projekt importieren", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_page = new ImportShapeFileImportPage( "shapefileimport", Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeSourceWizard.0"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_outlineviewer != null )
     {
       m_page.setProjectSelection( m_modell.getProject() );

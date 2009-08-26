@@ -31,7 +31,7 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.commons.KalypsoCommonsPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.commons.KalypsoCommonsPluginResources" ); //$NON-NLS-1$
     }
     catch( final MissingResourceException x )
     {

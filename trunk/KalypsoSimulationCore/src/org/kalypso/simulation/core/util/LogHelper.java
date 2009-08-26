@@ -45,6 +45,7 @@ import java.io.PrintWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * Helper for simulation logging.
@@ -53,7 +54,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
  */
 public class LogHelper
 {
-  public static final String MESS_BERECHNUNG_ABGEBROCHEN = "Berechnung durch Benutzer abgebrochen";
+  public static final String MESS_BERECHNUNG_ABGEBROCHEN = Messages.getString("org.kalypso.simulation.core.util.LogHelper.0"); //$NON-NLS-1$
 
   private final ISimulationMonitor m_monitor;
 

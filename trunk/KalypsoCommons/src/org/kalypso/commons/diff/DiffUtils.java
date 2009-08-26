@@ -54,7 +54,7 @@ public class DiffUtils
   {
     final IDiffLogger diffLogger = new DiffLogger( logger );
 
-    final String extension = "." + FileUtilities.getSuffix( file1.getFile() );
+    final String extension = "." + FileUtilities.getSuffix( file1.getFile() ); //$NON-NLS-1$
 
     final IDiffComparator diffComp = getDiffComparatorFor( extension, file1.toString() );
 
@@ -131,12 +131,12 @@ public class DiffUtils
     // check for jokers '*'
     for( final String ignorePath : ignores )
     {
-      if( ignorePath.startsWith( "*" ) ) // *foo
+      if( ignorePath.startsWith( "*" ) ) // *foo //$NON-NLS-1$
       {
         if( path.endsWith( ignorePath.substring( 1 ) ) )
           return true;
       }
-      if( ignorePath.endsWith( "*" ) )
+      if( ignorePath.endsWith( "*" ) ) //$NON-NLS-1$
       {
         if( path.startsWith( ignorePath.substring( 0, ignorePath.length() - 1 ) ) )
           return true;

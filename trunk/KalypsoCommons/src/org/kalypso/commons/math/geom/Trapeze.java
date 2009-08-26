@@ -6,6 +6,7 @@ package org.kalypso.commons.math.geom;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 
@@ -100,7 +101,7 @@ public class Trapeze
   public double height( )
   {
     if( (m_p11 == null) || (m_p21 == null) )
-      throw new IllegalStateException( "Trapeze has not a valid state: points are null." );
+      throw new IllegalStateException( Messages.getString("org.kalypso.commons.math.geom.Trapeze.0") ); //$NON-NLS-1$
 
     if( m_p11.getX() == m_p12.getX() )
       return Math.abs( m_p11.getX() - m_p21.getX() );
@@ -124,7 +125,7 @@ public class Trapeze
   public double area( )
   {
     if( (m_p11 == null) || (m_p12 == null) || (m_p21 == null) || (m_p22 == null) )
-      throw new IllegalStateException( "Trapeze has not a valid state: points are null." );
+      throw new IllegalStateException( Messages.getString("org.kalypso.commons.math.geom.Trapeze.1") ); //$NON-NLS-1$
 
     double d1 = PointUtilities.distance( m_p11, m_p12 );
     double d2 = PointUtilities.distance( m_p21, m_p22 );
@@ -141,9 +142,9 @@ public class Trapeze
   {
     StringBuffer buf = new StringBuffer();
 
-    buf.append( m_p11 + "|" + m_p12 + "\n" );
-    buf.append( "-------------------------------------------------\n" );
-    buf.append( m_p21 + "|" + m_p22 + "\n" );
+    buf.append( m_p11 + "|" + m_p12 + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    buf.append( "-------------------------------------------------\n" ); //$NON-NLS-1$
+    buf.append( m_p21 + "|" + m_p22 + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return buf.toString();
   }

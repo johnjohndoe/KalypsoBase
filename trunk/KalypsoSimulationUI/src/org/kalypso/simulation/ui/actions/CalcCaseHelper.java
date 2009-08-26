@@ -58,6 +58,7 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.simulation.ui.calccase.CalcCaseCollector;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * Helper Klasse für die Calc-Case Actions
@@ -104,13 +105,13 @@ public class CalcCaseHelper
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, title, "Fehler beim Ermitteln der Rechenfälle", e.getStatus() );
+      ErrorDialog.openError( shell, title, Messages.getString("org.kalypso.simulation.ui.actions.CalcCaseHelper.0"), e.getStatus() ); //$NON-NLS-1$
     }
 
     final IFolder[] calcCases = visitor.getCalcCases();
     if( calcCases.length == 0 )
     {
-      MessageDialog.openInformation( shell, title, "Es sind keine Rechenvarianten im Navigator selektiert." );
+      MessageDialog.openInformation( shell, title, Messages.getString("org.kalypso.simulation.ui.actions.CalcCaseHelper.1") ); //$NON-NLS-1$
       return null;
     }
 
@@ -130,11 +131,11 @@ public class CalcCaseHelper
 
     final String mergeRelPath;
     if( mergeCaseFolder == null )
-      mergeRelPath = "";
+      mergeRelPath = ""; //$NON-NLS-1$
     else
       mergeRelPath = mergeCaseFolder.getProjectRelativePath().toOSString();
 
-    map.put( "calc.merge.relpath", mergeRelPath );
+    map.put( "calc.merge.relpath", mergeRelPath ); //$NON-NLS-1$
 
     return map;
   }

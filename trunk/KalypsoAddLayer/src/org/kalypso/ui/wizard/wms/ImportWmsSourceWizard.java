@@ -62,6 +62,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 
@@ -76,7 +77,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * This constant stores the id for the dialog settings of this page.
    */
-  private static String IMPORT_WMS_WIZARD = "IMPORT_WMS_WIZARD";
+  private static String IMPORT_WMS_WIZARD = "IMPORT_WMS_WIZARD"; //$NON-NLS-1$
 
   /**
    * The page needed for import WMS sources.
@@ -149,10 +150,10 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
         boolean isMulti = m_page.isMultiLayer();
         if( isMulti )
         {
-          StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() );
-          StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
-          StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
-          StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
+          StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
+          StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" ); //$NON-NLS-1$
+          StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" ); //$NON-NLS-1$
+          StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" ); //$NON-NLS-1$
 
           Layer[] layerArray = m_page.getLayersList();
           for( int i = 0; i < layerArray.length; i++ )
@@ -164,13 +165,13 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             if( styles2.length > 0 )
               styleName = styles2[0].getName();
             else
-              styleName = "default";
+              styleName = "default"; //$NON-NLS-1$
             layers.append( layerName );
             styles.append( styleName );
             if( i < layerArray.length - 1 )
             {
-              layers.append( "," );
-              styles.append( "," );
+              layers.append( "," ); //$NON-NLS-1$
+              styles.append( "," ); //$NON-NLS-1$
             }
           }
 
@@ -178,12 +179,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
           if( providerID != null )
             provider.append( providerID );
 
-          String layerName = "Multi" + source;
-          source.append( "#" ).append( layers.toString() );
-          source.append( "#" ).append( styles.toString() );
-          source.append( "#" ).append( provider.toString() );
+          String layerName = "Multi" + source; //$NON-NLS-1$
+          source.append( "#" ).append( layers.toString() ); //$NON-NLS-1$
+          source.append( "#" ).append( styles.toString() ); //$NON-NLS-1$
+          source.append( "#" ).append( provider.toString() ); //$NON-NLS-1$
 
-          AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() );
+          AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() ); //$NON-NLS-1$
           m_outlineviewer.postCommand( command, null );
         }
         else
@@ -191,7 +192,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
           Layer[] layerArray = m_page.getLayersList();
           for( Layer layer : layerArray )
           {
-            StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() );
+            StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
 
             String layerName = layer.getName();
             String styleName;
@@ -199,18 +200,18 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             if( styles2.length > 0 )
               styleName = styles2[0].getName();
             else
-              styleName = "default";
+              styleName = "default"; //$NON-NLS-1$
 
             String providerID = m_page.getProviderID();
             if( providerID == null )
-              providerID = "";
+              providerID = ""; //$NON-NLS-1$
 
             String layerTitle = layer.getTitle();
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
-            AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
+            AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() ); //$NON-NLS-1$
             m_outlineviewer.postCommand( command, null );
           }
 
@@ -230,7 +231,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     // read service catalog file
-    InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
+    InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
     try
     {
       readCatalog( is );
@@ -250,7 +251,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_page = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString("org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 

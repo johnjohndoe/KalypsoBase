@@ -50,6 +50,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * Transfers results locally by moving the files to the target directory
@@ -87,11 +88,11 @@ public class DefaultResultEater implements ISimulationResultEater
   public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_modelspec.hasOutput( id ) )
-      throw new SimulationException( "Vom Server unerwartete Ausgabe mit ID: " + id, null );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.0") + id, null ); //$NON-NLS-1$
 
     final SimulationDataPath clientBean = m_clientOutputMap.get( id );
     if( clientBean == null )
-      throw new SimulationException( "Vom Client unerwartete Ausgabe mit ID: " + id, null );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.1") + id, null ); //$NON-NLS-1$
 
     final String clientPath = clientBean.getPath();
     // only add results with a valid path, because null path will later lead to a NullPointerException
@@ -135,7 +136,7 @@ public class DefaultResultEater implements ISimulationResultEater
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Results could not be transfered.", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.DefaultResultEater.2"), e ); //$NON-NLS-1$
     }
   }
 

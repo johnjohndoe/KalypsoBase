@@ -60,6 +60,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.simspec.DataType;
 
@@ -70,7 +71,7 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
 {
   private final Map<String, String> m_idhash;
 
-  protected static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+  protected static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" ); //$NON-NLS-1$
 
   protected final ModelspecData m_modelspec;
 
@@ -102,7 +103,7 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
   {
     final String path = m_idhash.get( id );
     if( path == null )
-      throw new NoSuchElementException( "Eingabedaten nicht vorhanden mit ID: " + id );
+      throw new NoSuchElementException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.0") + id ); //$NON-NLS-1$
 
     final DataType inputType = m_modelspec == null ? null : m_modelspec.getInput( id );
 
@@ -131,11 +132,11 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
       }
       catch( final IOException e )
       {
-        throw new SimulationException( "Problem reading input data.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.1"), e ); //$NON-NLS-1$
       }
       catch( final URISyntaxException e )
       {
-        throw new SimulationException( "URI input does not contain a valid URI.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.2"), e ); //$NON-NLS-1$
       }
     }
     else
@@ -150,12 +151,12 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
         }
         catch( final ParseException e )
         {
-          throw new SimulationException( "Could not parse " + path + " as an object of type " + type, e );
+          throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.3") + path + " as an object of type " + type, e ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
 
-    throw new SimulationException( "Unknown type " + type, null );
+    throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.4") + type, null ); //$NON-NLS-1$
   }
 
   /**

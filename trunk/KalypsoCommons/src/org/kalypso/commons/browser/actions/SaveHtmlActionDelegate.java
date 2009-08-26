@@ -60,6 +60,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -78,9 +79,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActionDelegate
 {
-  private static final String SETTINGS_FILE_NAME = "fileName";
+  private static final String SETTINGS_FILE_NAME = "fileName"; //$NON-NLS-1$
 
-  private static final String SETTINGS_FILE_PATH = "filePath";
+  private static final String SETTINGS_FILE_PATH = "filePath"; //$NON-NLS-1$
 
   private IWorkbenchPart m_part;
 
@@ -111,9 +112,9 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
     final Shell shell = m_part.getSite().getShell();
 
     final FileDialog dialog = new FileDialog( shell, SWT.SAVE );
-    dialog.setText( "Als Html speichern" );
-    dialog.setFilterNames( new String[] { "Html Dateien", "Alle Dateien" } );
-    dialog.setFilterExtensions( new String[] { "*.html", "*.*" } );
+    dialog.setText( Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.0") ); //$NON-NLS-1$
+    dialog.setFilterNames( new String[] { Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.1"), Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.2") } ); //$NON-NLS-1$ //$NON-NLS-2$
+    dialog.setFilterExtensions( new String[] { "*.html", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String lastName = m_dialogSettings.get( SETTINGS_FILE_NAME );
     final String lastPath = m_dialogSettings.get( SETTINGS_FILE_PATH );
@@ -128,14 +129,14 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
     m_dialogSettings.put( SETTINGS_FILE_NAME, dialog.getFileName() );
     m_dialogSettings.put( SETTINGS_FILE_PATH, savePath );
 
-    final Job job = new Job( "Html speichern: " + savePath )
+    final Job job = new Job( Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.3") + savePath ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( IProgressMonitor monitor )
       {
         try
         {
-          FileUtils.writeStringToFile( new File( savePath ), html, "UTF-8" );
+          FileUtils.writeStringToFile( new File( savePath ), html, "UTF-8" ); //$NON-NLS-1$
         }
         catch( final IOException e )
         {

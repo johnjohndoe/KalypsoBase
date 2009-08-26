@@ -52,10 +52,10 @@ import java.util.Map;
 public class TokenReplacerEngine
 {
   /** String with which the tokens start. */
-  public static final String TOKEN_START = "${";
+  public static final String TOKEN_START = "${"; //$NON-NLS-1$
 
   /** String with which the tokens end. */
-  public static final String TOKEN_END = "}";
+  public static final String TOKEN_END = "}"; //$NON-NLS-1$
 
   private Map<String, ITokenReplacer> m_trMap = new HashMap<String, ITokenReplacer>();
 
@@ -84,7 +84,7 @@ public class TokenReplacerEngine
 
       final String currentTokenString = buffer.substring( start + 2, stop );
       if( currentTokenString.length() == 0 )
-        buffer.replace( start, stop, "" );
+        buffer.replace( start, stop, "" ); //$NON-NLS-1$
       else
       {
         final int colon = currentTokenString.indexOf( ':' );

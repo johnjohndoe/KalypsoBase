@@ -76,6 +76,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -108,7 +109,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack )
   {
-    super( "EditCalcCaseControlPage", "Steuerparameter", image );
+    super( "EditCalcCaseControlPage", Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0"), image ); //$NON-NLS-1$ //$NON-NLS-2$
     m_canGoBack = canGoBack;
 
     final Collection<ICommand> changes = m_changes;
@@ -154,7 +155,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Steuerparameter speichern", 2000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1"), 2000 ); //$NON-NLS-1$
 
     // COMMITTEN
     final Collection<ICommand> changes = m_changes;
@@ -168,7 +169,7 @@ public class SteuerparameterWizardPage extends WizardPage
       {
         // BUG command wird nicht ausgeführt
         // Änderungen committen
-        final CompositeCommand compositeCommand = new CompositeCommand( "" );
+        final CompositeCommand compositeCommand = new CompositeCommand( "" ); //$NON-NLS-1$
         compositeCommand.addCommands( commands );
         compositeCommand.process();
       }
@@ -289,7 +290,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
     try
     {
-      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH );
+      final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
       m_fvFactory.addView( viewURL );
     }
     catch( final MalformedURLException e )
@@ -310,8 +311,8 @@ public class SteuerparameterWizardPage extends WizardPage
 
     final Button checkUpdate = new Button( m_panel, SWT.CHECK );
     checkUpdate.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
-    checkUpdate.setText( "Zeitreihen aktualisieren" );
-    checkUpdate.setToolTipText( "falls aktiv, werden die Zeitreihen im nächsten Schritt aktualisiert" );
+    checkUpdate.setText( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.2") ); //$NON-NLS-1$
+    checkUpdate.setToolTipText( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.3") ); //$NON-NLS-1$
     checkUpdate.setSelection( m_update );
     m_checkUpdate = checkUpdate;
 

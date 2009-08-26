@@ -71,7 +71,7 @@ public class StringParser extends AbstractParser
    */
   public String getFormat()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

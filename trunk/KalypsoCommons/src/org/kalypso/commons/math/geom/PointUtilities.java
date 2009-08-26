@@ -22,10 +22,10 @@ public class PointUtilities
     public static Point2D[] createPoints( double[] x, double[] y )
     {
         if( ( x == null ) || ( y == null ) )
-            throw new IllegalArgumentException( "null argument(s)" );
+            throw new IllegalArgumentException( "null argument(s)" ); //$NON-NLS-1$
 
         if( x.length != y.length )
-            throw new IllegalArgumentException( "arrays length not equal" );
+            throw new IllegalArgumentException( "arrays length not equal" ); //$NON-NLS-1$
 
         Point2D[] pts = new Point2D[x.length];
 

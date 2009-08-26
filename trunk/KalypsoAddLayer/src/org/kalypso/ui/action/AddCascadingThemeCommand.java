@@ -172,7 +172,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   public CascadingLayer init( final ObjectFactory factory )
   {
     final CascadingLayer layer = factory.createCascadingLayer();
-    layer.setId( "ID_" + (m_mapModell.getThemeSize() + 1) );
+    layer.setId( "ID_" + (m_mapModell.getThemeSize() + 1) ); //$NON-NLS-1$
     layer.setLinktype( "gmt" ); //$NON-NLS-1$
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
     layer.setType( "gmt" ); //$NON-NLS-1$

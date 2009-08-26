@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.DialogMultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
@@ -104,14 +105,14 @@ public class LogAnalyzer
     }
     catch( final Throwable t )
     {
-      final StringBuffer msg = new StringBuffer( "Fehler beim Lesen" );
+      final StringBuffer msg = new StringBuffer( Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.0") ); //$NON-NLS-1$
       if( lnr != null )
       {
-        msg.append( " von Zeile " );
+        msg.append( Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.1") ); //$NON-NLS-1$
         msg.append( lnr.getLineNumber() );
       }
 
-      msg.append( " der Logdatei: " );
+      msg.append( Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.2") ); //$NON-NLS-1$
       msg.append( file.getAbsolutePath() );
 
       final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), LoggerUtilities.CODE_SHOW_MSGBOX,
@@ -175,7 +176,7 @@ public class LogAnalyzer
     final String truncatedSummary = StringUtils.left( message, 512 );
     // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
     final String msg = truncatedSummary.replace( '\r', '\t' );
-    return msg + "...";
+    return msg + "..."; //$NON-NLS-1$
   }
 
   /**
@@ -195,14 +196,14 @@ public class LogAnalyzer
 
     public GroupStatusStrategry()
     {
-      m_result = new MultiStatus( KalypsoCommonsPlugin.getID(), -1, "", null );
+      m_result = new MultiStatus( KalypsoCommonsPlugin.getID(), -1, "", null ); //$NON-NLS-1$
       createNewSub();
     }
 
     public void add( final IStatus status )
     {
       if( m_result == null )
-        throw new IllegalStateException( "Result can only be retrieved once." );
+        throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.3") ); //$NON-NLS-1$
 
       switch( status.getCode() )
       {
@@ -229,7 +230,7 @@ public class LogAnalyzer
       if( !m_children.isEmpty() )
       {
         final IStatus[] children = m_children.toArray( new IStatus[m_children.size()] );
-        final String message = m_message.length() == 0 ? "siehe Details" : m_message.toString();
+        final String message = m_message.length() == 0 ? Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.4") : m_message.toString(); //$NON-NLS-1$
 
         final int code = m_result.getCode();
         final String plugin = m_result.getPlugin();
@@ -258,7 +259,7 @@ public class LogAnalyzer
       final int severity = status.getSeverity();
       final String plugin = status.getPlugin();
 
-      final String msg = StatusUtilities.getLocalizedSeverity( status ) + ": " + message;
+      final String msg = StatusUtilities.getLocalizedSeverity( status ) + ": " + message; //$NON-NLS-1$
       final IStatus clonedStatus = new Status( severity, plugin, code, msg, status.getException() );
       m_children.add( clonedStatus );
 
@@ -274,7 +275,7 @@ public class LogAnalyzer
     public IStatus[] getResult()
     {
       if( m_result == null )
-        throw new IllegalStateException( "Result can only be retrieved once." );
+        throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.5") ); //$NON-NLS-1$
 
       createNewSub();
 

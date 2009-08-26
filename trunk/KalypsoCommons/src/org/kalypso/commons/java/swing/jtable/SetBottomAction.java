@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * SetAllAction
  *
@@ -13,7 +15,7 @@ public class SetBottomAction extends AbstractObservationTableAction
 {
   public SetBottomAction( final JTable table )
   {
-    super( table, "Werte unterhalb setzen", "Führt den selektierten Wert für alle nachfolgenden fort" );
+    super( table, Messages.getString("org.kalypso.commons.java.swing.jtableSetBottomAction.0"), Messages.getString("org.kalypso.commons.java.swing.jtableSetBottomAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

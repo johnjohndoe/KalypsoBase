@@ -104,7 +104,7 @@ public class UnzippedJarSimulationDataProvider extends JarSimulationDataProvider
       {
         handlerStream = new BufferedInputStream( m_zipHandler.getInputStream() );
 
-        m_tmpdir = FileUtilities.createNewTempDir( "CalcJobInputData" );
+        m_tmpdir = FileUtilities.createNewTempDir( "CalcJobInputData" ); //$NON-NLS-1$
 
         ZipUtilities.unzip( handlerStream, m_tmpdir );
       }

@@ -62,7 +62,7 @@ public class LhwzHelper
    */
   public static double getDefaultUmhuellendeAccuracy()
   {
-    final String defaultValueStr = System.getProperty( "kalypso.lhwz.umhuellende60hprozent.default", null );
+    final String defaultValueStr = System.getProperty( "kalypso.lhwz.umhuellende60hprozent.default", null ); //$NON-NLS-1$
     if( defaultValueStr != null )
     {
       try

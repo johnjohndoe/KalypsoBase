@@ -77,6 +77,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
@@ -89,7 +90,7 @@ public class CalcJobHandler
 {
   private final Modeldata m_modelspec;
 
-  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoSimulationCorePlugin.getID(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) );
+  private final CoreException m_cancelException = new CoreException( new Status( IStatus.CANCEL, KalypsoSimulationCorePlugin.getID(), 0, "Berechnung wurde vom Benutzer abgebrochen", null ) ); //$NON-NLS-1$
 
   private String m_jobID = null;
 
@@ -105,18 +106,18 @@ public class CalcJobHandler
 
   public IStatus runJob( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(), 5000 );
+    monitor.beginTask( "Berechnung wird durchgeführt für Variante: " + calcCaseFolder.getName(), 5000 ); //$NON-NLS-1$
     try
     {
       // Daten zum Service schieben
-      monitor.subTask( "Initialisiere Berechnung..." );
+      monitor.subTask( "Initialisiere Berechnung..." ); //$NON-NLS-1$
       m_jobID = startCalcJob( calcCaseFolder, new SubProgressMonitor( monitor, 1000 ) );
 
       if( monitor.isCanceled() )
         throw m_cancelException;
 
       final SubProgressMonitor calcMonitor = new SubProgressMonitor( monitor, 2000 );
-      calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 );
+      calcMonitor.beginTask( "Berechnung wird durchgeführt", 100 ); //$NON-NLS-1$
       int oldProgess = 0;
       while( true )
       {
@@ -148,7 +149,7 @@ public class CalcJobHandler
         {
           e1.printStackTrace();
 
-          throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler" ) );
+          throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler" ) ); //$NON-NLS-1$
         }
 
         final int progress = bean.getProgress();
@@ -171,7 +172,7 @@ public class CalcJobHandler
 
       // Abhängig von den Ergebnissen was machen
       final String finishText = jobBean.getFinishText();
-      final String message = finishText == null ? "" : finishText;
+      final String message = finishText == null ? "" : finishText; //$NON-NLS-1$
       switch( jobBean.getState() )
       {
         case FINISHED:
@@ -183,7 +184,7 @@ public class CalcJobHandler
           // Ergebniss abholen
           m_calcService.transferCurrentResults( project.getLocation().toFile(), m_jobID );
           project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
-          return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null );
+          return StatusUtilities.createMultiStatusFromMessage( jobBean.getFinishStatus(), KalypsoSimulationCorePlugin.getID(), 0, message, System.getProperty( "line.separator" ), null ); //$NON-NLS-1$
         }
 
         case CANCELED:
@@ -199,7 +200,7 @@ public class CalcJobHandler
         default:
         {
           // darf eigentlich nie vorkommen
-          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null );
+          final IStatus status = StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), 0, jobBean.getMessage(), System.getProperty( "line.separator" ), null ); //$NON-NLS-1$
           throw new CoreException( status );
         }
       }
@@ -207,7 +208,7 @@ public class CalcJobHandler
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf des Rechendienstes" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -230,7 +231,7 @@ public class CalcJobHandler
       {
         e1.printStackTrace();
 
-        throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler bei Löschen des Rechen-Jobs" ) );
+        throw new CoreException( StatusUtilities.statusFromThrowable( e1, "Kritischer Fehler bei Löschen des Rechen-Jobs" ) ); //$NON-NLS-1$
       }
       monitor.done();
     }
@@ -243,7 +244,7 @@ public class CalcJobHandler
       final IProject project = calcCaseFolder.getProject();
 
       final List<ClearAfterCalc> clearList = m_modelspec.getClearAfterCalc();
-      monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() );
+      monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() ); //$NON-NLS-1$
 
       for( final ClearAfterCalc clearAfterCalc : clearList )
       {
@@ -269,11 +270,11 @@ public class CalcJobHandler
     try
     {
       final List<Modeldata.Input> inputList = m_modelspec.getInput();
-      monitor.beginTask( "Eingangsdaten für Berechnungsdienst vorbereiten", inputList.size() );
+      monitor.beginTask( "Eingangsdaten für Berechnungsdienst vorbereiten", inputList.size() ); //$NON-NLS-1$
 
       final SimulationDescription[] inputDescription = m_calcService.getRequiredInput( m_modelspec.getTypeID() );
 
-      m_zipFile = File.createTempFile( "CalcJobData_", ".zip" );
+      m_zipFile = File.createTempFile( "CalcJobData_", ".zip" ); //$NON-NLS-1$ //$NON-NLS-2$
       m_zipFile.deleteOnExit();
 
       final SimulationDataPath[] input = zipData( calcCaseFolder, monitor, inputDescription, inputList, m_zipFile );
@@ -282,17 +283,17 @@ public class CalcJobHandler
       final DataSource jarSource = new FileDataSource( m_zipFile );
       final DataHandler jarHandler = new DataHandler( jarSource );
 
-      final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), "Description", jarHandler, input, output );
+      final SimulationInfo bean = m_calcService.startJob( m_modelspec.getTypeID(), Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.0"), jarHandler, input, output ); //$NON-NLS-1$
       return bean.getId();
     }
     catch( final SimulationException se )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( se, "Fehler beim Starten der Berechnung. Kontrollieren Sie die Konfiguration des Rechendienstes." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( se, Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.1") ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Eingangsdaten konnten nicht erzeugt werden." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.2") ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -309,7 +310,7 @@ public class CalcJobHandler
     {
       final String outpath = ot.getPath();
       final boolean relCalcCase = ot.isRelativeToCalcCase();
-      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath;
+      final String path = relCalcCase ? calcCaseFolder.getProjectRelativePath() + "/" + outpath : outpath; //$NON-NLS-1$
 
       output[count++] = new SimulationDataPath( ot.getId(), path );
     }
@@ -320,7 +321,7 @@ public class CalcJobHandler
   private SimulationDataPath[] zipData( final IContainer calcCaseFolder, final IProgressMonitor monitor, final SimulationDescription[] inputDescription, final List<Modeldata.Input> inputList, final File zipFile ) throws FileNotFoundException, CoreException, IOException
   {
     // hash input description
-    final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+    final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" ); //$NON-NLS-1$
     final Map<String, SimulationDescription> inputdescriptionMap = new HashMap<String, SimulationDescription>( inputDescription.length );
     for( final SimulationDescription desc : inputDescription )
     {
@@ -370,7 +371,7 @@ public class CalcJobHandler
               continue;
             }
 
-            throw new CoreException( StatusUtilities.createErrorStatus( "Konnte Input-Resource nicht finden: " + inputPath + "\nÜberprüfen Sie die Modellspezifikation." ) );
+            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.3") + inputPath + Messages.getString("org.kalypso.simulation.core.calccase.CalcJobHandler.4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
           }
 
           // final IPath projectRelativePath = inputResource.getProjectRelativePath();

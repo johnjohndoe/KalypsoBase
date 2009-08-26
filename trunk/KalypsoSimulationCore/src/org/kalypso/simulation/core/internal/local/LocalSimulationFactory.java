@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
 
 /**
@@ -72,7 +73,7 @@ public class LocalSimulationFactory implements ISimulationFactory
     }
     catch( final CoreException e )
     {
-      throw new SimulationException( "Simulation-Klasse konnte nicht instantiiert werden für typ: " + typeID, e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.LocalSimulationFactory.0") + typeID, e ); //$NON-NLS-1$
     }
   }
 }

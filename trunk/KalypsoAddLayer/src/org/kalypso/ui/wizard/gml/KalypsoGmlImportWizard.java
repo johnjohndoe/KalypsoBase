@@ -60,6 +60,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,7 +81,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   @Override
   public void addPages( )
   {
-    m_page = new GmlFileImportPage( "GML:importPage", "Hinzufügen einer GML-Datei (im Workspace) zu einer Karte", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     m_page.setProjectSelection( m_mapModel.getProject() );
 
     addPage( m_page );
@@ -105,7 +106,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Thema konnte nicht hinzugefügt werden: ", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.1"), status ); //$NON-NLS-1$
       return false;
     }
 
@@ -152,7 +153,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
         final String title = ft.getAnnotation().getLabel();
         final String ftpName = ftp.getQName().getLocalPart();
         final String ftName = ft.getQName().getLocalPart();
-        final FeaturePath path = new FeaturePath( parentFeaturePath, ftpName + "[" + ftName + "]" );
+        final FeaturePath path = new FeaturePath( parentFeaturePath, ftpName + "[" + ftName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
         pathList.add( path.toString() );
         titleList.add( title );
       }
@@ -165,7 +166,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       final String title = titleIterator.next();
       final String featurePath = pathIterator.next();
-      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, source );
+      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, source ); //$NON-NLS-1$
     }
     return result;
   }
@@ -184,7 +185,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    setWindowTitle( "GML Datei" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2") ); //$NON-NLS-1$
   }
 
   /**

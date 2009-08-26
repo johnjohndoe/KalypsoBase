@@ -56,6 +56,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.internal.queued.SimulationThread;
@@ -70,7 +71,7 @@ public class SingleSimulationService implements ISimulationService
 {
   private static final Logger LOGGER = Logger.getLogger( SingleSimulationService.class.getName() );
 
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) ); //$NON-NLS-1$
 
   static
   {
@@ -155,7 +156,7 @@ public class SingleSimulationService implements ISimulationService
       }
       catch( final IOException e )
       {
-        throw new SimulationException( "Could not create temporary directory for simulation.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.0"), e ); //$NON-NLS-1$
       }
     }
 
@@ -200,12 +201,12 @@ public class SingleSimulationService implements ISimulationService
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.1"), e ); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Error while reading sim-service specs", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.2"), e ); //$NON-NLS-1$
     }
 
     return data;

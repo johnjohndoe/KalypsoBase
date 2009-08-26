@@ -101,7 +101,7 @@ public class ShapeLoader extends WorkspaceLoader
       final String sourceSrs = parseSrs( location );
       final String shpSource = parseSource( location );
 
-      final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", shpSource ); //$NON-NLS-1$
+      final String taskMsg = Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.1", shpSource ); //$NON-NLS-1$
       final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 100 );
       ProgressUtilities.worked( moni, 1 );
 

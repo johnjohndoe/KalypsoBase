@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -71,7 +72,7 @@ public class KalypsoSimulationCorePlugin extends Plugin
   {
     final ISimulationService[] services = KalypsoSimulationCorePlugin.getDefault().getSimulationServices();
 
-    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen.", null );
+    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.0"), null ); //$NON-NLS-1$
     for( final ISimulationService service : services )
     {
       try
@@ -85,12 +86,12 @@ public class KalypsoSimulationCorePlugin extends Plugin
       }
       catch( final SimulationException e )
       {
-        status.add( StatusUtilities.statusFromThrowable( e, "Fehler beim Aufruf eines Berechnungsdienstes" ) );
+        status.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.1") ) ); //$NON-NLS-1$
       }
     }
 
     if( status.isOK() )
-      throw new CoreException( StatusUtilities.createInfoStatus( "Keiner der konfigurierten Berechnungsdienste kann den gewünschten Modelltyp rechnen: " + typeID ) );
+      throw new CoreException( StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.2") + typeID ) ); //$NON-NLS-1$
     else
       throw new CoreException( status );
   }

@@ -49,6 +49,7 @@ import org.eclipse.ui.internal.registry.WizardsRegistryReader;
 import org.eclipse.ui.model.AdaptableList;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * This class extends the ImportWizard. This enables to call the import wizard from any action. Entry point to kalypso
@@ -70,7 +71,7 @@ public class KalypsoAddLayerWizard extends Wizard
   {
     m_outlineviewer = outlineviewer;
     m_selection = selection;
-    setWindowTitle( "Thema hinzufügen" ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.2") ); //$NON-NLS-1$
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
     setNeedsProgressMonitor( true );
 // setDialogSettings( PluginUtilities.getDialogSettings( KalypsoAddLayerPlugin.getDefault(), "addLayerWizard" ) );
@@ -82,8 +83,8 @@ public class KalypsoAddLayerWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableImportWizards(), "Themenarten:", m_outlineviewer );
-    page.setDescription( "Wählen Sie aus, welches Art Thema Sie hinzufügen möchten." );
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableImportWizards(), Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.0"), m_outlineviewer ); //$NON-NLS-1$
+    page.setDescription( Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.1") ); //$NON-NLS-1$
     addPage( page );
   }
 

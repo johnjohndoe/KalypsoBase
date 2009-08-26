@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import javax.swing.JTable;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * SetAllAction
  *
@@ -14,8 +16,8 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
 {
   public InterpolateSelectedAction( final JTable table )
   {
-    super( table, "Werte interpolieren",
-        "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
+    super( table, Messages.getString("org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction0"), //$NON-NLS-1$
+        Messages.getString("org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction1") ); //$NON-NLS-1$
   }
 
   @Override

@@ -108,6 +108,7 @@ import org.kalypso.simulation.core.calccase.CalcJobHandler;
 import org.kalypso.simulation.core.internal.local.LocalSimulationService;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -119,7 +120,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 @SuppressWarnings("restriction")
 public class ModelNature implements IProjectNature, IResourceChangeListener
 {
-  public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED";
+  public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED"; //$NON-NLS-1$
 
   public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
 
@@ -128,25 +129,25 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
-  private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = "Modellrechnung wird durchgeführt";
+  private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.0"); //$NON-NLS-1$
 
-  public static final String MODELLTYP_FOLDER = ".model";
+  public static final String MODELLTYP_FOLDER = ".model"; //$NON-NLS-1$
 
-  public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/" + "calcCaseConfig.xml";
+  public static final String MODELLTYP_CALCCASECONFIG_XML = MODELLTYP_FOLDER + "/" + "calcCaseConfig.xml"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  public static final String MODELLTYP_MODELSPEC_XML = "modelspec.xml";
+  public static final String MODELLTYP_MODELSPEC_XML = "modelspec.xml"; //$NON-NLS-1$
 
-  public static final String ID = KalypsoSimulationUIPlugin.getID() + ".ModelNature";
+  public static final String ID = KalypsoSimulationUIPlugin.getID() + ".ModelNature"; //$NON-NLS-1$
 
-  private static final String METADATA_FILE = ".metadata";
+  private static final String METADATA_FILE = ".metadata"; //$NON-NLS-1$
 
-  public static final String CONTROL_NAME = ".calculation";
+  public static final String CONTROL_NAME = ".calculation"; //$NON-NLS-1$
 
-  public static final String CONTROL_TEMPLATE_NAME = ".calculation.template";
+  public static final String CONTROL_TEMPLATE_NAME = ".calculation.template"; //$NON-NLS-1$
 
-  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view";
+  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view"; //$NON-NLS-1$
 
-  public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml";
+  public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml"; //$NON-NLS-1$ //$NON-NLS-2$
 
   private final Properties m_defaultMetadata = new Properties();
 
@@ -154,14 +155,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private IProject m_project;
 
-  public static final String PROGNOSE_FOLDER = ".prognose";
+  public static final String PROGNOSE_FOLDER = ".prognose"; //$NON-NLS-1$
 
-  public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/" + CONTROL_TEMPLATE_NAME;
+  public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/" + CONTROL_TEMPLATE_NAME; //$NON-NLS-1$
 
-  private static final String META_PROP_VALID_HOURS = "VALID_FORECAST_HOURS";
+  private static final String META_PROP_VALID_HOURS = "VALID_FORECAST_HOURS"; //$NON-NLS-1$
 
   /** Standardddifferenz des Simulationsstarts vor dem Vorhersagezeitpunkt */
-  private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS";
+  private static final String META_PROP_DEFAULT_SIMHOURS = "DEFAULT_SIMHOURS"; //$NON-NLS-1$
 
   /**
    * 2005-09-01 - Schlienger - added this constant in order to get a static dependency to the org.eclipse.ant.ui plugin
@@ -290,13 +291,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IResource resource = resourceRoot.findMember( path );
 
     if( resource == null || resource == resourceRoot )
-      return "Rechenvariante muss innerhalb eines Projektordners angelegt werden";
+      return Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.1"); //$NON-NLS-1$
 
     if( resource instanceof IFolder )
     {
       final IFolder folder = (IFolder) resource;
       if( isCalcCalseFolder( folder ) )
-        return "Rechenvariante darf nicht innerhalb einer anderen Rechenvariante angelegt werden";
+        return Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.2"); //$NON-NLS-1$
 
       return checkCanCreateCalculationCase( folder.getParent().getFullPath() );
     }
@@ -316,7 +317,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
     }
 
-    return "???";
+    return "???"; //$NON-NLS-1$
   }
 
   public static boolean isCalcCalseFolder( final IContainer folder )
@@ -351,16 +352,16 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile launchFile = getLaunchFile( launchName );
 
-      monitor.subTask( "Starte Launch-Datei '" + launchName + "'" );
+      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.3") + launchName + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
       // add user-variables to LaunchConfiguration
-      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap<Object, Object>() );
+      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap<Object, Object>() ); //$NON-NLS-1$
       attribute.putAll( userProperties );
       if( antProps != null )
         attribute.putAll( antProps );
-      lc.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute );
+      lc.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute ); //$NON-NLS-1$
 
       // add user-variables to variable-manager (so they can also be used within
       // the launch-file
@@ -372,7 +373,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       // TODO: timeout konfigurierbar machen?
       final int minutes = 720;
-      monitor.subTask( "Warte auf Ende der Berechnung..." );
+      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.4") ); //$NON-NLS-1$
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( monitor.isCanceled() )
@@ -389,13 +390,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
           for( int j = 0; j < arguments.length; j++ )
           {
-            if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 )
+            if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               final String logfile = arguments[j + 1];
               final File logFileFile = new File( logfile );
               final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFileFile, Charset.defaultCharset().name() );
               final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
-              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logfile, null );
+              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logfile, null ); //$NON-NLS-1$
             }
           }
           return Status.OK_STATUS;
@@ -407,7 +408,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO better ask for termination, but continue task in background
       launch.terminate();
 
-      return StatusUtilities.createErrorStatus( "Die Operation hat über " + minutes + " Minuten gedauert und wird deshalb abgebrochen." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.5") + minutes + " Minuten gedauert und wird deshalb abgebrochen." ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
@@ -417,7 +418,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
       // sollte eigentlich nie auftreten
-      return StatusUtilities.statusFromThrowable( e, "Operation konnte nicht durchgeführt werden." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.6") ); //$NON-NLS-1$
     }
     finally
     {
@@ -468,7 +469,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        System.out.println( "Variable already exists: " + name );
+        System.out.println( "Variable already exists: " + name ); //$NON-NLS-1$
         e.printStackTrace();
         // ignore it, its already there -> ?
       }
@@ -492,7 +493,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final Calendar cal = Calendar.getInstance();
     cal.setTime( now );
 
-    attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) );
+    attributes.setProperty( "kalypso.currentTime", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
 
     // erstmal auf die letzte Stunde runden
     cal.set( Calendar.MINUTE, 0 );
@@ -509,36 +510,36 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Zeit konnte nicht vailidiert werden: " + cal ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.7") + cal ) ); //$NON-NLS-1$
     }
 
-    attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) );
+    attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
 
     // standardzeit abziehen
-    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue();
+    final int simDiff = new Integer( m_metadata.getProperty( META_PROP_DEFAULT_SIMHOURS, "120" ) ).intValue(); //$NON-NLS-1$
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
 
-    attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) );
+    attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
 
-    attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() );
-    attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() );
-    attributes.setProperty( "kalypso.currentScenarioName", currentScenario.getName() );
-    attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() );
+    attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() ); //$NON-NLS-1$
+    attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() ); //$NON-NLS-1$
+    attributes.setProperty( "kalypso.currentScenarioName", currentScenario.getName() ); //$NON-NLS-1$
+    attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() ); //$NON-NLS-1$
 
-    attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() );
+    attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() ); //$NON-NLS-1$
 
-    attributes.setProperty( "simulation_project_loc", project.getLocation().toPortableString() );
+    attributes.setProperty( "simulation_project_loc", project.getLocation().toPortableString() ); //$NON-NLS-1$
 
-    attributes.setProperty( "calc.dir", folder.getLocation().toPortableString() );
-    attributes.setProperty( "project.dir", project.getLocation().toPortableString() );
+    attributes.setProperty( "calc.dir", folder.getLocation().toPortableString() ); //$NON-NLS-1$
+    attributes.setProperty( "project.dir", project.getLocation().toPortableString() ); //$NON-NLS-1$
 
-    attributes.setProperty( "calc.path", folder.getFullPath().toPortableString() );
-    attributes.setProperty( "project.path", project.getFullPath().toPortableString() );
+    attributes.setProperty( "calc.path", folder.getFullPath().toPortableString() ); //$NON-NLS-1$
+    attributes.setProperty( "project.path", project.getFullPath().toPortableString() ); //$NON-NLS-1$
 
     try
     {
-      attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() );
-      attributes.setProperty( "project.url", ResourceUtilities.createURL( project ).toString() );
+      attributes.setProperty( "calc.url", ResourceUtilities.createURL( folder ).toString() ); //$NON-NLS-1$
+      attributes.setProperty( "project.url", ResourceUtilities.createURL( project ).toString() ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
@@ -553,15 +554,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IFolder launchFolder = getLaunchFolder();
     if( launchFolder == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Launch Verzeichnis im Modellverzeichnis existiert nicht." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.8") ) ); //$NON-NLS-1$
 
-    final IFile file = launchFolder.getFile( launchName + ".launch" );
+    final IFile file = launchFolder.getFile( launchName + ".launch" ); //$NON-NLS-1$
     return file;
   }
 
   private IFolder getLaunchFolder( )
   {
-    return getModelFolder().getFolder( "launch" );
+    return getModelFolder().getFolder( "launch" ); //$NON-NLS-1$
   }
 
   /**
@@ -569,8 +570,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus createCalculationCaseInFolder( final IFolder folder, final Map<String, Object> antProperties, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = "Rechenvariante wird erzeugt";
-    return launchAnt( message, "createCalcCase", antProperties, folder, monitor );
+    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.9"); //$NON-NLS-1$
+    return launchAnt( message, "createCalcCase", antProperties, folder, monitor ); //$NON-NLS-1$
   }
 
   /**
@@ -578,8 +579,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = "Rechenvariante wird aktualisiert";
-    return launchAnt( message, "updateCalcCase", null, folder, monitor );
+    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.10"); //$NON-NLS-1$
+    return launchAnt( message, "updateCalcCase", null, folder, monitor ); //$NON-NLS-1$
   }
 
   /**
@@ -587,9 +588,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus setBasicModel( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = "Übernehme Rechanvariante in Basismodell";
+    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.11"); //$NON-NLS-1$
 
-    return launchAnt( message, "setBasicModel", null, folder, monitor );
+    return launchAnt( message, "setBasicModel", null, folder, monitor ); //$NON-NLS-1$
   }
 
   public String getCalcType( ) throws CoreException
@@ -650,7 +651,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Error loading Metadata", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.12"), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -690,7 +691,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.13") ) ); //$NON-NLS-1$
     }
   }
 
@@ -703,7 +704,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
       final String gmlPath = controlFile.getFullPath().toString();
-      final URL gmlURL = new URL( "platform:/resource/" + gmlPath );
+      final URL gmlURL = new URL( "platform:/resource/" + gmlPath ); //$NON-NLS-1$
 
       return GmlSerializer.createGMLWorkspace( gmlURL, null );
     }
@@ -711,7 +712,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, "Konnte Standard-Steuerparameter nicht laden:" + e.getLocalizedMessage(), e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.14") + e.getLocalizedMessage(), e ) ); //$NON-NLS-1$
     }
   }
 
@@ -725,11 +726,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     // todo: wäre schöner, wenn das besser parametrisiert werden könnte
     // z.B. ein Groovy-Skript aus der Modelspec o.ä.
-    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS, "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" );
+    final String validHours = m_metadata.getProperty( META_PROP_VALID_HOURS, "VALID_FORECAST_HOURS=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23" ); //$NON-NLS-1$
 
     final int hour = cal.get( Calendar.HOUR_OF_DAY );
 
-    return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1;
+    return (" " + validHours + " ").indexOf( " " + hour + " " ) != -1; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   public IStatus runCalculation( final IContainer folder, final IProgressMonitor monitor ) throws CoreException
@@ -749,7 +750,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       // if there is no 'modelspec' file
       // we try to call the ant task
-      return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor );
+      return launchAnt( STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, "runCalculation", null, calcCaseFolder, monitor ); //$NON-NLS-1$
     }
 
     return runCalculation( calcCaseFolder, monitor, modelspec );
@@ -786,7 +787,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" );
+      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
 
       final String typeID = modelspec.getTypeID();
 
@@ -831,8 +832,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IScenario getScenario( final IContainer calcCase ) throws CoreException
   {
-    final Object result = loadCalculationAndReadProperty( calcCase, "scenarioId" );
-    final String scenarioId = result == null ? "" : result.toString();
+    final Object result = loadCalculationAndReadProperty( calcCase, "scenarioId" ); //$NON-NLS-1$
+    final String scenarioId = result == null ? "" : result.toString(); //$NON-NLS-1$
 
     final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
     if( scenario == null )

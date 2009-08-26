@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.contribs.eclipse.jface.viewers.IViewerSorterFactory;
 import org.kalypso.contribs.eclipse.swt.widgets.TableSorter;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * A Table tree viewer, showing calc cases in a tree with additional column 'modiifed since'.
@@ -120,10 +121,10 @@ public class CalcCaseTableTreeViewer extends TableTreeViewer implements ICheckab
     table.setHeaderVisible( true );
 
     final TableColumn column = new TableColumn( table, SWT.NONE );
-    column.setText( "" );
+    column.setText( "" ); //$NON-NLS-1$
     column.setWidth( 0 );
-    m_tableSorter.createSortedColumn( table, "Vorhersage", this );
-    final TableColumn timeColumn = m_tableSorter.createSortedColumn( table, "zuletzt geändert", this );
+    m_tableSorter.createSortedColumn( table, Messages.getString("org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.1"), this ); //$NON-NLS-1$
+    final TableColumn timeColumn = m_tableSorter.createSortedColumn( table, Messages.getString("org.kalypso.simulation.ui.calccase.jface.CalcCaseTableTreeViewer.2"), this ); //$NON-NLS-1$
 
     final Color markedColor = tableTree.getDisplay().getSystemColor( SWT.COLOR_YELLOW );
     setLabelProvider( new CalcCaseTableLabelProvider( markedCalcCase, markedColor ) );

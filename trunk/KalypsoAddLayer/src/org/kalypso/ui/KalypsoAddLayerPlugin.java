@@ -18,7 +18,7 @@ public class KalypsoAddLayerPlugin extends AbstractUIPlugin
   private ResourceBundle resourceBundle;
 
   /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd) */
-  public static final String PL_IMPORT = "addLayerWizard";
+  public static final String PL_IMPORT = "addLayerWizard"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -29,7 +29,7 @@ public class KalypsoAddLayerPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.ui.KaylpsoAddLayerPluginPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.ui.KaylpsoAddLayerPluginPluginResources" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {

@@ -57,6 +57,7 @@ import org.kalypso.commons.java.io.DeleteObsoleteFilesVisitor;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author belger
@@ -81,7 +82,7 @@ public class ModelSynchronizer
 
   public void updateLocal( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Modell aktualisieren", 3000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.0"), 3000 ); //$NON-NLS-1$
 
     try
     {
@@ -101,7 +102,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Aktualisieren der Daten" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.1") ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -111,10 +112,10 @@ public class ModelSynchronizer
 
   private void synchronizeProject( final File from, final File to, final IProgressMonitor monitor ) throws IOException
   {
-    monitor.beginTask( "Projekt synchronizieren", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.2"), 1000 ); //$NON-NLS-1$
 
     final long start = new java.util.Date().getTime();
-    System.out.println("Modelsync Starting at: " + start);
+    System.out.println("Modelsync Starting at: " + start); //$NON-NLS-1$
     
     try
     {
@@ -128,9 +129,9 @@ public class ModelSynchronizer
     finally
     {
       final long stop = new java.util.Date().getTime();
-      System.out.println("Modelsync Stoping at: " + stop );
+      System.out.println("Modelsync Stoping at: " + stop ); //$NON-NLS-1$
       final long diff = stop - start;
-      System.out.println("Modelsync Diff: " + diff + " ms --> " + diff/1000 + " s");
+      System.out.println("Modelsync Diff: " + diff + " ms --> " + diff/1000 + " s"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     
       monitor.done();
     }
@@ -138,7 +139,7 @@ public class ModelSynchronizer
 
   private void copyAll( final File from, final File to, final IProgressMonitor monitor ) throws IOException
   {
-    monitor.beginTask( "Dateien kopieren", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.3"), 1000 ); //$NON-NLS-1$
 
     try
     {
@@ -167,7 +168,7 @@ public class ModelSynchronizer
     final File serverDir = new File( m_serverRoot, projectRelativePath );
 
     if( serverDir.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Das Verzeichnis existiert bereits auf dem Server: "
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.4") //$NON-NLS-1$
           + projectRelativePath ) );
 
     final File localDir = new File( m_resourceRootFile, projectRelativePath );
@@ -177,7 +178,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Zurückschreiben der Daten" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.5") ) ); //$NON-NLS-1$
     }
   }
 
@@ -198,12 +199,12 @@ public class ModelSynchronizer
    */
   public void getFolder( final File dir, final String localName, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Verzeichnis vom Server laden", 2000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.6"), 2000 ); //$NON-NLS-1$
 
     final String relativePath = FileUtilities.getRelativePathTo( m_serverRoot, dir );
     final IFile file = m_resourceRoot.getFile( localName );
     if( file.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Verzeichnis exisitert lokal bereits: "
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.7") //$NON-NLS-1$
           + relativePath ) );
 
     try
@@ -214,7 +215,7 @@ public class ModelSynchronizer
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Daten" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.8") ) ); //$NON-NLS-1$
     }
 
   }
@@ -225,33 +226,33 @@ public class ModelSynchronizer
       m_serverRoot.mkdir();
 
     // server -> local
-    final File lockFile = new File( m_serverRoot, ".lock" );
+    final File lockFile = new File( m_serverRoot, ".lock" ); //$NON-NLS-1$
     if( lockFile.exists() )
     {
-      String user = "<unbekannt>";
+      String user = "<unbekannt>"; //$NON-NLS-1$
       try
       {
-        user = FileUtils.readFileToString( lockFile, "UTF-8" );
+        user = FileUtils.readFileToString( lockFile, "UTF-8" ); //$NON-NLS-1$
       }
       catch( final IOException e )
       {
         e.printStackTrace();
       }
 
-      throw new CoreException( StatusUtilities.createErrorStatus( "Lock-Datei existiert für Benutzer: " + user ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.9") + user ) ); //$NON-NLS-1$
     }
 
     try
     {
-      final String user = System.getProperties().getProperty( "user.name", "<unbekannt>" );
-      FileUtils.writeStringToFile( lockFile, user, "UTF-8" );
+      final String user = System.getProperties().getProperty( "user.name", "<unbekannt>" ); //$NON-NLS-1$ //$NON-NLS-2$
+      FileUtils.writeStringToFile( lockFile, user, "UTF-8" ); //$NON-NLS-1$
       synchronizeProject( m_resourceRootFile, m_serverRoot, new NullProgressMonitor() );
     }
     catch( IOException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Konnte lock Datei nicht erzeugen" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.10") ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -269,7 +270,7 @@ public class ModelSynchronizer
     }
     catch( IOException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Datenvom Server " ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelSynchronizer.11") ) ); //$NON-NLS-1$
     }
 
   }

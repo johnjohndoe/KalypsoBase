@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * ImportImageWizardPage
@@ -131,17 +132,17 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     m_group = new Group( m_topComposite, SWT.NONE );
     m_group.setLayout( new GridLayout( 3, false ) );
     m_group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_group.setText( "Bild-Datei" );
+    m_group.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.0") ); //$NON-NLS-1$
 
     final Label sourceFileLabel = new Label( m_group, SWT.NONE );
-    sourceFileLabel.setText( "Quelle : " );
+    sourceFileLabel.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.3") ); //$NON-NLS-1$
 
     m_sourceFileText = new Text( m_group, SWT.BORDER );
     m_sourceFileText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_sourceFileText.setEditable( false );
 
     m_browseButton = new Button( m_group, SWT.PUSH );
-    m_browseButton.setText( "Durchsuchen..." );
+    m_browseButton.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.2") ); //$NON-NLS-1$
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
 
@@ -171,47 +172,47 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   private void createWorldFilePanel( final Composite composite )
   {
     m_worldFileGroup = new Group( composite, SWT.NONE );
-    m_worldFileGroup.setText( "World file:" );
+    m_worldFileGroup.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.1") ); //$NON-NLS-1$
     m_worldFileGroup.setLayout( new GridLayout( 2, false ) );
     m_worldFileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Label dx = new Label( m_worldFileGroup, SWT.NONE );
-    dx.setText( "Pixel (dx):" );
+    dx.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.4") ); //$NON-NLS-1$
     m_textDx = new Text( m_worldFileGroup, SWT.BORDER );
     m_textDx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDx.setEditable( false );
     m_textDx.addKeyListener( this );
 
     final Label phix = new Label( m_worldFileGroup, SWT.NONE );
-    phix.setText( "phi X:" );
+    phix.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.5") ); //$NON-NLS-1$
     m_textPhix = new Text( m_worldFileGroup, SWT.BORDER );
     m_textPhix.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhix.setEditable( false );
     m_textPhix.addKeyListener( this );
 
     final Label phiy = new Label( m_worldFileGroup, SWT.NONE );
-    phiy.setText( "phi Y:" );
+    phiy.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.6") ); //$NON-NLS-1$
     m_textPhiy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textPhiy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhiy.setEditable( false );
     m_textPhiy.addKeyListener( this );
 
     final Label dy = new Label( m_worldFileGroup, SWT.NONE );
-    dy.setText( "Pixel (dy):" );
+    dy.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.7") ); //$NON-NLS-1$
     m_textDy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textDy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDy.setEditable( false );
     m_textDy.addKeyListener( this );
 
     final Label ulcx = new Label( m_worldFileGroup, SWT.NONE );
-    ulcx.setText( "Obere linke Ecke (X):" );
+    ulcx.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.8") ); //$NON-NLS-1$
     m_textULCx = new Text( m_worldFileGroup, SWT.BORDER );
     m_textULCx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textULCx.setEditable( false );
     m_textULCx.addKeyListener( this );
 
     final Label ulcy = new Label( m_worldFileGroup, SWT.NONE );
-    ulcy.setText( "Obere linke Ecke (Y):" );
+    ulcy.setText( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.9") ); //$NON-NLS-1$
     m_textULCy = new Text( m_worldFileGroup, SWT.BORDER );
     m_textULCy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textULCy.setEditable( false );
@@ -232,7 +233,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       b = (Button) e.widget;
       if( b.equals( m_browseButton ) )
       {
-        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "tiff", "tif", "jpg", "TIFF", "TIF", "JPG", "png", "PNG", } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "tiff", "tif", "jpg", "TIFF", "TIF", "JPG", "png", "PNG", } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
         // "gif",
         // "GIF"} );
         dialog.open();
@@ -253,22 +254,22 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   private void updateWorldFile( )
   {
     IPath path = null;
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "TIF" ) )
+    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "TIF" ) ) //$NON-NLS-1$
     {
-      m_fileType = "tif";
-      m_wfType = "tfw";
+      m_fileType = "tif"; //$NON-NLS-1$
+      m_wfType = "tfw"; //$NON-NLS-1$
       path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "JPG" ) )
+    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "JPG" ) ) //$NON-NLS-1$
     {
-      m_fileType = "jpg";
-      m_wfType = "jgw";
+      m_fileType = "jpg"; //$NON-NLS-1$
+      m_wfType = "jgw"; //$NON-NLS-1$
       path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
-    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "PNG" ) )
+    if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "PNG" ) ) //$NON-NLS-1$
     {
-      m_fileType = "png";
-      m_wfType = "pgw";
+      m_fileType = "png"; //$NON-NLS-1$
+      m_wfType = "pgw"; //$NON-NLS-1$
       path = m_relativeSourcePath.removeFileExtension().addFileExtension( m_wfType ).removeFirstSegments( 1 );
     }
     // if( m_relativeSourcePath.getFileExtension().toUpperCase().equals( "GIF" ) )
@@ -323,7 +324,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       m_group.pack();
       m_wfExists = false;
       e.printStackTrace();
-      setErrorMessage( "Probleme: World file hat falsche Endung, Namen stimmen nicht überein,\n kein world file vorhanden. Bitte geben Sie die unten Werte ein." );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.10") ); //$NON-NLS-1$
       setPageComplete( false );
     }
 
@@ -342,7 +343,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     }
     catch( final NumberFormatException e )
     {
-      setErrorMessage( "Bitte geben sie alle Zahlen unten ein." );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.11") ); //$NON-NLS-1$
       return false;
     }
 
@@ -352,12 +353,12 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       {
         final IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
 
-        String str = "";
+        String str = ""; //$NON-NLS-1$
         final Control[] array = m_worldFileGroup.getChildren();
         for( final Control combo : array )
         {
           if( combo instanceof Text )
-            str = str + (((Text) combo).getText().trim() + "\n");
+            str = str + (((Text) combo).getText().trim() + "\n"); //$NON-NLS-1$
         }
 
         final ByteArrayInputStream bis = new ByteArrayInputStream( str.getBytes() );
@@ -366,7 +367,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       catch( final CoreException e )
       {
         e.printStackTrace();
-        setErrorMessage( "Error while writing world file" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.12") ); //$NON-NLS-1$
         return false;
       }
     }
@@ -377,7 +378,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     }
     else
     {
-      setErrorMessage( "Bitte wählen sie ein gültiges Koordinaten-System aus." );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.13") ); //$NON-NLS-1$
       setPageComplete( false );
     }
 
@@ -396,7 +397,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString("org.kalypso.ui.wizard.image.ImportImageWizardPage.14"), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   public void setProjectSelection( final IProject project )

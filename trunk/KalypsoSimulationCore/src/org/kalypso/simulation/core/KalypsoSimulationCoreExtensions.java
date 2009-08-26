@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.FailureService;
 
 /**
@@ -65,19 +66,19 @@ import org.kalypso.simulation.core.internal.FailureService;
  */
 public class KalypsoSimulationCoreExtensions
 {
-  private final static String EXT_ELEMENT_SERVICE = "simulationService";
+  private final static String EXT_ELEMENT_SERVICE = "simulationService"; //$NON-NLS-1$
 
   // private final static String EXT_ATTRIB_SERVICEID = "id";
 
-  private final static String EXT_ATTRIB_SERVICECLASS = "class";
+  private final static String EXT_ATTRIB_SERVICECLASS = "class"; //$NON-NLS-1$
 
-  private final static String EXT_ELEMENT_SIMULATION = "simulation";
+  private final static String EXT_ELEMENT_SIMULATION = "simulation"; //$NON-NLS-1$
 
-  private final static String EXT_ATTRIB_SIMULATIONID = "typeID";
+  private final static String EXT_ATTRIB_SIMULATIONID = "typeID"; //$NON-NLS-1$
 
-  private final static String EXT_ATTRIB_SIMULATIONCLASS = "simulationClass";
+  private final static String EXT_ATTRIB_SIMULATIONCLASS = "simulationClass"; //$NON-NLS-1$
 
-  private final static String EXT_ATTRIB_CATALOGCLASS = "catalogClass";
+  private final static String EXT_ATTRIB_CATALOGCLASS = "catalogClass"; //$NON-NLS-1$
 
   /**
    * Reads the extension point.
@@ -119,7 +120,7 @@ public class KalypsoSimulationCoreExtensions
   public static IStatus createCatalogs( final List<IUrlCatalog> catalogs )
   {
     final Map<String, IConfigurationElement> elements = readSimulations();
-    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, "Ein oder mehrere Schema-Kataloge wurden nicht richtig initialisiert.", null );
+    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.0"), null ); //$NON-NLS-1$
     // final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>( elements.size() );
     for( final IConfigurationElement element : elements.values() )
     {
@@ -224,7 +225,7 @@ public class KalypsoSimulationCoreExtensions
 
         // instead of ignoring, we add this 'failure'-service. So the service still shows in any lists, but invokation
         // show what originally happend.
-        services.add( new FailureService( new SimulationException( "Fehler beim Initialisieren des Service", e ) ) );
+        services.add( new FailureService( new SimulationException( Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.1"), e ) ) ); //$NON-NLS-1$
       }
     }
 

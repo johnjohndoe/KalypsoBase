@@ -46,7 +46,7 @@ public class MathOperationFactory
    */
   public static IMathOperation createMathOperation( final String operator )
   {
-    if( operator.equalsIgnoreCase( "*" ) )
+    if( operator.equalsIgnoreCase( "*" ) ) //$NON-NLS-1$
       return new IMathOperation()
       {
         /**
@@ -60,7 +60,7 @@ public class MathOperationFactory
           return result;
         }
       };
-    if( operator.equalsIgnoreCase( "/" ) )
+    if( operator.equalsIgnoreCase( "/" ) ) //$NON-NLS-1$
       return new IMathOperation()
       {
         /**
@@ -74,7 +74,7 @@ public class MathOperationFactory
           return result;
         }
       };
-    if( operator.equalsIgnoreCase( "+" ) )
+    if( operator.equalsIgnoreCase( "+" ) ) //$NON-NLS-1$
       return new IMathOperation()
       {
         /**
@@ -88,7 +88,7 @@ public class MathOperationFactory
           return result;
         }
       };
-    if( operator.equalsIgnoreCase( "-" ) )
+    if( operator.equalsIgnoreCase( "-" ) ) //$NON-NLS-1$
       return new IMathOperation()
       {
         /**
@@ -102,6 +102,6 @@ public class MathOperationFactory
           return result;
         }
       };
-    throw new UnsupportedOperationException( "unknown operator \"" + operator + "\"" );
+    throw new UnsupportedOperationException( "unknown operator \"" + operator + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

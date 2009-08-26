@@ -68,7 +68,7 @@ public class SimulationUtilitites
 
   public SimulationUtilitites( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate helper class" );
+    throw new UnsupportedOperationException( "Do not instantiate helper class" ); //$NON-NLS-1$
   }
 
   public static File createSimulationTmpDir( final String id ) throws IOException
@@ -77,7 +77,7 @@ public class SimulationUtilitites
     final String simDir = FrameworkProperties.getProperty( ISimulationConstants.SYSPROP_SIM_DIR, javaTmpDir );
 
     final File simTmpDir = new File( simDir );
-    final File tmpDir = new File( simTmpDir, "Simulation-" + id + "-" + System.currentTimeMillis() );
+    final File tmpDir = new File( simTmpDir, "Simulation-" + id + "-" + System.currentTimeMillis() ); //$NON-NLS-1$ //$NON-NLS-2$
     FileUtils.forceMkdir( tmpDir );
     FileUtils.forceDeleteOnExit( tmpDir );
     return tmpDir;
@@ -159,9 +159,9 @@ public class SimulationUtilitites
       if( !input.isRelativeToCalcCase() )
       {
         String path = input.getPath();
-        while( path.contains( "\\" ) )
+        while( path.contains( "\\" ) ) //$NON-NLS-1$
         {
-          path = path.replace( "\\", "/" );
+          path = path.replace( "\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         final URL url = new URL( context, path );
@@ -176,9 +176,9 @@ public class SimulationUtilitites
       if( !output.isRelativeToCalcCase() )
       {
         String path = output.getPath();
-        while( path.contains( "\\" ) )
+        while( path.contains( "\\" ) ) //$NON-NLS-1$
         {
-          path = path.replace( "\\", "/" );
+          path = path.replace( "\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         final URL url = new URL( context, path );

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.i18n.Messages;
 
 public class CreateGisMapViewWizardPage extends WizardPage
 {
@@ -32,9 +33,9 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
   public CreateGisMapViewWizardPage( ISelection selection )
   {
-    super( "wizardPage" );
-    setTitle( "GisMapView Editor File" );
-    setDescription( "This wizard creates a new file with *.gmt extension that can be opened by a GisMapView editor." );
+    super( "wizardPage" ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.1") ); //$NON-NLS-1$
     this.setImageDescriptor( ImageProvider.IMAGE_ICON_GMT );
     m_selection = selection;
   }
@@ -47,7 +48,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     layout.numColumns = 3;
     layout.verticalSpacing = 9;
     Label label = new Label( container, SWT.NULL );
-    label.setText( "&Container:" );
+    label.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.2") ); //$NON-NLS-1$
 
     containerText = new Text( container, SWT.BORDER | SWT.SINGLE );
     GridData gd = new GridData( GridData.FILL_HORIZONTAL );
@@ -61,7 +62,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     } );
 
     Button button = new Button( container, SWT.PUSH );
-    button.setText( "Browse..." );
+    button.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.3") ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -71,7 +72,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
       }
     } );
     label = new Label( container, SWT.NULL );
-    label.setText( "&File name:" );
+    label.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.4") ); //$NON-NLS-1$
 
     fileText = new Text( container, SWT.BORDER | SWT.SINGLE );
     gd = new GridData( GridData.FILL_HORIZONTAL );
@@ -110,7 +111,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
         containerText.setText( container.getFullPath().toString() );
       }
     }
-    fileText.setText( "Karte.gmt" );
+    fileText.setText( "Karte.gmt" ); //$NON-NLS-1$
   }
 
   /**
@@ -119,7 +120,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
   void handleBrowse( )
   {
-    ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "Select new file container" );
+    ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.5") ); //$NON-NLS-1$
     if( dialog.open() == Window.OK )
     {
       Object[] result = dialog.getResult();
@@ -141,21 +142,21 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
     if( container.length() == 0 )
     {
-      updateStatus( "File container must be specified" );
+      updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.6") ); //$NON-NLS-1$
       return;
     }
     if( fileName.length() == 0 )
     {
-      updateStatus( "File name must be specified" );
+      updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.7") ); //$NON-NLS-1$
       return;
     }
     int dotLoc = fileName.lastIndexOf( '.' );
     if( dotLoc != -1 )
     {
       String ext = fileName.substring( dotLoc + 1 );
-      if( ext.equalsIgnoreCase( "gmt" ) == false )
+      if( ext.equalsIgnoreCase( "gmt" ) == false ) //$NON-NLS-1$
       {
-        updateStatus( "File extension must be \"gmt\"" );
+        updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.8") ); //$NON-NLS-1$
         return;
       }
     }

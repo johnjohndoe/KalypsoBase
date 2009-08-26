@@ -140,22 +140,22 @@ public class WFSClient
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.format( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.format( "org.kalypso.ogc.wfs.WFSClient.2", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.2", m_wfsURL.toExternalForm() ), e );
     }
     catch( final SAXException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.format( "org.kalypso.ogc.wfs.WFSClient.3", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.3", m_wfsURL.toExternalForm() ), e );
     }
     catch( final InvalidCapabilitiesException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.format( "org.kalypso.ogc.wfs.WFSClient.4", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.4", m_wfsURL.toExternalForm() ), e );
     }
   }
 
@@ -367,7 +367,7 @@ public class WFSClient
     }
     catch( final MalformedURLException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.format( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
       throw new CoreException( status );
     }
   }
@@ -414,7 +414,7 @@ public class WFSClient
     }
     catch( final URISyntaxException e )
     {
-      final String message = Messages.format( "org.kalypso.ogc.wfs.WFSClient.1", e.getInput() );
+      final String message = Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", e.getInput() );
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }

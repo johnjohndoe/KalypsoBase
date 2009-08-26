@@ -186,7 +186,7 @@ public class DefaultProcess implements IProcess
     {
       final IStatus result = procCtrlThread.getResult();
       if( result != null && result.matches( IStatus.ERROR ) )
-        throw new ProcessTimeoutException( "Timeout executing " + m_executable );
+        throw new ProcessTimeoutException( "Timeout executing " + m_executable ); //$NON-NLS-1$
     }
 
     return iRetVal;

@@ -41,16 +41,16 @@ public class SIConverter implements IValueConverter
   private final static double factor( final String unit )
   {
     // BEWARE: 10^-x does not give the right value
-    if( unit.equals( "m" ) )
+    if( unit.equals( "m" ) ) //$NON-NLS-1$
       return 1;
-    if( unit.equals( "dm" ) )
+    if( unit.equals( "dm" ) ) //$NON-NLS-1$
       return 0.1;
-    if( unit.equals( "cm" ) )
+    if( unit.equals( "cm" ) ) //$NON-NLS-1$
       return 0.01;
-    if( unit.equals( "mm" ) )
+    if( unit.equals( "mm" ) ) //$NON-NLS-1$
       return 0.001;
 
-    if( unit.equals( "m³" ) )
+    if( unit.equals( "m³" ) ) //$NON-NLS-1$
       return 1;
 
     return 1;

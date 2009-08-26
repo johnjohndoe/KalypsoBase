@@ -64,7 +64,7 @@ public class DateParser extends AbstractParser
    */
   public DateParser()
   {
-    this( "" );
+    this( "" ); //$NON-NLS-1$
   }
 
   /**

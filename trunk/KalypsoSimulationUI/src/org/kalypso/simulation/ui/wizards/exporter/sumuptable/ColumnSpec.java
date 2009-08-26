@@ -60,7 +60,7 @@ public final class ColumnSpec implements Comparable<ColumnSpec>
 
   public ColumnSpec( final Arguments args )
   {
-    this( Integer.valueOf( args.getProperty( "position" ) ).intValue(), args.getProperty( "label" ), args.getProperty( "content" ) );
+    this( Integer.valueOf( args.getProperty( "position" ) ).intValue(), args.getProperty( "label" ), args.getProperty( "content" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public ColumnSpec( final int position, final String label, final String content )
@@ -102,16 +102,16 @@ public final class ColumnSpec implements Comparable<ColumnSpec>
   {
     String content = m_content;
 
-    if( content.startsWith( "arg:" ) && args != null )
+    if( content.startsWith( "arg:" ) && args != null ) //$NON-NLS-1$
     {
-      final String key = content.replaceAll( "arg:", "" );
-      content = args.getProperty( key, "" );
+      final String key = content.replaceAll( "arg:", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      content = args.getProperty( key, "" ); //$NON-NLS-1$
     }
 
-    if( content.startsWith( "metadata:" ) && obs != null )
+    if( content.startsWith( "metadata:" ) && obs != null ) //$NON-NLS-1$
     {
-      final String key = content.replaceAll( "metadata:", "" );
-      content = obs.getMetadataList().getProperty( key, "" );
+      final String key = content.replaceAll( "metadata:", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      content = obs.getMetadataList().getProperty( key, "" ); //$NON-NLS-1$
     }
 
     return ObsViewUtils.replaceTokens( content, obs, null );
@@ -131,7 +131,7 @@ public final class ColumnSpec implements Comparable<ColumnSpec>
     {
       final String argName = entry.getKey();
 
-      if( argName.startsWith( "column" ) )
+      if( argName.startsWith( "column" ) ) //$NON-NLS-1$
         cols.add( new ColumnSpec( (Arguments) entry.getValue() ) );
     }
 

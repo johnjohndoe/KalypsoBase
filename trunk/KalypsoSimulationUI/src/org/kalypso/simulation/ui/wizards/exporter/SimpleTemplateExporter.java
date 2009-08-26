@@ -84,23 +84,23 @@ public class SimpleTemplateExporter extends AbstractExporter
   private IExportableObject createExportableObjectsWith( final UrlArgument item ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" ); //$NON-NLS-1$
+    final URL context = (URL) getFromSupplier( "context" ); //$NON-NLS-1$
 
     // category is specified in the sub-arguments of the exporter, actually the ones in item
-    String category = item.getProperty( "category" );
+    String category = item.getProperty( "category" ); //$NON-NLS-1$
     if( category == null )
-      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
-    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null );
+      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null ); //$NON-NLS-1$
     final Integer kennzifferIndex = kennzifferIndexProp == null ? null : new Integer( kennzifferIndexProp );
 
     try
     {
       final URL templateUrl = item.getUrl();
 
-      final String documentFormatString = item.getProperty( "documentName" );
+      final String documentFormatString = item.getProperty( "documentName" ); //$NON-NLS-1$
       final String documentName = validateDocumentName( documentFormatString );
-      final String documentTitle = item.getProperty( "documentTitle" );
+      final String documentTitle = item.getProperty( "documentTitle" ); //$NON-NLS-1$
 
       final String idPrefix = getClass().getName() + templateUrl.getFile();
 
@@ -122,11 +122,11 @@ public class SimpleTemplateExporter extends AbstractExporter
   @Override
   protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
   {
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" ); //$NON-NLS-1$
+    final URL context = (URL) getFromSupplier( "context" ); //$NON-NLS-1$
 
     // create the possible template items
-    final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
+    final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context ); //$NON-NLS-1$
     final ExportableTreeItem[] items = new ExportableTreeItem[templateItems.length];
     for( int i = 0; i < templateItems.length; i++ )
     {

@@ -44,18 +44,19 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 public class LegendThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
   public LegendThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", "Legende", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Legende" ) );
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.LegendThemeWizard.1"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("org.kalypso.ui.wizard.others.LegendThemeWizard.2") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
   protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
-    return new AddThemeCommand( mapModell, themeName, "legend", "", "" );
+    return new AddThemeCommand( mapModell, themeName, "legend", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

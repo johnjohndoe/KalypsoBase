@@ -54,6 +54,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 
 /**
  * Convenient class to be used with the ErrorDialog. This class can create an IStatus object which can be displayed in
@@ -64,7 +65,7 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 public class LogStatusWrapper
 {
   /** lines which begin with this token are used as "summary-lines" (see constructor) */
-  public static final String SUMMARY_BEGIN_TOKEN = "***";
+  public static final String SUMMARY_BEGIN_TOKEN = "***"; //$NON-NLS-1$
 
   /** some summary destinated to the end-user so that he gets the grasp of what happened before looking at the details */
   private final String m_summary;
@@ -81,9 +82,9 @@ public class LogStatusWrapper
   public LogStatusWrapper( final File logFile, final String charsetName )
   {
     if( logFile == null )
-      throw new IllegalStateException( "Log-Datei darf nicht null sein" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.1") ); //$NON-NLS-1$
     if( !logFile.exists() )
-      throw new IllegalStateException( "Log-Datei " + logFile.toString() + " existiert nicht" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.2",logFile.toString() )); //$NON-NLS-1$
 
     m_logFile = logFile;
     m_charsetName = charsetName;
@@ -160,7 +161,7 @@ public class LogStatusWrapper
     // a look at the log file using the 'details' button in the ErrorDialog
     final String truncatedSummary = StringUtils.left( m_summary, 512 );
     // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
-    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + "Siehe Details oder Logdatei: "
+    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.5") //$NON-NLS-1$ //$NON-NLS-2$
         + m_logFile.toString();
 
     return new LogStatus( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, msg, null, m_logFile, m_charsetName );

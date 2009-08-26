@@ -50,7 +50,7 @@ public class KalypsoServiceConstants
     // not for use
   }
 
-  public static final String WFS_LINK_TYPE = "wfs";
+  public static final String WFS_LINK_TYPE = "wfs"; //$NON-NLS-1$
 
-  public static final String WMS_LINK_TYPE = "wms";
+  public static final String WMS_LINK_TYPE = "wms"; //$NON-NLS-1$
 }

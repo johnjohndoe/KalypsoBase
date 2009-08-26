@@ -70,6 +70,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 
 /**
@@ -79,7 +80,7 @@ import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
  */
 public class SumUpForecastTable
 {
-  private static final String cNoAlarm = "-";
+  private static final String cNoAlarm = "-"; //$NON-NLS-1$
 
   private final String m_axisType;
 
@@ -110,7 +111,7 @@ public class SumUpForecastTable
   {
     final DateRange range = TimeserieUtils.isForecast( obs );
     if( range == null )
-      return StatusUtilities.createInfoStatus( "Die Zeitreihe <" + obs.getName() + "> beinhaltet keinen Vorhersagezeitraum. Datei: " + argument.getUrl().toString() );
+      return StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.0", obs.getName(), argument.getUrl().toString() ) ); //$NON-NLS-1$ 
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( obs.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis valueAxis;
@@ -120,13 +121,13 @@ public class SumUpForecastTable
     }
     catch( final NoSuchElementException e )
     {
-      return StatusUtilities.createWarningStatus( "Zeitreihe kann nicht berücksichtigt werden: " + e.getLocalizedMessage() + ". Siehe URL: " + argument.getUrl() );
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.1", e.getLocalizedMessage(), argument.getUrl() ) ); //$NON-NLS-1$
     }
 
     final ITuppleModel values = obs.getValues( null );
 
     if( values.getCount() == 0 )
-      throw new SensorException( "Keine Daten vorhanden in: " + argument.getUrl() );
+      throw new SensorException( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.2", argument.getUrl() ) ); //$NON-NLS-1$
 
     final DoubleComparator dc = new DoubleComparator( m_delta );
     Number maxValue = new Double( -Double.MAX_VALUE );
@@ -147,10 +148,10 @@ public class SumUpForecastTable
 
     // seek for alarm level
     final MetadataList md = obs.getMetadataList();
-    final Double alarm1 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) );
-    final Double alarm2 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) );
-    final Double alarm3 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) );
-    final Double alarm4 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) );
+    final Double alarm1 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_1, "-1" ) ); //$NON-NLS-1$
+    final Double alarm2 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_2, "-1" ) ); //$NON-NLS-1$
+    final Double alarm3 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_3, "-1" ) ); //$NON-NLS-1$
+    final Double alarm4 = NumberUtils.parseQuietDouble( md.getProperty( TimeserieConstants.MD_ALARM_4, "-1" ) ); //$NON-NLS-1$
     final Double[] alarms = new Double[] { alarm1, alarm2, alarm3, alarm4 };
 
     String strAlarm = cNoAlarm;
@@ -168,7 +169,7 @@ public class SumUpForecastTable
           // if a alarmValue is zero (mostly because of unsufficient W/Q) then it won't be considered valid
           if( maxValue.doubleValue() >= alarmValue.doubleValue() && alarmValue.doubleValue() > 0.0 )
           {
-            strAlarm = "AS " + i;
+            strAlarm = "AS " + i; //$NON-NLS-1$
             alarm = alarmValue.doubleValue();
           }
         }
@@ -224,15 +225,14 @@ public class SumUpForecastTable
 
   public Date[] writeHeader( final Writer writer, final String separator, final DateFormat df ) throws IOException
   {
-    final String unit = "[" + TimeserieUtils.getUnit( m_axisType ) + "]";
 
-    writer.write( "Max " + unit );
+    writer.write( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.3", TimeserieUtils.getUnit( m_axisType ) ) ); //$NON-NLS-1$
     writer.write( separator );
-    writer.write( "Eintrittszeit" );
+    writer.write( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.4" ) ); //$NON-NLS-1$
     writer.write( separator );
-    writer.write( "Überschrittene Alarmstufe" );
+    writer.write( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.5" ) ); //$NON-NLS-1$
     writer.write( separator );
-    writer.write( "Richtwert " + unit );
+    writer.write( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.6", TimeserieUtils.getUnit( m_axisType ) ) ); //$NON-NLS-1$
     writer.write( separator );
 
     final Date[] dates = m_colHeader.getDates();
@@ -240,7 +240,7 @@ public class SumUpForecastTable
 
     for( int i = 0; i < dates.length; i++ )
     {
-      writer.write( df.format( dates[i] ) + " (" + distances[i] + ")" );
+      writer.write( df.format( dates[i] ) + " (" + distances[i] + ")" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( i < dates.length - 1 )
         writer.write( separator );
@@ -259,7 +259,7 @@ public class SumUpForecastTable
     if( row != null )
       writer.write( row.dumpRow( sep, nf, df, dates ) );
     else
-      writer.write( "<keine Daten vorhanden, Zeitreihe enthält die erforderliche Datenachse nicht oder ist möglicherweise ungültig>" );
+      writer.write( Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.7" ) ); //$NON-NLS-1$
   }
 
   public void dispose( )
@@ -338,11 +338,11 @@ public class SumUpForecastTable
         return;
 
       final int size = m_dates.size();
-      String distance = "";
+      String distance = ""; //$NON-NLS-1$
       if( size == 0 )
-        distance = " Beginn";
+        distance = Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.SumUpForecastTable.8" ); //$NON-NLS-1$
       else
-        distance = size * timeStep + " " + CalendarUtilities.getAbbreviation( timeUnit );
+        distance = size * timeStep + " " + CalendarUtilities.getAbbreviation( timeUnit ); //$NON-NLS-1$
 
       m_hints.add( distance );
 

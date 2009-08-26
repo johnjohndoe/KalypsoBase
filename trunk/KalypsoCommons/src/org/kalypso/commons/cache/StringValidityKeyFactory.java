@@ -10,9 +10,9 @@ import java.text.SimpleDateFormat;
  */
 public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
 {
-  private final static String KEY_SEP = "@";
+  private final static String KEY_SEP = "@"; //$NON-NLS-1$
 
-  private final static SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+  private final static SimpleDateFormat DF = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
 
   public StringValidityKey createKey( final String string )
   {

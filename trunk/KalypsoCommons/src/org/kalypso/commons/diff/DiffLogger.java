@@ -58,16 +58,16 @@ public class DiffLogger implements IDiffLogger
     switch( status )
     {
       case IDiffComparator.DIFF_CONTENT:
-        diff = "<-> ";
+        diff = "<-> "; //$NON-NLS-1$
         break;
       case IDiffComparator.DIFF_REMOVED:
-        diff = "--- ";
+        diff = "--- "; //$NON-NLS-1$
         break;
       case IDiffComparator.DIFF_ADDED:
-        diff = "+++ ";
+        diff = "+++ "; //$NON-NLS-1$
         break;
       case IDiffComparator.DIFF_UNCOMPAREABLE:
-        diff = "??? ";
+        diff = "??? "; //$NON-NLS-1$
         break;
       //    case IDiffComparator.DIFF_INFO:
       case IDiffComparator.DIFF_OK:
@@ -76,16 +76,16 @@ public class DiffLogger implements IDiffLogger
       //          diff = "=== ";
       //          break;
       case IDiffComparator.DIFF_INFO:
-        diff = "# ";
+        diff = "# "; //$NON-NLS-1$
         break;
       default:
-        diff = "unknown ";
+        diff = "unknown "; //$NON-NLS-1$
         break;
     }
     int offset = m_buffers.size();
     StringBuffer tab = new StringBuffer();
     for( int i = 0; i < offset; i++ )
-      tab.append( " " );
+      tab.append( " " ); //$NON-NLS-1$
     innerLog( Level.INFO, tab.toString() + diff + message );
   }
 
@@ -97,7 +97,7 @@ public class DiffLogger implements IDiffLogger
     {
       final StringBuffer buffer = m_buffers.peek();
       if( buffer.length() > 0 )
-        buffer.append( "\n" );
+        buffer.append( "\n" ); //$NON-NLS-1$
       buffer.append( message );
     }
   }

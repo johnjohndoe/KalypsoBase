@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * This dialog is for manageing the favorites of the WMS wizard page.
@@ -162,7 +163,7 @@ public class WMSFavoritesDialog extends Dialog
   protected Control createDialogArea( Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "WMS Favoriten" );
+    getShell().setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.0") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     Composite panel = (Composite) super.createDialogArea( parent );
@@ -177,7 +178,7 @@ public class WMSFavoritesDialog extends Dialog
     /* The selection label. */
     Label selectionLabel = new Label( selectionComposite, SWT.NONE );
     selectionLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    selectionLabel.setText( "Ausgewählter WMS Service: " );
+    selectionLabel.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.1") ); //$NON-NLS-1$
 
     /* The selection service text. */
     final Text selectionServiceText = new Text( selectionComposite, SWT.BORDER );
@@ -185,15 +186,15 @@ public class WMSFavoritesDialog extends Dialog
     selectionServiceData.widthHint = 200;
     selectionServiceData.minimumWidth = 200;
     selectionServiceText.setLayoutData( selectionServiceData );
-    selectionServiceText.setText( "" );
-    selectionServiceText.setToolTipText( "Dieser Service ist gerade ausgewählt. Wenn Sie den Dialog mit OK verlassen, wird dieser aktiv werden." );
+    selectionServiceText.setText( "" ); //$NON-NLS-1$
+    selectionServiceText.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.2") ); //$NON-NLS-1$
     selectionServiceText.setEditable( false );
 
     /* The service group. */
     Group serviceGroup = new Group( panel, SWT.NONE );
     serviceGroup.setLayout( new GridLayout( 1, false ) );
     serviceGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    serviceGroup.setText( "Ihre Favoriten" );
+    serviceGroup.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.3") ); //$NON-NLS-1$
 
     /* The service viewer. */
     final ListViewer serviceViewer = new ListViewer( serviceGroup, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
@@ -228,8 +229,8 @@ public class WMSFavoritesDialog extends Dialog
     /* The delete service button. */
     Button deleteServiceButton = new Button( serviceGroup, SWT.NONE );
     deleteServiceButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    deleteServiceButton.setText( "Entfernen" );
-    deleteServiceButton.setToolTipText( "Entfernen des aktuell ausgewählten Services aus der Liste der Favoriten." );
+    deleteServiceButton.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.4") ); //$NON-NLS-1$
+    deleteServiceButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.5") ); //$NON-NLS-1$
 
     /* Add the required listener here. */
 
@@ -244,7 +245,7 @@ public class WMSFavoritesDialog extends Dialog
         Text source = (Text) e.getSource();
         String text = source.getText();
 
-        if( !text.equals( "" ) )
+        if( !text.equals( "" ) ) //$NON-NLS-1$
         {
           m_selectedService = text;
           return;
@@ -299,7 +300,7 @@ public class WMSFavoritesDialog extends Dialog
           serviceViewer.refresh();
 
           /* Reset the selected fields, in case, it was the deleted one. They will reset the result members. */
-          selectionServiceText.setText( "" );
+          selectionServiceText.setText( "" ); //$NON-NLS-1$
         }
       }
     } );

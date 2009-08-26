@@ -44,6 +44,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
@@ -58,7 +59,7 @@ public class ScaleThemeWizard extends AbstractOtherThemeWizard implements IKalyp
    */
   public ScaleThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", "Maﬂstab-Thema", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Maﬂstab" ) );
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.0"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**
@@ -68,6 +69,6 @@ public class ScaleThemeWizard extends AbstractOtherThemeWizard implements IKalyp
   @Override
   protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
   {
-    return new AddThemeCommand( mapModell, themeName, "scale", "", "" );
+    return new AddThemeCommand( mapModell, themeName, "scale", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

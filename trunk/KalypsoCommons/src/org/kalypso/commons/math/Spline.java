@@ -1,5 +1,7 @@
 package org.kalypso.commons.math;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * Represents a Spline. Interpolation can be performed using eval().<br>
  * Algorithm is adapted from Book: Algorithmen, Robert Sedgewick (3-8273-7032-9) 
@@ -54,7 +56,7 @@ public class Spline
     public double eval( double value )
     {
         if( !m_initDone )
-            throw new IllegalStateException( "Spline wurde nicht initialisiert" );
+            throw new IllegalStateException( Messages.getString("org.kalypso.commons.math.Spline.0") ); //$NON-NLS-1$
 
         int i = -1;
 

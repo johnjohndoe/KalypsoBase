@@ -28,26 +28,26 @@ public class FileCacheTest extends TestCase
     final StringKeyFactory fact = new StringKeyFactory();
     final Comparator<String> kc = new StringComparator();
     final ISerializer<String> ser = new StringSerializer();
-    final FileCache<String, String> cache = new FileCache<String, String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) );
+    final FileCache<String, String> cache = new FileCache<String, String>( fact, kc, ser, new File( System.getProperty( "java.io.tmpdir" ) ) ); //$NON-NLS-1$
 
-    cache.addObject( "A", "A" );
-    cache.addObject( "B", "B" );
-    cache.addObject( "C", "C" );
-    cache.addObject( "D", "D" );
+    cache.addObject( "A", "A" ); //$NON-NLS-1$ //$NON-NLS-2$
+    cache.addObject( "B", "B" ); //$NON-NLS-1$ //$NON-NLS-2$
+    cache.addObject( "C", "C" ); //$NON-NLS-1$ //$NON-NLS-2$
+    cache.addObject( "D", "D" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    assertEquals( cache.getObject( "A" ), "A" );
-    assertEquals( cache.getObject( "B" ), "B" );
-    assertEquals( cache.getObject( "C" ), "C" );
-    assertEquals( cache.getObject( "D" ), "D" );
+    assertEquals( cache.getObject( "A" ), "A" ); //$NON-NLS-1$ //$NON-NLS-2$
+    assertEquals( cache.getObject( "B" ), "B" ); //$NON-NLS-1$ //$NON-NLS-2$
+    assertEquals( cache.getObject( "C" ), "C" ); //$NON-NLS-1$ //$NON-NLS-2$
+    assertEquals( cache.getObject( "D" ), "D" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    cache.remove( "C" );
+    cache.remove( "C" ); //$NON-NLS-1$
 
-    assertTrue( cache.getObject( "C" ) == null );
+    assertTrue( cache.getObject( "C" ) == null ); //$NON-NLS-1$
 
     cache.clear();
 
     assertTrue( cache.size() == 0 );
-    assertTrue( cache.getObject( "B" ) == null );
+    assertTrue( cache.getObject( "B" ) == null ); //$NON-NLS-1$
   }
 
   protected static class StringComparator implements Comparator<String>

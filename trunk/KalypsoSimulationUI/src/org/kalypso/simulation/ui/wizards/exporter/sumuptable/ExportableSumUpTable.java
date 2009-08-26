@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 
@@ -97,7 +98,7 @@ public final class ExportableSumUpTable implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    return m_documentName + ".csv";
+    return m_documentName + ".csv"; //$NON-NLS-1$
   }
 
   /**
@@ -107,13 +108,13 @@ public final class ExportableSumUpTable implements IExportableObject
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     // fetch basic arguments
-    final String sep = m_args.getProperty( "separator", ";" );
-    final String charset = m_args.getProperty( "charset", Charset.defaultCharset().name() );
-    final String axisType = m_args.getProperty( "axisType" );
-    final String timeUnit = m_args.getProperty( "timeUnit" );
-    final String timeStep = m_args.getProperty( "timeStep" );
-    final String delta = m_args.getProperty( "delta" );
-    final String dateFormat = m_args.getProperty( "dateFormat" );
+    final String sep = m_args.getProperty( "separator", ";" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String charset = m_args.getProperty( "charset", Charset.defaultCharset().name() ); //$NON-NLS-1$
+    final String axisType = m_args.getProperty( "axisType" ); //$NON-NLS-1$
+    final String timeUnit = m_args.getProperty( "timeUnit" ); //$NON-NLS-1$
+    final String timeStep = m_args.getProperty( "timeStep" ); //$NON-NLS-1$
+    final String delta = m_args.getProperty( "delta" ); //$NON-NLS-1$
+    final String dateFormat = m_args.getProperty( "dateFormat" ); //$NON-NLS-1$
 
     final DateFormat df = new SimpleDateFormat( dateFormat );
     final NumberFormat nf = TimeserieUtils.getNumberFormatFor( axisType );
@@ -128,20 +129,20 @@ public final class ExportableSumUpTable implements IExportableObject
       final List<IStatus> stati = new ArrayList<IStatus>();
 
       // for each observation
-      final UrlArgument[] items = ExporterHelper.createUrlItems( "obs", m_args, m_context );
+      final UrlArgument[] items = ExporterHelper.createUrlItems( "obs", m_args, m_context ); //$NON-NLS-1$
       final IObservation[] obses = new IObservation[items.length];
       for( int i = 0; i < items.length; i++ )
       {
         try
         {
-          obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" );
+          obses[i] = ZmlFactory.parseXML( items[i].getUrl(), "" ); //$NON-NLS-1$
 
           final IStatus status = table.addObservation( items[i], obses[i] );
           stati.add( status );
         }
         catch( final SensorException e )
         {
-          stati.add( StatusUtilities.createStatus( IStatus.WARNING, "Zeitreihe existiert nicht oder ist fehlerhaft: " + items[i].getUrl(), e ) );
+          stati.add( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTable.0", items[i].getUrl() ), e ) ); //$NON-NLS-1$
         }
       }
 
@@ -191,7 +192,7 @@ public final class ExportableSumUpTable implements IExportableObject
 
       table.dispose();
 
-      final IStatus status = StatusUtilities.createStatus( stati, "Fehler beim erzeugen des Übersichtsdokument: eine oder mehrere Zeitreihe konnte nicht hinzugefügt werden" );
+      final IStatus status = StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.simulation.ui.wizards.exporter.sumuptable.ExportableSumUpTable.1" ) ); //$NON-NLS-1$
 
       // wrap as warning because even if some obs is missing, export is still possible
       return StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
@@ -224,9 +225,9 @@ public final class ExportableSumUpTable implements IExportableObject
    */
   public String getCategory( )
   {
-    String category = m_args.getProperty( "category" );
+    String category = m_args.getProperty( "category" ); //$NON-NLS-1$
     if( category == null )
-      category = m_args.getProperty( "name", "unbekannt" );
+      category = m_args.getProperty( "name", "unbekannt" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return category;
   }
@@ -236,6 +237,6 @@ public final class ExportableSumUpTable implements IExportableObject
    */
   public String getStationIDs( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

@@ -40,6 +40,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.process.internal.StreamStreamer;
 import org.kalypso.contribs.java.lang.ICancelable;
 
@@ -137,7 +138,7 @@ public class ProcessHelper
     }
 
     if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
-      throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
+      throw new ProcessTimeoutException( Messages.getString("org.kalypso.commons.java.lang.ProcessHelper.0",sCmd) ); //$NON-NLS-1$ 
     return iRetVal;
   }
 
@@ -256,7 +257,7 @@ public class ProcessHelper
     }
 
     if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
-      throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
+      throw new ProcessTimeoutException( Messages.getString("org.kalypso.commons.java.lang.ProcessHelper.1", sCmd ) ); //$NON-NLS-1$
     return iRetVal;
   }
 

@@ -127,7 +127,7 @@ public class ConfigurableCachableObjectFactory
   {
     final String className = m_props.getProperty( type );
     if( className == null )
-      throw new FactoryException( "Unknown type: " + type );
+      throw new FactoryException( "Unknown type: " + type ); //$NON-NLS-1$
 
     Object obj = null;
 

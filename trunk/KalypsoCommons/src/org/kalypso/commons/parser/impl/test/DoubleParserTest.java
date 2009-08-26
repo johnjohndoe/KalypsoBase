@@ -55,9 +55,9 @@ public class DoubleParserTest extends TestCase
   {
     try
     {
-      test( ".101", 0.101 );
-      test( "10.10", 10.1 );
-      test( "10", 10 );
+      test( ".101", 0.101 ); //$NON-NLS-1$
+      test( "10.10", 10.1 ); //$NON-NLS-1$
+      test( "10", 10 ); //$NON-NLS-1$
     }
     catch( Exception e )
     {
@@ -70,9 +70,9 @@ public class DoubleParserTest extends TestCase
     DoubleParser parser = new DoubleParser();
     Double object = (Double)parser.parse( value );
 
-    System.out.println( value + " -> " + object.getClass().getName() + ": " + object.toString() );
+    System.out.println( value + " -> " + object.getClass().getName() + ": " + object.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
     String string = parser.toStringInternal( object );
-    System.out.println( "= " + string + "\n\n" );
+    System.out.println( "= " + string + "\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( object.doubleValue() == result );
   }
 }

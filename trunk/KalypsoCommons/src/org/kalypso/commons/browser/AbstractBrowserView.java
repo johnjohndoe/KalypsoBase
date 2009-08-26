@@ -46,13 +46,13 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   private static final String TAG_URL = "url"; //$NON-NLS-1$
 
-  private static final String TAG_SCROLLBARS = "scrolbars";
+  private static final String TAG_SCROLLBARS = "scrolbars"; //$NON-NLS-1$
 
-  private static final String TAG_HORIZONTAL_BAR = "horizontal";
+  private static final String TAG_HORIZONTAL_BAR = "horizontal"; //$NON-NLS-1$
 
-  private static final String TAG_VERTICAL_BAR = "vertical";
+  private static final String TAG_VERTICAL_BAR = "vertical"; //$NON-NLS-1$
 
-  private static final String TAG_SELECTION = "selection";
+  private static final String TAG_SELECTION = "selection"; //$NON-NLS-1$
 
   public static final int BACKWARD = -1;
 
@@ -191,7 +191,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       return;
 
     // BUGFIX: see bugfix below, this is also needed
-    setHtml( "<html><body></body></html>" );
+    setHtml( "<html><body></body></html>" ); //$NON-NLS-1$
 
     m_viewer.getDisplay().asyncExec( new Runnable()
     {
@@ -280,7 +280,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     final String lowerCase = name.toLowerCase();
 
     return lowerCase.endsWith( "html" ) || lowerCase.endsWith( "htm" ) || lowerCase.endsWith( "gif" ) || lowerCase.endsWith( "png" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "pdf" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$
+        lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "pdf" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override

@@ -90,6 +90,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.wms.utils.CapabilitiesGetter;
 import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesContentProvider;
 import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesLabelProvider;
@@ -105,22 +106,22 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * This constant stores the id for the dialog settings of this page.
    */
-  private static final String IMPORT_WMS_WIZARD_PAGE = "IMPORT_WMS_WIZARD_PAGE";
+  private static final String IMPORT_WMS_WIZARD_PAGE = "IMPORT_WMS_WIZARD_PAGE"; //$NON-NLS-1$
 
   /**
    * This constant stores the id for the sub dialog settings of this page.
    */
-  private static final String IMPORT_WMS_WIZARD_PAGE_SUB = "IMPORT_WMS_WIZARD_PAGE_SUB";
+  private static final String IMPORT_WMS_WIZARD_PAGE_SUB = "IMPORT_WMS_WIZARD_PAGE_SUB"; //$NON-NLS-1$
 
   /**
    * This constant stores the id for the last used service.
    */
-  private static final String LAST_USED_SERVICE = "LAST_USED_SERVICE";
+  private static final String LAST_USED_SERVICE = "LAST_USED_SERVICE"; //$NON-NLS-1$
 
   /**
    * This constant stores the id for the dialog settings of this page.
    */
-  private static final String LAST_USED_SERVICES = "LAST_USED_SERVICES";
+  private static final String LAST_USED_SERVICES = "LAST_USED_SERVICES"; //$NON-NLS-1$
 
   /**
    * This constant stores the minimum list width.
@@ -130,7 +131,7 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * This constant stores an small error text, concerning the URL.
    */
-  private static final String MSG_BASEURL_ERROR = "Die gewählte URL ist ungültig ... ";
+  private static final String MSG_BASEURL_ERROR = Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.0"); //$NON-NLS-1$
 
   /**
    * This variable stores the dialog settings for this page.
@@ -205,7 +206,7 @@ public class ImportWmsWizardPage extends WizardPage
    */
   public ImportWmsWizardPage( final String pageName )
   {
-    this( pageName, "Web Map Service", null );
+    this( pageName, Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.1"), null ); //$NON-NLS-1$
   }
 
   /**
@@ -279,8 +280,8 @@ public class ImportWmsWizardPage extends WizardPage
     /* The url label. */
     final Label urlLabel = new Label( urlComposite, SWT.NONE );
     urlLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    urlLabel.setText( "URL:" );
-    urlLabel.setToolTipText( "URL des Web Map Servers (WMS)" );
+    urlLabel.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.2") ); //$NON-NLS-1$
+    urlLabel.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.3") ); //$NON-NLS-1$
 
     /* The url text. */
     m_urlText = new Text( urlComposite, SWT.BORDER );
@@ -288,7 +289,7 @@ public class ImportWmsWizardPage extends WizardPage
     urlTextData.widthHint = 300;
     urlTextData.minimumWidth = 300;
     m_urlText.setLayoutData( urlTextData );
-    m_urlText.setToolTipText( "Geben Sie die URL des Web Map Servers (WMS) hier ein." );
+    m_urlText.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.4") ); //$NON-NLS-1$
 
     /* The url combo. */
     m_urlCombo = new ComboViewer( urlComposite, SWT.READ_ONLY );
@@ -296,7 +297,7 @@ public class ImportWmsWizardPage extends WizardPage
     urlComboData.widthHint = 100;
     urlComboData.minimumWidth = 100;
     m_urlCombo.getCombo().setLayoutData( urlComboData );
-    m_urlCombo.getCombo().setToolTipText( "Hier können Sie einen der registrierten Image-Provider auswählen. Sind keine vorhanden, ist diese Auswahl nicht möglich." );
+    m_urlCombo.getCombo().setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.5") ); //$NON-NLS-1$
 
     /* Set the content provider. */
     m_urlCombo.setContentProvider( new ArrayContentProvider() );
@@ -327,14 +328,14 @@ public class ImportWmsWizardPage extends WizardPage
     /* The favorites button. */
     final Button favoritesButton = new Button( urlComposite, SWT.NONE );
     favoritesButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    favoritesButton.setText( "Favoriten" );
-    favoritesButton.setToolTipText( "In dem Unterdialog können Sie Ihre Favoriten verwalten." );
+    favoritesButton.setText( "Favoriten" ); //$NON-NLS-1$
+    favoritesButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.6") ); //$NON-NLS-1$
 
     /* Create the section for the layer selection. */
     final Group layerGroup = new Group( panel, SWT.NONE );
     layerGroup.setLayout( new GridLayout( 3, false ) );
     layerGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    layerGroup.setText( "Verfügbare Themen des Web Map Servers" );
+    layerGroup.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.7") ); //$NON-NLS-1$
 
     /* The capabilities tree. */
     m_capabilitiesTree = new TreeViewer( layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
@@ -361,13 +362,13 @@ public class ImportWmsWizardPage extends WizardPage
     final Button layerButtonAdd = new Button( layerButtonComposite, SWT.PUSH );
     layerButtonAdd.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     layerButtonAdd.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
-    layerButtonAdd.setToolTipText( "Hinzufügen eines Themas zu der Kartenansicht." );
+    layerButtonAdd.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.8") ); //$NON-NLS-1$
 
     /* The layer button for removing a layer. */
     final Button layerButtonRemove = new Button( layerButtonComposite, SWT.PUSH );
     layerButtonRemove.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     layerButtonRemove.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
-    layerButtonRemove.setToolTipText( "Entfernen eines Themas aus der Kartenansicht." );
+    layerButtonRemove.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.9") ); //$NON-NLS-1$
 
     /* The layer viewer. */
     m_layerViewer = new ListViewer( layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
@@ -421,8 +422,8 @@ public class ImportWmsWizardPage extends WizardPage
     final GridData multiData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
     multiData.horizontalSpan = 3;
     m_multiLayerButton.setLayoutData( multiData );
-    m_multiLayerButton.setText( "Themen zusammenfassen" );
-    m_multiLayerButton.setToolTipText( "Alle ausgewählte Themen als Gruppe in Karte einfügen." );
+    m_multiLayerButton.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.10") ); //$NON-NLS-1$
+    m_multiLayerButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.11") ); //$NON-NLS-1$
     m_multiLayerButton.setEnabled( false );
 
     /* Add all required listener here. */
@@ -598,12 +599,12 @@ public class ImportWmsWizardPage extends WizardPage
     /* The registry must exist. */
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
         /* Get some attributes. */
-        final String id = element.getAttribute( "id" );
-        final String name = element.getAttribute( "name" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
+        final String name = element.getAttribute( "name" ); //$NON-NLS-1$
 
         /* Index with the id. */
         m_availableProviders.put( id, name );
@@ -693,7 +694,7 @@ public class ImportWmsWizardPage extends WizardPage
 
     /* Reset the errors. */
     setErrorMessage( null );
-    setMessage( "" );
+    setMessage( "" ); //$NON-NLS-1$
     setPageComplete( false );
 
     /* Reset the UI. */
@@ -737,7 +738,7 @@ public class ImportWmsWizardPage extends WizardPage
     {
       m_baseURL = null;
 
-      setErrorMessage( MSG_BASEURL_ERROR + ": " + e.getLocalizedMessage() + "\n(" + e.getClass().getName() + ")" );
+      setErrorMessage( MSG_BASEURL_ERROR + ": " + e.getLocalizedMessage() + "\n(" + e.getClass().getName() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
@@ -756,7 +757,7 @@ public class ImportWmsWizardPage extends WizardPage
     {
       /* Checks catchment field entry and file suffix. */
       if( url.length() == 0 )
-        errorMsg = "Das URL Feld darf nicht leer sein ...";
+        errorMsg = Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.12"); //$NON-NLS-1$
       else
       {
         validURL = new URL( url );
@@ -771,7 +772,7 @@ public class ImportWmsWizardPage extends WizardPage
     }
 
     if( validURL != null )
-      setMessage( "Die Basis URL ist gültig." );
+      setMessage( Messages.getString("org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.13") ); //$NON-NLS-1$
     else
       setErrorMessage( MSG_BASEURL_ERROR + errorMsg );
 

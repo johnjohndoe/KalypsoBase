@@ -134,11 +134,11 @@ public class TimeLogger
     final long sinceLastCall = current - m_lastCall;
     final long total = current - m_constructionTime;
     System.out.print( message );
-    System.out.print( ": Total " );
+    System.out.print( ": Total " ); //$NON-NLS-1$
     System.out.print( total );
-    System.out.print( " millis / SinceLast " );
+    System.out.print( " millis / SinceLast " ); //$NON-NLS-1$
     System.out.print( sinceLastCall );
-    System.out.println( " millis." );
+    System.out.println( " millis." ); //$NON-NLS-1$
 
     m_lastCall = current;
   }
@@ -152,9 +152,9 @@ public class TimeLogger
       if( duration.isSet( field ) )
       {
         System.out.print( duration.getField( field ) );
-        System.out.print( " " );
+        System.out.print( " " ); //$NON-NLS-1$
         System.out.print( field.toString() );
-        System.out.print( ", " );
+        System.out.print( ", " ); //$NON-NLS-1$
       }
     }
     System.out.println();

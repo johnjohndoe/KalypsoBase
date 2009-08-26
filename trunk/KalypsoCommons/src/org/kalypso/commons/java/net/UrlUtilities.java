@@ -111,7 +111,7 @@ public class UrlUtilities
   {
     // HACK
     // TODO comment
-    final int indexOf = source.indexOf( "!" );
+    final int indexOf = source.indexOf( "!" ); //$NON-NLS-1$
     if( indexOf == -1 )
       return resolver.resolveURL( context, source );
 
@@ -120,7 +120,7 @@ public class UrlUtilities
 
     final URL zipUrl = resolver.resolveURL( context, zipPath );
 
-    final URL jarUrl = new URL( "jar:" + zipUrl.toExternalForm() + refInZip );
+    final URL jarUrl = new URL( "jar:" + zipUrl.toExternalForm() + refInZip ); //$NON-NLS-1$
 
     return jarUrl;
   }

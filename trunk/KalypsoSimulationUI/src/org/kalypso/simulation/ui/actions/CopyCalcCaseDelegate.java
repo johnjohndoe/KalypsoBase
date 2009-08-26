@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.CopyFilesAndFoldersOperation;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -82,7 +83,7 @@ public class CopyCalcCaseDelegate extends AbstractHandler
 
     if( resource == null || !(resource instanceof IFolder) )
     {
-      MessageDialog.openInformation( shell, "Rechenvariante anlegen", "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.0"), Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
@@ -90,7 +91,7 @@ public class CopyCalcCaseDelegate extends AbstractHandler
     final IFile file = folder.getFile( ModelNature.CONTROL_NAME );
     if( !file.exists() )
     {
-      MessageDialog.openInformation( shell, "Rechenvariante anlegen", "Bitte wählen Sie eine Rechenvariante im Navigator aus" );
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.2"), Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.3") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 

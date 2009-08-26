@@ -60,9 +60,9 @@ public class WMSCapabilitiesLabelProvider extends LabelProvider
     final StringBuffer result = new StringBuffer();
     if( element instanceof WMSCapabilities )
     {
-      result.append( "WMS " );
+      result.append( "WMS " ); //$NON-NLS-1$
       final WMSCapabilities caps = (WMSCapabilities) element;
-      result.append( "(" + caps.getVersion() + ") " );
+      result.append( "(" + caps.getVersion() + ") " ); //$NON-NLS-1$ //$NON-NLS-2$
       result.append( caps.getServiceIdentification().getTitle() );
     }
     if( element instanceof Layer )

@@ -92,7 +92,7 @@ public class JarSimulationDataProvider extends AbstractSimulationDataProvider im
       if( jarfile == null )
         return null;
 
-      m_baseURL = new URL( "jar:" + jarfile.toURI().toURL().toString() + "!/" );
+      m_baseURL = new URL( "jar:" + jarfile.toURI().toURL().toString() + "!/" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return m_baseURL;
@@ -107,7 +107,7 @@ public class JarSimulationDataProvider extends AbstractSimulationDataProvider im
       try
       {
         handlerStream = m_zipHandler.getInputStream();
-        m_jarfile = File.createTempFile( "CalcJobInputData", ".jar" );
+        m_jarfile = File.createTempFile( "CalcJobInputData", ".jar" ); //$NON-NLS-1$ //$NON-NLS-2$
         m_jarfile.deleteOnExit();
 
         jarstream = new FileOutputStream( m_jarfile );

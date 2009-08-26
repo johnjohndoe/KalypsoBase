@@ -143,12 +143,12 @@ public class SumUpTableExporter extends AbstractExporter
   public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" ); //$NON-NLS-1$
+    final URL context = (URL) getFromSupplier( "context" ); //$NON-NLS-1$
 
-    final String documentFormatString = arguments.getProperty( "documentName", "übersicht.csv" );
+    final String documentFormatString = arguments.getProperty( "documentName", "übersicht.csv" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String documentName = validateDocumentName( documentFormatString );
-    final String documentTitle = arguments.getProperty( "documentTitle" );
+    final String documentTitle = arguments.getProperty( "documentTitle" ); //$NON-NLS-1$
     
     final IExportableObject expObj = new ExportableSumUpTable( arguments, context, getClass().getName(), documentName, documentTitle );
 

@@ -66,6 +66,7 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 
@@ -141,18 +142,18 @@ public class ExportableTemplateObject implements IExportableObject
     m_disposeHelper = new DisposeHelper();
 
     final String strUrl = m_templateUrl.toExternalForm();
-    if( strUrl.endsWith( "odt" ) )
+    if( strUrl.endsWith( "odt" ) ) //$NON-NLS-1$
     {
-      m_preferredFilename = FileUtilities.validateName( documentName + "." + m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT ), "_" );
+      m_preferredFilename = FileUtilities.validateName( documentName + "." + m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT ), "_" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       m_exportableObject = createObsDiagram( documentTitle );
     }
-    else if( strUrl.endsWith( "ott" ) )
+    else if( strUrl.endsWith( "ott" ) ) //$NON-NLS-1$
     {
-      m_preferredFilename = FileUtilities.validateName( documentName + ".csv", "_" );
+      m_preferredFilename = FileUtilities.validateName( documentName + ".csv", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
       m_exportableObject = createObsTable( documentTitle );
     }
     else
-      throw new IllegalArgumentException( "Kann Vorlagendatei nicht öffnen: " + strUrl + ". Nur .odt und .ott Vorlagen werden unterstützt." );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExportableTemplateObject.0",strUrl ) ); //$NON-NLS-1$ 
   }
 
   /**
@@ -168,7 +169,7 @@ public class ExportableTemplateObject implements IExportableObject
         /* Export it. */
         final IStatus status = m_exportableObject.exportObject( output, new SubProgressMonitor( monitor, 1 ) );
 
-        return StatusUtilities.createStatus( new IStatus[] { m_status, status }, "Fehler während des Exports der Vorlage: " + m_templateUrl.getFile() );
+        return StatusUtilities.createStatus( new IStatus[] { m_status, status }, Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExportableTemplateObject.1", m_templateUrl.getFile() )); //$NON-NLS-1$
       }
 
       /* There was no exportable object created. */
@@ -212,7 +213,7 @@ public class ExportableTemplateObject implements IExportableObject
   public String getStationIDs( )
   {
     if( m_exportableObject == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_exportableObject.getStationIDs();
   }
@@ -248,16 +249,16 @@ public class ExportableTemplateObject implements IExportableObject
 
       if( tpl.getItems().length == 0 )
       {
-        m_status = StatusUtilities.createWarningStatus( "Diagramm " + tpl.getTitle() + " (" + getCategory() + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        m_status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExportableTemplateObject.3", tpl.getTitle() , getCategory() ) ); //$NON-NLS-1$ 
         return null;
       }
 
       /* Wrap as warning because even if an obs is missing we can still export diagram. */
       m_status = StatusUtilities.wrapStatus( status, IStatus.WARNING, IStatus.WARNING | IStatus.ERROR );
 
-      final int width = Integer.parseInt( m_arguments.getProperty( "width", "800" ) );
-      final int height = Integer.parseInt( m_arguments.getProperty( "height", "600" ) );
-      final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT );
+      final int width = Integer.parseInt( m_arguments.getProperty( "width", "800" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      final int height = Integer.parseInt( m_arguments.getProperty( "height", "600" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String format = m_arguments.getProperty( "imageFormat", ExportableChart.DEFAULT_FORMAT ); //$NON-NLS-1$
 
       return new ExportableChart( chart, format, width, height, getIdentifier(), getCategory(), getKennzifferIndex() );
     }
@@ -300,7 +301,7 @@ public class ExportableTemplateObject implements IExportableObject
       final IStatus status = TableViewUtils.applyXMLTemplate( tpl, xml, m_context, true, ExporterHelper.MSG_TOKEN_NOT_FOUND );
       if( tpl.getItems().length == 0 )
       {
-        m_status = StatusUtilities.createWarningStatus( "Tabelle (" + getCategory() + ") beinhaltet keine Daten. Der Export findet also nicht statt." );
+        m_status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExportableTemplateObject.2", getCategory()) ); //$NON-NLS-1$
         return null;
       }
 

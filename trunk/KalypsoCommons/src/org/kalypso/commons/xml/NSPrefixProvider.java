@@ -70,18 +70,18 @@ public class NSPrefixProvider
     {
       THE_NS_MAPPER = new NSPrefixProvider();
       // THE_NS_MAPPER.getPreferredPrefix( NS.XLINK, "xlink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.XSD, "xs" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.SLD, "sld" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.OGC, "ogc" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.XSD, "xs" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.SLD, "sld" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.OGC, "ogc" ); //$NON-NLS-1$
 
-      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_MAPVIEW, "mapv" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSVIEW, "obsv" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_TEMPLATES, "templ" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_MAPVIEW, "mapv" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSVIEW, "obsv" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_TEMPLATES, "templ" ); //$NON-NLS-1$
       // THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.ADV_NAS, "adv" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.CATALOG, "catalog" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.ADV_NAS, "adv" ); //$NON-NLS-1$
+      THE_NS_MAPPER.getPreferredPrefix( NS.CATALOG, "catalog" ); //$NON-NLS-1$
 
       // TODO add here all the well known namespaces...
     }
@@ -161,7 +161,7 @@ public class NSPrefixProvider
         String ns;
         do
         {
-          ns = "ns" + index;
+          ns = "ns" + index; //$NON-NLS-1$
           index++;
         }
         while( !isValidPrefix( ns ) );
@@ -174,7 +174,7 @@ public class NSPrefixProvider
   {
     if( ns == null )
       return false;
-    if( ns.indexOf( " " ) >= 0 ) // TODO better check
+    if( ns.indexOf( " " ) >= 0 ) // TODO better check //$NON-NLS-1$
       return false;
     return !m_prefixMap.containsValue( ns );
   }

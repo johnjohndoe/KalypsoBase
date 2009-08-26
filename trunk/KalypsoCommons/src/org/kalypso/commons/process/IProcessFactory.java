@@ -53,7 +53,7 @@ public interface IProcessFactory
    * Id of the default (local) process factory implementation. <br>
    * This id should be used as fall-back if no other factory is specified.
    */
-  final String DEFAULT_PROCESS_FACTORY_ID = "org.kalypso.commons.process.defaultProcessFactory";
+  final String DEFAULT_PROCESS_FACTORY_ID = "org.kalypso.commons.process.defaultProcessFactory"; //$NON-NLS-1$
 
   /**
    * Creates a new {@link IProcess}.

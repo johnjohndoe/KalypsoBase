@@ -43,6 +43,8 @@ package org.kalypso.commons.math;
 import java.awt.geom.Point2D;
 import java.util.NoSuchElementException;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * represents a linear equation such as Y = aX + b
  * 
@@ -52,7 +54,7 @@ public class LinearEquation
 {
   /** static exception for Speed-Up of Method solve */
   private final static NoSuchElementException SOLVE_NO_SOLVE_EXCEPTION = new NoSuchElementException(
-      "lines do not intersect" );
+      Messages.getString("org.kalypso.commons.math.LinearEquation.0") ); //$NON-NLS-1$
 
   /** static exception for better speed when dealing with this class */
   private final static SameXValuesException SAME_X_EXCEPTION = new SameXValuesException();
@@ -200,7 +202,7 @@ public class LinearEquation
   @Override
   public String toString()
   {
-    return "Y = " + String.valueOf( m_a ) + "*X + " + String.valueOf( m_b );
+    return "Y = " + String.valueOf( m_a ) + "*X + " + String.valueOf( m_b ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -245,7 +247,7 @@ public class LinearEquation
   {
     public SameXValuesException()
     {
-      super( "X-Values are identical. Cannot create LinearEquation" );
+      super( Messages.getString("org.kalypso.commons.math.LinearEquation.3") ); //$NON-NLS-1$
     }
 
     public SameXValuesException( String message )

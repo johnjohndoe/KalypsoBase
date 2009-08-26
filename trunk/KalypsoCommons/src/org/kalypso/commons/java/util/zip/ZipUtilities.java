@@ -67,6 +67,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -88,7 +89,7 @@ public class ZipUtilities
    */
   public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
   {
-    final File file = File.createTempFile( "unzipTmpFile", ".zip" );
+    final File file = File.createTempFile( "unzipTmpFile", ".zip" ); //$NON-NLS-1$ //$NON-NLS-2$
     file.deleteOnExit();
 
     OutputStream os = null;
@@ -337,7 +338,7 @@ public class ZipUtilities
     try
     {
       visitor.setBasePattern( dir.getAbsolutePath() );
-      visitor.setBaseReplace( "" );
+      visitor.setBaseReplace( "" ); //$NON-NLS-1$
       FileUtilities.accept( dir, visitor, true );
     }
     finally
@@ -395,7 +396,7 @@ public class ZipUtilities
    */
   public static void unzip( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "ZIP wird entpackt nach: " + targetContainer.getName(), 1100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("org.kalypso.commons.java.util.zip.ZipUtilities.0") + targetContainer.getName(), 1100 ); //$NON-NLS-1$
 
     final InputStream zipStream = null;
     try
@@ -405,14 +406,14 @@ public class ZipUtilities
       {
         if( targetContainer instanceof IFolder )
         {
-          monitor.subTask( "erzeuge Hauptverzeichnis" + targetContainer.getName() );
+          monitor.subTask( Messages.getString("org.kalypso.commons.java.util.zip.ZipUtilities.1") + targetContainer.getName() ); //$NON-NLS-1$
           ((IFolder) targetContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
         }
         else
           monitor.worked( 100 );
       }
 
-      monitor.subTask( "" );
+      monitor.subTask( "" ); //$NON-NLS-1$
 
       final File containerDir = targetContainer.getLocation().toFile();
 

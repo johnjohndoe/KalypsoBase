@@ -70,7 +70,7 @@ public class TableViewLabelProvider extends LabelProvider implements ITableLabel
 
       }
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public Image getColumnImage( Object obj, int index )
@@ -82,11 +82,11 @@ public class TableViewLabelProvider extends LabelProvider implements ITableLabel
         case 0:
         {
           final String logLevel = (((LogFileRow) obj).getLevel()).trim();
-          if( (logLevel).equals( "SEVERE" ) )
+          if( (logLevel).equals( "SEVERE" ) ) //$NON-NLS-1$
             return PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_ERROR_TSK );
-          else if( logLevel.equals( "WARNING" ) )
+          else if( logLevel.equals( "WARNING" ) ) //$NON-NLS-1$
             return PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_WARN_TSK );
-          else if( logLevel.equals( "INFO" ) || logLevel.equals( "CONFIG" ) || logLevel.equals( "FINE" ) || logLevel.equals( "FINER" ) || logLevel.equals( "FINEST" ) )
+          else if( logLevel.equals( "INFO" ) || logLevel.equals( "CONFIG" ) || logLevel.equals( "FINE" ) || logLevel.equals( "FINER" ) || logLevel.equals( "FINEST" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
             return PlatformUI.getWorkbench().getSharedImages().getImage( ISharedImages.IMG_OBJS_INFO_TSK );
         }
       }

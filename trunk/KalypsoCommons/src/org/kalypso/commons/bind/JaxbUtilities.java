@@ -63,9 +63,9 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  */
 public final class JaxbUtilities
 {
-  private static final String COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER = "com.sun.xml.bind.namespacePrefixMapper";
+  private static final String COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER = "com.sun.xml.bind.namespacePrefixMapper"; //$NON-NLS-1$
 
-  public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out );
+  public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private JaxbUtilities( )
   {
@@ -81,9 +81,9 @@ public final class JaxbUtilities
    */
   public static JAXBContext createQuiet( final Class< ? >... objectFactoryClasses )
   {
-    final DebugPerf stopWatch = DEBUG.createStopWatch( "Initializing JAXContext for classes:%n" );
+    final DebugPerf stopWatch = DEBUG.createStopWatch( "Initializing JAXContext for classes:%n" ); //$NON-NLS-1$
     for( final Class< ? > clazz : objectFactoryClasses )
-      DEBUG.printf( "\t%s%n", clazz );
+      DEBUG.printf( "\t%s%n", clazz ); //$NON-NLS-1$
 
     final Thread currentThread = Thread.currentThread();
     final ClassLoader contextClassLoader = currentThread.getContextClassLoader();
@@ -95,7 +95,7 @@ public final class JaxbUtilities
       // Setting the System-Property 'javax.xml.bind.JAXBContext' does not help either,
       // as the right ContextFactory is not accessible via the AntClassLoader.
       // Maybe there is another, more clean way to do this?
-      if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" ) )
+      if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" ) ) //$NON-NLS-1$
         currentThread.setContextClassLoader( JaxbUtilities.class.getClassLoader() );
 
       return JAXBContext.newInstance( objectFactoryClasses );
@@ -111,7 +111,7 @@ public final class JaxbUtilities
       // Always restore old context class loader, who knows what happens else...
       currentThread.setContextClassLoader( contextClassLoader );
 
-      stopWatch.stopWatch( "JAXContext created.%n%n" );
+      stopWatch.stopWatch( "JAXContext created.%n%n" ); //$NON-NLS-1$
     }
   }
 
