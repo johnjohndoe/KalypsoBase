@@ -173,6 +173,6 @@ public class RepositoryFactoryConfig
 
   public String getName( )
   {
-    return toString();
+    return m_name;
   }
 }

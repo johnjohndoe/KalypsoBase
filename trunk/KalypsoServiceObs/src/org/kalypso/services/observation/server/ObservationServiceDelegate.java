@@ -640,7 +640,6 @@ public class ObservationServiceDelegate implements IObservationService
     final String repId = RepositoryUtils.getRepositoryId( id );
     final IObservationManipulator oman = m_mapRepId2Manip.get( repId );
     if( oman != null )
-    {
       try
       {
         oman.manipulate( obs, id );
@@ -650,7 +649,6 @@ public class ObservationServiceDelegate implements IObservationService
         m_logger.throwing( getClass().getName(), "updateMetadata", e );
         m_logger.info( "Could not manipulate observation with id: " + id + " due to previous errors" );
       }
-    }
 
     return md;
   }
@@ -690,7 +688,6 @@ public class ObservationServiceDelegate implements IObservationService
       if( rep.getIdentifier().equals( id ) )
         item = rep;
       else
-      {
         try
         {
           item = rep.findItem( id );
@@ -700,7 +697,6 @@ public class ObservationServiceDelegate implements IObservationService
           m_logger.throwing( getClass().getName(), "findItem", e );
           throw e;
         }
-      }
 
       if( item == null )
         continue;
