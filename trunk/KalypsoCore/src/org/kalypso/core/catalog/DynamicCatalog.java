@@ -197,7 +197,7 @@ public class DynamicCatalog implements ICatalog
       addEntry( uri, publicID, PUBLIC_ID, true );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private void addEntry( final String uri, final String entryID, final int entryType, final boolean relative )
   {
     if( entryID == null || "".equals( entryID ) ) //$NON-NLS-1$
@@ -405,9 +405,9 @@ public class DynamicCatalog implements ICatalog
 
   /**
    * @param resolveContext
-   *            If true, the found entry is resolved against the catalogs location, if false it is directly returned.
+   *          If true, the found entry is resolved against the catalogs location, if false it is directly returned.
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private List<String> internResolve( final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean local, final boolean resolveContext )
   {
     if( collector == null )
@@ -421,9 +421,6 @@ public class DynamicCatalog implements ICatalog
     {
       for( final Object entry : entries )
       {
-        if( entry == null )
-          java.lang.System.out.println("Oups...");
-        
         final Object item = ((JAXBElement<Object>) entry).getValue();
         switch( step )
         {

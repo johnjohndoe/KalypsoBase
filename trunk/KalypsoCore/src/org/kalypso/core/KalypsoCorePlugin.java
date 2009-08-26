@@ -123,7 +123,7 @@ public class KalypsoCorePlugin extends Plugin
     super.stop( context );
   }
 
-  public CatalogManager getCatalogManager( )
+  public synchronized CatalogManager getCatalogManager( )
   {
     if( m_catalogManager == null )
     {
@@ -137,7 +137,7 @@ public class KalypsoCorePlugin extends Plugin
     return m_catalogManager;
   }
 
-  public CatalogSLD getSLDCatalog( )
+  public synchronized CatalogSLD getSLDCatalog( )
   {
     if( m_sldCatalog == null )
     {
@@ -150,7 +150,7 @@ public class KalypsoCorePlugin extends Plugin
     return m_sldCatalog;
   }
 
-  public IFeatureSelectionManager getSelectionManager( )
+  public synchronized IFeatureSelectionManager getSelectionManager( )
   {
     if( m_selectionManager == null )
       m_selectionManager = new FeatureSelectionManager2();

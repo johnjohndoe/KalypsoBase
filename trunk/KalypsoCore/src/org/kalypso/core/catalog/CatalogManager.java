@@ -103,7 +103,7 @@ public class CatalogManager
     m_baseDir = baseDir;
   }
 
-  public void register( final IURNGenerator urnGenerator )
+  public synchronized void register( final IURNGenerator urnGenerator )
   {
     final Class< ? > key = urnGenerator.getSupportingClass();
     if( m_urnGenerators.containsKey( key ) )
@@ -139,7 +139,7 @@ public class CatalogManager
   }
 
   @SuppressWarnings("unchecked")
-  public ICatalog getCatalog( final URI catalogURI )
+  public synchronized ICatalog getCatalog( final URI catalogURI )
   {
     InputStream is = null;
     try
@@ -158,9 +158,7 @@ public class CatalogManager
 
         final Catalog catalog = object.getValue();
 
-        System.out.println( "Oups" + catalogURL );
-        if( catalog.getPublicOrSystemOrUri().contains( null ) )
-          System.out.println( "Oups" );
+        // System.out.println( "Loaded: " + catalogURL );
 
         final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
         m_openCatalogs.put( catalogURI, newOpenCatalog );
@@ -182,7 +180,7 @@ public class CatalogManager
   /**
    * saves all open catalogs
    */
-  public void saveAll( )
+  public synchronized void saveAll( )
   {
     final List<URI> catalogsToClose = new ArrayList<URI>();
     for( final ICatalog catalog : m_openCatalogs.values() )
@@ -207,7 +205,7 @@ public class CatalogManager
       m_openCatalogs.remove( catalogURI );
   }
 
-  public void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
+  public synchronized void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
       throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogManager.6" ) + baseURN ); //$NON-NLS-1$
@@ -267,7 +265,7 @@ public class CatalogManager
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
    */
-  public IURNGenerator getURNGeneratorFor( final Class< ? > supportingClass )
+  public synchronized IURNGenerator getURNGeneratorFor( final Class< ? > supportingClass )
   {
     return m_urnGenerators.get( supportingClass );
   }
