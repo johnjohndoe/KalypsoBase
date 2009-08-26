@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.gazetter.view;
 
+import org.kalypso.ui.i18n.Messages;
+
 /**
  * @author doemming
  */
@@ -49,5 +51,5 @@ public class GazetteerConstants
    * marker for unselected gazetteer combobox<br>
    * i18n-hint: do not translate here, do i18n in labelproviders
    */
-  final public static String NO_SELECTION_IN_COMBO = "bitte waehlen";
+  final public static String NO_SELECTION_IN_COMBO = Messages.getString("org.kalypso.ui.gazetter.view.GazetteerConstants.0"); //$NON-NLS-1$
 }

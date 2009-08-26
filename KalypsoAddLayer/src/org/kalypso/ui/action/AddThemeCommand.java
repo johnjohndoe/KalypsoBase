@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.ui.i18n.Messages;
 
 public class AddThemeCommand implements IThemeCommand
 {
@@ -125,7 +126,7 @@ public class AddThemeCommand implements IThemeCommand
    */
   public String getDescription( )
   {
-    return "Einfügen eines neuen Themas in die Karte";
+    return Messages.getString("org.kalypso.ui.action.AddThemeCommand.0"); //$NON-NLS-1$
   }
 
   private StyledLayerType init( )
@@ -137,7 +138,7 @@ public class AddThemeCommand implements IThemeCommand
     layer.setFeaturePath( m_featurePath );
     layer.setName( m_name );
     layer.setLinktype( m_type );
-    layer.setId( "ID_" + id );
+    layer.setId( "ID_" + id ); //$NON-NLS-1$
     layer.setVisible( true );
 
     final List<Style> styleList = layer.getStyle();
@@ -211,11 +212,11 @@ public class AddThemeCommand implements IThemeCommand
   public void addStyle( final String style, final String location )
   {
     final StyledLayerType.Style layertype = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerTypeStyle();
-    layertype.setLinktype( "sld" );
+    layertype.setLinktype( "sld" ); //$NON-NLS-1$
     layertype.setStyle( style );
     layertype.setHref( location );
-    layertype.setActuate( "onRequest" );
-    layertype.setType( "simple" );
+    layertype.setActuate( "onRequest" ); //$NON-NLS-1$
+    layertype.setType( "simple" ); //$NON-NLS-1$
 
     m_styles.add( layertype );
   }

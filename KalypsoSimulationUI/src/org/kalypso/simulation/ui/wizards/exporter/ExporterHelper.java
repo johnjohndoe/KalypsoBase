@@ -56,6 +56,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -67,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public final class ExporterHelper
 {
-  public static final String MSG_TOKEN_NOT_FOUND = "Token not found";
+  public static final String MSG_TOKEN_NOT_FOUND = "Token not found"; //$NON-NLS-1$
 
   private ExporterHelper( )
   {
@@ -98,7 +99,7 @@ public final class ExporterHelper
       else if( property != null )
         replace = property.toString();
       else if( property == null )
-        replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!";
+        replace = "!" + MSG_TOKEN_NOT_FOUND + ": " + tokenname + "!"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       if( replace != null )
         replacetokens.setProperty( tokenname, replace );
@@ -152,10 +153,10 @@ public final class ExporterHelper
       if( key.startsWith( argumentPrefix ) )
       {
         final Arguments args = (Arguments) entry.getValue();
-        final String label = args.getProperty( "label", "<unbekannt>" );
-        final String strFile = args.getProperty( "href" );
+        final String label = args.getProperty( "label", "<unbekannt>" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String strFile = args.getProperty( "href" ); //$NON-NLS-1$
         if( strFile == null )
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Keine Datei-Angabe für: " + key, null ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.0") + key, null ) ); //$NON-NLS-1$
 
         try
         {
@@ -163,13 +164,13 @@ public final class ExporterHelper
         }
         catch( final MalformedURLException e )
         {
-          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, "Ungültiger Pfad: " + strFile, e ) );
+          stati.add( new Status( IStatus.WARNING, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.1") + strFile, e ) ); //$NON-NLS-1$
         }
       }
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "Siehe Details", null ) );
+      throw new CoreException( new MultiStatus( KalypsoSimulationUIPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), Messages.getString("org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.2"), null ) ); //$NON-NLS-1$
 
     return items.toArray( new UrlArgument[items.size()] );
   }

@@ -55,15 +55,15 @@ public interface ISimulationConstants
     ERROR
   }
 
-  public final String OUTPUT_DIR_NAME = "output";
+  public final String OUTPUT_DIR_NAME = "output"; //$NON-NLS-1$
 
-  public final String RESULT_DIR_NAME = "Ergebnisse";
+  public final String RESULT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
 
-  public final String CALC_DIR_NAME = "calc";
+  public final String CALC_DIR_NAME = "calc"; //$NON-NLS-1$
 
   /**
    * The directory, where all temporary simulation files are stored. If not set, <code>java.io.tmpdir</code> will be
    * used instead.
    */
-  public final String SYSPROP_SIM_DIR = "kalypso.simulation.dir";
+  public final String SYSPROP_SIM_DIR = "kalypso.simulation.dir"; //$NON-NLS-1$
 }

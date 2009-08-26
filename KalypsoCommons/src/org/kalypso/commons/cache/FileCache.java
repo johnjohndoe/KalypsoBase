@@ -35,7 +35,7 @@ import org.kalypso.contribs.java.io.StreamUtilities;
  */
 public class FileCache<K, V>
 {
-  private final static String INDEX_FILE = ".filecache";
+  private final static String INDEX_FILE = ".filecache"; //$NON-NLS-1$
 
   private final Comparator< ? super K> m_kc;
 
@@ -63,7 +63,7 @@ public class FileCache<K, V>
   public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer<V> ser, final File directory )
   {
     if( !directory.exists() || !directory.isDirectory() )
-      throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() );
+      throw new IllegalArgumentException( "Argument is not a directory: " + directory.toString() ); //$NON-NLS-1$
 
     m_keyFactory = kFact;
     m_kc = kc;
@@ -99,7 +99,7 @@ public class FileCache<K, V>
       {
         if( line.length() > 0 )
         {
-          final String[] items = line.split( ";" );
+          final String[] items = line.split( ";" ); //$NON-NLS-1$
           final String keySpec = items[0];
           final String fileName = items[1];
 
@@ -138,7 +138,7 @@ public class FileCache<K, V>
         final String fileName = entry.getValue().getName();
 
         writer.write( keySpec );
-        writer.write( ";" );
+        writer.write( ";" ); //$NON-NLS-1$
         writer.write( fileName );
         writer.newLine();
       }
@@ -164,7 +164,7 @@ public class FileCache<K, V>
       if( m_index.containsKey( key ) )
         file = m_index.get( key );
       else
-        file = File.createTempFile( "cache", ".item", m_directory );
+        file = File.createTempFile( "cache", ".item", m_directory ); //$NON-NLS-1$ //$NON-NLS-2$
 
       os = new BufferedOutputStream( new FileOutputStream( file ) );
 
@@ -199,7 +199,7 @@ public class FileCache<K, V>
       if( m_index.containsKey( key ) )
         file = m_index.get( key );
       else
-        file = File.createTempFile( "cache", ".item", m_directory );
+        file = File.createTempFile( "cache", ".item", m_directory ); //$NON-NLS-1$ //$NON-NLS-2$
 
       os = new BufferedOutputStream( new FileOutputStream( file ) );
       is = new BufferedInputStream( new FileInputStream( fileToAdd ) );
@@ -241,7 +241,7 @@ public class FileCache<K, V>
     }
     catch( final IOException e )
     {
-      PluginUtilities.logToPlugin( KalypsoCommonsPlugin.getDefault(), IStatus.WARNING, "Unable to read cache file, although it should be there, returning null.", e );
+      PluginUtilities.logToPlugin( KalypsoCommonsPlugin.getDefault(), IStatus.WARNING, "Unable to read cache file, although it should be there, returning null.", e ); //$NON-NLS-1$
 
       // element was not yet in cahce
       return null;

@@ -55,13 +55,14 @@ import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
 public class SimulationThread extends Thread
 {
   private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() );
 
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) ); //$NON-NLS-1$
 
   static
   {
@@ -84,7 +85,7 @@ public class SimulationThread extends Thread
     m_job = job;
     m_tmpDir = tmpDir;
 
-    m_jobBean = new SimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" );
+    m_jobBean = new SimulationInfo( "" + id, description, typeID, ISimulationConstants.STATE.WAITING, -1, "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_inputData = new UnzippedJarSimulationDataProvider( zipHandler, modelspec, input );
 
@@ -126,25 +127,25 @@ public class SimulationThread extends Thread
     final String jobID = m_jobBean.getId();
     try
     {
-      LOGGER.info( "Calling run for ID: " + jobID );
+      LOGGER.info( "Calling run for ID: " + jobID ); //$NON-NLS-1$
 
       m_resultPacker.addFile( m_tmpDir );
 
       m_job.run( m_tmpDir, m_inputData, m_resultPacker, m_jobBean );
 
-      LOGGER.info( "Run finished for ID: " + jobID );
+      LOGGER.info( "Run finished for ID: " + jobID ); //$NON-NLS-1$
 
       if( m_jobBean.isCanceled() )
-        LOGGER.info( "JOB exited because it was canceled: " + jobID );
+        LOGGER.info( "JOB exited because it was canceled: " + jobID ); //$NON-NLS-1$
       else
       {
         m_jobBean.setState( ISimulationConstants.STATE.FINISHED );
-        LOGGER.info( "JOB exited normally: " + jobID );
+        LOGGER.info( "JOB exited normally: " + jobID ); //$NON-NLS-1$
       }
     }
     catch( final SimulationException se )
     {
-      LOGGER.warning( "Simulation aborted with exception: " + jobID );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID ); //$NON-NLS-1$
       se.printStackTrace();
 
       m_jobBean.setFinishInfo( IStatus.ERROR, se.getLocalizedMessage() );
@@ -153,7 +154,7 @@ public class SimulationThread extends Thread
     }
     catch( final Throwable t )
     {
-      LOGGER.warning( "Simulation aborted with exception: " + jobID );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID ); //$NON-NLS-1$
       t.printStackTrace();
 
       m_jobBean.setFinishInfo( IStatus.ERROR, t.getLocalizedMessage() );

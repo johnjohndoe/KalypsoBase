@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -127,7 +128,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
   {
     // data
     final Group fileGroup = new Group( parent, SWT.NULL );
-    fileGroup.setText( "RasterDataModel" );
+    fileGroup.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.0") ); //$NON-NLS-1$
 
     final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
@@ -138,7 +139,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     fileGroup.setLayout( gridLayout );
 
     final Label fileLabel = new Label( fileGroup, SWT.NONE );
-    fileLabel.setText( "Datei : " );
+    fileLabel.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.1") ); //$NON-NLS-1$
 
     fileTextField = new Text( fileGroup, SWT.BORDER );
     final GridData data1 = new GridData();
@@ -148,14 +149,14 @@ public class ImportRasterSourceWizardPage extends WizardPage
     fileTextField.setEditable( false );
 
     browseButton1 = new Button( fileGroup, SWT.PUSH );
-    browseButton1.setText( "Durchsuchen..." );
+    browseButton1.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.2") ); //$NON-NLS-1$
     browseButton1.setLayoutData( new GridData( GridData.END ) );
     browseButton1.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } ); //$NON-NLS-1$
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )
@@ -170,7 +171,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
 
     // style
     final Group styleGroup = new Group( parent, SWT.NULL );
-    styleGroup.setText( "Style" );
+    styleGroup.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.3") ); //$NON-NLS-1$
 
     final GridData data3 = new GridData();
     data3.horizontalAlignment = GridData.FILL;
@@ -181,7 +182,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     styleGroup.setLayout( gridLayout1 );
 
     final Label styleLabel = new Label( styleGroup, SWT.NONE );
-    styleLabel.setText( "Datei : " );
+    styleLabel.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.4") ); //$NON-NLS-1$
 
     styleTextField = new Text( styleGroup, SWT.BORDER );
     final GridData data4 = new GridData();
@@ -191,14 +192,14 @@ public class ImportRasterSourceWizardPage extends WizardPage
     styleTextField.setEditable( false );
 
     browseButton2 = new Button( styleGroup, SWT.PUSH );
-    browseButton2.setText( "Durchsuchen..." );
+    browseButton2.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.5") ); //$NON-NLS-1$
     browseButton2.setLayoutData( new GridData( GridData.END ) );
     browseButton2.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } ); //$NON-NLS-1$
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )
@@ -255,7 +256,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     } );
 
     final Label styleNameLabel = new Label( styleGroup, SWT.NONE );
-    styleNameLabel.setText( "UserStyle name: " );
+    styleNameLabel.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.6") ); //$NON-NLS-1$
 
     styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
     final GridData data5 = new GridData();
@@ -272,7 +273,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     } );
 
     final Label dummyLabel = new Label( styleGroup, SWT.NONE );
-    dummyLabel.setText( "" );
+    dummyLabel.setText( "" ); //$NON-NLS-1$
 
     final Button checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
     checkDefaultStyleButton.setSelection( checkDefaultStyle );
@@ -303,13 +304,13 @@ public class ImportRasterSourceWizardPage extends WizardPage
     } );
 
     final Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
-    defaultStyleLabel.setText( "Generate default style" );
+    defaultStyleLabel.setText( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.7") ); //$NON-NLS-1$
 
   }
 
   KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.8"), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   public void setProject( final IProject project )
@@ -328,7 +329,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
     }
     else
     {
-      error.append( "Bitte RasterDataModel ausgewählen.\n\n" );
+      error.append( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.9") ); //$NON-NLS-1$
       setPageComplete( false );
     }
 
@@ -340,7 +341,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
       }
       else
       {
-        error.append( "Bitte Style ausgewählen.\n" );
+        error.append( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.10") ); //$NON-NLS-1$
         setPageComplete( false );
       }
 
@@ -350,7 +351,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
       }
       else
       {
-        error.append( "Bitte Style name ausgewählen.\n" );
+        error.append( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.11") ); //$NON-NLS-1$
         setPageComplete( false );
       }
     }
@@ -359,7 +360,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
       setErrorMessage( error.toString() );
     // setMessage( error.toString() );
     else
-      setMessage( "Eingaben OK" );
+      setMessage( Messages.getString("org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.12") ); //$NON-NLS-1$
   }
 
   public IPath getFilePath( )

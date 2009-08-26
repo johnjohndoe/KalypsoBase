@@ -70,17 +70,17 @@ public class DefaultTupleModelTest extends TestCase
     m_row1 = new DateKey( new Date() );
     m_row2 = new DateKey( new Date() );
 
-    m_col1 = new SimpleColumnKey( "col1", Integer.class );
-    m_col2 = new SimpleColumnKey( "col2", Double.class );
-    m_col3 = new SimpleColumnKey( "col3", String.class );
+    m_col1 = new SimpleColumnKey( "col1", Integer.class ); //$NON-NLS-1$
+    m_col2 = new SimpleColumnKey( "col2", Double.class ); //$NON-NLS-1$
+    m_col3 = new SimpleColumnKey( "col3", String.class ); //$NON-NLS-1$
 
     m_model.setValue( new Integer( 0 ), m_row1, m_col1 );
     m_model.setValue( new Double( 0 ), m_row1, m_col2 );
-    m_model.setValue( "0", m_row1, m_col3 );
+    m_model.setValue( "0", m_row1, m_col3 ); //$NON-NLS-1$
 
     m_model.setValue( new Integer( 1 ), m_row2, m_col1 );
     m_model.setValue( new Double( 1 ), m_row2, m_col2 );
-    m_model.setValue( "1", m_row2, m_col3 );
+    m_model.setValue( "1", m_row2, m_col3 ); //$NON-NLS-1$
   }
 
   /*
@@ -127,11 +127,11 @@ public class DefaultTupleModelTest extends TestCase
   {
     assertEquals( new Integer( 0 ), m_model.getValue( m_row1, m_col1 ) );
     assertEquals( new Double( 0 ), m_model.getValue( m_row1, m_col2 ) );
-    assertEquals( "0", m_model.getValue( m_row1, m_col3 ) );
+    assertEquals( "0", m_model.getValue( m_row1, m_col3 ) ); //$NON-NLS-1$
 
     assertEquals( new Integer( 1 ), m_model.getValue( m_row2, m_col1 ) );
     assertEquals( new Double( 1 ), m_model.getValue( m_row2, m_col2 ) );
-    assertEquals( "1", m_model.getValue( m_row2, m_col3 ) );
+    assertEquals( "1", m_model.getValue( m_row2, m_col3 ) ); //$NON-NLS-1$
   }
 
   /*
@@ -144,7 +144,7 @@ public class DefaultTupleModelTest extends TestCase
     assertNull( m_model.getValue( m_row1, m_col1 ) );
 
     // setting value for new row and new col, not present yet
-    SimpleColumnKey col4 = new SimpleColumnKey( "col4", Date.class );
+    SimpleColumnKey col4 = new SimpleColumnKey( "col4", Date.class ); //$NON-NLS-1$
     DateKey row3 = new DateKey( new Date() );
     Date d = new Date();
     m_model.setValue( d, row3, col4 );
@@ -154,7 +154,7 @@ public class DefaultTupleModelTest extends TestCase
     try
     {
       m_model.setValue( d, m_row1, m_col1 );
-      fail( "should detect incompatible classes" );
+      fail( "should detect incompatible classes" ); //$NON-NLS-1$
     }
     catch( IllegalArgumentException e )
     {

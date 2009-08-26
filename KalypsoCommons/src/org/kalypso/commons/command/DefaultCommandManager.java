@@ -219,7 +219,7 @@ public class DefaultCommandManager implements ICommandManager
     if( canUndo() )
       return stack.elementAt( stackPos ).getDescription();
 
-    return "<cannot undo>";
+    return "<cannot undo>"; //$NON-NLS-1$
   }
 
   /**
@@ -230,7 +230,7 @@ public class DefaultCommandManager implements ICommandManager
     if( canRedo() )
       return stack.elementAt( stackPos + 1 ).getDescription();
 
-    return "<cannot redo>";
+    return "<cannot redo>"; //$NON-NLS-1$
   }
 
   /**

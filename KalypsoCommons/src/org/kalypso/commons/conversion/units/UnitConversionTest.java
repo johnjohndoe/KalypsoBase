@@ -33,15 +33,15 @@ public class UnitConversionTest extends TestCase
 
   public void testSIConverter()
   {
-    final SIConverter conv1 = new SIConverter( "m", "cm" );
+    final SIConverter conv1 = new SIConverter( "m", "cm" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( Double.compare( conv1.convert( 1 ), 100 ) == 0 );
     assertTrue( Double.compare( conv1.reverse( 1 ), .01 ) == 0 );
 
-    final SIConverter conv2 = new SIConverter( "m", "dm" );
+    final SIConverter conv2 = new SIConverter( "m", "dm" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( Double.compare( conv2.convert( 1 ), 10 ) == 0 );
     assertTrue( Double.compare( conv2.reverse( 1 ), .1 ) == 0 );
 
-    final SIConverter conv3 = new SIConverter( "m", "mm" );
+    final SIConverter conv3 = new SIConverter( "m", "mm" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( Double.compare( conv3.convert( 1 ), 1000 ) == 0 );
     assertTrue( Double.compare( conv3.reverse( 1 ), .001 ) == 0 );
   }

@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * SetAllAction
  *
@@ -13,7 +15,7 @@ public class SetSelectedAction extends AbstractObservationTableAction
 {
   public SetSelectedAction( final JTable table )
   {
-    super( table, "Selektierte Werte setzen", "Setzt die selektierten Werte auf den aktiven Wert" );
+    super( table, Messages.getString("org.kalypso.commons.java.swing.jtable.SetSelectedAction.0"), Messages.getString("org.kalypso.commons.java.swing.jtable.SetSelectedAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

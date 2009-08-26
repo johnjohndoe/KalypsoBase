@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ITranslator;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -53,9 +54,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class KalypsoCommonsExtensions
 {
-  private final static String I10N_TRANSLATOR_EXTENSION_POINT = "org.kalypso.commons.i18n";
+  private final static String I10N_TRANSLATOR_EXTENSION_POINT = "org.kalypso.commons.i18n"; //$NON-NLS-1$
 
-  private final static String PROCESS_EXTENSION_POINT = "org.kalypso.commons.process";
+  private final static String PROCESS_EXTENSION_POINT = "org.kalypso.commons.process"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> m_i10nExtensions;
 
@@ -78,7 +79,7 @@ public class KalypsoCommonsExtensions
 
       for( final IConfigurationElement element : configurationElements )
       {
-        final String elementId = element.getAttribute( "id" );
+        final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
         m_i10nExtensions.put( elementId, element );
       }
     }
@@ -87,14 +88,14 @@ public class KalypsoCommonsExtensions
     final IConfigurationElement element = m_i10nExtensions.get( id );
     if( element == null )
     {
-      final Status status = new Status( IStatus.ERROR, activator.getBundle().getSymbolicName(), 1, "No i10nTranslator with id: " + id, null );
+      final Status status = new Status( IStatus.ERROR, activator.getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.0") + id, null ); //$NON-NLS-1$
       activator.getLog().log( status );
       return null;
     }
 
     try
     {
-      return (ITranslator) element.createExecutableExtension( "class" );
+      return (ITranslator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -115,7 +116,7 @@ public class KalypsoCommonsExtensions
     final IProcessFactory factory = getProcessFactory( factoryId );
     if( factory == null )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( "No process factory with id: %s", factoryId );
+      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.1"), factoryId ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -125,7 +126,7 @@ public class KalypsoCommonsExtensions
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Problem creating process for executable %s in working dir %s.", executeable, tempDirName );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.2"), executeable, tempDirName ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -146,7 +147,7 @@ public class KalypsoCommonsExtensions
 
         for( final IConfigurationElement element : configurationElements )
         {
-          final String elementId = element.getAttribute( "id" );
+          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           m_processExtensions.put( elementId, element );
         }
       }
@@ -156,6 +157,6 @@ public class KalypsoCommonsExtensions
     if( element == null )
       return null;
 
-    return (IProcessFactory) element.createExecutableExtension( "class" );
+    return (IProcessFactory) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 }

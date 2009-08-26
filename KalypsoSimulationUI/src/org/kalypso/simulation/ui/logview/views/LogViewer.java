@@ -81,7 +81,7 @@ public class LogViewer extends ViewPart
       IFile file = (IFile) object;
       String extension = file.getFileExtension();
       String name = file.getName();
-      if( extension != null && extension.equals( "log" ) ||name.equals( "error.txt" ))
+      if( extension != null && extension.equals( "log" ) ||name.equals( "error.txt" )) //$NON-NLS-1$ //$NON-NLS-2$
       {
         setOrgIFile( file );
         fileSelectionChange();

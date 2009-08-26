@@ -62,7 +62,7 @@ public class IntegerParser extends AbstractParser
    */
   public IntegerParser()
   {
-    this( "" );
+    this( "" ); //$NON-NLS-1$
   }
 
   /**

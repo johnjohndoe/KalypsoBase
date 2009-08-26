@@ -62,6 +62,7 @@ import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -120,24 +121,24 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
           final StringBuffer source = new StringBuffer();
           final QualifiedName qNameFT = featureType.getName();
-          source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUri() );
-          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( qNameFT.getLocalName() );
+          source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUri() ); //$NON-NLS-1$ //$NON-NLS-2$
+          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( qNameFT.getLocalName() ); //$NON-NLS-1$ //$NON-NLS-2$
           final String namespaceURI = qNameFT.getNamespace().toString();
           if( namespaceURI != null && namespaceURI.length() > 0 )
-            source.append( "#" ).append( WfsLoader.KEY_FEATURETYPENAMESPACE ).append( "=" ).append( namespaceURI );
+            source.append( "#" ).append( WfsLoader.KEY_FEATURETYPENAMESPACE ).append( "=" ).append( namespaceURI ); //$NON-NLS-1$ //$NON-NLS-2$
 
           if( xml != null )
-            source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml );
+            source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml ); //$NON-NLS-1$ //$NON-NLS-2$
           if( m_filterWFSPage.doFilterMaxFeatures() )
           {
             final int maxfeatures = m_filterWFSPage.getMaxFeatures();
-            source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) );
+            source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) ); //$NON-NLS-1$ //$NON-NLS-2$
           }
-          final String featurePath = "featureMember[" + qNameFT.getLocalName() + "]";
+          final String featurePath = "featureMember[" + qNameFT.getLocalName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
           String title = featureType.getTitle();
           if( title == null || title.isEmpty() )
             title = qNameFT.getLocalName();
-          final AddThemeCommand command = new AddThemeCommand( mapModell, title, "wfs", featurePath, source.toString() );
+          final AddThemeCommand command = new AddThemeCommand( mapModell, title, "wfs", featurePath, source.toString() ); //$NON-NLS-1$
           m_outlineviewer.postCommand( command, null );
         }
       }
@@ -163,7 +164,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
+    final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
     try
     {
       // read service catalog file
@@ -184,8 +185,8 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", "Web Feature Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", "Filter definieren", ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell );
+    m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.1"), ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_importWFSPage );
     addPage( m_filterWFSPage );
   }
@@ -218,7 +219,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     do
     {
       if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
-        catalog.add( (line.split( "=" ))[1] );
+        catalog.add( (line.split( "=" ))[1] ); //$NON-NLS-1$
 
       line = br.readLine();
     }

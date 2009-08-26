@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author belger
@@ -55,7 +56,7 @@ public class CalcCaseJob extends Job
 
   public CalcCaseJob( final IFolder calcCaseFolder )
   {
-    super( "Berechne: " + calcCaseFolder.getName() );
+    super( Messages.getString("org.kalypso.simulation.ui.calccase.CalcCaseJob.0") + calcCaseFolder.getName() ); //$NON-NLS-1$
 
     m_calcCaseFolder = calcCaseFolder;
 

@@ -69,6 +69,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
@@ -82,10 +83,10 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
  */
 public class FileUtilities
 {
-  public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+  public static final String JAVA_IO_TMPDIR = "java.io.tmpdir"; //$NON-NLS-1$
 
   /** regex defining which are the invalid characters for a file name */
-  public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>|]";
+  public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>|]"; //$NON-NLS-1$
 
   /**
    * THE system tmp dir "java.io.tmpdir"
@@ -250,7 +251,7 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( "File with prefix (" + prefix + ") and suffix (" + suffix + ") was not found in " + path );
+    throw new FileNotFoundException( Messages.getString("org.kalypso.commons.java.io.FileUtilities.0", prefix , suffix , path) ); //$NON-NLS-1$ 
   }
 
   /**
@@ -334,11 +335,11 @@ public class FileUtilities
    */
   public synchronized static String createNewUniqueFileName( final String prefix, final String extension, final File parentDir )
   {
-    String newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension );
+    String newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension ); //$NON-NLS-1$
     File newFile = new File( parentDir, newFileName );
     while( newFile.exists() )
     {
-      newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension );
+      newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension ); //$NON-NLS-1$
       newFile = new File( parentDir, newFileName );
     }
     return newFileName;
@@ -361,7 +362,7 @@ public class FileUtilities
     int count = 0;
     while( newFile.exists() )
     {
-      final String newFileName = new String( prefix + "_" + count++ + extension );
+      final String newFileName = new String( prefix + "_" + count++ + extension ); //$NON-NLS-1$
       newFile = new File( parentDir, newFileName );
     }
     return newFile;
@@ -379,7 +380,7 @@ public class FileUtilities
   {
     final String rel = getRelativePathTo( basedir, absoluteFile );
 
-    final File file = new File( "." + rel );
+    final File file = new File( "." + rel ); //$NON-NLS-1$
     return file;
   }
 
@@ -406,23 +407,23 @@ public class FileUtilities
   {
     if( !absolute.startsWith( base ) )
     {
-      if( base.lastIndexOf( "/" ) > -1 )
-        base = base.substring( 0, base.lastIndexOf( "/" ) );
+      if( base.lastIndexOf( "/" ) > -1 ) //$NON-NLS-1$
+        base = base.substring( 0, base.lastIndexOf( "/" ) ); //$NON-NLS-1$
       // base=base.replaceAll(File.separator+".+$","");
       final String difference = StringUtils.difference( base, absolute );
-      if( difference == null || "".equals( difference ) )
+      if( difference == null || "".equals( difference ) ) //$NON-NLS-1$
         return null;
       final int index = absolute.indexOf( difference );
       if( index < 5 )
         return null;
       final String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
+      final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
       if( x.length() > 0 )
-        return x + "/" + difference;
+        return x + "/" + difference; //$NON-NLS-1$
       return difference;
     }
-    final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() );
+    final String rel = absolute.length() == base.length() ? "" : absolute.substring( base.length() ); //$NON-NLS-1$
 
     return rel;
   }
@@ -456,7 +457,7 @@ public class FileUtilities
    */
   public static String getSuffix( final String name )
   {
-    final String[] strings = name.split( "\\." );
+    final String[] strings = name.split( "\\." ); //$NON-NLS-1$
     if( strings.length != 0 )
       return strings[strings.length - 1];
     return null;
@@ -532,25 +533,25 @@ public class FileUtilities
     {
       try
       {
-        _shp = new File( shapeBase + ".shp" );
+        _shp = new File( shapeBase + ".shp" ); //$NON-NLS-1$
         if( _shp.exists() )
           FileUtils.copyFileToDirectory( _shp, target );
         else
           return;
-        _dbf = new File( shapeBase + ".dbf" );
+        _dbf = new File( shapeBase + ".dbf" ); //$NON-NLS-1$
         if( _dbf.exists() )
           FileUtils.copyFileToDirectory( _dbf, target );
         else
           return;
-        _shx = new File( shapeBase + ".shx" );
+        _shx = new File( shapeBase + ".shx" ); //$NON-NLS-1$
         if( _shx.exists() )
           FileUtils.copyFileToDirectory( _shx, target );
         else
           return;
-        _sbn = new File( shapeBase + ".sbn" );
+        _sbn = new File( shapeBase + ".sbn" ); //$NON-NLS-1$
         if( _sbn.exists() )
           FileUtils.copyFileToDirectory( _sbn, target );
-        _sbx = new File( shapeBase + ".sbx" );
+        _sbx = new File( shapeBase + ".sbx" ); //$NON-NLS-1$
         if( _sbn.exists() )
           FileUtils.copyFileToDirectory( _sbx, target );
 
@@ -604,7 +605,7 @@ public class FileUtilities
       return path;
 
     if( lastIndexOf + 1 == path.length() - 1 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return path.substring( lastIndexOf + 1 );
   }
@@ -690,7 +691,7 @@ public class FileUtilities
     int count = 0;
     while( baseFolder.getFile( myName ).exists() )
     {
-      myName = String.format( "%s%d", myBaseName, count );
+      myName = String.format( "%s%d", myBaseName, count ); //$NON-NLS-1$
       count++;
     }
 
@@ -730,7 +731,7 @@ public class FileUtilities
     }
 
     /* List for success or error messages. */
-    MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, "Delete the temporary files, older than " + String.valueOf( days ) + " days.", null );
+    MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString("org.kalypso.commons.java.io.FileUtilities.1" , String.valueOf( days )), null ); //$NON-NLS-1$ 
 
     /* Delete these files. */
     for( int i = 0; i < filesToDelete.size(); i++ )
@@ -747,12 +748,12 @@ public class FileUtilities
         FileUtilities.deleteRecursive( fileToDelete );
 
         /* Add the success message. */
-        stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) );
+        stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
       }
       catch( Exception ex )
       {
         /* If one could no be deleted, it does not matter, the next run will get it. We will get them all :). */
-        IStatus status = StatusUtilities.statusFromThrowable( ex, fileToDelete.getName() + ": NOT DELETED" );
+        IStatus status = StatusUtilities.statusFromThrowable( ex, fileToDelete.getName() + ": NOT DELETED" ); //$NON-NLS-1$
         stati.add( status );
       }
     }

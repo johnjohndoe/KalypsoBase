@@ -67,6 +67,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -88,7 +89,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     super.init( workbench, currentSelection );
-    setWindowTitle( "neue Rechenvariante" );
+    setWindowTitle(Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -99,7 +100,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   public void addPages( )
   {
     super.addPages();
-    m_createFolderPage = new NewCalculationCaseCreateFolderPage( "Rechenvariante", getSelection() );
+    m_createFolderPage = new NewCalculationCaseCreateFolderPage(Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1"), getSelection() ); //$NON-NLS-1$
     m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
     {
       /**

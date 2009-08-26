@@ -56,7 +56,7 @@ public class BooleanParser extends AbstractParser
    */
   public BooleanParser()
   {
-    this( "" );
+    this( "" ); //$NON-NLS-1$
   }
 
   /**

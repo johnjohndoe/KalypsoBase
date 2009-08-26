@@ -82,6 +82,7 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -140,7 +141,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   public ImportShapeFileImportPage( final String pageName )
   {
     super( pageName );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei in den Workspace ein." );
+    setDescription( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.0") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -152,7 +153,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   public ImportShapeFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Dieser Dialog liest eine ESRI Shape-Datei in den Workspace ein." );
+    setDescription( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.1") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -188,9 +189,9 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     topGroupData.horizontalAlignment = GridData.FILL;
     m_group.setLayout( topGroupLayout );
     m_group.setLayoutData( topGroupData );
-    m_group.setText( "Shape-Datei" );
+    m_group.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.2") ); //$NON-NLS-1$
     m_sourceFileLabel = new Label( m_group, SWT.NONE );
-    m_sourceFileLabel.setText( "Quelle : " );
+    m_sourceFileLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.3") ); //$NON-NLS-1$
 
     // Set width of source path field
     final GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
@@ -202,7 +203,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     m_sourceFileText.addModifyListener( this );
 
     m_browseButton = new Button( m_group, SWT.PUSH );
-    m_browseButton.setText( "Durchsuchen..." );
+    m_browseButton.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.4") ); //$NON-NLS-1$
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
 
@@ -224,7 +225,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
     // style
     final Group styleGroup = new Group( parent, SWT.NULL );
-    styleGroup.setText( "Style" );
+    styleGroup.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.5") ); //$NON-NLS-1$
 
     final GridData data3 = new GridData();
     data3.horizontalAlignment = GridData.FILL;
@@ -235,7 +236,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     styleGroup.setLayout( gridLayout1 );
 
     styleLabel = new Label( styleGroup, SWT.NONE );
-    styleLabel.setText( "Datei : " );
+    styleLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.6") ); //$NON-NLS-1$
 
     styleTextField = new Text( styleGroup, SWT.BORDER );
     final GridData data4 = new GridData();
@@ -245,12 +246,12 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     styleTextField.setEditable( false );
 
     browseButton2 = new Button( styleGroup, SWT.PUSH );
-    browseButton2.setText( "Durchsuchen..." );
+    browseButton2.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.7") ); //$NON-NLS-1$
     browseButton2.setLayoutData( new GridData( GridData.END ) );
     browseButton2.addSelectionListener( this );
 
     styleNameLabel = new Label( styleGroup, SWT.NONE );
-    styleNameLabel.setText( "UserStyle name: " );
+    styleNameLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.8") ); //$NON-NLS-1$
 
     styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
     final GridData data5 = new GridData();
@@ -269,14 +270,14 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     // } );
 
     final Label dummyLabel = new Label( styleGroup, SWT.NONE );
-    dummyLabel.setText( "" );
+    dummyLabel.setText( "" ); //$NON-NLS-1$
 
     checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
     checkDefaultStyleButton.setSelection( checkDefaultStyle );
     checkDefaultStyleButton.addSelectionListener( this );
 
     final Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
-    defaultStyleLabel.setText( "Generate default style" );
+    defaultStyleLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9") ); //$NON-NLS-1$
 
   }
 
@@ -293,7 +294,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
       else
       {
-        setErrorMessage( "Bitte einen Style-Namen auswählen!" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.10") ); //$NON-NLS-1$
         pageComplete = false;
       }
 
@@ -304,7 +305,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
       else
       {
-        setErrorMessage( "Bitte eine Style-Datei auswählen!" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.11") ); //$NON-NLS-1$
         pageComplete = false;
       }
     }
@@ -316,7 +317,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
     else
     {
-      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.12") ); //$NON-NLS-1$
       pageComplete = false;
     }
 
@@ -327,7 +328,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
     else
     {
-      setErrorMessage( "Bitte eine Shape-Datei auswählen!" );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.13") ); //$NON-NLS-1$
       pageComplete = false;
     }
 
@@ -346,7 +347,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       b = (Button) e.widget;
       if( b.equals( m_browseButton ) )
       {
-        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } ); //$NON-NLS-1$
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )
@@ -358,7 +359,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       }
       if( b.equals( browseButton2 ) )
       {
-        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } );
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } ); //$NON-NLS-1$
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )
@@ -488,12 +489,12 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   public File getShapeBaseFile( )
   {
-    return new File( m_project.getLocation() + "/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ) );
+    return new File( m_project.getLocation() + "/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ) ); //$NON-NLS-1$
   }
 
   public String getShapeBaseRelativePath( )
   {
-    return "project:/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() );
+    return "project:/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ); //$NON-NLS-1$
   }
 
   public IPath getShapePath( )
@@ -503,7 +504,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.14"), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   public String getCRS( )

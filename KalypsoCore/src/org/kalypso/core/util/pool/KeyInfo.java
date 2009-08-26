@@ -92,7 +92,7 @@ public final class KeyInfo extends Job
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
-    super( Messages.format( "org.kalypso.util.pool.KeyInfo.1", key.getLocation() ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.util.pool.KeyInfo.1", key.getLocation() ) ); //$NON-NLS-1$
 
     m_key = key;
     m_loader = loader;

@@ -77,6 +77,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.KalypsoCommonsDebug;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 
@@ -100,7 +101,7 @@ public class VFSUtilities
 
   private static final FileSystemOptions THE_HTTPS_OPTIONS = new FileSystemOptions();
 
-  private static final String EXTENSION_POINT_ID = "org.apache.commons.vfs.provider";
+  private static final String EXTENSION_POINT_ID = "org.apache.commons.vfs.provider"; //$NON-NLS-1$
 
   private static IFileSystemManagerResolveDelegate FILE_SYSTEM_MANAGER_DELEGATE = null;
 
@@ -130,7 +131,7 @@ public class VFSUtilities
   {
     // create new file system manager
     final StandardFileSystemManager fsManager = new StandardFileSystemManager();
-    fsManager.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
+    fsManager.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) ); //$NON-NLS-1$
     fsManager.init();
 
     configureManager( fsManager );
@@ -147,10 +148,10 @@ public class VFSUtilities
     final List<String> schemeList = Arrays.asList( schemes );
 
     // maybe add webdav
-    if( !schemeList.contains( "webdav" ) )
+    if( !schemeList.contains( "webdav" ) ) //$NON-NLS-1$
     {
-      KalypsoCommonsDebug.DEBUG.printf( "Adding webdav file provider ...%n" );
-      fsManager.addProvider( "webdav", new WebdavFileProvider() );
+      KalypsoCommonsDebug.DEBUG.printf( "Adding webdav file provider ...%n" ); //$NON-NLS-1$
+      fsManager.addProvider( "webdav", new WebdavFileProvider() ); //$NON-NLS-1$
     }
 
     final Map<String, IConfigurationElement> providerLocations = readExtensions();
@@ -158,18 +159,18 @@ public class VFSUtilities
     {
       final IConfigurationElement element = entry.getValue();
 
-      final String scheme = element.getAttribute( "scheme" );
+      final String scheme = element.getAttribute( "scheme" ); //$NON-NLS-1$
       if( !schemeList.contains( scheme ) )
       {
         try
         {
-          final VFSProviderExtension provider = (VFSProviderExtension) element.createExecutableExtension( "class" );
+          final VFSProviderExtension provider = (VFSProviderExtension) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           fsManager.addProvider( scheme, provider.getProvider() );
           provider.init( fsManager );
         }
         catch( final CoreException e )
         {
-          throw new FileSystemException( "Could not register provider for scheme " + scheme, e );
+          throw new FileSystemException( Messages.getString("org.kalypso.commons.io.VFSUtilities.0") + scheme, e ); //$NON-NLS-1$
         }
       }
     }
@@ -254,7 +255,7 @@ public class VFSUtilities
   {
     if( source.equals( destination ) )
     {
-      KalypsoCommonsDebug.DEBUG.printf( "Files '%s' and '%s' are the same files. Ignoring!%n", source.getName(), destination.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( Messages.getString("org.kalypso.commons.io.VFSUtilities.1"), source.getName(), destination.getName() ); //$NON-NLS-1$
       return;
     }
 
@@ -267,7 +268,7 @@ public class VFSUtilities
       try
       {
         if( FileType.FOLDER.equals( source.getType() ) )
-          throw new IllegalArgumentException( "The source-file is a directory ..." );
+          throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.2") ); //$NON-NLS-1$
 
         /* If the destination is only a directory, use the sources filename for the destination file. */
         FileObject destinationFile = destination;
@@ -279,7 +280,7 @@ public class VFSUtilities
         if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize() )
         {
           /* Copy file. */
-          KalypsoCommonsDebug.DEBUG.printf( "Copy file '%s' to '%s' ...%n", source.getName(), destinationFile.getName() );
+          KalypsoCommonsDebug.DEBUG.printf( "Copy file '%s' to '%s' ...%n", source.getName(), destinationFile.getName() ); //$NON-NLS-1$
           FileUtil.copyContent( source, destinationFile );
           source.close();
         }
@@ -290,18 +291,18 @@ public class VFSUtilities
       catch( final IOException e )
       {
         /* An error has occurred while copying the file. */
-        KalypsoCommonsDebug.DEBUG.printf( "An error has occured with the message: %s%n", e.getLocalizedMessage() );
+        KalypsoCommonsDebug.DEBUG.printf( "An error has occured with the message: %s%n", e.getLocalizedMessage() ); //$NON-NLS-1$
 
         /* If a certain amount (here 2) of retries was reached before, re-throw the error. */
         if( cnt >= 2 )
         {
-          KalypsoCommonsDebug.DEBUG.printf( "The second retry has failed, rethrowing the error ...%n" );
+          KalypsoCommonsDebug.DEBUG.printf( "The second retry has failed, rethrowing the error ...%n" ); //$NON-NLS-1$
           throw e;
         }
 
         /* Retry the copying of the file. */
         cnt++;
-        KalypsoCommonsDebug.DEBUG.printf( "Retry: %s%n", String.valueOf( cnt ) );
+        KalypsoCommonsDebug.DEBUG.printf( "Retry: %s%n", String.valueOf( cnt ) ); //$NON-NLS-1$
         success = false;
 
         /* Wait for some milliseconds. */
@@ -334,16 +335,16 @@ public class VFSUtilities
   public static void copyDirectoryToDirectory( final FileObject source, final FileObject destination, final boolean overwrite ) throws IOException
   {
     if( !FileType.FOLDER.equals( source.getType() ) )
-      throw new IllegalArgumentException( "Source must be directory...: " + source.getURL() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.3") + source.getURL() ); //$NON-NLS-1$
 
     if( destination.exists() )
     {
       if( !FileType.FOLDER.equals( destination.getType() ) )
-        throw new IllegalArgumentException( "Destination must be a directory...: " + destination.getURL() );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.4") + destination.getURL() ); //$NON-NLS-1$
     }
     else
     {
-      KalypsoCommonsDebug.DEBUG.printf( "Creating directory %s ...%", destination.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( "Creating directory %s ...%", destination.getName() ); //$NON-NLS-1$
       destination.createFolder();
     }
 
@@ -364,12 +365,12 @@ public class VFSUtilities
         final FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        KalypsoCommonsDebug.DEBUG.printf( "Copy directory %s to %s ...", child.getName(), destinationDir.getName() );
+        KalypsoCommonsDebug.DEBUG.printf( "Copy directory %s to %s ...", child.getName(), destinationDir.getName() ); //$NON-NLS-1$
         copyDirectoryToDirectory( child, destinationDir, overwrite );
       }
       else
       {
-        KalypsoCommonsDebug.DEBUG.printf( "Could not determine the file type ...%n" );
+        KalypsoCommonsDebug.DEBUG.printf( "Could not determine the file type ...%n" ); //$NON-NLS-1$
       }
     }
   }
@@ -395,7 +396,7 @@ public class VFSUtilities
   public static void copyStringToFileObject( final String value, final FileObject destination ) throws IOException
   {
     if( FileType.FOLDER.equals( destination.getType() ) )
-      throw new IllegalArgumentException( "Destination is a folder." );
+      throw new IllegalArgumentException( "Destination is a folder." ); //$NON-NLS-1$
 
     /* Copy the string to this url. */
     OutputStream outputStream = null;
@@ -434,13 +435,13 @@ public class VFSUtilities
       final String dirParent = parentDir.getURL().toExternalForm();
       final String dirName = prefix + String.valueOf( System.currentTimeMillis() );
 
-      final FileObject newDir = fsManager.resolveFile( dirParent + "/" + dirName );
+      final FileObject newDir = fsManager.resolveFile( dirParent + "/" + dirName ); //$NON-NLS-1$
       if( newDir.exists() )
       {
         continue;
       }
 
-      KalypsoCommonsDebug.DEBUG.printf( "Creating folder %s ...%n", newDir.getName().getPath() );
+      KalypsoCommonsDebug.DEBUG.printf( "Creating folder %s ...%n", newDir.getName().getPath() ); //$NON-NLS-1$
       newDir.createFolder();
       return newDir;
     }
@@ -457,27 +458,27 @@ public class VFSUtilities
   public static FileObject checkProxyFor( final String absoluteFile, final FileSystemManager fsManager ) throws FileSystemException, MalformedURLException
   {
     final Proxy proxy = ProxyUtilities.getProxy();
-    KalypsoCommonsDebug.DEBUG.printf( "Should use proxy: %s%n", String.valueOf( proxy.useProxy() ) );
+    KalypsoCommonsDebug.DEBUG.printf( "Should use proxy: %s%n", String.valueOf( proxy.useProxy() ) ); //$NON-NLS-1$
 
     if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
     {
       final String proxyHost = proxy.getProxyHost();
       final int proxyPort = proxy.getProxyPort();
-      KalypsoCommonsDebug.DEBUG.printf( "Proxy host: %s%n", proxyHost );
-      KalypsoCommonsDebug.DEBUG.printf( "Proxy port: %s%n", String.valueOf( proxyPort ) );
+      KalypsoCommonsDebug.DEBUG.printf( "Proxy host: %s%n", proxyHost ); //$NON-NLS-1$
+      KalypsoCommonsDebug.DEBUG.printf( "Proxy port: %s%n", String.valueOf( proxyPort ) ); //$NON-NLS-1$
 
       /* Get the credentials. */
       final String user = proxy.getUser();
       final String password = proxy.getPassword();
 
-      final Pattern p = Pattern.compile( "(.+)://.+" );
+      final Pattern p = Pattern.compile( "(.+)://.+" ); //$NON-NLS-1$
       final Matcher m = p.matcher( absoluteFile );
       if( m.find() == true )
       {
-        KalypsoCommonsDebug.DEBUG.printf( "File: %s%n", absoluteFile );
-        KalypsoCommonsDebug.DEBUG.printf( "Protocol: %s%n", m.group( 1 ) );
+        KalypsoCommonsDebug.DEBUG.printf( "File: %s%n", absoluteFile ); //$NON-NLS-1$
+        KalypsoCommonsDebug.DEBUG.printf( "Protocol: %s%n", m.group( 1 ) ); //$NON-NLS-1$
 
-        if( m.group( 1 ).equals( "webdav" ) )
+        if( m.group( 1 ).equals( "webdav" ) ) //$NON-NLS-1$
         {
           WebdavFileSystemConfigBuilder.getInstance().setProxyHost( THE_WEBDAV_OPTIONS, proxyHost );
           WebdavFileSystemConfigBuilder.getInstance().setProxyPort( THE_WEBDAV_OPTIONS, proxyPort );
@@ -491,7 +492,7 @@ public class VFSUtilities
 
           return fsManager.resolveFile( absoluteFile, THE_WEBDAV_OPTIONS );
         }
-        else if( m.group( 1 ).equals( "http" ) )
+        else if( m.group( 1 ).equals( "http" ) ) //$NON-NLS-1$
         {
           HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTP_OPTIONS, proxyHost );
           HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTP_OPTIONS, proxyPort );
@@ -505,7 +506,7 @@ public class VFSUtilities
 
           return fsManager.resolveFile( absoluteFile, THE_HTTP_OPTIONS );
         }
-        else if( m.group( 1 ).equals( "https" ) )
+        else if( m.group( 1 ).equals( "https" ) ) //$NON-NLS-1$
         {
           HttpFileSystemConfigBuilder.getInstance().setProxyHost( THE_HTTPS_OPTIONS, proxyHost );
           HttpFileSystemConfigBuilder.getInstance().setProxyPort( THE_HTTPS_OPTIONS, proxyPort );
@@ -552,24 +553,24 @@ public class VFSUtilities
     if( FileType.FOLDER.equals( toDel.getType() ) )
     {
       /* Delete the directory. */
-      KalypsoCommonsDebug.DEBUG.printf( "Deleting the directory %s ...%n", toDel.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( "Deleting the directory %s ...%n", toDel.getName() ); //$NON-NLS-1$
       return toDel.delete( new AllFileSelector() );
     }
     else if( FileType.FILE.equals( toDel.getType() ) )
     {
       /* Delete the file. */
-      KalypsoCommonsDebug.DEBUG.printf( "Deleting the file %s ...%n", toDel.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( "Deleting the file %s ...%n", toDel.getName() ); //$NON-NLS-1$
       if( toDel.delete() )
         return 1;
 
-      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() ); //$NON-NLS-1$
 
       return 0;
     }
     else
     {
       /* The type of the file could not be determined, or it is an imaginary one. */
-      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() );
+      KalypsoCommonsDebug.DEBUG.printf( "Could not delete %s!%n", toDel.getName() ); //$NON-NLS-1$
 
       return 0;
     }

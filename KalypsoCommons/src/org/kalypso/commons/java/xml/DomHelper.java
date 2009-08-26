@@ -78,13 +78,13 @@ public class DomHelper
     {
       case Node.ELEMENT_NODE:
       {
-        buffer.append( "<" ).append( node.getNodeName() ).append( ">" );
+        buffer.append( "<" ).append( node.getNodeName() ).append( ">" ); //$NON-NLS-1$ //$NON-NLS-2$
         
         final NodeList nodes = node.getChildNodes();
         for( int i = 0; i < nodes.getLength(); i++ )
           recursiveCollectChildren( nodes.item( i ), buffer );
         
-        buffer.append( "</" ).append( node.getNodeName() ).append( ">" );
+        buffer.append( "</" ).append( node.getNodeName() ).append( ">" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         break;
       }

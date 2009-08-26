@@ -111,6 +111,6 @@ public class SimulationDescription implements Serializable
   @Override
   public String toString( )
   {
-    return super.toString() + "\n ID: " + m_id + "\n Description: " + m_description;
+    return super.toString() + "\n ID: " + m_id + "\n Description: " + m_description; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -103,7 +103,7 @@
             class="org.kalypso.simulation.ui.logview.views.LogViewer"
             icon="icons/logview/problems_view.gif"
             id="org.kalypso.simulation.ui.logview.views.LogViewer"
-            name="Log Ansicht"/>
+            name="%org.kalypso.simulation.ui.logview.views.LogViewer.name"/>
    </extension>
    <extension
          point="org.eclipse.ant.core.extraClasspathEntries">

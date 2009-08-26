@@ -102,7 +102,7 @@ public class GmlLoader extends WorkspaceLoader
     try
     {
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
-      final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", source ); //$NON-NLS-1$
+      final String taskMsg = Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.1", source ); //$NON-NLS-1$
       final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 1000 );
 
       /* Initialise */

@@ -63,7 +63,7 @@ public abstract class AbstractCSV implements ITabledValues
   protected String m_commentedLineBeginString = null;
 
   /** separator used for serializing the contents. It is a semicolon by default. */
-  private String m_separator = ";";
+  private String m_separator = ";"; //$NON-NLS-1$
 
   /**
    * Constructor

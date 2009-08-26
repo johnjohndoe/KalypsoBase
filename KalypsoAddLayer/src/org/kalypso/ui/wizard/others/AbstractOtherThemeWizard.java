@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
@@ -73,7 +74,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
   {
     m_themeNameWizardPage = themeNameWizardPage;
 
-    m_themeNameWizardPage.setDescription( "Geben Sie den Namen für das neue Thema ein" );
+    m_themeNameWizardPage.setDescription( Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -115,7 +116,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
         try
         {
           if( mapModell == null )
-            return StatusUtilities.createErrorStatus( "Keine Karte vorhanden" );
+            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.1") ); //$NON-NLS-1$
 
           final ICommand command = createCommand( mapModell, themeName );
           outlineviewer.postCommand( command, null );
@@ -132,7 +133,7 @@ public abstract class AbstractOtherThemeWizard extends Wizard implements IKalyps
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Hinzufügen des Themas", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.others.AbstractOtherThemeWizard.2"), status ); //$NON-NLS-1$
 
     return status.isOK();
   }

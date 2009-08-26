@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.wfs.WFService;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -101,7 +102,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     final QName featureTypeToLoad = m_gazetteerLocation.getFeatureType();
     final String targetCRS = null;
     final String filter;
-    final String maxFeatureAsString = "100";
+    final String maxFeatureAsString = "100"; //$NON-NLS-1$
     // no parent and nothing seleced
     if( parent == null && selectedFeature == null )
     {
@@ -111,14 +112,14 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       if( query != null && query.length() > 0 )
       {
         final StringBuffer queryBuffer = new StringBuffer( query );
-        if( query.indexOf( "*" ) < 0 )
-          queryBuffer.append( "*" );
-        buffer.append( "<ogc:Filter>\n" );
-        buffer.append( "<ogc:PropertyIsLike wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
-        buffer.append( "<ogc:PropertyName>" + labelProperty.getLocalPart() + "</ogc:PropertyName>\n" );
-        buffer.append( "<ogc:Literal>" + queryBuffer.toString() + "</ogc:Literal>\n" );
-        buffer.append( "</ogc:PropertyIsLike>\n" );
-        buffer.append( "</ogc:Filter>\n" );
+        if( query.indexOf( "*" ) < 0 ) //$NON-NLS-1$
+          queryBuffer.append( "*" ); //$NON-NLS-1$
+        buffer.append( "<ogc:Filter>\n" ); //$NON-NLS-1$
+        buffer.append( "<ogc:PropertyIsLike wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" ); //$NON-NLS-1$
+        buffer.append( "<ogc:PropertyName>" + labelProperty.getLocalPart() + "</ogc:PropertyName>\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        buffer.append( "<ogc:Literal>" + queryBuffer.toString() + "</ogc:Literal>\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        buffer.append( "</ogc:PropertyIsLike>\n" ); //$NON-NLS-1$
+        buffer.append( "</ogc:Filter>\n" ); //$NON-NLS-1$
       }
       filter = buffer.toString();
 
@@ -133,18 +134,18 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       // TODO better use binding
       final String valueAsString = value.toString();
       final StringBuffer buffer = new StringBuffer();
-      buffer.append( "<ogc:Filter>\n" );
+      buffer.append( "<ogc:Filter>\n" ); //$NON-NLS-1$
       // buffer.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
-      buffer.append( "<ogc:PropertyIsEqualTo>\n" );
-      buffer.append( "<ogc:PropertyName>parents/" + spacialIdentifier.getLocalPart() + "</ogc:PropertyName>\n" );
-      buffer.append( "<ogc:Literal>" + valueAsString + "</ogc:Literal>\n" );
-      buffer.append( "</ogc:PropertyIsEqualTo>\n" );
-      buffer.append( "</ogc:Filter>\n" );
+      buffer.append( "<ogc:PropertyIsEqualTo>\n" ); //$NON-NLS-1$
+      buffer.append( "<ogc:PropertyName>parents/" + spacialIdentifier.getLocalPart() + "</ogc:PropertyName>\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buffer.append( "<ogc:Literal>" + valueAsString + "</ogc:Literal>\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buffer.append( "</ogc:PropertyIsEqualTo>\n" ); //$NON-NLS-1$
+      buffer.append( "</ogc:Filter>\n" ); //$NON-NLS-1$
       filter = buffer.toString();
     }
     else
       return; // never happens
-    final Job job = new Job( "Gazetter: load" + featureTypeToLoad.getLocalPart() )
+    final Job job = new Job( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.0") + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -161,7 +162,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
           e.printStackTrace();
           setContent( null );
           setEnable( false );
-          return StatusUtilities.createErrorStatus( "Fehler beim Zugriff auf den Gazetteer-Server. Es sind keine Daten abrufbar. Wiederholen Sie den Vorgang zu einem spaeteren Zeitpunkt oder wenden Sie sich an den Administrator/Provider" );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.1") ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -275,7 +276,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return result;
     }
     else
-      return new String[] { "gazetteer nicht erreichbar" };
+      return new String[] { Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.2") }; //$NON-NLS-1$
   }
 
   /**

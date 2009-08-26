@@ -66,6 +66,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
@@ -78,7 +79,7 @@ public class QueuedSimulationService implements ISimulationService
 {
   private static final Logger LOGGER = Logger.getLogger( QueuedSimulationService.class.getName() );
 
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) ); //$NON-NLS-1$
 
   static
   {
@@ -156,7 +157,7 @@ public class QueuedSimulationService implements ISimulationService
   {
     if( m_timer == null )
     {
-      LOGGER.info( "Start scheduling with period: " + m_schedulingPeriod + "ms" );
+      LOGGER.info( "Start scheduling with period: " + m_schedulingPeriod + "ms" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       m_timer = new Timer();
       final TimerTask timerTask = new TimerTask()
@@ -178,7 +179,7 @@ public class QueuedSimulationService implements ISimulationService
       m_timer.cancel();
       m_timer = null;
 
-      LOGGER.info( "Stopped scheduling" );
+      LOGGER.info( "Stopped scheduling" ); //$NON-NLS-1$
     }
   }
 
@@ -198,7 +199,7 @@ public class QueuedSimulationService implements ISimulationService
     final SimulationThread cjt = findJobThread( jobID );
 
     if( cjt.isAlive() )
-      throw new SimulationException( "Cannot dispose a running job! Cancel it first.", null );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.0"), null ); //$NON-NLS-1$
 
     cjt.dispose();
 
@@ -225,7 +226,7 @@ public class QueuedSimulationService implements ISimulationService
       }
     }
 
-    throw new SimulationException( "Job not found: " + jobID, null );
+    throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.1") + jobID, null ); //$NON-NLS-1$
   }
 
   /**
@@ -266,19 +267,19 @@ public class QueuedSimulationService implements ISimulationService
       File tmpdir;
       try
       {
-        tmpdir = SimulationUtilitites.createSimulationTmpDir( "" + id );
+        tmpdir = SimulationUtilitites.createSimulationTmpDir( "" + id ); //$NON-NLS-1$
       }
       catch( final IOException e )
       {
         e.printStackTrace();
-        throw new SimulationException( "Temporäres Simulationsverzeichnis konnte nicht erzeugt werden", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.2"), e ); //$NON-NLS-1$
       }
 
       final ModelspecData modelspec = getModelspec( typeID );
 
       final ISimulation job = m_calcJobFactory.createJob( typeID );
 
-      cjt = new SimulationThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output, tmpdir );
+      cjt = new SimulationThread( "" + id, description, typeID, job, modelspec, zipHandler, input, output, tmpdir ); //$NON-NLS-1$
 
       if( id == m_threads.size() )
       {
@@ -289,7 +290,7 @@ public class QueuedSimulationService implements ISimulationService
         m_threads.set( id, cjt );
       }
 
-      LOGGER.info( "Job waiting for scheduling: " + id );
+      LOGGER.info( "Job waiting for scheduling: " + id ); //$NON-NLS-1$
     }
 
     startScheduling();
@@ -319,8 +320,8 @@ public class QueuedSimulationService implements ISimulationService
         }
       }
 
-      LOGGER.info( "Scheduler: Running jobs: " + runningCount );
-      LOGGER.info( "Scheduler: Waiting jobs: " + waitingCount );
+      LOGGER.info( "Scheduler: Running jobs: " + runningCount ); //$NON-NLS-1$
+      LOGGER.info( "Scheduler: Waiting jobs: " + waitingCount ); //$NON-NLS-1$
 
       if( waitingCount == 0 )
       {
@@ -331,7 +332,7 @@ public class QueuedSimulationService implements ISimulationService
       // Maximal einen Job auf einmal starten
       if( runningCount >= m_maxThreads )
       {
-        LOGGER.info( "Scheduler: Maximum reached" );
+        LOGGER.info( "Scheduler: Maximum reached" ); //$NON-NLS-1$
         return;
       }
 
@@ -343,7 +344,7 @@ public class QueuedSimulationService implements ISimulationService
         final SimulationInfo jobBean = cjt.getJobBean();
         if( jobBean.getState() == ISimulationConstants.STATE.WAITING )
         {
-          LOGGER.info( "Scheduler: Starting job: " + jobBean.getId() );
+          LOGGER.info( "Scheduler: Starting job: " + jobBean.getId() ); //$NON-NLS-1$
           cjt.start();
           return;
         }
@@ -401,7 +402,7 @@ public class QueuedSimulationService implements ISimulationService
 
     final ISimulation job = m_calcJobFactory.createJob( typeID );
     if( job == null )
-      throw new SimulationException( String.format( "Can't find ISimulationJob for id: %s", typeID ) );
+      throw new SimulationException( String.format( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.3"), typeID ) ); //$NON-NLS-1$
 
     try
     {
@@ -411,12 +412,12 @@ public class QueuedSimulationService implements ISimulationService
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.4"), e ); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Error while reading sim-service specs", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.5"), e ); //$NON-NLS-1$
     }
 
     m_modelspecMap.put( typeID, data );
@@ -463,7 +464,7 @@ public class QueuedSimulationService implements ISimulationService
     {
       final URL url = m_catalog.getURL( namespace );
       if( url == null )
-        throw new SimulationException( "Unknown schema namespace: " + namespace, null );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.6") + namespace, null ); //$NON-NLS-1$
 
       final URLConnection connection = url.openConnection();
       return connection.getLastModified();
@@ -472,7 +473,7 @@ public class QueuedSimulationService implements ISimulationService
     {
       e.printStackTrace();
 
-      throw new SimulationException( "Unknown schema namespace: " + namespace, e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.7") + namespace, e ); //$NON-NLS-1$
     }
   }
 

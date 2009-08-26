@@ -63,7 +63,7 @@ public abstract class AbstractParser implements IParser
     //          + ") is not of the type " + getObjectClass().getName() );
 
     if( obj == null )
-      return "null";
+      return "null"; //$NON-NLS-1$
 
     return toStringInternal( obj );
   }

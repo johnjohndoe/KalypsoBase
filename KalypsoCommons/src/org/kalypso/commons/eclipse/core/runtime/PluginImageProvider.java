@@ -87,7 +87,7 @@ public class PluginImageProvider
     m_plugin = plugin;
 
     final File stateLocation = plugin.getStateLocation().toFile();
-    m_imageTmpDir = new File( stateLocation, "pluginImages" );
+    m_imageTmpDir = new File( stateLocation, "pluginImages" ); //$NON-NLS-1$
   }
 
   /**
@@ -153,7 +153,7 @@ public class PluginImageProvider
 
     final ImageDescriptor imageDescriptor = getImageDescriptor( path );
     if( imageDescriptor == null )
-      throw new NullPointerException( "Image-Path invalid for key: " + key + ", " + path );
+      throw new NullPointerException( "Image-Path invalid for key: " + key + ", " + path ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return imageDescriptor;
   }
@@ -170,7 +170,7 @@ public class PluginImageProvider
     {
       nameBuffer.append( '#' );
       if( descriptor == null )
-        nameBuffer.append( "null" );
+        nameBuffer.append( "null" ); //$NON-NLS-1$
       else
       {
         nameBuffer.append( descriptor.getClass().getName() );
@@ -237,7 +237,7 @@ public class PluginImageProvider
     try
     {
       final File imageDir = m_imageTmpDir;
-      final File classDir = new File( imageDir, "resources" );
+      final File classDir = new File( imageDir, "resources" ); //$NON-NLS-1$
       final File imageFile = new File( classDir, path );
       if( imageFile.exists() )
         return imageFile.toURI().toURL();
@@ -251,7 +251,7 @@ public class PluginImageProvider
     }
     catch( final IOException e )
     {
-      PluginUtilities.logToPlugin( m_plugin, IStatus.ERROR, "Could not create temporary file for " + url.toString(), e );
+      PluginUtilities.logToPlugin( m_plugin, IStatus.ERROR, "Could not create temporary file for " + url.toString(), e ); //$NON-NLS-1$
       return null;
     }
 

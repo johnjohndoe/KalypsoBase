@@ -52,6 +52,7 @@ import javax.xml.bind.Unmarshaller;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
 
@@ -77,7 +78,7 @@ public class ModelspecData
     }
     catch( final JAXBException e )
     {
-      throw new SimulationException( "Modelspezifikation konnte nicht geladen werden.", e );
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.ModelspecData.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -107,7 +108,7 @@ public class ModelspecData
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )
-        throw new SimulationException( "Keine Eingangsdaten für ID " + id + " (" + description + ") vorhanden.", null );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.ModelspecData.1", id,description ), null ); //$NON-NLS-1$ 
     }
   }
 

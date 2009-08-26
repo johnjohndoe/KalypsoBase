@@ -78,6 +78,7 @@ import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -117,17 +118,17 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   private Combo m_spatialOpsCombo;
 
-  String OPS_INTERSECTION = "Schneidet das Objekt";
+  String OPS_INTERSECTION = "Schneidet das Objekt"; //$NON-NLS-1$
 
-  String OPS_CONTAINS = "Enthält das Objekt";
+  String OPS_CONTAINS = "Enthält das Objekt"; //$NON-NLS-1$
 
-  String OPS_TOUCHES = "Berührt das Objekt";
+  String OPS_TOUCHES = "Berührt das Objekt"; //$NON-NLS-1$
 
   String m_themeName;
 
   boolean m_doFilterMaxFeature = false;
 
-  String m_maxFeaturesAsString = "500";
+  String m_maxFeaturesAsString = "500"; //$NON-NLS-1$
 
   int m_maxFeaturesAsInt = 500;
 
@@ -151,7 +152,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     topGroup.setLayout( new GridLayout( 2, false ) );
     topGroup.setLayoutData( new GridData() );
     m_bufferButton = new Button( topGroup, SWT.CHECK );
-    m_bufferButton.setText( "Puffer:" );
+    m_bufferButton.setText( "Puffer:" ); //$NON-NLS-1$
     m_bufferButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -171,7 +172,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     } );
     m_bufferDistance = new Text( topGroup, SWT.SINGLE | SWT.BORDER );
-    m_bufferDistance.setText( "in Meter" );
+    m_bufferDistance.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.0") ); //$NON-NLS-1$
     m_bufferDistance.setEditable( false );
     m_bufferDistance.addFocusListener( new FocusAdapter()
     {
@@ -186,7 +187,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
     } );
     m_activeSelectionButton = new Button( topGroup, SWT.RADIO );
-    m_activeSelectionButton.setText( "Active Selektion aus der Karte:" );
+    m_activeSelectionButton.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.1") ); //$NON-NLS-1$
     m_activeSelectionButton.addSelectionListener( new SelectionAdapter()
     {
 
@@ -228,7 +229,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     } );
     m_BBoxButton = new Button( topGroup, SWT.RADIO );
-    m_BBoxButton.setText( "aktueller Kartenausschnitt (BBOX)" );
+    m_BBoxButton.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.2") ); //$NON-NLS-1$
     m_BBoxButton.addSelectionListener( new SelectionAdapter()
     {
 
@@ -247,7 +248,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     m_BBoxButton.setLayoutData( data1 );
 
     final Button button = new Button( topGroup, SWT.CHECK );
-    button.setText( "max. Feature" );
+    button.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.3") ); //$NON-NLS-1$
     button.setSelection( m_doFilterMaxFeature );
 
     final Text maxFeatureField = new Text( topGroup, SWT.BORDER );
@@ -281,9 +282,9 @@ public class ImportWfsFilterWizardPage extends WizardPage
     final Group spatialOpsGroup = new Group( main, SWT.HORIZONTAL );
     spatialOpsGroup.setLayout( new GridLayout( 2, false ) );
     spatialOpsGroup.setLayoutData( new GridData() );
-    spatialOpsGroup.setText( "Unterstütze Räumliche Operatoren" );
+    spatialOpsGroup.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.4") ); //$NON-NLS-1$
     final Label opsLabel = new Label( spatialOpsGroup, SWT.NONE );
-    opsLabel.setText( "Operatoren" );
+    opsLabel.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.5") ); //$NON-NLS-1$
     m_spatialOpsCombo = new Combo( spatialOpsGroup, SWT.READ_ONLY );
     m_spatialOpsCombo.addSelectionListener( new SelectionAdapter()
     {
@@ -305,13 +306,13 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   protected void updateMessage( )
   {
-    String message = "";
+    String message = ""; //$NON-NLS-1$
     if( m_activeSelectionButton.getSelection() )
-      message = message + "Die selektierte Geometrie vom aktiven Thema: " + m_themeName + " wird als räumlicher Operator verwendet.";
+      message = message + Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.6", m_themeName ); //$NON-NLS-1$ 
     if( m_BBoxButton.getSelection() )
-      message = message + "Der aktive Kartenauschnitt wird als räumlicher Operator verwendet.";
+      message = message + Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.8"); //$NON-NLS-1$
     if( m_bufferButton.getSelection() )
-      message = message + "\nMit einem Puffer von " + m_bufferDistance.getText() + " Metern";
+      message = message + Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.7", m_bufferDistance.getText() ); //$NON-NLS-1$ 
     setMessage( message );
 
   }
@@ -326,13 +327,13 @@ public class ImportWfsFilterWizardPage extends WizardPage
         m_maxFeaturesAsInt = Integer.parseInt( m_maxFeaturesAsString );
         if( m_maxFeaturesAsInt < 1 )
         {
-          setErrorMessage( "maximale Anzahl Feature muss größer 0 sein" );
+          setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.9") ); //$NON-NLS-1$
           return false;
         }
       }
       catch( final Exception ex )
       {
-        setErrorMessage( "maximale Anzahl Feature muss ein Zahlenwert sein" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.10") ); //$NON-NLS-1$
         return false;
       }
     }
@@ -347,13 +348,13 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
       catch( final NumberFormatException e )
       {
-        setErrorMessage( "Es können nur Zahlen in das Textfeld eingegeben werden" );
-        m_bufferDistance.setText( "" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.11") ); //$NON-NLS-1$
+        m_bufferDistance.setText( "" ); //$NON-NLS-1$
         return false;
       }
       if( !m_BBoxButton.getSelection() && !m_activeSelectionButton.getSelection() )
       {
-        setErrorMessage( "Der Puffer-Operator darf nie alleine gewählt sein" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.12") ); //$NON-NLS-1$
         return false;
       }
     }
@@ -362,7 +363,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
       if( m_selectedGeom == null )
       {
-        setErrorMessage( "Es ist kein Element selektiert" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.13") ); //$NON-NLS-1$
         return false;
       }
     }
@@ -371,7 +372,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
       if( getBBoxFromActiveMap() == null )
       {
-        setErrorMessage( "Die active bbox ist Null" );
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.14") ); //$NON-NLS-1$
         return false;
       }
     }
@@ -413,7 +414,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     // check if buffer is selected
     final String val;
     if( !m_bufferButton.getSelection() )
-      val = "0.0";
+      val = "0.0"; //$NON-NLS-1$
     else
       val = m_bufferDistance.getText();
     final double distance = Double.parseDouble( val );
@@ -448,7 +449,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   private Object[] getSelectedFeatureProperties( )
   {
-    m_themeName = "Thema ohne Namen";
+    m_themeName = Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.15"); //$NON-NLS-1$
     if( m_gisMapOutlineViewer == null )
       return new Object[0];
     final IMapModell mapModell = m_gisMapOutlineViewer;

@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.util.AbstractSimulationDataProvider;
@@ -92,7 +93,7 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider 
   {
     final String path = m_inputs.get( id );
     if( path == null )
-      throw new NoSuchElementException( "Eingabedaten nicht vorhanden mit ID: " + id );
+      throw new NoSuchElementException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.0") + id ); //$NON-NLS-1$
 
     final DataType inputType = m_modelspec == null ? null : m_modelspec.getInput( id );
 
@@ -107,7 +108,7 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider 
         final URI relativeURI;
 
         final URI baseURL = getBaseURL().toURI();
-        if( path.startsWith( "platform:/resource//" ) )
+        if( path.startsWith( "platform:/resource//" ) ) //$NON-NLS-1$
         {
           relativeURI = baseURL.resolve( URIUtil.encodePath( path.substring( 20 ) ) );
         }
@@ -131,11 +132,11 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider 
       }
       catch( final IOException e )
       {
-        throw new SimulationException( "Problem reading input data.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.1"), e ); //$NON-NLS-1$
       }
       catch( final URISyntaxException e )
       {
-        throw new SimulationException( "URI input does not contain a valid URI.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.2"), e ); //$NON-NLS-1$
       }
     }
     else
@@ -150,11 +151,11 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider 
         }
         catch( final ParseException e )
         {
-          throw new SimulationException( "Could not parse " + path + " as an object of type " + type, e );
+          throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.4" , path , type), e ); //$NON-NLS-1$ 
         }
       }
     }
 
-    throw new SimulationException( "Unknown type " + type, null );
+    throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.3") + type, null ); //$NON-NLS-1$
   }
 }

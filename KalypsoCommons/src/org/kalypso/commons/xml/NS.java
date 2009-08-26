@@ -48,76 +48,76 @@ package org.kalypso.commons.xml;
 public interface NS
 {
   // the 'XML-Schema' schema:
-  public final static String XSD_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+  public final static String XSD_SCHEMA = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
 
-  public final static String XSD = "http://www.w3.org/2001/XMLSchema-instance";
+  public final static String XSD = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
 
   /**
    * Namespace for kalypso appinfo elements inside gml schemas.
    */
-  public final static String KALYPSO_APPINFO = "org.kalypso.appinfo";
+  public final static String KALYPSO_APPINFO = "org.kalypso.appinfo"; //$NON-NLS-1$
 
   /**
    * namespace from namespacedefinitions e.g. xmlns:app="foobar"
    */
-  public final static String XML_PREFIX_DEFINITION_XMLNS = "http://www.w3.org/2000/xmlns/";
+  public final static String XML_PREFIX_DEFINITION_XMLNS = "http://www.w3.org/2000/xmlns/"; //$NON-NLS-1$
 
-  public final static String XLINK = "http://www.w3.org/1999/xlink";
+  public final static String XLINK = "http://www.w3.org/1999/xlink"; //$NON-NLS-1$
 
-  public static final String GML2 = "http://www.opengis.net/gml";
+  public static final String GML2 = "http://www.opengis.net/gml"; //$NON-NLS-1$
 
   public static final String GML3 = GML2;
 
-  public static final String SMIL20 = "http://www.w3.org/2001/SMIL20/";
+  public static final String SMIL20 = "http://www.w3.org/2001/SMIL20/"; //$NON-NLS-1$
 
-  public static final String SMIL20LANG = "http://www.w3.org/2001/SMIL20/Language";
+  public static final String SMIL20LANG = "http://www.w3.org/2001/SMIL20/Language"; //$NON-NLS-1$
 
-  public static final String WFS = "http://www.opengis.net/wfs";
+  public static final String WFS = "http://www.opengis.net/wfs"; //$NON-NLS-1$
 
-  public static final String SWE = "http://www.opengis.net/swe";
+  public static final String SWE = "http://www.opengis.net/swe"; //$NON-NLS-1$
 
-  public static final String ST = "http://www.seegrid.csiro.au/xml/st";
+  public static final String ST = "http://www.seegrid.csiro.au/xml/st"; //$NON-NLS-1$
 
-  public static final String OM = "http://www.opengis.net/om";
+  public static final String OM = "http://www.opengis.net/om"; //$NON-NLS-1$
 
-  public static final String XST = "http://www.seegrid.csiro.au/xml/st";
+  public static final String XST = "http://www.seegrid.csiro.au/xml/st"; //$NON-NLS-1$
 
-  public static final String GMD = "http://www.isotc211.org/2005/gmd";
+  public static final String GMD = "http://www.isotc211.org/2005/gmd"; //$NON-NLS-1$
 
-  public static final String KALYPSO_TEMPLATES = "types.template.kalypso.org";
+  public static final String KALYPSO_TEMPLATES = "types.template.kalypso.org"; //$NON-NLS-1$
 
-  public static final String KALYPSO_MAPVIEW = "gismapview.template.kalypso.org";
+  public static final String KALYPSO_MAPVIEW = "gismapview.template.kalypso.org"; //$NON-NLS-1$
 
-  public static final String KALYPSO_OBSVIEW = "obsdiagview.template.kalypso.org";
+  public static final String KALYPSO_OBSVIEW = "obsdiagview.template.kalypso.org"; //$NON-NLS-1$
 
-  public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
+  public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org"; //$NON-NLS-1$
 
   /**
    * @deprecated Does not belong here, use constants from rrm plug-ins
    */
   @Deprecated
-  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
+  public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA"; //$NON-NLS-1$
 
-  public static final String KALYPSO_OM = "http://www.ksp.org/om";
+  public static final String KALYPSO_OM = "http://www.ksp.org/om"; //$NON-NLS-1$
 
-  public static final String CATALOG = "urn:oasis:names:tc:entity:xmlns:xml:catalog";
+  public static final String CATALOG = "urn:oasis:names:tc:entity:xmlns:xml:catalog"; //$NON-NLS-1$
 
   // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)
-  public static final String ADV_NAS = "http://www.adv-online.de/nas";
+  public static final String ADV_NAS = "http://www.adv-online.de/nas"; //$NON-NLS-1$
 
-  public static final String SLD = "http://www.opengis.net/sld";
+  public static final String SLD = "http://www.opengis.net/sld"; //$NON-NLS-1$
 
-  public static final String OGC = "http://www.opengis.net/ogc";
+  public static final String OGC = "http://www.opengis.net/ogc"; //$NON-NLS-1$
 
-  public static final String COMMON = "org.kalypso.gml.common";
+  public static final String COMMON = "org.kalypso.gml.common"; //$NON-NLS-1$
 
-  public static final String COMMON_SHP = "org.kalypso.gml.common.shape";
+  public static final String COMMON_SHP = "org.kalypso.gml.common.shape"; //$NON-NLS-1$
 
-  public static final String COMMON_MATH = "org.kalypso.gml.common.math";
+  public static final String COMMON_MATH = "org.kalypso.gml.common.math"; //$NON-NLS-1$
 
-  public static final String SWE_EXTENSIONS = "org.kalypso.swe.ext";
+  public static final String SWE_EXTENSIONS = "org.kalypso.swe.ext"; //$NON-NLS-1$
 
-  public static final String COMMON_MATHRANGES = "org.kalypso.gml.common.math.ranges";
+  public static final String COMMON_MATHRANGES = "org.kalypso.gml.common.math.ranges"; //$NON-NLS-1$
 
-  public static final String COMMON_COVERAGE = "org.kalypso.gml.common.coverage";
+  public static final String COMMON_COVERAGE = "org.kalypso.gml.common.coverage"; //$NON-NLS-1$
 }

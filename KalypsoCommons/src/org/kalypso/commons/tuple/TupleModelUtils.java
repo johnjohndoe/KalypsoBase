@@ -85,7 +85,7 @@ public final class TupleModelUtils
   public <R extends IRowKey, C extends IColumnKey> void addColumn( final ITupleModel<R, C> model, final C columnKey, final R[] rowKeys, final Object[] column )
   {
     if( rowKeys.length != column.length )
-      throw new IllegalArgumentException( "Array Length Not Equal: " + rowKeys.length + " != " + column.length );
+      throw new IllegalArgumentException( "Array Length Not Equal: " + rowKeys.length + " != " + column.length ); //$NON-NLS-1$ //$NON-NLS-2$
     
     for( int i = 0; i < rowKeys.length; i++ )
       model.setValue( column[i], rowKeys[i], columnKey );

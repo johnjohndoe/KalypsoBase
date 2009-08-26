@@ -41,6 +41,7 @@
 package org.kalypso.simulation.core;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -49,7 +50,7 @@ public class SimulationMonitorUtilitites
 {
   private SimulationMonitorUtilitites( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate helper class." );
+    throw new UnsupportedOperationException( "Do not instantiate helper class." ); //$NON-NLS-1$
   }
 
   public static void setProgress( final ISimulationMonitor monitor, final int progress ) throws SimulationException
@@ -57,8 +58,8 @@ public class SimulationMonitorUtilitites
     monitor.setProgress( progress );
     if( monitor.isCanceled() )
     {
-      monitor.setFinishInfo( IStatus.CANCEL, "Abbruch durch den Benutzer" );
-      throw new SimulationException( "Abbruch durch Benutzer", null );
+      monitor.setFinishInfo( IStatus.CANCEL, Messages.getString("org.kalypso.simulation.core.SimulationMonitorUtilitites.0") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.SimulationMonitorUtilitites.1"), null ); //$NON-NLS-1$
     }
   }
 }

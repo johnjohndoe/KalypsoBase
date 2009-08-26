@@ -56,7 +56,7 @@ public class DoubleParser extends AbstractParser
    */
   public DoubleParser()
   {
-    this( "" );
+    this( "" ); //$NON-NLS-1$
   }
 
   /**
@@ -84,7 +84,7 @@ public class DoubleParser extends AbstractParser
    */
   public String getFormat()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

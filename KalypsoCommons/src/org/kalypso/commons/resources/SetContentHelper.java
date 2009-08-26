@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 
@@ -70,7 +71,7 @@ public abstract class SetContentHelper
 
   public SetContentHelper()
   {
-    this( "Schreibe in Datei" );
+    this( Messages.getString("org.kalypso.commons.resources.SetContentHelper.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -128,7 +129,7 @@ public abstract class SetContentHelper
           }
         }
       };
-      final Thread innerThread = new Thread( innerRunnable, "SetContentHelper" );
+      final Thread innerThread = new Thread( innerRunnable, "SetContentHelper" ); //$NON-NLS-1$
       innerThread.start();
 
       // set file contents
@@ -157,7 +158,7 @@ public abstract class SetContentHelper
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, "Fehler beim Schreiben einer Datei" ) );
+        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString("org.kalypso.commons.resources.SetContentHelper.2") ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -183,7 +184,7 @@ public abstract class SetContentHelper
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString("org.kalypso.commons.resources.SetContentHelper.3"), e ) ); //$NON-NLS-1$
     }
     finally
     {

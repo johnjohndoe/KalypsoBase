@@ -68,8 +68,8 @@ public class SSLUtilities
   public static void acceptSelfSignedCertificatesSSL( )
   {
     ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
-    Protocol easyhttps = new Protocol( "https", easyfactory, 443 );
-    Protocol.registerProtocol( "https", easyhttps );
+    Protocol easyhttps = new Protocol( "https", easyfactory, 443 ); //$NON-NLS-1$
+    Protocol.registerProtocol( "https", easyhttps ); //$NON-NLS-1$
   }
 
   /**
@@ -86,7 +86,7 @@ public class SSLUtilities
   public static void configureWhole( URL keyStore, String keyPassphrase, URL trustStore, String trustPassphrase ) throws Exception
   {
     ProtocolSocketFactory authfactory = new AuthSSLProtocolSocketFactory( keyStore, keyPassphrase, trustStore, trustPassphrase );
-    Protocol authhttps = new Protocol( "https", authfactory, 443 );
-    Protocol.registerProtocol( "https", authhttps );
+    Protocol authhttps = new Protocol( "https", authfactory, 443 ); //$NON-NLS-1$
+    Protocol.registerProtocol( "https", authhttps ); //$NON-NLS-1$
   }
 }

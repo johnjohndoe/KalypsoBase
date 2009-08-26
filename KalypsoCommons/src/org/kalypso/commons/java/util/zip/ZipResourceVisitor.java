@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.i18n.Messages;
 
 /**
  * A {@link org.eclipse.core.resources.IResourceVisitor}which puts all visited resources in a single zip file.
@@ -135,7 +136,7 @@ public class ZipResourceVisitor implements IResourceVisitor
       }
       catch( final IOException e )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Datei wurde nicht in das ZIP Archiv geschrieben: " + relativePathTo, e );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString("org.kalypso.commons.java.util.zip.ZipResourceVisitor0") + relativePathTo, e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }

@@ -43,6 +43,7 @@ package org.kalypso.ui.gazetter.view;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -65,14 +66,14 @@ public class GazetteerLabelProvider extends LabelProvider
   public String getText( Object element )
   {
     if( element == GazetteerConstants.NO_SELECTION_IN_COMBO )
-      return "bitte waehlen";
+      return Messages.getString("org.kalypso.ui.gazetter.view.GazetteerLabelProvider.0"); //$NON-NLS-1$
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
       final Object text = feature.getProperty( m_labelProperty );
       if( text != null )
         return text.toString();
-      return "fehler";
+      return Messages.getString("org.kalypso.ui.gazetter.view.GazetteerLabelProvider.1"); //$NON-NLS-1$
     }
     return super.getText( element );
   }

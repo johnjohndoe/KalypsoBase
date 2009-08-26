@@ -53,6 +53,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.simulation.ui.calccase.CalcCaseJob;
+import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -71,7 +72,7 @@ public class StartCalculationActionDelegate extends AbstractHandler
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( shell, selection,
-        "Berechnung starten", "Folgende Rechenvarianten werden berechnet:" );
+        Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.0"), Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
     if( calcCasesToCalc == null )
       return null;
 
@@ -80,8 +81,8 @@ public class StartCalculationActionDelegate extends AbstractHandler
       final Job calcJob = new CalcCaseJob( folder );
 
       //    TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, "Berechnung durchführen: "
-          + folder.getName(), "Berechnung beendet: ", false, true ) );
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.2") //$NON-NLS-1$
+          + folder.getName(), Messages.getString("org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.3"), false, true ) ); //$NON-NLS-1$
       calcJob.schedule();
     }
 

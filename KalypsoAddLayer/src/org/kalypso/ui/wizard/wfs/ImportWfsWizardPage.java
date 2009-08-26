@@ -96,6 +96,7 @@ import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.filterencoding.Filter;
 
@@ -104,7 +105,7 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public class ImportWfsWizardPage extends WizardPage
 {
-  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, "Lade Capabilities...", null );
+  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.0"), null ); //$NON-NLS-1$
 
   protected Button getDefault;
 
@@ -114,9 +115,9 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected Text timeoutText;
 
-  protected static final String timeoutDefault = "3";
+  protected static final String timeoutDefault = "3"; //$NON-NLS-1$
 
-  protected static final String bufferDefault = "10";
+  protected static final String bufferDefault = "10"; //$NON-NLS-1$
 
   private ListViewer m_listLeftSide;
 
@@ -244,7 +245,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     setControl( composite );
 
-    setMessage( "Auf dieser Seite können Sie die Basisadresse (URL) des WebFeatureService eingeben und die anzuzeigenden Themen auswählen." );
+    setMessage( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.1") ); //$NON-NLS-1$
     setPageComplete( false );
     setStatus( null );
   }
@@ -254,12 +255,12 @@ public class ImportWfsWizardPage extends WizardPage
     final Group fieldGroup = new Group( parent, SWT.NULL );
     fieldGroup.setLayout( new GridLayout( 2, false ) );
     fieldGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fieldGroup.setText( "Verbindungsdaten" );
+    fieldGroup.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.2") ); //$NON-NLS-1$
 
     // add url
     m_labelUrl = new Label( fieldGroup, SWT.NONE );
-    m_labelUrl.setText( "URL:" );
-    m_labelUrl.setToolTipText( "URL des Web Feature Servers (WFS)" );
+    m_labelUrl.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.3") ); //$NON-NLS-1$
+    m_labelUrl.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.4") ); //$NON-NLS-1$
     m_labelUrl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     // initialize availabel Servers
@@ -316,7 +317,7 @@ public class ImportWfsWizardPage extends WizardPage
   private void createLayerSelectionControl( final Composite composite )
   {
     m_layerGroup = new Group( composite, SWT.CENTER );
-    m_layerGroup.setText( "Verfügbare Themen des Web Feature Servers" );
+    m_layerGroup.setText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.5") ); //$NON-NLS-1$
     final GridLayout gridLayout = new GridLayout( 4, false );
     gridLayout.marginHeight = 10;
     gridLayout.horizontalSpacing = 10;
@@ -335,7 +336,7 @@ public class ImportWfsWizardPage extends WizardPage
 
     m_addLayer = new Button( m_layerGroup, SWT.PUSH );
     m_addLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
-    m_addLayer.setToolTipText( "Hinzufügen eines Themas zur Kartenansicht" );
+    m_addLayer.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.6") ); //$NON-NLS-1$
     m_addLayer.addSelectionListener( m_addButtonSelectionListener );
     m_addLayer.setEnabled( false );
     m_listRightSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
@@ -351,11 +352,11 @@ public class ImportWfsWizardPage extends WizardPage
     m_removeLayer = new Button( m_leftsideButtonC, SWT.PUSH );
     m_removeLayer.setEnabled( false );
     m_removeLayer.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
-    m_removeLayer.setToolTipText( "Entfernen des gewählten Themas aus der Kartenansicht" );
+    m_removeLayer.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.7") ); //$NON-NLS-1$
     m_removeLayer.addSelectionListener( m_removeButtonSelectionListener );
     m_addFilterButton = new Button( m_leftsideButtonC, SWT.NULL );
     m_addFilterButton.setImage( ImageProvider.IMAGE_FILTERDIALOG_ADD_FILTER.createImage() );
-    m_addFilterButton.setToolTipText( "Erstellen/hinzufügen eines Filters für ein WFS Querable Request" );
+    m_addFilterButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.8") ); //$NON-NLS-1$
     m_addFilterButton.addSelectionListener( m_filterButtonSelectionListener );
     m_addFilterButton.setEnabled( false );
     m_layerGroup.setVisible( true );
@@ -404,7 +405,7 @@ public class ImportWfsWizardPage extends WizardPage
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Ungültige URL: " + m_uri, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.9") + m_uri, e ); //$NON-NLS-1$
       setErrorMessage( status.getMessage() );
       setStatus( status );
     }
@@ -484,7 +485,7 @@ public class ImportWfsWizardPage extends WizardPage
       final QualifiedName name = wfsFT.getName();
       final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
       final String namespace = name.getNamespace().toString();
-      final IGMLSchema schema = catalog.getSchema( namespace, "3.1.1" );
+      final IGMLSchema schema = catalog.getSchema( namespace, "3.1.1" ); //$NON-NLS-1$
       final IFeatureType ft = schema.getFeatureType( new QName( namespace, name.getLocalName() ) );
 
       final String[] supportedOperations = m_wfsClient.getAllFilterCapabilitesOperations();

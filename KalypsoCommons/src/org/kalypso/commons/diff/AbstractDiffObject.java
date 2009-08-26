@@ -39,7 +39,7 @@ public abstract class AbstractDiffObject implements IDiffObject
    */
   public IDiffComparator getDiffComparator( final String path )
   {
-    final String suffix = "." + path.replaceAll( ".+\\.", "" );
+    final String suffix = "." + path.replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return DiffUtils.getDiffComparatorFor( suffix, path );
   }
 }

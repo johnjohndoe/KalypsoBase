@@ -60,7 +60,7 @@ public class ZipDiffObject extends AbstractDiffObject
     while( enumeration.hasMoreElements() )
     {
       final ZipEntry entry = enumeration.nextElement();
-      final String key = entry.getName().replaceAll( "\\\\", "/" ).replaceFirst( "^/", "" );
+      final String key = entry.getName().replaceAll( "\\\\", "/" ).replaceFirst( "^/", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       m_pathes.put( key, entry );
     }
   }

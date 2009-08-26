@@ -100,19 +100,19 @@ public class LogTableViewer extends ViewPart
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
     TableColumn column = new TableColumn( table, SWT.LEFT, 0 );
-    column.setText( "Level" );
+    column.setText( "Level" ); //$NON-NLS-1$
     column.setWidth( 70 );
 
     column = new TableColumn( table, SWT.LEFT, 1 );
-    column.setText( "Element" );
+    column.setText( "Element" ); //$NON-NLS-1$
     column.setWidth( 100 );
 
     column = new TableColumn( table, SWT.LEFT, 2 );
-    column.setText( "Message" );
+    column.setText( "Message" ); //$NON-NLS-1$
     column.setWidth( 500 );
     
     column = new TableColumn( table, SWT.LEFT, 3 );
-    column.setText( "Parameter" );
+    column.setText( "Parameter" ); //$NON-NLS-1$
     column.setWidth( 200 );
   }
 

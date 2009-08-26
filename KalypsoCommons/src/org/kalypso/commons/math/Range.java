@@ -3,6 +3,7 @@ package org.kalypso.commons.math;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.contribs.java.util.Arrays;
 
 /**
@@ -96,7 +97,7 @@ public class Range
     double step = m_precision * m_factor;
 
     if( Double.compare( step, 0 ) == 0 )
-      throw new IllegalStateException( "Step = 0" );
+      throw new IllegalStateException( "Step = 0" ); //$NON-NLS-1$
 
     // estimate initial size
     int count = (int)Math.round( Math.abs( m_to - m_from ) / step );
@@ -128,7 +129,7 @@ public class Range
   public void setFactor( double d )
   {
     if( Double.compare( d, 0 ) == 0 )
-      throw new IllegalArgumentException( "factor = 0" );
+      throw new IllegalArgumentException( "factor = 0" ); //$NON-NLS-1$
 
     m_factor = d;
   }
@@ -179,14 +180,14 @@ public class Range
   {
     StringBuffer buf = new StringBuffer();
 
-    buf.append( toString() ).append( "\t[" );
+    buf.append( toString() ).append( "\t[" ); //$NON-NLS-1$
 
     double[] ds = getArray();
 
     for( int i = 0; i < (ds.length - 1); i++ )
-      buf.append( ds[i] ).append( ", " );
+      buf.append( ds[i] ).append( ", " ); //$NON-NLS-1$
 
-    buf.append( ds[ds.length - 1] ).append( "]" );
+    buf.append( ds[ds.length - 1] ).append( "]" ); //$NON-NLS-1$
 
     return buf.toString();
   }
@@ -219,7 +220,7 @@ public class Range
     if( (r1 != null) && (r2 != null) )
     {
       if( r1.m_to < r2.m_from )
-        throw new IllegalArgumentException( "Ranges do not intersect" );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.Range.0") ); //$NON-NLS-1$
 
       double from = (r1.m_from < r2.m_from) ? r2.m_from : r1.m_from;
       double to = (r1.m_to > r2.m_to) ? r2.m_to : r1.m_to;
@@ -333,7 +334,7 @@ public class Range
   {
     NumberFormat f = NumberFormat.getInstance();
 
-    return f.format( m_from ) + " - " + f.format( m_to );
+    return f.format( m_from ) + " - " + f.format( m_to ); //$NON-NLS-1$
   }
 
   /**

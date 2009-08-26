@@ -96,7 +96,7 @@ public class PolyGone
     StringBuffer b = new StringBuffer(  );
 
     for( int i = 0; i < m_x.length; i++ )
-      b.append( m_x[i] ).append( " - " ).append( m_y[i] ).append( "\n" );
+      b.append( m_x[i] ).append( " - " ).append( m_y[i] ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return b.toString(  );
   }

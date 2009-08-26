@@ -92,11 +92,11 @@ public class CSV extends AbstractCSV
       for( int j = 0; j < line.length; j++ )
       {
         if( j != 0 )
-          pw.print( ";" );
+          pw.print( ";" ); //$NON-NLS-1$
 
-        pw.print( "\"" );
+        pw.print( "\"" ); //$NON-NLS-1$
         pw.print( line[j] );
-        pw.print( "\"" );
+        pw.print( "\"" ); //$NON-NLS-1$
       }
 
       pw.println();

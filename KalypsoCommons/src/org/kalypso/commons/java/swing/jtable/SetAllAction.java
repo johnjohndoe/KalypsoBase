@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTable;
 
+import org.kalypso.commons.i18n.Messages;
+
 /**
  * SetAllAction
  *
@@ -13,7 +15,7 @@ public class SetAllAction extends AbstractObservationTableAction
 {
   public SetAllAction( final JTable table )
   {
-    super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
+    super( table, Messages.getString("org.kalypso.commons.java.swing.jtable.SetAllAction.0"), Messages.getString("org.kalypso.commons.java.swing.jtable.SetAllAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

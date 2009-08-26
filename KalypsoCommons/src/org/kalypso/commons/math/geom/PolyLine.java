@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import org.kalypso.commons.i18n.Messages;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.Range;
 import org.kalypso.contribs.java.util.DoubleComparator;
@@ -396,7 +397,7 @@ public class PolyLine
   {
     // mode verification
     if( (mode != OVER) && (mode != UNDER) && (mode != ALL) )
-      throw new IllegalArgumentException( "ungültiges Flächenberechnungsmodus" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.geom.PolyLine.0") ); //$NON-NLS-1$
 
     // if no refined coordinates are given, we compute them here
     double[] xe = PolyLine.refinePolylines( p1, p2 );
@@ -689,7 +690,7 @@ public class PolyLine
       return vPols.toArray( new PolyGone[vPols.size()] );
     }
     else
-      throw new IllegalArgumentException( "unvalid mode" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.geom.PolyLine.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -872,7 +873,7 @@ public class PolyLine
     StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < m_x.length; i++ )
-      buf.append( m_x[i] ).append( ", " ).append( m_y[i] ).append( "\n" );
+      buf.append( m_x[i] ).append( ", " ).append( m_y[i] ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return buf.toString();
   }

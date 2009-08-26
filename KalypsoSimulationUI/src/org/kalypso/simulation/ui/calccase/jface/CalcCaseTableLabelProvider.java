@@ -94,7 +94,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
     if( columnIndex == 0 )
     {
       if( element instanceof IFolder && ModelNature.isCalcCalseFolder( (IFolder)element ) )
-        return "";
+        return ""; //$NON-NLS-1$
       return m_provider.getText( element );
     }
     
@@ -107,7 +107,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
       return m_df.format( lastModifiedFromFolder(folder) );
     }
     
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public final static Date lastModifiedFromFolder( final IFolder folder )

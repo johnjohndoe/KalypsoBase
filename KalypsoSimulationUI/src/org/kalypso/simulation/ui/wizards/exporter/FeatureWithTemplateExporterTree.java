@@ -57,6 +57,7 @@ import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.impl.AbstractExporter;
 import org.kalypso.metadoc.ui.ExportableTreeItem;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
+import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.simulation.ui.wizards.exporter.ExporterHelper.UrlArgument;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
@@ -125,9 +126,9 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
   protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
   {
     // create the possible template items
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
-    final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" ); //$NON-NLS-1$
+    final URL context = (URL) getFromSupplier( "context" ); //$NON-NLS-1$
+    final UrlArgument[] templateItems = ExporterHelper.createUrlItems( "template", arguments, context ); //$NON-NLS-1$
     final ExportableTreeItem[] rootItems = new ExportableTreeItem[templateItems.length];
     for( int i = 0; i < templateItems.length; i++ )
     {
@@ -147,24 +148,24 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
   private ExportableTreeItem[] createExportableObjectsWith( final UrlArgument item, final ExportableTreeItem parentItem ) throws CoreException
   {
     // from supplier
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
-    final URL context = (URL) getFromSupplier( "context" );
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" ); //$NON-NLS-1$
+    final URL context = (URL) getFromSupplier( "context" ); //$NON-NLS-1$
 
-    final String documentNameFormat = item.getProperty( "documentName", "übersicht.csv" );
-    final String documentTitleFormat = item.getProperty( "documentTitle" );
+    final String documentNameFormat = item.getProperty( "documentName", "übersicht.csv" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String documentTitleFormat = item.getProperty( "documentTitle" ); //$NON-NLS-1$
 
-    final FeatureList features = (FeatureList) getFromSupplier( "features" );
-    final FeatureList selectedFeatures = (FeatureList) getFromSupplier( "selectedFeatures" );
-    final String labelProperty = (String) getFromSupplier( "propertyName" );
+    final FeatureList features = (FeatureList) getFromSupplier( "features" ); //$NON-NLS-1$
+    final FeatureList selectedFeatures = (FeatureList) getFromSupplier( "selectedFeatures" ); //$NON-NLS-1$
+    final String labelProperty = (String) getFromSupplier( "propertyName" ); //$NON-NLS-1$
 
     // from arguments
-    final Arguments tokens = arguments.getArguments( "tokens" );
+    final Arguments tokens = arguments.getArguments( "tokens" ); //$NON-NLS-1$
 
     // category is specified in the sub-arguments of the exporter, actually the ones in item
-    String category = item.getProperty( "category" );
+    String category = item.getProperty( "category" ); //$NON-NLS-1$
     if( category == null )
-      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) );
-    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null );
+      category = item.getProperty( "label", arguments.getProperty( "name", "unbekannt" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final String kennzifferIndexProp = item.getProperty( "kennzifferIndex", null ); //$NON-NLS-1$
     final Integer kennzifferIndex = kennzifferIndexProp == null ? null : new Integer( kennzifferIndexProp );
 
     final Collection<Feature> excludeList = createExcludeList( context, item, features );
@@ -201,7 +202,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
     final Collection<Feature> result = new HashSet<Feature>();
 
     final Arguments itemArguments = item.getArguments();
-    final Arguments excludeArguments = itemArguments.getArguments( "excludes" );
+    final Arguments excludeArguments = itemArguments.getArguments( "excludes" ); //$NON-NLS-1$
     if( excludeArguments == null )
       return result;
 
@@ -227,7 +228,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
   
   private Filter findFilter( final URL context, final Arguments excludeArguments ) throws Exception
   {
-    final String fid = excludeArguments.getProperty( "#featureid" );
+    final String fid = excludeArguments.getProperty( "#featureid" ); //$NON-NLS-1$
     if( fid != null )
     {
       final FeatureFilter filter = new FeatureFilter();
@@ -235,7 +236,7 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
       return filter;
     }
 
-    final String filterFile = excludeArguments.getProperty( "filter" );
+    final String filterFile = excludeArguments.getProperty( "filter" ); //$NON-NLS-1$
     if( filterFile != null )
     {
       InputStream is = null;
@@ -253,6 +254,6 @@ public class FeatureWithTemplateExporterTree extends AbstractExporter
       }
     }
 
-    throw new IllegalArgumentException( "Excludes muss entweder '#featureId' oder 'filter' Argument haben." );
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporterTree.0") ); //$NON-NLS-1$
   }
 }

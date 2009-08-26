@@ -82,7 +82,7 @@ public class PrintActionDelegate implements IViewActionDelegate, IEditorActionDe
     
     final Browser browser = (Browser) m_part.getAdapter( Browser.class );
 //    javascript:window.print()
-    browser.execute( "window.print()" );
+    browser.execute( "window.print()" ); //$NON-NLS-1$
   }
 
   /**

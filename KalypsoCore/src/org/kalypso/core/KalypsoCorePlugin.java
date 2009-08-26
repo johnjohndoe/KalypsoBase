@@ -190,7 +190,7 @@ public class KalypsoCorePlugin extends Plugin
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.format( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
       getLog().log( status );
 
       return TimeZone.getDefault();

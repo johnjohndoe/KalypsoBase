@@ -42,6 +42,8 @@ package org.kalypso.simulation.core;
 
 import java.io.Serializable;
 
+import org.kalypso.simulation.core.i18n.Messages;
+
 /**
  * <p>
  * Enthält die aktuellen Daten eines {@link org.kalypso.services.calculation.job.ICalcJob}
@@ -71,13 +73,13 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung
    */
-  private String m_message = "Warte auf Ausführung...";
+  private String m_message = Messages.getString("org.kalypso.simulation.core.SimulationInfo.0"); //$NON-NLS-1$
 
   /**
    * Wird vom Client nach erfolgter Berechnung dargestellt. Dient dazu, dem Benutzer ggfls. Hinweise auf Logdateien im
    * Fehlerfall o.ä. zu geben.
    */
-  private String m_finishText = "";
+  private String m_finishText = ""; //$NON-NLS-1$
 
   private int m_status = 0; // = IStatus.OK;
 

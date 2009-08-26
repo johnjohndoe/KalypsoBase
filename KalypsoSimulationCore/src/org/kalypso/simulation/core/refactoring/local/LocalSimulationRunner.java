@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreJaxb;
 import org.kalypso.simulation.core.SimulationDataPath;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.local.LocalSimulationFactory;
 import org.kalypso.simulation.core.internal.queued.DefaultResultEater;
 import org.kalypso.simulation.core.internal.queued.ModelspecData;
@@ -113,7 +114,7 @@ public class LocalSimulationRunner implements ISimulationRunner
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.createErrorStatus( "Rechnung fehlgeschlagen", e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0"), e ) ); //$NON-NLS-1$
     }
   }
 
@@ -128,7 +129,7 @@ public class LocalSimulationRunner implements ISimulationRunner
     }
 
     if( outputs.size() != myPaths.size() )
-      System.out.println( "*narf* LocalSimulationRunner.resolveOutputs() - output array sizes differ" );
+      System.out.println( "*narf* LocalSimulationRunner.resolveOutputs() - output array sizes differ" ); //$NON-NLS-1$
 
     return myPaths.toArray( new SimulationDataPath[] {} );
   }

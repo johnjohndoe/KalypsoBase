@@ -85,10 +85,10 @@ public class ZipFileVisitor implements FileVisitor
   public void setBasePattern( final String basePattern )
   {
     // Sonderfall abfangen, dass ein \E im basePattern ist
-    final String hackpattern = basePattern.replaceAll( "\\\\E", "\\\\E\\\\\\\\E\\\\Q" );
+    final String hackpattern = basePattern.replaceAll( "\\\\E", "\\\\E\\\\\\\\E\\\\Q" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // quote the regexp
-    m_basePattern = "\\Q" + hackpattern + "\\E";
+    m_basePattern = "\\Q" + hackpattern + "\\E"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setBaseReplace( final String baseReplace )

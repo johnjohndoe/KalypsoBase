@@ -81,14 +81,14 @@ public class LogFileReader
     {
       e.printStackTrace();
     }
-    final IFeatureType recordFT = logWorkspace.getGMLSchema().getFeatureType( new QName( "http://www.tuhh.de/NAFortranLog", "record" ) );
+    final IFeatureType recordFT = logWorkspace.getGMLSchema().getFeatureType( new QName( "http://www.tuhh.de/NAFortranLog", "record" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final Feature[] recordFEs = logWorkspace.getFeatures( recordFT );
     for( final Feature feature : recordFEs )
     {
-      String levelString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "level" ) );
-      String messageString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "message" ) );
-      String nameString = (String) feature.getProperty( new QName( "http://www.opengis.net/gml", "name" ) );
-      String paramString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "param" ) );
+      String levelString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "level" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      String messageString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "message" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      String nameString = (String) feature.getProperty( new QName( "http://www.opengis.net/gml", "name" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      String paramString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "param" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       rows.add( new LogFileRow( levelString, nameString, messageString, paramString ) );
     }
   }

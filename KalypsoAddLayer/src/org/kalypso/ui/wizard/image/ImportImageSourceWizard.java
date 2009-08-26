@@ -38,6 +38,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
@@ -49,7 +50,7 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
  */
 public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  public static final String ID = "org.kalypso.ui.wizard.image";
+  public static final String ID = "org.kalypso.ui.wizard.image"; //$NON-NLS-1$
 
   private ICommandTarget m_outlineviewer;
 
@@ -68,7 +69,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
       try
       {
         final AddThemeCommand command = new AddThemeCommand( m_mapModel, m_page.getRelativeSourcePath().removeFileExtension().lastSegment(), m_page.getFileType(), null, m_page.getURL().toString()
-            + "#" + m_page.getCSName() );
+            + "#" + m_page.getCSName() ); //$NON-NLS-1$
         m_outlineviewer.postCommand( command, null );
       }
       catch( final MalformedURLException e )
@@ -105,7 +106,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   public void addPages( )
   {
 
-    m_page = new ImportImageWizardPage( "imageimport", "Bild importieren (tif, jpg, png)", ImageProvider.IMAGE_KALYPSO_ICON_BIG );
+    m_page = new ImportImageWizardPage( "imageimport", Messages.getString("org.kalypso.ui.wizard.image.ImportImageSourceWizard.3"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_outlineviewer != null )
     {
       m_page.setProjectSelection( m_mapModel.getProject() );
