@@ -71,6 +71,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
@@ -88,14 +89,14 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVec
  */
 public class ImportGridUtilities
 {
-  public static final String[] SUPPORTED_GRID_FILE_PATTERNS = new String[] { "*.asc;*.asg;*.dat;*.bin", "*.asc;*.dat;*.asg", "*.bin", "*.*" };
+  public static final String[] SUPPORTED_GRID_FILE_PATTERNS = new String[] { "*.asc;*.asg;*.dat;*.bin", "*.asc;*.dat;*.asg", "*.bin", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-  public static final String[] SUPPORTED_GRID_FILE_NAMES = new String[] { "All supported formats (*.asc;*.asg;*.dat;*.bin)", "ESRI ASCII Grid-Files (*.asc, *.dat, *.asg)",
-      "Kalypso Grid-Files (*.bin)", "All files (*.*)" };
+  public static final String[] SUPPORTED_GRID_FILE_NAMES = new String[] { "All supported formats (*.asc;*.asg;*.dat;*.bin)", "ESRI ASCII Grid-Files (*.asc, *.dat, *.asg)", //$NON-NLS-1$ //$NON-NLS-2$
+      "Kalypso Grid-Files (*.bin)", "All files (*.*)" }; //$NON-NLS-1$ //$NON-NLS-2$
 
   private ImportGridUtilities( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -137,16 +138,16 @@ public class ImportGridUtilities
       final String gridFileName = gridFile.getName();
       final String basename = FilenameUtils.getBaseName( gridFileName );
       final String extension = FilenameUtils.getExtension( gridFileName ).toLowerCase();
-      if( "asc".equals( extension ) || "asg".equals( extension ) || "dat".equals( extension ) )
+      if( "asc".equals( extension ) || "asg".equals( extension ) || "dat".equals( extension ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       {
         try
         {
-          final String destFileName = basename + ".bin";
+          final String destFileName = basename + ".bin"; //$NON-NLS-1$
           destFile = new File( destDir, destFileName );
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Destination file already exists: %s", destFileName ), null ) );
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0"), destFileName ), null ) ); //$NON-NLS-1$
           }
           final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), destFile, 2, sourceCRS );
           converter.doConvert( monitor );
@@ -155,13 +156,13 @@ public class ImportGridUtilities
         catch( final MalformedURLException e )
         {
           e.printStackTrace();
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Konvertieren von .asc nach .bin", e );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.1"), e ); //$NON-NLS-1$
           throw new CoreException( status );
         }
       }
 
       // Kalypso-BIN Files: just copy
-      if( "bin".equals( extension ) )
+      if( "bin".equals( extension ) ) //$NON-NLS-1$
       {
         try
         {
@@ -169,7 +170,7 @@ public class ImportGridUtilities
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Destination file already exists: %s", destFile ), null ) );
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.2"), destFile ), null ) ); //$NON-NLS-1$
           }
           FileUtils.copyFile( gridFile, destFile );
           return destFile;
@@ -177,12 +178,12 @@ public class ImportGridUtilities
         catch( final IOException e )
         {
           e.printStackTrace();
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Kopieren der .bin Datei", e );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.3"), e ); //$NON-NLS-1$
           throw new CoreException( status );
         }
       }
 
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, String.format( "Unknown grid format: %s", extension ), null );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.4"), extension ), null ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final CoreException e )
@@ -204,7 +205,7 @@ public class ImportGridUtilities
     {
       public String queryOverwrite( final String pathString )
       {
-        if( MessageDialog.openQuestion( shell, "Datei import", "Die Datei " + pathString + " exisitert bereits.\nSoll Sie überschrieben werden?" ) )
+        if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5"), Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6") + pathString + " exisitert bereits.\nSoll Sie überschrieben werden?" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           return IOverwriteQuery.YES;
         return IOverwriteQuery.NO;
       }
@@ -237,7 +238,7 @@ public class ImportGridUtilities
     {
       final SubMonitor progress = SubMonitor.convert( monitor, 1 + 10 );
 
-      final String mimeType = "image/" + gridFile.getFileExtension();
+      final String mimeType = "image/" + gridFile.getFileExtension(); //$NON-NLS-1$
 
       final Feature coveragesFeature = coverages.getFeature();
       final GMLWorkspace workspace = coveragesFeature.getWorkspace();
@@ -258,7 +259,7 @@ public class ImportGridUtilities
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Ungültiger Dateipfad: " + gridFile.getFullPath().toOSString(), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7") + gridFile.getFullPath().toOSString(), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -306,13 +307,13 @@ public class ImportGridUtilities
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Ungültiger Dateifpad", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Raster-Metadaten", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.8"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -358,7 +359,7 @@ public class ImportGridUtilities
    */
   public static ICoverage importGrid( final ICoverageCollection coverageCollection, final File gridFile, final String name, final String crs, final IContainer targetFolder, final RectifiedGridDomain domain, final IProgressMonitor monitor ) throws CoreException
   {
-    final String taskName = String.format( "Importing %s", gridFile.getName() );
+    final String taskName = String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.9"), gridFile.getName() ); //$NON-NLS-1$
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
 
     IFile targetFile = null;

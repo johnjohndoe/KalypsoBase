@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapLayer;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -96,7 +97,7 @@ public class SelectionMapLayer implements IMapLayer
   @Override
   public String getLabel( )
   {
-    return "Selektion";
+    return Messages.getString("org.kalypso.ogc.gml.map.layer.SelectionMapLayer.0"); //$NON-NLS-1$
   }
 
   /**

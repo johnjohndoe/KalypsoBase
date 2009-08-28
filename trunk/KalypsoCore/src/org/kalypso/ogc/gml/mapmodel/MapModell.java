@@ -270,7 +270,7 @@ public class MapModell implements IMapModell
         children[i - 1] = theme.paint( g, p, null, progress.newChild( 1 ) );
     }
 
-    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null );
+    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
     return multiStatus;
   }
 

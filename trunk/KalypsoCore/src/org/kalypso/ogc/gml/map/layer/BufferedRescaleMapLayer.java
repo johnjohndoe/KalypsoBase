@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -163,7 +164,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   @Override
   public String toString( )
   {
-    return "Painting theme: " + getLabel();
+    return Messages.getString("org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.0") + getLabel(); //$NON-NLS-1$
   }
 
   /**
@@ -218,7 +219,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, world2screen );
 
-    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", runningTile, m_repaintMillis )
+    final JobObserverJob repaintJob = new JobObserverJob( Messages.getString("org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.1"), runningTile, m_repaintMillis ) //$NON-NLS-1$
     {
       @Override
       protected void jobRunning( )

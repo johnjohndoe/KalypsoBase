@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -74,11 +75,11 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class PageSelectGeodataFiles extends WizardPage
 {
-  private static final String SETTINGS_FILE_PATH = "fullFilePath";
+  private static final String SETTINGS_FILE_PATH = "fullFilePath"; //$NON-NLS-1$
 
-  private static final String SETTINGS_FOLDER_PATH = "gridFolderPath";
+  private static final String SETTINGS_FOLDER_PATH = "gridFolderPath"; //$NON-NLS-1$
 
-  private static final String SETTINGS_SRS_NAME = "srsName";
+  private static final String SETTINGS_SRS_NAME = "srsName"; //$NON-NLS-1$
 
   private File[] m_files;
 
@@ -119,7 +120,7 @@ public class PageSelectGeodataFiles extends WizardPage
     final Group fileGroup = new Group( container, SWT.NONE );
     fileGroup.setLayout( new GridLayout( 2, false ) );
     fileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    fileGroup.setText( "Rasterdatei(en)" );
+    fileGroup.setText( "Rasterdatei(en)" ); //$NON-NLS-1$
 
     final Text tFile = new Text( fileGroup, SWT.BORDER );
     tFile.addModifyListener( new ModifyListener()
@@ -134,7 +135,7 @@ public class PageSelectGeodataFiles extends WizardPage
     tFile.setEnabled( true );
 
     final Button buttonFile = new Button( fileGroup, SWT.NONE );
-    buttonFile.setText( "..." );
+    buttonFile.setText( "..." ); //$NON-NLS-1$
     buttonFile.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -147,7 +148,7 @@ public class PageSelectGeodataFiles extends WizardPage
     /* Coordinate system combo */
     final CRSSelectionPanel crsPanel = new CRSSelectionPanel( container, SWT.NONE );
     crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    crsPanel.setToolTipText( "Koordinatensystem der Raster-Datei(en)" );
+    crsPanel.setToolTipText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.0") ); //$NON-NLS-1$
     m_crs = getDialogSettings().get( SETTINGS_SRS_NAME );
     if( m_crs == null )
       m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -177,8 +178,8 @@ public class PageSelectGeodataFiles extends WizardPage
     final Group folderGroup = new Group( container, SWT.NONE );
     folderGroup.setLayout( new GridLayout( 2, false ) );
     folderGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    folderGroup.setText( "Zielverzeichnis" );
-    folderGroup.setToolTipText( "Zielverzeichnis für die Rasterdateien im Arbeitsbereich" );
+    folderGroup.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.1") ); //$NON-NLS-1$
+    folderGroup.setToolTipText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.2") ); //$NON-NLS-1$
 
     final Text tFolder = new Text( folderGroup, SWT.BORDER );
     tFolder.addModifyListener( new ModifyListener()
@@ -192,7 +193,7 @@ public class PageSelectGeodataFiles extends WizardPage
     tFolder.setEnabled( m_allowUserChangeGridFolder );
 
     final Button buttonFolder = new Button( folderGroup, SWT.NONE );
-    buttonFolder.setText( "..." );
+    buttonFolder.setText( "..." ); //$NON-NLS-1$
     buttonFolder.setEnabled( m_allowUserChangeGridFolder );
     buttonFolder.addSelectionListener( new SelectionAdapter()
     {
@@ -237,15 +238,15 @@ public class PageSelectGeodataFiles extends WizardPage
       }
     }
 
-    final ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), initialRoot, false, "Wählen Sie das Zielverzeichnis:" );
-    dialog.setTitle( "Zielverzeichnis" );
+    final ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), initialRoot, false, Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.3") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.4") ); //$NON-NLS-1$
     if( dialog.open() == Window.OK )
       tFolder.setText( ((IPath) dialog.getResult()[0]).toPortableString() );
   }
 
   protected void handleModified( final String text )
   {
-    final String[] names = text.split( ";" );
+    final String[] names = text.split( ";" ); //$NON-NLS-1$
     m_files = new File[names.length];
     for( int i = 0; i < names.length; i++ )
       m_files[i] = new File( names[i] );
@@ -288,25 +289,25 @@ public class PageSelectGeodataFiles extends WizardPage
   private String validate( )
   {
     if( m_files == null || m_files.length == 0 )
-      return "Please select a file";
+      return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.5"); //$NON-NLS-1$
 
     for( final File file : m_files )
     {
       if( !file.exists() )
-        return "Rasterdatei existiert nicht: " + file.getAbsolutePath();
+        return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.6") + file.getAbsolutePath(); //$NON-NLS-1$
     }
 
     if( m_gridFolderPath == null || m_gridFolderPath.isEmpty() )
-      return "Destination folder not specified";
+      return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.7"); //$NON-NLS-1$
 
     final IPath path = Path.fromPortableString( m_gridFolderPath );
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IResource member = root.findMember( path );
     if( !(member instanceof IContainer) )
-      return "Kein Verzeichnis";
+      return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.8"); //$NON-NLS-1$
 
     if( !member.exists() )
-      return "Zielverzeichnis existiert nicht";
+      return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.9"); //$NON-NLS-1$
 
 // final GridFileVerifier verifier = new GridFileVerifier();
 // try
@@ -321,7 +322,7 @@ public class PageSelectGeodataFiles extends WizardPage
 // }
 
     if( m_crs == null )
-      return "No projection defined. Choose one projection from the list, please.";
+      return Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.10"); //$NON-NLS-1$
 
     return null;
   }
@@ -329,7 +330,7 @@ public class PageSelectGeodataFiles extends WizardPage
   protected void browseForFile( final Text tFile )
   {
     final String fullPath = getDialogSettings().get( SETTINGS_FILE_PATH );
-    m_files = ImportGridUtilities.chooseFiles( getShell(), "Rasterdaten Import", fullPath );
+    m_files = ImportGridUtilities.chooseFiles( getShell(), Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.11"), fullPath ); //$NON-NLS-1$
 
     final StringBuffer sb = new StringBuffer();
     for( final File file : m_files )

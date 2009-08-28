@@ -70,14 +70,14 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  private static final String DEFAULT_FORMAT_STRING = "Wert: %.2f";
+  private static final String DEFAULT_FORMAT_STRING = "Wert: %.2f"; //$NON-NLS-1$
 
   /**
    * Value of the property for a format string.<br>
    * A {@link Formatter}-style format string, can only contain one variable of type f. Example:
    * <code>Value: %.3f</code>.
    */
-  public final static String PROP_FORMAT = "format";
+  public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -125,7 +125,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     catch( final Exception e )
     {
       e.printStackTrace();
-      formatter.format( "Fehler: %s%n", e.toString() );
+      formatter.format( "Fehler: %s%n", e.toString() ); //$NON-NLS-1$
     }
   }
 

@@ -85,7 +85,7 @@ public class MapModellContextSwitcher
     {
       if( m_oldContext != null )
       {
-        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.0") + m_oldContext.getContextId() ); //$NON-NLS-1$
+        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.0", m_oldContext.getContextId() ));  //$NON-NLS-1$
         m_contextService.deactivateContext( m_oldContext );
       }
       if( m_theme == null )
@@ -100,9 +100,9 @@ public class MapModellContextSwitcher
         {
           context.define( contextId, contextId, "org.kalypso.ogc.gml.map.context" ); //$NON-NLS-1$
         }
-        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.2") + contextId ); //$NON-NLS-1$
+        logger.finest(Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.1", contextId ));  //$NON-NLS-1$
         m_oldContext = m_contextService.activateContext( contextId );
-        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.3") + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) ); //$NON-NLS-1$
+        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.2", Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) )); //$NON-NLS-1$
       }
     }
 

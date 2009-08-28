@@ -89,7 +89,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class TimeserieUtils
 {
-  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties";
+  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
   private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
@@ -210,8 +210,8 @@ public class TimeserieUtils
         catch( final FileNotFoundException ioe )
         {
           // ignore: there is no config file; we are using standard instead
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at " + timeseriesConfigUrl.toExternalForm()
-              + " does not exist. Using default settings.", null );
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at " + timeseriesConfigUrl.toExternalForm() //$NON-NLS-1$
+              + " does not exist. Using default settings.", null ); //$NON-NLS-1$
           KalypsoCorePlugin.getDefault().getLog().log( status );
         }
 
@@ -293,7 +293,7 @@ public class TimeserieUtils
    */
   public static String getUnit( final String type )
   {
-    return getProperties().getProperty( "AXISUNIT_" + type, "" );
+    return getProperties().getProperty( "AXISUNIT_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -305,7 +305,7 @@ public class TimeserieUtils
    */
   public static String getName( final String type )
   {
-    return getProperties().getProperty( "AXISNAME_" + type, "" );
+    return getProperties().getProperty( "AXISNAME_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -322,7 +322,7 @@ public class TimeserieUtils
     if( strColor == null )
       return new Color[] { ColorUtilities.random() };
 
-    final String[] strings = strColor.split( "#" );
+    final String[] strings = strColor.split( "#" ); //$NON-NLS-1$
     if( strings.length == 0 )
       return new Color[] { ColorUtilities.random() };
 
@@ -415,7 +415,7 @@ public class TimeserieUtils
     if( nf != null )
       return nf;
 
-    if( format.equals( "%d" ) )
+    if( format.equals( "%d" ) ) //$NON-NLS-1$
     {
       final NumberFormat wf = NumberFormat.getIntegerInstance();
       wf.setGroupingUsed( false );
@@ -461,7 +461,7 @@ public class TimeserieUtils
    */
   public static DateFormat getDateFormat( )
   {
-    final DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+    final DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" ); //$NON-NLS-1$
 
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
 
@@ -507,7 +507,7 @@ public class TimeserieUtils
    */
   public static Double getTopMargin( final String type )
   {
-    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
+    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type ); //$NON-NLS-1$
     if( margin == null )
       return null;
 
@@ -601,6 +601,6 @@ public class TimeserieUtils
    */
   public static String getAxisClassFor( final String type )
   {
-    return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null );
+    return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null ); //$NON-NLS-1$
   }
 }

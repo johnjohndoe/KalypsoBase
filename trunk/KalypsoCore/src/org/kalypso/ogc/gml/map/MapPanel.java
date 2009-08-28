@@ -541,7 +541,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     bufferPaintJob.setPriority( Job.SHORT );
     bufferPaintJob.setUser( false );
 
-    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", bufferPaintJob, 5000 )
+    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", bufferPaintJob, 5000 ) //$NON-NLS-1$
     {
       @Override
       protected void jobRunning( )
@@ -578,7 +578,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       final int width = getWidth();
       final int height = getHeight();
       final Point size = new Point( width, height );
-      return new TextPaintable( size, "No Extent Set", m_backgroundColor );
+      return new TextPaintable( size, "No Extent Set", m_backgroundColor ); //$NON-NLS-1$
     }
 
     final IMapLayer[] layers = getLayersForRendering();
@@ -760,10 +760,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     if( boundingBox != null )
     {
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() ); //$NON-NLS-1$
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() ); //$NON-NLS-1$
     }
 
     if( invalidateMap )
@@ -973,15 +973,15 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
         // Repaint during rendering: yes
         newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, true, LAYER_REPAINT_MILLIS );
       }
-      else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) )
+      else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) ) //$NON-NLS-1$
       {
         // Render asynchronously: yes (own mutex)
         // Repaint during rendering: no
         newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), false );
       }
-      else if( theme.getClass().getName().endsWith( "KalypsoScaleTheme" ) )
+      else if( theme.getClass().getName().endsWith( "KalypsoScaleTheme" ) ) //$NON-NLS-1$
         newLayer = new DirectMapLayer( this, theme );
-      else if( theme.getClass().getName().endsWith( "KalypsoLegendTheme" ) )
+      else if( theme.getClass().getName().endsWith( "KalypsoLegendTheme" ) ) //$NON-NLS-1$
         newLayer = new DirectMapLayer( this, theme );
       else
       {

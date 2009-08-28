@@ -193,6 +193,6 @@ public class FeatureComponent extends AbstractComponent
   public String toString( )
   {
     final String id = m_itemDef == null ? null : m_itemDef.getId();
-    return String.format( "%s#%s", m_uri, id );
+    return String.format( "%s#%s", m_uri, id ); //$NON-NLS-1$
   }
 }

@@ -158,7 +158,7 @@ public final class KeyInfo extends Job
     if( isLocked() )
       return;
 
-    System.out.println( "Reloading " + getKey() + "..." );
+    System.out.println( "Reloading " + getKey() + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
     synchronized( this )
     {
@@ -178,7 +178,7 @@ public final class KeyInfo extends Job
   {
     if( m_hasNothingBlocked )
     {
-      System.out.println( "Locked due to reloading event state ..." );
+      System.out.println( "Locked due to reloading event state ..." ); //$NON-NLS-1$
 
       /* The first call on this function after locking the resources will reset the state of the first reloading event. */
       m_hasNothingBlocked = false;
@@ -191,7 +191,7 @@ public final class KeyInfo extends Job
     {
       if( entry.getValue() )
       {
-        System.out.println( "Locked due to resource state ..." );
+        System.out.println( "Locked due to resource state ..." ); //$NON-NLS-1$
         return true;
       }
     }

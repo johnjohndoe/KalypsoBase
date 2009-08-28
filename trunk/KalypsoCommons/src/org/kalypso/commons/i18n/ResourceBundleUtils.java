@@ -59,7 +59,7 @@ public final class ResourceBundleUtils
 {
   private ResourceBundleUtils( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+    throw new UnsupportedOperationException( "Do not instantiate this helper class" ); //$NON-NLS-1$
   }
 
   /**
@@ -109,12 +109,12 @@ public final class ResourceBundleUtils
     }
     catch( final MissingResourceException e )
     {
-      KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.INFO, "No resource bundle found for: %s%n", baseURL );
+      KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.INFO, "No resource bundle found for: %s%n", baseURL ); //$NON-NLS-1$
       return null;
     }
     catch( final MalformedURLException e )
     {
-      KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.WARNING, "Could not load resource bundle found for: %s (%s)%n", baseURL, e.toString() );
+      KalypsoCommonsDebug.DEBUG_I18N.printf( IStatus.WARNING, "Could not load resource bundle found for: %s (%s)%n", baseURL, e.toString() ); //$NON-NLS-1$
       return null;
     }
   }

@@ -70,7 +70,7 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_id = config.getAttribute( "id" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
   }
 
   /**
@@ -106,18 +106,18 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_bundle == null )
-      return "Key: " + key;
+      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.1") + key; //$NON-NLS-1$
 
     try
     {
       final String value = m_bundle.getString( key );
       if( value == null || value.isEmpty() )
-        return "Key not found: " + key;
+        return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2") + key; //$NON-NLS-1$
       return value;
     }
     catch( final MissingResourceException e )
     {
-      return "Key not found: " + key;
+      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2") + key; //$NON-NLS-1$
     }
   }
 }

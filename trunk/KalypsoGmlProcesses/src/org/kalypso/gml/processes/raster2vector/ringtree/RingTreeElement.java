@@ -116,7 +116,7 @@ public class RingTreeElement
      * the interval lof its children. TODO: explanation....
      */
 
-    System.out.println( "No good inner coordinate for: " + m_id );
+    System.out.println( "No good inner coordinate for: " + m_id ); //$NON-NLS-1$
     switch( intervalSet.size() )
     {
       case 0:
@@ -159,7 +159,7 @@ public class RingTreeElement
           }
         }
 
-        throw new IllegalStateException( "This may not happen...." );
+        throw new IllegalStateException( "This may not happen...." ); //$NON-NLS-1$
 
       case 1:
         final Integer interval = intervalSet.first();
@@ -187,7 +187,7 @@ public class RingTreeElement
         return first + 1;
 
       default:
-        throw new IllegalStateException( "This may not happen...." );
+        throw new IllegalStateException( "This may not happen...." ); //$NON-NLS-1$
     }
   }
 
@@ -221,7 +221,7 @@ public class RingTreeElement
       return mpArray;
     }
 
-    System.out.println( "Strange result: " + result );
+    System.out.println( "Strange result: " + result ); //$NON-NLS-1$
     return null;
   }
 

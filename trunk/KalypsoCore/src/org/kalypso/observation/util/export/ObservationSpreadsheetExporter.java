@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -122,7 +123,7 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.createErrorStatus( "Exporting observation as spreadsheet failed." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.observation.util.export.ObservationSpreadsheetExporter.0") ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

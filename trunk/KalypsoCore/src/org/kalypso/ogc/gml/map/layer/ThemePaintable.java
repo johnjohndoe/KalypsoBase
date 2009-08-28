@@ -45,6 +45,7 @@ import java.awt.Point;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
@@ -71,7 +72,7 @@ public class ThemePaintable implements IPaintable
   @Override
   public String toString( )
   {
-    return "Painting " + m_theme.getLabel();
+    return Messages.getString("org.kalypso.ogc.gml.map.layer.ThemePaintable.0") + m_theme.getLabel(); //$NON-NLS-1$
   }
 
   /**

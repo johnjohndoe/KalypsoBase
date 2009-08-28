@@ -76,7 +76,7 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_id = config.getAttribute( "id" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
   }
 
   /**
@@ -100,15 +100,15 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
       final String msgClass = element.getTextContent();
       try
       {
-        final String[] split = msgClass.split( ":" );
-        Assert.isTrue( split.length == 2, "Argument must be of form 'pluginId:className': " + msgClass );
+        final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
+        Assert.isTrue( split.length == 2, Messages.getString("org.kalypso.commons.i18n.NLSTranslator.2", msgClass )); //$NON-NLS-1$
         final Bundle bundle = Platform.getBundle( split[0] );
         m_nls = bundle.loadClass( split[1] );
         return;
       }
       catch( final ClassNotFoundException e )
       {
-        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, "Message class could not be loaded: " + msgClass, e );
+        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, Messages.getString("org.kalypso.commons.i18n.NLSTranslator.3", msgClass), e ); //$NON-NLS-1$
         JavaApiContributionsPlugin.getDefault().getLog().log( status );
         return;
       }
@@ -133,7 +133,7 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
   public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_nls == null )
-      return "Key: " + key;
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.4", key); //$NON-NLS-1$
 
     try
     {
@@ -144,22 +144,22 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
     {
       e.printStackTrace();
 
-      return "Failed to load string '" + key + "': " + e.toString();
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final NoSuchFieldException e )
     {
       e.printStackTrace();
-      return "Failed to load string '" + key + "': " + e.toString();
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      return "Failed to load string '" + key + "': " + e.toString();
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final IllegalAccessException e )
     {
       e.printStackTrace();
-      return "Failed to load string '" + key + "': " + e.toString();
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
   }
 }

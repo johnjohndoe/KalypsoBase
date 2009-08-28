@@ -118,7 +118,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateDefaultURNForRelated( final Object related )
   {
-    return generateBaseURNPattern( related ) + "default";
+    return generateBaseURNPattern( related ) + "default"; //$NON-NLS-1$
   }
 
   /**
@@ -126,6 +126,6 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
    */
   public String generateSelectedURNForRelated( final Object related )
   {
-    return generateBaseURNPattern( related ) + "selected";
+    return generateBaseURNPattern( related ) + "selected"; //$NON-NLS-1$
   }
 }

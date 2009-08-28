@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.AscGridExporter;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
@@ -73,7 +74,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
  */
 public class RectifiedGridCoverageExportWizard extends Wizard implements IImportWizard
 {
-  private static final String FMT_ASC = "ESRI Ascii Datei (*.asc)";
+  private static final String FMT_ASC = "ESRI Ascii Datei (*.asc)"; //$NON-NLS-1$
 
   private ICoverage[] m_coverages;
 
@@ -81,11 +82,11 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
 
   public RectifiedGridCoverageExportWizard( )
   {
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ExportRectifiedGridCoverageWizardSettings" );
+    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ExportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( "Rasterdaten Export" );
+    setWindowTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -124,9 +125,9 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
   public void addPages( )
   {
     final Map<Object, String> formats = new HashMap<Object, String>();
-    formats.put( FMT_ASC, "asc" );
+    formats.put( FMT_ASC, "asc" ); //$NON-NLS-1$
 
-    m_saveFileWizardPage = new SaveFileWizardPage( "saveFilePage", "Datei speichern", null, "Datei", formats );
+    m_saveFileWizardPage = new SaveFileWizardPage( "saveFilePage", Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.1"), null, Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.2"), formats ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     addPage( m_saveFileWizardPage );
 
     super.addPages();
@@ -154,7 +155,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
             final IGeoGrid grid = new RectifiedGridCoverageGeoGrid( coverage.getFeature() );
 
             final AscGridExporter gridExporter = new AscGridExporter( -9999, 2 );
-            monitor.beginTask( "Schreibe Raster", 100 );
+            monitor.beginTask( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.3"), 100 ); //$NON-NLS-1$
 
             /* Values */
             gridExporter.export( grid, new File( path ), monitor );
@@ -173,7 +174,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
       };
 
       final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, op );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Schreiben der Datei", result );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.4"), result ); //$NON-NLS-1$
       return result.isOK();
     }
 

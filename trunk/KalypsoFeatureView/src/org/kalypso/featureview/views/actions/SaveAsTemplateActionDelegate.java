@@ -73,6 +73,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
@@ -92,7 +93,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
   protected static final JAXBContext templateJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  private static final String STR_ALS_VORLAGE_SPEICHERN = "Als Vorlage speichern";
+  private static final String STR_ALS_VORLAGE_SPEICHERN = Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.0"); //$NON-NLS-1$
 
   private IViewPart m_view;
 
@@ -117,7 +118,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     if( gmlWorkspace == null || feature == null )
     {
-      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, "Die aktuelle Ansicht enthält kein Feature und kann deshalb nicht als Vorlage gespeichert werden." );
+      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.1") ); //$NON-NLS-1$
       return;
     }
 
@@ -130,7 +131,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
     final IPath dlgResult = dialog.getResult();
     final IPath fileToWrite;
     if( dlgResult.getFileExtension() == null )
-      fileToWrite = dlgResult.addFileExtension( "gft" );
+      fileToWrite = dlgResult.addFileExtension( "gft" ); //$NON-NLS-1$
     else
       fileToWrite = dlgResult;
 
@@ -139,11 +140,11 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
     final IFile file = root.getFile( fileToWrite );
     if( file.exists() )
     {
-      if( !MessageDialog.openQuestion( shell, STR_ALS_VORLAGE_SPEICHERN, "Datei existiert bereits. Überschreiben?" ) )
+      if( !MessageDialog.openQuestion( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.3") ) ) //$NON-NLS-1$
         return;
     }
 
-    final Job job = new Job( "Vorlage wird gespeichert" )
+    final Job job = new Job( Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.4") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -153,8 +154,8 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
           final Layer layer = templateOF.createFeaturetemplateLayer();
           layer.setFeaturePath( gmlWorkspace.getFeaturepathForFeature( feature ).toString() );
           layer.setHref( gmlWorkspace.getContext().toExternalForm() );
-          layer.setLinktype( "gml" );
-          layer.setId( "layer_1" );
+          layer.setLinktype( "gml" ); //$NON-NLS-1$
+          layer.setId( "layer_1" ); //$NON-NLS-1$
 
           final Featuretemplate template = templateOF.createFeaturetemplate();
           template.setLayer( layer );
@@ -163,7 +164,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
           viewList.addAll( Arrays.asList( view.getCurrentViewTemplates() ) );
 
           final Map<String, String> prefixes = new HashMap<String, String>( 1 );
-          prefixes.put( "featureview.template.kalypso.org", "gft" );
+          prefixes.put( "featureview.template.kalypso.org", "gft" ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );
 
@@ -181,7 +182,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final JAXBException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9"), e ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
@@ -189,7 +190,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( IOException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9"), e ); //$NON-NLS-1$
         }
 
         return Status.OK_STATUS;

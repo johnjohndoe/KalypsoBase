@@ -137,8 +137,8 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       resultEater.addResult( "KernelErr", fleKernelErr ); //$NON-NLS-1$
       strmKernelErr = new FileOutputStream( fleKernelErr );
 
-      final URL resource = getClass().getResource( "resources/triangle.exe" );
-      FileUtils.copyURLToFile( resource, new File(tmpdir, "triangle.exe") );
+      final URL resource = getClass().getResource( "resources/triangle.exe" ); //$NON-NLS-1$
+      FileUtils.copyURLToFile( resource, new File(tmpdir, "triangle.exe") ); //$NON-NLS-1$
 
       //final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" ); //$NON-NLS-1$
       final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -p" ); //$NON-NLS-1$

@@ -380,7 +380,7 @@ public class ShapeSerializer
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final QName fcQName = new QName( "http://www.opengis.net/gml", "_FeatureCollection" );
+    final QName fcQName = new QName( "http://www.opengis.net/gml", "_FeatureCollection" ); //$NON-NLS-1$ //$NON-NLS-2$
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, childFeatureType.getGMLSchema(), fcQName );
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
@@ -395,7 +395,7 @@ public class ShapeSerializer
 
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
   {
-    final String taskName = String.format( "Loading <%s>.shp", fileBase );
+    final String taskName = String.format( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.2"), fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
     ShapeFile sf = null;
@@ -415,11 +415,11 @@ public class ShapeSerializer
 
       moni.setWorkRemaining( count );
       final IFeatureType membersFT = listRelation.getTargetFeatureType();
-      final IPropertyType geomProperty = membersFT.getProperty( "GEOM" );
+      final IPropertyType geomProperty = membersFT.getProperty( "GEOM" ); //$NON-NLS-1$
       for( int i = 0; i < count; i++ )
       {
         if( i % 100 == 0 )
-          moni.subTask( String.format( "%d / %d", i, count ) );
+          moni.subTask( String.format( "%d / %d", i, count ) ); //$NON-NLS-1$
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         final Object geom = fe.getProperty( geomProperty );
         if( geom != null )

@@ -57,7 +57,7 @@ public class WFSClient
 
   public static final String OPERATION_GET_CAPABILITIES = "GetCapabilities"; //$NON-NLS-1$
 
-  private static final String OPERATION_GET_FEATURE = "GetFeature";
+  private static final String OPERATION_GET_FEATURE = "GetFeature"; //$NON-NLS-1$
 
   // TODO: move these in constant interface
   public static final String URL_PARAM_VERSION = "VERSION"; //$NON-NLS-1$
@@ -76,13 +76,13 @@ public class WFSClient
 
   public static String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT = "OUTPUTFORMAT"; //$NON-NLS-1$
 
-  private static final String OUTPUT_FORMAT = "text/xml; subtype=gml/3.1.1";
+  private static final String OUTPUT_FORMAT = "text/xml; subtype=gml/3.1.1"; //$NON-NLS-1$
 
   public static String PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT;
   {
     try
     {
-      PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT = URLEncoder.encode( OUTPUT_FORMAT, "UTF-8" );
+      PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT = URLEncoder.encode( OUTPUT_FORMAT, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {
@@ -140,22 +140,22 @@ public class WFSClient
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );//$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.2", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.2", m_wfsURL.toExternalForm() ), e );//$NON-NLS-1$
     }
     catch( final SAXException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.3", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.3", m_wfsURL.toExternalForm() ), e );//$NON-NLS-1$
     }
     catch( final InvalidCapabilitiesException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.4", m_wfsURL.toExternalForm() ), e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.3", m_wfsURL.toExternalForm() ), e );//$NON-NLS-1$
     }
   }
 
@@ -174,7 +174,7 @@ public class WFSClient
     {
       final String serviceName = params.get( URL_PARAM_SERVICE );
       if( !URL_PARAM_SERVICE_DEFAULT.equals( serviceName ) )
-        throw new IllegalArgumentException( "WFS-URL contains wrong service parameter: " + serviceName );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.0", serviceName) ); //$NON-NLS-1$
     }
     else
     {
@@ -186,7 +186,7 @@ public class WFSClient
     {
       final String version = params.get( URL_PARAM_VERSION );
       if( !URL_PARAM_VERSION_DEFAULT.equals( version ) )
-        throw new IllegalArgumentException( "WFS-URL contains unsupported version parameter: " + version );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.4", version )); //$NON-NLS-1$
     }
     else
     {
@@ -198,7 +198,7 @@ public class WFSClient
     {
       final String request = params.get( URL_PARAM_REQUEST );
       if( !OPERATION_GET_CAPABILITIES.equals( request ) )
-        throw new IllegalArgumentException( "WFS-URL contains already another request parameter: " + request );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.5", request )); //$NON-NLS-1$
     }
     else
     {
@@ -329,7 +329,7 @@ public class WFSClient
     final WFSFeatureType featureType = getFeatureType( name );
     final URL describeUrl = findGetOperationURL( WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
     if( describeUrl == null )
-      throw new IllegalStateException( "WFS does not support GET for " + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.6", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE )); //$NON-NLS-1$
 
     final QualifiedName qname = featureType.getName();
 
@@ -345,10 +345,10 @@ public class WFSClient
 
     final String namespaceUri = qname.getNamespace().toString();
     final String prefix = qname.getPrefix();
-    final String namespaceValue = String.format( "xmlns(%s=%s)", prefix, namespaceUri );
+    final String namespaceValue = String.format( "xmlns(%s=%s)", prefix, namespaceUri ); //$NON-NLS-1$
     params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, namespaceValue );
 
-    final String typenameValue = String.format( "%s:%s", prefix, qname.getLocalName() );
+    final String typenameValue = String.format( "%s:%s", prefix, qname.getLocalName() ); //$NON-NLS-1$
     params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, typenameValue );
 
     return UrlUtilities.addQuery( describeUrl, params );
@@ -367,7 +367,7 @@ public class WFSClient
     }
     catch( final MalformedURLException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", m_wfsURL.toExternalForm() ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -387,7 +387,7 @@ public class WFSClient
 
       final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
 
-      params.put( URL_PARAM_SERVICE, "WFS" );
+      params.put( URL_PARAM_SERVICE, "WFS" ); //$NON-NLS-1$
       params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
       params.put( URL_PARAM_REQUEST, OPERATION_GET_FEATURE );
       params.put( PARAM_DESCRIBE_FEATURE_TYPE_FORMAT, PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT );
@@ -402,8 +402,8 @@ public class WFSClient
       if( statusCode != 200 )
       {
         // REMARK: with OGC-Services, it's always 200, even on error...
-        System.out.println( "Status Code: " + statusCode );
-        throw new HttpException( "Connection error: " + statusCode );
+        System.out.println( "Status Code: " + statusCode ); //$NON-NLS-1$
+        throw new HttpException( "Connection error: " + statusCode ); //$NON-NLS-1$
       }
 
       inputStream = new BufferedInputStream( getMethod.getResponseBodyAsStream() );
@@ -414,7 +414,7 @@ public class WFSClient
     }
     catch( final URISyntaxException e )
     {
-      final String message = Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", e.getInput() );
+      final String message = Messages.getString( "org.kalypso.ogc.wfs.WFSClient.1", e.getInput() ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
@@ -427,19 +427,19 @@ public class WFSClient
     }
     catch( final HttpException e )
     {
-      final String message = String.format( "Failed to access WFS", name );
+      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final IOException e )
     {
-      final String message = String.format( "Failed to access WFS", name );
+      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to load result GML", name );
+      final String message = String.format( "Failed to load result GML", name ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
@@ -454,16 +454,16 @@ public class WFSClient
     final WFSFeatureType featureType = getFeatureType( name );
     final URL describeUrl = findGetOperationURL( WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
     if( describeUrl == null )
-      throw new IllegalStateException( "WFS does not support GET for " + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.wfs.WFSClient.8") + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE ); //$NON-NLS-1$
 
     final QualifiedName qname = featureType.getName();
 
     final String namespaceUri = qname.getNamespace().toString();
     final String prefix = qname.getPrefix();
-    final String namespaceValue = String.format( "xmlns(%s=%s)", prefix, namespaceUri );
+    final String namespaceValue = String.format( "xmlns(%s=%s)", prefix, namespaceUri ); //$NON-NLS-1$
     params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, namespaceValue );
 
-    final String typenameValue = String.format( "%s:%s", prefix, qname.getLocalName() );
+    final String typenameValue = String.format( "%s:%s", prefix, qname.getLocalName() ); //$NON-NLS-1$
     params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, typenameValue );
 
     return UrlUtilities.addQuery( describeUrl, params );
@@ -480,7 +480,7 @@ public class WFSClient
       final QName qname = new QName( name.getNamespace().toString(), name.getLocalName() );
       final URL schemaLocation = operationDescribeFeatureType( qname );
 
-      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", schemaLocation );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", schemaLocation ); //$NON-NLS-1$
       final IFeatureType featureType = schema.getFeatureType( qname );
 
       m_schemaHash.put( type, featureType );

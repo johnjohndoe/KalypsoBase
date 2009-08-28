@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -90,11 +91,11 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     m_gridFolder = gridFolder;
     m_allowUserChangeGridFolder = allowUserChangeGridFolder;
 
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" );
+    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( "Import" );
+    setWindowTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -103,9 +104,9 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_pageSelect = new PageSelectGeodataFiles( "pageSelect", m_gridFolder, m_allowUserChangeGridFolder );
-    m_pageSelect.setTitle( "Rasterdatei" );
-    m_pageSelect.setDescription( "Wählen Sie die Rasterdatei aus. Die Rasterdatei wird in den Arbeitsbereich kopiert." );
+    m_pageSelect = new PageSelectGeodataFiles( "pageSelect", m_gridFolder, m_allowUserChangeGridFolder ); //$NON-NLS-1$
+    m_pageSelect.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.0") ); //$NON-NLS-1$
+    m_pageSelect.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.4") ); //$NON-NLS-1$
 
     addPage( m_pageSelect );
 
@@ -129,7 +130,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
       {
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, "Importiere Rasterdaten", selectedFiles.length );
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5"), selectedFiles.length ); //$NON-NLS-1$
 
           final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( selectedFiles.length );
           for( final File gridFile : selectedFiles )
@@ -142,7 +143,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Rasterdaten-Import", status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.6"), status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR ); //$NON-NLS-1$
       return status.isOK();
     }
     catch( final Exception e )

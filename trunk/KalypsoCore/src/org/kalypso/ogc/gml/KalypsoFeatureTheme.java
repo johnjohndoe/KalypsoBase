@@ -147,7 +147,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // Should'nt we throw an exception here?
       m_featureList = null;
       m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, "FeaturePath does not point to any feature: " + featurePath, null ) );
+      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.ogc.gml.KalypsoFeatureTheme.0") + featurePath, null ) ); //$NON-NLS-1$
     }
 
     m_workspace.addModellListener( this );

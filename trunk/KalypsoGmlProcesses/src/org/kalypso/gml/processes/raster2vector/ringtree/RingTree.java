@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RingTree
 {
-  public final RingTreeElement root = new RingTreeElement( null, null, Double.NaN, null, "root" );
+  public final RingTreeElement root = new RingTreeElement( null, null, Double.NaN, null, "root" ); //$NON-NLS-1$
 
   public Object walk( final RingTreeWalker rtw )
   {
@@ -45,7 +45,7 @@ public class RingTree
       final double area = element.polygon.getArea();
       if( area == 0 )
       {
-        System.out.println( "Fläche ist 0.0" );
+        System.out.println( "Fläche ist 0.0" ); //$NON-NLS-1$
       }
       return;
     }

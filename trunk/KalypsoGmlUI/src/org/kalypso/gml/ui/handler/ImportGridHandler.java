@@ -14,6 +14,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -33,7 +34,7 @@ public class ImportGridHandler extends AbstractHandler implements IHandler
 
     final ICoverageCollection cc = findCoverageCollection( firstElement );
     if( cc == null )
-      throw new ExecutionException( "No coverage collection found", null );
+      throw new ExecutionException( Messages.getString("org.kalypso.gml.ui.handler.ImportGridHandler0"), null ); //$NON-NLS-1$
 
     // Choose target folder
     final URL gmlContext = cc.getFeature().getWorkspace().getContext();

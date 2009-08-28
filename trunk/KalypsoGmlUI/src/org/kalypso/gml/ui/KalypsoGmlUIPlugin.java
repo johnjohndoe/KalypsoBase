@@ -67,7 +67,7 @@ public class KalypsoGmlUIPlugin extends AbstractUIPlugin
    */
   public static ImageDescriptor getImageDescriptor( String path )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.gml.ui", path );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.gml.ui", path ); //$NON-NLS-1$
   }
 
   public static PluginImageProvider getImageProvider( )

@@ -112,7 +112,7 @@ public class ColorMapEntryTreeObject implements IWorkbenchAdapter
   {
     final String label = m_entry.getLabel().trim();
     if( label.isEmpty() )
-      return "" + m_entry.getQuantity();
+      return "" + m_entry.getQuantity(); //$NON-NLS-1$
 
     return resolveI18nString( label );
   }

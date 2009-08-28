@@ -350,7 +350,7 @@ public class ZmlFactory
         // if we have a date parser, set the right timezone to read the values
         if( parser instanceof DateParser )
         {
-          final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" );
+          final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" ); //$NON-NLS-1$
           ((DateParser)parser).setTimezone( TimeZone.getTimeZone( tzString ) );
         }
 

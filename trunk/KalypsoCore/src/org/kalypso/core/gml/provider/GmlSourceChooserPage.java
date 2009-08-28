@@ -127,7 +127,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
     setPageComplete( false );
 
-    setDescription( "Wählen Sie auf dieser Seite einen oder mehrere Wasserpiegel für den Import aus" );
+    setDescription( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.3") ); //$NON-NLS-1$
   }
 
   protected void handleCheckStateChanged( final CheckStateChangedEvent event, final CheckboxTreeViewer treeViewer )

@@ -66,6 +66,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.wizard.sensor.i18n.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
@@ -84,7 +85,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     super();
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
-    setWindowTitle( "Import Observation" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -98,7 +99,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     if( !selectedResources.isEmpty() )
       m_selection = new StructuredSelection( selectedResources );
 
-    setWindowTitle( "Title" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.1") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -109,9 +110,9 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   public void addPages( )
   {
     super.addPages();
-    m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" );
+    m_page2 = new ImportObservationAxisMappingWizardPage( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.2") ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen" );
+    m_page1 = new ImportObservationSelectionWizardPage( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.3") ); //$NON-NLS-1$
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -215,8 +216,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           for( final IAxis element : axesNew )
             newTuppelModel.setElement( countSrc + i, tuppelModelTarget.getElement( i, element ), element );
       }
-      final String href = "";
-      final String id = "";
+      final String href = ""; //$NON-NLS-1$
+      final String id = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
@@ -229,7 +230,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final Marshaller marshaller =  JaxbUtilities.createMarshaller(zmlJC);
       // use IResource
       final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
-      final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" );
+      final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
       writer.close();

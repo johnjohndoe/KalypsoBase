@@ -129,7 +129,7 @@ public class GmlLoader extends WorkspaceLoader
       }
 
       /* Adapting if necessary */
-      moni.subTask( "checking backwards compability..." );
+      moni.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.0") ); //$NON-NLS-1$
       final IResource gmlFile = getResources( key )[0];
       final GMLWorkspace adaptedWorkspace = adaptWorkspace( key, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
 
@@ -187,7 +187,7 @@ public class GmlLoader extends WorkspaceLoader
       ProgressUtilities.worked( moni, 0 );
     }
 
-    final MultiStatus adaptStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, resultList.toArray( new IStatus[resultList.size()] ), "", null );
+    final MultiStatus adaptStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, resultList.toArray( new IStatus[resultList.size()] ), "", null ); //$NON-NLS-1$
 
     if( !adaptStatus.isOK() )
     {

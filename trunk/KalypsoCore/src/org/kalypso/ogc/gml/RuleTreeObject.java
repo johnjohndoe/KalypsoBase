@@ -171,7 +171,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       throw new IllegalStateException();
 
     if( m_rule == null )
-      return "<no styles set>";
+      return "<no styles set>"; //$NON-NLS-1$
 
     final String title = m_rule.getTitle();
     if( title != null )

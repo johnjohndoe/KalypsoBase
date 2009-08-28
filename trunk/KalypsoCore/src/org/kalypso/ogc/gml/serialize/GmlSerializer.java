@@ -138,7 +138,7 @@ public final class GmlSerializer
       final BufferedOutputStream bs = new BufferedOutputStream( new FileOutputStream( gmlFile ) );
 
       // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
-      if( gmlFile.getName().endsWith( ".gz" ) )
+      if( gmlFile.getName().endsWith( ".gz" ) ) //$NON-NLS-1$
       {
         os = new GZIPOutputStream( bs );
       }
@@ -211,7 +211,7 @@ public final class GmlSerializer
       final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-      transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" );
+      transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" ); //$NON-NLS-1$ //$NON-NLS-2$
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
       // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       // TODO put new QName( NS.OM, "result" ) here instead inside the GMLSaxFactory
@@ -251,12 +251,12 @@ public final class GmlSerializer
       else
       {
         final long contentLength = getContentLength( gmlURL );
-        final String tskMsg = String.format( "Reading <%s>", gmlURL );
+        final String tskMsg = String.format( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.3"), gmlURL ); //$NON-NLS-1$
         monitor.beginTask( tskMsg, (int) contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
       }
 
-      if( gmlURL.toExternalForm().endsWith( ".gz" ) )
+      if( gmlURL.toExternalForm().endsWith( ".gz" ) ) //$NON-NLS-1$
       {
         is = new GZIPInputStream( bis );
       }
@@ -273,7 +273,7 @@ public final class GmlSerializer
     {
       // Handle cancel of progress monitor: ProgressInputStreams throws IOException with a CoreException as cause
       if( e == ProgressInputStream.CANCEL_EXCEPTION )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, "Canceled - Serializing of GML Workspace", e ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.5"), e ) ); //$NON-NLS-1$
 
       throw e;
     }
@@ -347,7 +347,7 @@ public final class GmlSerializer
     {
       bis = new BufferedInputStream( new FileInputStream( file ) );
 
-      if( file.getName().endsWith( ".gz" ) )
+      if( file.getName().endsWith( ".gz" ) ) //$NON-NLS-1$
       {
         is = new GZIPInputStream( bis );
       }
@@ -407,7 +407,7 @@ public final class GmlSerializer
 
   public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.11" ), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.10" ), 2 ); //$NON-NLS-1$
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
@@ -485,7 +485,7 @@ public final class GmlSerializer
   public static void saveWorkspace( final GMLWorkspace workspace, final IFile file ) throws Exception
   {
     if( workspace == null || file == null )
-      throw new Exception( "Either the workspace or the target file was null." );
+      throw new Exception( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.2") ); //$NON-NLS-1$
 
     /* The default encoding is that of the file. */
     final String encoding = file.getCharset();
@@ -511,7 +511,7 @@ public final class GmlSerializer
       final ZipEntry newEntry = new ZipEntry( zipEntryName );
       zos.putNextEntry( newEntry );
 
-      serializeWorkspace( zos, resultWorkspace, "CP1252" );
+      serializeWorkspace( zos, resultWorkspace, "CP1252" ); //$NON-NLS-1$
 
       zos.closeEntry();
       zos.close();

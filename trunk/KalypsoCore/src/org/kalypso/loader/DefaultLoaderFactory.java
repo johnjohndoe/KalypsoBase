@@ -70,23 +70,23 @@ public class DefaultLoaderFactory implements ILoaderFactory
     try
     {
       IExtensionRegistry registry = Platform.getExtensionRegistry();
-      IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" );
+      IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" ); //$NON-NLS-1$
       for( IConfigurationElement element : elements )
       {
-        String elementType = element.getAttribute( "type" );
+        String elementType = element.getAttribute( "type" ); //$NON-NLS-1$
         if( type.equals( elementType ) )
-          loader = (ILoader) element.createExecutableExtension( "class" );
+          loader = (ILoader) element.createExecutableExtension( "class" ); //$NON-NLS-1$
       }
 
       /* If there is no loader, this is an error. */
       if( loader == null )
-        throw new Exception( "Unknown type: " + type );
+        throw new Exception( "Unknown type: " + type ); //$NON-NLS-1$
 
       return loader;
     }
     catch( Exception ex )
     {
-      throw new FactoryException( "Could not instantiate the loader type: " + type, ex );
+      throw new FactoryException( "Could not instantiate the loader type: " + type, ex ); //$NON-NLS-1$
     }
   }
 }

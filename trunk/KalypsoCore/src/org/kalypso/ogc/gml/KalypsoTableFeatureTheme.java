@@ -49,6 +49,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -116,7 +117,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
       // Should'nt we throw an exception here?
       m_featureList = null;
       m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, "FeaturePath does not point to any feature: " + featurePath, null ) );
+      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.ogc.gml.KalypsoTableFeatureTheme.0") + featurePath, null ) ); //$NON-NLS-1$
     }
 
     m_workspace.addModellListener( this );

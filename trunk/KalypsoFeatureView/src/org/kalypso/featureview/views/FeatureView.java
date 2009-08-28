@@ -82,6 +82,7 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.KalypsoFeatureViewPlugin;
+import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -135,9 +136,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FeatureView extends ViewPart implements ModellEventListener
 {
-  public static final String ID = "org.kalypso.featureview.views.FeatureView";
+  public static final String ID = "org.kalypso.featureview.views.FeatureView"; //$NON-NLS-1$
 
-  private static final String _KEIN_FEATURE_SELEKTIERT_ = "<kein Feature selektiert>";
+  private static final String _KEIN_FEATURE_SELEKTIERT_ = Messages.getString("org.kalypso.featureview.views.FeatureView.1"); //$NON-NLS-1$
 
   /**
    * Settings constant for section name (value <code>FeatureView</code>).
@@ -401,7 +402,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // add showTables-Action to menu-bar
     // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
     // does not allow to set the checked state dynamically
-    m_showTablesAction = new Action( "Tabellen anzeigen", Action.AS_CHECK_BOX )
+    m_showTablesAction = new Action( Messages.getString("org.kalypso.featureview.views.FeatureView.2"), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -414,7 +415,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     };
     m_showTablesAction.setChecked( isShowTables() );
 
-    m_showValidationOkAction = new Action( "Validation OK anzeigen", Action.AS_CHECK_BOX )
+    m_showValidationOkAction = new Action( Messages.getString("org.kalypso.featureview.views.FeatureView.3"), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -457,7 +458,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     final ScrolledCompositeCreator creator = m_creator;
     final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
 
-    final Job job = new UIJob( getSite().getShell().getDisplay(), "Feature anzeigen" )
+    final Job job = new UIJob( getSite().getShell().getDisplay(), Messages.getString("org.kalypso.featureview.views.FeatureView.4") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

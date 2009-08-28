@@ -60,7 +60,7 @@ public class MapPanelUtilities
 {
   private MapPanelUtilities( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate helper class" );
+    throw new UnsupportedOperationException( "Do not instantiate helper class" ); //$NON-NLS-1$
   }
 
   public static GM_Envelope calcPanToLocationBoundingBox( final IMapPanel mapPanel, final double geoCenterX, final double geoCenterY )
