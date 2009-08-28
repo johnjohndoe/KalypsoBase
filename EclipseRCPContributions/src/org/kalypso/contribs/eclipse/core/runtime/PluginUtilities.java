@@ -98,10 +98,23 @@ public class PluginUtilities
   public static IDialogSettings getDialogSettings( final AbstractUIPlugin plugin, final String sectionName )
   {
     final IDialogSettings workbenchSettings = plugin.getDialogSettings();
-    final IDialogSettings section = workbenchSettings.getSection( sectionName );
-    if( section == null )
-      return workbenchSettings.addNewSection( sectionName );
+    return getSection( workbenchSettings, sectionName );
+  }
 
+  /**
+   * Returns a sub-section of a given {@link IDialogSettings}.<br>
+   * If the section does not yet exist, it is created.
+   * 
+   * @return <code>null</code>, if the given <code>settings</code> are <code>null</code>.
+   */
+  public static IDialogSettings getSection( final IDialogSettings settings, final String sectionName )
+  {
+    if( settings == null )
+      return null;
+
+    final IDialogSettings section = settings.getSection( sectionName );
+    if( section == null )
+      return settings.addNewSection( sectionName );
     return section;
   }
 
