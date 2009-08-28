@@ -79,7 +79,7 @@ public class MaximizeActionDelegate extends ActionDelegate implements IEditorAct
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.maximize", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.maximize", event ); //$NON-NLS-1$
     }
     catch( ExecutionException e )
     {

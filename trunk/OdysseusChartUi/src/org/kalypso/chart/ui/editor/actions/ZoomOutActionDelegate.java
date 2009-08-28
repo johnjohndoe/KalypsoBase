@@ -33,7 +33,7 @@ public class ZoomOutActionDelegate extends ActionDelegate implements IEditorActi
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.zoomOut", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.zoomOut", event ); //$NON-NLS-1$
     }
     catch( final ExecutionException e )
     {

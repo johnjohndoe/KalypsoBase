@@ -78,7 +78,7 @@ public class UrlResolverSingleton
     for( final Object object : props.keySet() )
     {
       final String key = (String)object;
-      if( key.endsWith( "URL" ) )
+      if( key.endsWith( "URL" ) ) //$NON-NLS-1$
       {
         final String path = props.getProperty( key );
         final URL resolved = resolveUrl( confUrl, path );

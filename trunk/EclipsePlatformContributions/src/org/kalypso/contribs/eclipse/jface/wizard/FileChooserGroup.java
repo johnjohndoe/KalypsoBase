@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 
 /**
@@ -106,10 +107,10 @@ public class FileChooserGroup
       switch( m_type )
       {
         case eOpen:
-          return "Datei auswählen";
+          return Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.0"); //$NON-NLS-1$
 
         case eSave:
-          return "Datei speichern unter";
+          return Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.1"); //$NON-NLS-1$
 
         default:
           throw new UnsupportedOperationException();
@@ -156,7 +157,7 @@ public class FileChooserGroup
 
         case eSave:
           final String[] extensions = dialog.getFilterExtensions();
-          return newFilename + "." + extensions[0];
+          return newFilename + "." + extensions[0]; //$NON-NLS-1$
 
         default:
           throw new UnsupportedOperationException();
@@ -164,7 +165,7 @@ public class FileChooserGroup
     }
   }
 
-  private static final String SETTINGS_FILENAME = "fileChooserGroup.filename";
+  private static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
 
   private File m_file;
 
@@ -246,7 +247,7 @@ public class FileChooserGroup
     group.setLayout( gridLayout );
 
     final Label label = new Label( group, SWT.NONE );
-    label.setText( "&Datei" );
+    label.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4") ); //$NON-NLS-1$
 
     final Text text = new Text( group, m_delegate.getTextBoxStyle() );
     m_text = text;
@@ -260,7 +261,7 @@ public class FileChooserGroup
     } );
 
     final Button button = new Button( group, SWT.NONE );
-    button.setText( "..." );
+    button.setText( "..." ); //$NON-NLS-1$
     button.setToolTipText( m_delegate.getButtonText() );
     button.addSelectionListener( new SelectionAdapter()
     {

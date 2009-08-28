@@ -81,7 +81,7 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
       case 1:
         return m_psource.getPropertyValue( pd.getDisplayName() ).toString();
       default:
-        return "";
+        return ""; //$NON-NLS-1$
     }
   }
 
@@ -106,7 +106,7 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
    */
   public boolean isLabelProperty( Object element, String property )
   {
-    return property.equals( "property" );
+    return property.equals( "property" ); //$NON-NLS-1$
   }
 
   /**

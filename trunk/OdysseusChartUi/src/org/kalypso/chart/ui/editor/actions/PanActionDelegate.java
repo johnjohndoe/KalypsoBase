@@ -33,7 +33,7 @@ public class PanActionDelegate extends ActionDelegate implements IEditorActionDe
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.pan", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.pan", event ); //$NON-NLS-1$
     }
     catch( ExecutionException e )
     {

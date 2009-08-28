@@ -78,7 +78,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
     try
     {
       if( resourceBundle == null )
-        resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" );
+        resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {

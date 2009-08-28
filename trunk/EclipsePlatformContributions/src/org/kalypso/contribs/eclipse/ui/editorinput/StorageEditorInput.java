@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * An {@link org.eclipse.ui.IEditorInput} which is based on a {@link IStorage}.
@@ -113,7 +114,7 @@ public class StorageEditorInput implements IStorageEditorInput
   {
     final IPath fullPath = m_storage.getFullPath();
     if( fullPath == null )
-      return "<Unbekannt>";
+      return Messages.getString("org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput.0"); //$NON-NLS-1$
 
     return fullPath.toOSString();
   }

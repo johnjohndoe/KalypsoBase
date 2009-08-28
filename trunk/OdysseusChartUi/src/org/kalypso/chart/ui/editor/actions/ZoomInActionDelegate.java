@@ -33,7 +33,7 @@ public class ZoomInActionDelegate extends ActionDelegate implements IEditorActio
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.zoomIn", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.zoomIn", event ); //$NON-NLS-1$
     }
     catch( ExecutionException e )
     {

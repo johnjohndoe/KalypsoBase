@@ -62,7 +62,7 @@ import org.osgi.framework.Bundle;
  */
 public class EclipsePlatformContributionsExtensions
 {
-  private static final String EXT_PROJECT_TEMPLATE = "org.kalypso.contribs.eclipseplatform.projectTemplate";
+  private static final String EXT_PROJECT_TEMPLATE = "org.kalypso.contribs.eclipseplatform.projectTemplate"; //$NON-NLS-1$
 
   /**
    * Returns all registered project templates.
@@ -80,12 +80,12 @@ public class EclipsePlatformContributionsExtensions
     final Collection<ProjectTemplate> demoProjects = new ArrayList<ProjectTemplate>( configurationElements.length );
     for( final IConfigurationElement configurationElement : configurationElements )
     {
-      final String label = configurationElement.getAttribute( "label" );
-      final String projectName = configurationElement.getAttribute( "projectName" );
-      final String description = configurationElement.getAttribute( "description" );
-      final String icon = configurationElement.getAttribute( "icon" );
-      final String data = configurationElement.getAttribute( "data" );
-      final String category = configurationElement.getAttribute( "category" );
+      final String label = configurationElement.getAttribute( "label" ); //$NON-NLS-1$
+      final String projectName = configurationElement.getAttribute( "projectName" ); //$NON-NLS-1$
+      final String description = configurationElement.getAttribute( "description" ); //$NON-NLS-1$
+      final String icon = configurationElement.getAttribute( "icon" ); //$NON-NLS-1$
+      final String data = configurationElement.getAttribute( "data" ); //$NON-NLS-1$
+      final String category = configurationElement.getAttribute( "category" ); //$NON-NLS-1$
 
       /* Ingore templates of the wrong category id, if set. */
       if( categoryId == null || categoryId.equals( category ) )
@@ -97,7 +97,7 @@ public class EclipsePlatformContributionsExtensions
 
         if( dataLocation == null )
         {
-          final String msg = String.format( "Resource not found for project template '%s': %s", label, data );
+          final String msg = String.format( "Resource not found for project template '%s': %s", label, data ); //$NON-NLS-1$
           final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
           EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
         }

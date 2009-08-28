@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.chart.ui.view.ChartOutlinePopupDialog;
 
 public class OpenOutlineHandler extends AbstractHandler
@@ -27,15 +28,15 @@ public class OpenOutlineHandler extends AbstractHandler
 
     IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.0") ); //$NON-NLS-1$
 
     IWorkbenchPartSite site = part.getSite();
     if( site == null )
-      throw new ExecutionException( "No active site." );
+      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.1") ); //$NON-NLS-1$
 
     IWorkbenchPage page = site.getPage();
     if( page == null )
-      throw new ExecutionException( "No active page." );
+      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.2") ); //$NON-NLS-1$
 
     ChartOutlinePopupDialog d = new ChartOutlinePopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), chartPart );
 

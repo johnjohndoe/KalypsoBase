@@ -52,13 +52,13 @@ import org.kalypso.contribs.eclipse.core.resources.StringStorage;
  */
 public class StringStorageInputFactory implements IElementFactory
 {
-  public final static String ID = "org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory";
+  public final static String ID = "org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory"; //$NON-NLS-1$
 
-  private static final String MEMENTO_DATA = "string.storage.memento.data";
+  private static final String MEMENTO_DATA = "string.storage.memento.data"; //$NON-NLS-1$
 
-  private static final String MEMENTO_PATH = "string.storage.memento.path";
+  private static final String MEMENTO_PATH = "string.storage.memento.path"; //$NON-NLS-1$
 
-  private static final String MEMENTO_NAME = "string.storage.memento.name";
+  private static final String MEMENTO_NAME = "string.storage.memento.name"; //$NON-NLS-1$
 
   public static void saveState( final StringStorage storage, final IMemento memento )
   {

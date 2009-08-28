@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.chart.ui.i18n.Messages;
 
 /**
  * Source: http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/AfacadeforthesaveFileDialog.htm. This class provides a
@@ -63,7 +64,7 @@ public class SafeSaveDialog
 
           // We really should read this string from a
           // resource bundle
-          mb.setMessage( fileName + " already exists. Do you want to replace it?" );
+          mb.setMessage( Messages.getString("org.kalypso.chart.ui.editor.ui.SafeSaveDialog.0",fileName ) ); //$NON-NLS-1$
 
           // If they click Yes, we're done and we drop out. If
           // they click No, we redisplay the File Dialog

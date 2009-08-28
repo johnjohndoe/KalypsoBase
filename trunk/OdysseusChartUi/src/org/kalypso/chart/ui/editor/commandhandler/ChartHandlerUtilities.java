@@ -60,13 +60,13 @@ import org.kalypso.chart.ui.IChartPart;
  */
 public class ChartHandlerUtilities
 {
-  public final static String ACTIVE_CHART_PART_NAME = "activeChartComposite";
+  public final static String ACTIVE_CHART_PART_NAME = "activeChartComposite"; //$NON-NLS-1$
 
-  public static final String CHARTUI_COMMAND_CATEGORY = "org.kalypso.chart.ui.commands.category";
+  public static final String CHARTUI_COMMAND_CATEGORY = "org.kalypso.chart.ui.commands.category"; //$NON-NLS-1$
 
   private ChartHandlerUtilities( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class." );
+    throw new UnsupportedOperationException( "Do not instantiate this helper class." ); //$NON-NLS-1$
   }
 
   /**

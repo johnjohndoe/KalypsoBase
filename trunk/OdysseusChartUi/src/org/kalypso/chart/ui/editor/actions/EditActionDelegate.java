@@ -33,7 +33,7 @@ public class EditActionDelegate extends ActionDelegate implements IEditorActionD
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.edit", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.edit", event ); //$NON-NLS-1$
     }
     catch( ExecutionException e )
     {
