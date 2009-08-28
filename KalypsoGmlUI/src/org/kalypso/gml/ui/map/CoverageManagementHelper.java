@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -110,12 +111,12 @@ public class CoverageManagementHelper
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementHelper0") ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "could not delete data file." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementHelper0") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

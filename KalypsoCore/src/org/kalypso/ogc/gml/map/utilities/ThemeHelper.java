@@ -69,7 +69,7 @@ public class ThemeHelper
 
     for( final IKalypsoTheme theme : themes )
     {
-      final String property = theme.getProperty( themeId, "" );
+      final String property = theme.getProperty( themeId, "" ); //$NON-NLS-1$
       if( ArrayUtils.contains( validThemes, property ) )
         myThemes.add( theme );
     }

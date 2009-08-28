@@ -56,6 +56,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -101,12 +102,12 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
    */
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Rasterdaten Import", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.0"), 100 ); //$NON-NLS-1$
 
     final File convertedGridFile = null;
     try
     {
-      monitor.subTask( "- importiere Daten in den Arbeitsbereich" );
+      monitor.subTask( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportFinishWorker.1") ); //$NON-NLS-1$
 
       final IContainer container = m_gmlFile == null ? null : m_gmlFile.getParent();
       final ICoverageCollection coverages = m_coverages == null ? new CoverageCollection( ResourceUtilities.createURL( container ), null ) : m_coverages;
@@ -135,7 +136,7 @@ public class RectifiedGridCoverageImportFinishWorker implements ICoreRunnableWit
     finally
     {
       // HACK: if it was converted (now .bin) delete the temporary file
-      if( convertedGridFile != null && convertedGridFile.getName().toLowerCase().endsWith( ".bin" ) )
+      if( convertedGridFile != null && convertedGridFile.getName().toLowerCase().endsWith( ".bin" ) ) //$NON-NLS-1$
         convertedGridFile.delete();
 
       monitor.done();

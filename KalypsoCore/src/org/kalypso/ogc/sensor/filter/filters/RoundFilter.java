@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -81,24 +82,24 @@ public class RoundFilter extends AbstractObservationFilter
 
   private static int toBigDecimalRoundingConstant( final String mode )
   {
-    if( "ROUND_CEILING".equals( mode ) )
+    if( "ROUND_CEILING".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_CEILING;
-    else if( "ROUND_DOWN".equals( mode ) )
+    else if( "ROUND_DOWN".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_DOWN;
-    else if( "ROUND_FLOOR".equals( mode ) )
+    else if( "ROUND_FLOOR".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_FLOOR;
-    else if( "ROUND_HALF_DOWN".equals( mode ) )
+    else if( "ROUND_HALF_DOWN".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_HALF_DOWN;
-    else if( "ROUND_HALF_EVEN".equals( mode ) )
+    else if( "ROUND_HALF_EVEN".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_HALF_EVEN;
-    else if( "ROUND_HALF_UP".equals( mode ) )
+    else if( "ROUND_HALF_UP".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_HALF_UP;
-    else if( "ROUND_UNNECESSARY".equals( mode ) )
+    else if( "ROUND_UNNECESSARY".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_UNNECESSARY;
-    else if( "ROUND_UP".equals( mode ) )
+    else if( "ROUND_UP".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_UP;
 
-    throw new IllegalArgumentException( "Unsupported Rounding-Mode: " + mode );
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.0") + mode ); //$NON-NLS-1$
   }
 
   @Override
@@ -152,7 +153,7 @@ public class RoundFilter extends AbstractObservationFilter
     // get all non-virtual Double-Axises
     final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
     if( axis == null )
-      throw new SensorException( "No axes of type: " + m_type );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.1") + m_type ); //$NON-NLS-1$
 
       final int valueCount = values.getCount();
       for( int j = 0; j < valueCount; j++ )
@@ -177,6 +178,6 @@ public class RoundFilter extends AbstractObservationFilter
   @Override
   public void setValues( final ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstützt ." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.RoundFilter.2") ); //$NON-NLS-1$
   }
 }

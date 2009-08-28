@@ -47,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
@@ -76,7 +77,7 @@ public class GridStyleDialog extends TitleAreaDialog
     m_globalMin = min;
     m_globalMax = max;
 
-    setTitle( "Farbverlauf erzeugen" );
+    setTitle( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -85,9 +86,9 @@ public class GridStyleDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setMessage( "Wählen Sie Anfangs- und Endfarbe für den Farbverlauf." );
+    setMessage( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.1") ); //$NON-NLS-1$
 
-    parent.getShell().setText( "Farbverlauf" );
+    parent.getShell().setText( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.2") ); //$NON-NLS-1$
 
     final Composite panel = (Composite) super.createDialogArea( parent );
 

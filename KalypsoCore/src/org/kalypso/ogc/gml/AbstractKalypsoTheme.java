@@ -81,6 +81,7 @@ import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -103,7 +104,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};
 
-  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, "painting...", null );
+  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ogc.gml.AbstractKalypsoTheme.0"), null ); //$NON-NLS-1$
 
   private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
 
@@ -394,7 +395,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     if( m.matches() && m.groupCount() == 2 )
     {
       final String styleName = m.group( 1 );
-      final String ftsName = "";
+      final String ftsName = ""; //$NON-NLS-1$
       final String ruleName = m.group( 2 );
 
       final Object[] themeChildren = getChildren( this );

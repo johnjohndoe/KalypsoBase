@@ -268,7 +268,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
     final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, message, null );
     KalypsoGisPlugin.getDefault().getLog().log( status );
 
-    final String title = "<Loading failed>";
+    final String title = Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.2"); //$NON-NLS-1$
     final String abstr = message;
     return createDummyStyle( title, abstr );
   }
@@ -280,7 +280,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
   {
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
-      m_userStyle = createDummyStyle( "<Style Object Invalid>", Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ) ); //$NON-NLS-1$
+      m_userStyle = createDummyStyle( Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.3"),  Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.9")  ); //$NON-NLS-1$ //$NON-NLS-2$
 
       fireStyleChanged();
       setDirty( false );
@@ -294,7 +294,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.removePoolListener( this );
-    m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.4" ), "Style has been disposed" ); //$NON-NLS-1$
+    m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.4" ), Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.5") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -345,7 +345,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
     if( getName() != null )
       return getName();
 
-    return Messages.getString( "org.kalypso.ogc.gml.KalypsoUserStyle.0" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.6" ); //$NON-NLS-1$
   }
 
   public String getLabel( )
@@ -353,7 +353,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
     final String label = findLabel();
 
     if( !isLoaded() )
-      return label + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.5" ); //$NON-NLS-1$
+      return label + Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.8" ); //$NON-NLS-1$
 
     if( m_dirty )
       return label + "*"; //$NON-NLS-1$
@@ -430,7 +430,7 @@ public class GisTemplateUserStyle implements IKalypsoUserStyle, Marshallable, IP
     {
       final String key = text.substring( 1 );
       if( m_resourceBundle == null )
-        return  Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.6", key ); //$NON-NLS-1$
+        return  Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.7", key ); //$NON-NLS-1$
 
       try
       {

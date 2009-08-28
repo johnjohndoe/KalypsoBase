@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -102,7 +101,7 @@ public class RenameThemeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.command.RenameThemeCommand.0" ); //$NON-NLS-1$
+    return  "org.kalypso.ogc.gml.command.RenameThemeCommand" ; //$NON-NLS-1$
   }
 
 }

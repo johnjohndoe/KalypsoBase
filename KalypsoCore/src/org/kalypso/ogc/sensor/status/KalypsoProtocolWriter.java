@@ -118,7 +118,7 @@ public class KalypsoProtocolWriter
           final String obsName = observation.getName();
           final String type = KalypsoStatusUtils.getAxisLabelFor( axis );
 
-          final StringBuffer sb = new StringBuffer( "Zeitreihe " );
+          final StringBuffer sb = new StringBuffer( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.0") ); //$NON-NLS-1$
           sb.append( obsName );
 
           final String desc = metadataList.getProperty( ObservationConstants.MD_DESCRIPTION, "" ); //$NON-NLS-1$
@@ -138,10 +138,10 @@ public class KalypsoProtocolWriter
           final String message = sb.toString();
 
           if( axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_CHECK ) )
-            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.3") ); //$NON-NLS-1$
           else if( !axis.isPersistable()
               && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
-            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.2") ); //$NON-NLS-1$
         }
 
       }

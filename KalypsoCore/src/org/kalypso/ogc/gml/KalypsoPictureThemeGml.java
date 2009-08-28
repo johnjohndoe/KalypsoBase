@@ -104,7 +104,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Unable to initialize picture theme", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeGml.1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

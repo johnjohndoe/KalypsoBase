@@ -82,7 +82,7 @@ public class KalypsoOGC31Plugin extends Plugin
     // as this takes quite some time. This enables clients to initialise the context on
     // startup by starting this plug-in immediately.
     // Runs in a separate job, as else plug-in initialisation may fail due to timeout
-    final Job job = new Job( "Initialising OGC31-Binding-Classes" )
+    final Job job = new Job( "Initialising OGC31-Binding-Classes" ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

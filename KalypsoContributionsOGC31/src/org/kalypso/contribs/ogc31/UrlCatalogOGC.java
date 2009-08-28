@@ -57,13 +57,13 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
   protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // SWE & OM things
-    catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) );
-    prefixes.put( NS.SWE, "swe" );
+    catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS.SWE, "swe" ); //$NON-NLS-1$
 
-    catalog.put( NS.ST, myClass.getResource( "schemata/sweCommon/1.0.30/simpleTypeDerivation.xsd" ) );
-    prefixes.put( NS.ST, "st" );
+    catalog.put( NS.ST, myClass.getResource( "schemata/sweCommon/1.0.30/simpleTypeDerivation.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS.ST, "st" ); //$NON-NLS-1$
 
-    catalog.put( NS.OM, myClass.getResource("schemata/om/1.0.30/observation.xsd") );
-    prefixes.put( NS.OM, "om" );
+    catalog.put( NS.OM, myClass.getResource("schemata/om/1.0.30/observation.xsd") ); //$NON-NLS-1$
+    prefixes.put( NS.OM, "om" ); //$NON-NLS-1$
   }
 }

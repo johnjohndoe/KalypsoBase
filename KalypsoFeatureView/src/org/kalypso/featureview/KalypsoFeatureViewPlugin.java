@@ -26,7 +26,7 @@ public class KalypsoFeatureViewPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.featureview.KalypsoFeatureViewPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.featureview.KalypsoFeatureViewPluginResources" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {

@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
@@ -96,7 +97,7 @@ public class MapPanelPainter implements IPaintable
   @Override
   public String toString( )
   {
-    return "Painting map: " + m_modell.getLabel( m_modell );
+    return Messages.getString("org.kalypso.ogc.gml.map.MapPanelPainter.0") + m_modell.getLabel( m_modell ); //$NON-NLS-1$
   }
 
   /**
@@ -129,7 +130,7 @@ public class MapPanelPainter implements IPaintable
       g.fillRect( 0, 0, screenWidth, screenHeight );
     }
 
-    monitor.beginTask( "Painting themes", m_layers.length );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.MapPanelPainter.1"), m_layers.length ); //$NON-NLS-1$
 
     for( final IMapLayer layer : m_layers )
     {

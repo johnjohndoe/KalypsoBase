@@ -83,7 +83,7 @@ public final class KeyComparator implements Comparator<IPoolableObjectType>
     final URL context = key.getContext();
     try
     {
-      if( location.startsWith( "urn:" ))
+      if( location.startsWith( "urn:" )) //$NON-NLS-1$
         return location;
       
       final URL sourceURL = m_urlResolver.resolveURL( context, location );
@@ -93,7 +93,7 @@ public final class KeyComparator implements Comparator<IPoolableObjectType>
     {
       e.printStackTrace();
       
-      return context.toExternalForm() + "#" + location;
+      return context.toExternalForm() + "#" + location; //$NON-NLS-1$
     }
   }
 }

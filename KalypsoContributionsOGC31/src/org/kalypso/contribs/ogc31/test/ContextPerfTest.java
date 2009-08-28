@@ -57,7 +57,7 @@ public class ContextPerfTest extends TestCase
 {
   public void testContextInstatiation( ) throws JAXBException
   {
-    final TimeLogger logger = new TimeLogger( "Start loading JAXBContext" );
+    final TimeLogger logger = new TimeLogger( "Start loading JAXBContext" ); //$NON-NLS-1$
 
     final Class< ? > CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
     final Class< ? > CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
@@ -66,6 +66,6 @@ public class ContextPerfTest extends TestCase
 
     JAXBContext.newInstance( CL_GML3, CL_SWE, CL_GMD, CL_ST );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "JAXBContext was loaded" );
+    logger.printCurrentInterim( "JAXBContext was loaded" ); //$NON-NLS-1$
   }
 }

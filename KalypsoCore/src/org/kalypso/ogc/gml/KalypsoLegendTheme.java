@@ -62,6 +62,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -126,7 +127,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     }
   };
 
-  private final Job m_legendJob = new UIJob( "Legende erzeugen" )
+  private final Job m_legendJob = new UIJob( Messages.getString("org.kalypso.ogc.gml.KalypsoLegendTheme.0") ) //$NON-NLS-1$
   {
     /**
      * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)

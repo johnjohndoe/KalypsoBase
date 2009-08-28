@@ -99,7 +99,7 @@ public class SimpleShapeWriter
     for( final QName property : properties )
     {
       final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( property );
-      typeHandlers.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", String.valueOf( count++ ) ), typeHandler, 1, 1, false ) );
+      typeHandlers.add( GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", String.valueOf( count++ ) ), typeHandler, 1, 1, false ) ); //$NON-NLS-1$
     }
 
     m_shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, typeHandlers.toArray( new IPropertyType[] {} ) );

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -110,7 +111,7 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Unable to initialize picture theme", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeWorldFile.0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

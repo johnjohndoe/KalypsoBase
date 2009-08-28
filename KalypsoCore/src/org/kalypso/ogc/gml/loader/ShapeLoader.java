@@ -121,7 +121,7 @@ public class ShapeLoader extends WorkspaceLoader
         sourceFile = new File( sourceURL.getPath() );
       else
       {
-        moni.subTask( "Downloading to local file system" );
+        moni.subTask( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.0") ); //$NON-NLS-1$
 
         /* If everything else fails, we copy the resources to local files */
         sourceFile = File.createTempFile( "shapeLocalizedFiled", "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -196,15 +196,15 @@ public class ShapeLoader extends WorkspaceLoader
     {
       // TODO: Should in the first instance interpret the prj content ...
       // Does not work now because we must create a coordinate system instance then, but we use string codes right now
-      String prjString = UrlUtilities.toString( prjURL, "UTF-8" );
-      if( prjString.startsWith( "EPSG:" ) )
+      String prjString = UrlUtilities.toString( prjURL, "UTF-8" ); //$NON-NLS-1$
+      if( prjString.startsWith( "EPSG:" ) ) //$NON-NLS-1$
         return prjString;
 
       return sourceSrs;
     }
     catch( IOException ex )
     {
-      System.out.println( "No prj file found for: " + prjURL.toString() );
+      System.out.println( "No prj file found for: " + prjURL.toString() ); //$NON-NLS-1$
       return sourceSrs;
     }
   }

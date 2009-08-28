@@ -119,7 +119,7 @@ public abstract class TimeserieConstants implements ObservationConstants
   public static final String TYPE_VELOCITY = "v"; //$NON-NLS-1$
 
   /** Polder-Kontrolle: an/aus */
-  public static final String TYPE_POLDER_CONTROL = "POLDER_CONTROL";
+  public static final String TYPE_POLDER_CONTROL = "POLDER_CONTROL"; //$NON-NLS-1$
 
   public static final String TYPE_ORDINAL_NUMBER = "ordinalNr"; //$NON-NLS-1$
 

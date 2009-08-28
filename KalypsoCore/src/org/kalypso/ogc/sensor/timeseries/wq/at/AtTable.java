@@ -55,6 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 
 /**
@@ -64,7 +65,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
  */
 public class AtTable
 {
-  private static final Pattern PATTERN_SECOND_LINE = Pattern.compile( "(\\d+).*\\((\\w),(\\w)\\)",
+  private static final Pattern PATTERN_SECOND_LINE = Pattern.compile( "(\\d+).*\\((\\w),(\\w)\\)", //$NON-NLS-1$
       Pattern.CASE_INSENSITIVE );
 
   private String m_name;
@@ -177,14 +178,14 @@ public class AtTable
 
     final String firstLine = reader.readLine();
     if( firstLine == null )
-      throw new IOException( "First line of .at file missing" );
+      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.1") ); //$NON-NLS-1$
     final String secondLine = reader.readLine();
     if( secondLine == null )
-      throw new IOException( "Second line of .at file missing" );
+      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.2") ); //$NON-NLS-1$
 
     final Matcher matcher = PATTERN_SECOND_LINE.matcher( secondLine );
     if( !matcher.matches() )
-      throw new IOException( "Syntax error in second line: " + secondLine + ". Should be 'n  Wertepaare (W,Q)'" );
+      throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.3", secondLine) ); //$NON-NLS-1$ 
 
     final int size = Integer.parseInt( matcher.group( 1 ) );
     final String typeFrom = matcher.group( 2 );
@@ -208,9 +209,9 @@ public class AtTable
       if( line == null )
         break;
 
-      final String[] strings = line.trim().split( "\\s+" );
+      final String[] strings = line.trim().split( "\\s+" ); //$NON-NLS-1$
       if( strings.length != 2 )
-        throw new IOException( "Syntax error in line " + reader.getLineNumber() + ": " + line );
+        throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.6", reader.getLineNumber() , line )); //$NON-NLS-1$
 
       try
       {
@@ -221,7 +222,7 @@ public class AtTable
       }
       catch( NumberFormatException e )
       {
-        throw new IOException( "Number format error in line " + reader.getLineNumber() + ": " + line );
+        throw new IOException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.8", reader.getLineNumber(),line )); //$NON-NLS-1$
       }
     }
 

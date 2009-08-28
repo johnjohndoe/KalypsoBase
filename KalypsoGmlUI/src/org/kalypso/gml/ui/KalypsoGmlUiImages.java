@@ -14,13 +14,13 @@ public class KalypsoGmlUiImages
 {
   public static enum DESCRIPTORS implements ImageKey
   {
-    COVERAGE_ADD("icons/cview16/addCoverage.gif"),
-    COVERAGE_REMOVE("icons/cview16/removeCoverage.gif"),
-    COVERAGE_EXPORT("icons/cview16/exportCoverage.gif"),
-    COVERAGE_UP("icons/cview16/upCoverage.gif"),
-    COVERAGE_DOWN("icons/cview16/downCoverage.gif"),
-    COVERAGE_JUMP("icons/cview16/jumptoCoverage.gif"),
-    STYLE_EDIT("icons/cview16/style_edit.gif");
+    COVERAGE_ADD("icons/cview16/addCoverage.gif"), //$NON-NLS-1$
+    COVERAGE_REMOVE("icons/cview16/removeCoverage.gif"), //$NON-NLS-1$
+    COVERAGE_EXPORT("icons/cview16/exportCoverage.gif"), //$NON-NLS-1$
+    COVERAGE_UP("icons/cview16/upCoverage.gif"), //$NON-NLS-1$
+    COVERAGE_DOWN("icons/cview16/downCoverage.gif"), //$NON-NLS-1$
+    COVERAGE_JUMP("icons/cview16/jumptoCoverage.gif"), //$NON-NLS-1$
+    STYLE_EDIT("icons/cview16/style_edit.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

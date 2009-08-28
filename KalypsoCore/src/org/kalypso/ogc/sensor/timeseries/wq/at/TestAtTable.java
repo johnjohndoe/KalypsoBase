@@ -57,18 +57,18 @@ public class TestAtTable extends TestCase
 {
   public void testReadAt() throws IOException
   {
-    URL atLocation = getClass().getResource( "resources/test.at" );
+    URL atLocation = getClass().getResource( "resources/test.at" ); //$NON-NLS-1$
     AtTable table = AtTable.readAt( atLocation );
 
-    assertEquals( "BDUE  Elba-Nr.: 12 Wmin:   130.0 Wmax:   900.0", table.getName() );
+    assertEquals( "BDUE  Elba-Nr.: 12 Wmin:   130.0 Wmax:   900.0", table.getName() ); //$NON-NLS-1$
     assertEquals( 79, table.getSize() );
-    assertEquals( "W", table.getTypeFrom() );
-    assertEquals( "Q", table.getTypeTo() );
+    assertEquals( "W", table.getTypeFrom() ); //$NON-NLS-1$
+    assertEquals( "Q", table.getTypeTo() ); //$NON-NLS-1$
     final WQPair[] values = table.getValues();
-    assertEquals( new Double( "120" ).doubleValue(), values[0].getW(), 0.0001 );
-    assertEquals( new Double( "5.5" ).doubleValue(), values[0].getQ(), 0.0001 );
-    assertEquals( new Double( "900" ).doubleValue(), values[78].getW(), 0.0001 );
-    assertEquals( new Double( "2072.0" ).doubleValue(), values[78].getQ(), 0.0001 );
+    assertEquals( new Double( "120" ).doubleValue(), values[0].getW(), 0.0001 ); //$NON-NLS-1$
+    assertEquals( new Double( "5.5" ).doubleValue(), values[0].getQ(), 0.0001 ); //$NON-NLS-1$
+    assertEquals( new Double( "900" ).doubleValue(), values[78].getW(), 0.0001 ); //$NON-NLS-1$
+    assertEquals( new Double( "2072.0" ).doubleValue(), values[78].getQ(), 0.0001 ); //$NON-NLS-1$
     assertEquals( null, table.getValidity() );
   }
 }

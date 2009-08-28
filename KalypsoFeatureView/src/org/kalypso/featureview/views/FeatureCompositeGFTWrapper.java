@@ -68,6 +68,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -156,18 +157,18 @@ public class FeatureCompositeGFTWrapper
      * loadGML() is at least called once.
      */
     if( workspace == null )
-      throw new IllegalStateException( "Workspace not initialized." );
+      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.0") ); //$NON-NLS-1$
 
     /* If a FeatureComposite exists, then the listeners can be attached. */
     if( m_compFeature == null )
-      throw new IllegalStateException( "There was no FeatureComposite." );
+      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.1") ); //$NON-NLS-1$
 
     /*
      * Are there already listeners created?
      */
     if( (m_ifFtrChLstner != null) )
       /* There are already listeners specified. Remove them first. */
-      throw new IllegalStateException( "There are already listener attached, remove them first." );
+      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.2") ); //$NON-NLS-1$
 
     /* ModellListener erzeugen. */
     final ModellEventListener listener = new ModellEventListener()
@@ -234,7 +235,7 @@ public class FeatureCompositeGFTWrapper
   public static void createGftFile( final IFile iTemplate, final IFile iDestination, final String gmlId ) throws IOException, CoreException
   {
     final HashMap<String, String> replacement = new HashMap<String, String>();
-    replacement.put( "%PLACEHOLDER%", gmlId );
+    replacement.put( "%PLACEHOLDER%", gmlId ); //$NON-NLS-1$
 
     FeatureCompositeGFTWrapper.createGftFile( iTemplate, iDestination, replacement );
   }

@@ -229,7 +229,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
-      logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );
+      logger.log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.1"), e ); //$NON-NLS-1$
       return outerSource;
     }
   }

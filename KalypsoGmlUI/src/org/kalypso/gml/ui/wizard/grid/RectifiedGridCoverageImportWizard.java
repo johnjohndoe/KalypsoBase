@@ -57,6 +57,7 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.IGridMetaReader;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
@@ -78,12 +79,12 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
    */
   public RectifiedGridCoverageImportWizard( )
   {
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" );
+    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
 
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( "Import" );
+    setWindowTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -102,13 +103,13 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   public void addPages( )
   {
     /* Only ask user for gml-file if no coverage collection is set */
-    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
-    m_fileCreationPage.setTitle( "Neue GML-Datei" );
-    m_fileCreationPage.setDescription( "Wählen Sie Speicherort und Namen der neuen Datei aus. Die GML-Datei indiziert das importierte Raster. Für eine Kachelung können weitere Raster in die gleiche Datei importiert werden." );
+    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection ); //$NON-NLS-1$
+    m_fileCreationPage.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.1") ); //$NON-NLS-1$
+    m_fileCreationPage.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.2") ); //$NON-NLS-1$
 
     m_pageSelect = new PageSelectGeodataFile( m_fileCreationPage );
-    m_pageSelect.setTitle( "Rasterdatei" );
-    m_pageSelect.setDescription( "Wählen Sie die Rasterdatei aus. Die Rasterdatei wird in den Arbeitsbereich neben die GML Datei (nächste Seite) kopiert." );
+    m_pageSelect.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.4") ); //$NON-NLS-1$
+    m_pageSelect.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.3") ); //$NON-NLS-1$
 
     addPage( m_pageSelect );
     addPage( m_fileCreationPage );
@@ -145,7 +146,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Import einer Datei", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.5"), status ); //$NON-NLS-1$
       return status.isOK();
     }
     catch( final Exception e )

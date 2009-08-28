@@ -10,7 +10,7 @@ public class GmlFeatureTypeStyleCatalogContribution implements ICatalogContribut
 {
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "resources/catalog.xml" );
+    final URL catalogURL = getClass().getResource( "resources/catalog.xml" ); //$NON-NLS-1$
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }
