@@ -27,22 +27,30 @@ import java.awt.Color;
  */
 public class DefaultHighlightColors
 {
-  private static final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 255 );
+  private static final Color COLOR_FILL = ColorUtilities.createTransparent( Color.YELLOW, 128 );
+
   private static final Color COLOR_TEXT = ColorUtilities.createTransparent( Color.RED, 255 );
+
   private static final Color COLOR_LINE = ColorUtilities.createTransparent( Color.YELLOW, 255 );
+
   private static final Color COLOR_BORDER = ColorUtilities.createTransparent( Color.RED, 255 );
+
   private static final Color COLOR_BACKGROUND = ColorUtilities.createTransparent( Color.lightGray, 5 );
 
   private Color m_fillColor = COLOR_FILL;
+
   private Color m_textColor = COLOR_TEXT;
+
   private Color m_lineColor = COLOR_LINE;
+
   private Color m_borderColor = COLOR_BORDER;
+
   private Color m_backgroundColor = COLOR_BACKGROUND;
 
   /**
    * @see org.kalypso.contribs.java.awt.IHighlightColors#getFillColor()
    */
-  public Color getFillColor()
+  public Color getFillColor( )
   {
     return m_fillColor;
   }
@@ -52,7 +60,7 @@ public class DefaultHighlightColors
     m_fillColor = fillColor;
   }
 
-  public Color getBackgroundColor()
+  public Color getBackgroundColor( )
   {
     return m_backgroundColor;
   }
@@ -62,7 +70,7 @@ public class DefaultHighlightColors
     m_backgroundColor = backgroundColor;
   }
 
-  public Color getBorderColor()
+  public Color getBorderColor( )
   {
     return m_borderColor;
   }
@@ -72,7 +80,7 @@ public class DefaultHighlightColors
     m_borderColor = borderColor;
   }
 
-  public Color getLineColor()
+  public Color getLineColor( )
   {
     return m_lineColor;
   }
@@ -82,7 +90,7 @@ public class DefaultHighlightColors
     m_lineColor = lineColor;
   }
 
-  public Color getTextColor()
+  public Color getTextColor( )
   {
     return m_textColor;
   }
@@ -97,7 +105,7 @@ public class DefaultHighlightColors
    * 
    * @return null, if the color equals the default color
    */
-  public Color getUndefaultFillColor()
+  public Color getUndefaultFillColor( )
   {
     return COLOR_FILL.equals( m_fillColor ) ? null : m_fillColor;
   }
@@ -107,7 +115,7 @@ public class DefaultHighlightColors
    * 
    * @return null, if the color equals the default color
    */
-  public Color getUndefaultTextColor()
+  public Color getUndefaultTextColor( )
   {
     return COLOR_TEXT.equals( m_textColor ) ? null : m_textColor;
   }
@@ -117,7 +125,7 @@ public class DefaultHighlightColors
    * 
    * @return null, if the color equals the default color
    */
-  public Color getUndefaultLineColor()
+  public Color getUndefaultLineColor( )
   {
     return COLOR_LINE.equals( m_lineColor ) ? null : m_lineColor;
   }
@@ -127,7 +135,7 @@ public class DefaultHighlightColors
    * 
    * @return null, if the color equals the default color
    */
-  public Color getUndefaultBorderColor()
+  public Color getUndefaultBorderColor( )
   {
     return COLOR_BORDER.equals( m_borderColor ) ? null : m_borderColor;
   }
@@ -137,7 +145,7 @@ public class DefaultHighlightColors
    * 
    * @return null, if the color equals the default color
    */
-  public Color getUndefaultBackgroundColor()
+  public Color getUndefaultBackgroundColor( )
   {
     return COLOR_BACKGROUND.equals( m_backgroundColor ) ? null : m_backgroundColor;
   }
