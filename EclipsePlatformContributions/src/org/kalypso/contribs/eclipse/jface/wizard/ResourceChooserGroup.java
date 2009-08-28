@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * A group for choosing a resource from the workspace.
@@ -67,7 +68,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  */
 public class ResourceChooserGroup
 {
-  private static final String SETTINGS_PATH = "settings.path";
+  private static final String SETTINGS_PATH = "settings.path"; //$NON-NLS-1$
 
   private IPath m_path;
 
@@ -113,8 +114,8 @@ public class ResourceChooserGroup
     text.setEditable( false );
 
     final Button button = new Button( group, SWT.NONE );
-    button.setText( "&Datei..." );
-    button.setToolTipText( "Datei aus dem Arbeitsbereich wählen" );
+    button.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.1") ); //$NON-NLS-1$
+    button.setToolTipText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.2") ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -146,7 +147,7 @@ public class ResourceChooserGroup
   private void setPath( final Text text, final IPath path )
   {
     m_path = path;
-    text.setText( m_path == null ? "" : m_path.toOSString() );
+    text.setText( m_path == null ? "" : m_path.toOSString() ); //$NON-NLS-1$
 
     if( m_dialogSettings != null )
       m_dialogSettings.put( SETTINGS_PATH, path.toPortableString() );

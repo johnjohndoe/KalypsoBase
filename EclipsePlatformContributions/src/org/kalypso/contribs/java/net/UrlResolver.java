@@ -97,31 +97,31 @@ public class UrlResolver implements IUrlResolver
    */
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
-    if( relativeURL.startsWith( "project:" ) )
+    if( relativeURL.startsWith( "project:" ) ) //$NON-NLS-1$
     {
       if( baseURL == null )
       {
-        throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" );
+        throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" ); //$NON-NLS-1$
       }
 
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
       {
-        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL );
+        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName();
+      final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName(); //$NON-NLS-1$
 
-      final String relPath = relativeURL.substring( "project:".length() + 1 );
-      return new URL( projectURL + "/" + relPath );
+      final String relPath = relativeURL.substring( "project:".length() + 1 ); //$NON-NLS-1$
+      return new URL( projectURL + "/" + relPath ); //$NON-NLS-1$
     }
-    else if( relativeURL.startsWith( "REMOTE=" ) )
+    else if( relativeURL.startsWith( "REMOTE=" ) ) //$NON-NLS-1$
     {
       /* @hack scenario data manager - project database global gml fragment */
-      if( relativeURL.contains( "${PROJECT}" ) )
+      if( relativeURL.contains( "${PROJECT}" ) ) //$NON-NLS-1$
       {
         final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-        final String myUrl = relativeURL.replaceAll( "\\$\\{PROJECT\\}", project.getName() );
+        final String myUrl = relativeURL.replaceAll( "\\$\\{PROJECT\\}", project.getName() ); //$NON-NLS-1$
 
         return new URL( myUrl.substring( 7 ) );
       }

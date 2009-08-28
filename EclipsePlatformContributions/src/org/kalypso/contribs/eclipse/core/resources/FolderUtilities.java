@@ -68,7 +68,7 @@ public class FolderUtilities
       return;
 
     if( !(folder instanceof IFolder) )
-      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "Cannot mkdirs project or workspace", null ) );
+      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "Cannot mkdirs project or workspace", null ) ); //$NON-NLS-1$
 
     // create parents
     mkdirs( folder.getParent() );

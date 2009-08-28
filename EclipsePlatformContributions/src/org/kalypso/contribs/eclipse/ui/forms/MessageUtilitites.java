@@ -117,7 +117,7 @@ public class MessageUtilitites
 
   private MessageUtilitites( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -172,7 +172,7 @@ public class MessageUtilitites
         return IMessage.INFORMATION;
 
       default:
-        throw new IllegalArgumentException( "Unknown status severity: " + severity );
+        throw new IllegalArgumentException( "Unknown status severity: " + severity ); //$NON-NLS-1$
     }
 
   }

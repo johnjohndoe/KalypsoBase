@@ -10,10 +10,11 @@ package org.kalypso.contribs.eclipse.ui.dialogs;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.ui.dialogs.ISelectionValidator;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 public class ResourceSelectionValidator implements ISelectionValidator
 {
-  public static final String ERROR_MESSAGE = "Bitte wählen sie eine Datei aus..";
+  public static final String ERROR_MESSAGE = Messages.getString("org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator0"); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.dialogs.ISelectionValidator#isValid(java.lang.Object)

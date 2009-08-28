@@ -59,6 +59,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * This intro action closes the intro view and opens the specified perspective.
@@ -82,11 +83,11 @@ public class OpenPerspectiveAction implements IIntroAction
     try
     {
       /* Get perspective id */
-      final String perspectiveID = params.getProperty( "perspectiveId", null );
-      final String filePathStr = params.getProperty( "file", null );
-      final String editorID = params.getProperty( "editorId", null );
+      final String perspectiveID = params.getProperty( "perspectiveId", null ); //$NON-NLS-1$
+      final String filePathStr = params.getProperty( "file", null ); //$NON-NLS-1$
+      final String editorID = params.getProperty( "editorId", null ); //$NON-NLS-1$
       if( perspectiveID == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Es ist keine Perspektive mit dieser Aktion verbunden." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.3") ) ); //$NON-NLS-1$
 
       final IWorkbench workbench = PlatformUI.getWorkbench();
 
@@ -110,7 +111,7 @@ public class OpenPerspectiveAction implements IIntroAction
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
-      ErrorDialog.openError( site.getShell(), "Perspektive Öffnen", "Perspektive konnte nicht geöffnet werden.", status );
+      ErrorDialog.openError( site.getShell(), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.4"), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
       EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
     }
   }

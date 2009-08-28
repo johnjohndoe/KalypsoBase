@@ -35,6 +35,7 @@ import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
+import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -96,7 +97,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   {
     if( !(input instanceof IStorageEditorInput) )
     {
-      throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" );
+      throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" ); //$NON-NLS-1$
     }
 
     setSite( site );
@@ -133,7 +134,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editor input", status );
+      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.0"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     updateControl();
@@ -183,8 +184,8 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       // given user a chance to use save-as
       // TODO: sehr witzig! Save as geht nämlich nicht....
-      MessageDialog.openInformation( getSite().getShell(), "Speichern", "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" + "keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n"
-          + "sich möglicherweise um eine 'virtuelle' Vorlage\n" + "Bitte benutzen Sie das 'Speichern als' Kommando." );
+      MessageDialog.openInformation( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.2"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.3") + "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          + "" + "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return;
     }
@@ -211,13 +212,13 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       final IStatus status = e.getStatus();
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.4"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final IOException e )
     {
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getEditorSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", status );
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.4"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -300,7 +301,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       if( m_chartType == null )
       {
         final Label label = new Label( m_composite, SWT.NONE );
-        label.setText( "No chart set" );
+        label.setText( Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.6") ); //$NON-NLS-1$
       }
       else
       {

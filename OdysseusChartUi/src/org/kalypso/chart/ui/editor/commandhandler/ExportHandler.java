@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ui.SafeSaveDialog;
+import org.kalypso.chart.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.framework.util.img.ChartImageFactory;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -52,7 +53,7 @@ public class ExportHandler extends AbstractHandler
       {
         final SafeSaveDialog dia = new SafeSaveDialog( shell );
 
-        dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } );
+        dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         m_filename = dia.open();
       }
@@ -65,20 +66,20 @@ public class ExportHandler extends AbstractHandler
         il.data = new ImageData[] { id };
 
         int format = -1;
-        final String formatString = m_filename.substring( m_filename.lastIndexOf( "." ) + 1 ).toLowerCase();
+        final String formatString = m_filename.substring( m_filename.lastIndexOf( "." ) + 1 ).toLowerCase(); //$NON-NLS-1$
 
-        if( formatString.equals( "png" ) )
+        if( formatString.equals( "png" ) ) //$NON-NLS-1$
           format = SWT.IMAGE_PNG;
-        else if( formatString.equals( "bmp" ) )
+        else if( formatString.equals( "bmp" ) ) //$NON-NLS-1$
           format = SWT.IMAGE_BMP;
-        else if( formatString.equals( "jpg" ) )
+        else if( formatString.equals( "jpg" ) ) //$NON-NLS-1$
           format = SWT.IMAGE_JPEG;
 
         if( format != -1 )
           il.save( m_filename, format );
         else
         {
-          final MessageDialog ed = new MessageDialog( shell, "Datei konnte nicht gespeichert werden.", null, "Das angegebene Format wird nicht unterstützt", MessageDialog.NONE, new String[] { "OK" }, 1 );
+          final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.0"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.1"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           ed.open();
         }
       }
@@ -86,7 +87,7 @@ public class ExportHandler extends AbstractHandler
     }
     else
     {
-      final MessageDialog ed = new MessageDialog( shell, "Kein Chart vorhangen", null, "Das Chart kann nicht gespeichert werden.", MessageDialog.NONE, new String[] { "OK" }, 1 );
+      final MessageDialog ed = new MessageDialog( shell, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2"), null, Messages.getString("org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3"), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ed.open();
     }
     m_filename = null;

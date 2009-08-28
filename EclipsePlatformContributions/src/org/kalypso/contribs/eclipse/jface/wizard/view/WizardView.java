@@ -110,6 +110,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
@@ -137,9 +138,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private RGB m_defaultTitleForeground;
 
-  private final String m_foregroundRGB_ID = "" + this + ".title.foreground";
+  private final String m_foregroundRGB_ID = "" + this + ".title.foreground"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final String m_backgroundRGB_ID = "" + this + ".title.background";
+  private final String m_backgroundRGB_ID = "" + this + ".title.background"; //$NON-NLS-1$ //$NON-NLS-2$
 
   private final List<IWizardContainerListener> m_listeners = new ArrayList<IWizardContainerListener>( 5 );
 
@@ -255,7 +256,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       // HACK: only set the message, if at least one message was set. Else we may destroy the background color
       // of the message label
       if( normalMsgAreaBackground != null )
-        setErrorMessage( "Kein Wizard gesetzt" );
+        setErrorMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView0") ); //$NON-NLS-1$
     }
     else
     {
@@ -437,21 +438,21 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   protected void createButtonsForButtonBar( final Composite parent )
   {
     // Reset button; will be invisible if current page is not resetable (see IResetableWizard).
-    createButton( parent, RESET_ID, "Zurücksetzen", "doReset", false );
+    createButton( parent, RESET_ID, Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView1"), "doReset", false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).hasSaveButton() )
-      createButton( parent, SAVE_ID, "Speichern", "doSave", false );
+      createButton( parent, SAVE_ID, Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView2"), "doSave", false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_wizard.isHelpAvailable() )
-      createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false );
+      createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false ); //$NON-NLS-1$
 
     if( m_wizard.needsPreviousAndNextButtons() )
       createPreviousAndNextButtons( parent );
 
-    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true );
+    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true ); //$NON-NLS-1$
 
     if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
-      createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false );
+      createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false ); //$NON-NLS-1$
   }
 
   /**
@@ -479,8 +480,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_CENTER );
     composite.setLayoutData( data );
     composite.setFont( parent.getFont() );
-    createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false );
-    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", false );
+    createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false ); //$NON-NLS-1$
+    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", false ); //$NON-NLS-1$
     return composite;
   }
 
@@ -783,13 +784,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       link = location.substring( index + 1 );
 
     boolean pageChanged = false;
-    if( "prev".compareToIgnoreCase( link ) == 0 )
+    if( "prev".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
       pageChanged = doPrev();
-    else if( "next".compareToIgnoreCase( link ) == 0 )
+    else if( "next".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
       pageChanged = doNext();
-    else if( "finish".compareToIgnoreCase( link ) == 0 )
+    else if( "finish".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
       pageChanged = doFinish();
-    else if( "cancel".compareToIgnoreCase( link ) == 0 )
+    else if( "cancel".compareToIgnoreCase( link ) == 0 ) //$NON-NLS-1$
       pageChanged = doCancel();
     else
     {
@@ -906,7 +907,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         return htmlURL.toString();
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**
@@ -1041,7 +1042,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
           helpSystem.displayHelpResource( context.getRelatedTopics()[0].getHref() );
         }
         else
-          Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
+          Logger.getLogger( WizardView.class.getName() ).warning( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView3") + helpId ); //$NON-NLS-1$
       }
     } );
 
@@ -1072,7 +1073,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
       if( wizard2.doAskForSave() )
       {
-        if( !MessageDialog.openQuestion( getShell(), "Speichern", "Daten jetzt speichern?" ) )
+        if( !MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView4"), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           return false;
       }
 
@@ -1084,7 +1085,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         }
       };
       final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
-      ErrorDialog.openError( getShell(), "Speichern", "Fehler beim Speichern", status );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView6"), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView7"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return true;

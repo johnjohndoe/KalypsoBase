@@ -69,12 +69,12 @@ public class HandlerHelper
       if( activeHandler.getClass().equals( handler.getClass() ) )
       {
         element.setChecked( true );
-        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getChartModel().getTitle() );
+        System.out.println( "Activating Handler " + handler.getClass().getSimpleName() + " for Chart " + part.getChartComposite().getChartModel().getTitle() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {
         element.setChecked( false );
-        System.out.println( "Handler " + handler.getClass().getSimpleName() + " not suitable for " + activeHandler.getClass().getSimpleName() );
+        System.out.println( "Handler " + handler.getClass().getSimpleName() + " not suitable for " + activeHandler.getClass().getSimpleName() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }

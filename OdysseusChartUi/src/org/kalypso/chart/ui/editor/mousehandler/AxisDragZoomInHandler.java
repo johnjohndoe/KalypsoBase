@@ -173,7 +173,7 @@ public class AxisDragZoomInHandler extends AbstractAxisDragHandler
 
     final Number numDragStart = axis.screenToNumeric( m_mouseDragStart );
     final Number numDragEnd = axis.screenToNumeric( m_mouseDragEnd );
-    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Zooming from " + m_mouseDragStart + " (" + numDragStart + ") to " + m_mouseDragEnd + " (" + numDragEnd + ")" );
+    Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Zooming from " + m_mouseDragStart + " (" + numDragStart + ") to " + m_mouseDragEnd + " (" + numDragEnd + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { numDragStart, numDragEnd } ) );
 
   }

@@ -118,7 +118,7 @@ public class UrlUtilities implements IUrlResolver
 
       // jetzt versuchen, selbst einen Stream zu öffnen
       final String protocol = url.getProtocol();
-      if( "file".equals( protocol ) )
+      if( "file".equals( protocol ) ) //$NON-NLS-1$
       {
         final File file = new File( url.getFile() );
         return new OutputStreamWriter( new FileOutputStream( file ) );
@@ -182,12 +182,12 @@ public class UrlUtilities implements IUrlResolver
     if( query == null || query.isEmpty() )
       return result;
 
-    final String[] split = query.split( "&" );
+    final String[] split = query.split( "&" ); //$NON-NLS-1$
     for( final String param : split )
     {
-      final String[] paramParts = param.split( "=" );
+      final String[] paramParts = param.split( "=" ); //$NON-NLS-1$
       if( paramParts.length != 2 )
-        throw new IllegalArgumentException( "URL contains incorect query part: " + param );
+        throw new IllegalArgumentException( "URL contains incorect query part: " + param ); //$NON-NLS-1$
 
       final String key = paramParts[0];
       final String value = paramParts[1];
@@ -229,7 +229,7 @@ public class UrlUtilities implements IUrlResolver
     final int queryIndex = urlString.indexOf( '?' );
     final String newUrlString;
     if( queryIndex == -1 )
-      newUrlString = urlString + "?" + queryBuffer.toString();
+      newUrlString = urlString + "?" + queryBuffer.toString(); //$NON-NLS-1$
     else
       newUrlString = urlString.substring( 0, queryIndex + 1 ) + queryBuffer.toString();
 

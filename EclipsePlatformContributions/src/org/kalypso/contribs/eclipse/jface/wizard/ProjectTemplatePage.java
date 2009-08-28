@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * TODO: move in EclipsePlatformContrib-plug-in
@@ -76,7 +77,7 @@ public class ProjectTemplatePage extends WizardPage
    */
   public ProjectTemplatePage( final String categoryId )
   {
-    super( "projectTemplatePage" );
+    super( "projectTemplatePage" ); //$NON-NLS-1$
 
     m_projectsTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( categoryId );
 
@@ -86,13 +87,13 @@ public class ProjectTemplatePage extends WizardPage
       m_selectedProject = m_projectsTemplates[0];
     }
 
-    setTitle( "Beispielprojekte" );
-    setMessage( "Auf dieser Seite wählen Sie aus, welches Beispielprojekt Sie erzeugen möchten." );
+    setTitle( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.0") ); //$NON-NLS-1$
+    setMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.1") ); //$NON-NLS-1$
   }
 
   public ProjectTemplatePage( final String header, final String description, final ProjectTemplate[] templates )
   {
-    super( "projectTemplatePage" );
+    super( "projectTemplatePage" ); //$NON-NLS-1$
 
     m_projectsTemplates = templates;
 
@@ -153,14 +154,14 @@ public class ProjectTemplatePage extends WizardPage
     // Info Group
     final Group group = new Group( composite, SWT.NONE );
     group.setLayout( new GridLayout() );
-    group.setText( "Projektbeschreibung" );
+    group.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.2") ); //$NON-NLS-1$
     final GridData groupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     groupData.heightHint = 100;
     group.setLayoutData( groupData );
 
     final Label descriptionLabel = new Label( group, SWT.H_SCROLL | SWT.V_SCROLL );
     descriptionLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    descriptionLabel.setText( "-kein Projekt gewählt-" );
+    descriptionLabel.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage.3") ); //$NON-NLS-1$
 
     tableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -173,7 +174,7 @@ public class ProjectTemplatePage extends WizardPage
 
         if( selectedProject == null )
         {
-          descriptionLabel.setText( "" );
+          descriptionLabel.setText( "" ); //$NON-NLS-1$
         }
         else
         {

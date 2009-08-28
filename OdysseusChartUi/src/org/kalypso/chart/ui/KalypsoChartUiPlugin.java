@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoChartUiPlugin extends AbstractUIPlugin
 {
-  public static final String ID = "org.kalypso.chart.ui";
+  public static final String ID = "org.kalypso.chart.ui"; //$NON-NLS-1$
 
   // The shared instance.
   private static KalypsoChartUiPlugin plugin;
@@ -55,6 +55,6 @@ public class KalypsoChartUiPlugin extends AbstractUIPlugin
    */
   public static ImageDescriptor getImageDescriptor( String path )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.chart.ui", path );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.chart.ui", path ); //$NON-NLS-1$
   }
 }

@@ -73,7 +73,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   /** Same as {@link #StringStorage("&lt;name&gt;", String, IPath)}. */
   public StringStorage( final String data, final IPath path )
   {
-    this( "<name>", data, path );
+    this( "<name>", data, path ); //$NON-NLS-1$
   }
 
   public StringStorage( final String name, final String data, final IPath path )
@@ -91,12 +91,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   {
     try
     {
-      final byte[] bytes = m_data.getBytes( "UTF-8" );
+      final byte[] bytes = m_data.getBytes( "UTF-8" ); //$NON-NLS-1$
       return new ByteArrayInputStream( bytes );
     }
     catch( final UnsupportedEncodingException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), 0, "", e ) ); //$NON-NLS-1$
     }
   }
 
@@ -140,7 +140,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   public String getCharset( )
   {
     // allways Unicode
-    return "UTF-8";
+    return "UTF-8"; //$NON-NLS-1$
   }
 
   /**

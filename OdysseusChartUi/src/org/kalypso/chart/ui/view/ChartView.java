@@ -66,6 +66,7 @@ import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
+import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -83,7 +84,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
  */
 public class ChartView extends ViewPart implements IChartPart, ISelectionListener
 {
-  public static final String ID = "org.kalypso.chart.ui.view.ChartView";
+  public static final String ID = "org.kalypso.chart.ui.view.ChartView"; //$NON-NLS-1$
 
   private Composite m_composite = null;
 
@@ -143,7 +144,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), "Load input", "Failed to load editor input", status );
+      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.view.ChartView0"), Messages.getString("org.kalypso.chart.ui.view.ChartView1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     updateControl();
@@ -169,7 +170,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     if( m_chartType == null )
     {
       final Label label = new Label( m_composite, SWT.NONE );
-      label.setText( "No chart set" );
+      label.setText( Messages.getString("org.kalypso.chart.ui.view.ChartView2") ); //$NON-NLS-1$
     }
     else
     {
@@ -207,7 +208,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoChartUiPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( getSite().getShell(), "Update input", "Failed to update view.", status );
+        ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.view.ChartView3"), Messages.getString("org.kalypso.chart.ui.view.ChartView4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 
@@ -332,7 +333,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
         if( ls instanceof IFile )
         {
           final IFile f = (IFile) ls;
-          if( f.getFileExtension().equals( "kod" ) )
+          if( f.getFileExtension().equals( "kod" ) ) //$NON-NLS-1$
           {
             try
             {

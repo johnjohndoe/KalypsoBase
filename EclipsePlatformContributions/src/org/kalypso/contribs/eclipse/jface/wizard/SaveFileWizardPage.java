@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * @author belger
@@ -147,14 +148,14 @@ public class SaveFileWizardPage extends WizardPage
     final String destinationValue = getDestinationValue();
     if( destinationValue.length() == 0 )
     {
-      setMessage( "Bitte geben Sie den Namen der Exportdatei an." );
+      setMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.0") ); //$NON-NLS-1$
       setErrorMessage( null );
       return false;
     }
 
     if( isContainerConflicting( destinationValue ) )
     {
-      setErrorMessage( "Exportdatei liegt innerhalb des Arbeitsbereichs" );
+      setErrorMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.1") ); //$NON-NLS-1$
       m_destinationNameField.setFocus();
       return false;
     }
@@ -213,7 +214,7 @@ public class SaveFileWizardPage extends WizardPage
     targetGroup.setText( m_groupname );
 
     final Label filenameLabel = new Label( targetGroup, SWT.NONE );
-    filenameLabel.setText( "Dateiname:" );
+    filenameLabel.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.2") ); //$NON-NLS-1$
 
     // destination name entry field
     m_destinationNameField = new Combo( targetGroup, SWT.BORDER );
@@ -232,7 +233,7 @@ public class SaveFileWizardPage extends WizardPage
 
     // destination browse button
     final Button destinationBrowseButton = new Button( targetGroup, SWT.PUSH );
-    destinationBrowseButton.setText( "Auswählen..." );
+    destinationBrowseButton.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.3") ); //$NON-NLS-1$
     destinationBrowseButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -249,7 +250,7 @@ public class SaveFileWizardPage extends WizardPage
     // destinationBrowseButton.setVisible( true );
 
     final Label label = new Label( targetGroup, SWT.NONE );
-    label.setText( "Format:" );
+    label.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.4") ); //$NON-NLS-1$
 
     m_formatViewer = new ComboViewer( targetGroup, SWT.BORDER | SWT.READ_ONLY | SWT.DROP_DOWN );
     m_formatViewer.setContentProvider( new ArrayContentProvider() );
@@ -275,9 +276,9 @@ public class SaveFileWizardPage extends WizardPage
     final String destinationValue = getDestinationValue();
     final int index = destinationValue.lastIndexOf( '.' );
     if( index == -1 )
-      setDestinationValue( destinationValue + "." + ext );
+      setDestinationValue( destinationValue + "." + ext ); //$NON-NLS-1$
     else
-      setDestinationValue( destinationValue.substring( 0, index ) + "." + ext );
+      setDestinationValue( destinationValue.substring( 0, index ) + "." + ext ); //$NON-NLS-1$
   }
 
   void handleDestinationBrowseButtonPressed()
@@ -286,13 +287,13 @@ public class SaveFileWizardPage extends WizardPage
 
     final String[] filterExts = new String[m_formats.size() + 1];
     final String[] filterNames = new String[m_formats.size() + 1];
-    filterExts[0] = "*";
-    filterNames[0] = "Alle Dateien";
+    filterExts[0] = "*"; //$NON-NLS-1$
+    filterNames[0] = Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.8"); //$NON-NLS-1$
     int count = 1;
     for( final Entry<Object, String> entry : m_formats.entrySet() )
     {
       filterNames[count] = entry.getKey().toString();
-      filterExts[count] = "*." + entry.getValue().toString();
+      filterExts[count] = "*." + entry.getValue().toString(); //$NON-NLS-1$
       
       count++;
     }
@@ -300,7 +301,7 @@ public class SaveFileWizardPage extends WizardPage
     dialog.setFilterExtensions( filterExts );
     dialog.setFilterNames( filterNames );
     
-    dialog.setText( "Datei speichern" );
+    dialog.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.10") ); //$NON-NLS-1$
     final String currentSourceString = getDestinationValue();
     int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
     if( lastSeparatorIndex != -1 )
@@ -317,7 +318,7 @@ public class SaveFileWizardPage extends WizardPage
       
       final String newFileName;
       if( selectedFileName.indexOf( '.' ) == -1 )
-        newFileName = selectedFileName + "." + m_formats.get( getDestinationFormat() );
+        newFileName = selectedFileName + "." + m_formats.get( getDestinationFormat() ); //$NON-NLS-1$
       else
         newFileName = selectedFileName;
       

@@ -56,7 +56,7 @@ import org.eclipse.swt.dnd.TransferData;
 public class ChartLayerTransfer extends ByteArrayTransfer
 {
 
-  private static final String TYPE_NAME = "chartLayerIdTransfer";
+  private static final String TYPE_NAME = "chartLayerIdTransfer"; //$NON-NLS-1$
 
   private static final int TYPEID = registerType( TYPE_NAME );
 

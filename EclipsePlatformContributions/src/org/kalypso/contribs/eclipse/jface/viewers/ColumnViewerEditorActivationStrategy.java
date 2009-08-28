@@ -73,7 +73,7 @@ public class ColumnViewerEditorActivationStrategy extends org.eclipse.jface.view
 
       case ColumnViewerEditorActivationEvent.KEY_PRESSED:
         return m_keyEnabled
-            && (event.keyCode == SWT.F2 || (" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( event.character ) >= 0 || (event.character >= '0' && event.character <= 'z') || (event.character >= 'A' && event.character <= 'Z')));
+            && (event.keyCode == SWT.F2 || (" -+,.;:öäüÖÄÜ´ß?`=!\"§$%&\\/()={}^°_#'<>|€µ".indexOf( event.character ) >= 0 || (event.character >= '0' && event.character <= 'z') || (event.character >= 'A' && event.character <= 'Z'))); //$NON-NLS-1$
 
       default:
         return false;

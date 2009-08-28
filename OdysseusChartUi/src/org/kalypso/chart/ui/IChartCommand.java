@@ -46,17 +46,17 @@ package org.kalypso.chart.ui;
  */
 public interface IChartCommand
 {
-  public static final String CATEGORY = "org.kalypso.chart.ui.commands.category";
+  public static final String CATEGORY = "org.kalypso.chart.ui.commands.category"; //$NON-NLS-1$
 
-  public static final String COMMAND_PAN = "org.kalypso.chart.ui.commands.pan";
+  public static final String COMMAND_PAN = "org.kalypso.chart.ui.commands.pan"; //$NON-NLS-1$
 
-  public static final String COMMAND_ZOOM_IN = "org.kalypso.chart.ui.commands.zoomIn";
+  public static final String COMMAND_ZOOM_IN = "org.kalypso.chart.ui.commands.zoomIn"; //$NON-NLS-1$
 
-  public static final String COMMAND_ZOOM_OUT = "org.kalypso.chart.ui.commands.zoomOut";
+  public static final String COMMAND_ZOOM_OUT = "org.kalypso.chart.ui.commands.zoomOut"; //$NON-NLS-1$
 
-  public static final String COMMAND_EDIT = "org.kalypso.chart.ui.commands.edit";
+  public static final String COMMAND_EDIT = "org.kalypso.chart.ui.commands.edit"; //$NON-NLS-1$
 
-  public static final String COMMAND_EXPORT = "org.kalypso.chart.ui.commands.export";
+  public static final String COMMAND_EXPORT = "org.kalypso.chart.ui.commands.export"; //$NON-NLS-1$
 
-  public static final String COMMAND_MAXIMIZE = "org.kalypso.chart.ui.commands.maximize";
+  public static final String COMMAND_MAXIMIZE = "org.kalypso.chart.ui.commands.maximize"; //$NON-NLS-1$
 }

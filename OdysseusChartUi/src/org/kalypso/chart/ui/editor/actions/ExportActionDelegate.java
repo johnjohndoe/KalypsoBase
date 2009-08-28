@@ -36,7 +36,7 @@ public class ExportActionDelegate extends ActionDelegate implements IEditorActio
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
-      handlerService.executeCommand( "org.kalypso.chart.ui.commands.export", event );
+      handlerService.executeCommand( "org.kalypso.chart.ui.commands.export", event ); //$NON-NLS-1$
     }
     catch( ExecutionException e )
     {
