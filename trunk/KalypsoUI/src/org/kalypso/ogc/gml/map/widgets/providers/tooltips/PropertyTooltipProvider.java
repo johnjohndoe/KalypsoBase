@@ -97,7 +97,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.MapPanel,
+   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
   public String getTooltip( final IMapPanel mapPanel, final Rectangle rectangle )
@@ -112,8 +112,8 @@ public class PropertyTooltipProvider implements ITooltipProvider
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics,
-   *      java.lang.String)
+   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics,
+   *      java.awt.Point, java.lang.String)
    */
   public void paintTooltip( final Graphics g, final Point p, final String tooltip )
   {
