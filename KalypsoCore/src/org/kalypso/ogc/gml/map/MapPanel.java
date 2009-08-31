@@ -521,15 +521,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   public void invalidateMap( )
   {
-    if( m_model != null )
-    {
-      // We should instead get a status from the model itself
-      if( m_model.getThemeSize() == 0 )
-        setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
-      else
-        setStatus( Status.OK_STATUS );
-    }
-
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return;
@@ -782,30 +773,37 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   public void setMapModell( final IMapModell modell )
   {
-    final IMapModell oldModel = m_model;
-
-    if( m_model != null )
+    final IMapModell oldModel;
+    synchronized( this )
     {
-      m_model.removeMapModelListener( m_modellListener );
+      oldModel = m_model;
+      if( oldModel != null )
+      {
+        oldModel.removeMapModelListener( m_modellListener );
 
-      for( final IMapLayer layer : m_layers.values() )
-        layer.dispose();
-      m_layers.clear();
+        for( final IMapLayer layer : m_layers.values() )
+          layer.dispose();
+        m_layers.clear();
+      }
+      m_model = modell;
     }
 
-    m_model = modell;
-
-    if( m_model == null )
+    if( modell == null )
       setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.20" ), null ) ); //$NON-NLS-1$
     else
     {
-      m_model.addMapModelListener( m_modellListener );
-      invalidateMap();
+      modell.addMapModelListener( m_modellListener );
+
+      // We should instead get a status from the model itself
+      if( modell.getThemeSize() == 0 )
+        setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
+      else
+        setStatus( Status.OK_STATUS );
     }
 
     invalidateMap();
 
-    fireMapModelChanged( oldModel, m_model );
+    fireMapModelChanged( oldModel, modell );
   }
 
   /**

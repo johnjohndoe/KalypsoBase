@@ -269,9 +269,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
-    if( m_mapModell == null )
-      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
-
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
     if( this instanceof IEditorPart )
@@ -414,7 +411,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       showBusy( true );
 
       if( m_mapPanel != null )
-        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+      {
+        final String message = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1", storage.getName() ); //$NON-NLS-1$;
+        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
+      }
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -554,20 +554,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
     else
       partName = m_mapModell.getLabel( m_mapModell );
+
     setCustomName( partName );
-//
-// final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-// if( !workbench.isClosing() )
-// {
-// workbench.getDisplay().asyncExec( new Runnable()
-// {
-// @SuppressWarnings("synthetic-access")
-// public void run( )
-// {
-// setPartName( partName );
-// }
-// } );
-// }
 
     if( m_mapPanel != null )
     {

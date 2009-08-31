@@ -103,9 +103,12 @@ public class PointGeometryBuilder implements IGeometryBuilder
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
+    if( currentPoint == null )
+      return;
+
     if( m_point == null )
       drawHandles( g, new int[] { (int) currentPoint.getX() }, new int[] { (int) currentPoint.getY() } );
-    else if( currentPoint != null )
+    else
     {
       final int x = (int) projection.getDestX( m_point.getX() );
       final int y = (int) projection.getDestY( m_point.getY() );
