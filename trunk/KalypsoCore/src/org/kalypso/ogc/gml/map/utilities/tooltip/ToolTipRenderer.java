@@ -82,7 +82,7 @@ public class ToolTipRenderer
 
   private final Color m_borderColor;
 
-  private final Color m_textColor;
+  private Color m_textColor;
 
   public ToolTipRenderer( )
   {
@@ -268,6 +268,11 @@ public class ToolTipRenderer
   public void setTooltip( final String tooltip )
   {
     setInputData( tooltip == null ? null : LINE_SPLIT.split( tooltip ) );
+  }
+
+  public void setTextColor( final Color textColor )
+  {
+    m_textColor = textColor;
   }
 
   public void setBackgroundColor( final Color backgroundColor )
