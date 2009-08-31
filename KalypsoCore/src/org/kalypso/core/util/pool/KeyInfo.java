@@ -256,10 +256,11 @@ public final class KeyInfo extends Job
       }
       catch( final CoreException ce )
       {
+        final IStatus status = ce.getStatus();
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
-        return ce.getStatus();
+        return status;
       }
       catch( final Throwable e )
       {

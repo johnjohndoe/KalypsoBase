@@ -50,8 +50,10 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -160,12 +162,23 @@ public class ShapeLoader extends WorkspaceLoader
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
         ProgressUtilities.worked( moni, 18 ); // check cancel
       }
+      catch( final CoreException ce )
+      {
+        if( !ce.getStatus().matches( IStatus.CANCEL ) )
+          ce.printStackTrace();
+      }
       catch( final Throwable e1 )
       {
         e1.printStackTrace();
       }
 
       return workspace;
+    }
+    catch( final CoreException ce )
+    {
+      if( !ce.getStatus().matches( IStatus.CANCEL ) )
+        ce.printStackTrace();
+      throw new LoaderException( ce );
     }
     catch( final Exception e )
     {
@@ -190,19 +203,19 @@ public class ShapeLoader extends WorkspaceLoader
    *          The source coordinate system (of the gmt).
    * @return The coordinate system, which should be used to load the shape.
    */
-  private String loadCrs( URL prjURL, String sourceSrs )
+  private String loadCrs( final URL prjURL, final String sourceSrs )
   {
     try
     {
       // TODO: Should in the first instance interpret the prj content ...
       // Does not work now because we must create a coordinate system instance then, but we use string codes right now
-      String prjString = UrlUtilities.toString( prjURL, "UTF-8" ); //$NON-NLS-1$
+      final String prjString = UrlUtilities.toString( prjURL, "UTF-8" ); //$NON-NLS-1$
       if( prjString.startsWith( "EPSG:" ) ) //$NON-NLS-1$
         return prjString;
 
       return sourceSrs;
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       System.out.println( "No prj file found for: " + prjURL.toString() ); //$NON-NLS-1$
       return sourceSrs;
