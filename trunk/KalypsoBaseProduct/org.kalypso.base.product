@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.4"?>
+<?pde version="3.5"?>
 
-<product name="%appName" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" version="0.2.0" useFeatures="true">
+<product name="%appName" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" version="0.2.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
@@ -42,7 +42,6 @@
       </win>
    </launcher>
 
-
    <vm>
       <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
       <macos>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
@@ -56,5 +55,9 @@
    <features>
       <feature id="org.kalypso.base.feature" version="0.1.0"/>
    </features>
+
+   <configurations>
+      <plugin id="org.kalypso.contribs.ogc31" autoStart="true" startLevel="0" />
+   </configurations>
 
 </product>
