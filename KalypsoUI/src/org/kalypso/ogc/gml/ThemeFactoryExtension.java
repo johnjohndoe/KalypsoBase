@@ -74,6 +74,9 @@ public class ThemeFactoryExtension
         init();
 
       final IConfigurationElement element = FACTORY_MAP.get( linktype.toLowerCase() );
+      if( element == null )
+        return null;
+
       return (IKalypsoThemeFactory) element.createExecutableExtension( ATTRIBUTE_FACTORY );
     }
     catch( final CoreException e )
