@@ -42,10 +42,10 @@ package org.kalypso.simulation.ui.ant;
 
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -53,7 +53,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -167,26 +166,20 @@ public class GmlPropertyTask extends Task
     if( value instanceof XMLGregorianCalendar )
     {
       // special handling for Date
-      // just write time in millies since 1970
-      final Date dateValue = DateUtilities.toDate( (XMLGregorianCalendar) value );
+      // We write Date as String in XML-Format, in order to correctly transfer timezone information
+      Calendar cal = ((XMLGregorianCalendar) value).toGregorianCalendar();
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final String dateTruncField = property.getDateTruncField();
-      Date date;
+
       if( dateoffset != null && dateoffsetfield != null )
-      {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( dateValue );
         cal.add( CalendarUtilities.getCalendarField( dateoffsetfield ), dateoffset.intValue() );
-        date = cal.getTime();
-      }
-      else
-        date = dateValue;
 
       if( dateTruncField != null )
-        date = DateUtils.truncate( date, Integer.valueOf( dateTruncField ).intValue() );
+        cal = DateUtils.truncate( cal, Integer.valueOf( dateTruncField ).intValue() );
 
-      m_propertyAdder.addProperty( name, "" + date.getTime(), null );
+      final String dateString = DatatypeConverter.printDateTime( cal );
+      m_propertyAdder.addProperty( name, dateString, null );
     }
     else if( value != null )
       m_propertyAdder.addProperty( name, value.toString(), null );

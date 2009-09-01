@@ -50,6 +50,7 @@ import org.apache.tools.ant.Task;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -106,21 +107,21 @@ public class GMLWeightingTask extends Task
 
   private String m_sourceFilter;
 
-  private long m_from;
+  private String m_from;
 
-  private long m_to;
+  private String m_to;
 
-  private Long m_forecastFrom;
+  private String m_forecastFrom;
 
-  private Long m_forecastTo;
+  private String m_forecastTo;
 
-  private Long m_sourceFrom;
+  private String m_sourceFrom;
 
-  private Long m_sourceTo;
+  private String m_sourceTo;
 
-  private Long m_targetFrom;
+  private String m_targetFrom;
 
-  private Long m_targetTo;
+  private String m_targetTo;
 
   /**
    * @see org.apache.tools.ant.Task#execute()
@@ -308,12 +309,12 @@ public class GMLWeightingTask extends Task
       }
 
       // 14. do the mapping
-      final Date sourceFrom = m_sourceFrom == null ? new Date( m_from ) : new Date( m_sourceFrom.longValue() );
-      final Date sourceTo = m_sourceTo == null ? new Date( m_forecastFrom.longValue() ) : new Date( m_sourceTo.longValue() );
-      final Date targetFrom = m_targetFrom == null ? new Date( m_forecastFrom.longValue() ) : new Date( m_targetFrom.longValue() );
-      final Date targetTo = m_targetTo == null ? new Date( m_to ) : new Date( m_targetTo.longValue() );
-      final Date forecastFrom = new Date( m_forecastFrom.longValue() );
-      final Date forecastTo = m_forecastTo == null ? new Date( m_to ) : new Date( m_forecastTo.longValue() );
+      final Date sourceFrom = m_sourceFrom == null ? DateUtilities.toDate( m_from ) : DateUtilities.toDate( m_sourceFrom );
+      final Date sourceTo = m_sourceTo == null ? DateUtilities.toDate( m_forecastFrom ) : DateUtilities.toDate( m_sourceTo );
+      final Date targetFrom = m_targetFrom == null ? DateUtilities.toDate( m_forecastFrom ) : DateUtilities.toDate( m_targetFrom );
+      final Date targetTo = m_targetTo == null ? DateUtilities.toDate( m_to ) : DateUtilities.toDate( m_targetTo );
+      final Date forecastFrom = DateUtilities.toDate( m_forecastFrom );
+      final Date forecastTo = m_forecastTo == null ? DateUtilities.toDate( m_to ) : DateUtilities.toDate( m_forecastTo );
 
       CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, sourceFrom, sourceTo, targetFrom, targetTo, forecastFrom, forecastTo );
 
@@ -514,7 +515,7 @@ public class GMLWeightingTask extends Task
    * @deprecated Use sourceFrom, targetFrom or forecastFrom instead
    */
   @Deprecated
-  public final void setFrom( final long from )
+  public final void setFrom( final String from )
   {
     m_from = from;
   }
@@ -523,7 +524,7 @@ public class GMLWeightingTask extends Task
    * @param forecastFrom
    *          beginning of forecast periode (end of measure periode)
    */
-  public final void setForecastFrom( final Long forecastFrom )
+  public final void setForecastFrom( final String forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
@@ -532,7 +533,7 @@ public class GMLWeightingTask extends Task
    * @param forecastTo
    *          end of forecast periode (end of measure periode)
    */
-  public final void setForecastTo( final Long forecastTo )
+  public final void setForecastTo( final String forecastTo )
   {
     m_forecastTo = forecastTo;
   }
@@ -543,7 +544,7 @@ public class GMLWeightingTask extends Task
    * @deprecated Use sourceTo, targetTo or forecastTo instead
    */
   @Deprecated
-  public final void setTo( final long to )
+  public final void setTo( final String to )
   {
     m_to = to;
   }
@@ -552,7 +553,7 @@ public class GMLWeightingTask extends Task
    * @param sourceFrom
    *          start of request for source - observations
    */
-  public final void setSourceFrom( final Long sourceFrom )
+  public final void setSourceFrom( final String sourceFrom )
   {
     m_sourceFrom = sourceFrom;
   }
@@ -561,7 +562,7 @@ public class GMLWeightingTask extends Task
    * @param sourceTo
    *          end of request for source - observations
    */
-  public final void setSourceTo( final Long sourceTo )
+  public final void setSourceTo( final String sourceTo )
   {
     m_sourceTo = sourceTo;
   }
@@ -570,7 +571,7 @@ public class GMLWeightingTask extends Task
    * @param targetFrom
    *          start of request for source - observations
    */
-  public final void setTargetFrom( final Long targetFrom )
+  public final void setTargetFrom( final String targetFrom )
   {
     m_targetFrom = targetFrom;
   }
@@ -579,7 +580,7 @@ public class GMLWeightingTask extends Task
    * @param targetTo
    *          end of request for source - observations
    */
-  public final void setTargetTo( final Long targetTo )
+  public final void setTargetTo( final String targetTo )
   {
     m_targetTo = targetTo;
   }

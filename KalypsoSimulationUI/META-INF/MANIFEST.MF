@@ -28,4 +28,6 @@ Require-Bundle: org.eclipse.compare;bundle-version="3.4.1",
  org.eclipse.core.variables;bundle-version="3.2.100",
  org.kalypso.auth;bundle-version="1.0.0",
  org.kalypso.service.wps;bundle-version="1.0.0",
- org.kalypso.ui;bundle-version="1.0.0"
+ org.kalypso.ui;bundle-version="1.0.0",
+ org.kalypso.services.observation;bundle-version="1.0.0";resolution:=optional,
+ org.eclipse.ant.core;bundle-version="3.2.100";resolution:=optional
