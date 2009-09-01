@@ -54,6 +54,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -85,13 +86,13 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
-  private long m_forecastFrom = -1;
+  private String m_forecastFrom = null;
 
   /**
    * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
-  private long m_forecastTo = -1;
+  private String m_forecastTo = null;
 
   /**
    * Die Liste der Tokens und deren Ersetzung in der Form:
@@ -128,19 +129,17 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
   {
     Date forecastFrom = null;
-    if( m_forecastFrom != -1 )
-      forecastFrom = new Date( m_forecastFrom );
+    if( m_forecastFrom != null )
+      forecastFrom = DateUtilities.toDate( m_forecastFrom );
 
     Date forecastTo = null;
-    if( m_forecastTo != -1 )
-      forecastTo = new Date( m_forecastTo );
+    if( m_forecastTo != null )
+      forecastTo = DateUtilities.toDate( m_forecastTo );
 
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
     if( m_targetObservationDir != null )
-    {
       return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs, m_metadata, forecastFrom, forecastTo, logger, m_tokens );
 
-    }
     return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs, m_metadata, forecastFrom, forecastTo, logger, m_tokens );
   }
 
@@ -158,11 +157,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   {
     // validate source
     final String property = source.getProperty();
-    final long from = source.getFrom();
-    final long to = source.getTo();
+    final String from = source.getFrom();
+    final String to = source.getTo();
 
-    final Date fromDate = new Date( from );
-    final Date toDate = new Date( to );
+    final Date fromDate = DateUtilities.toDate( from );
+    final Date toDate = DateUtilities.toDate( to );
     final String filter = source.getFilter();
     final Project project2 = getProject();
     if( project2 != null )
@@ -192,9 +191,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   {
     private String property;
 
-    private long from;
+    private String from;
 
-    private long to;
+    private String to;
 
     private String filter;
 
@@ -208,22 +207,22 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       this.property = prop;
     }
 
-    public final long getFrom( )
+    public final String getFrom( )
     {
       return from;
     }
 
-    public final void setFrom( final long lfrom )
+    public final void setFrom( final String lfrom )
     {
       this.from = lfrom;
     }
 
-    public final long getTo( )
+    public final String getTo( )
     {
       return to;
     }
 
-    public final void setTo( final long lto )
+    public final void setTo( final String lto )
     {
       this.to = lto;
     }
@@ -239,22 +238,22 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     }
   }
 
-  public final long getForecastFrom( )
+  public final String getForecastFrom( )
   {
     return m_forecastFrom;
   }
 
-  public final void setForecastFrom( final long forecastFrom )
+  public final void setForecastFrom( final String forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
 
-  public final long getForecastTo( )
+  public final String getForecastTo( )
   {
     return m_forecastTo;
   }
 
-  public final void setForecastTo( final long forecastTo )
+  public final void setForecastTo( final String forecastTo )
   {
     m_forecastTo = forecastTo;
   }
