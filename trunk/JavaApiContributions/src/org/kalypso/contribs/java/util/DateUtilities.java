@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -122,5 +123,11 @@ public final class DateUtilities
   public static Object toXMLGregorianCalendar( final GregorianCalendar dateTime )
   {
     return DATATYPE_FACTORY.newXMLGregorianCalendar( dateTime );
+  }
+
+  public static Date toDate( final String lexicalXSDDateTime )
+  {
+    final Calendar dateTime = DatatypeConverter.parseDateTime( lexicalXSDDateTime );
+    return dateTime.getTime();
   }
 }
