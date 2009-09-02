@@ -59,11 +59,11 @@ public class LiteralsJob implements ISimulation
   /**
    * The model specification.
    */
-  private static final String SIMULATION_SPEC = "literal_specification.xml";
+  private static final String SIMULATION_SPEC = "literal_specification.xml"; //$NON-NLS-1$
 
-  private static final String INPUT_LITERAL = "INPUT_LITERAL";
+  private static final String INPUT_LITERAL = "INPUT_LITERAL"; //$NON-NLS-1$
 
-  private static final String OUTPUT_LITERAL = "OUTPUT_LITERAL";
+  private static final String OUTPUT_LITERAL = "OUTPUT_LITERAL"; //$NON-NLS-1$
 
   /**
    * The constructor.

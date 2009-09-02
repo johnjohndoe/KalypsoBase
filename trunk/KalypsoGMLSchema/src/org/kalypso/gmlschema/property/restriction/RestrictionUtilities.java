@@ -52,7 +52,7 @@ public class RestrictionUtilities
 {
   public RestrictionUtilities( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate." );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
   }
 
   public static Integer findFractionDigits( final IRestriction[] restrictions )

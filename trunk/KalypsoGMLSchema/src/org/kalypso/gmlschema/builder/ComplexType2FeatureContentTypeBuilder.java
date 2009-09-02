@@ -104,7 +104,7 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
     if( !(object instanceof ComplexType) )
       return false;
     final ComplexType complexType = (ComplexType) object;
-    if( "AbstractGMLType".equals( complexType.getName() ) && NS.GML2.equals( gmlSchema.getTargetNamespace() ) )
+    if( "AbstractGMLType".equals( complexType.getName() ) && NS.GML2.equals( gmlSchema.getTargetNamespace() ) ) //$NON-NLS-1$
       return true;
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType, m_version );
     if( baseType == null )

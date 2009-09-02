@@ -80,7 +80,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 {
   public RepresentationTypeHandler( )
   {
-    super( "representation", new QName( NS.SWE, "RepresentationType" ), false );
+    super( "representation", new QName( NS.SWE, "RepresentationType" ), false ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -91,47 +91,47 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
     if( !(node instanceof Element) )
-      throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" );
+      throw new TypeRegistryException( "Empty or non-existent representation: cannot create RepresentationType instance" ); //$NON-NLS-1$
 
     final Element typeElt = (Element) node;
 
     final String localName = typeElt.getLocalName();
     final String base;
-    if( "SimpleType".equals( localName ) )
+    if( "SimpleType".equals( localName ) ) //$NON-NLS-1$
     {
       // read base-attribute of restriction
-      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
+      final NodeList elementsByTagName = typeElt.getElementsByTagNameNS( NS.XST, "restriction" ); //$NON-NLS-1$
       if( elementsByTagName.getLength() == 1 )
       {
         final Element restrictionElt = (Element) elementsByTagName.item( 0 );
-        base = restrictionElt.getAttribute( "base" );
+        base = restrictionElt.getAttribute( "base" ); //$NON-NLS-1$
 
         // TODO: recurse into simple-type and collect all restrictions
 
         if( base == null || base.length() == 0 )
-          throw new TypeRegistryException( "No base defined for st:restriction." );
+          throw new TypeRegistryException( "No base defined for st:restriction." ); //$NON-NLS-1$
       }
       else
       {
         // error handling?
-        throw new TypeRegistryException( "SimpleType without st:restriction definition." );
+        throw new TypeRegistryException( "SimpleType without st:restriction definition." ); //$NON-NLS-1$
       }
     }
-    else if( "Number".equals( localName ) )
+    else if( "Number".equals( localName ) ) //$NON-NLS-1$
     {
-      base = "double";
+      base = "double"; //$NON-NLS-1$
     }
-    else if( "Word".equals( localName ) )
+    else if( "Word".equals( localName ) ) //$NON-NLS-1$
     {
-      base = "string";
+      base = "string"; //$NON-NLS-1$
     }
-    else if( "Boolean".equals( localName ) )
+    else if( "Boolean".equals( localName ) ) //$NON-NLS-1$
     {
-      base = "boolean";
+      base = "boolean"; //$NON-NLS-1$
     }
     else
     {
-      base = "string";
+      base = "string"; //$NON-NLS-1$
     }
 
     // read base-attribute of restriction
@@ -143,43 +143,43 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     // TODO: read IRestriction - Elements from restrictionElt and append them to the RepresentationType
 
     // parse unitOfMeasure
-    final NodeList nlUom = typeElt.getElementsByTagNameNS( NS.GML3, "unitOfMeasure" );
+    final NodeList nlUom = typeElt.getElementsByTagNameNS( NS.GML3, "unitOfMeasure" ); //$NON-NLS-1$
     Element uomElt = null;
     if( nlUom.getLength() == 1 )
     {
       uomElt = (Element) nlUom.item( 0 );
     }
 
-    String unit = "";
+    String unit = ""; //$NON-NLS-1$
     if( uomElt != null )
     {
-      unit = uomElt.getAttribute( "uom" );
+      unit = uomElt.getAttribute( "uom" ); //$NON-NLS-1$
     }
 
     // parse frame (i.e. timezone information for dates)
-    final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.GML3, "frame" );
+    final NodeList nlFrame = typeElt.getElementsByTagNameNS( NS.GML3, "frame" ); //$NON-NLS-1$
     Element frameElt = null;
     if( nlFrame.getLength() == 1 )
     {
       frameElt = (Element) nlFrame.item( 0 );
     }
 
-    String frame = "";
+    String frame = ""; //$NON-NLS-1$
     if( frameElt != null )
     {
-      frame = frameElt.getAttributeNS( NS.XLINK, "href" );
+      frame = frameElt.getAttributeNS( NS.XLINK, "href" ); //$NON-NLS-1$
     }
 
     // TODO: parse classification
-    final String classification = "";
+    final String classification = ""; //$NON-NLS-1$
 
     /* parsing of restrictions */
     final Set<IRestriction> myRestrictions = new HashSet<IRestriction>();
 
-    NodeList restriction = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" );
+    NodeList restriction = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" ); //$NON-NLS-1$
     if( restriction.getLength() <= 0 )
     {
-      restriction = typeElt.getElementsByTagNameNS( NS.XST, "restriction" );
+      restriction = typeElt.getElementsByTagNameNS( NS.XST, "restriction" ); //$NON-NLS-1$
     }
 
     if( restriction.getLength() > 0 )
@@ -197,7 +197,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
           final Node myNode = restrictions.item( j );
 
           // TODO: implement other restrictions (see, who implements IRestriction!)
-          if( "pattern".equals( myNode.getLocalName() ) )
+          if( "pattern".equals( myNode.getLocalName() ) ) //$NON-NLS-1$
           {
             final NamedNodeMap attributes = myNode.getAttributes();
             for( int a = 0; a < attributes.getLength(); a++ )
@@ -211,11 +211,11 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
               }
             }
           }
-          else if( "enumeration".equals( myNode.getLocalName() ) )
+          else if( "enumeration".equals( myNode.getLocalName() ) ) //$NON-NLS-1$
           {
             // key
             final NamedNodeMap attributes = myNode.getAttributes();
-            final Node itmKey = attributes.getNamedItem( "value" );
+            final Node itmKey = attributes.getNamedItem( "value" ); //$NON-NLS-1$
 
             // values
             final NodeList childNodes = myNode.getChildNodes();
@@ -224,7 +224,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
             hEnumerations.put( itmKey.getTextContent(), annontation );
           }
-          else if( "minInclusive".equals( myNode.getLocalName() ) )
+          else if( "minInclusive".equals( myNode.getLocalName() ) ) //$NON-NLS-1$
           {
             final NamedNodeMap attributes = myNode.getAttributes();
             for( int a = 0; a < attributes.getLength(); a++ )
@@ -238,7 +238,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
               }
             }
           }
-          else if( "maxInclusive".equals( myNode.getLocalName() ) )
+          else if( "maxInclusive".equals( myNode.getLocalName() ) ) //$NON-NLS-1$
           {
             final NamedNodeMap attributes = myNode.getAttributes();
             for( int a = 0; a < attributes.getLength(); a++ )
@@ -252,7 +252,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
               }
             }
           }// end if-else-if
-          else if( "fractionDigits".equals( myNode.getLocalName() ) )
+          else if( "fractionDigits".equals( myNode.getLocalName() ) ) //$NON-NLS-1$
           {
             final NamedNodeMap attributes = myNode.getAttributes();
             for( int a = 0; a < attributes.getLength(); a++ )
@@ -269,11 +269,11 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
         } // endFor j
       } // endFor i
 
-      if( localName.equals( "Boolean" ) )
+      if( localName.equals( "Boolean" ) ) //$NON-NLS-1$
       {
         // Special case for boolean representations: use boolean values in enum
         if( hEnumerations.size() != 2 )
-          throw new TypeRegistryException( "Boolean representation type must have exactly two enumeration restrictions." );
+          throw new TypeRegistryException( "Boolean representation type must have exactly two enumeration restrictions." ); //$NON-NLS-1$
 
         final Set<Entry<Object, IAnnotation>> entrySet = hEnumerations.entrySet();
         final Iterator<Entry<Object, IAnnotation>> entryIt = entrySet.iterator();
@@ -317,15 +317,15 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     switch( type.getKind() )
     {
       case Boolean:
-        return document.createElementNS( NS.SWE, "Boolean" );
+        return document.createElementNS( NS.SWE, "Boolean" ); //$NON-NLS-1$
 
       case Word:
       {
-        final Element eltWord = document.createElementNS( NS.SWE, "Word" );
+        final Element eltWord = document.createElementNS( NS.SWE, "Word" ); //$NON-NLS-1$
 
         if( type.getClassification().length() > 0 )
         {
-          final Element eltClassification = document.createElementNS( NS.SWE, "classification" );
+          final Element eltClassification = document.createElementNS( NS.SWE, "classification" ); //$NON-NLS-1$
           eltWord.appendChild( eltClassification );
         }
 
@@ -334,7 +334,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
       case Number:
       {
-        final Element eltNumber = document.createElementNS( NS.SWE, "Number" );
+        final Element eltNumber = document.createElementNS( NS.SWE, "Number" ); //$NON-NLS-1$
 
         RepresentationTypeHandler.handleUnit( type, document, eltNumber );
         RepresentationTypeHandler.handleFrame( type, document, eltNumber );
@@ -344,10 +344,10 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
       case SimpleType:
       {
-        final Element eltSimpleType = document.createElementNS( NS.SWE, "SimpleType" );
+        final Element eltSimpleType = document.createElementNS( NS.SWE, "SimpleType" ); //$NON-NLS-1$
 
-        final Element eltRestriction = document.createElementNS( NS.XST, "restriction" );
-        eltRestriction.setAttribute( "base", type.getValueTypeName().getLocalPart() );
+        final Element eltRestriction = document.createElementNS( NS.XST, "restriction" ); //$NON-NLS-1$
+        eltRestriction.setAttribute( "base", type.getValueTypeName().getLocalPart() ); //$NON-NLS-1$
         eltSimpleType.appendChild( eltRestriction );
 
         RepresentationTypeHandler.handleUnit( type, document, eltSimpleType );
@@ -376,8 +376,8 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     final String unit = type.getUnit();
     if( unit != null && unit.length() > 0 )
     {
-      final Element eltUom = doc.createElementNS( NS.GML3, "unitOfMeasure" );
-      eltUom.setAttribute( "uom", unit );
+      final Element eltUom = doc.createElementNS( NS.GML3, "unitOfMeasure" ); //$NON-NLS-1$
+      eltUom.setAttribute( "uom", unit ); //$NON-NLS-1$
 
       elt.appendChild( eltUom );
     }
@@ -388,8 +388,8 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     final String frame = type.getFrame();
     if( (frame != null) && (frame.length() > 0) )
     {
-      final Element eltFrame = doc.createElementNS( NS.SWE, "frame" );
-      eltFrame.setAttribute( "frame", frame );
+      final Element eltFrame = doc.createElementNS( NS.SWE, "frame" ); //$NON-NLS-1$
+      eltFrame.setAttribute( "frame", frame ); //$NON-NLS-1$
 
       elt.appendChild( eltFrame );
     }

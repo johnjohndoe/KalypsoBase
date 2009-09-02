@@ -140,7 +140,7 @@ public class XsdBaseContentHandler implements ContentHandler
 
   public void processingInstruction( final String target, final String data )
   {
-    m_buffer.append( "processingInstruction: " + target + " / " + data + "\n" );
+    m_buffer.append( "processingInstruction: " + target + " / " + data + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public void startDocument( )
@@ -165,6 +165,6 @@ public class XsdBaseContentHandler implements ContentHandler
 
   public void skippedEntity( final String name )
   {
-    m_buffer.append( "skippedEntity: " + name + "\n" );
+    m_buffer.append( "skippedEntity: " + name + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

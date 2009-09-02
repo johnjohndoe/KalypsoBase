@@ -63,23 +63,23 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public class KalypsoGmlSchemaExtensions
 {
-  private static final String EXT_VIRTUALPROPERTY = "org.kalypso.gmlschema.virtualProperty";
+  private static final String EXT_VIRTUALPROPERTY = "org.kalypso.gmlschema.virtualProperty"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_ALLOWSUBST = "allowSubstitution";
+  private static final String ATTR_VIRTUALPROPERTY_ALLOWSUBST = "allowSubstitution"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_FEATURE = "feature";
+  private static final String ATTR_VIRTUALPROPERTY_FEATURE = "feature"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_QNAME = "qname";
+  private static final String ATTR_VIRTUALPROPERTY_QNAME = "qname"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_VALUE = "value";
+  private static final String ATTR_VIRTUALPROPERTY_VALUE = "value"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_ISLIST = "isList";
+  private static final String ATTR_VIRTUALPROPERTY_ISLIST = "isList"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_FUNCTION = "function";
+  private static final String ATTR_VIRTUALPROPERTY_FUNCTION = "function"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_PROPERTY = "property";
+  private static final String ATTR_VIRTUALPROPERTY_PROPERTY = "property"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_NAME = "name";
+  private static final String ATTR_VIRTUALPROPERTY_NAME = "name"; //$NON-NLS-1$
 
   private static Map<QName, Collection<IConfigurationElement>> REGISTERED_VIRTUAL_PROPERTIES = null;
 
@@ -126,7 +126,7 @@ public class KalypsoGmlSchemaExtensions
     final IMarshallingTypeHandler handler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
     final boolean isList = Boolean.valueOf( isListString );
     if( isList == true )
-      throw new UnsupportedOperationException( "isList == true not yet supported in virtualProperty extension-point" );
+      throw new UnsupportedOperationException( "isList == true not yet supported in virtualProperty extension-point" ); //$NON-NLS-1$
 
     // Read properties from child elements
     final Map<String, String> properties = new HashMap<String, String>();

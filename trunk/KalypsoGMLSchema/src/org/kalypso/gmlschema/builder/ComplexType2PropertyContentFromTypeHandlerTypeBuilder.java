@@ -73,7 +73,7 @@ public class ComplexType2PropertyContentFromTypeHandlerTypeBuilder extends Abstr
     else if( typeObject instanceof SimpleType )
       valueQName = GMLSchemaUtilities.findBaseType( gmlSchema, (SimpleType) typeObject, m_version );
     else
-      throw new GMLSchemaException( "Could not find valueQName for: " + typeObject );
+      throw new GMLSchemaException( "Could not find valueQName for: " + typeObject ); //$NON-NLS-1$
 
     final IPropertyContentType pct = new PropertyContentTypeFromTypeHandler( gmlSchema, typeObject, valueQName );
     gmlSchema.register( typeObject, pct );

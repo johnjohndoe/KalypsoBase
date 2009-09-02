@@ -57,9 +57,9 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 public abstract class RelationContentType implements IRelationContentType, IInitialize
 {
   /** TODO move this one to a constants class. */
-  protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
+  protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-  protected final static String DOCREF_XPATH = XPATH_APPINFO_NAMESPACE_DECL + "xs:annotation/xs:appinfo/kapp:documentReference";
+  protected final static String DOCREF_XPATH = XPATH_APPINFO_NAMESPACE_DECL + "xs:annotation/xs:appinfo/kapp:documentReference"; //$NON-NLS-1$
 
   private final GMLSchema m_gmlSchema;
 
@@ -151,9 +151,9 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         {
           final QName ref = ag.getRef();
           // TODO: what about gml2, probably it is different there? Maybe just look for xlink:href
-          if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) )
+          if( ref != null && QNameUtilities.equals( ref, NS.GML3, "AssociationAttributeGroup" ) ) //$NON-NLS-1$
             m_linkable = true;
-          else if( ref != null && QNameUtilities.equals( ref, NS.XLINK, "simpleLink" ) && schema != null && "2.1.2".equals( schema.getGMLVersion() ) )
+          else if( ref != null && QNameUtilities.equals( ref, NS.XLINK, "simpleLink" ) && schema != null && "2.1.2".equals( schema.getGMLVersion() ) ) //$NON-NLS-1$ //$NON-NLS-2$
             m_linkable = true;
         }
 

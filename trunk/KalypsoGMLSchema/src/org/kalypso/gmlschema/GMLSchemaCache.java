@@ -50,6 +50,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.gmlschema.i18n.Messages;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.policy.lfu.LfuCacheFactory;
 
@@ -72,8 +73,8 @@ public class GMLSchemaCache
 
   public GMLSchemaCache( )
   {
-    Debug.CATALOG.printf( "Schema cache initialized" );
-    m_memCache = new LfuCacheFactory().newInstance( "gml.schemas", TIMEOUT, SIZE );
+    Debug.CATALOG.printf( "Schema cache initialized" ); //$NON-NLS-1$
+    m_memCache = new LfuCacheFactory().newInstance( "gml.schemas", TIMEOUT, SIZE ); //$NON-NLS-1$
   }
 
   /**
@@ -82,9 +83,9 @@ public class GMLSchemaCache
   public synchronized void addSchema( final String namespace, final GMLSchema schema, final Date validity, final long lastModifiedCheck )
   {
     final String version = schema.getGMLVersion();
-    final String publicId = namespace + "#" + version;
+    final String publicId = namespace + "#" + version; //$NON-NLS-1$
 
-    Debug.CATALOG.printf( "Adding schema to cache: %s", publicId );
+    Debug.CATALOG.printf( "Adding schema to cache: %s", publicId ); //$NON-NLS-1$
 
     m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, lastModifiedCheck ) );
   }
@@ -98,19 +99,19 @@ public class GMLSchemaCache
   public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
   {
     if( schemaURL == null )
-      throw new InvocationTargetException( new GMLSchemaException( "Unable to load schema, unknown namespace: " + namespace ) );
+      throw new InvocationTargetException( new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaCache.0") + namespace ) ); //$NON-NLS-1$
 
-    Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL );
+    Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL ); //$NON-NLS-1$
 
     Assert.isNotNull( namespace );
 
-    final String publicId = namespace + "#" + gmlVersion;
+    final String publicId = namespace + "#" + gmlVersion; //$NON-NLS-1$
 
-    if( gmlVersion != null && !"3.1.1".equals( gmlVersion ) && !"2.1.2".equals( gmlVersion ) )
+    if( gmlVersion != null && !"3.1.1".equals( gmlVersion ) && !"2.1.2".equals( gmlVersion ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       // TODO: put this into a tracing option or log to plug-in log.
-      System.out.println( "Unknown gml version: " + gmlVersion + " for namespace: " + namespace );
-      System.out.println( "Use appinfo and use one of the known (3.1.1 or 2.1.2) in order to avoid multiple schema parsing." );
+      System.out.println( "Unknown gml version: " + gmlVersion + " for namespace: " + namespace ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "Use appinfo and use one of the known (3.1.1 or 2.1.2) in order to avoid multiple schema parsing." ); //$NON-NLS-1$
     }
 
     // PROBLEM: we have a problem with imported schematas here.
@@ -133,7 +134,7 @@ public class GMLSchemaCache
       final Date validity;
       if( doCheckModified )
       {
-        Debug.CATALOG.printf( "Check for modification of: %s%n", schemaURL );
+        Debug.CATALOG.printf( "Check for modification of: %s%n", schemaURL ); //$NON-NLS-1$
         validity = lastModified( schemaURL );
         sw.setLastModifiedCheck( currentMillis );
       }
@@ -147,7 +148,7 @@ public class GMLSchemaCache
       final Date lastValidity = sw.getValidity();
       if( validity == null || (lastValidity != null && validity.compareTo( lastValidity ) <= 0) )
       {
-        Debug.CATALOG.printf( "Schema found in mem-cache.%n" );
+        Debug.CATALOG.printf( "Schema found in mem-cache.%n" ); //$NON-NLS-1$
         return sw.getSchema();
       }
     }
@@ -158,12 +159,12 @@ public class GMLSchemaCache
       final Date validity = lastModified( schemaURL );
       m_memCache.addObject( publicId, new GMLSchemaWrapper( schema, validity, currentMillis ) );
 
-      Debug.CATALOG.printf( "Schema successfully looked-up: %s%n%n", namespace );
+      Debug.CATALOG.printf( "Schema successfully looked-up: %s%n%n", namespace ); //$NON-NLS-1$
       return schema;
     }
     catch( final GMLSchemaException e )
     {
-      Debug.CATALOG.printf( "Schema was not loaded/looked-up: %s%n%n", namespace );
+      Debug.CATALOG.printf( "Schema was not loaded/looked-up: %s%n%n", namespace ); //$NON-NLS-1$
       throw new InvocationTargetException( e );
     }
 

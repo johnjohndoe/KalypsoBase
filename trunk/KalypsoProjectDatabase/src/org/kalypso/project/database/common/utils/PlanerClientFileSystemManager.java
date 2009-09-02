@@ -137,7 +137,7 @@ public class PlanerClientFileSystemManager implements IFileSystemManagerResolveD
 
   private boolean isFtpProtocol( final String uri )
   {
-    return uri.toLowerCase().startsWith( "ftp" );
+    return uri.toLowerCase().startsWith( "ftp" ); //$NON-NLS-1$
   }
 
   private boolean isFtpProtocol( final FileObject baseFile, final String uri ) throws FileSystemException
@@ -145,7 +145,7 @@ public class PlanerClientFileSystemManager implements IFileSystemManagerResolveD
     if( baseFile != null )
     { 
       final URL url = baseFile.getURL();
-      if( url.getProtocol().toLowerCase().startsWith( "ftp" ) )
+      if( url.getProtocol().toLowerCase().startsWith( "ftp" ) ) //$NON-NLS-1$
         return true;
     }
 

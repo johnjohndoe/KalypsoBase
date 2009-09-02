@@ -10,6 +10,7 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.gmlschema.i18n.Messages;
 
 /**
  * <p>
@@ -50,7 +51,7 @@ public final class GMLSchemaCatalog
    */
   public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
   {
-    Debug.CATALOG.printf( "Loading schema into cache for gmlVersion %s and schemaLocation %s%n", gmlVersion, schemaLocation );
+    Debug.CATALOG.printf( "Loading schema into cache for gmlVersion %s and schemaLocation %s%n", gmlVersion, schemaLocation ); //$NON-NLS-1$
 
     try
     {
@@ -59,17 +60,17 @@ public final class GMLSchemaCatalog
 
       m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis() );
 
-      Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity );
+      Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity ); //$NON-NLS-1$
 
       return schema;
     }
     catch( final Exception e )
     {
-      final String message = "Failed to load schema into cache via schemaLocation" + schemaLocation;
+      final String message = Messages.getString("org.kalypso.gmlschema.GMLSchemaCatalog.0") + schemaLocation; //$NON-NLS-1$
       StatusUtilities.statusFromThrowable( e, message );
 
       Debug.CATALOG.printf( message );
-      Debug.CATALOG.printf( "%n" );
+      Debug.CATALOG.printf( "%n" ); //$NON-NLS-1$
 
       return null;
     }
@@ -92,7 +93,7 @@ public final class GMLSchemaCatalog
    */
   public GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaLocation ) throws InvocationTargetException
   {
-    Debug.CATALOG.printf( "Trying to retrieve schema from cache for:%n\tnamespace: %s%n\tgmlVersion: %s%n\tschemaLocation: %s%n", namespace, gmlVersion, schemaLocation );
+    Debug.CATALOG.printf( "Trying to retrieve schema from cache for:%n\tnamespace: %s%n\tgmlVersion: %s%n\tschemaLocation: %s%n", namespace, gmlVersion, schemaLocation ); //$NON-NLS-1$
 
     // HACK: if we are looking for the gml namespace
     // tweak it and add the version number
@@ -105,11 +106,11 @@ public final class GMLSchemaCatalog
         // if we get here and don't know the version number, we are probably loading
         // a gml whichs schema is the gml schema directly.
         // This is only possible for gml3 documents.
-        version = "3.1.1";
+        version = "3.1.1"; //$NON-NLS-1$
       else
         version = gmlVersion;
 
-      catalogUrl = m_urlCatalog.getURL( namespace + "#" + version.charAt( 0 ) );
+      catalogUrl = m_urlCatalog.getURL( namespace + "#" + version.charAt( 0 ) ); //$NON-NLS-1$
     }
     else
     {
@@ -117,17 +118,17 @@ public final class GMLSchemaCatalog
 
       // HACK: crude hack to enforce GML3 for WFS
       if( NS.WFS.equals( namespace ) )
-        version = "3.1.1";
+        version = "3.1.1"; //$NON-NLS-1$
       else
         version = gmlVersion;
     }
 
 
-    Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl );
+    Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl ); //$NON-NLS-1$
 
     final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
     if( schemaUrl == null )
-      Debug.CATALOG.printf( "No location for namespace: %s - trying to load from cache.%n", namespace );
+      Debug.CATALOG.printf( "No location for namespace: %s - trying to load from cache.%n", namespace ); //$NON-NLS-1$
 
     try
     {
@@ -153,6 +154,6 @@ public final class GMLSchemaCatalog
   public void clearCache( )
   {
     m_cache.clearCache();
-    Debug.CATALOG.printf( "Cleared schema cache." );
+    Debug.CATALOG.printf( "Cleared schema cache." ); //$NON-NLS-1$
   }
 }

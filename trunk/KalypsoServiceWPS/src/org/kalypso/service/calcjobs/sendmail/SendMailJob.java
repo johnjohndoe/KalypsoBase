@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.service.calcjobs.sendmail.utils.MailUtilities;
 import org.kalypso.service.calcjobs.sendmail.utils.SendMailAuthenticator;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -77,25 +78,25 @@ public class SendMailJob implements ISimulation
   /**
    * The model specification.
    */
-  private static final String SIMULATION_SPEC = "mail_specification.xml";
+  private static final String SIMULATION_SPEC = "mail_specification.xml"; //$NON-NLS-1$
 
-  private static final String INPUT_SENDER = "SENDER";
+  private static final String INPUT_SENDER = "SENDER"; //$NON-NLS-1$
 
-  private static final String INPUT_RECEIVER = "RECEIVER";
+  private static final String INPUT_RECEIVER = "RECEIVER"; //$NON-NLS-1$
 
-  private static final String INPUT_TYPE = "TYPE";
+  private static final String INPUT_TYPE = "TYPE"; //$NON-NLS-1$
 
-  private static final String INPUT_TITLE = "TITLE";
+  private static final String INPUT_TITLE = "TITLE"; //$NON-NLS-1$
 
-  private static final String INPUT_TEXT = "TEXT";
+  private static final String INPUT_TEXT = "TEXT"; //$NON-NLS-1$
 
-  private static final String OUTPUT_RESULT = "RESULT";
+  private static final String OUTPUT_RESULT = "RESULT"; //$NON-NLS-1$
 
-  private static final String CFG_RELAIS = "org.kalypso.wps.sendmail.relais";
+  private static final String CFG_RELAIS = "org.kalypso.wps.sendmail.relais"; //$NON-NLS-1$
 
-  private static final String CFG_RELAIS_USERNAME = "org.kalypso.wps.sendmail.relais.username";
+  private static final String CFG_RELAIS_USERNAME = "org.kalypso.wps.sendmail.relais.username"; //$NON-NLS-1$
 
-  private static final String CFG_RELAIS_PASSWORD = "org.kalypso.wps.sendmail.relais.password";
+  private static final String CFG_RELAIS_PASSWORD = "org.kalypso.wps.sendmail.relais.password"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -119,7 +120,7 @@ public class SendMailJob implements ISimulation
   public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
   {
     /* Update monitor. */
-    monitor.setMessage( "Validating the inputs ... " );
+    monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.0") ); //$NON-NLS-1$
 
     try
     {
@@ -132,27 +133,27 @@ public class SendMailJob implements ISimulation
 
       /* Check all neccessary inputs. */
       if( sender == null || sender.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_SENDER + "' property is not correct configured ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_SENDER + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( receiver == null || receiver.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_RECEIVER + "' property is not correct configured ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_RECEIVER + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( type == null || type.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_TYPE + "' property is not correct configured ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TYPE + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( title == null || title.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_TITLE + "' property is not correct configured ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TITLE + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( text == null || text.length() == 0 )
-        throw new SimulationException( "The '" + INPUT_TEXT + "' property is not correct configured ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TEXT + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !MailUtilities.checkContentType( type ) )
-        throw new SimulationException( "The content type '" + type + "' is not supported, try '" + MailUtilities.TEXT_PLAIN + "'  ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.2") + type + "' is not supported, try '" + MailUtilities.TEXT_PLAIN + "'  ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       /* Configuration inputs. */
       String relais = FrameworkProperties.getProperty( CFG_RELAIS );
       if( relais == null || relais.length() == 0 )
-        throw new SimulationException( "The '" + CFG_RELAIS + "' directive must be set on the server ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.3") + CFG_RELAIS + "' directive must be set on the server ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Configuration, which is optional. */
       String relais_username = FrameworkProperties.getProperty( CFG_RELAIS_USERNAME );
@@ -160,7 +161,7 @@ public class SendMailJob implements ISimulation
 
       /* Update monitor. */
       monitor.setProgress( 25 );
-      monitor.setMessage( "Preparing to send the e-mail ..." );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.4") ); //$NON-NLS-1$
 
       /* Create the properties for the session configuration. */
       Properties properties = new Properties();
@@ -170,49 +171,49 @@ public class SendMailJob implements ISimulation
        * implements this protocol. The client can override this property and explicitly specify the protocol with the
        * Session.getStore(String protocol) method.
        */
-      properties.put( "mail.store.protocol", "imap" );
+      properties.put( "mail.store.protocol", "imap" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /*
        * Specifies the default Transport Protocol. The Session.getTransport() method returns a Transport object that
        * implements this protocol. The client can override this property and explicitly specify the protocol by using
        * Session.getTransport(String protocol) method.
        */
-      properties.put( "mail.transport.protocol", "smtp" );
+      properties.put( "mail.transport.protocol", "smtp" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /*
        * Specifies the default Mail server. The Store and Transport object’s connect methods use this property, if the
        * protocol-specific host property is absent, to locate the target host.
        */
-      properties.put( "mail.host", relais );
+      properties.put( "mail.host", relais ); //$NON-NLS-1$
 
       /*
        * Specifies the username to provide when connecting to a Mail server. The Store and Transport object’s connect
        * methods use this property, if the protocol-specific username property is absent, to obtain the username.
        */
       if( relais_username != null )
-        properties.put( "mail.user", relais_username );
+        properties.put( "mail.user", relais_username ); //$NON-NLS-1$
 
       /* Specifies the protocol-specific default Mail server. This overrides the mail.host property. */
-      properties.put( "mail.smtp.host", relais );
+      properties.put( "mail.smtp.host", relais ); //$NON-NLS-1$
 
       /*
        * Specifies the protocol-specific default username for connecting to the Mail server. This overrides the
        * mail.user property.
        */
       if( relais_username != null )
-        properties.put( "mail.smtp.user", relais_username );
+        properties.put( "mail.smtp.user", relais_username ); //$NON-NLS-1$
 
       /*
        * Specifies the return address of the current user. Used by the InternetAddress.getLocalAddress method to specify
        * the current user’s email address.
        */
-      properties.put( "mail.from", sender );
+      properties.put( "mail.from", sender ); //$NON-NLS-1$
 
       /*
        * Specifies the initial debug mode. Setting this property to true will turn on debug mode, while setting it to
        * false turns debug mode off.
        */
-      properties.put( "mail.debug", false );
+      properties.put( "mail.debug", false ); //$NON-NLS-1$
 
       /* Need an authenticator eventually. */
       Authenticator auth = null;
@@ -223,7 +224,7 @@ public class SendMailJob implements ISimulation
       Session session = Session.getInstance( properties, auth );
 
       /* A tokenizer for splitting the string into all contained e-mail addresses. */
-      StringTokenizer tokenizer = new StringTokenizer( receiver, ";" );
+      StringTokenizer tokenizer = new StringTokenizer( receiver, ";" ); //$NON-NLS-1$
 
       /* The from address. */
       Address fromAddr = new InternetAddress( sender );
@@ -235,7 +236,7 @@ public class SendMailJob implements ISimulation
 
       /* Update monitor. */
       monitor.setProgress( 50 );
-      monitor.setMessage( "Build the e-mail message ..." );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.5") ); //$NON-NLS-1$
 
       /* Create the message. */
       MimeMessage message = new MimeMessage( session );
@@ -251,26 +252,26 @@ public class SendMailJob implements ISimulation
       // message.setHeader( "X-Mailer", "WPSSendMailV1.0" );
       /* Update monitor. */
       monitor.setProgress( 75 );
-      monitor.setMessage( "Send the e-mail ..." );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.6") ); //$NON-NLS-1$
 
       /* Sends the message. */
       Transport.send( message );
 
       /* Update monitor. */
       monitor.setProgress( 100 );
-      monitor.setMessage( "E-mail was sent ..." );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.7") ); //$NON-NLS-1$
 
       /* Add the result and end the simulation. */
-      resultEater.addResult( OUTPUT_RESULT, "The e-mail was sent successfully." );
+      resultEater.addResult( OUTPUT_RESULT, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.8") ); //$NON-NLS-1$
 
       /* Finish the job. */
-      monitor.setMessage( "The e-mail was sent successfully." );
-      monitor.setFinishInfo( IStatus.OK, "The e-mail was sent successfully." );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.9") ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.OK, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.10") ); //$NON-NLS-1$
     }
     catch( Exception ex )
     {
-      monitor.setMessage( "Could not send the e-mail: " + ex.getMessage() );
-      monitor.setFinishInfo( IStatus.ERROR, "Could not send the e-mail: " + ex.getMessage() );
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.11") + ex.getMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.12") + ex.getMessage() ); //$NON-NLS-1$
     }
   }
 }

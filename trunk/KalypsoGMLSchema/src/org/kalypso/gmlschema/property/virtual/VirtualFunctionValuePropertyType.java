@@ -270,7 +270,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
   @Override
   public String toString( )
   {
-    return "" + m_qName;
+    return "" + m_qName; //$NON-NLS-1$
   }
 
   /**

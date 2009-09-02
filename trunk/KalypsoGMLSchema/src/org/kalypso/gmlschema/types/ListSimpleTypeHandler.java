@@ -62,7 +62,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
   public ListSimpleTypeHandler( final IMarshallingTypeHandler baseTypeHandler )
   {
     if( !(baseTypeHandler instanceof ISimpleMarshallingTypeHandler) )
-      throw new IllegalArgumentException( "List may be used only on simple types. Not on complex types: " + baseTypeHandler );
+      throw new IllegalArgumentException( "List may be used only on simple types. Not on complex types: " + baseTypeHandler ); //$NON-NLS-1$
 
     m_baseTypeHandler = (ISimpleMarshallingTypeHandler<Object>) baseTypeHandler;
   }
@@ -78,7 +78,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
 
     final List<Object> list = new ArrayList<Object>();
 
-    final String[] strings = xmlString.split( " +" );
+    final String[] strings = xmlString.split( " +" ); //$NON-NLS-1$
     for( final String string : strings )
     {
       final Object object = m_baseTypeHandler.convertToJavaValue( string );

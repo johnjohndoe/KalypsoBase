@@ -57,6 +57,7 @@ import org.kalypso.gmlschema.builder.PropertyType2SimpleTypeBuilder;
 import org.kalypso.gmlschema.builder.RelationType2ComplexTypeBuilder;
 import org.kalypso.gmlschema.feature.CustomFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.i18n.Messages;
 import org.kalypso.gmlschema.property.CustomPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -121,7 +122,7 @@ public class GMLSchemaFactory
 
   public static GMLSchema createGMLSchema( final String gmlVersion, final URL schemaLocationURL ) throws GMLSchemaException
   {
-    Debug.LOADING.printf( "Loading schema: %s%n", schemaLocationURL );
+    Debug.LOADING.printf( "Loading schema: %s%n", schemaLocationURL ); //$NON-NLS-1$
 
     InputStream inputStream = null;
     try
@@ -133,10 +134,10 @@ public class GMLSchemaFactory
     }
     catch( final Throwable e )
     {
-      Debug.LOADING.printf( "Failed to load schema:%n" );
+      Debug.LOADING.printf( "Failed to load schema:%n" ); //$NON-NLS-1$
       Debug.LOADING.printStackTrace( e );
 
-      throw new GMLSchemaException( "Unable to load schema: " + e.getMessage(), e );
+      throw new GMLSchemaException( "Unable to load schema: " + e.getMessage(), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -149,15 +150,15 @@ public class GMLSchemaFactory
     SchemaDocument schemaDocument;
     try
     {
-      Debug.LOADING.printf( "Reading schema with xmlbeans%n" );
+      Debug.LOADING.printf( "Reading schema with xmlbeans%n" ); //$NON-NLS-1$
       schemaDocument = SchemaDocument.Factory.parse( inputStream );
     }
     catch( final Throwable e )
     {
-      Debug.LOADING.printf( "Failed to load schema:%n" );
+      Debug.LOADING.printf( "Failed to load schema:%n" ); //$NON-NLS-1$
       Debug.LOADING.printStackTrace( e );
 
-      throw new GMLSchemaException( "Unable to load schema: " + e.getMessage(), e );
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.0") + e.getMessage(), e ); //$NON-NLS-1$
     }
 
     final Schema schema = schemaDocument.getSchema();
@@ -171,9 +172,9 @@ public class GMLSchemaFactory
       // REMARK:
       // DID you have a look at XMLOptions#setErrorListener ?
 
-      Debug.LOADING.printf( "Schema binding failed, xmlbeans returned null.%n" );
+      Debug.LOADING.printf( "Schema binding failed, xmlbeans returned null.%n" ); //$NON-NLS-1$
 
-      throw new GMLSchemaException( "invalid schema! (no error message from apache ), find cause with debug... or use schema-validator " );
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.1") ); //$NON-NLS-1$
     }
     // TODO: read schema version from schemadocument
     // it would be nice to do something like that:
@@ -191,12 +192,12 @@ public class GMLSchemaFactory
       // we must decide for the first schema, which gml version it is
       // if we have no appinfo, default to gml2?
 
-      version = parsedGmlVersion == null ? "3.1.1" : parsedGmlVersion;
+      version = parsedGmlVersion == null ? "3.1.1" : parsedGmlVersion; //$NON-NLS-1$
     }
     else
       version = gmlVersion;
 
-    Debug.LOADING.printf( "Schema (%s) was read. Building GML-Schema using GML-Version %s.%n", schemaDocument.getSchema().getTargetNamespace(), version );
+    Debug.LOADING.printf( "Schema (%s) was read. Building GML-Schema using GML-Version %s.%n", schemaDocument.getSchema().getTargetNamespace(), version ); //$NON-NLS-1$
 
     final GMLSchemaBuilder builder = getBuilderForVersion( version );
     return builder.buildGMLSchema( schemaDocument, context );

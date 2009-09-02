@@ -10,7 +10,7 @@ public class KalypsoProjectDatabase extends Plugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.project.database"; // NO_UCD
+  public static final String PLUGIN_ID = "org.kalypso.project.database"; // NO_UCD //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoProjectDatabase plugin;

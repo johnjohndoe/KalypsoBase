@@ -69,7 +69,7 @@ public abstract class FeatureContentType implements IFeatureContentType
     if( name != null )
       m_qName = new QName( targetNamespace, name );
     else
-      m_qName = new QName( "anonymous" );
+      m_qName = new QName( "anonymous" ); //$NON-NLS-1$
   }
 
   public QName getQName( )
@@ -153,8 +153,8 @@ public abstract class FeatureContentType implements IFeatureContentType
    */
   public XmlObject[] collectFunctionProperties( )
   {
-    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ";
-    final String xpath = "xs:annotation/xs:appinfo/kapp:functionProperty";
+    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final String xpath = "xs:annotation/xs:appinfo/kapp:functionProperty"; //$NON-NLS-1$
 
     final String fullXpath = namespaceDecl + xpath;
 
@@ -167,7 +167,7 @@ public abstract class FeatureContentType implements IFeatureContentType
   @Override
   public String toString( )
   {
-    return m_qName + "\n" + m_complexType;
+    return m_qName + "\n" + m_complexType; //$NON-NLS-1$
   }
 
 }

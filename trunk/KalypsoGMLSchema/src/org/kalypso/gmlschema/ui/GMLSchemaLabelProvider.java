@@ -74,96 +74,96 @@ public class GMLSchemaLabelProvider implements ILabelProvider
   public String getText( final Object element )
   {
     if( element == null )
-      return "null";
+      return "null"; //$NON-NLS-1$
     if( element instanceof LabelAndChildsProvider )
       return ((LabelAndChildsProvider) element).getText();
     if( element instanceof String )
       return (String) element;
     if( element instanceof GMLSchema )
-      return "GMLSchema: " + ((IGMLSchema) element).getTargetNamespace();
+      return "GMLSchema: " + ((IGMLSchema) element).getTargetNamespace(); //$NON-NLS-1$
     if( element instanceof IFeatureType )
-      return "Feature: " + ((IFeatureType) element).getQName();
+      return "Feature: " + ((IFeatureType) element).getQName(); //$NON-NLS-1$
 
     if( element instanceof IFeatureContentType )
-      return "ContentType: " + ((IFeatureContentType) element).getQName();
+      return "ContentType: " + ((IFeatureContentType) element).getQName(); //$NON-NLS-1$
     final StringBuffer result = new StringBuffer();
 
     // IRestrictions
     if( element instanceof EnumerationRestriction )
     {
       final EnumerationRestriction restriction = (EnumerationRestriction) element;
-      result.append( "enumeration:\n" );
+      result.append( "enumeration:\n" ); //$NON-NLS-1$
       final Object[] enumeration = restriction.getEnumeration();
       for( final Object element2 : enumeration )
-        result.append( "  " + element2 + "\n" );
+        result.append( "  " + element2 + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MinLengthRestriction )
     {
       final MinLengthRestriction restriction = (MinLengthRestriction) element;
-      result.append( "  length >=" + restriction.getMinLength() + "\n" );
+      result.append( "  length >=" + restriction.getMinLength() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MaxLengthRestriction )
     {
       final MaxLengthRestriction restriction = (MaxLengthRestriction) element;
-      result.append( "  length <=" + restriction.getMaxLength() + "\n" );
+      result.append( "  length <=" + restriction.getMaxLength() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MinInclusiveRestriction )
     {
       final MinInclusiveRestriction restriction = (MinInclusiveRestriction) element;
-      result.append( "  value >=" + restriction.getMinInclusive() + "\n" );
+      result.append( "  value >=" + restriction.getMinInclusive() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MinExclusiveRestriction )
     {
       final MinExclusiveRestriction restriction = (MinExclusiveRestriction) element;
-      result.append( "  value >" + restriction.getMinExclusive() + "\n" );
+      result.append( "  value >" + restriction.getMinExclusive() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MaxInclusiveRestriction )
     {
       final MaxInclusiveRestriction restriction = (MaxInclusiveRestriction) element;
-      result.append( "  value <=" + restriction.getMaxInclusive() + "\n" );
+      result.append( "  value <=" + restriction.getMaxInclusive() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
     if( element instanceof MaxExclusiveRestriction )
     {
       final MaxExclusiveRestriction restriction = (MaxExclusiveRestriction) element;
-      result.append( "  value <" + restriction.getMaxExclusive() + "\n" );
+      result.append( "  value <" + restriction.getMaxExclusive() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       return result.toString();
     }
 
     if( element instanceof IPropertyType )
     {
       final IPropertyType prop = (IPropertyType) element;
-      result.append( "[" + prop.getMinOccurs() + "," );
+      result.append( "[" + prop.getMinOccurs() + "," ); //$NON-NLS-1$ //$NON-NLS-2$
       final int maxOccurs = prop.getMaxOccurs();
       if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-        result.append( "oo" );
+        result.append( "oo" ); //$NON-NLS-1$
       else
         result.append( maxOccurs );
-      result.append( "]" );
+      result.append( "]" ); //$NON-NLS-1$
 
     }
 
     if( element instanceof IRelationType )
     {
       final IRelationType relationType = (IRelationType) element;
-      result.append( "  Relation: " + (relationType).getQName() );
+      result.append( "  Relation: " + (relationType).getQName() ); //$NON-NLS-1$
 
       final List<String> strings = new ArrayList<String>();
 
       if( relationType.isInlineAble() )
-        strings.add( "inlinable" );
+        strings.add( "inlinable" ); //$NON-NLS-1$
       if( relationType.isLinkAble() )
-        strings.add( "linkable" );
+        strings.add( "linkable" ); //$NON-NLS-1$
       if( relationType.isNillable() )
-        strings.add( "nillable" );
+        strings.add( "nillable" ); //$NON-NLS-1$
 
       if( strings.size() > 0 )
-        result.append( " (" );
+        result.append( " (" ); //$NON-NLS-1$
       for( final Iterator<String> iter = strings.iterator(); iter.hasNext(); )
       {
         result.append( iter.next() );
@@ -171,23 +171,23 @@ public class GMLSchemaLabelProvider implements ILabelProvider
           result.append( ',' );
       }
       if( strings.size() > 0 )
-        result.append( ") " );
+        result.append( ") " ); //$NON-NLS-1$
     }
     else if( element instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) element;
-      result.append( "Property: " + vpt.getQName() );
+      result.append( "Property: " + vpt.getQName() ); //$NON-NLS-1$
       if( vpt.isGeometry() )
-        result.append( "    [X] GEOMETRY" );
-      result.append( "     Value: " + vpt.getValueQName() );
-      result.append( "     Class: " + vpt.getValueClass() );
+        result.append( "    [X] GEOMETRY" ); //$NON-NLS-1$
+      result.append( "     Value: " + vpt.getValueQName() ); //$NON-NLS-1$
+      result.append( "     Class: " + vpt.getValueClass() ); //$NON-NLS-1$
       if( vpt.hasDefault() )
-        result.append( "     default: " + vpt.getDefault() );
+        result.append( "     default: " + vpt.getDefault() ); //$NON-NLS-1$
       if( vpt.isFixed() )
-        result.append( "     fixed: " + vpt.getFixed() );
+        result.append( "     fixed: " + vpt.getFixed() ); //$NON-NLS-1$
     }
     else
-      return "unknown";
+      return "unknown"; //$NON-NLS-1$
     return result.toString();
   }
 

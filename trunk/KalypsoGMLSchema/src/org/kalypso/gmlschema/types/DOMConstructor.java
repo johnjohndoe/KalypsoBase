@@ -63,7 +63,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 public class DOMConstructor implements ContentHandler, LexicalHandler
 {
-  public static final String XMLNS_NSURI = "http://www.w3.org/2000/xmlns/";
+  public static final String XMLNS_NSURI = "http://www.w3.org/2000/xmlns/"; //$NON-NLS-1$
 
   private Node m_contextNode = null;
 
@@ -111,8 +111,8 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
         String attUri = atts.getURI( i );
         final String attQname = atts.getQName( i );
         final String attValue = atts.getValue( i );
-        if( attQname.startsWith( "xmlns" ) )
-          attUri = "http://www.w3.org/2000/xmlns/";
+        if( attQname.startsWith( "xmlns" ) ) //$NON-NLS-1$
+          attUri = "http://www.w3.org/2000/xmlns/"; //$NON-NLS-1$
 
         elem.setAttributeNS( attUri, attQname, attValue );
       }
@@ -269,9 +269,9 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
     else
       m_prefixes.removeAllElements();
 
-    String qname = "xmlns";
+    String qname = "xmlns"; //$NON-NLS-1$
     if( prefix.length() > 0 )
-      qname = "xmlns:" + prefix;
+      qname = "xmlns:" + prefix; //$NON-NLS-1$
     final Attr attr = m_factory.createAttributeNS( XMLNS_NSURI, qname );
     attr.setNodeValue( uri );
     m_prefixes.addElement( attr );

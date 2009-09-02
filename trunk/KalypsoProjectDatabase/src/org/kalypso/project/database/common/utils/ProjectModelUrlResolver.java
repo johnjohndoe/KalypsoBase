@@ -55,22 +55,22 @@ public class ProjectModelUrlResolver
 
   public static String getUrlAsWebdav( final IResolverInterface delegate, final String localPath )
   {
-    final String url = String.format( "%s%s", delegate.getPath(), localPath );
+    final String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
 
     return url;
   }
 
   public static URL getUrlAsHttp( final IResolverInterface delegate, final String localPath ) throws MalformedURLException
   {
-    String url = String.format( "%s%s", delegate.getPath(), localPath );
-    url = url.replaceAll( " ", "%20" );
+    String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
+    url = url.replaceAll( " ", "%20" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new URL( url );
   }
 
   public static String getUrlAsFtp( final IResolverInterface delegate, final String localPath )
   {
-    final String url = String.format( "%s%s", delegate.getPath(), localPath );
+    final String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
 
     return url;
   }

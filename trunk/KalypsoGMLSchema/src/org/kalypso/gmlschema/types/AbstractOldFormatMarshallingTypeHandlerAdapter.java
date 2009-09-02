@@ -85,7 +85,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
       // REMARK: we do not write the dom formatted here (argument false), because later the
       // content handler will probably do the formatting (IndentContentHandler). If we format here, we will get empty
       // lines later.
-      XMLHelper.writeDOM( node, "UTF-8", writer, false );
+      XMLHelper.writeDOM( node, "UTF-8", writer, false ); //$NON-NLS-1$
       IOUtils.closeQuietly( writer );
       // value is encoded in string
       final String xmlString = writer.toString();
