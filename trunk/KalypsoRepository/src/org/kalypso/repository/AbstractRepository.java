@@ -68,12 +68,15 @@ public abstract class AbstractRepository implements IRepository
 
   private final String m_conf;
 
-  public AbstractRepository( final String name, final String factory, final String conf, final boolean readOnly )
+  private String m_identifier;
+
+  public AbstractRepository( final String name, final String factory, final String conf, final boolean readOnly, final String identifier )
   {
     m_name = name;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
+    m_identifier = identifier;
 
     m_listeners = new Vector<IRepositoryListener>();
     m_properties = new Properties();
@@ -306,5 +309,15 @@ public abstract class AbstractRepository implements IRepository
   public void setProperty( final String name, final String value )
   {
     m_properties.setProperty( name, value );
+  }
+
+  public void setIdentifier( final String identifier )
+  {
+    m_identifier = identifier;
+  }
+
+  public final String getIdentifier( )
+  {
+    return m_identifier;
   }
 }

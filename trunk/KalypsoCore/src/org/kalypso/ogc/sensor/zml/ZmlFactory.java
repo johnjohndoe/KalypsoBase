@@ -101,6 +101,10 @@ import org.kalypso.ogc.sensor.zml.values.IZmlValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlArrayValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
+import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.RepositoriesExtensions;
+import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
@@ -208,6 +212,10 @@ public class ZmlFactory
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
+    final String protocol = url.getProtocol();
+    if( "zml-proxy".equals( protocol ) )
+      return parseZmlProxyXml( url );
+
     InputStream inputStream = null;
 
     try
@@ -264,6 +272,39 @@ public class ZmlFactory
     {
       IOUtils.closeQuietly( inputStream );
     }
+  }
+
+  private static IObservation parseZmlProxyXml( final URL url ) throws SensorException
+  {
+    try
+    {
+      final String urlBase = url.toString();
+      final String[] splittedUrlBase = urlBase.split( "\\?" );
+      if( splittedUrlBase.length != 2 )
+        throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) );
+
+      final String itemId = splittedUrlBase[0];
+      final String itemParameters = splittedUrlBase[1];
+      if( ZmlURL.isEmpty( url.toString() ) )
+      {
+        return RequestFactory.createDefaultObservation( urlBase );
+      }
+
+      /** resolve IObservation from proxy repository */
+      final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" );
+      final IRepository repository = factory.createRepository();
+
+      final IRepositoryItem item = repository.findItem( itemId );
+      final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+
+      // apply filter on observation
+      return FilterFactory.createFilterFrom( itemParameters, observation, null );
+    }
+    catch( final Exception ex )
+    {
+      throw new SensorException( "Parsing zml-proxy observation failed.", ex );
+    }
+
   }
 
   /**
