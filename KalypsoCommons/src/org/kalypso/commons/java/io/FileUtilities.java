@@ -710,34 +710,34 @@ public class FileUtilities
    *          The days, to keep the files and directories.
    * @return A multi status, containing the result for each file, which was tried to delete.
    */
-  public static MultiStatus deleteFiles( List<File> files, int days )
+  public static MultiStatus deleteFiles( final List<File> files, final int days )
   {
     /* The date 'days' before now. */
-    Calendar before = Calendar.getInstance();
+    final Calendar before = Calendar.getInstance();
     before.add( Calendar.DAY_OF_MONTH, -days );
 
     /* Check the date of the files, each file older than 'days' will be deleted. */
-    List<File> filesToDelete = new ArrayList<File>();
+    final List<File> filesToDelete = new ArrayList<File>();
 
     for( int i = 0; i < files.size(); i++ )
     {
       /* Get the file. */
-      File file = files.get( i );
+      final File file = files.get( i );
 
       /* Using the last modified time should not hurt. */
-      long lastModified = file.lastModified();
+      final long lastModified = file.lastModified();
       if( lastModified < before.getTimeInMillis() )
         filesToDelete.add( file );
     }
 
     /* List for success or error messages. */
-    MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString("org.kalypso.commons.java.io.FileUtilities.1" , String.valueOf( days )), null ); //$NON-NLS-1$ 
+    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString("org.kalypso.commons.java.io.FileUtilities.1" , String.valueOf( days )), null ); //$NON-NLS-1$ 
 
     /* Delete these files. */
     for( int i = 0; i < filesToDelete.size(); i++ )
     {
       /* Get the file/directory to delete. */
-      File fileToDelete = filesToDelete.get( i );
+      final File fileToDelete = filesToDelete.get( i );
 
       if( !fileToDelete.exists() )
         continue;
@@ -750,14 +750,25 @@ public class FileUtilities
         /* Add the success message. */
         stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         /* If one could no be deleted, it does not matter, the next run will get it. We will get them all :). */
-        IStatus status = StatusUtilities.statusFromThrowable( ex, fileToDelete.getName() + ": NOT DELETED" ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( ex, fileToDelete.getName() + ": NOT DELETED" ); //$NON-NLS-1$
         stati.add( status );
       }
     }
 
     return stati;
+  }
+
+
+  public static String resolveValidFileName( String fileName )
+  {
+    fileName = fileName.replaceAll( "\\\\", "_" );
+    fileName = fileName.replaceAll( "/", "_" );
+    fileName = fileName.replaceAll( ":", "_" );
+    fileName = fileName.replaceAll( "\\.", "_" );
+
+    return fileName.trim();
   }
 }
