@@ -82,27 +82,27 @@ public class GMLSchemaBuilder
     // Read I18N Properties from the same location
     // REMARK: this is somewhat special, however is the most effective way
     // to do it. Maybe we should some day provide a general hook at this place to do such things?
-    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: Start: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: Start: %s%n", namespace ); //$NON-NLS-1$
     final ResourceBundle bundle = ResourceBundleUtils.loadResourceBundle( context );
-    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: OK: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Searching I18N-property file: OK: %s%n", namespace ); //$NON-NLS-1$
 
-    Debug.PARSING.printf( "Building GML-Schema: %s%n", namespace );
+    Debug.PARSING.printf( "Building GML-Schema: %s%n", namespace ); //$NON-NLS-1$
 
-    Debug.PARSING_VERBOSE.printf( "Preparing: Start: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Preparing: Start: %s%n", namespace ); //$NON-NLS-1$
     final GMLSchema gmlSchema = new GMLSchema( schemaDocument, context, m_gmlVersion, bundle );
-    Debug.PARSING_VERBOSE.printf( "Preparing: OK: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Preparing: OK: %s%n", namespace ); //$NON-NLS-1$
 
     // I Step build the objects
-    Debug.PARSING_VERBOSE.printf( "Building GML-Schema: Start: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Building GML-Schema: Start: %s%n", namespace ); //$NON-NLS-1$
     rBuild( gmlSchema, gmlSchema );
-    Debug.PARSING_VERBOSE.printf( "Building GML-Schema: OK: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Building GML-Schema: OK: %s%n", namespace ); //$NON-NLS-1$
 
     // II Step initialize the elements
-    Debug.PARSING_VERBOSE.printf( "Initialising: Start: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Initialising: Start: %s%n", namespace ); //$NON-NLS-1$
     rInit( gmlSchema );
-    Debug.PARSING_VERBOSE.printf( "Initialising: Start: OK: %s%n", namespace );
+    Debug.PARSING_VERBOSE.printf( "Initialising: Start: OK: %s%n", namespace ); //$NON-NLS-1$
 
-    Debug.PARSING.printf( "GML-Schema has been built: %s%n", namespace );
+    Debug.PARSING.printf( "GML-Schema has been built: %s%n", namespace ); //$NON-NLS-1$
 
     return gmlSchema;
   }
@@ -133,7 +133,7 @@ public class GMLSchemaBuilder
   {
     IBuilder result = null;
 
-    Debug.PARSING_VERBOSE.printf( "Searching builder for:%n%s%n", object );
+    Debug.PARSING_VERBOSE.printf( "Searching builder for:%n%s%n", object ); //$NON-NLS-1$
 
     for( final IBuilder builder : m_registeredBuilders )
     {
@@ -146,16 +146,16 @@ public class GMLSchemaBuilder
           result = builder;
         else if( !result.replaces( builder ) )
         {
-          final String message = String.format( "Concurrent builders for '%s' available: %s - %s ", object );
-          System.out.println( "Object to build:\n" + object );
-          System.out.println( "1 - " + builder );
-          System.out.println( "2 - " + result );
+          final String message = String.format( "Concurrent builders for '%s' available: %s - %s ", object ); //$NON-NLS-1$
+          System.out.println( "Object to build:\n" + object ); //$NON-NLS-1$
+          System.out.println( "1 - " + builder ); //$NON-NLS-1$
+          System.out.println( "2 - " + result ); //$NON-NLS-1$
           throw new GMLSchemaException( message );
         }
       }
     }
 
-    Debug.PARSING_VERBOSE.printf( "Found builder:%s%n%n", result );
+    Debug.PARSING_VERBOSE.printf( "Found builder:%s%n%n", result ); //$NON-NLS-1$
 
     return result;
   }
@@ -169,33 +169,33 @@ public class GMLSchemaBuilder
   {
     for( final int initRun : IInitialize.INIT_ORDER )
     {
-      Debug.PARSING.printf( "Init run: %d%n", initRun );
+      Debug.PARSING.printf( "Init run: %d%n", initRun ); //$NON-NLS-1$
 
       final FeatureContentType[] featureContentTypes = gmlSchema.getAllFeatureContentTypes();
       for( final FeatureContentType element : featureContentTypes )
       {
-        Debug.PARSING.printf( "Initalising FeatureContentType: %s%n", element );
+        Debug.PARSING.printf( "Initalising FeatureContentType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
 
       final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
       for( final IFeatureType element : featureTypes )
       {
-        Debug.PARSING.printf( "Initalising FeatureType: %s%n", element );
+        Debug.PARSING.printf( "Initalising FeatureType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
 
       final IPropertyType[] propertyTypes = gmlSchema.getAllPropertyTypes();
       for( final IPropertyType element : propertyTypes )
       {
-        Debug.PARSING.printf( "Initalising PropertyType: %s%n", element );
+        Debug.PARSING.printf( "Initalising PropertyType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
 
       final IPropertyContentType[] propertyContentTypes = gmlSchema.getAllPropertyContentTypes();
       for( final IPropertyContentType element : propertyContentTypes )
       {
-        Debug.PARSING.printf( "Initalising PropertyContentType: %s%n", element );
+        Debug.PARSING.printf( "Initalising PropertyContentType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
 
@@ -203,14 +203,14 @@ public class GMLSchemaBuilder
       final RelationContentType[] relationContentTypes = gmlSchema.getAllRelationContentTypes();
       for( final RelationContentType element : relationContentTypes )
       {
-        Debug.PARSING.printf( "Initalising RelationContentType: %s%n", element );
+        Debug.PARSING.printf( "Initalising RelationContentType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
 
       final IRelationType[] relationTypes = gmlSchema.getAllRelationTypes();
       for( final IRelationType element : relationTypes )
       {
-        Debug.PARSING.printf( "Initalising RelationType: %s%n", element );
+        Debug.PARSING.printf( "Initalising RelationType: %s%n", element ); //$NON-NLS-1$
         element.init( initRun );
       }
     }

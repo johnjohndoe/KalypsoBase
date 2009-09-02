@@ -48,17 +48,17 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 {
-  private static final String PROJECT_LOCK_TICKET = "project.lock";
+  private static final String PROJECT_LOCK_TICKET = "project.lock"; //$NON-NLS-1$
 
-  private static final String PROJECT_IS_MODIFIED = "project.is.modified";
+  private static final String PROJECT_IS_MODIFIED = "project.is.modified"; //$NON-NLS-1$
 
-  private static final String PROJECT_CHANGES_COMMITED = "project.changes.commited";
+  private static final String PROJECT_CHANGES_COMMITED = "project.changes.commited"; //$NON-NLS-1$
 
-  private static final String PROJECT_IS_ON_SERVER = "project.is.on.server";
+  private static final String PROJECT_IS_ON_SERVER = "project.is.on.server"; //$NON-NLS-1$
 
-  private static final String PROJECT_DOWNLOADED_VERSION = "project.downloaded.version";
+  private static final String PROJECT_DOWNLOADED_VERSION = "project.downloaded.version"; //$NON-NLS-1$
 
-  private static final String REMOTE_PROJECT_TYPE = "project.remote.type";
+  private static final String REMOTE_PROJECT_TYPE = "project.remote.type"; //$NON-NLS-1$
 
   protected final IEclipsePreferences m_node;
 
@@ -74,7 +74,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   public boolean isLocked( )
   {
     final String ticket = getEditTicket();
-    if( ticket == null || "".equals( ticket.trim() ) )
+    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
       return false;
 
     return true;
@@ -114,7 +114,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public Integer getVersion( )
   {
-    return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) );
+    return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -129,7 +129,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 
   private void flush( )
   {
-    new WorkspaceJob( "" )
+    new WorkspaceJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -163,7 +163,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public String getProjectType( )
   {
-    return m_node.get( REMOTE_PROJECT_TYPE, "blub" );
+    return m_node.get( REMOTE_PROJECT_TYPE, "blub" ); //$NON-NLS-1$
   }
 
   /**

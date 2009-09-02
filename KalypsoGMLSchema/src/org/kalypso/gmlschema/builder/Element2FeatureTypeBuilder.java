@@ -71,7 +71,7 @@ public class Element2FeatureTypeBuilder extends AbstractBuilder
       // We should normally never come to this point, because now we have a property whose type is
       // a feature, that is forbidden
       // TODO: maybe this should be handled earlier
-      System.out.println( "Property of type feature (probably you must insert a feature-property): " + theElement );
+      System.out.println( "Property of type feature (probably you must insert a feature-property): " + theElement ); //$NON-NLS-1$
 
       final ElementReference reference = gmlSchema.resolveElementReference( ref );
       ftElement = reference.getElement();

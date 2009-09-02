@@ -97,7 +97,7 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   public H getTypeHandlerFor( final IPropertyType pt )
   {
     if( !(pt instanceof IValuePropertyType) )
-      throw new UnsupportedOperationException( "Could not find type handler for: " + pt );
+      throw new UnsupportedOperationException( "Could not find type handler for: " + pt ); //$NON-NLS-1$
     return getTypeHandlerForTypeName( ((IValuePropertyType) pt).getValueQName() );
   }
 

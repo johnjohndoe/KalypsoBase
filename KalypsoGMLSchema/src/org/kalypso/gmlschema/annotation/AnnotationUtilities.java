@@ -102,7 +102,7 @@ public class AnnotationUtilities
   private static DefaultAnnotation computeDefaultAnnontation( final String key, final Node itmLang )
   {
     final NamedNodeMap attributes = itmLang.getAttributes();
-    final Node langNode = attributes.getNamedItem( "xml:lang" );
+    final Node langNode = attributes.getNamedItem( "xml:lang" ); //$NON-NLS-1$
     final String language = langNode.getTextContent();
 
     final DefaultAnnotation annotation = new DefaultAnnotation( language, key );
@@ -401,10 +401,10 @@ public class AnnotationUtilities
   {
     final String lang = Platform.getNL();
 
-    final String nameValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "name" );
-    final String labelValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "label" );
-    final String tooltipValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "tooltip" );
-    final String descriptionValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "description" );
+    final String nameValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "name" ); //$NON-NLS-1$
+    final String labelValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "label" ); //$NON-NLS-1$
+    final String tooltipValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "tooltip" ); //$NON-NLS-1$
+    final String descriptionValue = ResourceBundleUtils.getStringQuiet( resourceBundle, key + "description" ); //$NON-NLS-1$
 
     if( nameValue == null && labelValue == null && tooltipValue == null && descriptionValue == null )
       return null;

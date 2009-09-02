@@ -296,7 +296,7 @@ public class CustomValuePropertyType implements IValuePropertyType
     final StringBuffer sb = new StringBuffer();
 
     sb.append( getQName() );
-    sb.append( " - " );
+    sb.append( " - " ); //$NON-NLS-1$
     sb.append( getValueQName() );
 
     return sb.toString();

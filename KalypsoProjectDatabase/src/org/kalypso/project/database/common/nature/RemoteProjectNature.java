@@ -61,9 +61,9 @@ public class RemoteProjectNature implements IProjectNature
 
   private static Map<IProject, IPreferenceChangeListener> LISTENER = new HashMap<IProject, IPreferenceChangeListener>();
 
-  public static final String NATURE_ID = "org.kalypso.project.database.project.nature";
+  public static final String NATURE_ID = "org.kalypso.project.database.project.nature"; //$NON-NLS-1$
 
-  private static final String PREFERENCES = "org.kalypso.project.database";
+  private static final String PREFERENCES = "org.kalypso.project.database"; //$NON-NLS-1$
 
   private IProject m_project = null;
 

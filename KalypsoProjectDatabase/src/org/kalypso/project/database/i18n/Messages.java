@@ -38,41 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.utils;
+package org.kalypso.project.database.i18n;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author Dirk Kuch
+ * @author Nico Schrage
  */
-public class ProjectModelUrlResolver
+public class Messages
 {
-  public interface IResolverInterface
+  private static final String BUNDLE_NAME = "org.kalypso.project.database.i18n.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    public String getPath( );
   }
 
-  public static String getUrlAsWebdav( final IResolverInterface delegate, final String localPath )
+  public static String getString( final String key, final Object... args )
   {
-    final String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
+    String formatStr = ""; //$NON-NLS-1$
+    try
+    {
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
 
-    return url;
+      return String.format( formatStr, args );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
+    }
   }
-
-  public static URL getUrlAsHttp( final IResolverInterface delegate, final String localPath ) throws MalformedURLException
-  {
-    String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
-    url = url.replaceAll( " ", "%20" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return new URL( url );
-  }
-
-  public static String getUrlAsFtp( final IResolverInterface delegate, final String localPath )
-  {
-    final String url = String.format( "%s%s", delegate.getPath(), localPath ); //$NON-NLS-1$
-
-    return url;
-  }
-
 }

@@ -95,7 +95,7 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 
       // value is encoded in xml in document object
       final StringWriter writer = new StringWriter();
-      XMLHelper.writeDOM( node, "UTF-8", writer );
+      XMLHelper.writeDOM( node, "UTF-8", writer ); //$NON-NLS-1$
       IOUtils.closeQuietly( writer );
 
       // value is encoded in string

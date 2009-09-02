@@ -57,15 +57,15 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ComplexJob implements ISimulation
 {
-  public static final String ID = "org.kalypso.service.wps.complexJob";
+  public static final String ID = "org.kalypso.service.wps.complexJob"; //$NON-NLS-1$
   /**
    * The model specification.
    */
-  private static final String SIMULATION_SPEC = "complex_specification.xml";
+  private static final String SIMULATION_SPEC = "complex_specification.xml"; //$NON-NLS-1$
 
-  public static final String INPUT_WORKSPACE = "INPUT_WORKSPACE";
+  public static final String INPUT_WORKSPACE = "INPUT_WORKSPACE"; //$NON-NLS-1$
 
-  public static final String OUTPUT_WORKSPACE = "OUTPUT_WORKSPACE";
+  public static final String OUTPUT_WORKSPACE = "OUTPUT_WORKSPACE"; //$NON-NLS-1$
 
   /**
    * The constructor.

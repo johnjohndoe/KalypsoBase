@@ -13,9 +13,9 @@ import org.eclipse.core.runtime.Platform;
  */
 public class MarshallingTypeRegistrySingleton
 {
-  private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.gmlschema.typeHandlers";
+  private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.gmlschema.typeHandlers"; //$NON-NLS-1$
 
-  private static final String TYPE_HANDLER_FACTORY_CLASS = "factory";
+  private static final String TYPE_HANDLER_FACTORY_CLASS = "factory"; //$NON-NLS-1$
 
   private static ITypeRegistry<IMarshallingTypeHandler> m_typeRegistry = null;
 

@@ -64,7 +64,7 @@ public class ProjectDatabaseServiceLocator
     final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
 
     final Service service = Service.create( wsdlLocation, serviceName );
-    final IProjectDatabase port = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
+    final IProjectDatabase port = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class ); //$NON-NLS-1$
 
     return port;
 

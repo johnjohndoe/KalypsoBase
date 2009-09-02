@@ -81,6 +81,7 @@ import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -105,19 +106,19 @@ import org.w3c.dom.Text;
  */
 public class GMLSchemaUtilities
 {
-  public static final String GML2_FeatureTypeBaseType = "AbstractFeatureType";
+  public static final String GML2_FeatureTypeBaseType = "AbstractFeatureType"; //$NON-NLS-1$
 
-  public static final String GML3_FeatureTypeBaseType = "AbstractGMLType";
+  public static final String GML3_FeatureTypeBaseType = "AbstractGMLType"; //$NON-NLS-1$
 
-  public static final QName GML2_RelationBaseType = new QName( NS.GML2, "FeatureAssociationType" );
+  public static final QName GML2_RelationBaseType = new QName( NS.GML2, "FeatureAssociationType" ); //$NON-NLS-1$
 
-  public static final QName GML2_GeometryAssociationType = new QName( NS.GML2, "GeometryAssociationType" );
+  public static final QName GML2_GeometryAssociationType = new QName( NS.GML2, "GeometryAssociationType" ); //$NON-NLS-1$
 
-  public static final QName GML3_FeaturePropertyType = new QName( NS.GML2, "FeaturePropertyType" );
+  public static final QName GML3_FeaturePropertyType = new QName( NS.GML2, "FeaturePropertyType" ); //$NON-NLS-1$
 
-  public static final QName GML3_ReferenceType = new QName( NS.GML2, "ReferenceType" );
+  public static final QName GML3_ReferenceType = new QName( NS.GML2, "ReferenceType" ); //$NON-NLS-1$
 
-  public static final String BASE_SCHEMA_IN_JAR = "base.xsd";
+  public static final String BASE_SCHEMA_IN_JAR = "base.xsd"; //$NON-NLS-1$
 
   private static final int CONSTRUCTION_REFERENCED_TYPE = 1;
 
@@ -231,7 +232,7 @@ public class GMLSchemaUtilities
       else if( restriction != null )
         base = restriction.getBase();
       else
-        throw new UnsupportedOperationException( "unknown base type for " + simpleContent.toString() );
+        throw new UnsupportedOperationException( "unknown base type for " + simpleContent.toString() ); //$NON-NLS-1$
     }
     else if( complexContent != null )
     {
@@ -243,7 +244,7 @@ public class GMLSchemaUtilities
       else if( restriction != null )
         base = restriction.getBase();
       else
-        throw new UnsupportedOperationException( "unknown base type for " + complexContent.toString() );
+        throw new UnsupportedOperationException( "unknown base type for " + complexContent.toString() ); //$NON-NLS-1$
       if( isXDSAnyType( base ) )
         return null;
     }
@@ -277,7 +278,7 @@ public class GMLSchemaUtilities
   {
     if( !base.getNamespaceURI().equals( NS.XSD_SCHEMA ) )
       return false;
-    return base.getLocalPart().equals( "anyType" );
+    return base.getLocalPart().equals( "anyType" ); //$NON-NLS-1$
   }
 
   /**
@@ -384,7 +385,7 @@ public class GMLSchemaUtilities
     final QName base = restriction.getBase();
 
     if( base == null )
-      throw new GMLSchemaException( "Missing base name for restriction: " + restriction );
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.0") + restriction ); //$NON-NLS-1$
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 
@@ -415,7 +416,7 @@ public class GMLSchemaUtilities
         break;
       case CONSTRUCTION_ABSTRACT_ANYTYPE:
       case CONSTRUCTION_ANYTYPE:
-        return new QName( NS.XSD_SCHEMA, "anyType" ); // no type
+        return new QName( NS.XSD_SCHEMA, "anyType" ); // no type //$NON-NLS-1$
       default:
         throw new UnsupportedOperationException();
     }
@@ -438,10 +439,10 @@ public class GMLSchemaUtilities
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = schema.resolveTypeReference( qName );
         if( typeReference == null )
-          throw new GMLSchemaException( "Could not find type reference for: " + qName );
+          throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.1") + qName ); //$NON-NLS-1$
         return findBaseType( typeReference, gmlVersion );
       default:
-        throw new GMLSchemaException( "Unknown base type for " + element.toString() );
+        throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.2") + element.toString() ); //$NON-NLS-1$
     }
   }
 
@@ -488,7 +489,7 @@ public class GMLSchemaUtilities
       return findBaseType( (ComplexTypeReference) reference, gmlVersion );
     else if( reference instanceof SimpleTypeReference )
       return findBaseType( (SimpleTypeReference) reference, gmlVersion );
-    throw new UnsupportedOperationException( "unknown reference: " + reference.getGMLSchema() + " - Version: " + gmlVersion );
+    throw new UnsupportedOperationException( "unknown reference: " + reference.getGMLSchema() + " - Version: " + gmlVersion ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -536,7 +537,7 @@ public class GMLSchemaUtilities
         return qName;
 
       /* Special case: the base of everything, only valid in gml3 */
-      if( gmlVersion.startsWith( "3" ) && "_Object".equals( localPart ) )
+      if( gmlVersion.startsWith( "3" ) && "_Object".equals( localPart ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return qName;
 
 // if( GMLSchemaUtilities.getBaseOfGeometriesType().equals( localPart ) )
@@ -573,7 +574,7 @@ public class GMLSchemaUtilities
       if( pt instanceof IRelationType )
       {
         final IRelationType rt = (IRelationType) pt;
-        final String newPath = pathToHere + "/" + rt.getQName().getLocalPart();
+        final String newPath = pathToHere + "/" + rt.getQName().getLocalPart(); //$NON-NLS-1$
 
         final IFeatureType targetFeatureType = rt.getTargetFeatureType();
         final IFeatureType[] targetFeatureTypes = GMLSchemaUtilities.getSubstituts( targetFeatureType, gmlSchma, true, true );
@@ -581,7 +582,7 @@ public class GMLSchemaUtilities
         for( final IFeatureType type : targetFeatureTypes )
         {
           if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
-            result.add( newPath + "[" + type.getQName().getLocalPart() + "]" );
+            result.add( newPath + "[" + type.getQName().getLocalPart() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
           // final String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() +
           // "]", type );
           // for( String string : strings )
@@ -600,7 +601,7 @@ public class GMLSchemaUtilities
    */
   public static void createSchemaArchive( final URL schemaURL, final File archiveFile ) throws XmlException, IOException
   {
-    final File tmpBase = FileUtilities.createNewTempDir( "kalypsoSchemaZip" );
+    final File tmpBase = FileUtilities.createNewTempDir( "kalypsoSchemaZip" ); //$NON-NLS-1$
 
     try
     {
@@ -662,11 +663,11 @@ public class GMLSchemaUtilities
       // document original schemalocation in schema as annotation
       final Annotation annotation = include.addNewAnnotation();
       final Documentation documentation = annotation.addNewDocumentation();
-      documentation.setLang( "en" );
-      documentation.setSource( "www.kalypso.wb.tu-harburg.de" );
+      documentation.setLang( "en" ); //$NON-NLS-1$
+      documentation.setSource( "www.kalypso.wb.tu-harburg.de" ); //$NON-NLS-1$
       final Node domNode = documentation.getDomNode();
       final Document ownerDocument = domNode.getOwnerDocument();
-      final Text text = ownerDocument.createTextNode( "original absolute schemaLocation was here: " + originalIncludeURL.toExternalForm() );
+      final Text text = ownerDocument.createTextNode( "original absolute schemaLocation was here: " + originalIncludeURL.toExternalForm() ); //$NON-NLS-1$
       domNode.appendChild( text );
 
       // find new schemalocation in archive
@@ -713,21 +714,21 @@ public class GMLSchemaUtilities
   private static String createSchemaLocation( final Map<URL, String> knownlocations, final String oldSchemaLocation )
   {
     // first try on expeced format
-    String newSchemaLocation = oldSchemaLocation.replaceAll( "\\.xsd$", "" );
-    newSchemaLocation = newSchemaLocation.replaceAll( "\\.XSD$", "" );
-    newSchemaLocation = newSchemaLocation.replaceAll( ".*\\\\", "" );
-    newSchemaLocation = newSchemaLocation.replaceAll( ".*/", "" );
-    newSchemaLocation = newSchemaLocation.replaceAll( "\\.", "_" );
-    newSchemaLocation = newSchemaLocation + ".xsd";
+    String newSchemaLocation = oldSchemaLocation.replaceAll( "\\.xsd$", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    newSchemaLocation = newSchemaLocation.replaceAll( "\\.XSD$", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    newSchemaLocation = newSchemaLocation.replaceAll( ".*\\\\", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    newSchemaLocation = newSchemaLocation.replaceAll( ".*/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    newSchemaLocation = newSchemaLocation.replaceAll( "\\.", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    newSchemaLocation = newSchemaLocation + ".xsd"; //$NON-NLS-1$
     if( newSchemaLocation.length() > 4 && !knownlocations.containsValue( newSchemaLocation ) )
       return newSchemaLocation;
     // generate generic result
-    final String location = "include";
+    final String location = "include"; //$NON-NLS-1$
     int i = 1;
     String result;
     do
     {
-      result = location + i + ".xsd";
+      result = location + i + ".xsd"; //$NON-NLS-1$
       i++;
     }
     while( knownlocations.containsValue( result ) );
@@ -736,7 +737,7 @@ public class GMLSchemaUtilities
 
   public static URL getSchemaURLForArchive( final URL schemaJarArchive ) throws MalformedURLException
   {
-    return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR );
+    return m_urlUtitilies.resolveURL( new URL( "jar:" + schemaJarArchive.toString() + "!/" ), BASE_SCHEMA_IN_JAR ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static List<ElementWithOccurs> collectElements( final GMLSchema schema, final ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
@@ -884,37 +885,37 @@ public class GMLSchemaUtilities
    */
   public static String getBaseOfFeatureType( final String gmlVersion )
   {
-    if( gmlVersion.startsWith( "2" ) )
+    if( gmlVersion.startsWith( "2" ) ) //$NON-NLS-1$
       return GML2_FeatureTypeBaseType;
-    if( gmlVersion.startsWith( "3" ) )
+    if( gmlVersion.startsWith( "3" ) ) //$NON-NLS-1$
       return GML3_FeatureTypeBaseType;
-    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static boolean isRelationType( final String gmlVersion, final QName qname )
   {
-    if( gmlVersion.startsWith( "2" ) )
+    if( gmlVersion.startsWith( "2" ) ) //$NON-NLS-1$
       return GML2_RelationBaseType.equals( qname );
-    if( gmlVersion.startsWith( "3" ) )
+    if( gmlVersion.startsWith( "3" ) ) //$NON-NLS-1$
       return GML3_FeaturePropertyType.equals( qname ) || GML3_ReferenceType.equals( qname );
 
-    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static QName getIdAttribute( final String gmlVersion )
   {
-    if( gmlVersion.startsWith( "2" ) )
-      return new QName( NS.GML3, "fid" );
+    if( gmlVersion.startsWith( "2" ) ) //$NON-NLS-1$
+      return new QName( NS.GML3, "fid" ); //$NON-NLS-1$
 
-    if( gmlVersion.startsWith( "3" ) )
-      return new QName( NS.GML3, "id" );
+    if( gmlVersion.startsWith( "3" ) ) //$NON-NLS-1$
+      return new QName( NS.GML3, "id" ); //$NON-NLS-1$
 
-    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" );
+    throw new UnsupportedOperationException( "GML-schema version '" + gmlVersion + "' is not supported" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static String getBaseOfGeometriesType( )
   {
-    return "AbstractGeometryType";
+    return "AbstractGeometryType"; //$NON-NLS-1$
   }
 
   /** Splits a schema location string into pairs of namespace-uri's and URLs. Errors in the schmeaLocation are ignored. */
@@ -926,7 +927,7 @@ public class GMLSchemaUtilities
     if( schemaLocation == null )
       return map;
 
-    final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" );
+    final String[] splittetSchemaLocation = schemaLocation.split( "\\s+" ); //$NON-NLS-1$
 
     for( int i = 0; i < splittetSchemaLocation.length; i++ )
     {
@@ -992,9 +993,9 @@ public class GMLSchemaUtilities
       return 1;
     if( occursValue instanceof Number )
       return ((Number) occursValue).intValue();
-    if( "unbounded".equals( occursValue ) )
+    if( "unbounded".equals( occursValue ) ) //$NON-NLS-1$
       return IPropertyType.UNBOUND_OCCURENCY;
-    throw new UnsupportedOperationException( "unknown occurency in schema: " + occursValue.toString() );
+    throw new UnsupportedOperationException( "unknown occurency in schema: " + occursValue.toString() ); //$NON-NLS-1$
   }
 
   /**
@@ -1011,8 +1012,8 @@ public class GMLSchemaUtilities
    */
   public static String parseGmlVersion( final SchemaDocument schemaDocument )
   {
-    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='org.kalypso.appinfo' ";
-    final String xpath = "xs:schema/xs:annotation/xs:appinfo/kapp:gmlVersion";
+    final String namespaceDecl = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='org.kalypso.appinfo' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final String xpath = "xs:schema/xs:annotation/xs:appinfo/kapp:gmlVersion"; //$NON-NLS-1$
 
     final String fullXpath = namespaceDecl + xpath;
 
@@ -1028,7 +1029,7 @@ public class GMLSchemaUtilities
         return anyType.stringValue();
 
       default:
-        throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() );
+        throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() ); //$NON-NLS-1$
     }
   }
 
@@ -1045,7 +1046,7 @@ public class GMLSchemaUtilities
       m_substitutesResultMap.put( cacheFTKey, map );
     }
 
-    final String cacheSchemaKey = contextSchema.getTargetNamespace() + "#" + contextSchema.getGMLVersion();
+    final String cacheSchemaKey = contextSchema.getTargetNamespace() + "#" + contextSchema.getGMLVersion(); //$NON-NLS-1$
 
     FindSubstitutesGMLSchemaVisitor visitor = map.get( cacheSchemaKey );
     if( visitor == null )

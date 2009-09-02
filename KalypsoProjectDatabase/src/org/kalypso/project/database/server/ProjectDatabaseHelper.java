@@ -64,7 +64,7 @@ class ProjectDatabaseHelper
       {
         return System.getProperty( IProjectDataBaseServerConstant.SERVER_PROJECT_PATH );
       }
-    }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
+    }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) ); //$NON-NLS-1$
   }
 
   protected static Boolean removeBean( final Session session, final KalypsoProjectBean bean )

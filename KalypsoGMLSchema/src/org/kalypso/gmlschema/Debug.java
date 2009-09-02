@@ -48,13 +48,13 @@ package org.kalypso.gmlschema;
  */
 public class Debug
 {
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug ANNOTATION_PROVIDERS = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/annotationproviders" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug ANNOTATION_PROVIDERS = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/annotationproviders" ); //$NON-NLS-1$
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug PARSING = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/parsing" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug PARSING = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/parsing" ); //$NON-NLS-1$
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug PARSING_VERBOSE = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/parsing/verbose" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug PARSING_VERBOSE = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/parsing/verbose" ); //$NON-NLS-1$
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug LOADING = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/loading" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug LOADING = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/loading" ); //$NON-NLS-1$
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug CATALOG = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/catalog" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug CATALOG = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGMLSchemaPlugin.getDefault(), "/debug/catalog" ); //$NON-NLS-1$
 }

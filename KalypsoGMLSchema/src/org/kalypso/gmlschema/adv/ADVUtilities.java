@@ -51,13 +51,13 @@ public class ADVUtilities
   static
   {
     final NSPrefixProvider provider = NSUtilities.getNSProvider();
-    advPrefix = provider.getPreferredPrefix( NS.ADV_NAS, "adv" );
-    xsPrefix = provider.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" );
+    advPrefix = provider.getPreferredPrefix( NS.ADV_NAS, "adv" ); //$NON-NLS-1$
+    xsPrefix = provider.getPreferredPrefix( NS.XSD_SCHEMA, "xsd" ); //$NON-NLS-1$
   }
 
-  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.ADV_NAS + "' ";
+  private static final String ADV_XPATH_NS = "declare namespace " + xsPrefix + "='" + NS.XSD_SCHEMA + "' " + "declare namespace " + advPrefix + "='" + NS.ADV_NAS + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
-  private static final String ADV_XPATH = ADV_XPATH_NS + xsPrefix + ":annotation/" + xsPrefix + ":appinfo/" + "adv" + ":referenziertesElement";
+  private static final String ADV_XPATH = ADV_XPATH_NS + xsPrefix + ":annotation/" + xsPrefix + ":appinfo/" + "adv" + ":referenziertesElement"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
   /**
    * @param element
@@ -91,11 +91,11 @@ public class ADVUtilities
       case 1:
         final XmlAnyTypeImpl qName = (XmlAnyTypeImpl) xmlObjects[0];
         final String name = qName.stringValue();
-        final String[] names = name.split( ":" );
+        final String[] names = name.split( ":" ); //$NON-NLS-1$
         final String namespace = qName.get_store().getNamespaceForPrefix( names[0] );
         return new QName( namespace, names[1] );
       default:
-        throw new UnsupportedOperationException( "can not handle multi 'adv:referenziertesElement' fragments in schema: \n" + element.toString() );
+        throw new UnsupportedOperationException( "can not handle multi 'adv:referenziertesElement' fragments in schema: \n" + element.toString() ); //$NON-NLS-1$
     }
   }
 

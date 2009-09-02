@@ -72,6 +72,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
+import org.kalypso.project.database.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
@@ -92,14 +93,14 @@ public class ProjectDatabase implements IProjectDatabase
       final AnnotationConfiguration configure;
 
       final String property = System.getProperty( IProjectDataBaseServerConstant.HIBERNATE_CONFIG_FILE );
-      if( property != null && !"".equals( property.trim() ) )
+      if( property != null && !"".equals( property.trim() ) ) //$NON-NLS-1$
       {
         /* mphhh... url handling doesn't work -> file not found exception -> file://c/blah/blah */
         final File url = new File( property );
         if( !url.exists() )
         {
-          System.out.println( String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s", property ) );
-          System.out.println( String.format( "Starting KalypsoProjectDatabase with default configuration!" ) );
+          System.out.println( String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s", property ) ); //$NON-NLS-1$
+          System.out.println( String.format( "Starting KalypsoProjectDatabase with default configuration!" ) ); //$NON-NLS-1$
 
           configure = new AnnotationConfiguration().configure();
         }
@@ -140,7 +141,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* names of existing projects */
-    final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list();
+    final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list(); //$NON-NLS-1$
     tx.commit();
 
     final Set<String> projects = new HashSet<String>();
@@ -162,7 +163,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       final Session mySession = FACTORY.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
-      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list();
+      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list(); //$NON-NLS-1$
       myTx.commit();
 
       for( final Object object : beans )
@@ -212,7 +213,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* names of exsting projects */
-    final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list();
+    final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list(); //$NON-NLS-1$
     tx.commit();
 
     if( projects.size() <= 0 )
@@ -242,7 +243,7 @@ public class ProjectDatabase implements IProjectDatabase
     try
     {
       if( !src.exists() )
-        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
+        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) ); //$NON-NLS-1$
 
       /* destination of incoming file */
       final String urlDestination = ProjectDatabaseHelper.resolveDestinationUrl( bean );
@@ -294,12 +295,12 @@ public class ProjectDatabase implements IProjectDatabase
     final Session mySession = FACTORY.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
 
-    final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() );
+    final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
     
-    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" );
+    final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
     final String now = sdf.format( new Date() );
     
-    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate();
+    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
     myTx.commit();
 
     if( updated == 0 )
@@ -307,12 +308,12 @@ public class ProjectDatabase implements IProjectDatabase
 
     final KalypsoProjectBean project = getProject( projectUnixName );
     if( !project.isProjectLockedForEditing() )
-      throw new IllegalStateException( "Updating edit lock of projects failed." );
+      throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
       if( !child.isProjectLockedForEditing() )
-        throw new IllegalStateException( "Updating edit lock of projects failed." );
+        throw new IllegalStateException( "Updating edit lock of projects failed." ); //$NON-NLS-1$
 
     
     
@@ -330,7 +331,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Session mySession = FACTORY.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate();
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate(); //$NON-NLS-1$
     myTx.commit();
 
     final KalypsoProjectBean project = getProject( projectUnixName );
@@ -359,7 +360,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* list of project types */
-    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list();
+    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list(); //$NON-NLS-1$
     tx.commit();
 
     return projects.toArray( new String[] {} );
@@ -413,7 +414,7 @@ public class ProjectDatabase implements IProjectDatabase
 
     final String unixName = bean.getUnixName();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate();
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s'", unixName ) ).executeUpdate(); //$NON-NLS-1$
     myTx.commit();
   }
 
@@ -427,7 +428,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Session mySession = FACTORY.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
 
-    mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate();
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate(); //$NON-NLS-1$
     myTx.commit();
   }
 }

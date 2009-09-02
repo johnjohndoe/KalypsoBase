@@ -47,7 +47,7 @@ package org.kalypso.gmlschema.property.relation;
  */
 public interface IDocumentReference
 {
-  public static final String SELF_REFERENCE_NAME = "self";
+  public static final String SELF_REFERENCE_NAME = "self"; //$NON-NLS-1$
 
   public static final IDocumentReference SELF_REFERENCE = new DocumentReference( SELF_REFERENCE_NAME );
 

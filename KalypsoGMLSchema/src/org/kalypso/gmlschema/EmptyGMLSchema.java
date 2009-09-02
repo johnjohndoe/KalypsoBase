@@ -60,7 +60,7 @@ public class EmptyGMLSchema implements IGMLSchema
    */
   public String getGMLVersion( )
   {
-    return "3.1";
+    return "3.1"; //$NON-NLS-1$
   }
 
   /**
@@ -68,7 +68,7 @@ public class EmptyGMLSchema implements IGMLSchema
    */
   public String getTargetNamespace( )
   {
-    return "empty";
+    return "empty"; //$NON-NLS-1$
   }
 
   /**

@@ -55,7 +55,7 @@ public class KalypsoProjectDatabaseExtensions
 
   private static Map<String, IConfigurationElement> DATABASE_TRIGGERS = null;
 
-  private final static String DATABASE_TRIGGER_EXTENSION_POINT = "org.kalypso.project.database.projectDatabaseTrigger";
+  private final static String DATABASE_TRIGGER_EXTENSION_POINT = "org.kalypso.project.database.projectDatabaseTrigger"; //$NON-NLS-1$
 
   /**
    * @param id
@@ -75,7 +75,7 @@ public class KalypsoProjectDatabaseExtensions
 
       for( final IConfigurationElement configurationElement : elements )
       {
-        final String remoteId = configurationElement.getAttribute( "remoteId" );
+        final String remoteId = configurationElement.getAttribute( "remoteId" ); //$NON-NLS-1$
         DATABASE_TRIGGERS.put( remoteId, configurationElement );
       }
     }

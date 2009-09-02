@@ -123,10 +123,10 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
           case IFeatureContentType.DERIVATION_NONE:
             return properties;
           case IFeatureContentType.DERIVATION_BY_EXTENSION:
-            label = "extended by";
+            label = "extended by"; //$NON-NLS-1$
             break;
           case IFeatureContentType.DERIVATION_BY_RESTRICTION:
-            label = "restricted by";
+            label = "restricted by"; //$NON-NLS-1$
             break;
           default:
             throw new UnsupportedOperationException();
@@ -152,9 +152,9 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
           String ns1 = ft1.getQName().getNamespaceURI();
           String ns2 = ft2.getQName().getNamespaceURI();
           if( ns1 == null )
-            ns1 = "";
+            ns1 = ""; //$NON-NLS-1$
           if( ns2 == null )
-            ns2 = "";
+            ns2 = ""; //$NON-NLS-1$
           if( ns1.equals( ns2 ) )
           {
             final String lp1 = ft1.getQName().getLocalPart();
@@ -174,10 +174,10 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       {
         final String isAbstract;
         if( ft.isAbstract() )
-          isAbstract = "\t  [x] abstract";
+          isAbstract = "\t  [x] abstract"; //$NON-NLS-1$
         else
-          isAbstract = "";
-        result.add( " -> " + ft.getQName() + isAbstract );
+          isAbstract = ""; //$NON-NLS-1$
+        result.add( " -> " + ft.getQName() + isAbstract ); //$NON-NLS-1$
       }
       return result.toArray();
     }

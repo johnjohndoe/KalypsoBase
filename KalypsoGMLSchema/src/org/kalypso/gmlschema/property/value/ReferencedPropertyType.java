@@ -77,7 +77,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
   private void checkState( )
   {
     if( m_globalPT == null )
-      throw new IllegalStateException( "Not yet initialized: " + this );
+      throw new IllegalStateException( "Not yet initialized: " + this ); //$NON-NLS-1$
   }
 
   /**
@@ -91,7 +91,7 @@ public class ReferencedPropertyType extends AbstractPropertyTypeFromElement impl
       case INITIALIZE_RUN_FIRST:
         m_globalPT = (IValuePropertyType) m_reference.getGMLSchema().getBuildedObjectFor( m_reference.getElement() );
         if( m_globalPT == null )
-          throw new GMLSchemaException( "Unable to finde referenced IValuePropertyType for: " + getQName() );
+          throw new GMLSchemaException( "Unable to finde referenced IValuePropertyType for: " + getQName() ); //$NON-NLS-1$
 
         break;
 

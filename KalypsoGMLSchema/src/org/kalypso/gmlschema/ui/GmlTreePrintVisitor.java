@@ -62,14 +62,14 @@ implements ITreeContentProviderVisitor
 
   public boolean visit( Object element, int indent )
   {
-    final String space = StringUtils.repeat( ".  ", indent );
+    final String space = StringUtils.repeat( ".  ", indent ); //$NON-NLS-1$
     final String text = m_labelProvider.getText( element );
-    final String[] lines = text.split( "\n" );
+    final String[] lines = text.split( "\n" ); //$NON-NLS-1$
     for( int i = 0; i < lines.length; i++ )
     {
       m_buffer.append( space );
       m_buffer.append( lines[i] );
-      m_buffer.append( "\n" );
+      m_buffer.append( "\n" ); //$NON-NLS-1$
     }
     return true;
   }

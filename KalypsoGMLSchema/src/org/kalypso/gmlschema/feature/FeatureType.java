@@ -67,7 +67,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 @SuppressWarnings("deprecation")
 public class FeatureType extends QualifiedElement implements IDetailedFeatureType
 {
-  private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" );
+  private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
   private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
@@ -140,11 +140,11 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     {
       final ElementReference substitutesReference = getGMLSchema().resolveElementReference( substitutionGroup );
       if( substitutesReference == null )
-        throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup );
+        throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup ); //$NON-NLS-1$
 
       final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
-      if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
+      if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
         m_substituteFT = null;
       else
       {
@@ -330,7 +330,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     {
       final IPropertyType[] properties = getProperties();
       for( final IPropertyType pt : properties )
-        b.append( "\n    - " ).append( pt.getQName() );
+        b.append( "\n    - " ).append( pt.getQName() ); //$NON-NLS-1$
     }
     return b.toString();
   }

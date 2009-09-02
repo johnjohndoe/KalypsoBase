@@ -57,14 +57,14 @@ import org.osgi.framework.Bundle;
  */
 public class TriggerHelper
 {
-  private static final String COMMON_FOLDER = "common";
+  private static final String COMMON_FOLDER = "common"; //$NON-NLS-1$
 
   public static void handleBean( final KalypsoProjectBean bean, final IConfigurationElement element ) throws Exception
   {
     /* resolve trigger extension class */
     final String pluginid = element.getContributor().getName();
     final Bundle bundle = Platform.getBundle( pluginid );
-    final Class< ? > triggerClass = bundle.loadClass( element.getAttribute( "class" ) );
+    final Class< ? > triggerClass = bundle.loadClass( element.getAttribute( "class" ) ); //$NON-NLS-1$
     final Constructor< ? > constructor = triggerClass.getConstructor();
 
     final IProjectDatabaseTrigger trigger = (IProjectDatabaseTrigger) constructor.newInstance();

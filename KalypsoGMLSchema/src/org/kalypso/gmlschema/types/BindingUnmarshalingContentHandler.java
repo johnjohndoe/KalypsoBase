@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  */
 public class BindingUnmarshalingContentHandler implements ContentHandler
 {
-  private static final String BOX_STRING = "box";
+  private static final String BOX_STRING = "box"; //$NON-NLS-1$
 
   private int m_level;
 
@@ -84,7 +84,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     m_unmarshallResultProvider = unmarshallResultProvider;
     m_unmarshalResultEater = unmarshalResultEater;
     m_gmlVersion = gmlVersion;
-    m_isGML2 = m_gmlVersion.startsWith( "2" );
+    m_isGML2 = m_gmlVersion.startsWith( "2" ); //$NON-NLS-1$
   }
 
   /**
@@ -99,22 +99,22 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
-      if( "exterior".equals( local ) )
+      if( "exterior".equals( local ) ) //$NON-NLS-1$
       {
-        local = "outerBoundaryIs";
-        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+        local = "outerBoundaryIs"; //$NON-NLS-1$
+        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       // hack for loading invalid gml2 polygons, do not remove (doemming)
-      else if( "interior".equals( local ) )
+      else if( "interior".equals( local ) ) //$NON-NLS-1$
       {
-        local = "innerBoundaryIs";
-        qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+        local = "innerBoundaryIs"; //$NON-NLS-1$
+        qname = qname.replaceFirst( "interior", "innerBoundaryIs" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
     {
-      local = "Box";
-      qname = qname.replaceFirst( BOX_STRING, "Box" );
+      local = "Box"; //$NON-NLS-1$
+      qname = qname.replaceFirst( BOX_STRING, "Box" ); //$NON-NLS-1$
     }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
@@ -126,7 +126,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     {
       e.printStackTrace();
 
-      throw new SAXException( "Element could not be processed: " + qname );
+      throw new SAXException( "Element could not be processed: " + qname ); //$NON-NLS-1$
     }
   }
 
@@ -136,22 +136,22 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
-      if( "exterior".equals( local ) )
+      if( "exterior".equals( local ) ) //$NON-NLS-1$
       {
-        local = "outerBoundaryIs";
-        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" );
+        local = "outerBoundaryIs"; //$NON-NLS-1$
+        qname = qname.replaceFirst( "exterior", "outerBoundaryIs" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       // hack for loading invalid gml2 polygons, do not remove (doemming)
-      if( "interior".equals( local ) )
+      if( "interior".equals( local ) ) //$NON-NLS-1$
       {
-        local = "innerBoundaryIs";
-        qname = qname.replaceFirst( "interior", "innerBoundaryIs" );
+        local = "innerBoundaryIs"; //$NON-NLS-1$
+        qname = qname.replaceFirst( "interior", "innerBoundaryIs" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else if( NS.GML2.equals( uri ) && BOX_STRING.equals( local ) )
     {
-      local = "Box";
-      qname = qname.replaceFirst( BOX_STRING, "Box" );
+      local = "Box"; //$NON-NLS-1$
+      qname = qname.replaceFirst( BOX_STRING, "Box" ); //$NON-NLS-1$
     }
     
     // System.out.println( indent() + "</" + qname + ">" );

@@ -62,15 +62,15 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
  */
 public class VirtualFunctionPropertyFactory
 {
-  public static final QName QNAME_FUNCTION = new QName( NS.KALYPSO_APPINFO, "functionId" );
+  public static final QName QNAME_FUNCTION = new QName( NS.KALYPSO_APPINFO, "functionId" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROPERTY = new QName( NS.KALYPSO_APPINFO, "property" );
+  public static final QName QNAME_PROPERTY = new QName( NS.KALYPSO_APPINFO, "property" ); //$NON-NLS-1$
 
-  public static final QName QNAME_NAME = new QName( NS.KALYPSO_APPINFO, "name" );
+  public static final QName QNAME_NAME = new QName( NS.KALYPSO_APPINFO, "name" ); //$NON-NLS-1$
 
-  public static final QName QNAME_VALUE = new QName( NS.KALYPSO_APPINFO, "value" );
+  public static final QName QNAME_VALUE = new QName( NS.KALYPSO_APPINFO, "value" ); //$NON-NLS-1$
 
-  private static final QName QNAME_VALUE_TYPE = new QName( NS.KALYPSO_APPINFO, "valueType" );
+  private static final QName QNAME_VALUE_TYPE = new QName( NS.KALYPSO_APPINFO, "valueType" ); //$NON-NLS-1$
 
   private VirtualFunctionPropertyFactory( )
   {
@@ -113,16 +113,16 @@ public class VirtualFunctionPropertyFactory
     catch( final Throwable th )
     {
       th.printStackTrace();
-      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th );
+      throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th ); //$NON-NLS-1$
     }
   }
 
   private static final String getPrefixedName( final QName qname ) throws IllegalArgumentException
   {
     if( qname == null )
-      throw new IllegalArgumentException( "Argument qname must not be null:" + qname );
+      throw new IllegalArgumentException( "Argument qname must not be null:" + qname ); //$NON-NLS-1$
 
-    return qname.getPrefix() + ":" + qname.getLocalPart();
+    return qname.getPrefix() + ":" + qname.getLocalPart(); //$NON-NLS-1$
   }
 
   /**
@@ -140,7 +140,7 @@ public class VirtualFunctionPropertyFactory
   {
     if( cursor == null || propertyQName == null )
     {
-      final String message = String.format( "Parameter cursor[%s] and name[%s] must not be null", cursor == null ? "null" : cursor.toString(), propertyQName == null ? "null"
+      final String message = String.format( "Parameter cursor[%s] and name[%s] must not be null", cursor == null ? "null" : cursor.toString(), propertyQName == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           : propertyQName.toString() );
       throw new IllegalArgumentException( message );
     }
@@ -149,7 +149,7 @@ public class VirtualFunctionPropertyFactory
     if( strQName == null )
       return null;
 
-    final String[] qnameParts = strQName.split( ":" );
+    final String[] qnameParts = strQName.split( ":" ); //$NON-NLS-1$
     if( qnameParts.length == 2 )
     {
       final String namespace = cursor.namespaceForPrefix( qnameParts[0] );
@@ -158,17 +158,17 @@ public class VirtualFunctionPropertyFactory
 
     if( qnameParts.length == 1 )
     {
-      final String namespace = cursor.namespaceForPrefix( "" );
+      final String namespace = cursor.namespaceForPrefix( "" ); //$NON-NLS-1$
       return new QName( namespace, qnameParts[0] );
     }
 
-    final String message = String.format( "Property[%s] must have the form \"[<prefix>:]<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts );
+    final String message = String.format( "Property[%s] must have the form \"[<prefix>:]<local name>\" but is \"%s\"", getPrefixedName( propertyQName ), qnameParts ); //$NON-NLS-1$
     throw new GMLSchemaException( message );
   }
 
   private static Map<String, String> parseParameters( final XmlObject funcProp )
   {
-    final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
+    final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     /* IMPORTENT: Use linked hash map in order to preserve parameter order. */
     final Map<String, String> properties = new LinkedHashMap<String, String>();

@@ -150,7 +150,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public Boolean isProjectLockedForEditing( )
   {
     final String ticket = getEditLockTicket();
-    if( ticket == null || "".equals( ticket.trim() ) )
+    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
       return false;
 
     return true;
@@ -202,7 +202,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
       {
         return System.getProperty( IProjectDataBaseServerConstant.SERVER_PROJECT_PATH );
       }
-    }, String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() ) );
+    }, String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() ) ); //$NON-NLS-1$
 
     return new URL( url );
   }

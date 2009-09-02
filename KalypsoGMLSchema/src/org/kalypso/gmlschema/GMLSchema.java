@@ -61,6 +61,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyContentType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -133,8 +134,8 @@ public class GMLSchema implements IGMLSchema
   /** Ignored namespaces: these two schemas import each other, we don't know how to handle this. */
   private final List<String> m_ignoreNameSpaces = new ArrayList<String>();
   {
-    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" );
-    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/Language" );
+    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" ); //$NON-NLS-1$
+    m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/Language" ); //$NON-NLS-1$
   }
 
   /* list of schemas that are referenced by include and have allready been processed */
@@ -233,7 +234,7 @@ public class GMLSchema implements IGMLSchema
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
           else
-            throw new GMLSchemaException( "Could not import schema: " + namespaceToImport + " with schemalocation: " + schemaLocation );
+            throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.0") + namespaceToImport + " with schemalocation: " + schemaLocation ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -295,7 +296,7 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( "could not resolve group reference to " + qName );
+      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gmlschema.GMLSchema.1") + qName ); //$NON-NLS-1$
       KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
@@ -390,7 +391,7 @@ public class GMLSchema implements IGMLSchema
     }
     catch( final InvocationTargetException e )
     {
-      throw new GMLSchemaException( "Unable to load schema: " + namespaceURI, e.getTargetException() );
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.2") + namespaceURI, e.getTargetException() ); //$NON-NLS-1$
     }
   }
 
@@ -418,7 +419,7 @@ public class GMLSchema implements IGMLSchema
   public void register( final Object xmlObject, final Object buildedObject )
   {
     if( buildedObject == null )
-      throw new UnsupportedOperationException( "can not register null-object" );
+      throw new UnsupportedOperationException( "can not register null-object" ); //$NON-NLS-1$
 
     m_buildedObjectHash.put( xmlObject, buildedObject );
 
@@ -587,7 +588,7 @@ public class GMLSchema implements IGMLSchema
   public IFeatureType getFeatureType( final QName qName )
   {
     final String namespaceURI = qName.getNamespaceURI();
-    if( namespaceURI == null || "".equals( namespaceURI ) || namespaceURI.equals( getTargetNamespace() ) )
+    if( namespaceURI == null || "".equals( namespaceURI ) || namespaceURI.equals( getTargetNamespace() ) ) //$NON-NLS-1$
     {
       final IFeatureType ft = m_featureTypeMap.get( qName );
       if( ft != null )
@@ -644,7 +645,7 @@ public class GMLSchema implements IGMLSchema
   @Override
   public String toString( )
   {
-    return String.format( "XML-Schema: %s (%s)", getTargetNamespace(), getContext() );
+    return String.format( "XML-Schema: %s (%s)", getTargetNamespace(), getContext() ); //$NON-NLS-1$
   }
 
   public SchemaDocument[] getIncludedSchemas( )

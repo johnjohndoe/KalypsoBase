@@ -46,16 +46,16 @@ package org.kalypso.gmlschema.annotation;
 public interface IAnnotation
 {
   /** Constant for the name annotation element. */
-  public static String ANNO_NAME = "name";
+  public static String ANNO_NAME = "name"; //$NON-NLS-1$
 
   /** Constant for the label annotation element. */
-  public static String ANNO_LABEL = "label";
+  public static String ANNO_LABEL = "label"; //$NON-NLS-1$
 
   /** Constant for the description annotation element. */
-  public static String ANNO_DESCRIPTION = "description";
+  public static String ANNO_DESCRIPTION = "description"; //$NON-NLS-1$
 
   /** Constant for the label annotation element. */
-  public static String ANNO_TOOLTIP = "tooltip";
+  public static String ANNO_TOOLTIP = "tooltip"; //$NON-NLS-1$
 
   /**
    * A label for a feature. For example the label of a tree element. Pattern replacement may take place.

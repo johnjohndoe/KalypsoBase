@@ -108,7 +108,7 @@ public class CustomFeatureType implements IFeatureType
           return;
         final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
         final Element substitutesElement = substitutesReference.getElement();
-        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) )
+        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
           return;
         final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
         m_substitutionGroupFT = ft;
