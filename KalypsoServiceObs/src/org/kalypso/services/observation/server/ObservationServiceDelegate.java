@@ -226,7 +226,7 @@ public class ObservationServiceDelegate implements IObservationService
     try
     {
       final URL confLocation = new URL( m_configurationLocation );
-      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repconf_server.xml" );
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" );
 
       // this call also closes the stream
       final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
@@ -264,11 +264,9 @@ public class ObservationServiceDelegate implements IObservationService
       }
 
       /* Load Repositories */
-      for( final Object name : facConfs )
+      for( final RepositoryFactoryConfig item : facConfs )
       {
-        final RepositoryFactoryConfig item = (RepositoryFactoryConfig) name;
         final IRepositoryFactory fact = item.getFactory();
-
         try
         {
           final IRepository rep = fact.createRepository();
