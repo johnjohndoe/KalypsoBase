@@ -90,7 +90,7 @@ public class RepositoryDumper
    * @throws RepositoryException
    * @throws InterruptedException
    */
-  public static void dumpExtended( File directory, IRepository root, IProgressMonitor monitor )
+  public static void dumpExtended( final File directory, final IRepository root, final IProgressMonitor monitor )
       throws InterruptedException, RepositoryException
   {
     Writer structureWriter = null;
@@ -98,7 +98,7 @@ public class RepositoryDumper
     try
     {
       /* Create the structure file. */
-      File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
+      final File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
 
       /* The writer to save the file. */
       structureWriter = new OutputStreamWriter( new FileOutputStream( structureFile ), "UTF-8" ); //$NON-NLS-1$
@@ -111,11 +111,11 @@ public class RepositoryDumper
       /* Update monitor. */
       monitor.worked( 800 );
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       throw e;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new RepositoryException( e );
     }
@@ -139,8 +139,8 @@ public class RepositoryDumper
    * @throws InterruptedException
    * @throws RepositoryException
    */
-  private static void dumpExtendedRecursive( final File baseDirectory, final Writer structureWriter, File directory,
-      IRepositoryItem item, IProgressMonitor monitor ) throws InterruptedException, RepositoryException
+  private static void dumpExtendedRecursive( final File baseDirectory, final Writer structureWriter, final File directory,
+      final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException
   {
     /* If the user cancled the operation, abort. */
     if( monitor.isCanceled() )
@@ -151,7 +151,7 @@ public class RepositoryDumper
     try
     {
       /* The name will be used as filename. */
-      String name = item.getName();
+      final String name = FileUtilities.resolveValidFileName( item.getName() );
 
       /* Write entry for structure file */
       structureWriter.write( item.getIdentifier() );
@@ -194,18 +194,18 @@ public class RepositoryDumper
       if( items == null )
         return;
 
-      for( int i = 0; i < items.length; i++ )
-        dumpExtendedRecursive( baseDirectory, structureWriter, newDirectory, items[i], monitor );
+      for( final IRepositoryItem item2 : items )
+        dumpExtendedRecursive( baseDirectory, structureWriter, newDirectory, item2, monitor );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new RepositoryException( e );
     }
-    catch( FactoryException e )
+    catch( final FactoryException e )
     {
       throw new RepositoryException( e );
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       throw new RepositoryException( e );
     }

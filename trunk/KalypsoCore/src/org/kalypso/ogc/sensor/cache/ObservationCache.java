@@ -89,7 +89,16 @@ public class ObservationCache
 
       if( obs == null )
       {
-        obs = (IObservation)adapt.getAdapter( IObservation.class );
+        try
+        {
+          obs = (IObservation) adapt.getAdapter( IObservation.class );
+        }
+        catch( final IllegalArgumentException ex )
+        {
+          ex.printStackTrace();
+
+          return null;
+        }
 
         // still null, then this item is not adaptable
         if( obs == null )
