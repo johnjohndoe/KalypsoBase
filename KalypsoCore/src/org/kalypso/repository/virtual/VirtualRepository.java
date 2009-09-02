@@ -76,8 +76,6 @@ public class VirtualRepository extends AbstractRepository
   /** stores the mapping between ids and items */
   private final Map<String, IRepositoryItem> m_idMap = new Hashtable<String, IRepositoryItem>();
 
-  private final String m_identifier;
-
   private final String m_location;
 
   /**
@@ -92,16 +90,15 @@ public class VirtualRepository extends AbstractRepository
    * @param readOnly
    * @throws RepositoryException
    */
-  public VirtualRepository( String factory, String identifier, String location, boolean readOnly ) throws RepositoryException
+  public VirtualRepository( final String factory, final String identifier, final String location, final boolean readOnly ) throws RepositoryException
   {
-    super( identifier, factory, location, readOnly );
-    m_identifier = identifier;
+    super( identifier, factory, location, readOnly, identifier + "://" );
     m_location = location;
     try
     {
       buildRepository();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new RepositoryException( e );
@@ -183,20 +180,13 @@ public class VirtualRepository extends AbstractRepository
     {
       buildRepository();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new RepositoryException( e );
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
-   */
-  public String getIdentifier( )
-  {
-    return m_identifier + "://"; //$NON-NLS-1$
-  }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()

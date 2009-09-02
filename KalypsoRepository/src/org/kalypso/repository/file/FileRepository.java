@@ -52,36 +52,32 @@ import org.kalypso.repository.IRepositoryItem;
 
 /**
  * Ein File Repository.
- *
+ * 
  * @author schlienger
  */
 public class FileRepository extends AbstractRepository
 {
   protected final File m_root;
 
-  protected final String m_identifier;
-
   protected final FileFilter m_filter;
 
   /**
    * Creates a FileRepository.
-   *
+   * 
    * @param factory
    * @param conf
    * @param location
-   *            path of the root
+   *          path of the root
    * @param identifier
-   *            user defined identifier for this repository
+   *          user defined identifier for this repository
    * @param readOnly
-   *            if true the repository is read only
+   *          if true the repository is read only
    * @param filter
-   *            [optional] if null an <code>AcceptAllFileFilter</code> is used.
+   *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
   public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final FileFilter filter )
   {
-    super( identifier, factory, conf, readOnly );
-
-    m_identifier = identifier;
+    super( identifier, factory, conf, readOnly, identifier );
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();
@@ -139,23 +135,13 @@ public class FileRepository extends AbstractRepository
 
   /**
    * Factory method that can be overriden by subclasses to create adequate items.
-   *
+   * 
    * @param file
    * @return IRepositoryItem instance
    */
   public FileItem createItem( final File file )
   {
     return new FileItem( this, file );
-  }
-
-  /**
-   * Returns the URL of the root dir.
-   *
-   * @see org.kalypso.repository.IRepository#getIdentifier()
-   */
-  public String getIdentifier( )
-  {
-    return m_identifier;
   }
 
   /**

@@ -310,6 +310,9 @@ public final class ZmlURL
   public static boolean isEmpty( final String href )
   {
     final String id = getIdentifierPart( href );
-    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return id.matches( ".*//LEER" );
+
+//    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }
