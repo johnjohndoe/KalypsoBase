@@ -55,22 +55,22 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return the classname of the factory that was used to create this repository
    */
-  public String getFactory();
+  public String getFactory( );
 
   /**
    * @return the configuration string used to create the repository
    */
-  public String getConfiguration();
+  public String getConfiguration( );
 
   /**
    * @return name of the repository
    */
-  public String getName();
+  public String getName( );
 
   /**
    * @return some description
    */
-  public String getDescription();
+  public String getDescription( );
 
   /**
    * Returns true when this repository is in readonly mode. What this really means, depends on the client
@@ -78,7 +78,7 @@ public interface IRepository extends IRepositoryItem
    * 
    * @return readonly flag
    */
-  public boolean isReadOnly();
+  public boolean isReadOnly( );
 
   /**
    * Finds the item that has the given id.
@@ -117,7 +117,7 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return convenience method that returns the properties of this repository in the form of a Properties object.
    */
-  public Properties getProperties();
+  public Properties getProperties( );
 
   /**
    * Convenience method for settings a whole set of properties.
@@ -131,7 +131,7 @@ public interface IRepository extends IRepositoryItem
    * 
    * @throws RepositoryException
    */
-  public void reload() throws RepositoryException;
+  public void reload( ) throws RepositoryException;
 
   /**
    * Dumps the contents (structure and summary of items)
@@ -141,11 +141,17 @@ public interface IRepository extends IRepositoryItem
   /**
    * Clears potential resources
    */
-  public void dispose();
+  public void dispose( );
 
   public void addRepositoryListener( final IRepositoryListener l );
 
   public void removeRepositoryListener( final IRepositoryListener l );
 
-  public void fireRepositoryStructureChanged();
+  public void fireRepositoryStructureChanged( );
+
+  /**
+   * Sets identifier string of the repository. Needed by proxy repository implementation to overwrite origin repository
+   * string.
+   */
+  public void setIdentifier( String identifier );
 }

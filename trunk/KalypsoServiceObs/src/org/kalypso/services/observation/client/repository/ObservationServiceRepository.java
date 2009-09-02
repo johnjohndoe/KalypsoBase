@@ -66,9 +66,9 @@ public class ObservationServiceRepository extends AbstractRepository
    * @throws ServiceException
    *           when the underlying service is not available
    */
-  public ObservationServiceRepository( String name, String factory, boolean readOnly ) throws RepositoryException 
+  public ObservationServiceRepository( final String name, final String factory, final boolean readOnly ) throws RepositoryException 
   {
-    super( name, factory, "", readOnly );
+    super( name, factory, "", readOnly, "observation-service-repository" );
 
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     if( srv == null )
@@ -119,13 +119,6 @@ public class ObservationServiceRepository extends AbstractRepository
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepository#getIdentifier()
-   */
-  public String getIdentifier()
-  {
-    return "observation-service-repository";
-  }
 
   /**
    * @see org.kalypso.repository.IRepository#reload()
@@ -174,9 +167,9 @@ public class ObservationServiceRepository extends AbstractRepository
     else
     {
       final IRepositoryItem[] items = item.getChildren();
-      for( int i = 0; i < items.length; i++ )
+      for( final IRepositoryItem item2 : items )
       {
-        foundItem = findItemRecursive( id, items[i] );
+        foundItem = findItemRecursive( id, item2 );
 
         if( foundItem != null )
           break;
