@@ -111,6 +111,10 @@ public class ObservationServiceRepository extends AbstractRepository
       for( int i = 0; i < items.length; i++ )
         items[i] = new ServiceRepositoryItem( srv, beans[i], null, this );
 
+      /** @hack single repository? skip one hierarchy level and return children of repository item */
+      if( items.length == 1 )
+        return items[0].getChildren();
+
       return items;
     }
     catch( final RepositoryException e )

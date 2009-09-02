@@ -316,7 +316,7 @@ public abstract class AbstractRepository implements IRepository
     m_identifier = identifier;
   }
 
-  public final String getIdentifier( )
+  public String getIdentifier( )
   {
     return m_identifier;
   }
