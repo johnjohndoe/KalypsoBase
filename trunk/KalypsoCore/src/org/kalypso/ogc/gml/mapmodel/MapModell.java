@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
@@ -267,7 +268,12 @@ public class MapModell implements IMapModell
       final IKalypsoTheme theme = themes[i - 1];
       progress.subTask( theme.getLabel() );
       if( theme.isVisible() )
-        children[i - 1] = theme.paint( g, p, null, progress.newChild( 1 ) );
+      {
+        IStatus status = theme.paint( g, p, null, progress.newChild( 1 ) );
+        children[i - 1] = status;
+      }
+      else
+        children[i - 1] = Status.OK_STATUS;
     }
 
     final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
