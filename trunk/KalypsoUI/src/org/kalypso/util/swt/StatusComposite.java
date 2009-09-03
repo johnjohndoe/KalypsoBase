@@ -43,6 +43,8 @@ package org.kalypso.util.swt;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -58,14 +60,15 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br> *
+ * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br>
+ * *
  * <dl>
  * <dt><b>Styles:</b></dt>
- * <dd>DETAILS</dd>
+ * <dd>DETAILS, HIDE_TEXT</dd>
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- *
+ * 
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
@@ -75,6 +78,11 @@ public class StatusComposite extends Composite
    * Style constant: if set, a details button is shown.
    */
   public static final int DETAILS = SWT.SEARCH;
+
+  /**
+   * Style constant: if set, the text label is hidden.
+   */
+  public static final int HIDE_TEXT = SWT.SIMPLE;
 
   protected Label m_statusImgLabel;
 
@@ -93,20 +101,42 @@ public class StatusComposite extends Composite
 
   protected void init( final int style )
   {
-
-    final GridLayout gridLayout = new GridLayout( 3, false );
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-
-    super.setLayout( gridLayout );
-
+    int colCount = 1;
     m_statusImgLabel = new Label( this, SWT.NONE );
     m_statusImgLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    m_statusMessageLabel = new Label( this, SWT.NONE );
-    m_statusMessageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_statusImgLabel.addMouseListener( new MouseAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+       */
+      @Override
+      public void mouseDoubleClick( final MouseEvent e )
+      {
+        detailsButtonPressed();
+      }
+    } );
+
+    if( (style & HIDE_TEXT) == 0 )
+    {
+      colCount++;
+      m_statusMessageLabel = new Label( this, SWT.NONE );
+      m_statusMessageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      m_statusMessageLabel.addMouseListener( new MouseAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+         */
+        @Override
+        public void mouseDoubleClick( final MouseEvent e )
+        {
+          detailsButtonPressed();
+        }
+      } );
+    }
 
     if( (style & DETAILS) != 0 )
     {
+      colCount++;
       m_detailsButton = new Button( this, SWT.PUSH );
       m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
       m_detailsButton.addSelectionListener( new SelectionAdapter()
@@ -121,8 +151,13 @@ public class StatusComposite extends Composite
         }
       } );
     }
-    else
-      m_detailsButton = null;
+
+    setStatus( m_status );
+
+    final GridLayout gridLayout = new GridLayout( colCount, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    super.setLayout( gridLayout );
   }
 
   protected void detailsButtonPressed( )
@@ -145,7 +180,7 @@ public class StatusComposite extends Composite
 
   /**
    * Sets the status of this composites and updates it to show it in the composite.
-   *
+   * 
    * @exception SWTException
    *              <ul>
    *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -162,19 +197,34 @@ public class StatusComposite extends Composite
     if( status == null )
     {
       m_statusImgLabel.setImage( null );
-      m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
-      m_statusMessageLabel.setToolTipText( null );
+      m_statusImgLabel.setToolTipText( null );
+
+      if( m_statusMessageLabel != null )
+      {
+        m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
+        m_statusMessageLabel.setToolTipText( null );
+      }
+
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( false );
     }
     else
     {
       m_statusImgLabel.setImage( getStatusImage( status ) );
-      m_statusMessageLabel.setText( status.getMessage() );
-      // Set same text as tooltip, if label is too short to hold the complete text
-      m_statusMessageLabel.setToolTipText( status.getMessage() );
+      m_statusImgLabel.setToolTipText( status.getMessage() );
+
+      if( m_statusMessageLabel != null )
+      {
+        m_statusMessageLabel.setText( status.getMessage() );
+        // Set same text as tooltip, if label is too short to hold the complete text
+        m_statusMessageLabel.setToolTipText( status.getMessage() );
+      }
+
       if( m_detailsButton != null )
-        m_detailsButton.setEnabled( status.isMultiStatus() || status.getException() != null );
+      {
+        final boolean enabled = status.isMultiStatus() || status.getException() != null;
+        m_detailsButton.setEnabled( enabled );
+      }
     }
 
     layout();
@@ -184,7 +234,7 @@ public class StatusComposite extends Composite
 
   /**
    * Get the IDE image at path.
-   *
+   * 
    * @param path
    * @return Image
    */
