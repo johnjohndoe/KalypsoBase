@@ -87,13 +87,13 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param marksAndExtGraphics
-   *            the image will be based upon these
+   *          the image will be based upon these
    * @param opacity
-   *            opacity that the resulting image will have
+   *          opacity that the resulting image will have
    * @param size
-   *            image height will be scaled to this value, respecting the proportions
+   *          image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *            image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
+   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
   protected Graphic_Impl( final Object[] marksAndExtGraphics, final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
@@ -108,11 +108,11 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param opacity
-   *            opacity that the resulting image will have
+   *          opacity that the resulting image will have
    * @param size
-   *            image height will be scaled to this value, respecting the proportions
+   *          image height will be scaled to this value, respecting the proportions
    * @param rotation
-   *            image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
+   *          image will be rotated clockwise for positive values, negative values result in anti-clockwise rotation
    */
   protected Graphic_Impl( final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
@@ -149,7 +149,9 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
    * will be based on.
    * <p>
-   * @param object to be used as basis for the resulting image
+   * 
+   * @param object
+   *          to be used as basis for the resulting image
    */
   public void setMarksAndExtGraphics( final Object[] object )
   {
@@ -165,12 +167,12 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
-   * <tt>Mark</tt> -instances.
+   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
+   * -instances.
    * <p>
    * 
    * @param object
-   *            to be used as basis for the resulting image
+   *          to be used as basis for the resulting image
    */
   public void addMarksAndExtGraphic( final Object object )
   {
@@ -183,7 +185,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param object
-   *            to be used as basis for the resulting image
+   *          to be used as basis for the resulting image
    */
   public void removeMarksAndExtGraphic( final Object object )
   {
@@ -195,10 +197,10 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
@@ -229,7 +231,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param opacity
-   *            Opacity to be set for the graphic
+   *          Opacity to be set for the graphic
    */
   public void setOpacity( final double opacity )
   {
@@ -243,10 +245,10 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   public double getSize( final Feature feature ) throws FilterEvaluationException
   {
@@ -330,10 +332,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getSize(Feature)
-   *      <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getSize(Feature) <p>
    * @param size
-   *            size to be set for the graphic
+   *          size to be set for the graphic
    */
   public void setSize( final double size )
   {
@@ -348,10 +349,10 @@ public class Graphic_Impl implements Graphic, Marshallable
    * <p>
    * 
    * @param feature
-   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *             if the evaluation fails or the value is invalid
+   *           if the evaluation fails or the value is invalid
    */
   public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
@@ -375,10 +376,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getRotation(Feature)
-   *      <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Graphic_Impl#getRotation(Feature) <p>
    * @param rotation
-   *            rotation to be set for the graphic
+   *          rotation to be set for the graphic
    */
   public void setRotation( final double rotation )
   {
@@ -387,14 +387,14 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and
-   * 'Rotation' parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is
-   * used. If there is none, the default value of 6 pixels is used.
+   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
+   * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
+   * is none, the default value of 6 pixels is used.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
@@ -402,7 +402,7 @@ public class Graphic_Impl implements Graphic, Marshallable
     if( size <= 0 )
       return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
 
-    final BufferedImage image = new BufferedImage( size + 1, size + 1, BufferedImage.TYPE_INT_ARGB );
+    final BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
     final Graphics2D g = image.createGraphics();
     g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
@@ -457,13 +457,13 @@ public class Graphic_Impl implements Graphic, Marshallable
 
   /**
    * Returns an {@link Image} representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
-   * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If
-   * there is none, the default value of 6 pixels is used.
+   * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
+   * is none, the default value of 6 pixels is used.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {

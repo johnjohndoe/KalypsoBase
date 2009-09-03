@@ -110,11 +110,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     try
     {
       final StrokePainter strokePainter = new StrokePainter( stroke, getFeature(), uom, projection );
-      final FillPainter fillPpainter = new FillPainter( fill, getFeature(), uom, projection );
+      final FillPainter fillPainter = new FillPainter( fill, getFeature(), uom, projection );
 
       for( final GM_Surface< ? > element : surfaces )
       {
-        SldAwtUtilities.paintSurface( g2, element, projection, fillPpainter, strokePainter );
+        SldAwtUtilities.paintSurface( g2, element, projection, fillPainter, strokePainter );
       }
     }
     catch( final FilterEvaluationException e )
