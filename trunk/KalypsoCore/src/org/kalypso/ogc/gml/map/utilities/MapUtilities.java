@@ -193,7 +193,7 @@ public class MapUtilities
 
     final GeoTransform projection = mapPanel.getProjection();
     final IMapModell mapModell = mapPanel.getMapModell();
-    if( mapModell == null )
+    if( mapModell == null || projection == null )
       return null;
 
     String coordinatesSystem = mapModell.getCoordinatesSystem();
