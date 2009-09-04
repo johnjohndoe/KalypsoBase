@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: OdysseusChartExtensionTest Plug-in
-Bundle-SymbolicName: de.openali.odysseus.chart.ext.test;singleton:=true
-Bundle-Version: 0.2.0
-Require-Bundle: de.openali.odysseus.chart.ext.base;bundle-version="[0.2.0,0.2.0]"
-Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.kalypso.chart.ext.test.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
