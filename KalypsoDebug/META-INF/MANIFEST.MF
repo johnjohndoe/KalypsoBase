@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoDebug Plug-in
+Bundle-SymbolicName: org.kalypso.debug; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.debug.KalypsoDebugPlugin
+Bundle-Vendor: kalypso.org
+Export-Package: org.kalypso.debug,
+ org.kalypso.debug.editor,
+ org.kalypso.debug.view
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.ui,
+ org.kalypso.contribs.eclipseplatform
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
