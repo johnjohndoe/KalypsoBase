@@ -44,8 +44,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -55,7 +57,7 @@ import org.kalypso.services.observation.sei.ItemBean;
  * 
  * @author Schlienger
  */
-public class ObservationServiceRepository extends AbstractRepository
+public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository
 {
   /** root item is identified by the null bean */
   private final static ItemBean ROOT_ITEM = null;
@@ -146,9 +148,18 @@ public class ObservationServiceRepository extends AbstractRepository
    */
   public IRepositoryItem findItem( final String id ) throws RepositoryException
   {
-    final IRepositoryItem item = findItemRecursive( id, this );
+    if( this.getIdentifier() == id )
+      return this;
 
-    return item;
+    final IRepositoryItem[] children = this.getChildren();
+    for( final IRepositoryItem child : children )
+    {
+      final IRepositoryItem item = findItemRecursive( id, child );
+      if( item != null )
+        return item;
+    }
+
+    return null;
   }
 
   /**
@@ -166,8 +177,11 @@ public class ObservationServiceRepository extends AbstractRepository
       return foundItem;
 
     // either this is the item, or find recursive
-    if( item.getIdentifier().equalsIgnoreCase( id ) )
+    final String identifier = RepositoryUtils.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
+    if( identifier.equals( id ) )
+    {
       foundItem = item;
+    }
     else
     {
       final IRepositoryItem[] items = item.getChildren();
@@ -184,5 +198,15 @@ public class ObservationServiceRepository extends AbstractRepository
       m_foundItems.put( id, foundItem );
     
     return foundItem;
+  }
+
+  /**
+   * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
+   */
+  @Override
+  public void makeItem( final String identifier ) throws RepositoryException
+  {
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+    srv.makeItem( identifier );
   }
 }

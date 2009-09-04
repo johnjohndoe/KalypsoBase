@@ -75,6 +75,9 @@ public interface IRepositoryService
    */
   public ItemBean findItem( final String id ) throws RepositoryException;
 
+  
+  public void makeItem( String identifier ) throws RepositoryException;
+  
   /**
    * Forces the refresh of the remote repository.
    * 
