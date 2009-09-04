@@ -85,13 +85,16 @@ public class MapModellHelper
    * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
    * 
+   * @param panelOrModell
+   *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
+   *          a modell, if you do not have a panel (i.e. for image export or similar).
    * @return <code>false</code> if any error happened, the map is not guaranteed to be loaded in this case.
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
-  public static boolean waitForAndErrorDialog( final Shell shell, final IMapPanel mapPanel, final String windowTitle, final String message )
+  public static boolean waitForAndErrorDialog( final Shell shell, final Object panelOrModell, final String windowTitle, final String message )
   {
-    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel.getMapModell() );
+    final ICoreRunnableWithProgress operation = createWaitForMapOperation( panelOrModell );
     final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, windowTitle, message, waitErrorStatus );
     return waitErrorStatus.isOK();
@@ -100,8 +103,12 @@ public class MapModellHelper
   /**
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
+   * 
+   * @param panelOrModell
+   *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
+   *          a modell, if you do not have a panel (i.e. for image export or similar).
    */
-  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapModell modell )
+  public static ICoreRunnableWithProgress createWaitForMapOperation( final Object panelOrModell )
   {
     final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
     {
@@ -118,6 +125,14 @@ public class MapModellHelper
 
           try
           {
+            IMapModell modell;
+            if( panelOrModell instanceof IMapPanel )
+              modell = ((IMapPanel) panelOrModell).getMapModell();
+            else if( panelOrModell instanceof IMapModell )
+              modell = (IMapModell) panelOrModell;
+            else
+              throw new IllegalArgumentException();
+
             if( isMapLoaded( modell ) )
               return Status.OK_STATUS;
 
