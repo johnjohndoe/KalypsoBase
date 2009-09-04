@@ -65,46 +65,7 @@
             resolver="org.eclipse.debug.internal.ui.stringsubstitution.ProjectResolver">
       </variable>
    </extension>
-   <extension
-         point="org.kalypso.metadoc.exporter">
-      <exporter
-            icon="icons/elcl16/export-gis-feature.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.FeatureWithTemplateExporterTree"
-            description="%featureWithTemplateExporter.description"
-            name="%featureWithTemplateExporter.name"
-            id="featureWithTemplateExporterTree"/>            
-      <exporter
-            icon="icons/elcl16/export-simple-template.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.SimpleTemplateExporter"
-            description="%simpleTemplateExporter.description"
-            name="%simpleTemplateExporter.name"
-            id="simpleTemplateExporter"/>
-      <exporter
-            icon="icons/elcl16/export-sumup-table.gif"
-            class="org.kalypso.simulation.ui.wizards.exporter.SumUpTableExporter"
-            description="%sumUpTableExporter.description"
-            name="%sumUpTableExporter.name"
-            id="sumUpTableExporter"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-         <includes>
-            <contentExtension
-                  pattern="org.kalypso.simulation.ui.modelContent"/>
-         </includes>
-      </viewerContentBinding>
-   </extension>
   
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            category="org.kalypso.ui.kalypso"
-            class="org.kalypso.simulation.ui.logview.views.LogViewer"
-            icon="icons/logview/problems_view.gif"
-            id="org.kalypso.simulation.ui.logview.views.LogViewer"
-            name="%org.kalypso.simulation.ui.logview.views.LogViewer.name"/>
-   </extension>
    <extension
          point="org.eclipse.ant.core.extraClasspathEntries">
       <extraClasspathEntry
