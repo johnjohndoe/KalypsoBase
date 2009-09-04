@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
+import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -710,5 +711,23 @@ public class ObservationServiceDelegate implements IObservationService
     m_logger.warning( "Item not found: " + id );
 
     return null;
+  }
+
+  /**
+   * FIXME at the moment we assume that an new item should be created in all sub repositories
+   * 
+   * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
+   */
+  @Override
+  public void makeItem( final String itemIdentifier ) throws RepositoryException
+  {
+    for( final IRepository repository : m_repositories )
+    {
+      if( repository instanceof IModifyableRepository )
+      {
+        final IModifyableRepository modifyable = (IModifyableRepository) repository;
+        modifyable.makeItem( RepositoryUtils.replaceIdentifier( itemIdentifier, repository.getIdentifier() ) );
+      }
+    }
   }
 }

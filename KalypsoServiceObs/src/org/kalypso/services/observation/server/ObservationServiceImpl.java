@@ -333,4 +333,13 @@ public class ObservationServiceImpl implements IObservationService
     /* Reschedule the job. */
     m_observationServiceJob.schedule( m_intervall );
   }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
+   */
+  @Override
+  public void makeItem( final String identifier ) throws RepositoryException
+  {
+    getDelegate().makeItem( identifier );
+  }
 }

@@ -29,6 +29,7 @@
  */
 package org.kalypso.repository;
 
+
 /**
  * RepositoryUtils provides some utility methods in a static way
  * 
@@ -36,9 +37,9 @@ package org.kalypso.repository;
  */
 public class RepositoryUtils
 {
-  private RepositoryUtils()
+  private RepositoryUtils( )
   {
-  // no instanciation
+    // no instanciation
   }
 
   /**
@@ -63,19 +64,73 @@ public class RepositoryUtils
   /**
    * Return only the item-id part of the full id. If id is null, it returns null.
    * 
-   * @return the id part of the item. This is pretty much straightforward since the
-   *         convention (as defined in the IRepositoryItem interface) specifies that an Item's identifier should be
-   *         build using the repository id + item specific id (follows URL specification): repository-id://item-id-part
+   * @return the id part of the item. This is pretty much straightforward since the convention (as defined in the
+   *         IRepositoryItem interface) specifies that an Item's identifier should be build using the repository id +
+   *         item specific id (follows URL specification): repository-id://item-id-part
    */
   public static String getItemId( final String fullId )
   {
     if( fullId == null )
       return null;
-    
+
     final int ix = fullId.indexOf( "://" );
     if( ix == -1 )
       throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId );
 
-    return fullId.substring( ix + 3 );    
+    return fullId.substring( ix + 3 );
   }
+
+  /**
+   * looks for an equivalent item in an different repository
+   */
+  public static IRepositoryItem findEquivalentItem( final IRepositoryItem baseItem, final IRepository destinationRepository ) throws RepositoryException
+  {
+    final String id = resolveDestinationId( baseItem, destinationRepository );
+
+    return destinationRepository.findItem( id );
+  }
+
+  public static String resolveDestinationId( final IRepositoryItem baseItem, final IRepository destinationRepository )
+  {
+    return replaceIdentifier( baseItem.getIdentifier(), destinationRepository.getIdentifier() );
+  }
+
+  /**
+   * replace repository identifier in {@value itemIdentifier} with {@value repositoryIdentifier}
+   */
+  public static String replaceIdentifier( final String itemIdentifier, String repositoryIdentifier )
+  {
+    final String repository = getRepositoryId( itemIdentifier );
+    if( !repositoryIdentifier.endsWith( "://" ) )
+      repositoryIdentifier = String.format( "%s://", repositoryIdentifier );
+
+    return String.format( "%s%s", repositoryIdentifier, itemIdentifier.substring( repository.length() ) );
+  }
+
+  public static String getParentItemId( final String identifier )
+  {
+    final int index = identifier.lastIndexOf( "." );
+    if( index == -1 )
+    {
+      return RepositoryUtils.getRepositoryId( identifier );
+    }
+
+    return identifier.substring( 0, index );
+  }
+
+  public static String resolveItemName( final String identifier ) throws RepositoryException
+  {
+    int index = identifier.lastIndexOf( "." );
+    if( index == -1 )
+    {
+      index = identifier.indexOf( "://" );
+      if( index == -1 )
+        throw new RepositoryException( String.format( "Couldn't resolve item name from identifier: %s", identifier ) );
+
+      return identifier.substring( index + 3 );
+    }
+
+    return identifier.substring( index + 1 );
+  }
+
 }
