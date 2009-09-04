@@ -50,6 +50,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -168,6 +169,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private GM_Envelope m_initialEnv;
 
+  private BaseMapSchedulingRule m_baseMapSchedulingRule;
+
   protected AbstractMapPart( )
   {
     super();
@@ -179,10 +182,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void init( final IEditorSite site, final IEditorInput input )
   {
-    super.init( site, input );
+    setSite( site );
+
+    if( !(input instanceof IStorageEditorInput) )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+    setInput( (IStorageEditorInput) input );
+
     initMapPanel( site );
 
     if( input instanceof IStorageEditorInput )
+    {
       try
       {
         startLoadJob( ((IStorageEditorInput) input).getStorage() );
@@ -191,6 +200,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       {
         e.printStackTrace();
       }
+    }
   }
 
   /**
@@ -373,14 +383,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     };
 
     final IFile file = storage instanceof IFile ? (IFile) storage : null;
-    job.setRule( new BaseMapSchedulingRule( m_mapPanel, file ) );
+    job.setRule( getSchedulingRule( m_mapPanel, file ) );
     job.schedule();
   }
 
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     if( ObjectUtils.equals( m_file, storage ) )
       return;
@@ -388,6 +398,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_saving )
       return;
 
+    System.out.println( "Loading map: " + storage );
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
     try
@@ -484,7 +495,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final Form control = m_control;
     if( control != null && !control.isDisposed() )
     {
-      control.getDisplay().syncExec( new Runnable()
+      control.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {
@@ -499,7 +510,21 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public BaseMapSchedulingRule getSchedulingRule( )
   {
-    return new BaseMapSchedulingRule( m_mapPanel, m_file );
+    return getSchedulingRule( m_mapPanel, m_file );
+  }
+
+  public synchronized BaseMapSchedulingRule getSchedulingRule( final IMapPanel mapPanel, final IFile file )
+  {
+    if( m_baseMapSchedulingRule != null )
+    {
+      final IResource oldMapFile = m_baseMapSchedulingRule.getMapFile();
+      final IMapPanel oldMapPanel = m_baseMapSchedulingRule.getMapPanel();
+      if( ObjectUtils.equals( oldMapFile, file ) && oldMapPanel == mapPanel )
+        return m_baseMapSchedulingRule;
+    }
+
+    m_baseMapSchedulingRule = new BaseMapSchedulingRule( mapPanel, file );
+    return m_baseMapSchedulingRule;
   }
 
   /**

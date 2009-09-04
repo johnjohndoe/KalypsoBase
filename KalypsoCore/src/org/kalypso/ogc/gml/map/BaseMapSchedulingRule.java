@@ -58,9 +58,6 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
 
   public BaseMapSchedulingRule( final IMapPanel mapPanel, final IResource mapFile )
   {
-// Assert.isNotNull( mapPanel );
-// Assert.isNotNull( mapFile );
-
     m_mapPanel = mapPanel;
     m_mapFile = mapFile;
   }
