@@ -123,7 +123,10 @@ public final class XmlTypes
    * <pre>
    *      yyyy-MM-dd'T'HH:mm:ss
    * </pre>
+   * 
+   * @deprecated Use {@link javax.xml.bind.DatatypeConverter} instead
    */
+  @Deprecated
   public static DateParser getDateParser( final TimeZone timezone )
   {
     final DateParser parser = new DateParser( XML_DATETIME_FORMAT );
