@@ -62,7 +62,7 @@
       <variable
             name="simulation_project_loc"
             description="Substitution for project_loc, will be replaced by the simulation framework with the choosen projekt. Has the same behaviour as project_loc."
-            resolver="org.eclipse.debug.internal.ui.stringsubstitution.ProjectResolver">
+            resolver="org.eclipse.debug.internal.core.variables.ProjectResolver">
       </variable>
    </extension>
   
