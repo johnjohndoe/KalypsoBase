@@ -231,8 +231,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     final JobExclusiveCommandTarget commandTarget = m_commandTarget;
     final Job job = new Job( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.0") + filePath.toPortableString() ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
-      // ignore: we do not want to make it more public
       @Override
       public IStatus run( final IProgressMonitor monitor )
       {
