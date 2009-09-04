@@ -171,7 +171,7 @@ public class KalypsoCorePlugin extends Plugin
    */
   public TimeZone getTimeZone( )
   {
-    final String timeZoneID = getPluginPreferences().getString( IKalypsoCorePreferences.DISPLAY_TIMEZONE );
+    final String timeZoneID = getPreferenceStore().getString( IKalypsoCorePreferences.DISPLAY_TIMEZONE );
     if( IKalypsoCorePreferences.PREFS_OS_TIMEZONE.equals( timeZoneID ) )
       return TimeZone.getDefault();
 
