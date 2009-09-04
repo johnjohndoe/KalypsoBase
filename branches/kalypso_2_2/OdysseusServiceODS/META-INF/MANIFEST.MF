@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OdysseusService
+Bundle-SymbolicName: de.openali.odysseus.service.ods;singleton:=true
+Bundle-Version: 0.2.0
+Require-Bundle: de.openali.odysseus.chart.factory,
+ de.openali.odysseus.service.ows;bundle-version="0.2.0"
+Export-Package: de.openali.odysseus.service.ods.operation;uses:="de.openali.ows.service",
+ de.openali.odysseus.service.ods.util;
+  uses:="org.apache.xmlbeans.impl.values,
+   org.apache.xmlbeans,
+   de.openali.service.odsimpl,
+   net.opengis.ows"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: de.openali.odysseus.service.ods.OdysseusServiceODSPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: javax.servlet;version="2.4.0"
