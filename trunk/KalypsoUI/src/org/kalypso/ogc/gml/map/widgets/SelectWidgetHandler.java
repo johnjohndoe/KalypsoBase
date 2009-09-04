@@ -106,7 +106,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IMapModell model = mapPanel.getMapModell();
     if( !MapModellHelper.isMapLoaded( model ) )
     {
-      // TODO: this is too slow here!
       if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return null;
     }

@@ -306,7 +306,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  private final void setInput( final IStorageEditorInput input )
+  protected final void setInput( final IStorageEditorInput input )
   {
     m_editorInput = input;
 
