@@ -74,7 +74,7 @@ public class ListRemoteProjectAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     link.setImage( IMG_REMOTE_PROJECT );
-    link.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction.1"), m_handler.getName() ) ); //$NON-NLS-1$
+    link.setToolTipText(  Messages.getString("org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction.1", m_handler.getName() ) ); //$NON-NLS-1$
     link.setText( m_handler.getName() );
 
     link.setEnabled( false );

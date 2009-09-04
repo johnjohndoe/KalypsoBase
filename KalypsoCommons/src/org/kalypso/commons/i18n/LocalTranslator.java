@@ -106,18 +106,18 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_bundle == null )
-      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.1") + key; //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.1",key); //$NON-NLS-1$
 
     try
     {
       final String value = m_bundle.getString( key );
       if( value == null || value.isEmpty() )
-        return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2") + key; //$NON-NLS-1$
+        return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2",key); //$NON-NLS-1$
       return value;
     }
     catch( final MissingResourceException e )
     {
-      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2") + key; //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2",key); //$NON-NLS-1$
     }
   }
 }

@@ -73,6 +73,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
@@ -109,7 +110,7 @@ public class DescribeProcessOperation implements IOperation
     try
     {
       /* Start the operation. */
-      Debug.println( "Operation \"DescribeProcess\" started." );
+      Debug.println( "Operation \"DescribeProcess\" started." ); //$NON-NLS-1$
 
       /* Get the identifiers out of the request. */
       final List<String> identifiers = getIdentifier( request );
@@ -129,7 +130,7 @@ public class DescribeProcessOperation implements IOperation
     }
     catch( final Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
     }
   }
 
@@ -157,7 +158,7 @@ public class DescribeProcessOperation implements IOperation
       }
       catch( final JAXBException e )
       {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
       }
     }
     else
@@ -166,19 +167,19 @@ public class DescribeProcessOperation implements IOperation
       simulationTypes = new ArrayList<String>();
 
       /* Search for the parameter Identifier. */
-      final String parameterValue = request.getParameterValue( "Identifier" );
+      final String parameterValue = request.getParameterValue( "Identifier" ); //$NON-NLS-1$
       if( parameterValue != null )
       {
         simulationTypes.add( parameterValue );
       }
 
-      m_version = request.getParameterValue( "Version" );
+      m_version = request.getParameterValue( "Version" ); //$NON-NLS-1$
     }
 
     if( simulationTypes.size() == 0 )
     {
-      Debug.println( "Missing parameter Identifier!" );
-      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter Identifier is missing ...", "Identifier" );
+      Debug.println( "Missing parameter Identifier!" ); //$NON-NLS-1$
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, Messages.getString("org.kalypso.service.wps.server.operations.DescribeProcessOperation.0"), "Identifier" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return simulationTypes;
@@ -218,7 +219,7 @@ public class DescribeProcessOperation implements IOperation
 
     /* Build all content for the process description. */
     final String identifier = modelData.getTypeID();
-    final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier );
+    final CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier ); //$NON-NLS-1$
     final String title = identifier;
 
     /* Get the input from the model spec. */
@@ -226,11 +227,11 @@ public class DescribeProcessOperation implements IOperation
 
     /* Build the data inputs. */
     final List<InputDescriptionType> inputDescriptions = new LinkedList<InputDescriptionType>();
-    final String gmlVersion = "3.1.1";
+    final String gmlVersion = "3.1.1"; //$NON-NLS-1$
     for( int j = 0; j < input.size(); j++ )
     {
       final DataType data = input.get( j );
-      final CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+      final CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() ); //$NON-NLS-1$
       final String inputTitle = data.getId();
       final String inputAbstrakt = data.getDescription();
       final int minOccurs = data.isOptional() ? 0 : 1;
@@ -265,7 +266,7 @@ public class DescribeProcessOperation implements IOperation
     {
       final DataType data = output.get( j );
 
-      final CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+      final CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() ); //$NON-NLS-1$
       final String outputTitle = data.getId();
       final String outputAbstrakt = data.getDescription();
 
@@ -289,7 +290,7 @@ public class DescribeProcessOperation implements IOperation
 
     final ProcessOutputs processOutputs = WPS040ObjectFactoryUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
 
-    return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true );
+    return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, "", null, null, dataInputs, processOutputs, true, true ); //$NON-NLS-1$
   }
 
   private static LiteralInputType getLiteralData( final QName type )
@@ -303,7 +304,7 @@ public class DescribeProcessOperation implements IOperation
   {
     final String format = mimeTypeFromDataType( gmlVersion, type );
     final String schema = format == null ? null : schemaLocationFromDataType( gmlVersion, type );
-    final ComplexDataType complexData1 = WPS040ObjectFactoryUtilities.buildComplexDataType( format, "", schema );
+    final ComplexDataType complexData1 = WPS040ObjectFactoryUtilities.buildComplexDataType( format, "", schema ); //$NON-NLS-1$
     final ComplexDataType complexData = complexData1;
     final List<ComplexDataType> complexDatas = new LinkedList<ComplexDataType>();
     complexDatas.add( complexData );
@@ -331,7 +332,7 @@ public class DescribeProcessOperation implements IOperation
 
   private static String mimeTypeFromDataType( final String gmlVersion, final QName type )
   {
-    String format = "";
+    String format = ""; //$NON-NLS-1$
     if( GMLSchemaUtilities.isKnownType( type, gmlVersion ) )
     {
       format = WPSSimulationDataProvider.TYPE_GML;

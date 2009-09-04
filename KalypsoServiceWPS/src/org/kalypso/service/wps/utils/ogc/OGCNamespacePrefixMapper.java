@@ -64,20 +64,20 @@ public class OGCNamespacePrefixMapper extends NamespacePrefixMapper
   public String getPreferredPrefix( String namespaceUri, String suggestion, boolean requirePrefix )
   {
     /* Use xmlns-prefix for xmlns-Namespace. */
-    if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) )
-      return "xmlns";
+    if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "xmlns"; //$NON-NLS-1$
 
     /* Use xlink-prefix for xlink-Namespace. */
-    if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) )
-      return "xlink";
+    if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "xlink"; //$NON-NLS-1$
 
     /* Use wps-prefix for wps-Namespace. */
-    if( "http://www.opengeospatial.net/wps".equals( namespaceUri ) )
-      return "wps";
+    if( "http://www.opengeospatial.net/wps".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "wps"; //$NON-NLS-1$
 
     /* Use ows-prefix for ows-Namespace. */
-    if( "http://www.opengeospatial.net/ows".equals( namespaceUri ) )
-      return "ows";
+    if( "http://www.opengeospatial.net/ows".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "ows"; //$NON-NLS-1$
 
     return suggestion;
   }

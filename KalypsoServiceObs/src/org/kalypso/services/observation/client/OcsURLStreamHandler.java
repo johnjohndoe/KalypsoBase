@@ -64,6 +64,7 @@ import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.osgi.service.url.AbstractURLStreamHandlerService;
@@ -89,7 +90,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     try
     {
       final String protocol = u.getProtocol();
-      if( "proxy".equals( protocol ) )
+      if( "proxy".equals( protocol ) ) //$NON-NLS-1$
       {
         return openProxyConnection( u );
       }
@@ -99,7 +100,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( final Exception ex )
     {
-      throw new IOException( "Resolving url connection failed", ex );
+      throw new IOException( "Resolving url connection failed", ex ); //$NON-NLS-1$
     }
 
   }
@@ -107,13 +108,13 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   private URLConnection openProxyConnection( final URL u ) throws Exception
   {
     /** resolve IObservation from proxy repository */
-    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" );
+    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
     final IRepository repository = factory.createRepository();
 
     final String urlBase = u.toString();
-    final String[] splittedUrlBase = urlBase.split( "\\?" );
+    final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
     if( splittedUrlBase.length != 2 )
-      throw new IllegalStateException( String.format( "Unknown URL format. Format = proxy://itemId?parameter. Given %s", urlBase ) );
+      throw new IllegalStateException( String.format( "Unknown URL format. Format = proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
 
     final String itemId = splittedUrlBase[0];
     final String itemParameters = splittedUrlBase[1];
@@ -135,13 +136,13 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
   private File resolveTempFile( final IObservation observation, final String itemId ) throws IOException
   {
-    final String pathTmpDir = System.getProperty( "java.io.tmpdir" );
+    final String pathTmpDir = System.getProperty( "java.io.tmpdir" ); //$NON-NLS-1$
     final File tmpDir = new File( pathTmpDir );
-    final File observationDir = new File( tmpDir, "kalypso/observations" );
+    final File observationDir = new File( tmpDir, "kalypso/observations" ); //$NON-NLS-1$
     if( !observationDir.exists() )
       FileUtils.forceMkdir( observationDir );
 
-    final String[] parts = itemId.split( ":" );
+    final String[] parts = itemId.split( ":" ); //$NON-NLS-1$
 
     return null;
   }
@@ -150,22 +151,22 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   {
     final String href = u.toExternalForm();
 
-    m_logger.info( "Lade ZML: " + href );
+    m_logger.info( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.0") + href ); //$NON-NLS-1$
 
     // check if an empty id is provided, in that case use the request if provided
     if( ZmlURL.isEmpty( href ) )
     {
       try
       {
-        m_logger.warning( "Leere Zeitreihe angefordert..." );
+        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.1") ); //$NON-NLS-1$
 
         return tryWithRequest( href, null );
       }
       catch( final Exception e )
       {
-        m_logger.warning( "Leere Zeitreihe konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.2") + e.getLocalizedMessage() ); //$NON-NLS-1$
 
-        throw new IOException( "Leere Zeitreihe konnte nicht erzeugt werden: " + e.getLocalizedMessage() );
+        throw new IOException( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.3") + e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
 
@@ -185,7 +186,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       final DataBean data = srv.readData( href );
 
       // create a local temp file for storing the zml
-      file = FileUtilities.createNewUniqueFile( "zml", FileUtilities.TMP_DIR );
+      file = FileUtilities.createNewUniqueFile( "zml", FileUtilities.TMP_DIR ); //$NON-NLS-1$
       file.deleteOnExit();
       // TODO: dirty.... the stream to file never gets closed
 
@@ -203,25 +204,25 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Link konnte nicht aufgelöst werden: " + href );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.4") + href ); //$NON-NLS-1$
       KalypsoServiceObsActivator.getDefault().getLog().log( status );
 // String exceptionMessage = e.getLocalizedMessage();
 // m_logger.info( "Link konnte nicht aufgelöst werden: " + href + "\nFehler: " + exceptionMessage );
 
       try
       {
-        m_logger.warning( "Es wird versucht, eine Default-Zeitreihe zu erzeugen..." );
+        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.5") ); //$NON-NLS-1$
 
         return tryWithRequest( href, file );
       }
       catch( final Exception se )
       {
-        m_logger.warning( "Default-Zeitreihe konnte nicht erzeugt werden." );
-        final IStatus status2 = StatusUtilities.statusFromThrowable( se, "Link konnte nicht aufgelöst werden: " + href );
+        m_logger.warning( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.6") ); //$NON-NLS-1$
+        final IStatus status2 = StatusUtilities.statusFromThrowable( se, Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.7", href )); //$NON-NLS-1$
         KalypsoServiceObsActivator.getDefault().getLog().log( status2 );
       }
 
-      throw new IOException( "URL konnte nicht aufgelöst werden, Grund: " + e.getLocalizedMessage() );
+      throw new IOException( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.8", e.getLocalizedMessage()) ); //$NON-NLS-1$
     }
     finally
     {
@@ -241,7 +242,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     // create a local temp file for storing the zml if not provided
     if( file == null )
     {
-      file = FileUtilities.createNewUniqueFile( "zml", FileUtilities.TMP_DIR );
+      file = FileUtilities.createNewUniqueFile( "zml", FileUtilities.TMP_DIR ); //$NON-NLS-1$
       file.deleteOnExit();
     }
 
@@ -249,7 +250,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     // a request, let create a default observation according to it.
     final IObservation obs = RequestFactory.createDefaultObservation( href );
 
-    m_logger.info( "Default-Zeitreihe " + obs.getName() + " wurde erzeugt." );
+    m_logger.info( Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.9", obs.getName()) ); //$NON-NLS-1$ 
 
     ZmlFactory.writeToFile( obs, file );
 

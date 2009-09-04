@@ -66,7 +66,7 @@ public final class GMLSchemaCatalog
     }
     catch( final Exception e )
     {
-      final String message = Messages.getString("org.kalypso.gmlschema.GMLSchemaCatalog.0") + schemaLocation; //$NON-NLS-1$
+      final String message = Messages.getString("org.kalypso.gmlschema.GMLSchemaCatalog.0", schemaLocation); //$NON-NLS-1$
       StatusUtilities.statusFromThrowable( e, message );
 
       Debug.CATALOG.printf( message );

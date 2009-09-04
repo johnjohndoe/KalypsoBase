@@ -600,7 +600,7 @@ public class WPS100ObjectFactoryUtilities
     metadata.setAbstractMetaData( abstractMetaData );
 
     /* Attributes. */
-    metadata.setType( "simple" );
+    metadata.setType( "simple" ); //$NON-NLS-1$
 
     if( href != null )
       metadata.setHref( href );
@@ -1707,7 +1707,7 @@ public class WPS100ObjectFactoryUtilities
     final OnlineResourceType onlineResource = OWS_1_0_0_OF.createOnlineResourceType();
 
     /* Attributes. */
-    onlineResource.setType( "simple" );
+    onlineResource.setType( "simple" ); //$NON-NLS-1$
 
     if( href != null )
       onlineResource.setHref( href );
@@ -1888,7 +1888,7 @@ public class WPS100ObjectFactoryUtilities
     final RequestMethodType requestMethod = OWS_1_0_0_OF.createRequestMethodType();
 
     /* Attributes. */
-    requestMethod.setType( "simple" );
+    requestMethod.setType( "simple" ); //$NON-NLS-1$
 
     if( href != null )
       requestMethod.setHref( href );

@@ -86,7 +86,7 @@ public class FileRepository extends AbstractRepository
 
     m_root = new File( location );
     if( !m_root.exists() )
-      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" );
+      throw new IllegalArgumentException( "Location existiert nicht! (Location: " + location + ")" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 
@@ -161,7 +161,7 @@ public class FileRepository extends AbstractRepository
     final String baseId = getIdentifier().toLowerCase();
     final String itemId = id.toLowerCase();
 
-    final String scheme = baseId + ":/";
+    final String scheme = baseId + ":/"; //$NON-NLS-1$
 
     if( !itemId.startsWith( scheme ) )
       return null;
@@ -172,7 +172,7 @@ public class FileRepository extends AbstractRepository
 
     // replaceFirst can not handle "$" in itemId, so replaced by next line
     // final String path = itemId.replaceFirst( scheme, strRoot );
-    final String path = strRoot + itemId.replaceFirst( scheme, "" );
+    final String path = strRoot + itemId.replaceFirst( scheme, "" ); //$NON-NLS-1$
     final File f = new File( path );
 
     if( !f.exists() )

@@ -54,9 +54,9 @@ public class RepositoryUtils
     if( fullId == null )
       return null;
 
-    final int ix = fullId.indexOf( "://" );
+    final int ix = fullId.indexOf( "://" ); //$NON-NLS-1$
     if( ix == -1 )
-      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId );
+      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId ); //$NON-NLS-1$
 
     return fullId.substring( 0, ix + 3 );
   }
@@ -73,9 +73,9 @@ public class RepositoryUtils
     if( fullId == null )
       return null;
 
-    final int ix = fullId.indexOf( "://" );
+    final int ix = fullId.indexOf( "://" ); //$NON-NLS-1$
     if( ix == -1 )
-      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId );
+      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId ); //$NON-NLS-1$
 
     return fullId.substring( ix + 3 );
   }

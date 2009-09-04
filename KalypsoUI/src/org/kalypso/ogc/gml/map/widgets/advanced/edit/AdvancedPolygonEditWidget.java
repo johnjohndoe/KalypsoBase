@@ -166,7 +166,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public String getToolTip( )
   {
-    return String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.1"), getCurrentDelegate().getToolTip() ); //$NON-NLS-1$
+    return String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.1", getCurrentDelegate().getToolTip()) ); //$NON-NLS-1$
   }
 
   /**

@@ -76,14 +76,14 @@ public class OGCServiceExtensions
     if( element == null )
       return null;
 
-    IConfigurationElement[] children = element.getChildren( "parameter" );
+    IConfigurationElement[] children = element.getChildren( "parameter" ); //$NON-NLS-1$
     if( children.length == 0 )
       return parameters;
 
     for( int i = 0; i < children.length; i++ )
     {
       IConfigurationElement child = children[i];
-      parameters.add( child.getAttribute( "parameterName" ) );
+      parameters.add( child.getAttribute( "parameterName" ) ); //$NON-NLS-1$
     }
 
     return parameters;
@@ -92,14 +92,14 @@ public class OGCServiceExtensions
   public static IOGCService createService( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> elts = getOperations();
-    System.out.println( "looking for service: " + id );
+    System.out.println( "looking for service: " + id ); //$NON-NLS-1$
 
     final IConfigurationElement element = elts.get( id );
     if( element == null )
       return null;
 
-    System.out.println( "Found service: " + id );
-    return (IOGCService) element.createExecutableExtension( "class" );
+    System.out.println( "Found service: " + id ); //$NON-NLS-1$
+    return (IOGCService) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   /**
@@ -120,7 +120,7 @@ public class OGCServiceExtensions
     {
       String key = itr.next();
       IConfigurationElement element = elts.get( key );
-      services.put( key, (IOGCService) element.createExecutableExtension( "class" ) );
+      services.put( key, (IOGCService) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
     }
 
     return services;
@@ -136,13 +136,13 @@ public class OGCServiceExtensions
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.service.ogc.ogcService" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.service.ogc.ogcService" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
-        final String id = element.getAttribute( "serviceName" );
+        final String id = element.getAttribute( "serviceName" ); //$NON-NLS-1$
         THE_MAP.put( id, element );
 
-        System.out.println( "adding service: " + id );
+        System.out.println( "adding service: " + id ); //$NON-NLS-1$
       }
     }
     else

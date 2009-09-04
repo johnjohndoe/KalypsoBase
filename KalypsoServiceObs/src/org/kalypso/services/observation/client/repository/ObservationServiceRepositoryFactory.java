@@ -51,7 +51,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
 {
   public ObservationServiceRepositoryFactory( )
   {
-    setRepositoryName( "Zeitreihen Dienst" );
+    setRepositoryName( "Zeitreihen Dienst" ); //$NON-NLS-1$
   }
 
   /**

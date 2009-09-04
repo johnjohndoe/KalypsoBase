@@ -156,6 +156,6 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
       }
     }
 
-    throw new NoSuchElementException( "Item not found: " + id );
+    throw new NoSuchElementException( "Item not found: " + id ); //$NON-NLS-1$
   }
 }

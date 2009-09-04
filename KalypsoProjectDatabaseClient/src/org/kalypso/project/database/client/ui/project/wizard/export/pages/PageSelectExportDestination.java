@@ -146,7 +146,7 @@ public class PageSelectExportDestination extends WizardPage
 
     /* propose export target */
     final String javaTmpDir = FrameworkProperties.getProperty( FileUtilities.JAVA_IO_TMPDIR );
-    final String target = String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.3" ), javaTmpDir ); //$NON-NLS-1$
+    final String target =  Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.3" , javaTmpDir ); //$NON-NLS-1$
     m_sFile = target;
     text.setText( target );
 

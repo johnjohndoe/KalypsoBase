@@ -78,6 +78,7 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
@@ -157,7 +158,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final CoreException e1 )
     {
-      throw new SimulationException( "Could not get process description", e1 );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.0"), e1 ); //$NON-NLS-1$
     }
 
     m_execute = executeMediator.getV04();
@@ -182,7 +183,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Error resolving the result directory for this job", e );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.1"), e ); //$NON-NLS-1$
     }
     checkExpectedOutput();
   }
@@ -193,7 +194,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_outputList.containsKey( id ) )
-      throw new SimulationException( "Server doesn't expect the output with the ID: " + id, null );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.2") + id, null ); //$NON-NLS-1$
 
     // if( !m_outputListClient.containsKey( id ) )
     // throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
@@ -241,12 +242,12 @@ public class WPSSimulationResultEater implements ISimulationResultEater
             final String schemaLocationString = gmlWorkspace.getGMLSchema().getContext().toString();
             gmlWorkspace.setSchemaLocation( schemaLocationString );
             schema = schemaLocationString;
-            GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true );
+            GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true ); //$NON-NLS-1$
             complexResult = stringWriter.toString();
           }
           catch( final GmlSerializeException e )
           {
-            throw new SimulationException( "Problem serializing gml output.", e );
+            throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.3"), e ); //$NON-NLS-1$
           }
         }
         else
@@ -260,46 +261,46 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     else if( literalOutput != null )
     {
       final String value = literalOutput.getDataType().getValue();
-      if( value.endsWith( "string" ) )
+      if( value.endsWith( "string" ) ) //$NON-NLS-1$
       {
         if( result instanceof String )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a String (Literal): " + result, null );
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.4") + id + "' must be a String (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      else if( value.endsWith( "int" ) )
+      else if( value.endsWith( "int" ) ) //$NON-NLS-1$
       {
         if( result instanceof Integer )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be an Integer (Literal): " + result, null );
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.5") + id + "' must be an Integer (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      else if( value.endsWith( "double" ) )
+      else if( value.endsWith( "double" ) ) //$NON-NLS-1$
       {
         if( result instanceof Double )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a Double (Literal) ...", null );
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.6", id ), null ); //$NON-NLS-1$
       }
-      else if( value.endsWith( "boolean" ) )
+      else if( value.endsWith( "boolean" ) ) //$NON-NLS-1$
       {
         if( result instanceof String )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a Boolean (Literal) ...", null );
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$ 
       }
       else
-        throw new SimulationException( "The type of the output (which is: " + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.8") + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else if( boundingBoxOutput != null )
     {
       if( result instanceof BoundingBoxType )
         valueFormChoice = result;
       else
-        throw new SimulationException( "The type of the output with the identifier '" + id + "' must be a BoundingBoxType ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.9", id ), null ); //$NON-NLS-1$ 
     }
     else
-      throw new SimulationException( "The type of the output with the identifier '" + id + "' is not correctly defined by the simulation ...", null );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.10", id ), null ); //$NON-NLS-1$ 
 
     /* Build io value. */
     final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
@@ -321,19 +322,19 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         if( FileType.FOLDER.equals( source.getType() ) )
         {
           /* Directory copy. */
-          Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." );
+          Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           VFSUtilities.copyDirectoryToDirectory( source, destination );
         }
         else if( FileType.FILE.equals( source.getType() ) )
         {
           /* File copy. */
-          Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." );
+          Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           VFSUtilities.copyFileTo( source, destination );
         }
       }
       catch( final IOException e )
       {
-        throw new SimulationException( "Could not update reference to " + sourceFile, e );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.11",sourceFile), e ); //$NON-NLS-1$
       }
     }
 
@@ -357,8 +358,8 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       /* Getting the relative path to the source file. */
       final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
       if( relativePathToSource == null )
-        throw new SimulationException( "The output to be copied is not inside the temporary directory: " + sourceFile );
-      final String uri = m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource;
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.12", sourceFile) ); //$NON-NLS-1$
+      final String uri = m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource; //$NON-NLS-1$
 
       final FileObject destination = m_vfsManager.resolveFile( uri );
 
@@ -378,7 +379,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "Could not add ComplexValueReference for file " + sourceFile, e );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.13", sourceFile), e ); //$NON-NLS-1$
     }
   }
 
@@ -386,7 +387,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   {
     /* Resolving the result file object. */
     if( m_resultDir == null )
-      throw new SimulationException( "Error resolving the result directory for this job: The property org.kalypso.service.wps.results is not set ...", null );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.14"), null ); //$NON-NLS-1$
   }
 
   /**
@@ -415,27 +416,27 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    */
   private LiteralValueType addLiteralValueType( final Object result )
   {
-    String value = "";
-    String dataType = "";
+    String value = ""; //$NON-NLS-1$
+    String dataType = ""; //$NON-NLS-1$
     if( result instanceof String )
     {
       value = DatatypeConverter.printString( (String) result );
-      dataType = "string";
+      dataType = "string"; //$NON-NLS-1$
     }
     else if( result instanceof Integer )
     {
       value = DatatypeConverter.printInt( ((Integer) result).intValue() );
-      dataType = "int";
+      dataType = "int"; //$NON-NLS-1$
     }
     else if( result instanceof Double )
     {
       value = DatatypeConverter.printDouble( ((Double) result).doubleValue() );
-      dataType = "double";
+      dataType = "double"; //$NON-NLS-1$
     }
     else if( result instanceof Boolean )
     {
       value = DatatypeConverter.printBoolean( ((Boolean) result).booleanValue() );
-      dataType = "boolean";
+      dataType = "boolean"; //$NON-NLS-1$
     }
     else
     {
@@ -499,7 +500,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       final String clientKey = clientKeys.next();
       if( !m_outputList.containsKey( clientKey ) )
-        throw new SimulationException( "The output for the identifier '" + clientKey + "' can not be provided from the server ...", null );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.15",clientKey ), null ); //$NON-NLS-1$ /
     }
 
     /* Ok, everything is fine. The client did not expect things, the server cannot do. */

@@ -147,7 +147,7 @@ public class ImportGridUtilities
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0"), destFileName ), null ) ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", destFileName ), null ) ); //$NON-NLS-1$
           }
           final ConvertAscii2Binary converter = new ConvertAscii2Binary( gridFile.toURI().toURL(), destFile, 2, sourceCRS );
           converter.doConvert( monitor );
@@ -170,7 +170,7 @@ public class ImportGridUtilities
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.2"), destFile ), null ) ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.2", destFile ), null ) ); //$NON-NLS-1$
           }
           FileUtils.copyFile( gridFile, destFile );
           return destFile;
@@ -183,7 +183,7 @@ public class ImportGridUtilities
         }
       }
 
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.4"), extension ), null ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.4", extension ), null ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final CoreException e )
@@ -205,7 +205,8 @@ public class ImportGridUtilities
     {
       public String queryOverwrite( final String pathString )
       {
-        if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5"), Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6") + pathString + " exisitert bereits.\nSoll Sie überschrieben werden?" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5"),//$NON-NLS-1$ 
+            Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6", pathString  )) ) //$NON-NLS-2$ 
           return IOverwriteQuery.YES;
         return IOverwriteQuery.NO;
       }
@@ -259,7 +260,7 @@ public class ImportGridUtilities
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7") + gridFile.getFullPath().toOSString(), e ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7",gridFile.getFullPath().toOSString()), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -359,7 +360,7 @@ public class ImportGridUtilities
    */
   public static ICoverage importGrid( final ICoverageCollection coverageCollection, final File gridFile, final String name, final String crs, final IContainer targetFolder, final RectifiedGridDomain domain, final IProgressMonitor monitor ) throws CoreException
   {
-    final String taskName = String.format( Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.9"), gridFile.getName() ); //$NON-NLS-1$
+    final String taskName =  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.9", gridFile.getName() ); //$NON-NLS-1$
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, 100 );
 
     IFile targetFile = null;

@@ -188,7 +188,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
         }
         catch( final Exception e )
         {
-          final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8"), ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
+          final String msg =  Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8", ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
           final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
           stati.add( status );
         }

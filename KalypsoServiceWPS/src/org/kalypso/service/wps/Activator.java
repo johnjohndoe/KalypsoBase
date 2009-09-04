@@ -14,7 +14,7 @@ public class Activator extends Plugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.service.wps";
+  public static final String PLUGIN_ID = "org.kalypso.service.wps"; //$NON-NLS-1$
 
   // The shared instance
   private static Activator plugin;
@@ -36,7 +36,7 @@ public class Activator extends Plugin
     super.start( context );
     // TODO: try to do this some other way
     //workaround to force loading of marshall utilities in this place
-    final InputStream inputStream = MarshallUtilities.getInputStream( "" );
+    final InputStream inputStream = MarshallUtilities.getInputStream( "" ); //$NON-NLS-1$
     IOUtils.closeQuietly( inputStream );
   }
 

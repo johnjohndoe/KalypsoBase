@@ -129,7 +129,7 @@ public class ProjectLockRemoteAction implements IProjectAction
       final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
       final String date = sdf.format( editLockDate );
 
-      tooltip = String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.3"), date ); //$NON-NLS-1$
+      tooltip = Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.3", date ); //$NON-NLS-1$
     }
     else
       tooltip = Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.ProjectLockRemoteAction.4"); //$NON-NLS-1$

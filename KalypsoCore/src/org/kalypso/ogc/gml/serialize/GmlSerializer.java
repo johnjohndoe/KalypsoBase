@@ -251,7 +251,7 @@ public final class GmlSerializer
       else
       {
         final long contentLength = getContentLength( gmlURL );
-        final String tskMsg = String.format( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.3"), gmlURL ); //$NON-NLS-1$
+        final String tskMsg = String.format( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL )); //$NON-NLS-1$
         monitor.beginTask( tskMsg, (int) contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
       }

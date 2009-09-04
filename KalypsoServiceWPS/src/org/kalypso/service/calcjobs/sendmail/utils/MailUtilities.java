@@ -50,27 +50,27 @@ public class MailUtilities
   /**
    * x-java-content-handler=com.sun.mail.handlers.text_plain
    */
-  public static final String TEXT_PLAIN = "text/plain";
+  public static final String TEXT_PLAIN = "text/plain"; //$NON-NLS-1$
 
   /**
    * x-java-content-handler=com.sun.mail.handlers.text_html
    */
-  public static final String TEXT_HTML = "text/html";
+  public static final String TEXT_HTML = "text/html"; //$NON-NLS-1$
 
   /**
    * x-java-content-handler=com.sun.mail.handlers.text_xml
    */
-  public static final String TEXT_XML = "text/xml";
+  public static final String TEXT_XML = "text/xml"; //$NON-NLS-1$
 
   /**
    * x-java-content-handler=com.sun.mail.handlers.multipart_mixed; x-java-fallback-entry=true
    */
-  public static final String MULTIPART_ALL = "multipart/*";
+  public static final String MULTIPART_ALL = "multipart/*"; //$NON-NLS-1$
 
   /**
    * x-java-con tent-handler=com.sun.mail.handlers.message_rfc822
    */
-  public static final String MESSAGE_RFC822 = "message/rfc822";
+  public static final String MESSAGE_RFC822 = "message/rfc822"; //$NON-NLS-1$
 
   /**
    * The constructor.

@@ -95,7 +95,7 @@ public class RequestBean
       return null;
 
     /* Only try to read, if the content type was set to text/xml. */
-    if( !("text/xml".equals( request.getContentType() )) )
+    if( !("text/xml".equals( request.getContentType() )) ) //$NON-NLS-1$
       return null;
 
     String body = null;
@@ -106,10 +106,10 @@ public class RequestBean
       reader = request.getReader();
 
       final StringBuffer buffer = new StringBuffer();
-      String line = "";
+      String line = ""; //$NON-NLS-1$
 
       while( (line = reader.readLine()) != null )
-        buffer.append( line + "\n" );
+        buffer.append( line + "\n" ); //$NON-NLS-1$
 
       reader.close();
       body = buffer.toString();

@@ -247,7 +247,7 @@ public class ShapeSerializer
       geometryProperty = featureType.getDefaultGeometryProperty().getQName();
     }
     if( geoPt == null )
-      throw new GmlSerializeException( String.format( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.12" ), geomProperty.toString(), featureType.getQName().toString() ) ); //$NON-NLS-1$
+      throw new GmlSerializeException(  Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.12" , geomProperty.toString(), featureType.getQName().toString() ) ); //$NON-NLS-1$
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
@@ -395,7 +395,7 @@ public class ShapeSerializer
 
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
   {
-    final String taskName = String.format( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.2"), fileBase ); //$NON-NLS-1$
+    final String taskName = Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
     ShapeFile sf = null;

@@ -76,10 +76,10 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     final String ticket = service.acquireProjectEditLock( m_handler.getUniqueName() );
     if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
-      StatusUtilities.createErrorStatus( String.format( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.1" ), m_handler.getName() ) ); //$NON-NLS-1$
+      StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.1" , m_handler.getName() ) ); //$NON-NLS-1$
 
     if( !(m_handler instanceof ITranscendenceProject) )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2" ), m_handler.getName() ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2" , m_handler.getName() ) ) ); //$NON-NLS-1$
 
     m_handler.getRemotePreferences().setEditTicket( ticket );
 

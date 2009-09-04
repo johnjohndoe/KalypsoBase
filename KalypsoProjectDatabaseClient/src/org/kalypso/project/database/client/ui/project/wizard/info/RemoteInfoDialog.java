@@ -155,7 +155,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupVersions = new Group( parent, SWT.NULL );
     groupVersions.setLayout( new GridLayout() );
     groupVersions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    groupVersions.setText( String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.1" ), m_handler.getBean().getName() ) ); //$NON-NLS-1$
+    groupVersions.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.1" , m_handler.getBean().getName() ) ); //$NON-NLS-1$
 
     final ComboViewer viewerVersions = new ComboViewer( groupVersions );
     viewerVersions.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -172,7 +172,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          return String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.2" ), project.getProjectVersion(), project.getCreationDate() ); //$NON-NLS-1$
+          return  Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.2" , project.getProjectVersion(), project.getCreationDate() ); //$NON-NLS-1$
         }
 
         return super.getText( element );
@@ -260,7 +260,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          version.setText( String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9" ), project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
+          version.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9" , project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
 
           if( project.getChanges() != null )
             changes.setText( m_handler.getBean().getChanges() );

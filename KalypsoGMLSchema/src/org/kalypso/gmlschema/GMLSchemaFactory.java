@@ -158,7 +158,7 @@ public class GMLSchemaFactory
       Debug.LOADING.printf( "Failed to load schema:%n" ); //$NON-NLS-1$
       Debug.LOADING.printStackTrace( e );
 
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.0") + e.getMessage(), e ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.0", e.getMessage()), e ); //$NON-NLS-1$
     }
 
     final Schema schema = schemaDocument.getSchema();

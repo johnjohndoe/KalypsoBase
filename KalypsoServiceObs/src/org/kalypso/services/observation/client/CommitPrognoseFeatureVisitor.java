@@ -62,6 +62,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.client.repository.ServiceRepositoryObservation;
+import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -130,10 +131,10 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     final TimeseriesLinkType sourceLink = (TimeseriesLinkType) f.getProperty( m_sourceTS );
     final TimeseriesLinkType targetLink = (TimeseriesLinkType) f.getProperty( m_targetTS );
     if( sourceLink == null )
-      return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, "Kein Link für Property " + m_sourceTS + " in Feature ID = " + id, null );
+      return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.0", m_sourceTS, id ), null ); //$NON-NLS-1$
 
     if( targetLink == null )
-      return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, "Kein Link für Property " + m_targetTS + " in Feature ID = " + id, null );
+      return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.0", m_targetTS, id ), null ); //$NON-NLS-1$
 
     final String sourceHref = sourceLink.getHref();
     final String targetHref = targetLink.getHref();
@@ -144,12 +145,12 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Auflösen eines Zeitreihen-Links für Feature ID = " + id );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.1" ) + id ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Zugriff auf den Zeitreihendienst für Feature ID = " + id );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
     }
   }
 
@@ -157,7 +158,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   {
     final String filteredSourceHref;
     if( m_sourceFilter != null && m_sourceFilter.length() > 0 && sourceHref.indexOf( '?' ) == -1 )
-      filteredSourceHref = sourceHref + "?" + m_sourceFilter;
+      filteredSourceHref = sourceHref + "?" + m_sourceFilter; //$NON-NLS-1$
     else
       filteredSourceHref = sourceHref;
 
@@ -181,8 +182,8 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
       // LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
       // + " are defined in " + source );
 
-      final Status status = new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, "Zeitreihe konnte nicht auf dem Server hochgeladen werden "
-          + "weil sie nicht mit der Zielzeitreihe kompatibel ist. " + "Prüfen Sie u.a. die Achsenliste in: " + source, e );
+      final Status status = new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.3", source ), e ); //$NON-NLS-1$
+
       return status;
     }
 
@@ -195,10 +196,10 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     if( ZmlURL.isServerSide( targetHref ) )
     {
       ServiceRepositoryObservation.setValuesFor( values, targetHref, m_srv );
-      LOG.info( "Observation saved on server: " + targetHref );
+      LOG.info( "Observation saved on server: " + targetHref ); //$NON-NLS-1$
     }
     else
-      LOG.warning( "! Observation not server side: " + targetHref );
+      LOG.warning( "! Observation not server side: " + targetHref ); //$NON-NLS-1$
     // }
 
     return Status.OK_STATUS;

@@ -99,11 +99,11 @@ public class OGCServlet extends HttpServlet implements Servlet
       {
         final String key = itr.next();
         final IOGCService service = services.get( key );
-        System.out.println( "Asking service " + key + " ..." );
+        System.out.println( "Asking service " + key + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
         if( service.responsibleFor( request ) )
         {
           /* Found a service. */
-          System.out.println( "Service " + key + " answered positivly." );
+          System.out.println( "Service " + key + " answered positivly." ); //$NON-NLS-1$ //$NON-NLS-2$
           foundKey = key;
           foundService = service;
           break;
@@ -112,23 +112,23 @@ public class OGCServlet extends HttpServlet implements Servlet
 
       /* No suitable service found. */
       if( foundService == null || foundKey == null )
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "No service found, which can handle this request.", "" );
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "No service found, which can handle this request.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Check, if all required parameters are there. But only, if the request was send via the get method. */
       if( !request.isPost() )
       {
-        System.out.println( "GET detected: Checking if all mandatory parameters are available ..." );
+        System.out.println( "GET detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
         checkMandadoryParameter( request, foundKey );
       }
       else if( request.isPost() && request.getBody() == null )
       {
-        System.out.println( "POST without XML detected: Checking if all mandatory parameters are available ..." );
+        System.out.println( "POST without XML detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
         checkMandadoryParameter( request, foundKey );
       }
       else
       {
         /* The service itself should check his parameters in the XML. */
-        System.out.println( "POST with XML detected: Let the service check if all mandatory parameters are available ..." );
+        System.out.println( "POST with XML detected: Let the service check if all mandatory parameters are available ..." ); //$NON-NLS-1$
       }
 
       /* Execute the operation. */
@@ -136,7 +136,7 @@ public class OGCServlet extends HttpServlet implements Servlet
     }
     catch( final CoreException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" ); //$NON-NLS-1$
     }
   }
 
@@ -155,7 +155,7 @@ public class OGCServlet extends HttpServlet implements Servlet
     {
       final String parameterName = mandadoryParameters.get( i );
       if( request.getParameterValue( parameterName ) == null )
-        throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter '" + parameterName + "' is mandatory", parameterName );
+        throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter '" + parameterName + "' is mandatory", parameterName ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

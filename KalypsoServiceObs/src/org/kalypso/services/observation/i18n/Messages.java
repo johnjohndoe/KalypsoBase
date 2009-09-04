@@ -38,47 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.base.worker;
+package org.kalypso.services.observation.i18n;
 
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.project.database.client.i18n.Messages;
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Deletes an local IProject
- * 
- * @author Dirk Kuch
+ * @author Nico Schrage
  */
-public class DeleteLocalProjectWorker implements ICoreRunnableWithProgress
+public class Messages
 {
-  private final IProject m_project;
+  private static final String BUNDLE_NAME = "org.kalypso.services.observation.i18n.messages"; //$NON-NLS-1$
 
-  public DeleteLocalProjectWorker( final IProject project )
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    m_project = project;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public static String getString( final String key, final Object... args )
   {
-    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, Messages.getString( "org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler.0" , m_project.getName() ), true ); //$NON-NLS-1$
+    String formatStr = ""; //$NON-NLS-1$
     try
     {
-      return operation.execute( monitor, null );
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
     }
-    catch( final ExecutionException e )
+    catch( final MissingResourceException e )
     {
-      return StatusUtilities.createErrorStatus( e.getMessage() );
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
     }
   }
-
 }

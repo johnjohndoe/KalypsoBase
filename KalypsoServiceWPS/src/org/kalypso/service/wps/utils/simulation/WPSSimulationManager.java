@@ -44,6 +44,7 @@ import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.Activator;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.simulation.core.SimulationException;
@@ -57,7 +58,7 @@ import org.kalypso.simulation.core.internal.local.LocalURLCatalog;
  */
 public class WPSSimulationManager
 {
-  private static final String WPS_MAX_NUM_THREADS = "org.kalypso.service.wps.maxNumThreads";
+  private static final String WPS_MAX_NUM_THREADS = "org.kalypso.service.wps.maxNumThreads"; //$NON-NLS-1$
 
   /**
    * The simulations will be handled here.
@@ -76,7 +77,7 @@ public class WPSSimulationManager
   {
     int maxNumThreads = 1;
     final String property = System.getProperty( WPS_MAX_NUM_THREADS );
-    if( property != null && !"".equals( property ) )
+    if( property != null && !"".equals( property ) ) //$NON-NLS-1$
     {
       try
       {
@@ -84,10 +85,10 @@ public class WPSSimulationManager
       }
       catch( final NumberFormatException e )
       {
-        Activator.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "%s does not specify a valid maximum number of threads: %s.", WPS_MAX_NUM_THREADS, property ) );
+        Activator.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationManager.1"), WPS_MAX_NUM_THREADS, property ) ); //$NON-NLS-1$
       }
     }
-    Debug.println( "Setting maximum number of threads to " + maxNumThreads );
+    Debug.println( "Setting maximum number of threads to " + maxNumThreads ); //$NON-NLS-1$
     m_service = new WPSQueuedSimulationService( new LocalSimulationFactory(), new LocalURLCatalog(), maxNumThreads, 2000 );
   }
 
@@ -138,7 +139,7 @@ public class WPSSimulationManager
     }
     catch( final SimulationException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "Could not start process." );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationManager.2") ); //$NON-NLS-1$
     }
   }
 

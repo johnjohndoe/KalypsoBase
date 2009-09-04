@@ -182,7 +182,7 @@ public class ProjectOpenAction implements IProjectAction
     link.setImage( m_type.getImage() );
     link.setText( m_handler.getName() );
 
-    link.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10"), m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
+    link.setToolTipText(  Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {

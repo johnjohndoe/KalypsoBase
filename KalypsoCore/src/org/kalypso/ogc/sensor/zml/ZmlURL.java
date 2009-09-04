@@ -311,7 +311,7 @@ public final class ZmlURL
   {
     final String id = getIdentifierPart( href );
 
-    return id.matches( ".*//LEER" );
+    return id.matches( ".*//LEER" ); //$NON-NLS-1$
 
 //    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" ); //$NON-NLS-1$ //$NON-NLS-2$
   }

@@ -18,15 +18,15 @@ import org.kalypso.repository.factory.IRepositoryFactory;
  */
 public class RepositoriesExtensions
 {
-  public final static String REPOSITORIES_EXTENSION_POINT = "org.kalypso.repository.factories";
+  public final static String REPOSITORIES_EXTENSION_POINT = "org.kalypso.repository.factories"; //$NON-NLS-1$
 
-  public final static String ATT_NAME = "name";
+  public final static String ATT_NAME = "name"; //$NON-NLS-1$
 
-  public final static String ATT_FACTORY = "factory";
+  public final static String ATT_FACTORY = "factory"; //$NON-NLS-1$
 
-  public final static String ATT_CONF = "conf";
+  public final static String ATT_CONF = "conf"; //$NON-NLS-1$
 
-  public final static String ATT_RO = "readOnly";
+  public final static String ATT_RO = "readOnly"; //$NON-NLS-1$
 
   /**
    * Uses the platform extension registry to retrieve all extensions for the repositories extension point.

@@ -136,7 +136,7 @@ public class GmlLoader extends WorkspaceLoader
       /* Hook for Loader stuff */
       final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
 
-      setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createStatus( resultList, Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" , gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
       ProgressUtilities.done( moni );
 

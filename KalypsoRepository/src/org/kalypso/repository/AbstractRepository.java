@@ -116,7 +116,7 @@ public abstract class AbstractRepository implements IRepository
    */
   public String getDescription( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**
@@ -198,7 +198,7 @@ public abstract class AbstractRepository implements IRepository
   {
     final String desc = getDescription();
     if( (desc != null) && (desc.length() > 0) )
-      return getName() + " (" + desc + ")";
+      return getName() + " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     return getName();
   }
@@ -225,7 +225,7 @@ public abstract class AbstractRepository implements IRepository
    */
   public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
-    dumpRecursive( writer, this, "", monitor );
+    dumpRecursive( writer, this, "", monitor ); //$NON-NLS-1$
   }
 
   /**
@@ -247,18 +247,18 @@ public abstract class AbstractRepository implements IRepository
       // we dump the properties too.
       final Properties props = (Properties) item.getAdapter( Properties.class );
       if( props != null )
-        writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) );
+        writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) ); //$NON-NLS-1$
       else
         writer.write( indent + item.toString() );
 
-      writer.write( "\n" );
+      writer.write( "\n" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       throw new RepositoryException( e );
     }
 
-    final String recIndent = indent + "\t";
+    final String recIndent = indent + "\t"; //$NON-NLS-1$
 
     final IRepositoryItem[] items = item.getChildren();
     if( items == null )

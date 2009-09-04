@@ -80,7 +80,7 @@ public class OWSException extends Exception
     extype.getExceptionText().add( ew.toString() );
     report.getException().add( extype );
     Marshaller m;
-    String excString = "";
+    String excString = ""; //$NON-NLS-1$
     StringWriter sw = null;
     try
     {

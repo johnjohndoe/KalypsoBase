@@ -55,7 +55,7 @@ public class ItemBean implements Serializable
 
   public ItemBean( )
   {
-    this( "", "" );
+    this( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

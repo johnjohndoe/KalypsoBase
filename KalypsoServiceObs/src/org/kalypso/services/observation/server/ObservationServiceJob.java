@@ -63,7 +63,7 @@ public class ObservationServiceJob extends Job
 
   public ObservationServiceJob( final ObservationServiceImpl observationServiceWrapper )
   {
-    super( "ObservationServiceJob" );
+    super( "ObservationServiceJob" ); //$NON-NLS-1$
 
     m_observationServiceWrapper = observationServiceWrapper;
   }

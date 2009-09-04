@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.exceptions.WPSException;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -91,7 +92,7 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  */
 public class SimulationDelegate
 {
-  private static final String SERVER_INPUT_LOCAL = "local";
+  private static final String SERVER_INPUT_LOCAL = "local"; //$NON-NLS-1$
 
   /**
    * The id identifying the simulation.
@@ -148,8 +149,8 @@ public class SimulationDelegate
     m_data = data;
 
     /* Initializing the variables from the properties of the config.ini. */
-    m_service = System.getProperty( "org.kalypso.service.wps.service" );
-    m_input = System.getProperty( "org.kalypso.service.wps.input" );
+    m_service = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+    m_input = System.getProperty( "org.kalypso.service.wps.input" ); //$NON-NLS-1$
 
     /* Variables that are initialized during run time. */
     m_fsManager = null;
@@ -164,11 +165,11 @@ public class SimulationDelegate
     /* The file system manager needs to be set. */
     initVFSManager();
 
-    Debug.println( "Checking for service URL ..." );
+    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
     if( m_service == null )
     {
-      Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No URL to the the service is given. Be sure to check the config.ini for the 'org.kalypso.service.wps.service' property.", null ) );
+      Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.0"), null ) ); //$NON-NLS-1$
     }
   }
 
@@ -187,7 +188,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Initializing the the VFS manager has failed ...", ex ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.1"), ex ) ); //$NON-NLS-1$
     }
   }
 
@@ -228,14 +229,14 @@ public class SimulationDelegate
 
       /* Create the file objects. */
       final FileObject source = m_fsManager.toFileObject( file );
-      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo );
+      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo ); //$NON-NLS-1$
 
       /* Copy file. */
       VFSUtilities.copyFileTo( source, destination );
     }
     catch( final Exception ex )
     {
-      throw new WPSException( "Could not copy file '" + ifile.getName() + "' to the server ...", ex );
+      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.2",ifile.getName()), ex ); //$NON-NLS-1$ 
     }
   }
 
@@ -249,16 +250,16 @@ public class SimulationDelegate
       /* If the directory is not initialized, it will be generated and created (if necessary). */
       if( m_serverTmpDirectory == null )
       {
-        Debug.println( "Checking for server URL, where the input data can be copied ..." );
+        Debug.println( "Checking for server URL, where the input data can be copied ..." ); //$NON-NLS-1$
         if( m_input == null )
         {
-          Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
-          throw new WPSException( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." );
+          Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." ); //$NON-NLS-1$
+          throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.3") ); //$NON-NLS-1$
         }
         else if( SERVER_INPUT_LOCAL.equals( m_input ) )
         {
           // do not use server directory, but calculate in calcCaseFolder
-          Debug.println( "Local calculation! Using calcCaseFolder as input directory." );
+          Debug.println( "Local calculation! Using calcCaseFolder as input directory." ); //$NON-NLS-1$
           final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
           m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation );
         }
@@ -266,11 +267,11 @@ public class SimulationDelegate
         {
           /* Get the directory for server access. */
           final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
-          m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory );
+          m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory ); //$NON-NLS-1$
 
           if( !m_serverTmpDirectory.exists() )
           {
-            Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." );
+            Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
             m_serverTmpDirectory.createFolder();
           }
         }
@@ -283,7 +284,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new WPSException( "Could not init the temp directory on the server, where the client can put his input files ...", ex );
+      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.4"), ex ); //$NON-NLS-1$
     }
   }
 
@@ -346,7 +347,7 @@ public class SimulationDelegate
 
             // TODO: NO!!!! We do not know that!
             if( destResource.getType() == IResource.FILE )
-              ((IFile) destResource).setCharset( "UTF-8", new NullProgressMonitor() );
+              ((IFile) destResource).setCharset( "UTF-8", new NullProgressMonitor() ); //$NON-NLS-1$
           }
         }
       }
@@ -357,7 +358,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not copy the result data to the client ...", ex ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.5"), ex ) ); //$NON-NLS-1$
     }
   }
 
@@ -397,7 +398,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new WPSException( "Could not finish the deinit operation ...", ex );
+      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.6"), ex ); //$NON-NLS-1$
     }
   }
 
@@ -438,8 +439,8 @@ public class SimulationDelegate
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Sammle Daten ...", 500 );
-      Debug.println( "Collecting data ..." );
+      monitor.beginTask( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.7"), 500 ); //$NON-NLS-1$
+      Debug.println( "Collecting data ..." ); //$NON-NLS-1$
 
       /* Need the filesystem manager. */
       final FileSystemManager fsManager = VFSUtilities.getManager();
@@ -470,7 +471,7 @@ public class SimulationDelegate
           if( inputDescription.getMinimumOccurs().intValue() == 1 )
           {
             /* Ooops, it is a mandatory one, but it is missing in our model data. */
-            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "The data input " + identifier.getValue() + " is mandatory. Check your model data.", null );
+            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.8", identifier.getValue()), null ); //$NON-NLS-1$ 
             throw new CoreException( status );
           }
 
@@ -489,7 +490,7 @@ public class SimulationDelegate
 
           /* If the protocol is null, it is a local file resource, otherwise it is a remote resource, */
           /* which is not allowed to be copied or it is a complex value type (file-protocol). */
-          if( "file".equals( protocol ) )
+          if( "file".equals( protocol ) ) //$NON-NLS-1$
           {
             // TODO: Why do we need this?
             final URL localFileUrl = new URL( inputPath );
@@ -498,7 +499,7 @@ public class SimulationDelegate
             wpsInputs.put( identifier.getValue(), hexString );
             continue;
           }
-          else if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) )
+          else if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             /* If protocol is null or protocol is "project", it is a local file resource. */
             /*
@@ -507,7 +508,7 @@ public class SimulationDelegate
              */
             if( m_calcCaseFolder == null )
             {
-              throw new WPSException( "Complex data specified, but no base folder given." );
+              throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.9") ); //$NON-NLS-1$
             }
 
             final IProject project = m_calcCaseFolder.getProject();
@@ -531,7 +532,7 @@ public class SimulationDelegate
                 continue;
               }
 
-              throw new CoreException( StatusUtilities.createErrorStatus( "Could not find input resource: " + inputPath + "\nPlease check your model data." ) );
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.10", inputPath ) ) ); //$NON-NLS-1$ 
             }
 
             /* Collect all files. */
@@ -581,8 +582,8 @@ public class SimulationDelegate
 
       /* Monitor. */
       monitor.worked( 200 );
-      monitor.setTaskName( "Kopiere die Daten auf den Server ..." );
-      Debug.println( "Copy to the server ..." );
+      monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.11") ); //$NON-NLS-1$
+      Debug.println( "Copy to the server ..." ); //$NON-NLS-1$
 
       /* Copy all collected files. */
       final IFile[] files = visitor.getFiles();
@@ -600,7 +601,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Could not create the data inputs ...", ex ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.12"), ex ) ); //$NON-NLS-1$
     }
     finally
     {

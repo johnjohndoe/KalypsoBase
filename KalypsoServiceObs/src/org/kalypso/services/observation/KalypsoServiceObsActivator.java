@@ -22,9 +22,9 @@ import org.osgi.service.url.URLStreamHandlerService;
  */
 public class KalypsoServiceObsActivator extends AbstractUIPlugin
 {
-  public final static String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location";
+  public final static String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
 
-  public final static String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval";
+  public final static String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
 
   // The shared instance.
   private static KalypsoServiceObsActivator plugin;
@@ -96,18 +96,18 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
       {
         // REMARK: see JaxbUtilities for an explanation.
         // Applies to JAX-WS instead of JAXB in this case (same mechanism).
-        if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" )  )
+        if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" )  ) //$NON-NLS-1$
           currentThread.setContextClassLoader( KalypsoServiceObsActivator.class.getClassLoader() );
 
-        final String namespaceURI = "http://server.observation.services.kalypso.org/";
+        final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
         final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
 
-        final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" );
+        final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" ); //$NON-NLS-1$
         final URL wsdlLocation = new URL( wsdlLocationProperty );
-        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
+        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
         final Service service = Service.create( wsdlLocation, serviceName );
 
-        m_observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class );
+        m_observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
       }
       catch( final MalformedURLException e )
       {

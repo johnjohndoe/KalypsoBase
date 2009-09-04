@@ -90,7 +90,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
-    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids );
+    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, //
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ),//$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids );//$NON-NLS-1$
     addField( m_timeZoneFieldEditor );
   }
 

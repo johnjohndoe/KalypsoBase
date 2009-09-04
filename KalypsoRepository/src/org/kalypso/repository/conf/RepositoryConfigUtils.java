@@ -93,7 +93,7 @@ public class RepositoryConfigUtils
     }
     catch( final Exception e )
     {
-      throw new RepositoryException( "Unable to load repository config from location: " + location, e );
+      throw new RepositoryException( "Unable to load repository config from location: " + location, e ); //$NON-NLS-1$
     }
   }
 }

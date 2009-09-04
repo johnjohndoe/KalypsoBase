@@ -133,27 +133,27 @@ public class SendMailJob implements ISimulation
 
       /* Check all neccessary inputs. */
       if( sender == null || sender.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_SENDER + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_SENDER ), null ); //$NON-NLS-1$
 
       if( receiver == null || receiver.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_RECEIVER + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_RECEIVER ), null ); //$NON-NLS-1$ 
 
       if( type == null || type.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TYPE + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TYPE ), null ); //$NON-NLS-1$ 
 
       if( title == null || title.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TITLE + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_TITLE ), null ); //$NON-NLS-1$ 
 
       if( text == null || text.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1") + INPUT_TEXT + "' property is not correct configured ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TEXT ), null ); //$NON-NLS-1$ 
 
       if( !MailUtilities.checkContentType( type ) )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.2") + type + "' is not supported, try '" + MailUtilities.TEXT_PLAIN + "'  ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.2", type , MailUtilities.TEXT_PLAIN ), null ); //$NON-NLS-1$ 
 
       /* Configuration inputs. */
       String relais = FrameworkProperties.getProperty( CFG_RELAIS );
       if( relais == null || relais.length() == 0 )
-        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.3") + CFG_RELAIS + "' directive must be set on the server ...", null ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.3", CFG_RELAIS ), null ); //$NON-NLS-1$ 
 
       /* Configuration, which is optional. */
       String relais_username = FrameworkProperties.getProperty( CFG_RELAIS_USERNAME );
