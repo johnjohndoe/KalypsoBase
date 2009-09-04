@@ -363,7 +363,6 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
 
   private boolean triangleLiesInsideColorClass( final double min, final double max, final double from, final double to )
