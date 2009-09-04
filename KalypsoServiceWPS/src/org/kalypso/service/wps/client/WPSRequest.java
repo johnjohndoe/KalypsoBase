@@ -144,6 +144,10 @@ public class WPSRequest
    */
   private FileSystemManagerWrapper m_manager = null;
 
+  /**
+   * @param timeout
+   *          If > 0, the process is automatically cancelled after this amount of time in milliseconds.
+   */
   public WPSRequest( final String identifier, final String serviceEndpoint, final long timeout )
   {
     wpsRequest = new NonBlockingWPSRequest( identifier, serviceEndpoint );
@@ -246,43 +250,27 @@ public class WPSRequest
 
         exState = wpsRequest.getExecuteResponse( m_manager );
         if( exState == null )
-        {
           return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.2") ); //$NON-NLS-1$
-        }
 
         final StatusType state = exState.getStatus();
         if( state.getProcessAccepted() != null )
-        {
           doProcessAccepted( exState );
-        }
         else if( state.getProcessFailed() != null )
-        {
           return doProcessFailed( exState );
-        }
         else if( state.getProcessStarted() != null )
-        {
           doProcessStarted( monitor, exState );
-        }
         else if( state.getProcessSucceeded() != null )
-        {
           return doProcessSucceeded( exState );
-        }
         else
-        {
           return doUnknownState( exState );
-        }
 
         /* If the user aborted the job. */
         if( monitor.isCanceled() )
-        {
           return doCanceled();
-        }
 
         /* If the timeout is reached. */
-        if( executed >= m_timeout )
-        {
+        if( m_timeout > 0 && executed > m_timeout )
           return doTimeout();
-        }
       }
     }
     catch( final Exception e )
