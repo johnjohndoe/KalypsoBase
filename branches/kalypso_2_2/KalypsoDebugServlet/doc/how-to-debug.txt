@@ -1,0 +1,6 @@
+To activate debugging (i.e. more output into the common eclipse log files) add the -debug command line switch to your web.xml:
+
+<init-param>
+			<param-name>commandline</param-name>
+			<param-value>-console -debug</param-value>			
+</init-param>
