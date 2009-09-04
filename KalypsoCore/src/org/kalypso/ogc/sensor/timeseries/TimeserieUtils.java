@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +67,7 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -84,11 +86,17 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
- *
+ * 
  * @author schlienger
  */
-public class TimeserieUtils
+public class TimeserieUtils extends TimeserieConstants
 {
+  /** default date format used within some of the timeseries dependent properties */
+// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
+// locale
+  /** @dperecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
+  private final static DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
+
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$
 
   private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
@@ -110,7 +118,7 @@ public class TimeserieUtils
    * Allows to overwrite the location of the config.properties file.<br>
    * If international alternatives are present these will be used (i.e. config_de.properties instead of
    * config.properties).
-   *
+   * 
    * @param configUrl
    *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
@@ -126,7 +134,7 @@ public class TimeserieUtils
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
-   *
+   * 
    * @param obs
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
@@ -154,7 +162,7 @@ public class TimeserieUtils
 
   /**
    * Finds out the list of alarmstufen metadata keys
-   *
+   * 
    * @return list of metadata keys
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
@@ -164,7 +172,7 @@ public class TimeserieUtils
 
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
-   *
+   * 
    * @return color
    */
   public final static Color getColorForAlarmLevel( final String mdAlarm )
@@ -178,7 +186,7 @@ public class TimeserieUtils
 
   /**
    * Lazy loading of the properties
-   *
+   * 
    * @return config of the timeseries package
    */
   private static synchronized Properties getProperties( )
@@ -241,7 +249,11 @@ public class TimeserieUtils
   {
     if( from != null && to != null )
     {
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) ); //$NON-NLS-1$
+      final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+      final String fromStr = DateUtilities.printDateTime( from, timeZone );
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
+      final String fromTo = String.format( "%s;%s", fromStr, toStr );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, fromTo ); //$NON-NLS-1$
     }
   }
 
@@ -250,7 +262,7 @@ public class TimeserieUtils
    * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
-   *
+   * 
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
@@ -266,16 +278,28 @@ public class TimeserieUtils
       final String[] splits = range.split( ";" ); //$NON-NLS-1$
       if( splits.length == 2 )
       {
+        final String fromStr = splits[0];
+        final String toStr = splits[1];
+
         try
         {
-// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
-// locale
-          final Date from = TimeserieConstants.DEFAULT_DF.parse( splits[0] );
-          final Date to = TimeserieConstants.DEFAULT_DF.parse( splits[1] );
-
+          final Date from = DateUtilities.parseDateTime( fromStr );
+          final Date to = DateUtilities.parseDateTime( toStr );
           return new DateRange( from, to );
         }
-        catch( final Exception e )
+        catch( final IllegalArgumentException e )
+        {
+          // ignore, pobably it is an old zml
+        }
+
+        // TRICKY: in order to support backwards compability, we still trey to parse the old format
+        try
+        {
+          final Date from = FORECAST_DF.parse( fromStr );
+          final Date to = FORECAST_DF.parse( toStr );
+          return new DateRange( from, to );
+        }
+        catch( final ParseException e )
         {
           e.printStackTrace();
         }
@@ -287,7 +311,7 @@ public class TimeserieUtils
 
   /**
    * Units are read from the config.properties file.
-   *
+   * 
    * @param type
    * @return corresponding unit
    */
@@ -300,7 +324,7 @@ public class TimeserieUtils
    * Returns a user-friendly name for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -312,7 +336,7 @@ public class TimeserieUtils
    * Returns a color for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color[] getColorsFor( final String type )
@@ -355,7 +379,7 @@ public class TimeserieUtils
    * <p>
    * Uses UNIT_TO_TYPE_ Keys in config.properties
    * </p>
-   *
+   * 
    * @param unit
    * @return type
    */
@@ -391,7 +415,7 @@ public class TimeserieUtils
   /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
-   *
+   * 
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
@@ -456,7 +480,7 @@ public class TimeserieUtils
 
   /**
    * It is currently fix and is: "dd.MM.yy HH:mm"
-   *
+   * 
    * @return the date format to use when displaying dates for observations/timeseries
    */
   public static DateFormat getDateFormat( )
@@ -517,7 +541,7 @@ public class TimeserieUtils
   /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
-   *
+   * 
    * @param axisTypes
    *          as seen in TimeserieConstants.TYPE_*
    * @param amountRows
@@ -574,7 +598,7 @@ public class TimeserieUtils
   /**
    * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
-   *
+   * 
    * @param axisType
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException

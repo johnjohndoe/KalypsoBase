@@ -77,6 +77,7 @@ import org.kalypso.commons.parser.ParserFactory;
 import org.kalypso.commons.parser.impl.DateParser;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -203,12 +204,12 @@ public class ZmlFactory
    * 
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * @param url
-   *            the url specification of the zml
+   *          the url specification of the zml
    * @param identifier
-   *            [optional] ID für Repository
+   *          [optional] ID für Repository
    * @return IObservation object
    * @throws SensorException
-   *             in case of parsing or creation problem
+   *           in case of parsing or creation problem
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
@@ -266,7 +267,7 @@ public class ZmlFactory
     }
     catch( final IOException e )
     {
-      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.5") + url.toExternalForm(), e ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.5" ) + url.toExternalForm(), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -311,11 +312,11 @@ public class ZmlFactory
    * Parse the XML and create an IObservation instance.
    * 
    * @param source
-   *            contains the zml
+   *          contains the zml
    * @param identifier
-   *            [optional] the identifier of the resulting observation
+   *          [optional] the identifier of the resulting observation
    * @param context
-   *            [optional] the context of the source in order to resolve relative url
+   *          [optional] the context of the source in order to resolve relative url
    */
   public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
   {
@@ -385,14 +386,15 @@ public class ZmlFactory
           format = getProperties().getProperty( type + "_format" ); //$NON-NLS-1$
 
         parser = getParserFactory().createParser( type, format );
-        if( parser instanceof DateParser && timeZone != null )
-          ((DateParser) parser).setTimezone( timeZone );
 
         // if we have a date parser, set the right timezone to read the values
         if( parser instanceof DateParser )
         {
+          if( timeZone != null )
+            ((DateParser) parser).setTimezone( timeZone );
+
           final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" ); //$NON-NLS-1$
-          ((DateParser)parser).setTimezone( TimeZone.getTimeZone( tzString ) );
+          ((DateParser) parser).setTimezone( TimeZone.getTimeZone( tzString ) );
         }
 
         values = createValues( context, tmpAxis, parser, data );
@@ -464,13 +466,13 @@ public class ZmlFactory
    * Parses the values and create the corresponding objects.
    * 
    * @param context
-   *            context into which the original file exists
+   *          context into which the original file exists
    * @param axisType
-   *            binding object for axis
+   *          binding object for axis
    * @param parser
-   *            configured parser enabled for parsing the values according to axis spec
+   *          configured parser enabled for parsing the values according to axis spec
    * @param data
-   *            [optional] contains the data-block if observation is block-inline
+   *          [optional] contains the data-block if observation is block-inline
    * @return corresponding values depending on value axis type
    * @throws ParserException
    * @throws MalformedURLException
@@ -487,7 +489,7 @@ public class ZmlFactory
     if( vl != null )
       return new ZmlLinkValues( vl, parser, context, data );
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.14") + axisType.toString() ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.14" ) + axisType.toString() ); //$NON-NLS-1$
   }
 
   /**
@@ -502,7 +504,7 @@ public class ZmlFactory
    * Create an XML-Observation ready for marshalling.
    * 
    * @param timezone
-   *            the timezone into which dates should be converted before serialized
+   *          the timezone into which dates should be converted before serialized
    */
   public static Observation createXML( final IObservation obs, final IRequest args, TimeZone timezone ) throws FactoryException
   {
@@ -537,7 +539,7 @@ public class ZmlFactory
       }
 
       if( timezone == null )
-        timezone = TimeZone.getDefault();
+        timezone = KalypsoCorePlugin.getDefault().getTimeZone();
 
       // write timezone info into metadata
       final MetadataType mdType = OF.createMetadataType();
@@ -546,7 +548,7 @@ public class ZmlFactory
       // Check, if value already exists and remove first
       for( final Iterator<MetadataType> iterator = metadataList.iterator(); iterator.hasNext(); )
       {
-        if( iterator.next().getName().equals( TimeserieConstants.MD_TIMEZONE ))
+        if( iterator.next().getName().equals( TimeserieConstants.MD_TIMEZONE ) )
           iterator.remove();
       }
       metadataList.add( mdType );
@@ -555,8 +557,7 @@ public class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-          {
-
+      {
         public int compare( final IAxis a1, final IAxis a2 )
         {
           String type1 = a1.getType();
@@ -577,8 +578,7 @@ public class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-
-          } );
+      } );
 
       for( final IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );
@@ -630,7 +630,7 @@ public class ZmlFactory
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringAxis( model, axis, sb );
     else
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.21") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.21" ) ); //$NON-NLS-1$
 
     return sb.toString();
   }
@@ -668,7 +668,7 @@ public class ZmlFactory
       final Object elt = model.getElement( i, axis );
 
       if( elt == null )
-        LOG.warning( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.24") + i + Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.25") + axis ); //$NON-NLS-1$ //$NON-NLS-2$
+        LOG.warning( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.24" ) + i + Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.25" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
       sb.append( elt ).append( ";" ); //$NON-NLS-1$
     }
 
@@ -677,7 +677,7 @@ public class ZmlFactory
       final Object elt = model.getElement( amount, axis );
 
       if( elt == null )
-        LOG.warning( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.27") + amount + Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.28") + axis ); //$NON-NLS-1$ //$NON-NLS-2$
+        LOG.warning( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.27" ) + amount + Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.28" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
 
       sb.append( elt );
     }
@@ -712,7 +712,7 @@ public class ZmlFactory
    * Helper method for simply writing the observation to a file
    * 
    * @throws SensorException
-   *             if an IOException or a FactoryException is thrown internally
+   *           if an IOException or a FactoryException is thrown internally
    */
   public static void writeToFile( final IObservation filteredObs, final File file ) throws SensorException
   {
@@ -743,7 +743,7 @@ public class ZmlFactory
     }
     catch( final Exception e )
     {
-      LOG.log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.30"), e ); //$NON-NLS-1$
+      LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
 
       throw new SensorException( e );
     }
@@ -775,7 +775,7 @@ public class ZmlFactory
           try
           {
             final String stringValue = cells[ax];
-            final Class<?> dataClass = axis[ax].getDataClass();
+            final Class< ? > dataClass = axis[ax].getDataClass();
             Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
               keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
@@ -802,7 +802,7 @@ public class ZmlFactory
             if( cells.length > ax )
             {
               final String stringValue = cells[ax];
-              final Class<?> dataClass = axis[ax].getDataClass();
+              final Class< ? > dataClass = axis[ax].getDataClass();
               if( Number.class.isAssignableFrom( dataClass ) )
                 rowValues[ax] = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
               else
@@ -835,7 +835,7 @@ public class ZmlFactory
   /**
    * @param observation
    * @param request
-   *            may be <code>null</code>
+   *          may be <code>null</code>
    * @return string made for clipboard
    * @throws SensorException
    */
@@ -873,7 +873,7 @@ public class ZmlFactory
         }
         catch( final Exception e )
         {
-          result.append( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.34") ); //$NON-NLS-1$
+          result.append( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.34" ) ); //$NON-NLS-1$
           // ignore
         }
         if( col + 1 == sortedAxes.length )

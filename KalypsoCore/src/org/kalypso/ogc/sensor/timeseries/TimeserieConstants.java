@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
-import java.text.DateFormat;
 import java.util.Arrays;
 
 import org.kalypso.core.i18n.Messages;
@@ -53,11 +52,6 @@ import org.kalypso.ogc.sensor.ObservationConstants;
  */
 public abstract class TimeserieConstants implements ObservationConstants
 {
-  /** default date format used within some of the timeseries dependent properties */
-// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
-// locale
-  public final static DateFormat DEFAULT_DF = DateFormat.getDateTimeInstance();
-
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N"; //$NON-NLS-1$
 
@@ -134,7 +128,7 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   static
   {
-    String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC,
+    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC,
         TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
     Arrays.sort( types );
     TYPES_ALL = types;
