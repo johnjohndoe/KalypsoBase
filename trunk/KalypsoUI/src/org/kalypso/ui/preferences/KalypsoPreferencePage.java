@@ -48,6 +48,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.i18n.Messages;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -63,6 +65,8 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 public class KalypsoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
   private StringFieldEditor m_sfeCrs;
+
+  private ComboStringFieldEditor m_timeZoneFieldEditor;
 
   public KalypsoPreferencePage( )
   {
@@ -86,8 +90,8 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
-    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
-    addField( timeZoneFieldEditor );
+    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids );
+    addField( m_timeZoneFieldEditor );
   }
 
   /**
@@ -100,6 +104,9 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
 
     m_sfeCrs.setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
     m_sfeCrs.load();
+
+    m_timeZoneFieldEditor.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+    m_timeZoneFieldEditor.load();
   }
 
   /**
