@@ -52,7 +52,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * Date utilities.
- *
+ * 
  * @author schlienger
  */
 public final class DateUtilities
@@ -125,9 +125,17 @@ public final class DateUtilities
     return DATATYPE_FACTORY.newXMLGregorianCalendar( dateTime );
   }
 
-  public static Date toDate( final String lexicalXSDDateTime )
+  public static Date parseDateTime( final String lexicalXSDDateTime )
   {
     final Calendar dateTime = DatatypeConverter.parseDateTime( lexicalXSDDateTime );
     return dateTime.getTime();
+  }
+
+  /** Prints a date as xs:dateTime using {@link DatatypeConverter#printDateTime(Calendar)}. */
+  public static String printDateTime( final Date date, final TimeZone tz )
+  {
+    final Calendar cal = Calendar.getInstance( tz );
+    cal.setTime( date );
+    return DatatypeConverter.printDateTime( cal );
   }
 }
