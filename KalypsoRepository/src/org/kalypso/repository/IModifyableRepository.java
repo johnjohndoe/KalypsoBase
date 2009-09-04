@@ -52,4 +52,6 @@ public interface IModifyableRepository extends IRepository
    *          item identifier
    */
   void makeItem( String identifier ) throws RepositoryException;
+
+  void deleteItem( String identifier ) throws RepositoryException;
 }

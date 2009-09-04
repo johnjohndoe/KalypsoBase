@@ -77,6 +77,8 @@ public interface IRepositoryService
 
   
   public void makeItem( String identifier ) throws RepositoryException;
+
+  public void deleteItem( String identifier ) throws RepositoryException;
   
   /**
    * Forces the refresh of the remote repository.
