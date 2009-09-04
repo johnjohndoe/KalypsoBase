@@ -129,7 +129,7 @@ public class ServiceRepositoryObservation implements IObservation
       final DataBean db = m_srv.readData( href );
 
       ins = new BufferedInputStream( db.getDataHandler().getInputStream() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
       ins.close();
 
       m_srv.clearTempData( db.getId() );
@@ -248,7 +248,7 @@ public class ServiceRepositoryObservation implements IObservation
       // save zml
       final Observation obst = ZmlFactory.createXML( obs, null );
 
-      tmpFile = File.createTempFile( "towards-server", "zml" );
+      tmpFile = File.createTempFile( "towards-server", "zml" ); //$NON-NLS-1$ //$NON-NLS-2$
       tmpFile.deleteOnExit();
 
       stream = new BufferedOutputStream( new FileOutputStream( tmpFile ) );
@@ -296,7 +296,7 @@ public class ServiceRepositoryObservation implements IObservation
     try
     {
       in = new InputStreamReader( file.getContents(), file.getCharset() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null ); //$NON-NLS-1$
       in.close();
 
       setValuesFor( obs.getValues( null ), href, srv );

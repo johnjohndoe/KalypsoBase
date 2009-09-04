@@ -187,7 +187,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
 
       for( final KalypsoProjectBean version : versions )
       {
-        final String text = String.format( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.5"), version.getProjectVersion() ); //$NON-NLS-1$
+        final String text =  Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.5", version.getProjectVersion() ); //$NON-NLS-1$
 
         final ImageHyperlink linkVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
         linkVersion.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false, 2, 0 ) );
@@ -196,7 +196,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
         linkVersion.setUnderlined( false );
 
         final ImageHyperlink lnkDeleteVersion = m_toolkit.createImageHyperlink( m_body, SWT.NULL );
-        lnkDeleteVersion.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.6"), text ) ); //$NON-NLS-1$
+        lnkDeleteVersion.setToolTipText( Messages.getString("org.kalypso.project.database.client.ui.management.ManageRemoteProjects.6", text ) ); //$NON-NLS-1$
         lnkDeleteVersion.setImage( IMG_DELETE );
 
         lnkDeleteVersion.addHyperlinkListener( new HyperlinkAdapter()

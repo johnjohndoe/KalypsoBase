@@ -56,6 +56,7 @@ import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
@@ -82,7 +83,7 @@ public class WPSQueuedSimulationService
   /**
    * Debug on?
    */
-  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private final static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) ); //$NON-NLS-1$
 
   static
   {
@@ -144,7 +145,7 @@ public class WPSQueuedSimulationService
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
 
-    m_resultSpace = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    m_resultSpace = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" ); //$NON-NLS-1$
   }
 
   public int getServiceVersion( )
@@ -183,7 +184,7 @@ public class WPSQueuedSimulationService
   {
     if( m_timer == null )
     {
-      LOGGER.info( "Start scheduling with period: " + m_schedulingPeriod + "ms" );
+      LOGGER.info( "Start scheduling with period: " + m_schedulingPeriod + "ms" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       m_timer = new Timer();
       final TimerTask timerTask = new TimerTask()
@@ -205,7 +206,7 @@ public class WPSQueuedSimulationService
       m_timer.cancel();
       m_timer = null;
 
-      LOGGER.info( "Stopped scheduling" );
+      LOGGER.info( "Stopped scheduling" ); //$NON-NLS-1$
     }
   }
 
@@ -219,7 +220,7 @@ public class WPSQueuedSimulationService
     final WPSSimulationThread cjt = findJobThread( jobID );
 
     if( cjt.isAlive() )
-      throw new SimulationException( "Cannot dispose a running job! Cancel it first.", null );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSQueuedSimulationService.0"), null ); //$NON-NLS-1$
 
     cjt.dispose();
 
@@ -237,7 +238,7 @@ public class WPSQueuedSimulationService
     {
       final WPSSimulationThread thread = m_threads.get( jobID );
       if( thread == null )
-        throw new SimulationException( "Job not found: " + jobID, null );
+        throw new SimulationException( "Job not found: " + jobID, null ); //$NON-NLS-1$
 
       return thread;
     }
@@ -248,8 +249,8 @@ public class WPSQueuedSimulationService
     final String typeID = executeMediator.getProcessId();
     if( typeID == null || typeID.length() == 0 )
     {
-      Debug.println( "Missing parameter Identifier!" );
-      throw new SimulationException( "Process identifier is missing!" );
+      Debug.println( "Missing parameter Identifier!" ); //$NON-NLS-1$
+      throw new SimulationException( "Process identifier is missing!" ); //$NON-NLS-1$
     }
 
     final WPS_VERSION version = executeMediator.getVersion();
@@ -265,7 +266,7 @@ public class WPSQueuedSimulationService
       final String threadId = Long.toString( cjt.getId() );
       m_threads.put( threadId, cjt );
 
-      LOGGER.info( "Job waiting for scheduling: " + threadId );
+      LOGGER.info( "Job waiting for scheduling: " + threadId ); //$NON-NLS-1$
     }
 
     startScheduling();
@@ -290,8 +291,8 @@ public class WPSQueuedSimulationService
           waitingCount++;
       }
 
-      LOGGER.info( "Scheduler: Running jobs: " + runningCount );
-      LOGGER.info( "Scheduler: Waiting jobs: " + waitingCount );
+      LOGGER.info( "Scheduler: Running jobs: " + runningCount ); //$NON-NLS-1$
+      LOGGER.info( "Scheduler: Waiting jobs: " + waitingCount ); //$NON-NLS-1$
 
       if( waitingCount == 0 )
       {
@@ -302,7 +303,7 @@ public class WPSQueuedSimulationService
       // Maximal einen Job auf einmal starten
       if( runningCount >= m_maxThreads )
       {
-        LOGGER.info( "Scheduler: Maximum reached" );
+        LOGGER.info( "Scheduler: Maximum reached" ); //$NON-NLS-1$
         return;
       }
 
@@ -312,7 +313,7 @@ public class WPSQueuedSimulationService
         final WPSSimulationInfo jobInfo = cjt.getJobInfo();
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
         {
-          LOGGER.info( "Scheduler: Starting job: " + jobInfo.getId() );
+          LOGGER.info( "Scheduler: Starting job: " + jobInfo.getId() ); //$NON-NLS-1$
           cjt.start();
           return;
         }
@@ -355,7 +356,7 @@ public class WPSQueuedSimulationService
     {
       final URL url = m_catalog.getURL( namespace );
       if( url == null )
-        throw new SimulationException( "Unknown schema namespace: " + namespace, null );
+        throw new SimulationException( "Unknown schema namespace: " + namespace, null ); //$NON-NLS-1$
 
       final URLConnection connection = url.openConnection();
       return connection.getLastModified();
@@ -364,7 +365,7 @@ public class WPSQueuedSimulationService
     {
       e.printStackTrace();
 
-      throw new SimulationException( "Unknown schema namespace: " + namespace, e );
+      throw new SimulationException( "Unknown schema namespace: " + namespace, e ); //$NON-NLS-1$
     }
   }
 

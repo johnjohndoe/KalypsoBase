@@ -84,6 +84,7 @@ import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -150,7 +151,7 @@ public class ObservationServiceDelegate implements IObservationService
     m_logger = Logger.getLogger( ObservationServiceDelegate.class.getName() );
     m_initialized = false;
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Observations" );
+    m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
 
     m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_CONFIGURATION_LOCATION );
@@ -227,13 +228,13 @@ public class ObservationServiceDelegate implements IObservationService
     try
     {
       final URL confLocation = new URL( m_configurationLocation );
-      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" );
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" ); //$NON-NLS-1$
 
       // this call also closes the stream
       final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
       // load the service properties
-      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" );
+      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" ); //$NON-NLS-1$
 
       InputStream ins = null;
       try
@@ -244,7 +245,7 @@ public class ObservationServiceDelegate implements IObservationService
       }
       catch( final IOException e )
       {
-        m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() );
+        m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() ); //$NON-NLS-1$
       }
       finally
       {
@@ -254,9 +255,9 @@ public class ObservationServiceDelegate implements IObservationService
       /* Configure logging according to configuration */
       try
       {
-        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() );
+        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() ); //$NON-NLS-1$
         final Level logLevel = Level.parse( logLevelString );
-        Logger.getLogger( "" ).setLevel( logLevel );
+        Logger.getLogger( "" ).setLevel( logLevel ); //$NON-NLS-1$
       }
       catch( final Throwable t )
       {
@@ -277,7 +278,7 @@ public class ObservationServiceDelegate implements IObservationService
 
           // look into properties if an IObservationManipulator should be
           // configured for the current repository
-          final String pManip = "MANIPULATOR_" + rep.getIdentifier();
+          final String pManip = "MANIPULATOR_" + rep.getIdentifier(); //$NON-NLS-1$
           final String cnManip = props.getProperty( pManip );
           if( cnManip != null )
           {
@@ -287,7 +288,7 @@ public class ObservationServiceDelegate implements IObservationService
         }
         catch( final Exception e )
         {
-          m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration " + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() );
+          m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration " + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           e.printStackTrace();
         }
       }
@@ -299,9 +300,9 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-      m_logger.throwing( getClass().getName(), "init", e );
+      m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
 
-      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e );
+      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
     }
   }
 
@@ -330,15 +331,15 @@ public class ObservationServiceDelegate implements IObservationService
       {
         request = ObservationRequest.createWith( requestType );
 
-        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request );
+        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
-        m_logger.info( "Reading data for observation: " + obean.getId() );
+        m_logger.info( "Reading data for observation: " + obean.getId() ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
-      m_logger.warning( "Invalid Href: " + href );
-      m_logger.throwing( getClass().getName(), "readData", e );
+      m_logger.warning( "Invalid Href: " + href ); //$NON-NLS-1$
+      m_logger.throwing( getClass().getName(), "readData", e ); //$NON-NLS-1$
 
       // this is a fatal error (software programming error on the client-side)
       // so break processing now!
@@ -355,7 +356,7 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final Exception e )
     {
-      m_logger.info( "Could not find an observation for " + obean.getId() + ". Reason is:\n" + e.getLocalizedMessage() );
+      m_logger.info( "Could not find an observation for " + obean.getId() + ". Reason is:\n" + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // this is not a fatal error, repository might be temporarely unavailable
     }
@@ -363,7 +364,7 @@ public class ObservationServiceDelegate implements IObservationService
     if( obs == null )
     {
       // obs could not be created, use the request now
-      m_logger.info( "Creating request-based observation for " + obean.getId() );
+      m_logger.info( "Creating request-based observation for " + obean.getId() ); //$NON-NLS-1$
       obs = RequestFactory.createDefaultObservation( requestType );
     }
 
@@ -380,11 +381,11 @@ public class ObservationServiceDelegate implements IObservationService
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
-      final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" );
+      final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // create temp file
       m_tmpDir.mkdirs(); // additionally create the parent dir if not already exists
-      final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );
+      final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir ); //$NON-NLS-1$
 
       // we say delete on exit even if we allow the client to delete the file
       // explicitely in the clearTempData() service call. This allows us to
@@ -402,7 +403,7 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final Exception e ) // generic exception used for simplicity
     {
-      m_logger.throwing( getClass().getName(), "readData", e );
+      m_logger.throwing( getClass().getName(), "readData", e ); //$NON-NLS-1$
       throw new SensorException( e.getLocalizedMessage(), e );
     }
     finally
@@ -415,7 +416,7 @@ public class ObservationServiceDelegate implements IObservationService
       catch( final IOException e )
       {
         m_logger.severe( e.getLocalizedMessage() );
-        throw new SensorException( "Error closing the output stream", e );
+        throw new SensorException( "Error closing the output stream", e ); //$NON-NLS-1$
       }
     }
   }
@@ -428,10 +429,10 @@ public class ObservationServiceDelegate implements IObservationService
       final boolean b = file.delete();
 
       if( !b )
-        m_logger.warning( "Could not delete file " + file.toString() + " associated to dataId " + dataId );
+        m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString() , dataId )); //$NON-NLS-1$
     }
     else
-      m_logger.warning( "Unknown dataId: " + dataId );
+      m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId )); //$NON-NLS-1$
   }
 
   public void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
@@ -446,8 +447,8 @@ public class ObservationServiceDelegate implements IObservationService
 
       if( obs == null )
       {
-        final RemoteException e = new RemoteException( "No observation for " + obean.getId() );
-        m_logger.throwing( getClass().getName(), "writeData", e );
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() ); //$NON-NLS-1$
+        m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
         throw e;
       }
 
@@ -460,7 +461,7 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {
-      m_logger.throwing( getClass().getName(), "writeData", e );
+      m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
       throw new SensorException( e.getLocalizedMessage(), e );
     }
   }
@@ -472,7 +473,7 @@ public class ObservationServiceDelegate implements IObservationService
   private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException, NoSuchElementException
   {
     if( obean == null )
-      throw new NullPointerException( "ItemBean must not be null" );
+      throw new NullPointerException( "ItemBean must not be null" ); //$NON-NLS-1$
 
     /* Create the repository beans, if neccessary. */
     createRepositoryBeans();
@@ -492,7 +493,7 @@ public class ObservationServiceDelegate implements IObservationService
       final IRepositoryItem item = rep.findItem( id );
 
       if( item == null )
-        throw new NoSuchElementException( "Item does not exist or could not be found: " + id );
+        throw new NoSuchElementException( "Item does not exist or could not be found: " + id ); //$NON-NLS-1$
 
       return item;
     }
@@ -507,7 +508,7 @@ public class ObservationServiceDelegate implements IObservationService
         return item;
     }
 
-    throw new NoSuchElementException( "Unknown Repository or item. Repository: " + repId + ", Item: " + id );
+    throw new NoSuchElementException( "Unknown Repository or item. Repository: " + repId + ", Item: " + id ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -529,7 +530,7 @@ public class ObservationServiceDelegate implements IObservationService
       }
       catch( final RepositoryException e )
       {
-        m_logger.throwing( getClass().getName(), "hasChildren", e );
+        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
         throw e;
       }
   }
@@ -576,7 +577,7 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final RepositoryException e )
     {
-      m_logger.throwing( getClass().getName(), "getChildren", e );
+      m_logger.throwing( getClass().getName(), "getChildren", e ); //$NON-NLS-1$
       throw e;
     }
   }
@@ -624,7 +625,7 @@ public class ObservationServiceDelegate implements IObservationService
     }
     catch( final RepositoryException e )
     {
-      m_logger.throwing( getClass().getName(), "adaptItem", e );
+      m_logger.throwing( getClass().getName(), "adaptItem", e ); //$NON-NLS-1$
       throw new SensorException( e.getLocalizedMessage(), e );
     }
   }
@@ -645,8 +646,8 @@ public class ObservationServiceDelegate implements IObservationService
       }
       catch( final SensorException e )
       {
-        m_logger.throwing( getClass().getName(), "updateMetadata", e );
-        m_logger.info( "Could not manipulate observation with id: " + id + " due to previous errors" );
+        m_logger.throwing( getClass().getName(), "updateMetadata", e ); //$NON-NLS-1$
+        m_logger.info( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.2", id ) ); //$NON-NLS-1$
       }
 
     return md;
@@ -693,7 +694,7 @@ public class ObservationServiceDelegate implements IObservationService
         }
         catch( final RepositoryException e )
         {
-          m_logger.throwing( getClass().getName(), "findItem", e );
+          m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
           throw e;
         }
 
@@ -708,7 +709,7 @@ public class ObservationServiceDelegate implements IObservationService
       return bean;
     }
 
-    m_logger.warning( "Item not found: " + id );
+    m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.3", id )); //$NON-NLS-1$
 
     return null;
   }

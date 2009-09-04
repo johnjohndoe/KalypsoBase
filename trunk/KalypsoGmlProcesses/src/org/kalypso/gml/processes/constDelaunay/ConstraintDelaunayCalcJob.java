@@ -90,16 +90,16 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor, System.out );
 
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8" ), geometryXPath ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.8" , geometryXPath) ); //$NON-NLS-1$
 
       // load gml
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.9" ), gmlURL ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.9" , gmlURL )); //$NON-NLS-1$
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final GMLXPath calcpath = new GMLXPath( geometryXPath, null );
 
       // get calculation via path
-      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.10" ), geometryXPath ); //$NON-NLS-1$
+      log.log( true, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.10", geometryXPath) ); //$NON-NLS-1$
 
       /* Retrieve list of GM_Curves from workspace */
       Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
@@ -165,7 +165,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       }
       catch( final Throwable e )
       {
-        log.log( false, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.21" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        log.log( false, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.21" , e.getLocalizedMessage() )); //$NON-NLS-1$
         log.log( e, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.22" ) ); //$NON-NLS-1$
         monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayCalcJob.23" ) ); //$NON-NLS-1$
         return;

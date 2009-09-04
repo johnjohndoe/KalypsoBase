@@ -194,7 +194,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
       case V040:
         final net.opengeospatial.wps.ProcessDescriptionType.DataInputs dataInputs = WPS040ObjectFactoryUtilities.buildDataInputs( inputDescriptions );
         final net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs processOutputs = WPS040ObjectFactoryUtilities.buildProcessDescriptionTypeProcessOutputs( outputDescriptions );
-        final net.opengeospatial.ows.CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier );
+        final net.opengeospatial.ows.CodeType code = WPS040ObjectFactoryUtilities.buildCodeType( "", identifier ); //$NON-NLS-1$
         final String version = WPSUtilities.WPS_VERSION.V040.toString();
         final List<MetadataType> metaDatas = null; // TODO: metadata
         return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, abstrakt, metaDatas, version, dataInputs, processOutputs, storeSupported, statusSupported );
@@ -210,7 +210,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
     switch( getVersion() )
     {
       case V040:
-        final net.opengeospatial.ows.CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+        final net.opengeospatial.ows.CodeType outputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() ); //$NON-NLS-1$
         final String outputTitle = data.getId();
         final String outputAbstrakt = data.getDescription();
 
@@ -227,7 +227,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         else
         {
           /* Reference. */
-          final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" );
+          final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
           complexDatas.add( complexData );
 
@@ -243,7 +243,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
    */
   private Object getInputDescription( final DataType data )
   {
-    final net.opengeospatial.ows.CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() );
+    final net.opengeospatial.ows.CodeType inputCode = WPS040ObjectFactoryUtilities.buildCodeType( "", data.getId() ); //$NON-NLS-1$
     final String inputTitle = data.getId();
     final String inputAbstrakt = data.getDescription();
     final int minOccurs = data.isOptional() ? 0 : 1;
@@ -266,7 +266,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         else
         {
           /* Reference. */
-          final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" );
+          final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
           complexDatas.add( complexData );
           inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );

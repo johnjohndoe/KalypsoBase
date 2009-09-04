@@ -15,7 +15,7 @@ import org.kalypso.repository.factory.AbstractRepositoryFactory;
  */
 public class FileRepositoryFactory extends AbstractRepositoryFactory
 {
-  protected final static String SEPARATOR = "#";
+  protected final static String SEPARATOR = "#"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
@@ -48,7 +48,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     final String[] conf = getConfiguration().split( SEPARATOR );
 
     if( conf.length < 1 )
-      throw new RepositoryException( "Invalid configuration in RepositoryFactory: " + getConfiguration() );
+      throw new RepositoryException( "Invalid configuration in RepositoryFactory: " + getConfiguration() ); //$NON-NLS-1$
 
     final String location = conf[0];
 
@@ -56,7 +56,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
 
     if( conf.length == 2 )
     {
-      final String[] WILDS = conf[1].split( "," );
+      final String[] WILDS = conf[1].split( "," ); //$NON-NLS-1$
       filter = new MultipleWildCardFileFilter( WILDS, false, true, false );
     }
     else

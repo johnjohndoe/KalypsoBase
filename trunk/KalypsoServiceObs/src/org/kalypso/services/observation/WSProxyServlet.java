@@ -30,7 +30,7 @@ public class WSProxyServlet extends WSServlet
     final ServletContext context = servletConfig.getServletContext();
 
     /* Debug. */
-    System.out.println( "[NNNN] WS_Proxy_Servlet: Setting JAX-WS Runtime..." );
+    System.out.println( "[NNNN] WS_Proxy_Servlet: Setting JAX-WS Runtime..." ); //$NON-NLS-1$
 
     /* We just simulate the initialisation of the servlet. */
     m_servletContextListener.contextInitialized( new ServletContextEvent( context ) );

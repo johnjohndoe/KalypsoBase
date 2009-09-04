@@ -234,7 +234,7 @@ public class GMLSchema implements IGMLSchema
           if( gmlSchema != null )
             m_importedSchemasHash.put( gmlSchema.getTargetNamespace(), gmlSchema );
           else
-            throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.0") + namespaceToImport + " with schemalocation: " + schemaLocation ); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.0" ,namespaceToImport ,schemaLocation )); //$NON-NLS-1$
         }
       }
 
@@ -296,7 +296,7 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gmlschema.GMLSchema.1") + qName ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gmlschema.GMLSchema.1", qName )); //$NON-NLS-1$
       KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
@@ -391,7 +391,7 @@ public class GMLSchema implements IGMLSchema
     }
     catch( final InvocationTargetException e )
     {
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.2") + namespaceURI, e.getTargetException() ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchema.2", namespaceURI), e.getTargetException() ); //$NON-NLS-1$
     }
   }
 

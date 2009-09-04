@@ -69,6 +69,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.exceptions.WPSException;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
@@ -90,12 +91,12 @@ public class WPSRequest
   /**
    * Commonly used system property for the location of the WPS endpoint. Not every WPS client might use this one.
    */
-  public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service";
+  public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service"; //$NON-NLS-1$
 
   /**
    * This value for WPS endpoint indicates that a service call should be local (i.e. inside the same VM).
    */
-  public static final String SERVICE_LOCAL = "ServiceLocal";
+  public static final String SERVICE_LOCAL = "ServiceLocal"; //$NON-NLS-1$
 
   /**
    * The amount from the max monitor value, which is reserved for the server side task.
@@ -212,13 +213,13 @@ public class WPSRequest
     final String statusLocation = wpsRequest.getStatusLocation();
     if( statusLocation.length() == 0 )
     {
-      return StatusUtilities.createErrorStatus( "The server responded without a status-location." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.0") ); //$NON-NLS-1$
     }
 
     final FileObject statusFile = null;
     try
     {
-      Debug.println( "Checking state file of the server ..." );
+      Debug.println( "Checking state file of the server ..." ); //$NON-NLS-1$
       ExecuteResponseType exState = null;
 
       /* Poll to update the status. */
@@ -228,7 +229,7 @@ public class WPSRequest
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
       final ProcessDescriptionType processDescription = getProcessDescription( monitor );
       final String title = processDescription.getTitle();
-      monitor.setTaskName( "Warte auf Prozess " + title );
+      monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.WPSRequest.1") + title ); //$NON-NLS-1$
 
       m_manager = VFSUtilities.getNewManager();
       while( run )
@@ -246,7 +247,7 @@ public class WPSRequest
         exState = wpsRequest.getExecuteResponse( m_manager );
         if( exState == null )
         {
-          return StatusUtilities.createErrorStatus( "The process did not return an execute response." );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.2") ); //$NON-NLS-1$
         }
 
         final StatusType state = exState.getStatus();
@@ -311,8 +312,8 @@ public class WPSRequest
 
   protected IStatus doTimeout( )
   {
-    Debug.println( "Timeout reached ..." );
-    return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+    Debug.println( "Timeout reached ..." ); //$NON-NLS-1$
+    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.3") ); //$NON-NLS-1$
   }
 
   protected IStatus doCanceled( )
@@ -323,21 +324,21 @@ public class WPSRequest
   protected IStatus doUnknownState( final ExecuteResponseType exState )
   {
     IStatus status;
-    status = StatusUtilities.createErrorStatus( "The server responded with an unknown state ..." );
+    status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.4") ); //$NON-NLS-1$
     return status;
   }
 
   protected IStatus doProcessSucceeded( final ExecuteResponseType exState )
   {
     /* Check if the results are ready. */
-    Debug.println( "The simulation has finished ..." );
+    Debug.println( "The simulation has finished ..." ); //$NON-NLS-1$
 
     /* Get the process outputs. */
     final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
 
     if( processOutputs == null )
     {
-      return StatusUtilities.createErrorStatus( "The process did not return any results." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.5") ); //$NON-NLS-1$
     }
     else
     {
@@ -453,19 +454,19 @@ public class WPSRequest
         final String dataType = literalValue.getDataType();
 
         Object result = null;
-        if( "string".equals( dataType ) )
+        if( "string".equals( dataType ) ) //$NON-NLS-1$
         {
           result = DatatypeConverter.parseString( value );
         }
-        else if( "int".equals( dataType ) )
+        else if( "int".equals( dataType ) ) //$NON-NLS-1$
         {
           result = DatatypeConverter.parseInt( value );
         }
-        else if( "double".equals( dataType ) )
+        else if( "double".equals( dataType ) ) //$NON-NLS-1$
         {
           result = DatatypeConverter.parseDouble( value );
         }
-        else if( "boolean".equals( dataType ) )
+        else if( "boolean".equals( dataType ) ) //$NON-NLS-1$
         {
           result = DatatypeConverter.parseBoolean( value );
         }

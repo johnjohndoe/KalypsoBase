@@ -252,7 +252,7 @@ public class TimeserieUtils extends TimeserieConstants
       final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      final String fromTo = String.format( "%s;%s", fromStr, toStr );
+      final String fromTo = String.format( "%s;%s", fromStr, toStr ); //$NON-NLS-1$
       obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, fromTo ); //$NON-NLS-1$
     }
   }

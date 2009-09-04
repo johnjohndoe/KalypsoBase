@@ -351,7 +351,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" , curve ) ); //$NON-NLS-1$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 

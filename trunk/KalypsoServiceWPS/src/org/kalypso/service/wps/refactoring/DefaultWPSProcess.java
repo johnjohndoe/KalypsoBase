@@ -81,6 +81,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
@@ -133,7 +134,7 @@ public class DefaultWPSProcess implements IWPSProcess
     m_serviceEndpoint = serviceEndpoint;
     m_manager = manager;
 
-    Assert.isNotNull( m_serviceEndpoint, "No URL to the the service is given." );
+    Assert.isNotNull( m_serviceEndpoint, "No URL to the the service is given." ); //$NON-NLS-1$
   }
 
   /**
@@ -143,8 +144,8 @@ public class DefaultWPSProcess implements IWPSProcess
   {
     if( m_processDescription == null )
     {
-      monitor.beginTask( "Frage nach der Prozess-Beschreibung ...", 300 );
-      Debug.println( "Asking for a process description ..." );
+      monitor.beginTask( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.0"), 300 ); //$NON-NLS-1$
+      Debug.println( "Asking for a process description ..." ); //$NON-NLS-1$
 
 // // decide between local and remote invocation
 // if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
@@ -157,7 +158,7 @@ public class DefaultWPSProcess implements IWPSProcess
       final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
       if( processDescriptionList.size() != 1 )
       {
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned more than one process description.", null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.1"), null ) ); //$NON-NLS-1$
       }
 
       ProgressUtilities.worked( monitor, 300 );
@@ -189,7 +190,7 @@ public class DefaultWPSProcess implements IWPSProcess
     if( status.getProcessFailed() != null )
       return ProcessStatus.FAILED;
 
-    throw new IllegalStateException( "Unknwon status: " + status.toString() );
+    throw new IllegalStateException( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.2") + status.toString() ); //$NON-NLS-1$
   }
 
   /**
@@ -253,7 +254,7 @@ public class DefaultWPSProcess implements IWPSProcess
     if( processSucceeded != null )
       return processSucceeded;
 
-    return "Unknown state";
+    return Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.3"); //$NON-NLS-1$
   }
 
   /**
@@ -266,8 +267,8 @@ public class DefaultWPSProcess implements IWPSProcess
     Assert.isTrue( m_executionResponse == null );
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, "Berechnung vorbereiten ...", 200 );
-    Debug.println( "Checking for service URL ..." );
+    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.4"), 200 ); //$NON-NLS-1$
+    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
 
     /* Get the process description. */
     final ProcessDescriptionType processDescription = getProcessDescription( monitor );
@@ -277,8 +278,8 @@ public class DefaultWPSProcess implements IWPSProcess
     m_outputDefinitions = WPSUtilities.createOutputDefinitions( processDescription, outputs );
 
     /* Send the request. */
-    monitor.setTaskName( "Starte die Simulation ..." );
-    Debug.println( "Start the simulation ..." );
+    monitor.setTaskName( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.5") ); //$NON-NLS-1$
+    Debug.println( "Start the simulation ..." ); //$NON-NLS-1$
 
 // final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
 
@@ -385,7 +386,7 @@ public class DefaultWPSProcess implements IWPSProcess
       if( inputDescription.getMinimumOccurs().intValue() == 1 )
       {
         /* Ooops, it is a mandatory one, but it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( "The data input %s is mandatory. Check your input data.", inputId ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.6"), inputId ) ); //$NON-NLS-1$
       }
     }
 
@@ -472,7 +473,7 @@ public class DefaultWPSProcess implements IWPSProcess
         final String schemaLocationString = gmlSchema.getContext().toString();
 
         format = WPSSimulationDataProvider.TYPE_GML;
-        encoding = "UTF-8";
+        encoding = "UTF-8"; //$NON-NLS-1$
         schema = schemaLocationString;
 
         // enforce the schemaLocation
@@ -508,7 +509,7 @@ public class DefaultWPSProcess implements IWPSProcess
     final StringWriter stringWriter = new StringWriter( 512 * 1024 );
     try
     {
-      GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true );
+      GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true ); //$NON-NLS-1$
     }
     catch( final GmlSerializeException e )
     {
@@ -632,19 +633,19 @@ public class DefaultWPSProcess implements IWPSProcess
 
   private static Object parseValue( final String value, final String dataType )
   {
-    if( "string".equals( dataType ) )
+    if( "string".equals( dataType ) ) //$NON-NLS-1$
       return DatatypeConverter.parseString( value );
 
-    if( "int".equals( dataType ) )
+    if( "int".equals( dataType ) ) //$NON-NLS-1$
       return DatatypeConverter.parseInt( value );
 
-    if( "double".equals( dataType ) )
+    if( "double".equals( dataType ) ) //$NON-NLS-1$
       return DatatypeConverter.parseDouble( value );
 
-    if( "boolean".equals( dataType ) )
+    if( "boolean".equals( dataType ) ) //$NON-NLS-1$
       return DatatypeConverter.parseBoolean( value );
 
-    throw new NotImplementedException( "Unknown result type: " + dataType );
+    throw new NotImplementedException( "Unknown result type: " + dataType ); //$NON-NLS-1$
   }
 
   private static void addItem( final Map<String, Object[]> map, final String id, final Object value )

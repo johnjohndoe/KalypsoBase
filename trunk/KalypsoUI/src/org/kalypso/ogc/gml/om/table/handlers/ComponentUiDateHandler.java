@@ -212,7 +212,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     }
     catch( final ParseException e )
     {
-      return String.format( Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1"), getParseFormat() ); //$NON-NLS-1$
+      return  Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1", getParseFormat() ); //$NON-NLS-1$
     }
   }
 }

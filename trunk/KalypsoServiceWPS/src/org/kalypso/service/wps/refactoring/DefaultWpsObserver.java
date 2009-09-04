@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
@@ -112,7 +113,7 @@ public class DefaultWpsObserver implements IWPSObserver
 
     if( processOutputs == null )
     {
-      return StatusUtilities.createErrorStatus( "The process did not return any results." );
+      return StatusUtilities.createErrorStatus( "The process did not return any results." ); //$NON-NLS-1$
     }
     else
     {
@@ -126,9 +127,9 @@ public class DefaultWpsObserver implements IWPSObserver
   @Override
   public IStatus handleTimeout( )
   {
-    Debug.println( "Timeout reached ..." );
+    Debug.println( "Timeout reached ..." ); //$NON-NLS-1$
 
-    return StatusUtilities.createErrorStatus( "Timeout reached ..." );
+    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWpsObserver.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -137,7 +138,7 @@ public class DefaultWpsObserver implements IWPSObserver
   @Override
   public final IStatus handleUnknownState( final ExecuteResponseType exState )
   {
-    return StatusUtilities.createErrorStatus( "The server responded with an unknown state ..." );
+    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWpsObserver.3") ); //$NON-NLS-1$
   }
 
 }

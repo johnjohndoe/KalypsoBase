@@ -46,6 +46,7 @@ import net.opengeospatial.wps.StatusType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 
 /**
@@ -69,7 +70,7 @@ public class AsynchronousWPSWatchdog
   {
     try
     {
-      Debug.println( "Checking state file of the server ..." );
+      Debug.println( "Checking state file of the server ..." ); //$NON-NLS-1$
 
       /* Poll to update the status. */
       final boolean run = true;
@@ -78,7 +79,7 @@ public class AsynchronousWPSWatchdog
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
       final String title = m_process.getTitle();
       
-      monitor.beginTask( "Warte auf Prozess " + title, 100 ); // 100%
+      monitor.beginTask( Messages.getString("org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.0") + title, 100 ); // 100% //$NON-NLS-1$
 
       while( run )
       {
@@ -94,7 +95,7 @@ public class AsynchronousWPSWatchdog
 
         final ExecuteResponseType exState = m_process.getExecuteResponse();
         if( exState == null )
-          return StatusUtilities.createErrorStatus( "The process did not return an execute response." );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.1") ); //$NON-NLS-1$
 
         final Integer percentage = m_process.getPercentCompleted();
         final String statusDescription = m_process.getStatusDescription();

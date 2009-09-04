@@ -64,8 +64,8 @@ public class Debug
    */
   public static void println( String message )
   {
-    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/debug" ) ) )
-      System.out.println( "DEBUG: " + message );
+    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/debug" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "DEBUG: " + message ); //$NON-NLS-1$
   }
 
   /**
@@ -75,7 +75,7 @@ public class Debug
    */
   public static boolean doNotDeleteTmpFiles( )
   {
-    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/doNotDeleteTempFiles" ) ) )
+    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/doNotDeleteTempFiles" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return true;
 
     return false;

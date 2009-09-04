@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
@@ -75,7 +76,7 @@ public class WPSSimulationThread extends Thread
   /**
    * Debug on?
    */
-  private static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) );
+  private static boolean DO_DEBUG_TRACE = Boolean.valueOf( Platform.getDebugOption( "org.kalypso.simulation.core/debug/simulation/service" ) ); //$NON-NLS-1$
 
   static
   {
@@ -130,12 +131,12 @@ public class WPSSimulationThread extends Thread
    */
   public WPSSimulationThread( final ISimulation job, final ExecuteMediator executeMediator, final ProcessDescriptionMediator processDescriptionMediator, final String resultSpace ) throws SimulationException
   {
-    super( "WPS-SimulationThread" );
+    super( "WPS-SimulationThread" ); //$NON-NLS-1$
     m_job = job;
 
     // TODO: should this temp dir not be inside the general wps tmp-dir?
     final long threadId = getId();
-    m_tmpDir = FileUtilities.createNewTempDir( "CalcJob-" + threadId );
+    m_tmpDir = FileUtilities.createNewTempDir( "CalcJob-" + threadId ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
 
     final String typeID = executeMediator.getProcessId();
@@ -147,7 +148,7 @@ public class WPSSimulationThread extends Thread
     }
     catch( final CoreException e )
     {
-      throw new SimulationException( "Could not get process description.", e );
+      throw new SimulationException( "Could not get process description.", e ); //$NON-NLS-1$
     }
 
     /* Check, if the required input is available. */
@@ -169,7 +170,7 @@ public class WPSSimulationThread extends Thread
       final InputDescriptionType inputDescription = (InputDescriptionType) entry.getValue();
       if( inputDescription.getMinimumOccurs().intValue() == 1 && inputList.get( id ) == null )
       {
-        throw new SimulationException( "Missing input for id " + id );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationThread.0", id )); //$NON-NLS-1$
       }
     }
   }
@@ -182,12 +183,12 @@ public class WPSSimulationThread extends Thread
     if( Debug.doNotDeleteTmpFiles() )
     {
       /* Debug-Information. */
-      Debug.println( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ..." );
+      Debug.println( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ..." ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
       /* Debug-Information. */
-      Debug.println( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ..." );
+      Debug.println( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Delete the tmp-data. */
       FileUtilities.deleteRecursive( m_tmpDir );
@@ -218,24 +219,24 @@ public class WPSSimulationThread extends Thread
     String jobID = m_jobInfo.getId();
     try
     {
-      LOGGER.info( "Calling run for ID: " + jobID );
+      LOGGER.info( "Calling run for ID: " + jobID ); //$NON-NLS-1$
 
       m_job.run( m_tmpDir, m_inputData, m_resultEater, m_jobInfo );
 
-      LOGGER.info( "Run finished for ID: " + jobID );
+      LOGGER.info( "Run finished for ID: " + jobID ); //$NON-NLS-1$
 
       if( m_jobInfo.isCanceled() )
-        LOGGER.info( "JOB exited because it was canceled: " + jobID );
+        LOGGER.info( "JOB exited because it was canceled: " + jobID ); //$NON-NLS-1$
       else
       {
         m_jobInfo.setState( ISimulationConstants.STATE.FINISHED );
-        LOGGER.info( "JOB exited normally: " + jobID );
+        LOGGER.info( "JOB exited normally: " + jobID ); //$NON-NLS-1$
       }
     }
     catch( final Throwable t )
     {
-      LOGGER.warning( "Simulation aborted with exception: " + jobID );
-      m_jobInfo.setFinishText( "Simulation aborted with exception." );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID ); //$NON-NLS-1$
+      m_jobInfo.setFinishText( "Simulation aborted with exception." ); //$NON-NLS-1$
       m_jobInfo.setFinishStatus( IStatus.ERROR );
       m_jobInfo.setException( t );
       m_jobInfo.setState( ISimulationConstants.STATE.ERROR );

@@ -352,7 +352,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile launchFile = getLaunchFile( launchName );
 
-      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.3") + launchName + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
+      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.3", launchName )); //$NON-NLS-1$
 
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
@@ -408,7 +408,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO better ask for termination, but continue task in background
       launch.terminate();
 
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.5") + minutes + " Minuten gedauert und wird deshalb abgebrochen." ); //$NON-NLS-1$ //$NON-NLS-2$
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.5", minutes ) ); //$NON-NLS-1$ 
     }
     catch( final CoreException e )
     {

@@ -62,7 +62,7 @@ public class RepositoryFactoryConfig
 
   private final boolean m_readOnly;
 
-  private final static String SEPARATOR = ";";
+  private final static String SEPARATOR = ";"; //$NON-NLS-1$
 
   /** factory can be specified in constructor */
   private IRepositoryFactory m_rf = null;
@@ -115,7 +115,7 @@ public class RepositoryFactoryConfig
 
     final IRepositoryFactory rf = RepositoriesExtensions.retrieveExtensionFor( m_factory );
     if( rf == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) ); //$NON-NLS-1$
 
     rf.setReadOnly( m_readOnly );
     rf.setConfiguration( m_conf );
@@ -166,7 +166,7 @@ public class RepositoryFactoryConfig
   public String toString( )
   {
     if( m_conf != null && m_conf.length() > 0 )
-      return m_name + " (" + m_conf + ")";
+      return m_name + " (" + m_conf + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     return m_name;
   }

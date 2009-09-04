@@ -150,7 +150,7 @@ public class FileItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    return m_rep.getIdentifier() + ":/" + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace( '\\', '/' );
+    return m_rep.getIdentifier() + ":/" + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace( '\\', '/' ); //$NON-NLS-1$
   }
 
   /**

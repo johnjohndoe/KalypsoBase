@@ -87,6 +87,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.client.exceptions.WPSException;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
@@ -117,7 +118,7 @@ public class NonBlockingWPSRequest
    */
   private final String m_identifier;
   
-  private String m_jobId = "";
+  private String m_jobId = ""; //$NON-NLS-1$
 
   /**
    * The address of the service.
@@ -205,11 +206,11 @@ public class NonBlockingWPSRequest
 
   private void initProcessDescription( IProgressMonitor monitor ) throws CoreException
   {
-    Debug.println( "Initializing ..." );
+    Debug.println( "Initializing ..." ); //$NON-NLS-1$
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, "Frage nach der Prozess-Beschreibung ...", 300 );
-    Debug.println( "Asking for a process description ..." );
+    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.0"), 300 ); //$NON-NLS-1$
+    Debug.println( "Asking for a process description ..." ); //$NON-NLS-1$
 
     // decide between local and remote invocation
     if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
@@ -222,7 +223,7 @@ public class NonBlockingWPSRequest
       final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
       if( processDescriptionList.size() != 1 )
       {
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned more than one process description.", null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.1"), null ) ); //$NON-NLS-1$
       }
 
       /* Monitor. */
@@ -261,22 +262,22 @@ public class NonBlockingWPSRequest
     // TODO: clear old results
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, "Berechnung vorbereiten ...", 200 );
-    Debug.println( "Checking for service URL ..." );
+    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.2"), 200 ); //$NON-NLS-1$
+    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
 
     /* Check, if we have a service endpoint. */
     if( m_serviceEndpoint == null )
     {
-      Debug.println( "No URL to the service is given." );
-      return StatusUtilities.statusFromThrowable( new WPSException( "No URL to the the service is given." ) );
+      Debug.println( "No URL to the service is given." ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( new WPSException( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.3") ) ); //$NON-NLS-1$
     }
 
     /* Send the request. */
-    monitor.setTaskName( "Starte die Simulation ..." );
-    Debug.println( "Start the simulation ..." );
+    monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.4") ); //$NON-NLS-1$
+    Debug.println( "Start the simulation ..." ); //$NON-NLS-1$
 
     ExecuteResponseType executeResponse;
-    final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
+    final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier ); //$NON-NLS-1$
 
     try
     {
@@ -296,9 +297,9 @@ public class NonBlockingWPSRequest
           m_jobId = info.getId();
           /* Prepare the execute response. */
           final FileObject resultDir = manager.getResultDir( info.getId() );
-          resultFile = resultDir.resolveFile( "executeResponse.xml" );
+          resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
           final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
-          final StatusType status = WPS040ObjectFactoryUtilities.buildStatusType( "Process accepted.", true );
+          final StatusType status = WPS040ObjectFactoryUtilities.buildStatusType( "Process accepted.", true ); //$NON-NLS-1$
           executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs, m_outputDefinitions, null, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
         }
         catch( final IOException e )
@@ -388,7 +389,7 @@ public class NonBlockingWPSRequest
       if( inputDescription.getMinimumOccurs().intValue() == 1 )
       {
         /* Ooops, it is a mandatory one, but it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( "The data input %s is mandatory. Check your input data.", inputId ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.5", inputId) ) ); //$NON-NLS-1$
       }
     }
 
@@ -475,11 +476,11 @@ public class NonBlockingWPSRequest
         final String schemaLocationString = gmlSchema.getContext().toString();
 
         format = WPSSimulationDataProvider.TYPE_GML;
-        encoding = "UTF-8";
+        encoding = "UTF-8"; //$NON-NLS-1$
 
         // TODO: copy the schema to a place where the server can find it
         // REMARK: makes no sense to give platform: or bundleresource: urls; they do not exist on theother side
-        if( schemaLocationString != null && !schemaLocationString.startsWith( "bundleresource:" ) && !schemaLocationString.startsWith( "platform:" ) )
+        if( schemaLocationString != null && !schemaLocationString.startsWith( "bundleresource:" ) && !schemaLocationString.startsWith( "platform:" ) ) //$NON-NLS-1$ //$NON-NLS-2$
           schema = schemaLocationString;
         else
           schema = null;
@@ -517,7 +518,7 @@ public class NonBlockingWPSRequest
     final StringWriter stringWriter = new StringWriter( 512 * 1024 );
     try
     {
-      GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true );
+      GmlSerializer.serializeWorkspace( stringWriter, gmlWorkspace, "UTF-8", true ); //$NON-NLS-1$
     }
     catch( final GmlSerializeException e )
     {
@@ -607,7 +608,7 @@ public class NonBlockingWPSRequest
         {
           inputStream = content.getInputStream();
           final String xml = MarshallUtilities.fromInputStream( inputStream );
-          if( xml != null && !"".equals( xml ) )
+          if( xml != null && !"".equals( xml ) ) //$NON-NLS-1$
           {
             final Object object = MarshallUtilities.unmarshall( xml );
             executeState = (JAXBElement<ExecuteResponseType>) object;
@@ -617,18 +618,18 @@ public class NonBlockingWPSRequest
         catch( final Exception e )
         {
           /* An error has occured while copying the file. */
-          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
+          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() ); //$NON-NLS-1$
 
           /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
           if( cnt >= 2 )
           {
-            Debug.println( "The second retry has failed, rethrowing the error ..." );
+            Debug.println( "The second retry has failed, rethrowing the error ..." ); //$NON-NLS-1$
             throw e;
           }
 
           /* Retry the copying of the file. */
           cnt++;
-          Debug.println( "Retry: " + String.valueOf( cnt ) );
+          Debug.println( "Retry: " + String.valueOf( cnt ) ); //$NON-NLS-1$
           success = false;
 
           /* Wait for some milliseconds. */

@@ -95,7 +95,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
         m_delegate = KalypsoCoreExtensions.createThemeInfo( infoId, theme );
         if( m_delegate == null )
         {
-          final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4"), theme.getLabel(), infoId ); //$NON-NLS-1$
+          final String msg = Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4", theme.getLabel(), infoId ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
         }
 

@@ -99,7 +99,7 @@ public class GMLSchemaCache
   public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws InvocationTargetException
   {
     if( schemaURL == null )
-      throw new InvocationTargetException( new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaCache.0") + namespace ) ); //$NON-NLS-1$
+      throw new InvocationTargetException( new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaCache.0", namespace )) ); //$NON-NLS-1$
 
     Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL ); //$NON-NLS-1$
 

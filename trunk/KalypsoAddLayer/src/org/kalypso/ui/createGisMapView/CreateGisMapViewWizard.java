@@ -107,7 +107,7 @@ public class CreateGisMapViewWizard extends Wizard implements INewWizard
     IResource resource = root.findMember( new Path( containerName ) );
     if( !resource.exists() || !(resource instanceof IContainer) )
     {
-      throwCoreException( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.2") + containerName + "\" does not exist." ); //$NON-NLS-1$ //$NON-NLS-2$
+      throwCoreException( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizard.2", containerName )); //$NON-NLS-1$
     }
     IContainer container = (IContainer) resource;
     final IFile file = container.getFile( new Path( fileName ) );

@@ -151,7 +151,7 @@ public abstract class AbstractSimulationDataProvider implements ISimulationDataP
         }
         catch( final ParseException e )
         {
-          throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.3") + path + " as an object of type " + type, e ); //$NON-NLS-1$ //$NON-NLS-2$
+          throw new SimulationException( Messages.getString("org.kalypso.simulation.core.util.AbstractSimulationDataProvider.3",path ,type), e ); //$NON-NLS-1$ 
         }
       }
     }

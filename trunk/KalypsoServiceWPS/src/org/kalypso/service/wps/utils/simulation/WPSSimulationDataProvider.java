@@ -66,6 +66,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.xml.sax.InputSource;
@@ -77,7 +78,7 @@ import org.xml.sax.InputSource;
  */
 public class WPSSimulationDataProvider implements ISimulationDataProvider
 {
-  public static final String TYPE_GML = "text/gml";
+  public static final String TYPE_GML = "text/gml"; //$NON-NLS-1$
 
   /**
    * Contains the id of the inputs as key and the input itself as value.
@@ -113,7 +114,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   {
     final Object input = m_inputList.get( id );
     if( input == null )
-      throw new SimulationException( "Input not available with the ID: " + id, null );
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id), null ); //$NON-NLS-1$
 
     if( input instanceof ComplexValueType )
       return parseComplexValue( (ComplexValueType) input );
@@ -132,7 +133,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       }
       catch( final ParseException e )
       {
-        throw new SimulationException( "Could not parse " + value + " as an object of type " + type, e );
+        throw new SimulationException( "Could not parse " + value + " as an object of type " + type, e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else if( input instanceof ComplexValueReference )
@@ -154,7 +155,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         }
         catch( final URISyntaxException e2 )
         {
-          throw new SimulationException( "Value reference is not a valid URI.", e2 );
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1"), e2 ); //$NON-NLS-1$
         }
       }
     }
@@ -192,7 +193,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       }
       catch( final Exception e )
       {
-        throw new SimulationException( "Problem parsing gml input from string.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2"), e ); //$NON-NLS-1$
       }
     }
     else
@@ -203,14 +204,14 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         // TODO: why not base64 encoded byte[]?
         final byte[] bytes = DatatypeConverter.parseHexBinary( textContent );
 
-        final File file = FileUtilities.createNewUniqueFile( "complexValue_", FileUtilities.TMP_DIR );
+        final File file = FileUtilities.createNewUniqueFile( "complexValue_", FileUtilities.TMP_DIR ); //$NON-NLS-1$
         FileUtils.writeByteArrayToFile( file, bytes );
 
         return file.toURI().toURL();
       }
       catch( final IOException e )
       {
-        throw new SimulationException( "Problem converting complex-valued input from hexadecimal binary to file.", e );
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3"), e ); //$NON-NLS-1$
       }
     }
   }

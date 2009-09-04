@@ -81,6 +81,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
@@ -96,17 +97,17 @@ public class WPSUtilities
   /**
    * AnyURI QName.
    */
-  public static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
+  public static final QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" ); //$NON-NLS-1$
 
   /**
    * Service type identifier.
    */
-  public static final String SERVICE = "WPS";
+  public static final String SERVICE = "WPS"; //$NON-NLS-1$
 
   public static enum WPS_VERSION
   {
-    V100("1.0.0"),
-    V040("0.4.0");
+    V100("1.0.0"), //$NON-NLS-1$
+    V040("0.4.0"); //$NON-NLS-1$
 
     private final String m_version;
 
@@ -155,7 +156,7 @@ public class WPSUtilities
   public static String send( final String xml, final String url ) throws CoreException, HttpException, IOException
   {
     /* Send the request. */
-    Debug.println( "Calling " + url + " ..." );
+    Debug.println( "Calling " + url + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Create the client. */
     final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 25000, new URL( url ), 0 );
@@ -164,7 +165,7 @@ public class WPSUtilities
     final PostMethod post = new PostMethod( url );
     // TODO: this is maybe a bit heavy, if the request is big (got an OutOfMemory once at marshalling the xml string)
 
-    post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) );
+    post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) ); //$NON-NLS-1$
 
     /* Let the method handle the authentication, if any. */
     post.setDoAuthentication( true );
@@ -173,14 +174,14 @@ public class WPSUtilities
     final int status = client.executeMethod( post );
 
     /* Handle the response. */
-    Debug.println( "Status code: " + String.valueOf( status ) );
+    Debug.println( "Status code: " + String.valueOf( status ) ); //$NON-NLS-1$
 
     if( status != 200 )
     {
       // TODO: we should also add the body into a sub-status;
       // so we could show it to the user if he examines it more closely
       // String body = post.getResponseBodyAsString();
-      final String msg = String.format( "Request failed! Server response code %d.", status );
+      final String msg =  Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.0", status ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 
@@ -197,7 +198,7 @@ public class WPSUtilities
     final List<CodeType> identifiers = new LinkedList<CodeType>();
     for( final String processId : processIds )
     {
-      identifiers.add( WPS040ObjectFactoryUtilities.buildCodeType( "", processId ) );
+      identifiers.add( WPS040ObjectFactoryUtilities.buildCodeType( "", processId ) ); //$NON-NLS-1$
     }
 
     final DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifiers );
@@ -238,7 +239,7 @@ public class WPSUtilities
 
     /* Check describe process. */
     if( processDescriptionList == null || processDescriptionList.size() == 0 )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "DescribeProcess returned no process description.", null ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.1"), null ) ); //$NON-NLS-1$
 
     return processDescriptionList;
   }
@@ -249,15 +250,15 @@ public class WPSUtilities
     try
     {
       /* Build the execute request. */
-      final Execute execute = WPS040ObjectFactoryUtilities.buildExecute( WPS040ObjectFactoryUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true );
+      final Execute execute = WPS040ObjectFactoryUtilities.buildExecute( WPS040ObjectFactoryUtilities.buildCodeType( "", typeID ), dataInputs, outputDefinitions, true, true ); //$NON-NLS-1$
       final String executeRequestString = MarshallUtilities.marshall( execute, WPS_VERSION.V040 );
       final String executeResponseString = WPSUtilities.send( executeRequestString, serviceEndpoint );
 
       /* Handle the execute response. */
-      Debug.println( "Response:\n" + executeResponseString );
+      Debug.println( "Response:\n" + executeResponseString ); //$NON-NLS-1$
 
       if( executeResponseString == null || executeResponseString.length() == 0 )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Got an empty response ..." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.2") ) ); //$NON-NLS-1$
 
       final Object response = MarshallUtilities.unmarshall( executeResponseString, WPS_VERSION.V040 );
 
@@ -288,12 +289,12 @@ public class WPSUtilities
   public static String createErrorString( final ExceptionReport exceptionReport )
   {
     final List<ExceptionType> exceptions = exceptionReport.getException();
-    String messages = "";
+    String messages = ""; //$NON-NLS-1$
     for( final ExceptionType exception : exceptions )
     {
       final List<String> exceptionList = exception.getExceptionText();
-      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" );
-      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exceptionText + "\nLocator: " + exception.getLocator();
+      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" ); //$NON-NLS-1$
+      messages = messages + "Code: " + exception.getExceptionCode() + "\nMessage: " + exceptionText + "\nLocator: " + exception.getLocator(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     return messages;
@@ -309,10 +310,10 @@ public class WPSUtilities
   public static ISimulation getSimulation( final String simulationType ) throws CoreException
   {
     /* Get the simulation. */
-    Debug.println( "Searching for simulation \"" + simulationType + "\" ..." );
+    Debug.println( "Searching for simulation \"" + simulationType + "\" ..." ); //$NON-NLS-1$ //$NON-NLS-2$
     final ISimulation simulation = KalypsoSimulationCoreExtensions.createSimulation( simulationType );
     if( simulation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "No simulation found with id %s.", simulationType ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.3", simulationType) ) ); //$NON-NLS-1$
     return simulation;
   }
 
@@ -329,8 +330,8 @@ public class WPSUtilities
     }
     catch( final CoreException e )
     {
-      Debug.println( "Error retrieving the simulations!" );
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+      Debug.println( "Error retrieving the simulations!" ); //$NON-NLS-1$
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
     }
   }
 
@@ -350,13 +351,13 @@ public class WPSUtilities
   public static String convertInternalToClient( final String serverUrl )
   {
     /* If no property for the replacement is set, use the server URL and provide it to the client. */
-    final String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" );
+    final String clientProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.client.replacement" ); //$NON-NLS-1$
     if( clientProperty == null )
       return serverUrl;
 
-    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" ); //$NON-NLS-1$
     final String clientUrl = serverUrl.replace( serverProperty, clientProperty );
-    Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." );
+    Debug.println( "Converting " + serverUrl + " to " + clientUrl + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return clientUrl;
   }
@@ -380,12 +381,12 @@ public class WPSUtilities
   public static String convertInternalToServer( final String clientUrl, final String clientProperty )
   {
     /* If no property for the replacement is set, use the client URL and provide it to the server. */
-    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" );
+    final String serverProperty = FrameworkProperties.getProperty( "org.kalypso.service.wps.server.replacement" ); //$NON-NLS-1$
     if( serverProperty == null )
       return clientUrl;
 
     final String serverUrl = clientUrl.replace( clientProperty, serverProperty );
-    Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." );
+    Debug.println( "Converting " + clientUrl + " to " + serverUrl + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return serverUrl;
   }
@@ -454,8 +455,8 @@ public class WPSUtilities
           final FileContent content = statusFile.getContent();
           inputStream = content.getInputStream();
           final String xml = MarshallUtilities.fromInputStream( inputStream );
-          if( xml == null || "".equals( xml ) )
-            throw new IOException( "Empty result: " + statusFile.toString() );
+          if( xml == null || "".equals( xml ) ) //$NON-NLS-1$
+            throw new IOException( Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.4") + statusFile.toString() ); //$NON-NLS-1$
 
           final Object object = MarshallUtilities.unmarshall( xml );
           final JAXBElement< ? > executeState = (JAXBElement< ? >) object;
@@ -465,8 +466,8 @@ public class WPSUtilities
         {
           lastError = e;
 
-          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() );
-          Debug.println( "Retry: " + String.valueOf( i ) );
+          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() ); //$NON-NLS-1$
+          Debug.println( "Retry: " + String.valueOf( i ) ); //$NON-NLS-1$
 
           Thread.sleep( 1000 );
         }
@@ -477,15 +478,15 @@ public class WPSUtilities
         }
       }
 
-      Debug.println( "The second retry has failed, rethrowing the error ..." );
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to retreive execution response: " + lastError.getLocalizedMessage(), lastError );
+      Debug.println( "The second retry has failed, rethrowing the error ..." ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.5") + lastError.getLocalizedMessage(), lastError ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to retreive execution response: " + e.getLocalizedMessage(), e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.utils.WPSUtilities.6") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

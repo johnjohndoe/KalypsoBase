@@ -141,7 +141,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
   {
     final String[] tip = m_current.getTooltip();
 
-    return String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.AdvancedPolygonSelectionWidget.2"), tip[0] ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.AdvancedPolygonSelectionWidget.2", tip[0] ); //$NON-NLS-1$
   }
 
   /**

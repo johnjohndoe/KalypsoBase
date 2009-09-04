@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -104,7 +105,7 @@ public class WPSSimulationHandler extends Thread
    */
   public WPSSimulationHandler( final WPSQueuedSimulationService service, final ExecuteMediator executeMediator, final String jobId )
   {
-    super( "WPS-SimulationHandler" );
+    super( "WPS-SimulationHandler" ); //$NON-NLS-1$
     m_service = service;
     // TODO: Version 1.0
     m_execute = executeMediator.getV04();
@@ -136,13 +137,13 @@ public class WPSSimulationHandler extends Thread
           case UNKNOWN:
           case ERROR:
             final int finishStatus = jobInfo.getFinishStatus();
-            final String statusMessage = "Process ended with status: " + finishStatus;
+            final String statusMessage = Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.1", finishStatus); //$NON-NLS-1$
             final String finishText = jobInfo.getFinishText();
             /* Send user a message. */
             if( finishStatus != IStatus.ERROR )
             {
               // false means process succeeded
-              createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( statusMessage + ". " + finishText, false ), ioValues );
+              createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( statusMessage + ". " + finishText, false ), ioValues ); //$NON-NLS-1$
             }
             else
             {
@@ -166,7 +167,7 @@ public class WPSSimulationHandler extends Thread
           case WAITING:
             // do nothing?
             // true means process accepted
-            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process waiting.", true ), ioValues );
+            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process waiting.", true ), ioValues ); //$NON-NLS-1$
             break;
         }
 
@@ -178,7 +179,7 @@ public class WPSSimulationHandler extends Thread
       try
       {
         // cancel job
-        createProcessFailedExecuteResponse( "Problem evaluating simulation state. Cancelling simulation...", e );
+        createProcessFailedExecuteResponse( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.0"), e ); //$NON-NLS-1$
         m_service.cancelJob( m_jobID );
       }
       catch( final Exception e1 )
@@ -234,9 +235,9 @@ public class WPSSimulationHandler extends Thread
     }
 
     if( list.isEmpty() )
-      list.add( "No error message available." );
+      list.add( "No error message available." ); //$NON-NLS-1$
 
-    final ExceptionType exception = WPS040ObjectFactoryUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" );
+    final ExceptionType exception = WPS040ObjectFactoryUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
     exceptions.add( exception );
 
@@ -258,7 +259,7 @@ public class WPSSimulationHandler extends Thread
   {
     /* Prepare the execute response. */
     final FileObject resultDir = m_service.getResultDir( m_jobID );
-    final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" );
+    final FileObject resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
     final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
 
     ProcessOutputs processOutputs = null;

@@ -385,7 +385,7 @@ public class GMLSchemaUtilities
     final QName base = restriction.getBase();
 
     if( base == null )
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.0") + restriction ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.0", restriction) ); //$NON-NLS-1$
     if( isKnownType( base, gmlVersion ) )
       return getKnownTypeFor( base, gmlVersion );
 
@@ -439,10 +439,10 @@ public class GMLSchemaUtilities
       case CONSTRUCTION_NAMED_TYPE:
         final TypeReference typeReference = schema.resolveTypeReference( qName );
         if( typeReference == null )
-          throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.1") + qName ); //$NON-NLS-1$
+          throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.1", qName )); //$NON-NLS-1$
         return findBaseType( typeReference, gmlVersion );
       default:
-        throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.2") + element.toString() ); //$NON-NLS-1$
+        throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaUtilities.2", element.toString() )); //$NON-NLS-1$
     }
   }
 

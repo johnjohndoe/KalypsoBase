@@ -107,7 +107,7 @@ public class MarshallUtilities
         m = CONTEXT_1_0_0.createMarshaller();
         break;
       default:
-        throw new JAXBException( "Unsupported WPS version " + wpsVersion );
+        throw new JAXBException( "Unsupported WPS version " + wpsVersion ); //$NON-NLS-1$
     }
     /* Create the marshaller. */
     final StringWriter sw = new StringWriter();
@@ -133,7 +133,7 @@ public class MarshallUtilities
     try
     {
       final XPath xpath = m_xpFactory.newXPath();
-      final XPathExpression expr = xpath.compile( "//@version" );
+      final XPathExpression expr = xpath.compile( "//@version" ); //$NON-NLS-1$
 
       final DocumentBuilder builder = m_factory.newDocumentBuilder();
       final InputSource is = new InputSource( new StringReader( xml ) );
@@ -150,7 +150,7 @@ public class MarshallUtilities
     }
     catch( final Exception e )
     {
-      throw new JAXBException( "Malformed document", e );
+      throw new JAXBException( "Malformed document", e ); //$NON-NLS-1$
     }
   }
 
@@ -167,7 +167,7 @@ public class MarshallUtilities
         um = CONTEXT_1_0_0.createUnmarshaller();
         break;
       default:
-        throw new JAXBException( "Unsupported WPS version " + wpsVersion );
+        throw new JAXBException( "Unsupported WPS version " + wpsVersion ); //$NON-NLS-1$
     }
 
     return um.unmarshal( new StringReader( xml ) );

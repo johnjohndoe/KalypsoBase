@@ -96,7 +96,7 @@ public class RemoteProjectDownloader implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString("org.kalypso.project.database.client.core.utils.RemoteProjectDownloader.0"), m_project.getUniqueName() ), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus(  Messages.getString("org.kalypso.project.database.client.core.utils.RemoteProjectDownloader.0", m_project.getUniqueName() ), e ) ); //$NON-NLS-1$
     }
   }
 

@@ -214,7 +214,7 @@ public class ZmlFactory
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
     final String protocol = url.getProtocol();
-    if( "zml-proxy".equals( protocol ) )
+    if( "zml-proxy".equals( protocol ) ) //$NON-NLS-1$
       return parseZmlProxyXml( url );
 
     InputStream inputStream = null;
@@ -280,9 +280,9 @@ public class ZmlFactory
     try
     {
       final String urlBase = url.toString();
-      final String[] splittedUrlBase = urlBase.split( "\\?" );
+      final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
       if( splittedUrlBase.length != 2 )
-        throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) );
+        throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
 
       final String itemId = splittedUrlBase[0];
       final String itemParameters = splittedUrlBase[1];
@@ -292,7 +292,7 @@ public class ZmlFactory
       }
 
       /** resolve IObservation from proxy repository */
-      final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" );
+      final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
       final IRepository repository = factory.createRepository();
 
       final IRepositoryItem item = repository.findItem( itemId );
@@ -303,7 +303,7 @@ public class ZmlFactory
     }
     catch( final Exception ex )
     {
-      throw new SensorException( "Parsing zml-proxy observation failed.", ex );
+      throw new SensorException( "Parsing zml-proxy observation failed.", ex ); //$NON-NLS-1$
     }
 
   }

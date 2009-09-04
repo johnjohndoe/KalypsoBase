@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
@@ -83,14 +84,14 @@ public class SimulationUtilities
       URL url = new URL( path );
 
       /* If it is a file URL, it is no remote URL. */
-      if( url.getProtocol().equals( "file" ) )
+      if( url.getProtocol().equals( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.0" ) ) ) //$NON-NLS-1$
       {
-        Debug.println( "Input '" + path + "' was a local file URL ..." );
+        Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.1" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 
       /* It is a remote URL. */
-      Debug.println( "Input '" + path + "' was a remote URL ..." );
+      Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.3" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return url;
     }
@@ -100,7 +101,7 @@ public class SimulationUtilities
     }
 
     /* If it was no parseable URL, it is probably a file path. */
-    Debug.println( "Input '" + path + "' was no URL ..." );
+    Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.5" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
@@ -127,8 +128,8 @@ public class SimulationUtilities
   {
     String endPoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
     if( endPoint == null )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "No default service endpoint is set. Use property '" + WPSRequest.SYSTEM_PROP_WPS_ENDPOINT
-          + "' to define a default WPS-Endpoint.", null ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, //
+      Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.7", WPSRequest.SYSTEM_PROP_WPS_ENDPOINT ), null ) ); //$NON-NLS-1$
 
     return endPoint;
   }

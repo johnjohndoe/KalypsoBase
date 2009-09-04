@@ -764,10 +764,10 @@ public class FileUtilities
 
   public static String resolveValidFileName( String fileName )
   {
-    fileName = fileName.replaceAll( "\\\\", "_" );
-    fileName = fileName.replaceAll( "/", "_" );
-    fileName = fileName.replaceAll( ":", "_" );
-    fileName = fileName.replaceAll( "\\.", "_" );
+    fileName = fileName.replaceAll( "\\\\", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileName = fileName.replaceAll( "/", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileName = fileName.replaceAll( ":", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileName = fileName.replaceAll( "\\.", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return fileName.trim();
   }

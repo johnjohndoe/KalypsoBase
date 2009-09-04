@@ -402,7 +402,7 @@ public class QueuedSimulationService implements ISimulationService
 
     final ISimulation job = m_calcJobFactory.createJob( typeID );
     if( job == null )
-      throw new SimulationException( String.format( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.3"), typeID ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.3", typeID ) ); //$NON-NLS-1$
 
     try
     {

@@ -112,7 +112,7 @@ public class ObservationServiceImpl implements IObservationService
     m_observationServiceJob = null;
     m_delegate = null;
 
-    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_REINIT_SERVICE, "600000" );
+    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_REINIT_SERVICE, "600000" ); //$NON-NLS-1$
     long reinit = 600000; // 10 min
     try
     {

@@ -370,7 +370,7 @@ public class Raster2Lines implements IGeoGridWalker
     }
     else
     {
-      final String msg = String.format( Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.1" ), x, y, index ); //$NON-NLS-1$
+      final String msg =  Messages.getString( "org.kalypso.gml.processes.raster2vector.Raster2Lines.1" , x, y, index ); //$NON-NLS-1$
       throw new GeoGridException( msg, null );
     }
   }

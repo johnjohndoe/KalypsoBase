@@ -72,7 +72,7 @@ public interface IWPSProcess
   /**
    * Commonly used system property for the location of the WPS endpoint. Not every WPS client might use this one.
    */
-  public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service";
+  public static final String SYSTEM_PROP_WPS_ENDPOINT = "org.kalypso.service.wps.service"; //$NON-NLS-1$
 
   /**
    * Starts the execution of this process.

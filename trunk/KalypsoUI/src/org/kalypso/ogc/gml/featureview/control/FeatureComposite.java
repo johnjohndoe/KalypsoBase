@@ -387,7 +387,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" ), operationElement, feature ); //$NON-NLS-1$
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" , operationElement, feature )); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -400,7 +400,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" ), result ); //$NON-NLS-1$
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" , result )); //$NON-NLS-1$
 
             return result;
           }

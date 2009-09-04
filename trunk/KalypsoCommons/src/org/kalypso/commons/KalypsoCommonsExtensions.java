@@ -88,7 +88,7 @@ public class KalypsoCommonsExtensions
     final IConfigurationElement element = m_i10nExtensions.get( id );
     if( element == null )
     {
-      final Status status = new Status( IStatus.ERROR, activator.getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.0") + id, null ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.ERROR, activator.getBundle().getSymbolicName(), 1, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.0", id), null ); //$NON-NLS-1$
       activator.getLog().log( status );
       return null;
     }
@@ -116,7 +116,7 @@ public class KalypsoCommonsExtensions
     final IProcessFactory factory = getProcessFactory( factoryId );
     if( factory == null )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.1"), factoryId ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.1", factoryId )); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -126,7 +126,7 @@ public class KalypsoCommonsExtensions
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.2"), executeable, tempDirName ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.commons.KalypsoCommonsExtensions.2", executeable, tempDirName )); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

@@ -76,7 +76,7 @@ public class ExecuteOperation implements IOperation
   {
     final StringBuffer response = new StringBuffer();
     /* Start the operation. */
-    Debug.println( "Operation \"Execute\" started." );
+    Debug.println( "Operation \"Execute\" started." ); //$NON-NLS-1$
 
     /* Gets the identifier, but also unmarshalls the request, so it has to be done! */
     final String requestXml = request.getBody();
@@ -87,7 +87,7 @@ public class ExecuteOperation implements IOperation
     }
     catch( final JAXBException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
     }
 
     /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
@@ -102,7 +102,7 @@ public class ExecuteOperation implements IOperation
     try
     {
       final FileObject resultDir = manager.getResultDir( info.getId() );
-      resultFile = resultDir.resolveFile( "executeResponse.xml" );
+      resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
       int time = 0;
       int timeout = 10000;
       final int delay = 500;
@@ -118,7 +118,7 @@ public class ExecuteOperation implements IOperation
     }
     catch( final Exception e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" );
+      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e, "" ); //$NON-NLS-1$
     }
     finally
     {
