@@ -731,4 +731,22 @@ public class ObservationServiceDelegate implements IObservationService
       }
     }
   }
+
+  /**
+   * FIXME at the moment we assume that an item should be deleted in all sub repositories
+   * 
+   * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
+   */
+  @Override
+  public void deleteItem( final String identifier ) throws RepositoryException
+  {
+    for( final IRepository repository : m_repositories )
+    {
+      if( repository instanceof IModifyableRepository )
+      {
+        final IModifyableRepository modifyable = (IModifyableRepository) repository;
+        modifyable.deleteItem( RepositoryUtils.replaceIdentifier( identifier, repository.getIdentifier() ) );
+      }
+    }
+  }
 }

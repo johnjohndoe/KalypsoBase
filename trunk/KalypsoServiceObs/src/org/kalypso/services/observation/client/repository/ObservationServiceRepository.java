@@ -209,4 +209,14 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     srv.makeItem( identifier );
   }
+
+  /**
+   * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
+   */
+  @Override
+  public void deleteItem( final String identifier ) throws RepositoryException
+  {
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+    srv.deleteItem( identifier );
+  }
 }
