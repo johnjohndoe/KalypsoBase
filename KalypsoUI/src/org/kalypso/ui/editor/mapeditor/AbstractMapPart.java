@@ -398,7 +398,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_saving )
       return;
 
-    System.out.println( "Loading map: " + storage );
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
     try
