@@ -153,6 +153,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     m_commandtarget = commandtarget;
     m_marginHeight = marginHeight;
     m_marginWidth = marginWidth;
+    m_featureComposite.addChangeListener( m_changeListener );
   }
 
   /**
@@ -327,7 +328,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( feature != null )
       {
-        m_featureComposite.addChangeListener( m_changeListener );
         m_featureComposite.setFeature( feature );
 
         /* process rendering properties */
