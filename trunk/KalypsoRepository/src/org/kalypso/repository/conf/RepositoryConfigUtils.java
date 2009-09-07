@@ -96,4 +96,20 @@ public class RepositoryConfigUtils
       throw new RepositoryException( "Unable to load repository config from location: " + location, e ); //$NON-NLS-1$
     }
   }
+
+  /**
+   * @param name
+   *          name of the RepositoryFactoryConfig
+   */
+  public static RepositoryFactoryConfig resolveConfiguration( final List<RepositoryFactoryConfig> configurations, final String name )
+  {
+    for( final RepositoryFactoryConfig config : configurations )
+    {
+      if( config.getName().equals( name ) )
+        return config;
+    }
+
+    return null;
+  }
+
 }

@@ -60,6 +60,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -107,7 +108,7 @@ import org.xml.sax.InputSource;
  * @author Holger Albert
  */
 @SuppressWarnings("restriction")
-public class ObservationServiceDelegate implements IObservationService
+public class ObservationServiceDelegate implements IObservationService, IDisposable
 {
   private final List<IRepository> m_repositories;
 
