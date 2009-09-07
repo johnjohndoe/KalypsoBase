@@ -44,7 +44,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.services.IDisposable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.sei.IObservationService;
 
@@ -55,6 +58,8 @@ import org.kalypso.services.observation.sei.IObservationService;
  */
 public class ObservationServiceJob extends Job
 {
+  public static final String SERVICE_IMPLEMENTATION = "org.kalypso.services.observation.server.implementation";
+
   /**
    * This wrapper also implements the {@link IObservationService}-Interface. It uses this job for reloading the
    * observation service.
@@ -80,20 +85,22 @@ public class ObservationServiceJob extends Job
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
+
       /* Create the observation service. */
-      final IObservationService observationService = new ObservationServiceDelegate();
+      final IObservationService observationService = loadService();
 
       /* Monitor. */
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
       /* Dispose the old delegate. */
-      final ObservationServiceDelegate delegate = (ObservationServiceDelegate) m_observationServiceWrapper.getDelegateInternal();
-      if( delegate != null )
+      final IObservationService delegate = m_observationServiceWrapper.getDelegateInternal();
+      if( delegate instanceof IDisposable )
       {
         // System.out.println( "Dispose the old observation service delegate (" + delegate.toString() + ") ... " +
         // DateFormat.getDateTimeInstance().format( Calendar.getInstance().getTime() ) );
-        delegate.dispose();
+        final IDisposable disposable = (IDisposable) delegate;
+        disposable.dispose();
       }
 
       /* Store the result. */
@@ -103,9 +110,22 @@ public class ObservationServiceJob extends Job
 
       return Status.OK_STATUS;
     }
-    catch( final RepositoryException ex )
+    catch( final Exception ex )
     {
       return StatusUtilities.statusFromThrowable( ex );
     }
+  }
+
+  private IObservationService loadService( ) throws RepositoryException, ClassUtilityException
+  {
+    final String property = System.getProperty( SERVICE_IMPLEMENTATION, "" );
+    if( property == null || "".equals( property.trim() ) )
+    {
+      return new ObservationServiceDelegate();
+    }
+
+    final IObservationService service = (IObservationService) ClassUtilities.newInstance( property, IObservationService.class, ObservationServiceJob.class.getClassLoader(), null, null );
+
+    return service;
   }
 }

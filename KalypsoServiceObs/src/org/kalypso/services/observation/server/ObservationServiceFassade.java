@@ -43,32 +43,26 @@ package org.kalypso.services.observation.server;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.filter.filters.ZmlFilter;
 import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -96,32 +90,20 @@ import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
 
 /**
- * Kalypso Observation Service.
+ * Kalypso Observation Service Fassade.
  * <p>
- * When a observation is delivered to the client, the IObservationManipulator mechanism is always used to possibly
- * manipulate the observation before it is delivered. ObservationManipulators are configured within the
- * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
- * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
+ * Server Fassade for an "local" IRepository
  * 
- * @author Marc Schlienger
- * @author Gernot Belger
- * @author Holger Albert
+ * @author Dirk Kuch
  */
 @SuppressWarnings("restriction")
-public class ObservationServiceDelegate implements IObservationService, IDisposable
+public class ObservationServiceFassade implements IObservationService, IDisposable
 {
-  private final List<IRepository> m_repositories;
+  public static final String DESTINATION_REPOSITORY = "org.kalypso.services.observation.server.fassade.destination.repository.name";
 
-  private ItemBean[] m_repositoryBeans = null;
+  private IRepository m_repository = null;
 
-  /** Bean-ID(String) --> IRepositoryItem */
-  private final Map<String, IRepositoryItem> m_mapBeanId2Item;
-
-  /** IRepositoryItem --> ItemBean */
-  private final Map<IRepositoryItem, ItemBean[]> m_mapItem2Bean;
-
-  /** Repository-ID(String) --> IRepository */
-  private final Map<String, IRepository> m_mapRepId2Rep;
+  private ItemBean m_repositoryBean = null;
 
   /** Repository-ID(String) --> IObservationManipulator */
   private final Map<String, IObservationManipulator> m_mapRepId2Manip;
@@ -133,24 +115,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   private final Logger m_logger;
 
-  private boolean m_initialized = false;
-
   private final String m_configurationLocation;
 
   /**
    * Constructs the service by reading the configuration.
    */
-  public ObservationServiceDelegate( ) throws RepositoryException
+  public ObservationServiceFassade( ) throws RepositoryException
   {
-    m_repositories = new Vector<IRepository>();
-    m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
-    m_mapItem2Bean = new Hashtable<IRepositoryItem, ItemBean[]>( 512 );
-    m_mapRepId2Rep = new Hashtable<String, IRepository>();
     m_mapRepId2Manip = new Hashtable<String, IObservationManipulator>();
     m_mapDataId2File = new Hashtable<String, File>( 128 );
 
-    m_logger = Logger.getLogger( ObservationServiceDelegate.class.getName() );
-    m_initialized = false;
+    m_logger = Logger.getLogger( ObservationServiceFassade.class.getName() );
 
     m_tmpDir = FileUtilities.createNewTempDir( "Observations" ); //$NON-NLS-1$
     m_tmpDir.deleteOnExit();
@@ -161,47 +136,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     init();
   }
 
-  @Override
-  protected void finalize( ) throws Throwable
-  {
-    // System.out.println( "Finalize observation service delegate (" + this.toString() + ") ... " +
-    // DateFormat.getDateTimeInstance().format( Calendar.getInstance().getTime() ) );
-
-    /* Dispose everything. */
-    dispose();
-  }
 
   /**
    * This function disposes everything.
    */
   public void dispose( )
   {
-    clearCache();
+    m_repository.dispose();
 
     // force delete, even if we called deleteOnExit()
     if( m_tmpDir.exists() )
       m_tmpDir.delete();
-  }
-
-  private void clearCache( )
-  {
-    m_mapBeanId2Item.clear();
-    m_mapItem2Bean.clear();
-    m_mapRepId2Rep.clear();
-    m_mapRepId2Manip.clear();
-    m_repositoryBeans = null;
-
-    // dispose repositories
-    for( final Object element : m_repositories )
-      ((IRepository) element).dispose();
-    m_repositories.clear();
-
-    // clear temp files
-    for( final Object element : m_mapDataId2File.values() )
-      ((File) element).delete();
-    m_mapDataId2File.clear();
-
-    ZmlFilter.configureFor( null );
   }
 
   /**
@@ -209,23 +154,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    * 
    * @throws RemoteException
    */
-  protected final synchronized void init( ) throws RepositoryException
+  private final synchronized void init( ) throws RepositoryException
   {
-    // TODO: at the moment, we silently ignore this implementation if no
-    // service location was given: this is necessary, because if
-    // the help system is running (jetty!), this implementation is also available at the
-    // client side...
-    // TODO Solution: remove this server code from the client side... (but in order to do that, we must split-up the
-    // observation service plug-ins)
-    if( m_initialized || m_configurationLocation == null )
-      return;
-
-    m_initialized = true;
-
-    clearCache();
-
-    final Properties props = new Properties();
-
     try
     {
       final URL confLocation = new URL( m_configurationLocation );
@@ -234,90 +164,21 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       // this call also closes the stream
       final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
-      // load the service properties
-      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" ); //$NON-NLS-1$
-
-      InputStream ins = null;
-      try
-      {
-        ins = urlProps.openStream();
-        props.load( ins );
-        ins.close();
-      }
-      catch( final IOException e )
-      {
-        m_logger.warning( "Cannot read properties-file: " + e.getLocalizedMessage() ); //$NON-NLS-1$
-      }
-      finally
-      {
-        IOUtils.closeQuietly( ins );
-      }
-
-      /* Configure logging according to configuration */
-      try
-      {
-        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() ); //$NON-NLS-1$
-        final Level logLevel = Level.parse( logLevelString );
-        Logger.getLogger( "" ).setLevel( logLevel ); //$NON-NLS-1$
-      }
-      catch( final Throwable t )
-      {
-        // Catch everything, changing the log level should not prohibit this service to run
-        t.printStackTrace();
-      }
-
-      /* Load Repositories */
-      for( final RepositoryFactoryConfig item : facConfs )
-      {
-        final IRepositoryFactory fact = item.getFactory();
-        try
-        {
-          final IRepository rep = fact.createRepository();
-          m_repositories.add( rep );
-
-          m_mapRepId2Rep.put( rep.getIdentifier(), rep );
-
-          // look into properties if an IObservationManipulator should be
-          // configured for the current repository
-          final String pManip = "MANIPULATOR_" + rep.getIdentifier(); //$NON-NLS-1$
-          final String cnManip = props.getProperty( pManip );
-          if( cnManip != null )
-          {
-            final IObservationManipulator man = (IObservationManipulator) ClassUtilities.newInstance( cnManip, IObservationManipulator.class, getClass().getClassLoader() );
-            m_mapRepId2Manip.put( rep.getIdentifier(), man );
-          }
-        }
-        catch( final Exception e )
-        {
-          m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration " + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          e.printStackTrace();
-        }
-      }
-
-      // tricky: set the list of repositories to the ZmlFilter so that
-      // it can directly fetch the observations without using the default
-      // URL resolving stuff
-      ZmlFilter.configureFor( m_repositories );
+      final RepositoryFactoryConfig config = RepositoryConfigUtils.resolveConfiguration( facConfs, System.getProperty( DESTINATION_REPOSITORY, null ) );
+      final IRepositoryFactory factory = config.getFactory();
+      m_repository = factory.createRepository();
     }
-    catch( final Exception e ) // generic exception caught for simplicity
+    catch( final Exception e )
     {
-      m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
+      if( e instanceof RepositoryException )
+        throw (RepositoryException) e;
 
-      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+      throw new RepositoryException( "Initializing repository server fassade failed.", e );
     }
   }
 
   public DataBean readData( final String href ) throws SensorException
   {
-    try
-    {
-      init();
-    }
-    catch( final RepositoryException e1 )
-    {
-      throw new SensorException( e1 );
-    }
-
     final String hereHref = ZmlURL.removeServerSideId( href );
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
@@ -411,14 +272,14 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       if( fos != null )
         try
-      {
+        {
           fos.close();
-      }
-      catch( final IOException e )
-      {
-        m_logger.severe( e.getLocalizedMessage() );
-        throw new SensorException( "Error closing the output stream", e ); //$NON-NLS-1$
-      }
+        }
+        catch( final IOException e )
+        {
+          m_logger.severe( e.getLocalizedMessage() );
+          throw new SensorException( "Error closing the output stream", e ); //$NON-NLS-1$
+        }
     }
   }
 
@@ -430,18 +291,16 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       final boolean b = file.delete();
 
       if( !b )
-        m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString() , dataId )); //$NON-NLS-1$
+        m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString(), dataId ) ); //$NON-NLS-1$
     }
     else
-      m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId )); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
   public void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
   {
     try
     {
-      init();
-
       final IRepositoryItem item = itemFromBean( obean );
 
       final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
@@ -473,43 +332,13 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    */
   private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException, NoSuchElementException
   {
-    if( obean == null )
-      throw new NullPointerException( "ItemBean must not be null" ); //$NON-NLS-1$
-
-    /* Create the repository beans, if neccessary. */
-    createRepositoryBeans();
-
     final String id = ZmlURL.removeServerSideId( obean.getId() );
 
-    // maybe bean already in map?
-    if( m_mapBeanId2Item.containsKey( id ) )
-      return m_mapBeanId2Item.get( id );
+    final IRepositoryItem item = m_repository.findItem( id );
+    if( item == null )
+      throw new NoSuchElementException( "Item does not exist or could not be found: " + id ); //$NON-NLS-1$
 
-    // try with repository id
-    final String repId = RepositoryUtils.getRepositoryId( id );
-    if( m_mapRepId2Rep.containsKey( repId ) )
-    {
-      final IRepository rep = m_mapRepId2Rep.get( repId );
-
-      final IRepositoryItem item = rep.findItem( id );
-
-      if( item == null )
-        throw new NoSuchElementException( "Item does not exist or could not be found: " + id ); //$NON-NLS-1$
-
-      return item;
-    }
-
-    // last chance: go through repositories and use findItem()
-    for( final Object element : m_repositories )
-    {
-      final IRepository rep = (IRepository) element;
-
-      final IRepositoryItem item = rep.findItem( id );
-      if( item != null )
-        return item;
-    }
-
-    throw new NoSuchElementException( "Unknown Repository or item. Repository: " + repId + ", Item: " + id ); //$NON-NLS-1$ //$NON-NLS-2$
+    return item;
   }
 
   /**
@@ -517,23 +346,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    */
   public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
-    init();
-
-    // dealing with ROOT?
-    if( parent == null )
-      return m_repositories.size() > 0;
-
-      try
-      {
-        final IRepositoryItem item = itemFromBean( parent );
-
-        return item.hasChildren();
-      }
-      catch( final RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
-        throw e;
-      }
+    return m_repository.hasChildren();
   }
 
   /**
@@ -541,40 +354,26 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    */
   public ItemBean[] getChildren( final ItemBean pbean ) throws RepositoryException
   {
-    init();
-
     // dealing with ROOT?
     if( pbean == null )
     {
       createRepositoryBeans();
-      return m_repositoryBeans;
-    }
 
-    IRepositoryItem item = null;
+      return new ItemBean[] { m_repositoryBean };
+    }
 
     try
     {
-      item = itemFromBean( pbean );
-
-      // already in cache?
-      if( m_mapItem2Bean.containsKey( item ) )
-        return m_mapItem2Bean.get( item );
-
+      final IRepositoryItem item = itemFromBean( pbean );
       final IRepositoryItem[] children = item.getChildren();
 
-      final ItemBean[] beans = new ItemBean[children.length];
-      for( int i = 0; i < beans.length; i++ )
+      final List<ItemBean> beans = new ArrayList<ItemBean>();
+      for( final IRepositoryItem child : children )
       {
-        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName() );
-
-        // store it for future referencing
-        m_mapBeanId2Item.put( beans[i].getId(), children[i] );
+        beans.add( new ItemBean( child.getIdentifier(), child.getName() ) );
       }
 
-      // cache it for next request
-      m_mapItem2Bean.put( item, beans );
-
-      return beans;
+      return beans.toArray( new ItemBean[] {} );
     }
     catch( final RepositoryException e )
     {
@@ -584,21 +383,13 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   }
 
   /**
-   * This function creates the repository beans, if neccessary.
+   * This function creates the repository beans, if necessary.
    */
   private void createRepositoryBeans( )
   {
-    if( m_repositoryBeans == null )
+    if( m_repositoryBean == null )
     {
-      m_repositoryBeans = new ItemBean[m_repositories.size()];
-
-      for( int i = 0; i < m_repositoryBeans.length; i++ )
-      {
-        final IRepository rep = m_repositories.get( i );
-
-        m_repositoryBeans[i] = new RepositoryBean( rep.getIdentifier(), rep.getName() );
-        m_mapBeanId2Item.put( m_repositoryBeans[i].getId(), rep );
-      }
+      m_repositoryBean = new RepositoryBean( m_repository.getIdentifier(), m_repository.getName() );
     }
   }
 
@@ -609,14 +400,11 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     try
     {
-      init();
-
       final IRepositoryItem item = itemFromBean( ib );
       if( item == null )
         return null;
 
       final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
-
       if( obs == null )
         return null;
 
@@ -648,7 +436,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       catch( final SensorException e )
       {
         m_logger.throwing( getClass().getName(), "updateMetadata", e ); //$NON-NLS-1$
-        m_logger.info( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.2", id ) ); //$NON-NLS-1$
+        m_logger.info( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.2", id ) ); //$NON-NLS-1$
       }
 
     return md;
@@ -665,11 +453,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   /**
    * @see org.kalypso.repository.service.IRepositoryService#reload()
    */
-  public void reload( ) throws RepositoryException
+  public void reload( )
   {
-    m_initialized = false;
-
-    init();
   }
 
   /**
@@ -677,77 +462,36 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
    */
   public ItemBean findItem( final String id ) throws RepositoryException
   {
-    init();
-
-    for( final Object element : m_repositories )
-    {
-      final IRepository rep = (IRepository) element;
-
-      final IRepositoryItem item;
-
-      // first check the repository itself, then look into it
-      if( rep.getIdentifier().equals( id ) )
-        item = rep;
-      else
-        try
-        {
-          item = rep.findItem( id );
-        }
-        catch( final RepositoryException e )
-        {
-          m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
-          throw e;
-        }
-
-      if( item == null )
-        continue;
-
-      final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName() );
-
-      // store it for future referencing
-      m_mapBeanId2Item.put( bean.getId(), item );
-
-      return bean;
-    }
-
-    m_logger.warning( Messages.getString("org.kalypso.services.observation.server.ObservationServiceDelegate.3", id )); //$NON-NLS-1$
+    final IRepositoryItem item = m_repository.findItem( id );
+    if( item != null )
+      return new ItemBean( item.getIdentifier(), item.getName() );
 
     return null;
   }
 
   /**
-   * FIXME at the moment we assume that an new item should be created in all sub repositories
-   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
   public void makeItem( final String itemIdentifier ) throws RepositoryException
   {
-    for( final IRepository repository : m_repositories )
+    if( m_repository instanceof IModifyableRepository )
     {
-      if( repository instanceof IModifyableRepository )
-      {
-        final IModifyableRepository modifyable = (IModifyableRepository) repository;
-        modifyable.makeItem( RepositoryUtils.replaceIdentifier( itemIdentifier, repository.getIdentifier() ) );
-      }
+      final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
+      modifyable.makeItem( RepositoryUtils.replaceIdentifier( itemIdentifier, modifyable.getIdentifier() ) );
     }
   }
 
   /**
-   * FIXME at the moment we assume that an item should be deleted in all sub repositories
-   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
   public void deleteItem( final String identifier ) throws RepositoryException
   {
-    for( final IRepository repository : m_repositories )
+    if( m_repository instanceof IModifyableRepository )
     {
-      if( repository instanceof IModifyableRepository )
-      {
-        final IModifyableRepository modifyable = (IModifyableRepository) repository;
-        modifyable.deleteItem( RepositoryUtils.replaceIdentifier( identifier, repository.getIdentifier() ) );
-      }
+      final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
+      modifyable.deleteItem( RepositoryUtils.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
     }
   }
 }
