@@ -54,17 +54,17 @@ public class ObservationBean extends ItemBean
 
   public ObservationBean()
   {
-    this( "", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( "", "", false, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public ObservationBean( final String id )
   {
-    this( id, "", null ); //$NON-NLS-1$
+    this( id, "", false, null ); //$NON-NLS-1$
   }
 
-  public ObservationBean( final String id, final String name, final Map<Object, Object> metadata )
+  public ObservationBean( final String id, final String name, final Boolean modifyable, final Map<Object, Object> metadata )
   {
-    super( id, name );
+    super( id, name, modifyable );
 
     m_metadataList = metadata;
   }

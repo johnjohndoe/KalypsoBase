@@ -53,9 +53,11 @@ public class ItemBean implements Serializable
 
   private String m_name;
 
+  private Boolean m_modifyable;
+
   public ItemBean( )
   {
-    this( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( "", "", false ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -64,10 +66,11 @@ public class ItemBean implements Serializable
    * @param name
    *          name of this item
    */
-  public ItemBean( final String id, final String name )
+  public ItemBean( final String id, final String name, final Boolean modifyable )
   {
     m_id = id;
     m_name = name;
+    m_modifyable = modifyable;
   }
 
   public String getId( )
@@ -90,10 +93,20 @@ public class ItemBean implements Serializable
     m_name = name;
   }
 
+  public Boolean getModifyable( )
+  {
+    return m_modifyable;
+  }
+
+  public void setModifyable( final Boolean modifyable )
+  {
+    m_modifyable = modifyable;
+  }
+
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  public boolean equals( ItemBean other )
+  public boolean equals( final ItemBean other )
   {
     if( other == null )
       return false;

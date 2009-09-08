@@ -38,20 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.services.observation.client.repository;
+
+import org.kalypso.repository.IModifyableRepositoryItem;
+import org.kalypso.repository.IRepository;
+import org.kalypso.services.observation.sei.IObservationService;
+import org.kalypso.services.observation.sei.ItemBean;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
+ *
  */
-public interface IModifyableRepository extends IRepository, IModifyableRepositoryItem
+public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem implements IModifyableRepositoryItem
 {
-  /**
-   * creates a new item in the repository
-   * 
-   * @param identifier
-   *          item identifier
-   */
-  void makeItem( String identifier ) throws RepositoryException;
 
-  void deleteItem( String identifier ) throws RepositoryException;
+  public ModifyableServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent, final IRepository rep )
+  {
+    super( srv, bean, parent, rep );
+  }
+
 }

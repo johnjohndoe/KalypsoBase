@@ -43,15 +43,7 @@ package org.kalypso.repository;
 /**
  * @author Dirk Kuch
  */
-public interface IModifyableRepository extends IRepository, IModifyableRepositoryItem
+public interface IModifyableRepositoryItem extends IRepositoryItem
 {
-  /**
-   * creates a new item in the repository
-   * 
-   * @param identifier
-   *          item identifier
-   */
-  void makeItem( String identifier ) throws RepositoryException;
 
-  void deleteItem( String identifier ) throws RepositoryException;
 }

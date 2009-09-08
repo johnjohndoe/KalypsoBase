@@ -53,8 +53,8 @@ public class RepositoryBean extends ItemBean
     super();
   }
 
-  public RepositoryBean( final String id, final String name )
+  public RepositoryBean( final String id, final String name, final Boolean modifyable )
   {
-    super( id, name );
+    super( id, name, modifyable );
   }
 }
