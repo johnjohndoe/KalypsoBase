@@ -309,12 +309,12 @@ public class GMLWeightingTask extends Task
       }
 
       // 14. do the mapping
-      final Date sourceFrom = m_sourceFrom == null ? DateUtilities.toDate( m_from ) : DateUtilities.toDate( m_sourceFrom );
-      final Date sourceTo = m_sourceTo == null ? DateUtilities.toDate( m_forecastFrom ) : DateUtilities.toDate( m_sourceTo );
-      final Date targetFrom = m_targetFrom == null ? DateUtilities.toDate( m_forecastFrom ) : DateUtilities.toDate( m_targetFrom );
-      final Date targetTo = m_targetTo == null ? DateUtilities.toDate( m_to ) : DateUtilities.toDate( m_targetTo );
-      final Date forecastFrom = DateUtilities.toDate( m_forecastFrom );
-      final Date forecastTo = m_forecastTo == null ? DateUtilities.toDate( m_to ) : DateUtilities.toDate( m_forecastTo );
+      final Date sourceFrom = m_sourceFrom == null ? DateUtilities.parseDateTime( m_from ) : DateUtilities.parseDateTime( m_sourceFrom );
+      final Date sourceTo = m_sourceTo == null ? DateUtilities.parseDateTime( m_forecastFrom ) : DateUtilities.parseDateTime( m_sourceTo );
+      final Date targetFrom = m_targetFrom == null ? DateUtilities.parseDateTime( m_forecastFrom ) : DateUtilities.parseDateTime( m_targetFrom );
+      final Date targetTo = m_targetTo == null ? DateUtilities.parseDateTime( m_to ) : DateUtilities.parseDateTime( m_targetTo );
+      final Date forecastFrom = DateUtilities.parseDateTime( m_forecastFrom );
+      final Date forecastTo = m_forecastTo == null ? DateUtilities.parseDateTime( m_to ) : DateUtilities.parseDateTime( m_forecastTo );
 
       CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, sourceFrom, sourceTo, targetFrom, targetTo, forecastFrom, forecastTo );
 
