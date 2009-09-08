@@ -111,7 +111,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     // TODO: should never happen remove if fixed
     if( feature == null )
-      return new NotImplementedFeatureDialog();
+      return new NotImplementedFeatureDialog(  );  
 
     if( pt instanceof IValuePropertyType )
     {
@@ -137,7 +137,12 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       final Feature linkedFeature;
 
       if( property == null )
+      {
+        if( !rt.isInlineAble() || rt.isLinkAble() )
+          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"), "..." );  //$NON-NLS-1$  //$NON-NLS-2$
+        
         return new CreateFeaturePropertyDialog( listener, feature, rt );
+      }
 
       if( property instanceof String ) // link auf ein Feature mit FeatureID
       {
@@ -259,8 +264,11 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    */
   public void updateControl( )
   {
-    m_dialog = chooseDialog( getFeature(), getFeatureTypeProperty(), m_listener );
+    Feature feature = getFeature();
+    m_dialog = chooseDialog( feature, getFeatureTypeProperty(), m_listener );
 
     m_button.setText( m_dialog.getLabel() );
+    
+    m_button.setEnabled( feature != null );
   }
 }
