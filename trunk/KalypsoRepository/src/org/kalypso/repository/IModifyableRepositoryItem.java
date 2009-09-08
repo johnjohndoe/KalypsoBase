@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+
 /**
  * @author Dirk Kuch
  */
 public interface IModifyableRepositoryItem extends IRepositoryItem
 {
-
+  void setData( Object observation ) throws RepositoryException;
 }

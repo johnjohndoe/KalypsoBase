@@ -137,7 +137,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     init();
   }
 
-
   /**
    * This function disposes everything.
    */
@@ -501,6 +500,23 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     {
       final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
       modifyable.deleteItem( RepositoryUtils.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
+    }
+  }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setItemData( final String identifier, final Object data ) throws RepositoryException
+  {
+    if( m_repository instanceof IModifyableRepository )
+    {
+      final IRepositoryItem item = m_repository.findItem( identifier );
+      if( item instanceof IModifyableRepositoryItem )
+      {
+        final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+        modifyable.setData( data );
+      }
     }
   }
 }

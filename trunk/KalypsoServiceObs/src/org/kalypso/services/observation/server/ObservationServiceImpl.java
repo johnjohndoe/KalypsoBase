@@ -351,4 +351,13 @@ public class ObservationServiceImpl implements IObservationService
   {
     getDelegate().deleteItem( identifier );
   }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setItemData( final String identifier, final Object data ) throws RepositoryException
+  {
+    getDelegate().setItemData( identifier, data );
+  }
 }

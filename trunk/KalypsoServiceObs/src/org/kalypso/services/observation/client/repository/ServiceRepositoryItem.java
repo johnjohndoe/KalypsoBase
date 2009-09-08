@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.IRepository;
@@ -108,14 +111,22 @@ public class ServiceRepositoryItem implements IRepositoryItem
   {
     try
     {
+      final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
       final ItemBean[] beans = m_srv.getChildren( m_bean );
 
-      final IRepositoryItem[] items = new ServiceRepositoryItem[beans.length];
+      for( final ItemBean bean : beans )
+      {
+        if( bean.getModifyable() )
+        {
+          items.add( new ModifyableServiceRepositoryItem( m_srv, bean, this, m_rep ) );
+        }
+        else
+        {
+          items.add( new ServiceRepositoryItem( m_srv, bean, this, m_rep ) );
+        }
+      }
 
-      for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( m_srv, beans[i], this, m_rep );
-
-      return items;
+      return items.toArray( new IRepositoryItem[] {} );
     }
     catch( final RepositoryException e )
     {
