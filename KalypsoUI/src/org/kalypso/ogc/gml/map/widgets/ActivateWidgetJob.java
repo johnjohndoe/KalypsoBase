@@ -1,7 +1,6 @@
 package org.kalypso.ogc.gml.map.widgets;
 
 import org.eclipse.core.commands.common.CommandException;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,8 +34,6 @@ public final class ActivateWidgetJob extends UIJob
   {
     super( name );
     
-    Assert.isNotNull( activePage );
-    
     m_widget = widget;
     m_mapPanel = mapPanel;
     m_activePage = activePage;
@@ -47,7 +44,7 @@ public final class ActivateWidgetJob extends UIJob
   {
     try
     {
-      if( m_widget instanceof IWidgetWithOptions )
+      if( m_widget instanceof IWidgetWithOptions && m_activePage != null )
       {
         final MapWidgetView widgetView = (MapWidgetView) m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
         widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );

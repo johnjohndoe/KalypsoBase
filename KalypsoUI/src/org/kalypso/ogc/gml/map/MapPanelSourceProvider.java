@@ -50,6 +50,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -134,6 +136,15 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     }
   };
 
+  private final ISelectionChangedListener m_selectionChangedListener = new ISelectionChangedListener()
+  {
+    @Override
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      handleSelectionChanged();
+    }
+  };
+
   /**
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
@@ -175,6 +186,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
 
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
+    m_mapPanel.addSelectionChangedListener( m_selectionChangedListener );
     m_mapPanelListener.onMapModelChanged( m_mapPanel, null, m_mapPanel.getMapModell() );
   }
 
@@ -200,9 +212,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
 
     m_mapPanel = null;
-
-// for( final IServiceWithSources service : m_registeredServices )
-// service.removeSourceProvider( this );
 
     if( m_mapPanelContext != null )
       m_contextService.deactivateContext( m_mapPanelContext );
@@ -241,6 +250,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
         fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_MAPPANEL_NAME, m_mapPanel );
 
         activateThemeContextSWT( activeTheme );
+
         return Status.OK_STATUS;
       }
     };
@@ -261,6 +271,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
     if( activeTheme != null )
     {
+      // TODO: is this really still needed, probably not, because every test now goes against the mapCnotext, no more
+      // theme contextes..
       final String contextId = activeTheme.getTypeContext();
       final Context context = m_contextService.getContext( contextId );
       if( !context.isDefined() )
@@ -270,21 +282,25 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       }
 
       m_themeContext = m_contextService.activateContext( contextId );
-
-      // REMARK: in order to update the command contributions, we
-      // activate/deactivate the current map-context.
-      // This is better, as all items should be completely update()'d
-      // ( instead of just refreshed via an UIElement updater.
-      // This is for example necessary for the NewFeature-DropDown.
-      // There is probably a better way to do this, which one?
-      if( m_mapPanelContext != null )
-      {
-        m_contextService.deactivateContext( m_mapPanelContext );
-        m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
-      }
-      
-
     }
+
+    // REMARK: in order to update the command contributions, we
+    // activate/deactivate the current map-context.
+    // This is better, as all items should be completely update()'d
+    // ( instead of just refreshed via an UIElement updater.
+    // This is for example necessary for the NewFeature-DropDown.
+    // There is probably a better way to do this, which one?
+    if( m_mapPanelContext != null )
+    {
+      m_contextService.deactivateContext( m_mapPanelContext );
+      m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
+    }
+  }
+
+  protected void handleSelectionChanged( )
+  {
+    // Update contribution items that depend on the selection
+    activateThemeContext( m_mapPanel.getMapModell().getActiveTheme() );
   }
 
 }
