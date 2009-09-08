@@ -71,6 +71,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
+import org.kalypso.repository.IModifyableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -370,7 +371,9 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       final List<ItemBean> beans = new ArrayList<ItemBean>();
       for( final IRepositoryItem child : children )
       {
-        beans.add( new ItemBean( child.getIdentifier(), child.getName() ) );
+        final Boolean modifyable = child instanceof IModifyableRepositoryItem;
+
+        beans.add( new ItemBean( child.getIdentifier(), child.getName(), modifyable ) );
       }
 
       return beans.toArray( new ItemBean[] {} );
@@ -389,7 +392,8 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   {
     if( m_repositoryBean == null )
     {
-      m_repositoryBean = new RepositoryBean( m_repository.getIdentifier(), m_repository.getName() );
+      final Boolean modifyable = m_repository instanceof IModifyableRepository;
+      m_repositoryBean = new RepositoryBean( m_repository.getIdentifier(), m_repository.getName(), modifyable );
     }
   }
 
@@ -409,8 +413,9 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         return null;
 
       final MetadataList md = updateObservation( obs, ib.getId() );
+      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
 
-      return new ObservationBean( ib.getId(), obs.getName(), md );
+      return new ObservationBean( ib.getId(), obs.getName(), modifyable, md );
     }
     catch( final RepositoryException e )
     {
@@ -464,7 +469,11 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   {
     final IRepositoryItem item = m_repository.findItem( id );
     if( item != null )
-      return new ItemBean( item.getIdentifier(), item.getName() );
+    {
+      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
+
+      return new ItemBean( item.getIdentifier(), item.getName(), modifyable );
+    }
 
     return null;
   }

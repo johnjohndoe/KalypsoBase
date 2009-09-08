@@ -77,6 +77,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
+import org.kalypso.repository.IModifyableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -565,7 +566,10 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       final ItemBean[] beans = new ItemBean[children.length];
       for( int i = 0; i < beans.length; i++ )
       {
-        beans[i] = new ItemBean( children[i].getIdentifier(), children[i].getName() );
+        final IRepositoryItem child = children[i];
+        final Boolean modifyable = child instanceof IModifyableRepositoryItem;
+
+        beans[i] = new ItemBean( child.getIdentifier(), child.getName(), modifyable );
 
         // store it for future referencing
         m_mapBeanId2Item.put( beans[i].getId(), children[i] );
@@ -595,8 +599,9 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       for( int i = 0; i < m_repositoryBeans.length; i++ )
       {
         final IRepository rep = m_repositories.get( i );
+        final Boolean modifyable = rep instanceof IModifyableRepository;
 
-        m_repositoryBeans[i] = new RepositoryBean( rep.getIdentifier(), rep.getName() );
+        m_repositoryBeans[i] = new RepositoryBean( rep.getIdentifier(), rep.getName(), modifyable );
         m_mapBeanId2Item.put( m_repositoryBeans[i].getId(), rep );
       }
     }
@@ -621,8 +626,9 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         return null;
 
       final MetadataList md = updateObservation( obs, ib.getId() );
+      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
 
-      return new ObservationBean( ib.getId(), obs.getName(), md );
+      return new ObservationBean( ib.getId(), obs.getName(), modifyable, md );
     }
     catch( final RepositoryException e )
     {
@@ -702,7 +708,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       if( item == null )
         continue;
 
-      final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName() );
+      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
+      final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName(), modifyable );
 
       // store it for future referencing
       m_mapBeanId2Item.put( bean.getId(), item );
