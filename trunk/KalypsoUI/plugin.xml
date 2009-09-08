@@ -246,8 +246,10 @@
 		</command>
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.11" id="org.kalypso.ogc.gml.map.ThemeInfoCommand" name="%command.name.13" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%command.description.12" id="org.kalypso.ogc.gml.map.OpenOutlineCommand" name="%command.name.14" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das erste Feature in der Karte" name="Erstes" id="org.kalypso.ui.map.selectFirstFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das nächste Feature in der Karte" name="Nächstes" id="org.kalypso.ui.map.selectNextFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das vorhergehende Feature in der Karte" name="Vorhergehendes" id="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das letzte Feature in der Karte" name="Letztes" id="org.kalypso.ui.map.selectLastFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.EditRelationsCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
@@ -547,8 +549,10 @@
 		<image commandId="org.kalypso.ogc.gml.map.Screenshot" icon="icons/map/screenshot.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" icon="icons/map/themeInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" icon="icons/map/show_outline.gif" />
+		<image commandId="org.kalypso.ui.map.selectFirstFeatureCommand" icon="icons/map/firstFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" icon="icons/map/nextFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" icon="icons/map/prevFeature.gif" />
+		<image commandId="org.kalypso.ui.map.selectLastFeatureCommand" icon="icons/map/lastFeature.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
@@ -990,6 +994,12 @@
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget" />
 			</class>
 		</handler>
+		<handler commandId="org.kalypso.ui.map.selectFirstFeatureCommand">
+			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+				<parameter name="forward" value="false" />
+				<parameter name="firstlast" value="true" />
+			</class>
+		</handler>
 		<handler commandId="org.kalypso.ui.map.selectNextFeatureCommand">
 			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
 				<parameter name="forward" value="true" />
@@ -1004,6 +1014,12 @@
 				<parameter name="image" value="icons/util/backward_nav.gif" />
 			</class>
 		</handler>
+        <handler commandId="org.kalypso.ui.map.selectLastFeatureCommand">
+            <class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+                <parameter name="forward" value="true" />
+                <parameter name="firstlast" value="true" />
+            </class>
+        </handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler" commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryPrevHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryNextHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand"/>

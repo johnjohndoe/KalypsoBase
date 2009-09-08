@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -17,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -25,12 +25,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -63,10 +65,9 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private String m_widgetTooltipFromExtension;
 
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
-
     if( isDeselecting( event.getTrigger() ) )
       return null;
 
@@ -93,11 +94,9 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       return status;
     }
 
-    final Shell shell = (Shell) applicationContext.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( applicationContext );
 
-    final IWorkbenchWindow window = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final AbstractMapPart abstractMapPart = findMapPart( window );
-    final IMapPanel mapPanel = abstractMapPart == null ? null : abstractMapPart.getMapPanel();
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
@@ -110,9 +109,20 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         return null;
     }
 
-    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart.getSite().getPage() ); //$NON-NLS-1$
-    // Probably not necessary
-    job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
+    // DIRTY: for some applications, we need to wait for the map to be really loaded, so there is this scheduling
+    // rule...
+    // It can only be obtained from the real workebench-part
+    // We also need the part to get its page to open the Widget-Option-Part; but we do not have a page in all
+    // contexts....
+    final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
+    final AbstractMapPart mapPart = findMapPart( window );
+    final IWorkbenchPage page = mapPart == null ? null : mapPart.getSite().getPage();
+
+    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, page ); //$NON-NLS-1$
+
+    if( mapPart != null )
+      job.setRule( mapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
+
     job.schedule();
 
     return null;
