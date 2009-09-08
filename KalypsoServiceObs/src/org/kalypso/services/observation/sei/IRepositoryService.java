@@ -74,12 +74,13 @@ public interface IRepositoryService
    * @throws RemoteException
    */
   public ItemBean findItem( final String id ) throws RepositoryException;
-
   
   public void makeItem( String identifier ) throws RepositoryException;
 
   public void deleteItem( String identifier ) throws RepositoryException;
   
+  public void setItemData( String identifier, Object data ) throws RepositoryException;
+
   /**
    * Forces the refresh of the remote repository.
    * 

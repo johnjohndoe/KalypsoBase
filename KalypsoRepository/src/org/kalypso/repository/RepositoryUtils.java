@@ -133,4 +133,18 @@ public class RepositoryUtils
     return identifier.substring( index + 1 );
   }
 
+  public static boolean continueSearch( final String baseIdendifier, final String lookingFor )
+  {
+    final String[] baseParts = baseIdendifier.split( "\\." );
+    final String[] lookingForParts = lookingFor.split( "\\." );
+
+    for( int i = 0; i < baseParts.length; i++ )
+    {
+      if( !baseParts[i].equals( lookingForParts[i] ) )
+        return false;
+    }
+
+    return true;
+  }
+
 }

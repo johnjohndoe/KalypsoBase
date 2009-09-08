@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.kalypso.repository.AbstractRepository;
@@ -106,18 +108,27 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     try
     {
       final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+
+      final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
+
       final ItemBean[] beans = srv.getChildren( ROOT_ITEM );
-
-      final IRepositoryItem[] items = new IRepositoryItem[beans.length];
-
-      for( int i = 0; i < items.length; i++ )
-        items[i] = new ServiceRepositoryItem( srv, beans[i], null, this );
+      for( final ItemBean bean : beans )
+      {
+        if( bean.getModifyable() )
+        {
+          items.add( new ModifyableServiceRepositoryItem( srv, bean, null, this ) );
+        }
+        else
+        {
+          items.add( new ServiceRepositoryItem( srv, bean, null, this ) );
+        }
+      }
 
       /** @hack single repository? skip one hierarchy level and return children of repository item */
-      if( items.length == 1 )
-        return items[0].getChildren();
+      if( items.size() == 1 )
+        return items.get( 0 ).getChildren();
 
-      return items;
+      return items.toArray( new IRepositoryItem[] {} );
     }
     catch( final RepositoryException e )
     {
@@ -218,5 +229,14 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     srv.deleteItem( identifier );
+  }
+
+  /**
+   * @see org.kalypso.repository.IModifyableRepositoryItem#setData(java.lang.Object)
+   */
+  @Override
+  public void setData( final Object observation )
+  {
+    throw new IllegalStateException( "This should never happen" );
   }
 }

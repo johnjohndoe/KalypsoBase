@@ -757,4 +757,24 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       }
     }
   }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setItemData( final String identifier, final Object data ) throws RepositoryException
+  {
+    for( final IRepository repository : m_repositories )
+    {
+      if( repository instanceof IModifyableRepository )
+      {
+        final IRepositoryItem item = repository.findItem( identifier );
+        if( item instanceof IModifyableRepositoryItem )
+        {
+          final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+          modifyable.setData( data );
+        }
+      }
+    }
+  }
 }
