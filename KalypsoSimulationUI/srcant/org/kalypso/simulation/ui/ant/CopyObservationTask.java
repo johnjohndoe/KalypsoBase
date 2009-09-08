@@ -130,11 +130,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   {
     Date forecastFrom = null;
     if( m_forecastFrom != null )
-      forecastFrom = DateUtilities.toDate( m_forecastFrom );
+      forecastFrom = DateUtilities.parseDateTime( m_forecastFrom );
 
     Date forecastTo = null;
     if( m_forecastTo != null )
-      forecastTo = DateUtilities.toDate( m_forecastTo );
+      forecastTo = DateUtilities.parseDateTime( m_forecastTo );
 
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
     if( m_targetObservationDir != null )
@@ -160,8 +160,8 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final String from = source.getFrom();
     final String to = source.getTo();
 
-    final Date fromDate = DateUtilities.toDate( from );
-    final Date toDate = DateUtilities.toDate( to );
+    final Date fromDate = DateUtilities.parseDateTime( from );
+    final Date toDate = DateUtilities.parseDateTime( to );
     final String filter = source.getFilter();
     final Project project2 = getProject();
     if( project2 != null )
