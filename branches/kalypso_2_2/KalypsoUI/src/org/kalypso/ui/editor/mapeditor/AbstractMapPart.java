@@ -539,7 +539,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    if( m_mapModell == null || m_saving || !file.exists() )
+    if( m_mapModell == null || m_saving )
       return;
 
     m_saving = true;
