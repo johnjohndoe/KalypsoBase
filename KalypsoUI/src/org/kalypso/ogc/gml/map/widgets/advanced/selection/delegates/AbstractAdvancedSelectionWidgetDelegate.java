@@ -124,8 +124,9 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       final EDIT_MODE mode = getEditMode();
 
       final Feature[] features = m_dataProvider.query( getSurface( point ), mode );
-
-      highlightUnderlyingGeometries( features, g, mode );
+      if( features.length > 0 )
+        highlightUnderlyingGeometries( features, g, mode );
+      
     }
     catch( final GM_Exception e )
     {
