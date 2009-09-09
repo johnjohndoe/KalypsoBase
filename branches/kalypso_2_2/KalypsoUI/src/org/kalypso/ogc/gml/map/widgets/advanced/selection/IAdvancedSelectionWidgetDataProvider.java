@@ -53,6 +53,13 @@ public interface IAdvancedSelectionWidgetDataProvider
 {
   Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
 
+  Feature[] getLastQuery( );
+  /**
+   * features which are sorted out and  not returned from the last query
+   */
+  Feature[] getMissed();
+  
+  
   /**
    * post selection changes
    */
@@ -61,4 +68,6 @@ public interface IAdvancedSelectionWidgetDataProvider
   public void addSelectionChangeListener( IAdvancedWidgetChangeListener listener );
 
   public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
+
+  
 }
