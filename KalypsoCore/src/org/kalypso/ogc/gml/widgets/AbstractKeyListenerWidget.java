@@ -47,9 +47,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -68,6 +70,8 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
 
   private Point m_currentPoint = null;
 
+  private boolean m_finished = false;
+  
   public AbstractKeyListenerWidget( final String name )
   {
     super( name, name );
@@ -75,13 +79,25 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    m_finished = true;
+    super.finish();
+  }
 
   protected void paintToolTip( final Graphics g )
   {
     final IMapPanel mapPanel = getMapPanel();
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    m_toolTipRenderer.setTooltip( getToolTip() );
+    String tooltip = m_finished  ? "" : getToolTip();
+    
+    m_toolTipRenderer.setTooltip( tooltip );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
   }
 
@@ -96,10 +112,13 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
 
     mapPanel.setCursor( java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
     mapPanel.getWidgetManager().setActualWidget( null );
+
+    /* remove old tool tips */
+    mapPanel.repaintMap();
   }
 
   /**
-   * Escape Key pressed? -> reset / deactivate widget
+   * Enter or Escape Key pressed? -> reset / deactivate widget
    * 
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
@@ -108,6 +127,10 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
   {
     final int keyCode = e.getKeyCode();
     if( KeyEvent.VK_ESCAPE == keyCode )
+    {
+      reset();
+    }
+    else if (KeyEvent.VK_ENTER == keyCode)
     {
       reset();
     }
