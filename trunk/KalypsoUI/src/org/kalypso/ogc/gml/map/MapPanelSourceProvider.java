@@ -118,7 +118,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
     // TODO: we should fire a source change on any change of the panel
-    
+
     /**
      * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
@@ -240,7 +240,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   protected void activateThemeContext( final IKalypsoTheme activeTheme )
   {
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.ogc.gml.map.MapPanelSourceProvider.1") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelSourceProvider.1" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -300,7 +300,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   protected void handleSelectionChanged( )
   {
     // Update contribution items that depend on the selection
-    activateThemeContext( m_mapPanel.getMapModell().getActiveTheme() );
+    IMapModell mapModell = m_mapPanel == null ? null : m_mapPanel.getMapModell();
+    IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
+    activateThemeContext( activeTheme );
   }
-
 }

@@ -241,7 +241,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
 
       final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
       final FeatureList featureList = featureTheme.getFeatureList();
-      if( featureList.isEmpty() )
+      if( featureList == null || featureList.isEmpty() )
         return false;
 
       final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
@@ -250,13 +250,13 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
 
       if( objectToSelect == currentElement )
         return false;
-      
+
       return objectToSelect != null;
     }
     catch( final ExecutionException e )
     {
       // ignore, happens often
-// e.printStackTrace();
+      // e.printStackTrace();
       return false;
     }
   }
