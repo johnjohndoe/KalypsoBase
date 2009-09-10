@@ -284,7 +284,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       }
       else if( value.endsWith( "boolean" ) ) //$NON-NLS-1$
       {
-        if( result instanceof String )
+        if( result instanceof Boolean )
           valueFormChoice = addLiteralValueType( result );
         else
           throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$ 
