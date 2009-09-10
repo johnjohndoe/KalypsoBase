@@ -49,7 +49,7 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.ui.wizard.sensor.i18n.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.ui.wizard.sensor.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
