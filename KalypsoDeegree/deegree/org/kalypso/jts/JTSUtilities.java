@@ -385,9 +385,7 @@ public class JTSUtilities
       final Point pointN1 = line.getPointN( i + 1 );
 
       if( add )
-      {
         points.add( pointN );
-      }
 
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
@@ -408,9 +406,7 @@ public class JTSUtilities
     final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
-    {
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
-    }
 
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
@@ -460,9 +456,7 @@ public class JTSUtilities
         final Point pointN1 = lineN.getPointN( j + 1 );
 
         if( add )
-        {
           points.add( pointN );
-        }
 
         /* Build a line with the two points to check the flag. */
         final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
@@ -479,9 +473,7 @@ public class JTSUtilities
       }
 
       if( endPointFound )
-      {
         break;
-      }
     }
 
     points.add( end );
@@ -490,9 +482,8 @@ public class JTSUtilities
     final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
-    {
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
-    }
+
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     return factory.createLineString( coordinates );
