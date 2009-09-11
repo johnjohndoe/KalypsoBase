@@ -187,6 +187,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
+    m_pool.removePoolListener( this );
+
     m_template = template;
 
     final List<FeatureviewType> view = template.getView();
