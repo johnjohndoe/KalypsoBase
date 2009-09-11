@@ -184,10 +184,10 @@ public class WPSRequest
 
   /**
    * this function forwards the functionality of cancel of active job from the member wpsRequest fixes the bug #242, in
-   * actual situation works only with local jobs and was tested only on windows machine. this class is already signed as
-   * deprecated, so complete functionality test will not be done
+   * current situation works only with local jobs and was tested only on windows machine. this class is already signed
+   * as deprecated, so complete functionality test will not be done
    */
-  public IStatus cancelActualJob( )
+  public IStatus cancelJob( )
   {
     return wpsRequest.cancelJob();
   }
@@ -203,6 +203,10 @@ public class WPSRequest
     {
       return status;
     }
+    else if( monitor.isCanceled() && doCanceled().matches( IStatus.CANCEL ) )
+    {
+      return doCanceled();
+    }
 
     // start request, returns immediately
     status = wpsRequest.run( monitor );
@@ -217,7 +221,7 @@ public class WPSRequest
     final String statusLocation = wpsRequest.getStatusLocation();
     if( statusLocation.length() == 0 )
     {
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.0") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.0" ) ); //$NON-NLS-1$
     }
 
     final FileObject statusFile = null;
@@ -233,7 +237,7 @@ public class WPSRequest
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
       final ProcessDescriptionType processDescription = getProcessDescription( monitor );
       final String title = processDescription.getTitle();
-      monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.WPSRequest.1") + title ); //$NON-NLS-1$
+      monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title ); //$NON-NLS-1$
 
       m_manager = VFSUtilities.getNewManager();
       while( run )
@@ -250,7 +254,7 @@ public class WPSRequest
 
         exState = wpsRequest.getExecuteResponse( m_manager );
         if( exState == null )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.2") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.2" ) ); //$NON-NLS-1$
 
         final StatusType state = exState.getStatus();
         if( state.getProcessAccepted() != null )
@@ -265,8 +269,12 @@ public class WPSRequest
           return doUnknownState( exState );
 
         /* If the user aborted the job. */
-        if( monitor.isCanceled() )
-          return doCanceled();
+        if( monitor.isCanceled() && doCanceled().matches( IStatus.CANCEL ) )
+        {
+          // this check ensures that the job is cancelled only if possible
+          // doCanceled() may return an ERROR_STATUS instead
+          return Status.CANCEL_STATUS;
+        }
 
         /* If the timeout is reached. */
         if( m_timeout > 0 && executed > m_timeout )
@@ -301,18 +309,19 @@ public class WPSRequest
   protected IStatus doTimeout( )
   {
     Debug.println( "Timeout reached ..." ); //$NON-NLS-1$
-    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.3") ); //$NON-NLS-1$
+    return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.3" ) ); //$NON-NLS-1$
   }
 
   protected IStatus doCanceled( )
   {
-    return Status.CANCEL_STATUS;
+    // by default try to cancel the job
+    return wpsRequest.cancelJob();
   }
 
   protected IStatus doUnknownState( final ExecuteResponseType exState )
   {
     IStatus status;
-    status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.4") ); //$NON-NLS-1$
+    status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.4" ) ); //$NON-NLS-1$
     return status;
   }
 
@@ -326,7 +335,7 @@ public class WPSRequest
 
     if( processOutputs == null )
     {
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.WPSRequest.5") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.5" ) ); //$NON-NLS-1$
     }
     else
     {

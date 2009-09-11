@@ -117,7 +117,7 @@ public class NonBlockingWPSRequest
    * The identifier of the service to be called.
    */
   private final String m_identifier;
-  
+
   private String m_jobId = ""; //$NON-NLS-1$
 
   /**
@@ -209,7 +209,7 @@ public class NonBlockingWPSRequest
     Debug.println( "Initializing ..." ); //$NON-NLS-1$
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.0"), 300 ); //$NON-NLS-1$
+    monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.0" ), 300 ); //$NON-NLS-1$
     Debug.println( "Asking for a process description ..." ); //$NON-NLS-1$
 
     // decide between local and remote invocation
@@ -223,7 +223,7 @@ public class NonBlockingWPSRequest
       final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
       if( processDescriptionList.size() != 1 )
       {
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.1"), null ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.1" ), null ) ); //$NON-NLS-1$
       }
 
       /* Monitor. */
@@ -232,25 +232,35 @@ public class NonBlockingWPSRequest
       /* We will always take the first one. */
       m_processDescription = processDescriptionList.get( 0 );
     }
-  } 
-  
-  /**
-   * this function forwards the functionality of cancel of active job from the member wpsRequest
-   * 
-   * fixes the bug #242, in actual situation works only with local jobs
-   * and was tested only on windows machine.
-   * this class is already signed as deprecated, so complete functionality test will not be done  
-   */
-  public IStatus cancelJob(){
-    try{
-      if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) ) 
-        WPSSimulationManager.getInstance().getJob( m_jobId ).cancel();
-    }
-    catch (Exception e) {
-      return Status.CANCEL_STATUS;
-    }
-    return Status.OK_STATUS;
   }
+
+  /**
+   * this function forwards the functionality of cancel of active job from the member wpsRequest fixes the bug #242, in
+   * actual situation works only with local jobs and was tested only on windows machine. this class is already signed as
+   * deprecated, so complete functionality test will not be done
+   */
+  public IStatus cancelJob( )
+  {
+    if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
+    {
+      final WPSSimulationManager instance = WPSSimulationManager.getInstance();
+      try
+      {
+        final WPSSimulationInfo job = instance.getJob( m_jobId );
+        job.cancel();
+        return Status.CANCEL_STATUS;
+      }
+      catch( final SimulationException e )
+      {
+        return StatusUtilities.statusFromThrowable( e, "Simulation could not be cancelled." );
+      }
+    }
+    else
+    {
+      return StatusUtilities.createErrorStatus( "Canceling only possible for local simulations." );
+    }
+  }
+
   /**
    * Starts the simulation.
    * 
@@ -262,18 +272,18 @@ public class NonBlockingWPSRequest
     // TODO: clear old results
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.2"), 200 ); //$NON-NLS-1$
+    monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.2" ), 200 ); //$NON-NLS-1$
     Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
 
     /* Check, if we have a service endpoint. */
     if( m_serviceEndpoint == null )
     {
       Debug.println( "No URL to the service is given." ); //$NON-NLS-1$
-      return StatusUtilities.statusFromThrowable( new WPSException( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.3") ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( new WPSException( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.3" ) ) ); //$NON-NLS-1$
     }
 
     /* Send the request. */
-    monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.4") ); //$NON-NLS-1$
+    monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.4" ) ); //$NON-NLS-1$
     Debug.println( "Start the simulation ..." ); //$NON-NLS-1$
 
     ExecuteResponseType executeResponse;
@@ -389,7 +399,7 @@ public class NonBlockingWPSRequest
       if( inputDescription.getMinimumOccurs().intValue() == 1 )
       {
         /* Ooops, it is a mandatory one, but it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.NonBlockingWPSRequest.5", inputId) ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.5", inputId ) ) ); //$NON-NLS-1$
       }
     }
 
@@ -484,7 +494,7 @@ public class NonBlockingWPSRequest
           schema = schemaLocationString;
         else
           schema = null;
-        
+
         // enforce the schemaLocation
         // TODO: copy the schema to a place where the server can find it
         gmlWorkspace.setSchemaLocation( schemaLocationString );
