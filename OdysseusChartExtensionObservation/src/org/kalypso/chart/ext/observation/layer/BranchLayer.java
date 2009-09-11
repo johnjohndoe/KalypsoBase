@@ -242,7 +242,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     Object value = null;
     IDataOperator op = null;
     double min = Double.MAX_VALUE;
-    double max = Double.MIN_VALUE;
+    double max = -Double.MAX_VALUE;
     for( int i = 0; i < size; i++ )
     {
       IRecord record = data.get( i );
