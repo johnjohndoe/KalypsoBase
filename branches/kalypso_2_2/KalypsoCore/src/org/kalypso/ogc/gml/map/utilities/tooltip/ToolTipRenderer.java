@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.utilities.tooltip;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -157,6 +159,7 @@ public class ToolTipRenderer
     }
 
     /* draw outer rectangle */
+    ((Graphics2D)g).setStroke( new BasicStroke( 1.0f ) );
     g.setColor( m_backgroundColor );
     g.fillRect( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
 
