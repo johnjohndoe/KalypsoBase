@@ -612,7 +612,6 @@ public class TupleResult implements List<IRecord>
   // - setComponent( index, comp )
 
   /** This method creates, but DOES NOT adds a record. */
-  // TODO its very confusing - create should add
   public IRecord createRecord( )
   {
     return new Record( this, getComponents() );
