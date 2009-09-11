@@ -362,7 +362,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* If there are less objects selected, than required, set an error message. */
-    if( m_checked.length < m_numToSelect )
+    if( m_checked == null || m_checked.length < m_numToSelect )
     {
       if( !firstTime )
         WizardPageUtilities.appendError( "Sie müssen mindestens " + String.valueOf( m_numToSelect ) + " Element(e) auswählen.", this );
