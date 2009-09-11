@@ -261,6 +261,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
     public boolean contains( final double value )
     {
+      // TODO: check this is most certainly a bug and should be Double.MAX_VALUE
       if( m_min == Double.MIN_VALUE )
         return value < m_max;
       else if( m_max == Double.MAX_VALUE )

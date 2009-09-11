@@ -70,7 +70,7 @@ public class ChartUtilities
     }
 
     double min = Double.MAX_VALUE;
-    double max = Double.MIN_VALUE;
+    double max = -Double.MAX_VALUE;
 
     for( final IDataRange<Number> element : ranges )
     {
@@ -79,14 +79,8 @@ public class ChartUtilities
         double eltMin = element.getMin().doubleValue();
         double eltMax = element.getMax().doubleValue();
 
-        if( min == Double.MAX_VALUE || min > eltMin )
-        {
-          min = eltMin;
-        }
-        if( max == Double.MIN_VALUE || max < eltMax )
-        {
-          max = eltMax;
-        }
+        min = Math.min( min, eltMin );
+        max = Math.max( max, eltMax );
       }
       catch( ClassCastException e )
       {
@@ -94,9 +88,7 @@ public class ChartUtilities
       }
     }
 
-    final IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
-    return range;
-
+    return new ComparableDataRange<Number>( new Number[] { min, max } );
   }
 
   /**
