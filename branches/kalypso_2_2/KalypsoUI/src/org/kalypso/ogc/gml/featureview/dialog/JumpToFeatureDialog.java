@@ -79,7 +79,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
   {
     if( m_feature == null )
     {
-      MessageDialog.openConfirm( shell, "Feature Anzeigen", "Link nicht gesetzt" );
+      MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.0"), Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return Window.CANCEL;
     }
     
@@ -105,7 +105,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
     if( m_feature == null )
       return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link"); //$NON-NLS-1$
 
-    return "...";
+    return "..."; //$NON-NLS-1$
   }
 
 }

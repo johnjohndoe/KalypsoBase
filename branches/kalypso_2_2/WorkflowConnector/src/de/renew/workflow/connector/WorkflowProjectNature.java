@@ -53,7 +53,7 @@ import de.renew.workflow.base.WorkflowSystem;
  */
 public class WorkflowProjectNature implements IProjectNature
 {
-  private static final String ID = "de.renew.workflow.connector.WorkflowProjectNature";
+  private static final String ID = "de.renew.workflow.connector.WorkflowProjectNature"; //$NON-NLS-1$
 
   protected IProject m_project;
 
