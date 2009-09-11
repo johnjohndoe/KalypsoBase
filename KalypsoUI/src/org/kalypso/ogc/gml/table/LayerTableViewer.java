@@ -340,7 +340,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
-      if( layer.getHref() != null )
+      if( layer.getHref() != null && !layer.getHref().trim().isEmpty() )
       {
         // Only dispose theme if we really replace it
         // TODO: check this: sometimes we get a theme from outside... what to do in that case?

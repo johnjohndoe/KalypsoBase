@@ -296,12 +296,17 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_viewer.dispose();
 
     if( m_kft != null )
+    {
+      final CommandableWorkspace workspace = m_kft.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( this );
       m_kft.dispose();
+      m_kft = null;
+    }
 
     m_target.dispose();
 
     super.dispose();
-
   }
 
   /**
