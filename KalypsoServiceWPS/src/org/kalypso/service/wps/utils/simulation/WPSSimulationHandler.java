@@ -137,7 +137,7 @@ public class WPSSimulationHandler extends Thread
           case UNKNOWN:
           case ERROR:
             final int finishStatus = jobInfo.getFinishStatus();
-            final String statusMessage = Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.1", finishStatus); //$NON-NLS-1$
+            final String statusMessage = Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.1", finishStatus ); //$NON-NLS-1$
             final String finishText = jobInfo.getFinishText();
             /* Send user a message. */
             if( finishStatus != IStatus.ERROR )
@@ -162,12 +162,13 @@ public class WPSSimulationHandler extends Thread
           case CANCELED:
             /* Delete all files in result directory. */
             /* TODO Eventually delete all files in the result on cancel. */
+            createProcessFailedExecuteResponse( "Process cancelled", null );
             bEnd = true;
             break;
           case WAITING:
             // do nothing?
             // true means process accepted
-            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process waiting.", true ), ioValues ); //$NON-NLS-1$
+            createExecuteResponse( WPS040ObjectFactoryUtilities.buildStatusType( "Process waiting.", true ), ioValues );
             break;
         }
 
@@ -179,7 +180,7 @@ public class WPSSimulationHandler extends Thread
       try
       {
         // cancel job
-        createProcessFailedExecuteResponse( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.0"), e ); //$NON-NLS-1$
+        createProcessFailedExecuteResponse( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationHandler.0" ), e ); //$NON-NLS-1$
         m_service.cancelJob( m_jobID );
       }
       catch( final Exception e1 )

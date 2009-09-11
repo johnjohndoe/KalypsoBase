@@ -169,7 +169,7 @@ public class SimulationDelegate
     if( m_service == null )
     {
       Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." ); //$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.0"), null ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.0" ), null ) ); //$NON-NLS-1$
     }
   }
 
@@ -188,7 +188,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.1"), ex ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.1" ), ex ) ); //$NON-NLS-1$
     }
   }
 
@@ -236,7 +236,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.2",ifile.getName()), ex ); //$NON-NLS-1$ 
+      throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.2", ifile.getName() ), ex ); //$NON-NLS-1$ 
     }
   }
 
@@ -254,7 +254,7 @@ public class SimulationDelegate
         if( m_input == null )
         {
           Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." ); //$NON-NLS-1$
-          throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.3") ); //$NON-NLS-1$
+          throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.3" ) ); //$NON-NLS-1$
         }
         else if( SERVER_INPUT_LOCAL.equals( m_input ) )
         {
@@ -284,7 +284,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.4"), ex ); //$NON-NLS-1$
+      throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.4" ), ex ); //$NON-NLS-1$
     }
   }
 
@@ -358,7 +358,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.5"), ex ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.5" ), ex ) ); //$NON-NLS-1$
     }
   }
 
@@ -384,21 +384,17 @@ public class SimulationDelegate
    */
   private void deleteInputFiles( ) throws WPSException
   {
-    if( m_serverTmpDirectory == null )
-    {
-      return;
-    }
-
     try
     {
-      if( m_serverTmpDirectory.exists() )
+      // do not delete local input files (original files)
+      if( SERVER_INPUT_LOCAL.equals( m_input ) && m_serverTmpDirectory != null && m_serverTmpDirectory.exists() )
       {
         VFSUtilities.deleteFiles( m_serverTmpDirectory );
       }
     }
     catch( final Exception ex )
     {
-      throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.6"), ex ); //$NON-NLS-1$
+      throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.6" ), ex ); //$NON-NLS-1$
     }
   }
 
@@ -439,7 +435,7 @@ public class SimulationDelegate
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.7"), 500 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.7" ), 500 ); //$NON-NLS-1$
       Debug.println( "Collecting data ..." ); //$NON-NLS-1$
 
       /* Need the filesystem manager. */
@@ -471,7 +467,7 @@ public class SimulationDelegate
           if( inputDescription.getMinimumOccurs().intValue() == 1 )
           {
             /* Ooops, it is a mandatory one, but it is missing in our model data. */
-            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.8", identifier.getValue()), null ); //$NON-NLS-1$ 
+            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.8", identifier.getValue() ), null ); //$NON-NLS-1$ 
             throw new CoreException( status );
           }
 
@@ -508,7 +504,7 @@ public class SimulationDelegate
              */
             if( m_calcCaseFolder == null )
             {
-              throw new WPSException( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.9") ); //$NON-NLS-1$
+              throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.9" ) ); //$NON-NLS-1$
             }
 
             final IProject project = m_calcCaseFolder.getProject();
@@ -532,7 +528,7 @@ public class SimulationDelegate
                 continue;
               }
 
-              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.10", inputPath ) ) ); //$NON-NLS-1$ 
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.10", inputPath ) ) ); //$NON-NLS-1$ 
             }
 
             /* Collect all files. */
@@ -582,7 +578,7 @@ public class SimulationDelegate
 
       /* Monitor. */
       monitor.worked( 200 );
-      monitor.setTaskName( Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.11") ); //$NON-NLS-1$
+      monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.11" ) ); //$NON-NLS-1$
       Debug.println( "Copy to the server ..." ); //$NON-NLS-1$
 
       /* Copy all collected files. */
@@ -601,7 +597,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.client.simulation.SimulationDelegate.12"), ex ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.12" ), ex ) ); //$NON-NLS-1$
     }
     finally
     {
