@@ -62,6 +62,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.QuadraticAlgorithm;
+import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.TriangulationDT;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -78,8 +80,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Helper class for tringle.exe<BR>
  * for more information goto: http://www.cs.cmu.edu/~quake/triangle.html
- *
+ * 
  * @author Thomas Jung
+ * 
+ * extension for creating triangulated surfaces without writing temporary files and using triangle.exe
+ * @author ig
  */
 public class ConstraintDelaunayHelper
 {
@@ -88,7 +93,7 @@ public class ConstraintDelaunayHelper
   /**
    * writes out a triangle-polyfile with linestrings for the console program Triangle.exe
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "deprecation" })
   public static String writePolyFileForLinestrings( final OutputStream polyStream, final List list, final PrintWriter simLog )
   {
     final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( list.size() );
@@ -117,13 +122,14 @@ public class ConstraintDelaunayHelper
         catch( final GM_Exception e )
         {
           e.printStackTrace();
-          simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1") + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+          simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1" ) + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
-      else if(geoObject instanceof Feature) {
+      else if( geoObject instanceof Feature )
+      {
         try
         {
-          final Feature feature = (Feature)geoObject;
+          final Feature feature = (Feature) geoObject;
           final GM_Curve curve = (GM_Curve) feature.getDefaultGeometryProperty();
 
           if( crs == null )
@@ -138,13 +144,13 @@ public class ConstraintDelaunayHelper
         catch( final GM_Exception e )
         {
           e.printStackTrace();
-          simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1") + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+          simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.1" ) + geoObject + " - " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
       }
       else
       {
-        simLog.println( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.3") + geoObject ); //$NON-NLS-1$
+        simLog.println( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.3" ) + geoObject ); //$NON-NLS-1$
       }
     }
 
@@ -417,7 +423,7 @@ public class ConstraintDelaunayHelper
 
   public static void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
   {
-    pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.21") ); //$NON-NLS-1$
+    pwSimuLog.append( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.21" ) ); //$NON-NLS-1$
 
     final long lTimeout = PROCESS_TIMEOUT;
 
@@ -450,7 +456,7 @@ public class ConstraintDelaunayHelper
       if( timeRunning >= lTimeout )
       {
         exec.destroy();
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.24") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.24" ) ) ); //$NON-NLS-1$
       }
 
       /* Wait a few millisec, before continuing. */
@@ -459,8 +465,13 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs ) throws GM_Exception
+  {
+    return convertToTriangles( polygonSurface, crs, true );
+  }
+
+  @SuppressWarnings("unchecked")
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
@@ -470,7 +481,7 @@ public class ConstraintDelaunayHelper
       if( object instanceof GM_Surface )
       {
         final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-        final GM_Triangle[] triangles = convertToTriangles( surface, crs );
+        final GM_Triangle[] triangles = convertToTriangles( surface, crs, pBoolWriteFiles );
         for( final GM_Triangle triangle : triangles )
         {
           triangleList.add( triangle );
@@ -482,21 +493,44 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
   {
-    final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
+    return convertToTriangles( surface, crs, true );
+  }
 
-    for( final GM_SurfacePatch surfacePatch : surface )
+  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> pSurface, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
+    boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
+    for( final GM_SurfacePatch surfacePatch : pSurface )
     {
       final GM_Position[] exterior = surfacePatch.getExteriorRing();
       final GM_Position[][] interior = surfacePatch.getInteriorRings();
-      final GM_Triangle[] triangles = createGM_Triangles( exterior, interior, crs );
-      if( triangles != null )
+      final GM_Triangle[] lArrTriangles;
+      lArrTriangles = createGM_Triangles( exterior, interior, crs, pBoolWriteFiles );
+
+      if( lArrTriangles != null )
       {
-        for( final GM_Triangle triangle : triangles )
+        for( final GM_Triangle lTriangle : lArrTriangles )
         {
-          triangleList.add( triangle );
+          if( !lBoolConvex )
+          {
+            if( !pSurface.contains( lTriangle.getCentroid().getPosition() ) )
+            {
+              continue;
+            }
+          }
+          if( lTriangle.getOrientation() == -1 )
+          {
+            triangleList.add( GeometryFactory.createGM_Triangle( lTriangle.getExteriorRing()[0], lTriangle.getExteriorRing()[2], lTriangle.getExteriorRing()[1], crs ) );
+
+          }
+          else
+          {
+            triangleList.add( lTriangle );
+          }
         }
       }
     }
+    //can be used for reducing of all angles in triangles
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
@@ -504,20 +538,20 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs ) throws GM_Exception
+  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs, boolean pBoolWriteFiles ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
     // first, check the exterior ring. If it is not closed or has less than 4 positions cancel operation.
     if( checkForPolygon( exterior ) == false )
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26") ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.26" ) ); //$NON-NLS-1$
 
     final GM_Position[][] interiorPolygons = getClosedPolygons( interior );
 
     // if there are more than 3 corner positions triangulate the pos array.
     if( exterior.length > 4 )
     {
-      return triangulatePolygon( exterior, interiorPolygons, crs );
+      return triangulatePolygon( exterior, interiorPolygons, crs, pBoolWriteFiles );
     }
     else
     {
@@ -571,6 +605,11 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Position[][] interiorPolygons, final String crs )
   {
+    return triangulatePolygon( exterior, interiorPolygons, crs, true );
+  }
+
+  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, boolean pBoolWriteFiles )
+  {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
     PrintWriter pwSimuLog;
@@ -592,6 +631,21 @@ public class ConstraintDelaunayHelper
     {
       final TriangleSegment segment = new TriangleSegment( i, i + 1, true );
       segmentList.add( segment );
+    }
+
+    // triangulate without triangle.exe
+    if( !pBoolWriteFiles )
+    {
+      List<GM_Triangle> lListAllResults = new ArrayList<GM_Triangle>();
+
+      GM_Triangle[] lArrTriRes = getTrianglesWithTriangulationDT( exterior, crs );
+      for( final GM_Triangle lTriAct : lArrTriRes )
+      {
+        {
+          lListAllResults.add( lTriAct );
+        }
+      }
+      return lListAllResults.toArray( new GM_Triangle[lListAllResults.size()] );
     }
 
     // collect the data
@@ -630,9 +684,9 @@ public class ConstraintDelaunayHelper
 
       if( !nodeFile.exists() || !eleFile.exists() )
       {
-        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.31") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.32") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.33") ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.31" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.32" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.33" ) ); //$NON-NLS-1$
         return null;
       }
 
@@ -659,4 +713,15 @@ public class ConstraintDelaunayHelper
       return null;
     }
   }
+
+  private static GM_Triangle[] getTrianglesWithTriangulationDT( final GM_Position[] pPositions, final String pStrCrs )
+  {
+    TriangulationDT lTriangulationDT = new TriangulationDT( pPositions, pStrCrs );
+    QuadraticAlgorithm lAlgorithmRunner = new QuadraticAlgorithm();
+    lAlgorithmRunner.triangulate( lTriangulationDT );
+    List<GM_Triangle> lListActResults = lTriangulationDT.getListGMTriangles();
+    return lListActResults.toArray( new GM_Triangle[lListActResults.size()] );
+
+  }
+
 }
