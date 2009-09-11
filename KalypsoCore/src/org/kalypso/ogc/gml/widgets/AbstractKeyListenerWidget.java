@@ -95,7 +95,7 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     final IMapPanel mapPanel = getMapPanel();
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    String tooltip = m_finished  ? "" : getToolTip();
+    String tooltip = m_finished  ? "" : getToolTip(); //$NON-NLS-1$
     
     m_toolTipRenderer.setTooltip( tooltip );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
