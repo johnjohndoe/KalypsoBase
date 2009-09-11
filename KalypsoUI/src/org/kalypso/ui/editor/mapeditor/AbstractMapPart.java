@@ -134,11 +134,44 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private boolean m_disposed = false;
 
-  private String m_partName;
-
   private IFile m_file;
 
-  private IResourceChangeListener m_resourceChangeListener;
+  private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
+  {
+    public void resourceChanged( final IResourceChangeEvent event )
+    {
+      if( m_saving )
+        return;
+
+      final IFile file = getFile();
+      if( file == null )
+        return;
+
+      if( event.getType() != IResourceChangeEvent.POST_CHANGE )
+        return;
+
+      final IResourceDelta rootDelta = event.getDelta();
+      final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
+      if( fileDelta == null )
+        return;
+
+      switch( fileDelta.getKind() )
+      {
+        case IResourceDelta.REMOVED:
+          // Unhook from that file; else we still try to save it even if it is already deleted
+          setFile( null );
+
+          // TODO: maybe also unhook the map? Should be an option for the map, if we watn to release automatically and
+          // set the map-modell to null
+          // or to hold the map in memory.
+
+          return;
+      }
+
+      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+        startLoadJob( file );
+    }
+  };
 
   protected boolean m_saving;
 
@@ -225,57 +258,19 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), commandTarget.redoAction );
     actionBars.updateActionBars();
-
-    m_resourceChangeListener = new IResourceChangeListener()
-    {
-      public void resourceChanged( final IResourceChangeEvent event )
-      {
-        if( m_saving )
-          return;
-
-        final IFile file = getFile();
-        if( file == null )
-          return;
-
-        if( event.getType() != IResourceChangeEvent.POST_CHANGE )
-          return;
-
-        final IResourceDelta rootDelta = event.getDelta();
-        final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
-        if( fileDelta == null )
-          return;
-
-        switch( fileDelta.getKind() )
-        {
-          case IResourceDelta.REMOVED:
-            // Unhook from that file; else we still try to save it even if it is already deleted
-            setFile( null );
-
-            // TODO: maybe also unhook the map? Should be an option for the map, if we watn to release automatically and
-            // set the map-modell to null
-            // or to hold the map in memory.
-
-            return;
-        }
-
-        if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-          startLoadJob( file );
-      }
-    };
-
   }
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( final Composite parent )
+  public synchronized void createPartControl( final Composite parent )
   {
     final IWorkbenchPartSite site = getSite();
 
     m_control = MapPartHelper.createMapForm( parent );
     m_mapPanel = MapPartHelper.createMapPanelInForm( m_control, this, m_selectionManager );
-    setMapModell( m_mapModell, m_initialEnv );
+    updateMapModell( m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
@@ -392,6 +387,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
+    System.out.println( "Loading map: " + storage );
+    System.out.println( "m_file= " + m_file );
+
     if( ObjectUtils.equals( m_file, storage ) )
       return;
 
@@ -453,6 +451,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
+
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
       setMapModell( null, null );
@@ -467,12 +467,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final IFile file = getFile();
-      if( m_partName == null )
-      {
-        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
-        setCustomName( fileName );
-      }
       // TODO: always call in SWT thread (or move into setCustomName)
 // if( file != null )
 // setTitleToolTip( file.getFullPath().toPortableString() );
@@ -543,7 +537,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       return;
 
     m_saving = true;
-    
+
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.8" ), 2000 ); //$NON-NLS-1$
@@ -561,7 +555,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       m_saving = false;
       throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.9" ) ) ); //$NON-NLS-1$
     }
-    
+
     m_saving = false;
   }
 
@@ -573,12 +567,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapModell = mapModell;
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
-    final String partName;
-    if( m_mapModell == null )
-      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
-    else
-      partName = m_mapModell.getLabel( m_mapModell );
+    updateMapModell( env );
+  }
 
+  private void updateMapModell( final GM_Envelope env )
+  {
+    final String label = m_mapModell == null ? Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ) : m_mapModell.getLabel( m_mapModell ); //$NON-NLS-1$
+    final String fileName = m_file == null ? Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ) : FileUtilities.nameWithoutExtension( getFile().getName() ); //$NON-NLS-1$
+    final String partName = label == null ? fileName : label;
+    
     setCustomName( partName );
 
     if( m_mapPanel != null )
@@ -604,7 +601,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void setCustomName( final String name )
   {
-    m_partName = name;
     final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
     if( !workbench.isClosing() )
     {
@@ -613,7 +609,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         @SuppressWarnings("synthetic-access")
         public void run( )
         {
-          setPartName( m_partName );
+          setPartName( name );
         }
       } );
     }
