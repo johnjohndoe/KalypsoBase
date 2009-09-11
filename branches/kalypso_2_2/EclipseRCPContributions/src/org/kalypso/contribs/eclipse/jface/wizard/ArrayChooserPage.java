@@ -329,7 +329,7 @@ public class ArrayChooserPage extends WizardPage
   }
 
   /**
-   * This function sets the list of chooseables. If one is already set via the construtor, it will be replaced by this
+   * This function sets the list of chooseables. If one is already set via the constructor, it will be replaced by this
    * list.
    *
    * @param input
