@@ -158,7 +158,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     {
       try
       {
-
         axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURI().toURL() ).getAxisList() );
       }
       catch( final Exception e )
