@@ -387,9 +387,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
-    System.out.println( "Loading map: " + storage );
-    System.out.println( "m_file= " + m_file );
-
     if( ObjectUtils.equals( m_file, storage ) )
       return;
 
