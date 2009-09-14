@@ -44,6 +44,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LegendGraphic;
@@ -148,26 +150,27 @@ public class RulePainter
       {
         final ExternalGraphic externalGraphic = (ExternalGraphic) o;
         final ParameterValueType sizeParameter = graphic.getSizeParameter();
-        final Object[] components = sizeParameter == null ? null : sizeParameter.getComponents();
 
-        // TODO: check: we now force the size of the image, so creating it should not be necessary any more?!
-        final BufferedImage asImage;
-        if( components != null && components.length > 0 )
+        int size = 10;
+        try
         {
-          final Integer size = Integer.valueOf( components[0].toString() );
-          asImage = externalGraphic.getAsImage( size, size );
+          String evaluate = sizeParameter.evaluate( null );
+          double d = NumberUtils.parseQuietDouble( evaluate );
+          if( !Double.isNaN( d ) )
+            size = (int)d;
         }
-        else
+        catch( FilterEvaluationException e )
         {
-          // TODO: check: why 10? if no size is given, probably the original image size should be taken?
-          asImage = externalGraphic.getAsImage( 10, 10 );
+          e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
         }
 
-        if( asImage != null )
-        {
-          maxWidth = Math.max( maxWidth, asImage.getWidth() );
-          maxHeight = Math.max( maxHeight, asImage.getWidth() );
-        }
+        final BufferedImage asImage = externalGraphic.getAsImage( size, size ); 
+        maxWidth = Math.max( maxWidth, asImage.getWidth() );
+        maxHeight = Math.max( maxHeight, asImage.getWidth() );
       }
 
       /* Ignore the marks. */
