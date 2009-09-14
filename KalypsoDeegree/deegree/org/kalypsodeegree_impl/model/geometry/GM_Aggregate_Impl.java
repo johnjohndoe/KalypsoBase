@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -315,11 +316,18 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   @Override
   public boolean equals( final Object other )
   {
-    // envelope was not valid
-    if( !super.equals( other ) || !(other instanceof GM_Aggregate_Impl) || !getEnvelope().equals( ((GM_Object) other).getEnvelope() ) || (getSize() != ((GM_Aggregate) other).getSize()) )
-    {
+    if( other == this )
+      return true;
+    
+    if( !super.equals( other ) || !(other instanceof GM_Aggregate_Impl) )
       return false;
-    }
+    
+    // envelope was not valid
+    if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
+      return false;
+    
+    if( getSize() != ((GM_Aggregate) other).getSize() )
+      return false;
 
     try
     {
