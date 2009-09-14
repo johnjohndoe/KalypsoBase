@@ -424,6 +424,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
+    if( m_kft == null )
+      return;
+    
     if( modellEvent instanceof IGMLWorkspaceModellEvent && ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace() == m_kft.getWorkspace() )
     {
       final Event event = new Event();
