@@ -188,7 +188,7 @@ public class ObservationViewerDialog extends Dialog
       {
         public void widgetSelected( SelectionEvent e )
         {
-          final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), null, m_axisTypes[0] );
+          final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), m_axisTypes[0] );
           if( dialog.open() == Window.OK )
           {
             if( !dialog.isValid() )
@@ -218,6 +218,8 @@ public class ObservationViewerDialog extends Dialog
       };
       result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.3"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.4"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+    
+    // FIXME: this specialized stuff has to be refaktored out of this general dialog!
     if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
     {
       final SelectionListener newListener = new SelectionListener()

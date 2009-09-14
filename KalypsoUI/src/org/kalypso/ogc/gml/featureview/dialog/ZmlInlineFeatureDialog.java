@@ -58,7 +58,6 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
 
   public ZmlInlineFeatureDialog( Feature feature, IPropertyType ftp, ITypeHandler handler )
   {
-
     m_feature = feature;
     m_ftp = ftp;
     m_typeHandler = handler;
