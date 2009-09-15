@@ -27,7 +27,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * kalypso bypassing the login procedure. Once the login procedure is started, the user is set to null unless
    * authentication succeeded.
    */
-  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[] { Scenario.DEFAULT_SCENARIO } );
+  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[] { Scenario.DEFAULT_SCENARIO } ); //$NON-NLS-1$ //$NON-NLS-2$
 
   /**
    * The constructor.
@@ -38,7 +38,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.auth.KalypsoAuthPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.auth.KalypsoAuthPluginResources" ); //$NON-NLS-1$
     }
     catch( final MissingResourceException x )
     {
@@ -104,7 +104,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   public IKalypsoUser getCurrentUser( )
   {
     if( m_user == null )
-      throw new IllegalStateException( "No user" );
+      throw new IllegalStateException( "No user" ); //$NON-NLS-1$
 
     return m_user;
   }

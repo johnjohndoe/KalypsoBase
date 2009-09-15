@@ -144,7 +144,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
       final JAXBElement<DocumentType> kmlDocument = googleEarthFactory.createDocument( documentType );
 
       final FolderType folderType = googleEarthFactory.createFolderType();
-      folderType.setName( "Kalypso Google Earth (TM) Export" );
+      folderType.setName( "Kalypso Google Earth (TM) Export" ); //$NON-NLS-1$
 
       /* process map */
       final KalypsoThemeVisitor visitor = new KMLThemeVisitor( new ThemeGoogleEarthExportable() );

@@ -220,7 +220,7 @@ public class GmlLoader extends WorkspaceLoader
     {
       try
       {
-        resultList.add( StatusUtilities.createInfoStatus( String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13" ), gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
+        resultList.add( StatusUtilities.createInfoStatus(Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13" , gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
         gmlFile.copy( currentTry, false, monitor );
       }
       catch( final CoreException e )

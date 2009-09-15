@@ -83,7 +83,7 @@ public class KalypsoDebugPlugin extends AbstractUIPlugin
     try
     {
       if( resourceBundle == null )
-        resourceBundle = ResourceBundle.getBundle( "kalypsoDebug.KalypsoDebugPluginResources" );
+        resourceBundle = ResourceBundle.getBundle( "kalypsoDebug.KalypsoDebugPluginResources" ); //$NON-NLS-1$
     }
     catch( MissingResourceException x )
     {

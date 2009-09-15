@@ -427,13 +427,13 @@ public class WFSClient
     }
     catch( final HttpException e )
     {
-      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
+      final String message = Messages.getString("org.kalypso.ogc.wfs.WFSClient.7", name ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final IOException e )
     {
-      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
+      final String message = Messages.getString("org.kalypso.ogc.wfs.WFSClient.7", name ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }

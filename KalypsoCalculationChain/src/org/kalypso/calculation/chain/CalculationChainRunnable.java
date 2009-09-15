@@ -81,13 +81,13 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
       {
         if( status.isOK() )
         {
-          System.out.println( String.format( "Starting calc job: %s", job.getCalculationTypeID() ) );
+          System.out.println( String.format( "Starting calc job: %s", job.getCalculationTypeID() ) ); //$NON-NLS-1$
 
           final IPath workspace = job.getContainer();
           final IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember( workspace );
 
           URL context;
-          if( m_context.toString().startsWith( "platform:/resource//" ) )
+          if( m_context.toString().startsWith( "platform:/resource//" ) ) //$NON-NLS-1$
           {
             // local processing - project workspace
             context = workspaceResource.getLocationURI().toURL();
@@ -112,7 +112,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      System.out.println( "ERROR: " + e.getLocalizedMessage() );
+      System.out.println( "ERROR: " + e.getLocalizedMessage() ); //$NON-NLS-1$
       e.printStackTrace();
       // ErrorDialog.openError(shell, "Error",
       // e.getLocalizedMessage(), Status.CANCEL_STATUS);
