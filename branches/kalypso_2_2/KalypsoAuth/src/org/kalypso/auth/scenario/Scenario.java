@@ -67,7 +67,7 @@ public class Scenario implements IScenario
    */
   public String getName( )
   {
-    return getProperty( IScenario.PROP_NAME, "-unbekannt-" );
+    return getProperty( IScenario.PROP_NAME, "-unbekannt-" ); //$NON-NLS-1$
   }
 
   /**
@@ -75,7 +75,7 @@ public class Scenario implements IScenario
    */
   public String getDescription( )
   {
-    return getProperty( IScenario.PROP_DESCRIPTION, "" );
+    return getProperty( IScenario.PROP_DESCRIPTION, "" ); //$NON-NLS-1$
   }
 
   /**

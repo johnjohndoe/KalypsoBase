@@ -107,7 +107,7 @@ public class RelativeFeatureChange extends FeatureChange
 
     final Number numericProperty = (Number) feature.getProperty( getProperty() );
     if( numericProperty == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + " null" ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + " null" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( "+".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$

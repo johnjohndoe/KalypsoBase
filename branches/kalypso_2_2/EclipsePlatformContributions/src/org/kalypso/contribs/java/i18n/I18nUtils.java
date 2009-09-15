@@ -56,7 +56,7 @@ public class I18nUtils
 {
   private I18nUtils( )
   {
-    throw new IllegalStateException( "Helper class, do not instantiate" );
+    throw new IllegalStateException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -127,12 +127,12 @@ public class I18nUtils
     keys.add( baseName );
     if( language.length() > 0 )
     {
-      keys.add( String.format( "%s_%s", baseName, language ) );
+      keys.add( String.format( "%s_%s", baseName, language ) ); //$NON-NLS-1$
       if( country.length() > 0 )
       {
-        keys.add( String.format( "%s_%s_%s", baseName, language, country ) );
+        keys.add( String.format( "%s_%s_%s", baseName, language, country ) ); //$NON-NLS-1$
         if( variant.length() > 0 )
-          keys.add( String.format( "%s_%s_%s_%s", baseName, language, country, variant ) );
+          keys.add( String.format( "%s_%s_%s_%s", baseName, language, country, variant ) ); //$NON-NLS-1$
       }
     }
 

@@ -62,7 +62,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
     final Text text = new Text( panel, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( !Double.isNaN( m_amount ) )
-      text.setText( "" + m_amount );
+      text.setText( "" + m_amount ); //$NON-NLS-1$
     text.addModifyListener( new ModifyListener()
     {
       @Override
@@ -83,7 +83,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
     addBtton( radioButtonGroup, "*", Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     addBtton( radioButtonGroup, "/", Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.12" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setTitle( "Edit values" );
+    setTitle( Messages.getString("org.kalypso.ui.editor.actions.BatchEditParametersInputDialog.0") ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.1" ) );//$NON-NLS-1$ 
 
     return composite;
