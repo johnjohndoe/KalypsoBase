@@ -86,6 +86,10 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public void setEditTicket( final String ticket )
   {
+    // FIXME this should never happen
+    if( m_node == null )
+      return;
+
     m_node.put( PROJECT_LOCK_TICKET, ticket );
     flush();
   }
