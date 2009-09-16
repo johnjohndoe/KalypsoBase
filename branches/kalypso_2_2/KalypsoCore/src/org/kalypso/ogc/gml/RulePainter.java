@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -152,23 +152,26 @@ public class RulePainter
         final ParameterValueType sizeParameter = graphic.getSizeParameter();
 
         int size = 10;
-        try
+        if( sizeParameter != null )
         {
-          String evaluate = sizeParameter.evaluate( null );
-          double d = NumberUtils.parseQuietDouble( evaluate );
-          if( !Double.isNaN( d ) )
-            size = (int)d;
-        }
-        catch( FilterEvaluationException e )
-        {
-          e.printStackTrace();
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
+          try
+          {
+            String evaluate = sizeParameter.evaluate( null );
+            double d = NumberUtils.parseQuietDouble( evaluate );
+            if( !Double.isNaN( d ) )
+              size = (int) d;
+          }
+          catch( FilterEvaluationException e )
+          {
+            e.printStackTrace();
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
         }
 
-        final BufferedImage asImage = externalGraphic.getAsImage( size, size ); 
+        final BufferedImage asImage = externalGraphic.getAsImage( size, size );
         maxWidth = Math.max( maxWidth, asImage.getWidth() );
         maxHeight = Math.max( maxHeight, asImage.getWidth() );
       }
