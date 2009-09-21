@@ -26,3 +26,4 @@ Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.views,
  org.kalypso.afgui.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .
