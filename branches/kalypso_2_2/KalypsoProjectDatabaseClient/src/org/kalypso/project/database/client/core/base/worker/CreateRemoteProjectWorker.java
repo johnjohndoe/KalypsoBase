@@ -188,7 +188,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
             if( updateCount < 5 )
               this.schedule( 250 );
             else
-              throw new CoreException( StatusUtilities.createErrorStatus( "Updating project description failed.", e ) );
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0"), e ) ); //$NON-NLS-1$
 
             return Status.CANCEL_STATUS;
           }
