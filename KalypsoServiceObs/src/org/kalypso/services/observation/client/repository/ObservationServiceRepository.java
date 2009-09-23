@@ -41,9 +41,7 @@
 package org.kalypso.services.observation.client.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IModifyableRepository;
@@ -64,13 +62,11 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /** root item is identified by the null bean */
   private final static ItemBean ROOT_ITEM = null;
 
-  private final Map<String, IRepositoryItem> m_foundItems = new HashMap<String, IRepositoryItem>();
-
   /**
    * @throws ServiceException
    *           when the underlying service is not available
    */
-  public ObservationServiceRepository( final String name, final String factory, final boolean readOnly ) throws RepositoryException 
+  public ObservationServiceRepository( final String name, final String factory, final boolean readOnly ) throws RepositoryException
   {
     super( name, factory, "", readOnly, "observation-service-repository" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -80,7 +76,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   }
 
   @Override
-  public String getDescription()
+  public String getDescription( )
   {
     return ""; //$NON-NLS-1$
   }
@@ -88,7 +84,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren() throws RepositoryException
+  public boolean hasChildren( ) throws RepositoryException
   {
     try
     {
@@ -103,7 +99,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
@@ -136,14 +132,11 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     }
   }
 
-
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload() throws RepositoryException
+  public void reload( ) throws RepositoryException
   {
-    m_foundItems.clear();
-    
     try
     {
       KalypsoServiceObsActivator.getDefault().getObservationServiceProxy().reload();
@@ -180,35 +173,31 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    */
   private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {
-    IRepositoryItem foundItem = null;
-
-    // first lookup in the cache
-    foundItem = m_foundItems.get( id );
-    if( foundItem != null )
-      return foundItem;
-
     // either this is the item, or find recursive
     final String identifier = RepositoryUtils.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
     if( identifier.equals( id ) )
     {
-      foundItem = item;
+      return item;
     }
+
+    if( !RepositoryUtils.continueSearch( identifier, id ) )
+      return null;
     else
     {
       final IRepositoryItem[] items = item.getChildren();
-      for( final IRepositoryItem item2 : items )
+      for( final IRepositoryItem child : items )
       {
-        foundItem = findItemRecursive( id, item2 );
+        final String childIdentifier = RepositoryUtils.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
+        if( !RepositoryUtils.continueSearch( childIdentifier, id ) )
+          continue;
 
-        if( foundItem != null )
-          break;
+        final IRepositoryItem found = findItemRecursive( id, child );
+        if( found != null )
+          return found;
       }
     }
 
-    if( foundItem != null )
-      m_foundItems.put( id, foundItem );
-    
-    return foundItem;
+    return null;
   }
 
   /**
