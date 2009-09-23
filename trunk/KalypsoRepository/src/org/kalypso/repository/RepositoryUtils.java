@@ -138,10 +138,17 @@ public class RepositoryUtils
     final String[] baseParts = baseIdendifier.split( "\\." );
     final String[] lookingForParts = lookingFor.split( "\\." );
 
-    for( int i = 0; i < baseParts.length; i++ )
+    int count = lookingForParts.length;
+    if( baseParts.length < lookingForParts.length )
+      count = baseParts.length;
+    else if( baseParts.length > lookingForParts.length )
+      return false;
+
+    for( int i = 0; i < count; i++ )
     {
-      if( !baseParts[i].equals( lookingForParts[i] ) )
-        return false;
+
+        if( !baseParts[i].equals( lookingForParts[i] ) )
+          return false;
     }
 
     return true;
