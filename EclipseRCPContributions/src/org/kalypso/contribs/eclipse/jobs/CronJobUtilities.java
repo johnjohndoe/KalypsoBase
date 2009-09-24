@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
@@ -123,7 +122,7 @@ public class CronJobUtilities
   {
     /* Is it a cron job? */
     if( !(job instanceof CronJob) )
-      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be started, because it is no cron job ..." );
+      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be scheduled, because it is no cron job ..." );
 
     /* Cast. */
     CronJob cronJob = (CronJob) job;
@@ -133,7 +132,7 @@ public class CronJobUtilities
 
     /* This job should not be started. */
     if( scheduleDelay < 0 )
-      return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be started, due to a negative delay ..." );
+      return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be scheduled, due to a negative delay ..." );
 
     /* Get the job manager. */
     IJobManager jobManager = CronJob.getJobManager();
@@ -156,7 +155,7 @@ public class CronJobUtilities
 
       /* Our cron job is already running, ignore it. */
       if( runningCronJob.getIdentifier().equals( cronJob.getIdentifier() ) )
-        return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be started, because a cron job with its id is already running ..." );
+        return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be scheduled, because a cron job with its id is already running ..." );
     }
 
     /* Okay, he can be started. */
@@ -168,7 +167,7 @@ public class CronJobUtilities
     /* Finally start it. */
     cronJob.schedule( scheduleDelay );
 
-    return Status.OK_STATUS;
+    return StatusUtilities.createInfoStatus( "The cron job ('" + cronJob.getName() + "') was scheduled ..." );
   }
 
   /**

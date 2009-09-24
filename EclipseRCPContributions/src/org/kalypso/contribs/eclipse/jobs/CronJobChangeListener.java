@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This listener will check, if the job has to be rescheduled.
@@ -67,12 +71,22 @@ public class CronJobChangeListener extends JobChangeAdapter
     /* Get the job. */
     final Job job = event.getJob();
 
-    /* Is it a cron job. */
+    /* Is it a cron job? */
     if( !(job instanceof CronJob) )
       return;
 
     /* Cast. */
     final CronJob cronJob = (CronJob) job;
+
+    if( Debug.CRON_JOB.isEnabled() )
+    {
+      /* Get the result. */
+      final IStatus result = cronJob.getResult();
+
+      /* Log. */
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "The cron job ('" + cronJob.getName() + "') has finished ..." ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( result );
+    }
 
     /* Get the reschedule delay. */
     final long rescheduleDelay = cronJob.getRescheduleDelay();
@@ -85,6 +99,10 @@ public class CronJobChangeListener extends JobChangeAdapter
 
       return;
     }
+
+    /* Log. */
+    if( Debug.CRON_JOB.isEnabled() )
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('" + cronJob.getName() + "') will be rescheduled in %d ms ...", rescheduleDelay ) ) );
 
     /* Schedule (leave myself as listener). */
     job.schedule( rescheduleDelay );
