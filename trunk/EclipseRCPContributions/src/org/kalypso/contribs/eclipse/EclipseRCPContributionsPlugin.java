@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.contribs.eclipse.jobs.CronJob;
 import org.kalypso.contribs.eclipse.jobs.CronJobUtilities;
+import org.kalypso.contribs.eclipse.utils.Debug;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -66,7 +69,16 @@ public class EclipseRCPContributionsPlugin extends Plugin
         CronJob cronJob = cronJobs.get( i );
 
         /* Start the cron job. */
-        CronJobUtilities.startCronJob( cronJob );
+        IStatus status = CronJobUtilities.startCronJob( cronJob );
+
+        if( Debug.CRON_JOB.isEnabled() )
+        {
+          /* Get the log. */
+          ILog log = getLog();
+
+          /* Log the result. */
+          log.log( status );
+        }
       }
     }
   }
