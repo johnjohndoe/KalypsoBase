@@ -90,6 +90,16 @@ public class RepositoryUtils
     return destinationRepository.findItem( id );
   }
 
+  /**
+   * looks for an equivalent item in an different repository
+   */
+  public static IRepositoryItem findEquivalentItem( final String id, final IRepository repository ) throws RepositoryException
+  {
+    final String identifier = replaceIdentifier( id, repository.getIdentifier() );
+
+    return repository.findItem( identifier );
+  }
+
   public static String resolveDestinationId( final IRepositoryItem baseItem, final IRepository destinationRepository )
   {
     return replaceIdentifier( baseItem.getIdentifier(), destinationRepository.getIdentifier() );
