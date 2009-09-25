@@ -673,7 +673,7 @@ public class JTSUtilities
   public static double calcSignedAreaOfRing( final Coordinate[] ring )
   {
     if( ring.length < 4 ) // 3 points and 4. is repetition of first point
-      throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
+      throw new UnsupportedOperationException( "Can not calculate area of < 3 points ..." );
 
     final Coordinate a = ring[0]; // base
     double area = 0;
@@ -994,9 +994,7 @@ public class JTSUtilities
     final List<Coordinate> results = new ArrayList<Coordinate>();
 
     for( final Coordinate coordinate : coordinates )
-    {
       results.add( new Coordinate( coordinate.x, coordinate.y ) );
-    }
 
     return results.toArray( new Coordinate[] {} );
   }
@@ -1025,9 +1023,7 @@ public class JTSUtilities
   {
     final double[] factors = new double[coverPolygons.length];
     for( int i = 0; i < coverPolygons.length; i++ )
-    {
       factors[i] = JTSUtilities.fractionAreaOf( basePolygon, coverPolygons[i] );
-    }
 
     return factors;
   }
@@ -1075,9 +1071,7 @@ public class JTSUtilities
       final Polygon innerPolygon = factory.createPolygon( ring, null );
       final double area = innerPolygon.getArea();
       if( area > 0.1 )
-      {
         myInnerRings.add( ring );
-      }
     }
 
     if( myInnerRings.size() != rings )
@@ -1185,5 +1179,119 @@ public class JTSUtilities
       return msg;
 
     return null;
+  }
+
+  /**
+   * This function adds z coordinates to the given geomtry, using the inverse distance weighting on a list of points
+   * with z coordinates.
+   * 
+   * @param geometry
+   *          The geometry for which the z coordinates should be added.
+   * @param points
+   *          The points with z coordinates, which will be used for the inverse distance weighting.
+   * @return A new geometry with x, y and z coordinates.
+   */
+  public static Geometry addZCoordinates( Geometry geometry, List<Point> points )
+  {
+    /* Check the prerequisites. */
+    if( geometry == null )
+      throw new IllegalArgumentException( "No geometry given ..." );
+
+    /* Check the prerequisites. */
+    if( points == null || points.size() == 0 )
+      throw new IllegalArgumentException( "No points with z coordinates given ..." );
+
+    /* Create the geometry factory. */
+    GeometryFactory factory = new GeometryFactory();
+
+    /* Clone the geometry. */
+    Geometry newGeometry = factory.createGeometry( geometry );
+
+    /* Modify the coordinates of the new geometry. */
+    Coordinate[] coordinates = newGeometry.getCoordinates();
+    for( int i = 0; i < coordinates.length; i++ )
+    {
+      /* Get the coordinate. */
+      Coordinate coordinate = coordinates[i];
+
+      /* Now add a z coordinate to the coordinate. */
+      addZCoordinate( coordinate, points );
+    }
+
+    /* Tell the new geometry, that it has changed. */
+    newGeometry.geometryChanged();
+
+    return newGeometry;
+  }
+
+  /**
+   * This function adds a z coordinate to the given point, using the inverse distance weighting on a list of points with
+   * z coordinates.
+   * 
+   * @param coordinate
+   *          The coordinate for which the z coordinates should be added.
+   * @param points
+   *          The points with z coordinates, which will be used for the inverse distance weighting.
+   */
+  private static void addZCoordinate( Coordinate coordinate, List<Point> points )
+  {
+    /* Check the prerequisites. */
+    if( coordinate == null )
+      throw new IllegalArgumentException( "No geometry given ..." );
+
+    /* Check the prerequisites. */
+    if( points == null || points.size() == 0 )
+      throw new IllegalArgumentException( "No points with z coordinates given ..." );
+
+    /* The sum of all distances. */
+    double sumDistances = 0.0;
+
+    /* Calculate the distances. */
+    List<Double> distances = new ArrayList<Double>();
+    for( int i = 0; i < points.size(); i++ )
+    {
+      /* Get the point. */
+      Point point = points.get( i );
+
+      /* Get the distance of the coordinate to the coordinate of the point. */
+      double distance = coordinate.distance( point.getCoordinate() );
+
+      /* First add it to the sum of distances. */
+      sumDistances = sumDistances + distance;
+
+      /* Then add it to the list of distances. */
+      distances.add( new Double( distance ) );
+    }
+
+    /* Calculate the factors. */
+    List<Double> factors = new ArrayList<Double>();
+    for( int i = 0; i < distances.size(); i++ )
+    {
+      /* Get the distance. */
+      Double distance = distances.get( i );
+
+      /* Calculate the factor. */
+      double factor = (distance.doubleValue() / sumDistances);
+
+      /* Add it to the list of factors. */
+      factors.add( new Double( factor ) );
+    }
+
+    /* Now calculate the new z coordinate. */
+    double newZ = 0.0;
+    for( int i = 0; i < points.size(); i++ )
+    {
+      /* Get the point. */
+      Point point = points.get( i );
+
+      /* Get the factor. */
+      Double factor = factors.get( i );
+
+      /* Calculate the new z coordinate. */
+      newZ = newZ + (point.getCoordinate().z * factor.doubleValue());
+    }
+
+    /* Set the new z coordinate. */
+    coordinate.z = newZ;
   }
 }
