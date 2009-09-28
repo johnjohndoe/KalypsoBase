@@ -1,16 +1,16 @@
 package org.kalypso.kml.export.utils;
 
+import net.opengis.kml.DocumentType;
+import net.opengis.kml.LatLonAltBoxType;
+import net.opengis.kml.LookAtType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.RegionType;
+
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.google.earth.kml.DocumentType;
-import com.google.earth.kml.LatLonAltBoxType;
-import com.google.earth.kml.LookAtType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.RegionType;
 
 /**
  * @author Dirk Kuch
@@ -45,7 +45,8 @@ public class GoogleEarthUtils
     lookAtType.setLatitude( middle.getY() );
     lookAtType.setLongitude( middle.getX() );
 
-    documentType.setLookAt( lookAtType );
+    // FIXME changed in kml2.2
+// documentType.setLookAt( lookAtType );
   }
 
   /**

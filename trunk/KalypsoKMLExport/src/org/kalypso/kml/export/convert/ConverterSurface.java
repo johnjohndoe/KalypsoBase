@@ -6,6 +6,11 @@ package org.kalypso.kml.export.convert;
 import java.util.List;
 import java.util.Locale;
 
+import net.opengis.kml.BoundaryType;
+import net.opengis.kml.LinearRingType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PolygonType;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.GeoTransformer;
@@ -14,11 +19,6 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.google.earth.kml.BoundaryType;
-import com.google.earth.kml.LinearRingType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PolygonType;
 
 /**
  * @author Dirk Kuch

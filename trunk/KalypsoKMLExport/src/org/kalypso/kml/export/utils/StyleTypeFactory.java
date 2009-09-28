@@ -12,6 +12,15 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengis.kml.AbstractStyleSelectorType;
+import net.opengis.kml.BasicLinkType;
+import net.opengis.kml.DocumentType;
+import net.opengis.kml.IconStyleType;
+import net.opengis.kml.LineStyleType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PolyStyleType;
+import net.opengis.kml.StyleType;
+
 import org.kalypso.kml.export.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -21,15 +30,6 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-
-import com.google.earth.kml.DocumentType;
-import com.google.earth.kml.IconStyleIconType;
-import com.google.earth.kml.IconStyleType;
-import com.google.earth.kml.LineStyleType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PolyStyleType;
-import com.google.earth.kml.StyleSelectorType;
-import com.google.earth.kml.StyleType;
 
 /**
  * @author Dirk Kuch
@@ -75,8 +75,8 @@ public class StyleTypeFactory
    */
   public void addStylesToDocument( final DocumentType documentType )
   {
-    final List<JAXBElement< ? extends StyleSelectorType>> styles = documentType.getStyleSelector();
 
+    final List<JAXBElement< ? extends AbstractStyleSelectorType>> styles = documentType.getAbstractStyleSelectorGroup();
     styles.add( kmlFactory.createStyle( m_labelStyleType ) );
 
     Set<Entry<String, StyleType>> set = m_polyStyles.entrySet();
@@ -295,11 +295,13 @@ public class StyleTypeFactory
       final IconStyleType iconStyleType = kmlFactory.createIconStyleType();
       iconStyleType.setId( "iconStyleType" + Integer.valueOf( styleType.hashCode() ).toString() ); //$NON-NLS-1$
 
-      final IconStyleIconType icon = kmlFactory.createIconStyleIconType();
+      final IconStyleType icon = kmlFactory.createIconStyleType();
       icon.setId( "iconStyleIconType" + Integer.valueOf( iconStyleType.hashCode() ).toString() ); //$NON-NLS-1$
-      icon.setHref( href );
 
-      iconStyleType.setIcon( icon );
+      final BasicLinkType linkType = kmlFactory.createBasicLinkType();
+      linkType.setHref( href );
+      icon.setIcon( linkType );
+
       styleType.setIconStyle( iconStyleType );
 
       m_iconStyles.put( href, styleType );

@@ -5,15 +5,15 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengis.kml.AbstractFeatureType;
+import net.opengis.kml.FolderType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PlacemarkType;
+import net.opengis.kml.PointType;
+
 import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.interfaces.IPlacemark;
-
-import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.FolderType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PlacemarkType;
-import com.google.earth.kml.PointType;
 
 public class PlacemarkUtil
 {
@@ -37,7 +37,7 @@ public class PlacemarkUtil
     final FolderType folderType = googleEarthFactory.createFolderType();
     folderType.setName( Messages.PlacemarkUtil_0 );
 
-    final List<JAXBElement< ? extends FeatureType>> myFeatures = folderType.getFeature();
+    final List<JAXBElement< ? extends AbstractFeatureType>> myFeatures = folderType.getAbstractFeatureGroup();
 
     for( final IPlacemark placemark : placemarks )
     {
@@ -50,7 +50,7 @@ public class PlacemarkUtil
         final PointType point = googleEarthFactory.createPointType();
         final List<String> coordinates = point.getCoordinates();
         coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) ); //$NON-NLS-1$
-        placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
+        placemarkType.setAbstractGeometryGroup( googleEarthFactory.createPoint( point ) );
 
         myFeatures.add( googleEarthFactory.createPlacemark( placemarkType ) );
       }
@@ -62,7 +62,7 @@ public class PlacemarkUtil
     }
 
     // add to base
-    final List<JAXBElement< ? extends FeatureType>> features = base.getFeature();
+    final List<JAXBElement< ? extends AbstractFeatureType>> features = base.getAbstractFeatureGroup();
     features.add( 0, googleEarthFactory.createFolder( folderType ) );
   }
 }

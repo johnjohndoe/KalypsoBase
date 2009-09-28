@@ -7,6 +7,13 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengis.kml.AbstractFeatureType;
+import net.opengis.kml.FolderType;
+import net.opengis.kml.GroundOverlayType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PlacemarkType;
+import net.opengis.kml.StyleType;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
@@ -17,13 +24,6 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
-
-import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.FolderType;
-import com.google.earth.kml.GroundOverlayType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PlacemarkType;
-import com.google.earth.kml.StyleType;
 
 /**
  * @author Dirk Kuch
@@ -41,7 +41,6 @@ public class KMLExportDelegate implements IPaintDelegate
     m_provider = provider;
     m_factory = factory;
     m_folderType = folderType;
-
   }
 
   /*
@@ -72,10 +71,10 @@ public class KMLExportDelegate implements IPaintDelegate
         }
 
         // TODO perhaps, get rendered GM_Point geometry from symbolizer
-        final FeatureType[] featureTypes = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
+        final AbstractFeatureType[] featureTypes = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
 
-        final List<JAXBElement< ? extends FeatureType>> features = m_folderType.getFeature();
-        for( final FeatureType featureType : featureTypes )
+        final List<JAXBElement< ? extends AbstractFeatureType>> features = m_folderType.getAbstractFeatureGroup();
+        for( final AbstractFeatureType featureType : featureTypes )
         {
           if( featureType instanceof PlacemarkType )
           {
