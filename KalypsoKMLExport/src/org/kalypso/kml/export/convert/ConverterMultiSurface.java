@@ -7,12 +7,12 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import net.opengis.kml.AbstractGeometryType;
+import net.opengis.kml.MultiGeometryType;
+import net.opengis.kml.ObjectFactory;
+
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-
-import com.google.earth.kml.GeometryType;
-import com.google.earth.kml.MultiGeometryType;
-import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author Dirk Kuch
@@ -29,7 +29,7 @@ public class ConverterMultiSurface
   public static MultiGeometryType convert( final ObjectFactory factory, final GM_MultiSurface gmo ) throws Exception
   {
     final MultiGeometryType multiGeometryType = factory.createMultiGeometryType();
-    final List<JAXBElement< ? extends GeometryType>> geometries = multiGeometryType.getGeometry();
+    final List<JAXBElement< ? extends AbstractGeometryType>> geometries = multiGeometryType.getAbstractGeometryGroup();
 
     final GM_Surface< ? >[] surfaces = gmo.getAllSurfaces();
     for( final GM_Surface< ? > surface : surfaces )

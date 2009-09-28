@@ -3,15 +3,15 @@
  */
 package org.kalypso.kml.export.utils;
 
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.StyleType;
+
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.StyleType;
 
 /**
  * @author Dirk Kuch

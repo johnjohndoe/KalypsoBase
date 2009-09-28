@@ -14,6 +14,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
+import net.opengis.kml.AbstractFeatureType;
+import net.opengis.kml.DocumentType;
+import net.opengis.kml.FolderType;
+import net.opengis.kml.ObjectFactory;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -44,11 +49,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-
-import com.google.earth.kml.DocumentType;
-import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.FolderType;
-import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author Dirk Kuch
@@ -162,7 +162,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
       // TODO;
 // GoogleEarthExportUtils.removeEmtpyFolders( folderType );
-      documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
+      documentType.getAbstractFeatureGroup().add( googleEarthFactory.createFolder( folderType ) );
 
       PlacemarkUtil.addAdditional( folderType, m_provider, googleEarthFactory );
 
@@ -198,7 +198,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
   private void processTheme( final FolderType parentFolderType, final IKalypsoTheme theme )
   {
     final ObjectFactory factory = new ObjectFactory();
-    final List<JAXBElement< ? extends FeatureType>> myList = parentFolderType.getFeature();
+    final List<JAXBElement< ? extends AbstractFeatureType>> myList = parentFolderType.getAbstractFeatureGroup();
 
     /* get inner themes */
     if( theme instanceof AbstractCascadingLayerTheme )

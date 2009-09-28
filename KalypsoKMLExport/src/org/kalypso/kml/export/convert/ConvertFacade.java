@@ -6,6 +6,11 @@ package org.kalypso.kml.export.convert;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.opengis.kml.AbstractFeatureType;
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PlacemarkType;
+import net.opengis.kml.StyleType;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.geometry.GeoUtils;
 import org.kalypso.kml.export.geometry.GeoUtils.GEOMETRY_TYPE;
@@ -18,19 +23,14 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PlacemarkType;
-import com.google.earth.kml.StyleType;
-
 /**
  * @author Dirk Kuch
  */
 public class ConvertFacade
 {
-  public static FeatureType[] convert( final IKMLAdapter[] providers, final ObjectFactory factory, final GM_Object[] geometries, final StyleType style, final Feature feature ) throws Exception
+  public static AbstractFeatureType[] convert( final IKMLAdapter[] providers, final ObjectFactory factory, final GM_Object[] geometries, final StyleType style, final Feature feature ) throws Exception
   {
-    final List<FeatureType> featureTypes = new ArrayList<FeatureType>();
+    final List<AbstractFeatureType> featureTypes = new ArrayList<AbstractFeatureType>();
 
     for( final GM_Object gmo : geometries )
     {
@@ -39,8 +39,8 @@ public class ConvertFacade
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
+        placemark.setAbstractGeometryGroup( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
 
-        placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
 
@@ -50,7 +50,7 @@ public class ConvertFacade
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-        placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
+        placemark.setAbstractGeometryGroup( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
 
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
@@ -61,7 +61,7 @@ public class ConvertFacade
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-        placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
+        placemark.setAbstractGeometryGroup( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
 
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
@@ -72,7 +72,7 @@ public class ConvertFacade
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-        placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
+        placemark.setAbstractGeometryGroup( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
 
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
@@ -121,6 +121,6 @@ public class ConvertFacade
 
     }
 
-    return featureTypes.toArray( new FeatureType[] {} );
+    return featureTypes.toArray( new AbstractFeatureType[] {} );
   }
 }

@@ -6,6 +6,9 @@ package org.kalypso.kml.export.convert;
 import java.util.List;
 import java.util.Locale;
 
+import net.opengis.kml.LineStringType;
+import net.opengis.kml.ObjectFactory;
+
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -13,9 +16,6 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-
-import com.google.earth.kml.LineStringType;
-import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author Dirk Kuch

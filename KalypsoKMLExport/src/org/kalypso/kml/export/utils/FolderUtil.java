@@ -4,17 +4,17 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.FolderType;
-import com.google.earth.kml.GroundOverlayType;
-import com.google.earth.kml.PlacemarkType;
+import net.opengis.kml.AbstractFeatureType;
+import net.opengis.kml.FolderType;
+import net.opengis.kml.GroundOverlayType;
+import net.opengis.kml.PlacemarkType;
 
 public class FolderUtil
 {
 
   public static void removeEmptyFolders( final FolderType folderType )
   {
-    final List<JAXBElement< ? extends FeatureType>> features = folderType.getFeature();
+    final List<JAXBElement< ? extends AbstractFeatureType>> features = folderType.getAbstractFeatureGroup();
     final Object[] myFeatures = features.toArray();
 
     for( final Object obj : myFeatures )
@@ -25,7 +25,7 @@ public class FolderUtil
       }
       final JAXBElement< ? > element = (JAXBElement< ? >) obj;
 
-      final FeatureType featureType = (FeatureType) element.getValue();
+      final AbstractFeatureType featureType = (AbstractFeatureType) element.getValue();
       if( featureType instanceof FolderType )
       {
         final FolderType myFolderType = (FolderType) featureType;
@@ -38,7 +38,7 @@ public class FolderUtil
 
   private static boolean isEmptyFolder( final FolderType base )
   {
-    final List<JAXBElement< ? extends FeatureType>> features = base.getFeature();
+    final List<JAXBElement< ? extends AbstractFeatureType>> features = base.getAbstractFeatureGroup();
 
     boolean isEmpty = true;
 
@@ -51,7 +51,7 @@ public class FolderUtil
       }
       final JAXBElement< ? > element = (JAXBElement< ? >) obj;
 
-      final FeatureType featureType = (FeatureType) element.getValue();
+      final AbstractFeatureType featureType = (AbstractFeatureType) element.getValue();
       if( featureType instanceof FolderType )
       {
         final FolderType myFolderType = (FolderType) featureType;

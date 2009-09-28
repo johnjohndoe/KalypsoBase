@@ -6,12 +6,12 @@ package org.kalypso.kml.export.convert;
 import java.util.List;
 import java.util.Locale;
 
+import net.opengis.kml.ObjectFactory;
+import net.opengis.kml.PointType;
+
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
-
-import com.google.earth.kml.ObjectFactory;
-import com.google.earth.kml.PointType;
 
 /**
  * @author Dirk Kuch
