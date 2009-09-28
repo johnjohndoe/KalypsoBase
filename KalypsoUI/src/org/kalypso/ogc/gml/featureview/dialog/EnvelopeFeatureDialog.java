@@ -60,11 +60,11 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
 {
   private FeatureChange m_change = null;
 
-  private final Feature m_feature;
+  private Feature m_feature;
 
-  private final IValuePropertyType m_ftp;
+  private IValuePropertyType m_ftp;
 
-  public EnvelopeFeatureDialog( final Feature feature, final IValuePropertyType ftp )
+  public EnvelopeFeatureDialog( Feature feature, IValuePropertyType ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -78,20 +78,14 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
     GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
 
     Double[] values = null;
-
     if( envelope == null )
-    {
       values = new Double[] { new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ), new Double( "0.0" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
     else
-    {
       values = new Double[] { envelope.getMin().getX(), envelope.getMin().getY(), envelope.getMax().getX(), envelope.getMax().getY() };
-    }
 
-    final EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
+    EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
 
-    final int open = dialog.open();
-
+    int open = dialog.open();
     if( open == Window.OK )
     {
       values = dialog.getValues();
@@ -120,5 +114,4 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   {
     return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog.editvalues" ); //$NON-NLS-1$
   }
-
 }
