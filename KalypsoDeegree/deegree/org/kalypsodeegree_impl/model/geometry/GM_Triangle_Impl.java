@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -145,7 +144,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   /**
    * Overwritten for better performance. <BR>
    * TODO: this method does not recognize, if the positions lies on an edge or a corner of the triangle.
-   * 
+   *
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#contains(org.kalypsodeegree.model.geometry.GM_Position)
    */
   public boolean contains2( final GM_Position position )
@@ -228,13 +227,9 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 
     throw new IllegalStateException();
   }
-
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Triangle#getOrientation()
-   */
-  @Override
-  public int getOrientation( )
-  {
-    throw new NotImplementedException( "Not implemented. This function was added, to remove compile errors (perhaps incomplete commit). Please review your workspace if you have the missing function and commit it." );
+  
+  public int getOrientation(){
+    return orientation( getExteriorRing()[0], getExteriorRing()[1], getExteriorRing()[2] );
   }
+  
 }
