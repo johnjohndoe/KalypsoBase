@@ -175,6 +175,15 @@ class GM_Position_Impl implements GM_Position, Serializable
 
     return false;
   }
+  
+  @Override
+  public int hashCode(){
+    int lIntHash = 17;
+    lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getX() ) ^ ( Double.doubleToLongBits( getX() ) >>> 32 ) );
+    lIntHash = 31 * lIntHash + ( int ) ( Double.doubleToLongBits( getY() ) ^ ( Double.doubleToLongBits( getY() ) >>> 32 ) );
+    lIntHash = 31 * lIntHash +  ( int ) ( Double.doubleToLongBits( getZ() ) ^ ( Double.doubleToLongBits( getZ() ) >>> 32 ) );
+    return lIntHash;
+  }
 
   /**
    * compares if all field of other are equal to the corresponding fields of this position
