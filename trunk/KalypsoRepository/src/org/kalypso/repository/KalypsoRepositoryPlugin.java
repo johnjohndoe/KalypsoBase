@@ -36,9 +36,6 @@
 package org.kalypso.repository;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
 
 public class KalypsoRepositoryPlugin extends Plugin
@@ -48,10 +45,6 @@ public class KalypsoRepositoryPlugin extends Plugin
    */
   private static KalypsoRepositoryPlugin m_plugin;
 
-  /**
-   * Storage for preferences.
-   */
-  private ScopedPreferenceStore m_preferenceStore;
 
   /**
    * The constructor.
@@ -61,7 +54,6 @@ public class KalypsoRepositoryPlugin extends Plugin
     super();
 
     m_plugin = this;
-    m_preferenceStore = null;
   }
 
   /**
@@ -79,10 +71,7 @@ public class KalypsoRepositoryPlugin extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    savePluginPreferences();
-
     m_plugin = null;
-    m_preferenceStore = null;
 
     super.stop( context );
   }
@@ -96,30 +85,5 @@ public class KalypsoRepositoryPlugin extends Plugin
   }
 
 
-  /**
-   * Copied from {@link org.eclipse.ui.plugin.AbstractUIPlugin}.
-   * <p>
-   * Returns the preference store for this UI plug-in. This preference store is used to hold persistent settings for
-   * this plug-in in the context of a workbench. Some of these settings will be user controlled, whereas others may be
-   * internal setting that are never exposed to the user.
-   * <p>
-   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with
-   * defaults, and returned.
-   * </p>
-   * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
-   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
-   * themselves.
-   * </p>
-   * 
-   * @return the preference store
-   */
-  public IPreferenceStore getPreferenceStore( )
-  {
-    /* Create the preference store lazily. */
-    if( m_preferenceStore == null )
-      m_preferenceStore = new ScopedPreferenceStore( new InstanceScope(), getBundle().getSymbolicName() );
 
-    return m_preferenceStore;
-  }
 }
