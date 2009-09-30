@@ -387,7 +387,7 @@ public final class KeyInfo extends Job
 
   /**
    * Reloads the pool object.
-   *
+   * 
    * @param force
    *          If <code>false</code>, the object only is reloaded if it is dirty.
    */
@@ -439,10 +439,17 @@ public final class KeyInfo extends Job
     final int flags = delta.getFlags();
     final int kind = delta.getKind();
 
-    // TRICKY: if (exactly) only markers have changed, do nothing
-    if( flags == IResourceDelta.MARKERS )
-      return;
+    System.out.println( String.format( "Resource change (kind): %d", kind ) );
+    System.out.println( String.format( "Resource change (flags): %d", flags ) );
 
+    // TRICKY: if (exactly) only markers have changed, do nothing
+    if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS & IResourceDelta.SYNC) )
+    {
+      System.out.println( "Resource change (action): Ignored" );
+      return;
+    }
+
+    System.out.println( "Resource change (action): Handled" );
     switch( kind )
     {
       case IResourceDelta.REMOVED:
@@ -468,5 +475,4 @@ public final class KeyInfo extends Job
   {
     return m_loader;
   }
-
 }
