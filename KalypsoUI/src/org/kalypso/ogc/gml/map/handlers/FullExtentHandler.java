@@ -62,13 +62,13 @@ public class FullExtentHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final IMapModell modell = mapPanel.getMapModell();
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
     final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, fullExtent );
 
-    MapHandlerUtils.postMapCommand( mapPanel, command, null );
+    MapHandlerUtils.postMapCommandChecked( mapPanel, command, null );
 
     return Status.OK_STATUS;
   }

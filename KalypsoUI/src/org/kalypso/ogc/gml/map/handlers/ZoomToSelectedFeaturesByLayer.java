@@ -104,7 +104,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     /* If no theme is given, use the active theme. */
     if( m_theme == null )

@@ -64,7 +64,7 @@ public class MoveRightHandler extends AbstractHandler implements IHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 
@@ -79,7 +79,7 @@ public class MoveRightHandler extends AbstractHandler implements IHandler
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
 
     final GM_Envelope wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, currentBBox.getCoordinateSystem() );
-    MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, wishBBox ), null );
+    MapHandlerUtils.postMapCommandChecked( mapPanel, new ChangeExtentCommand( mapPanel, wishBBox ), null );
 
     return Status.OK_STATUS;
   }

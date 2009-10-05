@@ -127,7 +127,7 @@ public class MapScreenShotHandler extends AbstractHandler
       /* generate and store img */
       os = new BufferedOutputStream( new FileOutputStream( img ) );
 
-      final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
       export.exportObject( os, new NullProgressMonitor() );

@@ -91,7 +91,7 @@ public class ZoomToSelectedFeatures extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     /* Collect the features. */
     final ArrayList<Feature> features = new ArrayList<Feature>();

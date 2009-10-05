@@ -93,7 +93,7 @@ public class MoveThemeUpHandler extends AbstractHandler
 
     /* (Re-)select moved themes */
     final StructuredSelection newSelection = new StructuredSelection( selectedThemesInOrder );
-    MapHandlerUtils.postCommand( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
+    MapHandlerUtils.postCommandChecked( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
 
     return null;
   }

@@ -65,8 +65,8 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( context );
 
     final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
@@ -88,7 +88,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
 
     wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, zoomBox.getCoordinateSystem() );
 
-    MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, wishBBox ), null );
+    MapHandlerUtils.postMapCommandChecked( mapPanel, new ChangeExtentCommand( mapPanel, wishBBox ), null );
 
     return Status.OK_STATUS;
   }

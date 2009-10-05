@@ -152,6 +152,6 @@ public class ZoomToFeaturesPart
     final GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax, envelope.getCoordinateSystem() );
 
     /* Finally set the bounding box. */
-    MapHandlerUtils.postMapCommand( m_mapPanel, new ChangeExtentCommand( m_mapPanel, newEnvelope ), null );
+    MapHandlerUtils.postMapCommandChecked( m_mapPanel, new ChangeExtentCommand( m_mapPanel, newEnvelope ), null );
   }
 }
