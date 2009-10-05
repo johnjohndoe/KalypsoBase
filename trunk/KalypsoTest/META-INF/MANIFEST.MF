@@ -4,13 +4,13 @@ Bundle-Name: KalypsoTest
 Bundle-SymbolicName: org.kalypso.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.sourceforge.net
-Require-Bundle: org.kalypso.contribs.eclipseplatform,
+Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
+ org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.deegree,
  org.eclipse.ui,
- org.junit;resolution:=optional,
  org.kalypso.simulation.core,
  org.kalypso.ui,
  org.kalypso.contribs.ogc31

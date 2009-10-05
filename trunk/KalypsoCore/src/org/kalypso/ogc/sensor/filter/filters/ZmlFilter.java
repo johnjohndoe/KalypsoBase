@@ -77,11 +77,11 @@ public final class ZmlFilter extends AbstractObservationFilter
     super.initFilter( conf, obs, context );
 
     // conf is the href string
-    final String href = conf.toString();
+    final String href = conf == null ? null : conf.toString();
 
     // if the href is empty, simply ignore and let the given obs replace this
     // filter
-    if( href.length() != 0 )
+    if( href != null && href.length() != 0 )
     {
       // TRICKY: clients can set the REPS field. This will be used first to make
       // a lookup for the href as an identifier of an Observation.

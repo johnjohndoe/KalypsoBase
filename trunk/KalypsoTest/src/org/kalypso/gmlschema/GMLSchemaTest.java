@@ -125,23 +125,6 @@ public class GMLSchemaTest extends TestCase
     // FileUtilities.deleteRecursive( m_tmpFileCache );
   }
 
-  public void testBPlan( ) throws Exception
-  {
-    try
-    {
-      loadAndTestSchema( // 
-      // getClass().getResource( "resources/xplanung/BPlanGML_2.xsd" ),// schemalocationURL
-      getClass().getResource( "resources/xplanung/BPlan-Operationen_2.xsd" ),// schemalocationURL
-      getClass().getResource( "resources/xplanung/test_planGML2.txt" ) // testresource to compare
-      , false );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw e;
-    }
-  }
-
   public void testNA( ) throws Exception
   {
     try

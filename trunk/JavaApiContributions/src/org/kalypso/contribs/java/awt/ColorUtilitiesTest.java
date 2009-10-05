@@ -2,8 +2,8 @@
  *
  *  Copyright (c) 2008 by
  *
- *  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
- *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+ *  Bjï¿½rnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+ *  Technische Universitï¿½t Hamburg-Harburg, Institut fï¿½r Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
  *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
@@ -20,18 +20,20 @@ package org.kalypso.contribs.java.awt;
 
 import java.awt.Color;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author schlienger
  */
-public class ColorUtilitiesTest extends TestCase
+public class ColorUtilitiesTest
 {
+  @Test
   public void testCreateSimilar( )
   {
     final Color org = Color.black;
 
-    assertEquals( org, ColorUtilities.derivateColor( org, 0 ) );
+    Assert.assertEquals( org, ColorUtilities.derivateColor( org, 0 ) );
     final Color c1 = ColorUtilities.derivateColor( org, 1 );
     System.out.println( c1 );
 

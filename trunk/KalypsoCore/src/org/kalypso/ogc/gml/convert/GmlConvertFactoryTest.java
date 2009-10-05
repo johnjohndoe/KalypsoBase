@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
@@ -19,10 +21,12 @@ import org.kalypso.core.i18n.Messages;
 /**
  * @author belger
  */
-public class GmlConvertFactoryTest extends TestCase
+public class GmlConvertFactoryTest extends Assert
 {
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
+  // Invalid test, depends on KalypsoModelSaale
+//  @Test
   public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );

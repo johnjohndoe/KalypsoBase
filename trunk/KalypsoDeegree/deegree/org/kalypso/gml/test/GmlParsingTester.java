@@ -110,10 +110,9 @@ public class GmlParsingTester extends TestCase
     final SAXParser saxParser = m_saxFactory.newSAXParser();
     // make namespace-prefxes visible to content handler
     // used to allow necessary schemas from gml document
-    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
-
+//    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
     final XMLReader xmlReader = saxParser.getXMLReader();
-
+    
     // TODO: also set an error handler here
     // TODO: use progress-monitors to show progress and let the user cancel parsing
 
