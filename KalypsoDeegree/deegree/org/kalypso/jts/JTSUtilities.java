@@ -41,6 +41,7 @@
 package org.kalypso.jts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -863,9 +864,7 @@ public class JTSUtilities
 
       final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
       for( int i = coordinates.length - 1; i >= 0; i-- )
-      {
         myCoordinates.add( coordinates[i] );
-      }
 
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
@@ -1094,9 +1093,7 @@ public class JTSUtilities
     {
       final double distance = base.distance( geometry );
       if( distance <= radius )
-      {
         myGeometries.add( geometry );
-      }
     }
 
     return myGeometries.toArray( new Geometry[] {} );
@@ -1189,9 +1186,12 @@ public class JTSUtilities
    *          The geometry for which the z coordinates should be added.
    * @param points
    *          The points with z coordinates, which will be used for the inverse distance weighting.
+   * @param numberOfPoints
+   *          The number of the nearest points of the list, that will be used in the distance weighting. If this
+   *          parameter is <= 0, all points will be used.
    * @return A new geometry with x, y and z coordinates.
    */
-  public static Geometry addZCoordinates( Geometry geometry, List<Point> points )
+  public static Geometry addZCoordinates( Geometry geometry, List<Point> points, int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( geometry == null )
@@ -1215,7 +1215,7 @@ public class JTSUtilities
       Coordinate coordinate = coordinates[i];
 
       /* Now add a z coordinate to the coordinate. */
-      addZCoordinate( coordinate, points );
+      addZCoordinate( coordinate, points, numberOfPoints );
     }
 
     /* Tell the new geometry, that it has changed. */
@@ -1232,8 +1232,11 @@ public class JTSUtilities
    *          The coordinate for which the z coordinates should be added.
    * @param points
    *          The points with z coordinates, which will be used for the inverse distance weighting.
+   * @param numberOfPoints
+   *          The number of the nearest points of the list, that will be used in the distance weighting. If this
+   *          parameter is <= 0, all points will be used.
    */
-  private static void addZCoordinate( Coordinate coordinate, List<Point> points )
+  private static void addZCoordinate( Coordinate coordinate, List<Point> points, int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( coordinate == null )
@@ -1243,18 +1246,24 @@ public class JTSUtilities
     if( points == null || points.size() == 0 )
       throw new IllegalArgumentException( "No points with z coordinates given ..." );
 
+    /* Get the coordinate pairs. */
+    List<CoordinatePair> coordinatePairs = getCoordinatePairs( coordinate, points );
+
     /* The sum of all distances. */
     double sumDistances = 0.0;
 
     /* Calculate the distances. */
     List<Double> distances = new ArrayList<Double>();
-    for( int i = 0; i < points.size(); i++ )
+    for( int i = 0; i < coordinatePairs.size(); i++ )
     {
-      /* Get the point. */
-      Point point = points.get( i );
+      if( numberOfPoints > 0 && i >= numberOfPoints )
+        break;
+
+      /* Get the coordinate pair. */
+      CoordinatePair coordinatePair = coordinatePairs.get( i );
 
       /* Get the distance of the coordinate to the coordinate of the point. */
-      double distance = coordinate.distance( point.getCoordinate() );
+      double distance = 1 / coordinatePair.getDistance();
 
       /* First add it to the sum of distances. */
       sumDistances = sumDistances + distance;
@@ -1279,19 +1288,58 @@ public class JTSUtilities
 
     /* Now calculate the new z coordinate. */
     double newZ = 0.0;
-    for( int i = 0; i < points.size(); i++ )
+    for( int i = 0; i < coordinatePairs.size(); i++ )
     {
-      /* Get the point. */
-      Point point = points.get( i );
+      if( numberOfPoints > 0 && i >= numberOfPoints )
+        break;
+
+      /* Get the coordinate pair. */
+      CoordinatePair coordinatePair = coordinatePairs.get( i );
 
       /* Get the factor. */
       Double factor = factors.get( i );
 
       /* Calculate the new z coordinate. */
-      newZ = newZ + (point.getCoordinate().z * factor.doubleValue());
+      newZ = newZ + (coordinatePair.getSecondCoordinate().z * factor.doubleValue());
     }
 
     /* Set the new z coordinate. */
     coordinate.z = newZ;
+  }
+
+  /**
+   * This function returns a list of coordinates pairs. The first coordinate of a pair will be always the parameter
+   * coordinate and the second coordinate of a pair will be a coordinate of one point of the list. The list will be
+   * sorted by the distance, each pair has.
+   * 
+   * @param coordinate
+   *          The coordinate.
+   * @param points
+   *          The list of points.
+   * @return A list of coordinate pairs. The first coordinate of a pair will be always the parameter coordinate, and the
+   *         second coordinate of a pair will be a coordinate of one point of the list. The list will be sorted by the
+   *         distance, each pair has.
+   */
+  public static List<CoordinatePair> getCoordinatePairs( Coordinate coordinate, List<Point> points )
+  {
+    /* Memory for the results. */
+    List<CoordinatePair> results = new ArrayList<CoordinatePair>();
+
+    for( int i = 0; i < points.size(); i++ )
+    {
+      /* Get the point. */
+      Point point = points.get( i );
+
+      /* Create the coordinate pair. */
+      CoordinatePair coordinatePair = new CoordinatePair( coordinate, point.getCoordinate() );
+
+      /* Add to the results. */
+      results.add( coordinatePair );
+    }
+
+    /* Sort the results. */
+    Collections.sort( results, null );
+
+    return results;
   }
 }
