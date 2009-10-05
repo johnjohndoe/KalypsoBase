@@ -3,8 +3,6 @@ package org.kalypso.contribs.java.io.filter;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.kalypso.contribs.java.io.FileUtilities;
-
 /**
  * This filter filters all files with the same basename as given.
  * 
@@ -37,7 +35,7 @@ public class BasenameFilenameFilter implements FilenameFilter
     if( !file.exists() || file.isDirectory() )
       return false;
 
-    String baseName = FileUtilities.nameWithoutExtension( name );
+    String baseName = nameWithoutExtension( name );
     if( baseName == null )
       return false;
 
@@ -45,5 +43,14 @@ public class BasenameFilenameFilter implements FilenameFilter
       return true;
 
     return false;
+  }
+  
+  private static String nameWithoutExtension( final String fileName )
+  {
+    final int lastIndexOf = fileName.lastIndexOf( '.' );
+    if( lastIndexOf == -1 )
+      return fileName;
+
+    return fileName.substring( 0, lastIndexOf );
   }
 }

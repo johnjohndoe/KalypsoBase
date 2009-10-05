@@ -54,7 +54,7 @@ public class FileUtilitiesTest extends TestCase
   public void testIsChildOf()
   {
     final File f = new File( "C:/temp" );
-    final File c = new File( "C:/TEMP/grafik-kalypso/zml/Beispiel/beispiel.zml" );
+    final File c = new File( "C:/temp/grafik-kalypso/zml/Beispiel/beispiel.zml" );
 
     assertTrue( FileUtilities.isChildOf( f, c ) );
 
