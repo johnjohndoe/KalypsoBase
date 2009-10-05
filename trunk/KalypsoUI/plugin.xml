@@ -254,6 +254,7 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectFeatureCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" name="%org.kalypso.ogc.gml.map.SelectSingleFeatureCommand.label" description="%org.kalypso.ogc.gml.map.SelectSingleFeatureCommand.description" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SaveThemeCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.UndoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.RedoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.label" />
@@ -557,6 +558,7 @@
 		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" icon="icons/map/select_feature.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" icon="icons/map/select_feature.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SaveThemeCommand" disabledIcon="icons/map/save_edit_disabled.gif" icon="icons/feature/save_GML.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.UndoCommand" disabledIcon="icons/map/undo_edit_disabled.gif" icon="icons/map/undo_edit.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.RedoCommand" disabledIcon="icons/map/redo_edit_disabled.gif" icon="icons/map/redo_edit.gif" />
@@ -1056,6 +1058,16 @@
 		<handler commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.SelectWidget" />
+			</class>
+			<enabledWhen>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+				</with>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand">
+			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget" />
 			</class>
 			<enabledWhen>
 				<with variable="activeMapPanel">

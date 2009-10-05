@@ -103,6 +103,6 @@ public class PanToFeaturePart
     final GM_Envelope paned = boundingBox.getPaned( centroid );
 
     /* Finally set the bounding box. */
-    MapHandlerUtils.postMapCommand( m_mapPanel, new ChangeExtentCommand( m_mapPanel, paned ), null );
+    MapHandlerUtils.postMapCommandChecked( m_mapPanel, new ChangeExtentCommand( m_mapPanel, paned ), null );
   }
 }

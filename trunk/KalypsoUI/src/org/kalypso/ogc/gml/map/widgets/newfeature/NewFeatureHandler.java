@@ -35,8 +35,8 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
 
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
 
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( applicationContext );
-    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( applicationContext );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
+    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( applicationContext );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       throw new ExecutionException( "No feature theme in context" ); //$NON-NLS-1$
 

@@ -74,7 +74,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {

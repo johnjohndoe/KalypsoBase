@@ -79,7 +79,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for map commands.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapHandlerUtils
@@ -94,11 +94,11 @@ public class MapHandlerUtils
   /**
    * Post a command to the currently active map.
    */
-  public static void postCommand( final IEvaluationContext context, final ICommand command, final Runnable runnnable ) throws ExecutionException
+  public static void postCommandChecked( final IEvaluationContext context, final ICommand command, final Runnable runnnable ) throws ExecutionException
   {
     final ICommandTarget commandTarget = findCommandTarget( context );
     if( commandTarget == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.MapHandlerUtils.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.map.handlers.MapHandlerUtils.1" ) ); //$NON-NLS-1$
 
     commandTarget.postCommand( command, runnnable );
   }
@@ -119,7 +119,7 @@ public class MapHandlerUtils
     return null;
   }
 
-  public static void postMapCommand( final IMapPanel mapPanel, final ChangeExtentCommand command, final Runnable runnable ) throws ExecutionException
+  public static void postMapCommandChecked( final IMapPanel mapPanel, final ChangeExtentCommand command, final Runnable runnable ) throws ExecutionException
   {
     final ICommandTarget commandTarget = mapPanel.getWidgetManager().getCommandTarget();
     if( commandTarget == null )
@@ -131,13 +131,24 @@ public class MapHandlerUtils
   /**
    * Gets the currently active mapPanel from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
-   *
+   * 
+   * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
+   */
+  public static IMapPanel getMapPanel( final IEvaluationContext context )
+  {
+    return (IMapPanel) context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
+  }
+
+  /**
+   * Gets the currently active mapPanel from the handler event.<br>
+   * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
-  public static IMapPanel getMapPanel( final IEvaluationContext context ) throws ExecutionException
+  public static IMapPanel getMapPanelChecked( final IEvaluationContext context ) throws ExecutionException
   {
-    final IMapPanel mapPanel = (IMapPanel) context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
+    final IMapPanel mapPanel = getMapPanel( context );
     if( mapPanel == null )
       throw new ExecutionException( "No mapPanel in context." ); //$NON-NLS-1$
 
@@ -148,14 +159,29 @@ public class MapHandlerUtils
    * Gets the currently active mapModell from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
    * modell.
-   *
+   * 
+   * @return <code>null</code>, if no {@link IMapModell} was found in the context.
+   */
+  public static IMapModell getMapModell( final IEvaluationContext context )
+  {
+    final IMapPanel mapPanel = getMapPanel( context );
+    if( mapPanel == null )
+      return null;
+
+    return mapPanel.getMapModell();
+  }
+
+  /**
+   * Gets the currently active mapModell from the handler event.<br>
+   * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
+   * modell.
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
-  public static IMapModell getMapModell( final IEvaluationContext context ) throws ExecutionException
+  public static IMapModell getMapModellChecked( final IEvaluationContext context ) throws ExecutionException
   {
-    final IMapPanel mapPanel = getMapPanel( context );
-    final IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = getMapModell( context );
     if( mapModell == null )
       throw new ExecutionException( "No mapModell in context." ); //$NON-NLS-1$
 
@@ -166,13 +192,13 @@ public class MapHandlerUtils
    * Gets the currently active theme from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its active
    * theme.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
-  public static IKalypsoTheme getActiveTheme( final IEvaluationContext context ) throws ExecutionException
+  public static IKalypsoTheme getActiveThemeChecked( final IEvaluationContext context ) throws ExecutionException
   {
-    final IMapModell mapModell = getMapModell( context );
+    final IMapModell mapModell = getMapModellChecked( context );
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme == null )
       throw new ExecutionException( "No active theme in context" ); //$NON-NLS-1$

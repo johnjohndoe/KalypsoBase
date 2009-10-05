@@ -62,11 +62,11 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final GM_Envelope zoomBox = MapPanelUtilities.calcZoomInBoundingBox( mapPanel.getBoundingBox(), true );
     if( zoomBox != null )
-      MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
+      MapHandlerUtils.postMapCommandChecked( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
 
     return Status.OK_STATUS;
   }

@@ -79,8 +79,8 @@ public class PrintMapHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-    final IMapModell mapModell = MapHandlerUtils.getMapModell( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+    final IMapModell mapModell = MapHandlerUtils.getMapModellChecked( context );
     final String mapName = mapModell.getName().getValue();
 
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );

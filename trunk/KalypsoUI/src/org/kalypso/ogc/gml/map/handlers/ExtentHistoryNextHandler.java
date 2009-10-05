@@ -60,12 +60,12 @@ public class ExtentHistoryNextHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final ExtentHistory extendHistory = mapPanel.getExtentHistory();
     final GM_Envelope extend = extendHistory.getNext();
     if( extend != null )
-      MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, extend, false ), null );
+      MapHandlerUtils.postMapCommandChecked( mapPanel, new ChangeExtentCommand( mapPanel, extend, false ), null );
 
     return null;
   }

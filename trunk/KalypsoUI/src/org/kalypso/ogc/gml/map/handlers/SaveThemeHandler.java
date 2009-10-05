@@ -75,7 +75,7 @@ public class SaveThemeHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 

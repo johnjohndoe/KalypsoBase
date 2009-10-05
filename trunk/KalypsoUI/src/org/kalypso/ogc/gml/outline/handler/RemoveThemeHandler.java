@@ -71,7 +71,7 @@ public class RemoveThemeHandler extends AbstractHandler
     for( final IKalypsoTheme theme : selectedThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( theme.getMapModell(), theme ) );
 
-    MapHandlerUtils.postCommand( context, compositeCommand, null );
+    MapHandlerUtils.postCommandChecked( context, compositeCommand, null );
 
     return null;
   }

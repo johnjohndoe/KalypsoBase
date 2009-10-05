@@ -71,8 +71,8 @@ public class ActivateThemeHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ActivateThemeHandler.0") ); //$NON-NLS-1$
 
     final IKalypsoTheme themeToActivate = selectedThemes[0];
-    final IMapModell mapModell = MapHandlerUtils.getMapModell( context );
-    MapHandlerUtils.postCommand( context, new ActivateThemeCommand( mapModell, themeToActivate ), null );
+    final IMapModell mapModell = MapHandlerUtils.getMapModellChecked( context );
+    MapHandlerUtils.postCommandChecked( context, new ActivateThemeCommand( mapModell, themeToActivate ), null );
 
     return null;
   }

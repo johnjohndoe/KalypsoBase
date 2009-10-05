@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -95,7 +96,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     }
 
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( applicationContext );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
 
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
@@ -246,16 +247,20 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       element.setTooltip( m_widgetTooltipFromExtension );
     }
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    if( window == null )
-      return;
-
-    final IWorkbenchPart activePart = window.getPartService().getActivePart();
-    if( activePart == null )
-      return;
-
-    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+//    final IWorkbench workbench = PlatformUI.getWorkbench();
+//    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+//    if( window == null )
+//      return;
+//
+//    final IWorkbenchPart activePart = window.getPartService().getActivePart();
+//    if( activePart == null )
+//      return;
+//
+//    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
     if( mapPanel != null )
     {
       final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
@@ -271,6 +276,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       else
         element.setChecked( false );
     }
+    
   }
  
 }

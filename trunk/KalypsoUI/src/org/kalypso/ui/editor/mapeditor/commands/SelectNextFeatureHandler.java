@@ -103,8 +103,8 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( context );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return null;
 
@@ -234,8 +234,8 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
     try
     {
       final IEvaluationContext context = (IEvaluationContext) evaluationContext;
-      final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-      final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
+      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+      final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( context );
       if( !(activeTheme instanceof IKalypsoFeatureTheme) )
         return false;
 

@@ -66,7 +66,7 @@ public class ZoomToSelectedThemeHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    final IMapPanel panel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel panel = MapHandlerUtils.getMapPanelChecked( context );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     if( selectedThemes.length == 0 )
@@ -83,7 +83,7 @@ public class ZoomToSelectedThemeHandler extends AbstractHandler
 
     final ChangeExtentCommand changeExtentCommand = new ChangeExtentCommand( panel, wishBBox );
 
-    MapHandlerUtils.postCommand( context, changeExtentCommand, null );
+    MapHandlerUtils.postCommandChecked( context, changeExtentCommand, null );
 
     return null;
   }

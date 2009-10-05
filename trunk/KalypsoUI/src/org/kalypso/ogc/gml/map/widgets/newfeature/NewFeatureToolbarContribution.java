@@ -189,7 +189,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
     {
       final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
       final IEvaluationContext currentState = handlerService.getCurrentState();
-      return MapHandlerUtils.getActiveTheme( currentState );
+      return MapHandlerUtils.getActiveThemeChecked( currentState );
     }
     catch( final ExecutionException e )
     {
