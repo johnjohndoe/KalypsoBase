@@ -340,7 +340,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     String newName = name;
     if( index > 0 )
       newName = newName + "_" + Integer.toString( index ); //$NON-NLS-1$
-    final String newName2 = org.kalypso.contribs.java.io.FileUtilities.validateName( newName, "_" ); //$NON-NLS-1$
+    final String newName2 = FileUtilities.validateName( newName, "_" ); //$NON-NLS-1$
     final File file = new File( m_targetobservationDir, newName2 + ".zml" ); //$NON-NLS-1$
     if( file.exists() )
     {

@@ -443,7 +443,7 @@ public class GrafikLauncher
       for( final TypeCurve tc : curves )
       {
         // create a corresponding dat-File for the current observation file
-        final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
+        final String datFileProtoName = FileUtilities.nameWithoutExtension( zmlFile
             .getName() )
             + "-" + cc + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
         final String datFileName = datFileProtoName.replace( ' ', '_' );

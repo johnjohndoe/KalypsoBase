@@ -105,7 +105,8 @@ public class GmlSerializerTest
    * Before optimization: 17.5s<br>
    * Before optimization: 16.5s<br>
    */
-  @Test
+  // Invalid test, depends on KalypsoModel1d2d
+//  @Test
   public void testSavePerformance( ) throws Exception
   {
 // final URL zipResource = getClass().getResource( "resources/dgm2m.zip" );
