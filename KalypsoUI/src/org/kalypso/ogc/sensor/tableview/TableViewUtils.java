@@ -206,8 +206,9 @@ public final class TableViewUtils
     final List<TypeRenderingRule> xmlRules = xmlRulesType.getRenderingrule();
 
     // only set timezone if not default one
-    if( !template.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
-      xmlTemplate.setTimezone( template.getTimezone().getID() );
+    final TimeZone timezone = template.getTimezone();
+    if( timezone != null )
+      xmlTemplate.setTimezone( timezone.getID() );
 
     final List<RenderingRule> rules = template.getRules().getRules();
     for( final RenderingRule rule : rules )
@@ -287,9 +288,10 @@ public final class TableViewUtils
     view.setAlphaSort( as );
 
     // timezone is optional
-    if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )
+    final String xmlTz = xml.getTimezone();
+    if( xmlTz != null && xmlTz.length() > 0 )
     {
-      final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
+      final TimeZone timeZone = TimeZone.getTimeZone( xmlTz );
       view.setTimezone( timeZone );
     }
 

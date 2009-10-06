@@ -41,6 +41,8 @@
 
 package org.kalypso.ui.editor.obstableeditor.actions;
 
+import java.util.TimeZone;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -60,7 +62,8 @@ public class TablePropertiesAction extends AbstractEditorActionDelegate
   {
     final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
     final TableView table = (TableView) editor.getView();
-    final TablePropertiesDialog dlg = new TablePropertiesDialog( getShell(), table.getTimezone().getID() );
+    final TimeZone timezone = table.getTimezone();
+    final TablePropertiesDialog dlg = new TablePropertiesDialog( getShell(), timezone );
     if( dlg.open() == Window.OK )
       editor.postCommand( new ChangeTablePropsCommand( table, dlg.getTimezoneName() ), null );
   }

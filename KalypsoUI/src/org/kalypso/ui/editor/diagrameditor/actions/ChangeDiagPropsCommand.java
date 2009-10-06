@@ -61,20 +61,21 @@ public class ChangeDiagPropsCommand implements ICommand
 
   private final DiagView m_diag;
 
-  private String m_orgDiagramTitle;
+  private final String m_orgDiagramTitle;
 
-  private boolean m_orgShowLegend;
+  private final boolean m_orgShowLegend;
 
-  private String m_orgLegendTitle;
+  private final String m_orgLegendTitle;
 
-  private String m_orgTimezoneName;
+  private final String m_orgTimezoneName;
 
-  public ChangeDiagPropsCommand( DiagView diag, String diagramTitle, boolean showLegend, String legendTitle, String timezoneName )
+  public ChangeDiagPropsCommand( final DiagView diag, final String diagramTitle, final boolean showLegend, final String legendTitle, final String timezoneName )
   {
     m_orgDiagramTitle = diag.getTitle();
     m_orgShowLegend = diag.isShowLegend();
     m_orgLegendTitle = diag.getLegendName();
-    m_orgTimezoneName = diag.getTimezone().getID();
+    final TimeZone timezone = diag.getTimezone();
+    m_orgTimezoneName = timezone == null ? null : timezone.getID();
 
     m_diag = diag;
 
@@ -100,7 +101,9 @@ public class ChangeDiagPropsCommand implements ICommand
     m_diag.setTitle( m_diagramTitle );
     m_diag.setShowLegend( m_showLegend );
     m_diag.setLegendName( m_legendTitle );
-    m_diag.setTimezone( TimeZone.getTimeZone( m_timezoneName ) );
+
+    final TimeZone tz = m_timezoneName == null ? null : TimeZone.getTimeZone( m_timezoneName );
+    m_diag.setTimezone( tz );
   }
 
   /**
@@ -119,7 +122,11 @@ public class ChangeDiagPropsCommand implements ICommand
     m_diag.setTitle( m_orgDiagramTitle );
     m_diag.setShowLegend( m_orgShowLegend );
     m_diag.setLegendName( m_orgLegendTitle );
-    m_diag.setTimezone( TimeZone.getTimeZone( m_orgTimezoneName ) );
+
+    if( m_orgTimezoneName == null )
+      m_diag.setTimezone( null );
+    else
+      m_diag.setTimezone( TimeZone.getTimeZone( m_orgTimezoneName ) );
   }
 
   /**
@@ -127,6 +134,6 @@ public class ChangeDiagPropsCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.ChangeDiagPropsCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.ChangeDiagPropsCommand.0" ); //$NON-NLS-1$
   }
 }

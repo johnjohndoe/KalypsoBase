@@ -52,15 +52,19 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 public class ChangeTablePropsCommand implements ICommand
 {
   private final TableView m_table;
-  private final String m_timezoneName;
-  private String m_orgTimezoneName;
 
-  public ChangeTablePropsCommand( TableView table, String timezoneName )
+  private final String m_timezoneName;
+
+  private final String m_orgTimezoneName;
+
+  public ChangeTablePropsCommand( final TableView table, final String timezoneName )
   {
-    m_orgTimezoneName = table.getTimezone().getID();
-    
+    final TimeZone timezone = table.getTimezone();
+
+    m_orgTimezoneName = timezone == null ? null : timezone.getID();
+
     m_table = table;
-    
+
     m_timezoneName = timezoneName;
   }
 
@@ -77,7 +81,8 @@ public class ChangeTablePropsCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    m_table.setTimezone( TimeZone.getTimeZone( m_timezoneName ) );
+    final TimeZone timeZone = m_timezoneName == null ? null : TimeZone.getTimeZone( m_timezoneName );
+    m_table.setTimezone( timeZone );
   }
 
   /**
@@ -93,14 +98,17 @@ public class ChangeTablePropsCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    m_table.setTimezone( TimeZone.getTimeZone( m_orgTimezoneName ) );
+    if( m_orgTimezoneName == null )
+      m_table.setTimezone( null );
+    else
+      m_table.setTimezone( TimeZone.getTimeZone( m_orgTimezoneName ) );
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.ChangeTablePropsCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.editor.obstableeditor.actions.ChangeTablePropsCommand.0" ); //$NON-NLS-1$
   }
 }

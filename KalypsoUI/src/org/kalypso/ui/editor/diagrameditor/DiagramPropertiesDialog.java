@@ -66,110 +66,130 @@ import org.kalypso.i18n.Messages;
  */
 public class DiagramPropertiesDialog extends TitleAreaDialog
 {
+  private static final String KALYPSO_DEFAULT = "<Kalypso Default>";//$NON-NLS-1$
+
   protected String m_diagTitle;
 
   protected boolean m_showLegend;
 
   protected String m_legendTitle;
 
-  protected String m_tz;
+  protected TimeZone m_tz;
 
-  public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend, final String legendTitle, final String timezoneName )
+  public DiagramPropertiesDialog( final Shell parentShell, final String diagTitle, final boolean showLegend, final String legendTitle, final TimeZone timezone )
   {
     super( parentShell );
 
     m_diagTitle = diagTitle;
     m_showLegend = showLegend;
     m_legendTitle = legendTitle;
-    m_tz = timezoneName;
+    m_tz = timezone;
   }
 
   /**
    * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  protected void configureShell( Shell newShell )
+  protected void configureShell( final Shell newShell )
   {
     super.configureShell( newShell );
-    
-    newShell.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.5") ); //$NON-NLS-1$
+
+    newShell.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.5" ) ); //$NON-NLS-1$
   }
-  
+
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    setTitle( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.0") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.0" ) ); //$NON-NLS-1$
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
     cmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label lblTitle = new Label( cmp, SWT.LEFT );
-    lblTitle.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.1") ); //$NON-NLS-1$
+    lblTitle.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.1" ) ); //$NON-NLS-1$
     final Text txtTitle = new Text( cmp, SWT.BORDER );
     txtTitle.setText( m_diagTitle );
     txtTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     txtTitle.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_diagTitle = txtTitle.getText();
       }
     } );
 
     final Label lblShowLegend = new Label( cmp, SWT.LEFT );
-    lblShowLegend.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.2") ); //$NON-NLS-1$
+    lblShowLegend.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.2" ) ); //$NON-NLS-1$
     final Button btnShowLegend = new Button( cmp, SWT.CHECK );
     btnShowLegend.setSelection( m_showLegend );
     btnShowLegend.addSelectionListener( new SelectionListener()
     {
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_showLegend = btnShowLegend.getSelection();
       }
 
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         // empty
       }
     } );
 
     final Label lblLegTitle = new Label( cmp, SWT.LEFT );
-    lblLegTitle.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.3") ); //$NON-NLS-1$
+    lblLegTitle.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.3" ) ); //$NON-NLS-1$
     final Text txtLegTitle = new Text( cmp, SWT.BORDER );
     txtLegTitle.setText( m_legendTitle );
     txtLegTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     txtLegTitle.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_legendTitle = txtLegTitle.getText();
       }
     } );
 
     final Label lblTz = new Label( cmp, SWT.LEFT );
-    lblTz.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.4") ); //$NON-NLS-1$
-    final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
+    lblTz.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.4" ) ); //$NON-NLS-1$
+    final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN | SWT.READ_ONLY );
     cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    
+
     final String[] tz = TimeZone.getAvailableIDs();
     Arrays.sort( tz );
-    cmbTz.setItems( tz );
-    
-    cmbTz.setText( m_tz );
-    
+    final String[] items = new String[tz.length + 1];
+    items[0] = KALYPSO_DEFAULT;
+    System.arraycopy( tz, 0, items, 1, tz.length );
+    cmbTz.setItems( items );
+
+    if( m_tz == null )
+      cmbTz.select( 0 );
+    else
+    {
+      final int index = Arrays.binarySearch( tz, m_tz.getID() );
+      cmbTz.select( index + 1 );
+    }
+
     cmbTz.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
-        m_tz = cmbTz.getText();
+        handleTimeZoneChanged( cmbTz );
       }
     } );
-    
+
     return cmp;
+  }
+
+  protected void handleTimeZoneChanged( final Combo cmbTz )
+  {
+    final String text = cmbTz.getText();
+    if( KALYPSO_DEFAULT.equals( text ) )
+      m_tz = null;
+    else
+      m_tz = TimeZone.getTimeZone( text );
   }
 
   public String getDiagramTitle( )
@@ -186,9 +206,9 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   {
     return m_legendTitle;
   }
-  
+
   public String getTimezoneName( )
   {
-    return m_tz;
+    return m_tz == null ? null : m_tz.getID();
   }
 }

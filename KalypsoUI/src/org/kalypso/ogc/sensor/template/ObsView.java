@@ -60,7 +60,6 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * A kind of view over observations.
@@ -107,9 +106,10 @@ public abstract class ObsView implements IObsViewEventProvider
   private Set<String> m_hiddenTypes = new HashSet<String>();
 
   /**
-   * By default the timezone is the default one. It can be overriden by the value of the template.
+   * By default the timezone is <code>null</code>. In this case, the Kalypso zimezone is used. It can be overriden by
+   * the value of the template.
    */
-  private TimeZone m_timezone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
+  private TimeZone m_timezone = null;
 
   /**
    * Default constructor: enables all the features

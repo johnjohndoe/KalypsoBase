@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -199,17 +200,16 @@ public class DiagViewUtils
     xmlTemplate.setLegend( xmlLegend );
     xmlTemplate.setTitle( view.getTitle() );
 
-    // only set timezone if not default one
-    if( !view.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
-      xmlTemplate.setTimezone( view.getTimezone().getID() );
+    // only set timezone if defined
+    final TimeZone timezone = view.getTimezone();
+    if( timezone != null )
+      xmlTemplate.setTimezone( timezone.getID() );
 
     final List<TypeAxis> xmlAxes = xmlTemplate.getAxis();
 
     final DiagramAxis[] diagramAxes = view.getDiagramAxes();
-    for( int i = 0; i < diagramAxes.length; i++ )
+    for( final DiagramAxis axis : diagramAxes )
     {
-      final DiagramAxis axis = diagramAxes[i];
-
       final TypeAxis xmlAxis = ODT_OF.createTypeAxis();
       xmlAxis.setDatatype( axis.getDataType() );
       xmlAxis.setDirection( TypeDirection.fromValue( axis.getDirection() ) );
@@ -228,9 +228,8 @@ public class DiagViewUtils
 
     final List<TypeObservation> xmlThemes = xmlTemplate.getObservation();
     final Map<IObservation, ArrayList<ObsViewItem>> map = ObsView.mapItems( view.getItems() );
-    for( final Iterator<Map.Entry<IObservation, ArrayList<ObsViewItem>>> itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
+    for( final Entry<IObservation, ArrayList<ObsViewItem>> entry : map.entrySet() )
     {
-      final Map.Entry<IObservation, ArrayList<ObsViewItem>> entry = itThemes.next();
       final IObservation obs = entry.getKey();
       if( obs == null )
         continue;
@@ -251,7 +250,7 @@ public class DiagViewUtils
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
-        Stroke stroke = curve.getStroke();
+        final Stroke stroke = curve.getStroke();
         if( stroke instanceof BasicStroke )
         {
           final BasicStroke bs = (BasicStroke)stroke;
@@ -262,19 +261,19 @@ public class DiagViewUtils
           if( dashArray != null )
           {
             final List<Float> dashList = strokeType.getDash();
-            for( int i = 0; i < dashArray.length; i++ )
-              dashList.add( new Float( dashArray[i] ) );
+            for( final float element : dashArray )
+              dashList.add( new Float( element ) );
           }
         }
 
         final List<TypeAxisMapping> xmlMappings = xmlCurve.getMapping();
 
         final AxisMapping[] mappings = curve.getMappings();
-        for( int i = 0; i < mappings.length; i++ )
+        for( final AxisMapping mapping : mappings )
         {
           final TypeAxisMapping xmlMapping = ODT_OF.createTypeAxisMapping();
-          xmlMapping.setDiagramAxis( mappings[i].getDiagramAxis().getIdentifier() );
-          xmlMapping.setObservationAxis( mappings[i].getObservationAxis().getName() );
+          xmlMapping.setDiagramAxis( mapping.getDiagramAxis().getIdentifier() );
+          xmlMapping.setObservationAxis( mapping.getObservationAxis().getName() );
 
           xmlMappings.add( xmlMapping );
         }
@@ -376,23 +375,23 @@ public class DiagViewUtils
       view.clearFeatures();
 
       final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
-      for( int i = 0; i < featureNames.length; i++ )
-        view.setFeatureEnabled( featureNames[i], true );
+      for( final String featureName : featureNames )
+        view.setFeatureEnabled( featureName, true );
     }
 
     // timezone is optional
-    if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )
+    final String xmlTz = xml.getTimezone();
+    if( xmlTz != null && xmlTz.length() > 0 )
     {
-      final TimeZone timeZone = TimeZone.getTimeZone( xml.getTimezone() );
+      final TimeZone timeZone = TimeZone.getTimeZone( xmlTz );
       view.setTimezone( timeZone );
     }
 
     // axes spec is optional
     if( xml.getAxis() != null )
     {
-      for( final Iterator<TypeAxis> it = xml.getAxis().iterator(); it.hasNext(); )
+      for( final TypeAxis baseAxis : xml.getAxis() )
       {
-        final TypeAxis baseAxis = it.next();
         view.addAxis( new DiagramAxis( baseAxis ) );
       }
     }
@@ -400,10 +399,8 @@ public class DiagViewUtils
     final List<IStatus> stati = new ArrayList<IStatus>();
 
     final List<TypeObservation> list = xml.getObservation();
-    for( final Iterator<TypeObservation> it = list.iterator(); it.hasNext(); )
+    for( final TypeObservation tobs : list )
     {
-      final TypeObservation tobs = it.next();
-
       // check, if href is ok
       final String href = tobs.getHref();
 

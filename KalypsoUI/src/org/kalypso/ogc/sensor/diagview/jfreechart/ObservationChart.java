@@ -42,12 +42,14 @@ package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
 import org.kalypso.contribs.java.lang.CatchRunnable;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
@@ -84,7 +86,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
    *          for swing to be finished with updating/painting the diagram before doing the export, else you get strange
    *          results
    */
-  public ObservationChart( final DiagView template, boolean waitForSwing ) throws SensorException
+  public ObservationChart( final DiagView template, final boolean waitForSwing ) throws SensorException
   {
     super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), false );
 
@@ -100,7 +102,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
     setBackgroundPaint( new GradientPaint( 0, 0, Color.white, 0, 1000, new Color( 168, 168, 255 ) ) );
   }
 
-  protected void setLegendProperties( String legendName, boolean showLegend )
+  protected void setLegendProperties( final String legendName, final boolean showLegend )
   {
     m_legend.setTitle( legendName );
 
@@ -205,7 +207,10 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
           {
             setTitle( view.getTitle() );
             setLegendProperties( view.getLegendName(), view.isShowLegend() );
-            obsPlot.setTimezone( view.getTimezone() );
+
+            final TimeZone timezone = view.getTimezone();
+            final TimeZone plotTimezone = timezone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : timezone;
+            obsPlot.setTimezone( plotTimezone );
             break;
           }
 
