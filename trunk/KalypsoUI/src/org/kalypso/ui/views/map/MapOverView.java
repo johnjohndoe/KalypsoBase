@@ -149,7 +149,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
     if( oldMapModell != modelToSet )
     {
       final GM_Envelope env = modelToSet == null ? null : modelToSet.getFullExtentBoundingBox();
-      setMapModell( modelToSet, env );
+      updatePanel( modelToSet, env );
     }
   }
 

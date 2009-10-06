@@ -96,6 +96,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -275,7 +276,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_control = MapPartHelper.createMapForm( parent );
     m_mapPanel = MapPartHelper.createMapPanelInForm( m_control, this, m_selectionManager );
-    setMapModell( m_mapModell, m_initialEnv );
+    updatePanel( m_mapModell, m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
@@ -566,27 +567,32 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_saving = false;
   }
 
-  protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
+  private void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
   {
-    if( m_mapModell != null )
+    if( m_mapModell != null && m_mapModell != mapModell )
       m_mapModell.dispose();
 
     m_mapModell = mapModell;
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
+    updatePanel( m_mapModell, m_initialEnv );
+  }
+
+  protected void updatePanel(IMapModell mapModell, GM_Envelope initialEnv )
+  {
     final String partName;
-    if( m_mapModell == null )
+    if( mapModell == null )
       partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
     else
-      partName = m_mapModell.getLabel( m_mapModell );
+      partName = mapModell.getLabel( mapModell );
 
     setCustomName( partName );
 
     if( m_mapPanel != null )
     {
-      m_mapPanel.setMapModell( m_mapModell );
-      if( env != null )
-        m_mapPanel.setBoundingBox( env );
+      m_mapPanel.setMapModell( mapModell );
+      if( initialEnv != null )
+        m_mapPanel.setBoundingBox( initialEnv );
     }
   }
 
