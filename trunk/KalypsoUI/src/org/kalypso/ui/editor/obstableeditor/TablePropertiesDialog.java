@@ -62,50 +62,71 @@ import org.kalypso.i18n.Messages;
  */
 public class TablePropertiesDialog extends TitleAreaDialog
 {
-  protected String m_tz;
+  private static final String KALYPSO_DEFAULT = "<Kalypso Default>";//$NON-NLS-1$
 
-  public TablePropertiesDialog( final Shell parentShell, final String timezoneName )
+  protected TimeZone m_tz;
+
+  public TablePropertiesDialog( final Shell parentShell, final TimeZone timezone )
   {
     super( parentShell );
 
-    m_tz = timezoneName;
+    m_tz = timezone;
   }
 
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    setTitle( Messages.getString("org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.0") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.0" ) ); //$NON-NLS-1$
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
     cmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label lblTz = new Label( cmp, SWT.LEFT );
-    lblTz.setText( Messages.getString("org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.1") ); //$NON-NLS-1$
+    lblTz.setText( Messages.getString( "org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.1" ) ); //$NON-NLS-1$
     final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
     cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final String[] tz = TimeZone.getAvailableIDs();
     Arrays.sort( tz );
-    cmbTz.setItems( tz );
-    cmbTz.setText( m_tz );
-    
+    final String[] items = new String[tz.length + 1];
+    items[0] = KALYPSO_DEFAULT;
+    System.arraycopy( tz, 0, items, 1, tz.length );
+    cmbTz.setItems( items );
+
+    if( m_tz == null )
+      cmbTz.select( 0 );
+    else
+    {
+      final int index = Arrays.binarySearch( tz, m_tz.getID() );
+      cmbTz.select( index + 1 );
+    }
+
     cmbTz.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
-        m_tz = cmbTz.getText();
+        handleTimeZoneChanged( cmbTz );
       }
     } );
-    
+
     return cmp;
+  }
+
+  protected void handleTimeZoneChanged( final Combo cmbTz )
+  {
+    final String text = cmbTz.getText();
+    if( KALYPSO_DEFAULT.equals( text ) )
+      m_tz = null;
+    else
+      m_tz = TimeZone.getTimeZone( text );
   }
 
   public String getTimezoneName( )
   {
-    return m_tz;
+    return m_tz == null ? null : m_tz.getID();
   }
 }

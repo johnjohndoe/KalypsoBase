@@ -195,7 +195,11 @@ public class ObservationPlot extends XYPlot
       }
 
       final String axisLabel = diagAxis.toFullString();
-      final ValueAxis vAxis = (ValueAxis) ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), new String[] { axisLabel } );
+      // Small hack:_ if label is null, we need to instantiate with an string, else the reflection does not work.
+      final String[] arguments = axisLabel == null ? new String[] { "" } : new String[] { axisLabel }; //$NON-NLS-1$
+      final ValueAxis vAxis = (ValueAxis) ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), arguments );
+      if( axisLabel == null )
+        vAxis.setLabel( null );
 
       setTimezone( vAxis );
       vAxis.setInverted( diagAxis.isInverted() );

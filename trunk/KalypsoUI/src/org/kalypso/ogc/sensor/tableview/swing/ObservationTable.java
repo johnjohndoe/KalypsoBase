@@ -51,6 +51,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,6 +80,7 @@ import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -146,7 +148,10 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     // date renderer with timezone
     m_dateRenderer = new DateTableCellRenderer();
-    m_dateRenderer.setTimeZone( template.getTimezone() );
+
+    final TimeZone viewzone = template.getTimezone();
+    final TimeZone timezone = viewzone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : viewzone;
+    m_dateRenderer.setTimeZone( timezone );
 
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
@@ -316,7 +321,9 @@ public class ObservationTable extends Panel implements IObsViewEventListener
           final TableView view = (TableView) evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
 
-          m_dateRenderer.setTimeZone( view.getTimezone() );
+          final TimeZone timezone = view.getTimezone();
+          final TimeZone rendererTimezone = timezone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : timezone;
+          m_dateRenderer.setTimeZone( rendererTimezone );
 
           repaint();
         }
