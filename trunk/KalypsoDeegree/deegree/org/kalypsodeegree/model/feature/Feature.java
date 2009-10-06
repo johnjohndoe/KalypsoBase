@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 /**
  * @author Dirk Kuch
  */
-public interface Feature extends KalypsoBaseFeature, Deegree2Feature
+public interface Feature extends BaseFeature, Deegree2Feature
 {
   public static final QName QN_NAME = new QName( NS.GML3, "name" );
 
@@ -63,8 +63,9 @@ public interface Feature extends KalypsoBaseFeature, Deegree2Feature
   /** Sets the gml:name property */
   public void setName( final String name );
 
-  /** Returns the gml:description property of the bound feature. */
-  public String getDescription( );
+// Defined in Deegree2Feature
+// /** Returns the gml:description property of the bound feature. */
+// public String getDescription( );
 
   /** Sets the gml_description property */
   public void setDescription( final String desc );
