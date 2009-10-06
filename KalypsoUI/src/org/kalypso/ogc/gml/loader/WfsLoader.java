@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -31,6 +32,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -68,18 +70,18 @@ public class WfsLoader extends WorkspaceLoader
   protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
     final String source = key.getLocation();
+    final Properties sourceProps = PropertiesHelper.parseFromString( source, KV_PAIR_SEPARATOR );
+    final String baseURLAsString = sourceProps.getProperty( KEY_URL );
+    final String featureType = sourceProps.getProperty( KEY_FEATURETYPE );
+    final String featureTypeNS = sourceProps.getProperty( KEY_FEATURETYPENAMESPACE );
+    final String filter = sourceProps.getProperty( KEY_FILTER );
+    final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
     final BufferedInputStream inputStream = null;
     final PrintStream ps = null;
     try
     {
       monitor.beginTask( "WFS laden", 1000 ); //$NON-NLS-1$
-      final Properties sourceProps = PropertiesHelper.parseFromString( source, KV_PAIR_SEPARATOR );
-      final String baseURLAsString = sourceProps.getProperty( KEY_URL );
-      final String featureType = sourceProps.getProperty( KEY_FEATURETYPE );
-      final String featureTypeNS = sourceProps.getProperty( KEY_FEATURETYPENAMESPACE );
-      final String filter = sourceProps.getProperty( KEY_FILTER );
-      final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
       final QName qNameFT;
       if( featureTypeNS != null && featureTypeNS.length() > 0 )
@@ -114,10 +116,10 @@ public class WfsLoader extends WorkspaceLoader
     {
       e.printStackTrace();
 
-      // REMARK: we no not pass the exception to the next level her (hence the printStackTrace)
-      // in order to have a nicer error dialog later (avoids the same line aperaring twice in the details-panel)
-      final LoaderException loaderException = new LoaderException( e.getLocalizedMessage() );
-      setStatus( loaderException.getStatus() );
+      final String msg = String.format( "Failed to load GML from %s", baseURLAsString );
+      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { e.getStatus() }, msg, e );
+      final LoaderException loaderException = new LoaderException( multiStatus );
+      setStatus( multiStatus );
       throw loaderException;
     }
     finally

@@ -38,6 +38,7 @@ import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.gml.GMLException;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -379,6 +380,7 @@ public class WFSClient
   public GMLWorkspace operationGetFeature( final QName name, final String filter, final Integer maxFeatures ) throws CoreException
   {
     InputStream inputStream = null;
+    String requestString = null;
     try
     {
       /* Create getFeature URL */
@@ -396,7 +398,8 @@ public class WFSClient
 
       /* Post the request */
       final URL url = getGetUrl( name, params );
-      final GetMethod getMethod = new GetMethod( url.toURI().toString() );
+      requestString = url.toURI().toString();
+      final GetMethod getMethod = new GetMethod( requestString );
 
       final int statusCode = m_httpClient.executeMethod( getMethod );
       if( statusCode != 200 )
@@ -427,19 +430,28 @@ public class WFSClient
     }
     catch( final HttpException e )
     {
-      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.7" ), name, requestString ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final IOException e )
     {
-      final String message = String.format( Messages.getString("org.kalypso.ogc.wfs.WFSClient.7"), name ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "org.kalypso.ogc.wfs.WFSClient.7" ), name, requestString ); //$NON-NLS-1$
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
+      throw new CoreException( status );
+    }
+    catch( final GMLException e )
+    {
+      // TODO: we should distinguish parse errors and errors returned from wfs-requests.
+      // But how in both cases, we get an GMLException...
+
+      final String message = String.format( "Failed to parse result GML for type <%s>. Request was: %s", name, requestString );
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to load result GML", name ); //$NON-NLS-1$
+      final String message = String.format( "Failed to parse result GML", name, requestString );
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
