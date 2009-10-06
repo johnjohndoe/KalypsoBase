@@ -62,13 +62,12 @@ public final class CsvFeatureReader
 
   public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
   {
-    final List<Feature> list = new ArrayList<Feature>();
-
     final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
     final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    List<Feature> list = (List<Feature>) rootFeature.getProperty( memberRelation );
     loadCSVIntoList( rootFeature, memberRelation, ft, list, reader, comment, delemiter, lineskip );
 
     final GMLSchema schema = null;
