@@ -42,6 +42,8 @@ package org.kalypso.gml;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.org.xml.sax.AppendingContentHandler;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -65,6 +67,9 @@ import org.xml.sax.XMLReader;
  */
 public class GMLorExceptionContentHandler extends DelegateContentHandler
 {
+  // TODO: where to put this constant?
+  final QName QNAME_OWS_EXCEPTION_REPORT = new QName( "http://www.opengis.net/ows", "ExceptionReport" );
+
   private int m_depth = 0;
 
   public GMLorExceptionContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
@@ -81,13 +86,19 @@ public class GMLorExceptionContentHandler extends DelegateContentHandler
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    // handle OGC Exceptions
-    // Handle degree1 + deegree2 exepctions.
-    // deegree1-service: ...Exception
-    // deegree2-service: ServiceExceptionReport
-    // TODO: we should test for the namespace, what happens if we ever have a gml with root element 'exception'?
-    if( m_depth == 0 && localName != null && (localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" )) )
-      setDelegate( new AppendingContentHandler( new StringBuffer() ) );
+    if( m_depth == 0 )
+    {
+      // handle OGC Exceptions
+      // Handle degree1 + deegree2 exepctions.
+      // deegree1-service: ...Exception
+      // deegree2-service: ServiceExceptionReport
+      // TODO: we should test for the namespace, what happens if we ever have a gml with root element 'exception'?
+      final QName eltQName = new QName( uri, localName );
+      if( localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" ) )
+        setDelegate( new AppendingContentHandler( new StringBuffer() ) );
+      else if( eltQName.equals( QNAME_OWS_EXCEPTION_REPORT ) )
+        setDelegate( new AppendingContentHandler( new StringBuffer() ) );
+    }
 
     m_depth++;
 
@@ -108,6 +119,7 @@ public class GMLorExceptionContentHandler extends DelegateContentHandler
   public GMLWorkspace getWorkspace( ) throws GMLException
   {
     final ContentHandler delegate = getDelegate();
+
     if( delegate instanceof AppendingContentHandler )
     {
       final Appendable buffer = ((AppendingContentHandler) delegate).getAppendable();
