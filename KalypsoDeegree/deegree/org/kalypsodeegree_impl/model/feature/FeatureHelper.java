@@ -39,6 +39,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,8 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
@@ -65,6 +68,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -262,7 +266,8 @@ public class FeatureHelper
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
   {
     final GMLWorkspace workspace = sourceFeature.getWorkspace();
-    final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
+    final IGMLSchema gmlSchema = workspace == null ? null : workspace.getGMLSchema();
+    final String gmlVersion = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     for( final Object element : propertyMap.entrySet() )
     {
       final Map.Entry entry = (Entry) element;
@@ -276,14 +281,48 @@ public class FeatureHelper
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-      if( !sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-        throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
-
+      
       final Object object = sourceFeature.getProperty( sourceFTP );
+      final Object newobject;
+      
+      if( object == null )
+        newobject = null;
+      else if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
+        newobject = FeatureHelper.cloneData( sourceFeature, targetFeature, sourceFTP, object, gmlVersion );
+      else
+      {
+        final IMarshallingTypeHandler sourceTypeHandler = sourceFTP.getTypeHandler();
+        final IMarshallingTypeHandler targetTypeHandler = targetFTP.getTypeHandler();
+        
+        String objectAsString;
+        if( sourceTypeHandler instanceof ISimpleMarshallingTypeHandler )
+          objectAsString = ((ISimpleMarshallingTypeHandler)sourceTypeHandler).convertToXMLString( object );
+        else 
+          objectAsString =  object.toString();
+        
+        try
+        {
+          newobject = targetTypeHandler.parseType( objectAsString );
+        }
+        catch( ParseException e )
+        {
+          throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
+        }
+      }
 
-      final Object newobject = FeatureHelper.cloneData( sourceFeature, targetFeature, sourceFTP, object, gmlVersion );
-
-      targetFeature.setProperty( targetFTP, newobject );
+      // Hack: Types are same, but ordinality (i.e. list or not) can be different.
+      if( !sourceFTP.isList() && targetFTP.isList() )
+        targetFeature.setProperty( targetFTP, Arrays.asList( newobject ) );
+      else if( sourceFTP.isList() && !targetFTP.isList() )
+      {
+        final List<?> newlist = (List< ? >) newobject;
+        if( newlist.isEmpty())
+          targetFeature.setProperty( targetFTP, null );
+        else
+          targetFeature.setProperty( targetFTP, newlist.get( 0 ) );
+      }
+      else
+        targetFeature.setProperty( targetFTP, newobject );
     }
   }
 

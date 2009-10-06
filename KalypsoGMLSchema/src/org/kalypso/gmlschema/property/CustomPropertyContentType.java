@@ -42,6 +42,7 @@ package org.kalypso.gmlschema.property;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
@@ -56,6 +57,8 @@ public class CustomPropertyContentType implements IPropertyContentType
 
   public CustomPropertyContentType( final QName qname, final IMarshallingTypeHandler typeHandler )
   {
+    Assert.isNotNull( typeHandler );
+    
     m_qname = qname;
     m_typeHandler = typeHandler;
   }
