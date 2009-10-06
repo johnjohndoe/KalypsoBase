@@ -19,9 +19,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public interface IKalypsoThemeFactory
 {
   /**
-   * Creates a theme. TODO: this method signature needs to be reworked, way too many arguments
+   * Creates a theme.
    */
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException;
 
-  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, int count, GM_Envelope bbox, String srsName );
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName );
 }

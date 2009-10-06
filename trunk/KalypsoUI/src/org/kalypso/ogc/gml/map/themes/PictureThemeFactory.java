@@ -80,11 +80,10 @@ public class PictureThemeFactory implements IKalypsoThemeFactory
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, int,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String, org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
    */
   @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, int count, GM_Envelope bbox, String srsName )
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName )
   {
     throw new NotImplementedException();
   }

@@ -75,6 +75,7 @@ import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.w3c.dom.Element;
 
 /**
  * @author Gernot Belger
@@ -235,7 +236,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       {
         final I18NTranslatorType translator = GisTemplateHelper.OF_TEMPLATE_TYPES.createI18NTranslatorType();
         translator.setId( i10nTranslator.getId() );
-        translator.getAny().addAll( i10nTranslator.getConfiguration() );
+        final List<Element> configuration = i10nTranslator.getConfiguration();
+        if( configuration != null )
+          translator.getAny().addAll( configuration );
         gismapview.setTranslator( translator );
       }
 
@@ -258,10 +261,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       monitor.worked( 100 );
 
       int count = 0;
-
       for( final IKalypsoTheme theme : themes )
       {
-        final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, count++, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+        final String id = "ID_" + count++;
+        final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
         {
           layerList.add( layerElement );

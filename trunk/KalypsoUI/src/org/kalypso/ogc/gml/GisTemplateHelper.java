@@ -471,14 +471,14 @@ public class GisTemplateHelper
     }
   }
 
-  public static JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final int count, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  public static JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
     if( theme instanceof CascadingLayerKalypsoTheme )
     {
       final CascadingLayer cascadingLayer = OF_GISMAPVIEW.createCascadingLayer();
 
       final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
-      cascadingKalypsoTheme.fillLayerType( cascadingLayer, "ID_" + count, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
+      cascadingKalypsoTheme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
       return TemplateUtilitites.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
     }
 
@@ -487,7 +487,7 @@ public class GisTemplateHelper
 
     if( theme instanceof GisTemplateFeatureTheme )
     {
-      ((GisTemplateFeatureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() );//$NON-NLS-1$
+      ((GisTemplateFeatureTheme) theme).fillLayerType( layer, id, theme.isVisible() );//$NON-NLS-1$
       return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoWMSTheme )
@@ -495,7 +495,7 @@ public class GisTemplateHelper
       layer.setName( themeNameKey );
       layer.setFeaturePath( "" ); //$NON-NLS-1$
       layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count ); //$NON-NLS-1$
+      layer.setId( id ); //$NON-NLS-1$
       layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
       layer.setLinktype( theme.getType() );
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
@@ -513,13 +513,13 @@ public class GisTemplateHelper
     }
     else if( theme instanceof KalypsoPictureTheme )
     {
-      ((KalypsoPictureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+      ((KalypsoPictureTheme) theme).fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
       return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof CascadingKalypsoTheme )
     {
       final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
-      cascadingKalypsoTheme.fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+      cascadingKalypsoTheme.fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
 
       cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, monitor );
       return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
@@ -529,7 +529,7 @@ public class GisTemplateHelper
       layer.setName( themeNameKey );
       layer.setFeaturePath( "" ); //$NON-NLS-1$
       layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count ); //$NON-NLS-1$
+      layer.setId( id ); //$NON-NLS-1$
       layer.setHref( "" ); //$NON-NLS-1$
 
       layer.setLinktype( "legend" ); //$NON-NLS-1$
@@ -548,7 +548,7 @@ public class GisTemplateHelper
     {
       layer.setName( themeNameKey );
       layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count ); //$NON-NLS-1$
+      layer.setId( id ); //$NON-NLS-1$
       layer.setLinktype( "scale" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
@@ -571,7 +571,7 @@ public class GisTemplateHelper
         return null;
       }
 
-      return themeFactory.configureLayer( theme, count, bbox, srsName );
+      return themeFactory.configureLayer( theme, id, bbox, srsName );
     }
   }
 

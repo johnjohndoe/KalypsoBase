@@ -122,12 +122,12 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = layer.getLayer();
 
-    fillLayerList( layers, getInnerMapModel(), srsName, monitor );
+    fillLayerList( layers, getInnerMapModel(), id, srsName, monitor );
 
     GisTemplateFeatureTheme.fillProperties( this, extentFac, layer );
   }
 
-  private void fillLayerList( final List<JAXBElement< ? extends StyledLayerType>> layers, final IMapModell innerMapModel, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  private void fillLayerList( final List<JAXBElement< ? extends StyledLayerType>> layers, final IMapModell innerMapModel, final String id, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
     final IKalypsoTheme[] themes = innerMapModel.getAllThemes();
     monitor.beginTask( "", themes.length ); //$NON-NLS-1$
@@ -135,7 +135,8 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     int count = 0;
     for( final IKalypsoTheme theme : themes )
     {
-      final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, count++, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
+      final String layerId = id + "_" + count++;
+      final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, layerId, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
       layers.add( layerElement );
     }
   }
