@@ -61,6 +61,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.command.RenameThemeCommand;
+import org.kalypso.util.swt.StatusComposite;
 
 /**
  * This is a page for showing some properties of a theme.
@@ -91,6 +92,14 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
       // todo: show some error message
       return composite;
     }
+
+    /* Current Status */
+    final Label statusLabel = new Label( composite, SWT.NONE );
+    statusLabel.setText( "Status" );
+
+    final StatusComposite statusComposite = new StatusComposite( composite, StatusComposite.DETAILS );
+    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    statusComposite.setStatus( theme.getStatus() );
 
     /* Theme name */
     final Label nameLabel = new Label( composite, SWT.NONE );
