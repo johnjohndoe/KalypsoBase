@@ -256,7 +256,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
     {
       case V040:
         final Object inputFormChoice;
-        if( !type.equals( WPSUtilities.QNAME_ANY_URI ) && handler instanceof ISimpleMarshallingTypeHandler )
+        if( !WPSUtilities.QNAME_ANY_URI.equals( type ) && handler instanceof ISimpleMarshallingTypeHandler )
         {
           /* Literal. */
           final DomainMetadataType metaData = WPS040ObjectFactoryUtilities.buildDomainMetadataType( type.getLocalPart(), null );
