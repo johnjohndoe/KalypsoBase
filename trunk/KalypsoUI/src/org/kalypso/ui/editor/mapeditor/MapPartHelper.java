@@ -181,7 +181,6 @@ public class MapPartHelper
     mapComposite.setLayoutData( layoutData );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
     virtualFrame.add( mapPanel );
-
     return mapPanel;
   }
 
