@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
@@ -175,12 +176,13 @@ public final class TableViewUtils
   /**
    * Saves the given template (binding). Closes the writer.
    */
-  public static void saveTableTemplateXML( final Obstableview xml, final Writer writer ) throws JAXBException
+  public static void saveTableTemplateXML( final Obstableview xml, final OutputStreamWriter writer ) throws JAXBException
   {
     try
     {
       final Marshaller m = JaxbUtilities.createMarshaller( OTT_JC );
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      m.setProperty( Marshaller.JAXB_ENCODING, writer.getEncoding() );
       m.marshal( xml, writer );
     }
     finally
