@@ -111,6 +111,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( Class adapter )
   {

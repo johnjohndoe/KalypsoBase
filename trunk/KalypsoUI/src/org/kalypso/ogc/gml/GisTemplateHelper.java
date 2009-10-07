@@ -215,15 +215,15 @@ public class GisTemplateHelper
     return GisTemplateHelper.loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
+  public static final Gismapview loadGisMapView( final IStorage storage ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
   {
     InputStream inputStream = null;
     try
     {
-      inputStream = file.getContents();
+      inputStream = storage.getContents();
       final InputSource is = new InputSource( inputStream );
-      if( file instanceof IEncodedStorage )
-        is.setEncoding( ((IEncodedStorage) file).getCharset() );
+      if( storage instanceof IEncodedStorage )
+        is.setEncoding( ((IEncodedStorage) storage).getCharset() );
       final Gismapview gisMapView = GisTemplateHelper.loadGisMapView( is );
       inputStream.close();
       return gisMapView;
