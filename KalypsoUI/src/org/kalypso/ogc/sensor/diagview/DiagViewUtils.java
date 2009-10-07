@@ -44,6 +44,7 @@ import java.awt.BasicStroke;
 import java.awt.Stroke;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
@@ -126,12 +127,13 @@ public class DiagViewUtils
   /**
    * Saves the given template (binding). Closes the writer.
    */
-  public static void saveDiagramTemplateXML( final Obsdiagview tpl, final Writer writer ) throws JAXBException
+  public static void saveDiagramTemplateXML( final Obsdiagview tpl, final OutputStreamWriter writer ) throws JAXBException
   {
     try
     {
       final Marshaller m = JaxbUtilities.createMarshaller( ODT_JC );
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      m.setProperty( Marshaller.JAXB_ENCODING, writer.getEncoding() );
       m.marshal( tpl, writer );
     }
     finally
@@ -181,9 +183,7 @@ public class DiagViewUtils
    */
   private static Obsdiagview loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final Obsdiagview baseTemplate = (Obsdiagview) ODT_JC.createUnmarshaller().unmarshal( ins );
-
-    return baseTemplate;
+    return (Obsdiagview) ODT_JC.createUnmarshaller().unmarshal( ins );
   }
 
   /**
