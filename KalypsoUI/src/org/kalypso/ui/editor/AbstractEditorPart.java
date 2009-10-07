@@ -44,9 +44,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -55,7 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -72,17 +69,20 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.WorkbenchPart;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
- * TODO: why not directly inherit from {@link org.eclipse.ui.part.EditorPart}?
+ * Does not implement editor part, as the MapView also inherits from this one....
  * 
  * @author bce
  */
@@ -202,7 +202,17 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    */
   public boolean isDirty( )
   {
-    return (!(getEditorInput() instanceof IFileEditorInput)) || m_commandTarget.isDirty();
+    // If the underlying file does not yet exists (i.e. template created from data file)
+    // we need to be saved
+    final IStorageEditorInput editorInput = getEditorInput();
+    if( editorInput instanceof IFileEditorInput )
+    {
+      final IFile file = ((IFileEditorInput) editorInput).getFile();
+      if( file == null || !file.exists() )
+        return true;
+    }
+
+    return m_commandTarget.isDirty();
   }
 
   /**
@@ -229,56 +239,33 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().getFile( filePath );
     final JobExclusiveCommandTarget commandTarget = m_commandTarget;
-    final Job job = new Job( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.0") + filePath.toPortableString() ) //$NON-NLS-1$
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
-      public IStatus run( final IProgressMonitor monitor )
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        try
-        {
-          monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
-          final IFileEditorInput newInput = new FileEditorInput( file );
-          doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
-          commandTarget.resetDirty();
-          setInput( newInput );
+        monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
+        final IFileEditorInput newInput = new FileEditorInput( file );
+        doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
+        commandTarget.resetDirty();
+        setInput( newInput );
 
-          monitor.done();
-          return Status.OK_STATUS;
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-          return e.getStatus();
-        }
+        monitor.done();
+        return Status.OK_STATUS;
       }
     };
-    job.setUser( true );
-    job.setPriority( Job.LONG );
-    job.schedule();
+
+    // REMARK: we cannot use a job here, the method must block until finished. Else
+    // The content may already be disposed before the doSaveInternal is called.
+    final IProgressService progressService = (IProgressService) getSite().getService( IProgressService.class );
+    RunnableContextHelper.execute( progressService, true, true, operation );
   }
 
   private IFile getSaveAsFile( final IStorageEditorInput input )
   {
-    try
-    {
-      if( input instanceof FileEditorInput )
-        ((IFileEditorInput) input).getFile();
-
-      final IStorage storage = input.getStorage();
-      final IPath fullPath = storage.getFullPath();
-
-      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-      final IWorkspaceRoot root = workspace.getRoot();
-
-      if( fullPath == null )
-        return null;
-
-      return root.getFile( fullPath );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+    if( input instanceof IFileEditorInput )
+      return ((IFileEditorInput) input).getFile();
 
     return null;
   }
@@ -394,7 +381,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   public void fireDirty( )
   {
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.1") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ui.editor..AbstractEditorPart.1" ) ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override

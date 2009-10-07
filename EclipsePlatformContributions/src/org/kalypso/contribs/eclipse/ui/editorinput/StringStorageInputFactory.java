@@ -58,15 +58,12 @@ public class StringStorageInputFactory implements IElementFactory
 
   private static final String MEMENTO_PATH = "string.storage.memento.path"; //$NON-NLS-1$
 
-  private static final String MEMENTO_NAME = "string.storage.memento.name"; //$NON-NLS-1$
-
   public static void saveState( final StringStorage storage, final IMemento memento )
   {
     memento.putString( MEMENTO_DATA, storage.getData() );
     final IPath fullPath = storage.getFullPath();
     if( fullPath != null )
       memento.putString( MEMENTO_PATH, fullPath.toPortableString() );
-    memento.putString( MEMENTO_NAME, storage.getName() );
   }
 
   /**
@@ -76,11 +73,10 @@ public class StringStorageInputFactory implements IElementFactory
   {
     final String data = memento.getString( MEMENTO_DATA );
     final String pathName = memento.getString( MEMENTO_PATH );
-    final String name = memento.getString( MEMENTO_NAME );
 
     final IPath path = pathName == null ? null : Path.fromPortableString( pathName );
 
-    final StringStorage storage = new StringStorage( name, data, path );
+    final StringStorage storage = new StringStorage( data, path );
 
     return new StorageEditorInput( storage );
   }
