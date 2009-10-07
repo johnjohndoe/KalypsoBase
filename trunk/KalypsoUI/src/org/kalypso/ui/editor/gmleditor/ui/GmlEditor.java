@@ -3,6 +3,7 @@ package org.kalypso.ui.editor.gmleditor.ui;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -113,10 +114,11 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
       final IStorage storage = input.getStorage();
 
       final Reader r;
+      final InputStream contents = storage.getContents();
       if( storage instanceof IEncodedStorage )
-        r = new InputStreamReader( storage.getContents(), ((IEncodedStorage) storage).getCharset() );
+        r = new InputStreamReader( contents, ((IEncodedStorage) storage).getCharset() );
       else
-        r = new InputStreamReader( storage.getContents() );
+        r = new InputStreamReader( contents );
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );

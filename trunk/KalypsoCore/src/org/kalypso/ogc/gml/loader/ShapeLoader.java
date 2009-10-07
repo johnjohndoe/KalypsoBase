@@ -64,6 +64,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -179,6 +180,19 @@ public class ShapeLoader extends WorkspaceLoader
       if( !ce.getStatus().matches( IStatus.CANCEL ) )
         ce.printStackTrace();
       throw new LoaderException( ce );
+    }
+    catch( final GmlSerializeException ge )
+    {
+      final Throwable cause = ge.getCause();
+      if( cause instanceof CoreException )
+      {
+        final IStatus status = ((CoreException) cause).getStatus();
+        if( status.matches( IStatus.CANCEL ) )
+          throw new LoaderException( cause );
+      }
+
+      ge.printStackTrace();
+      throw new LoaderException( ge );
     }
     catch( final Exception e )
     {

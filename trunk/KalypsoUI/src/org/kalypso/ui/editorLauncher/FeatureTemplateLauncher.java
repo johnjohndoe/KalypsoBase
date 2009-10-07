@@ -47,8 +47,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
@@ -68,6 +71,8 @@ import org.kalypso.template.types.LayerTypeUtilities;
  */
 public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
 {
+  private static String EXT_GFT = ".gft";//$NON-NLS-1$
+
   /**
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
@@ -114,10 +119,12 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final String templateXml = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gft", templateXml, file //$NON-NLS-1$
-          .getFullPath() ) );
+      final String basename = FilenameUtils.removeExtension( file.getName() );
+      final String gftName = basename + EXT_GFT;
+      final IFile gftFile = file.getParent().getFile( new Path( gftName ) );
+      final IPath fullPath = gftFile.getFullPath();
 
-      return input;
+      return new StorageEditorInput( new StringStorage( templateXml, fullPath ) );
     }
     catch( final JAXBException e )
     {

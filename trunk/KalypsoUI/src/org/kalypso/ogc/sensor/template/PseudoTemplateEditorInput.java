@@ -40,19 +40,24 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.IStorageEditorInput;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.i18n.Messages;
 
 /**
  * PseudoTemplateEditorInput
  * 
  * @author schlienger
  */
-public class PseudoTemplateEditorInput implements IStorageEditorInput
+public class PseudoTemplateEditorInput implements IFileEditorInput
 {
   private final TemplateStorage m_storage;
 
@@ -101,7 +106,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput.0") + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension; //$NON-NLS-1$
+    return FilenameUtils.getBaseName( m_storage.getName() ) + m_fileExtension;
   }
 
   /**
@@ -124,7 +129,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @SuppressWarnings("unchecked")
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }
@@ -136,8 +141,26 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return super.equals( obj );
+  }
+
+  /**
+   * @see org.eclipse.ui.IFileEditorInput#getFile()
+   */
+  @Override
+  public IFile getFile( )
+  {
+    final IPath fullPath = m_storage.getFullPath();
+    if( fullPath == null )
+      return null;
+
+    final String pathNoExt = FilenameUtils.removeExtension( fullPath.toString() );
+    final IPath filePath = new Path( pathNoExt + m_fileExtension );
+
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = workspace.getRoot();
+    return root.getFile( filePath );
   }
 }

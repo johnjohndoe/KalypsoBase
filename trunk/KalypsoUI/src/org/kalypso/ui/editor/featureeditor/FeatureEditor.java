@@ -40,13 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -271,19 +268,15 @@ public class FeatureEditor extends EditorPart
   {
     monitor.beginTask( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.7"), 1000 ); //$NON-NLS-1$
 
-    InputStream contents = null;
     try
     {
       final IStorage storage = input.getStorage();
-      contents = new BufferedInputStream( storage.getContents() );
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );
 
-      Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+      final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( storage );
       m_viewer.setTemplate( template, context, null, null, null );
-
-      contents.close();
     }
     catch( final MalformedURLException e )
     {
@@ -305,7 +298,6 @@ public class FeatureEditor extends EditorPart
     }
     finally
     {
-      IOUtils.closeQuietly( contents );
       monitor.done();
     }
   }

@@ -40,13 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.editorinput;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
@@ -55,10 +59,14 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
  *
  * @author Gernot Belger
  */
-public class StorageEditorInput implements IStorageEditorInput
+public class StorageEditorInput implements IFileEditorInput
 {
   private final IStorage m_storage;
 
+  /**
+   * @param storage
+   *          The stroage is used to represent the contents
+   */
   public StorageEditorInput( final IStorage storage )
   {
     m_storage = storage;
@@ -73,11 +81,22 @@ public class StorageEditorInput implements IStorageEditorInput
   }
 
   /**
+   * @see org.eclipse.ui.IFileEditorInput#getFile()
+   */
+  @Override
+  public IFile getFile( )
+  {
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IWorkspaceRoot root = workspace.getRoot();
+    return root.getFile( m_storage.getFullPath() );
+  }
+
+  /**
    * @see org.eclipse.ui.IEditorInput#exists()
    */
   public boolean exists( )
   {
-    return true;
+    return getFile().exists();
   }
 
   /**

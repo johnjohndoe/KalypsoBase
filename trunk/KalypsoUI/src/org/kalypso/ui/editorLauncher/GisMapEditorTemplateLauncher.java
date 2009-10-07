@@ -48,8 +48,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
@@ -138,9 +141,12 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file.getFullPath() ) ); //$NON-NLS-1$
+      final String basename = FilenameUtils.removeExtension( file.getName() );
+      final String gftName = basename + ".gmt"; //$NON-NLS-1$
+      final IFile gftFile = file.getParent().getFile( new Path( gftName ) );
+      final IPath fullPath = gftFile.getFullPath();
 
-      return input;
+      return new StorageEditorInput( new StringStorage( string, fullPath ) );
     }
     catch( final JAXBException e )
     {

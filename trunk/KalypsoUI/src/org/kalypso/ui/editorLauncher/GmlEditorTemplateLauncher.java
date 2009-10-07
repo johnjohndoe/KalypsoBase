@@ -47,15 +47,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
@@ -99,7 +101,6 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
 
     try
     {
-
       final ObjectFactory typesFac = new ObjectFactory();
 
       final LayerType type = typesFac.createLayerType();
@@ -116,10 +117,12 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final String name = FileUtilities.nameWithoutExtension( file.getName() ) + ".gmv"; //$NON-NLS-1$
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( name, string, file.getFullPath() ) ); //$NON-NLS-1$
+      final String basename = FilenameUtils.removeExtension( file.getName() );
+      final String gftName = basename + ".gmv"; //$NON-NLS-1$
+      final IFile gftFile = file.getParent().getFile( new Path( gftName ) );
+      final IPath fullPath = gftFile.getFullPath();
 
-      return input;
+      return new StorageEditorInput( new StringStorage( string, fullPath ) );
     }
     catch( final JAXBException e )
     {

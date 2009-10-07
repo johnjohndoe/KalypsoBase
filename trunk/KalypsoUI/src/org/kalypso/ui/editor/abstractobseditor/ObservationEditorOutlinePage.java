@@ -18,6 +18,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.kalypso.contribs.eclipse.ui.views.contentoutline.ContentOutlinePage2;
@@ -67,7 +68,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
 
     // drop support for files
-    Transfer[] transfers = new Transfer[]
+    final Transfer[] transfers = new Transfer[]
     { FileTransfer.getInstance() };
     tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
 
@@ -115,12 +116,16 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   public void onObsViewChanged( final ObsViewEvent evt )
   {
     final TreeViewer tv = getTreeViewer();
-    if( tv != null && !tv.getControl().isDisposed() )
+    final Control control = tv.getControl();
+    if( tv != null && !control.isDisposed() )
     {
-      tv.getControl().getDisplay().asyncExec( new Runnable()
+      control.getDisplay().asyncExec( new Runnable()
       {
         public void run()
         {
+          if( control.isDisposed() )
+            return;
+
           tv.refresh();
           refreshCheckState( (ContainerCheckedTreeViewer)tv );
         }
@@ -166,9 +171,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     if( m_view != null )
     {
       final ObsViewItem[] items = m_view.getItems();
-      for( int i = 0; i < items.length; i++ )
+      for( final ObsViewItem item : items )
       {
-        final ObsViewItem item = items[i];
         tv.setChecked( item, item.isShown() );
       }
     }
@@ -240,7 +244,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     protected final AbstractObservationEditor m_editor2;
 
-    protected DropAdapter( Viewer viewer, AbstractObservationEditor editor )
+    protected DropAdapter( final Viewer viewer, final AbstractObservationEditor editor )
     {
       super( viewer );
       m_editor2 = editor;
@@ -253,7 +257,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
      */
     @Override
-    public boolean performDrop( Object data )
+    public boolean performDrop( final Object data )
     {
       if( m_view == null )
         return false;
@@ -270,7 +274,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
      *      org.eclipse.swt.dnd.TransferData)
      */
     @Override
-    public boolean validateDrop( Object target, int operation, TransferData transferType )
+    public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
     {
       if( !FileTransfer.getInstance().isSupportedType( transferType ) )
         return false;

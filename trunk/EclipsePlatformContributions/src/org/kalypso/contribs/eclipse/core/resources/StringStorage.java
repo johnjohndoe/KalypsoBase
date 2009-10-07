@@ -64,22 +64,13 @@ import org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory;
  */
 public class StringStorage implements IEncodedStorage, IPersistableElement
 {
-  private final String m_name;
-
-  private final String m_data;
+  private final String m_content;
 
   private final IPath m_path;
 
-  /** Same as {@link #StringStorage("&lt;name&gt;", String, IPath)}. */
-  public StringStorage( final String data, final IPath path )
+  public StringStorage( final String content, final IPath path )
   {
-    this( "<name>", data, path ); //$NON-NLS-1$
-  }
-
-  public StringStorage( final String name, final String data, final IPath path )
-  {
-    m_name = name;
-    m_data = data;
+    m_content = content;
     m_path = path;
   }
 
@@ -91,7 +82,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   {
     try
     {
-      final byte[] bytes = m_data.getBytes( "UTF-8" ); //$NON-NLS-1$
+      final byte[] bytes = m_content.getBytes( "UTF-8" ); //$NON-NLS-1$
       return new ByteArrayInputStream( bytes );
     }
     catch( final UnsupportedEncodingException e )
@@ -113,7 +104,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
    */
   public String getName( )
   {
-    return m_name;
+    return m_path.lastSegment();
   }
 
   /**
@@ -156,12 +147,11 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
       return false;
 
     final StringStorage other = (StringStorage) obj;
-    
 
     if( m_path == null )
-      return m_data.equals( other.m_data ) && m_name.equals( other.m_name ) && other.m_path == null;
+      return m_content.equals( other.m_content ) && other.m_path == null;
     
-    return m_data.equals( other.m_data ) && m_name.equals( other.m_name ) && m_path.equals( other.m_path );
+    return m_content.equals( other.m_content ) && m_path.equals( other.m_path );
   }
 
   /**
@@ -182,6 +172,6 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
 
   public String getData( )
   {
-    return m_data;
+    return m_content;
   }
 }
