@@ -61,6 +61,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
@@ -70,6 +71,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.ObjectFactory;
@@ -189,7 +191,7 @@ public class DiagViewUtils
    * 
    * @return xml binding object (ready for marshalling for instance)
    */
-  public static Obsdiagview buildDiagramTemplateXML( final DiagView view )
+  public static Obsdiagview buildDiagramTemplateXML( final DiagView view, final IContainer context )
   {
     final Obsdiagview xmlTemplate = ODT_OF.createObsdiagview();
 
@@ -235,8 +237,12 @@ public class DiagViewUtils
         continue;
 
       final TypeObservation xmlTheme = ODT_OF.createTypeObservation();
+
+      final String href = obs.getHref();
+      final String xmlHref = ObsViewUtils.makeRelativ( context, href );
+      xmlTheme.setHref( xmlHref );
+
       xmlTheme.setLinktype( "zml" ); //$NON-NLS-1$
-      xmlTheme.setHref( obs.getHref() );
 
       final List<TypeCurve> xmlCurves = xmlTheme.getCurve();
 

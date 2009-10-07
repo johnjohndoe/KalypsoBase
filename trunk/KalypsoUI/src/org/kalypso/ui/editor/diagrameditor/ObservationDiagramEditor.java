@@ -45,6 +45,7 @@ import java.io.OutputStreamWriter;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -154,18 +155,19 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     if( template == null )
       return;
 
+    final IFile file = input.getFile();
     final SetContentHelper helper = new SetContentHelper()
     {
       @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
       {
-        final Obsdiagview type = DiagViewUtils.buildDiagramTemplateXML( template );
+        final Obsdiagview type = DiagViewUtils.buildDiagramTemplateXML( template, file.getParent() );
 
         DiagViewUtils.saveDiagramTemplateXML( type, writer );
       }
     };
 
-    helper.setFileContents( input.getFile(), false, true, monitor );
+    helper.setFileContents( file, false, true, monitor );
   }
 
   /**

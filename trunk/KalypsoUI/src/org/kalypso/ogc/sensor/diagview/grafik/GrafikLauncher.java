@@ -175,7 +175,7 @@ public class GrafikLauncher
       if( !status.isOK() )
         return status;
 
-      final Obsdiagview odt = DiagViewUtils.buildDiagramTemplateXML( diag );
+      final Obsdiagview odt = DiagViewUtils.buildDiagramTemplateXML( diag, null );
       return startGrafikODT( zmlFile.getName(), odt, dest, monitor );
     }
     catch( final Exception e )

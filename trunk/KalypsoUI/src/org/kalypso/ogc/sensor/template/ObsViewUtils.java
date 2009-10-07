@@ -40,12 +40,18 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.IPath;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -141,12 +147,8 @@ public class ObsViewUtils
   {
     String result = formatString;
 
-    for( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
-    {
-      final Map.Entry entry = (Map.Entry) it.next();
-
+    for( final Entry<Object, Object> entry : properties.entrySet() )
       result = result.replaceAll( (String) entry.getKey(), (String) entry.getValue() );
-    }
 
     return result;
   }
@@ -164,9 +166,9 @@ public class ObsViewUtils
   {
     final Properties properties = new Properties();
     final String[] strings = tokens.split( ";" ); //$NON-NLS-1$
-    for( int i = 0; i < strings.length; i++ )
+    for( final String string : strings )
     {
-      final String[] splits = strings[i].split( "-" ); //$NON-NLS-1$
+      final String[] splits = string.split( "-" ); //$NON-NLS-1$
       properties.setProperty( splits[0], splits[1] );
     }
 
@@ -200,9 +202,9 @@ public class ObsViewUtils
     if( items == null )
       return set;
 
-    for( int i = 0; i < items.length; i++ )
+    for( final ObsViewItem item : items )
     {
-      final IAxis[] axes = items[i].getObservation().getAxisList();
+      final IAxis[] axes = item.getObservation().getAxisList();
       for( int j = 0; j < axes.length; j++ )
       {
         final String axisType = axes[j].getType();
@@ -212,5 +214,28 @@ public class ObsViewUtils
     }
 
     return set;
+  }
+
+  public static String makeRelativ( final IContainer context, final String href )
+  {
+    if( context == null )
+      return href;
+
+    try
+    {
+      final URL contextURL = ResourceUtilities.createURL( context );
+      final URL hrefURL = UrlResolverSingleton.resolveUrl( contextURL, href );
+
+      // Only works, if both url denote workspace resources
+      final IPath contextPath = context.getFullPath();
+      final IPath hrefPath = ResourceUtilities.findPathFromURL( hrefURL );
+
+      final IPath relativPath = PathUtils.makeRelativ( contextPath, hrefPath );
+      return relativPath.toString();
+    }
+    catch( final MalformedURLException e )
+    {
+      return href;
+    }
   }
 }
