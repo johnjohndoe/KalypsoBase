@@ -129,7 +129,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final org.kalypso.simulation.core.simspec.ObjectFactory OF_SPEC = new org.kalypso.simulation.core.simspec.ObjectFactory();
 
-  private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.0"); //$NON-NLS-1$
+  private static final String STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT = Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.0" ); //$NON-NLS-1$
 
   public static final String MODELLTYP_FOLDER = ".model"; //$NON-NLS-1$
 
@@ -173,7 +173,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    * This is the id to use in your own launch files.
    * <p>
    * Example of an launch-file:
-   *
+   * 
    * <pre>
    *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
    *    &lt;launchConfiguration type=&quot;org.eclipse.ant.AntLaunchConfigurationType&quot;&gt;
@@ -291,13 +291,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     final IResource resource = resourceRoot.findMember( path );
 
     if( resource == null || resource == resourceRoot )
-      return Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.1"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.1" ); //$NON-NLS-1$
 
     if( resource instanceof IFolder )
     {
       final IFolder folder = (IFolder) resource;
       if( isCalcCalseFolder( folder ) )
-        return Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.2"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.2" ); //$NON-NLS-1$
 
       return checkCanCreateCalculationCase( folder.getParent().getFullPath() );
     }
@@ -352,7 +352,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       final IFile launchFile = getLaunchFile( launchName );
 
-      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.3", launchName )); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.3", launchName ) ); //$NON-NLS-1$
 
       final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
 
@@ -368,12 +368,17 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       userVariables = registerValueVariablesFromProperties( svm, userProperties );
       monitor.worked( 1000 );
 
+      // Find the log file, if defined
+      final File logFile = findLogFile( lc );
+      if( logFile != null )
+        logFile.getParentFile().mkdirs();
+
       // TODO prüfen ob der launch überhaupt asynchron laufen kann?
       final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
 
       // TODO: timeout konfigurierbar machen?
       final int minutes = 720;
-      monitor.subTask( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.4" ) ); //$NON-NLS-1$
       for( int i = 0; i < 60 * minutes; i++ )
       {
         if( monitor.isCanceled() )
@@ -388,18 +393,12 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
           if( arguments == null )
             return Status.OK_STATUS;
 
-          for( int j = 0; j < arguments.length; j++ )
-          {
-            if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
-            {
-              final String logfile = arguments[j + 1];
-              final File logFileFile = new File( logfile );
-              final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFileFile, Charset.defaultCharset().name() );
-              final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
-              return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logfile, null ); //$NON-NLS-1$
-            }
-          }
-          return Status.OK_STATUS;
+          if( logFile == null )
+            return Status.OK_STATUS;
+
+          final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFile, Charset.defaultCharset().name() );
+          final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
+          return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logFile.getAbsolutePath(), null ); //$NON-NLS-1$
         }
         Thread.sleep( 1000 );
         monitor.worked( 1000 );
@@ -408,7 +407,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // TODO better ask for termination, but continue task in background
       launch.terminate();
 
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.5", minutes ) ); //$NON-NLS-1$ 
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.5", minutes ) ); //$NON-NLS-1$ 
     }
     catch( final CoreException e )
     {
@@ -418,7 +417,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
       // sollte eigentlich nie auftreten
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.6") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.6" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -439,6 +438,25 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       monitor.done();
     }
+  }
+
+  private File findLogFile( final ILaunchConfigurationWorkingCopy lc ) throws CoreException
+  {
+    final String[] arguments = ExternalToolsUtil.getArguments( lc );
+
+    if( arguments == null )
+      return null;
+    for( int j = 0; j < arguments.length; j++ )
+    {
+      if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
+      {
+        final String logfile = arguments[j + 1];
+        final File logFileFile = new File( logfile );
+        return logFileFile;
+      }
+    }
+
+    return null;
   }
 
   private static final IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm, final Properties properties )
@@ -510,7 +528,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // nach 24h spätestens abbrechen!
       count++;
       if( count == 24 )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.7") + cal ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.7" ) + cal ) ); //$NON-NLS-1$
     }
 
     attributes.setProperty( "kalypso.startforecast", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
@@ -554,7 +572,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     final IFolder launchFolder = getLaunchFolder();
     if( launchFolder == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.8") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
 
     final IFile file = launchFolder.getFile( launchName + ".launch" ); //$NON-NLS-1$
     return file;
@@ -570,7 +588,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus createCalculationCaseInFolder( final IFolder folder, final Map<String, Object> antProperties, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.9"); //$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.9" ); //$NON-NLS-1$
     return launchAnt( message, "createCalcCase", antProperties, folder, monitor ); //$NON-NLS-1$
   }
 
@@ -579,7 +597,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus updateCalcCase( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.10"); //$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.10" ); //$NON-NLS-1$
     return launchAnt( message, "updateCalcCase", null, folder, monitor ); //$NON-NLS-1$
   }
 
@@ -588,7 +606,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
    */
   public IStatus setBasicModel( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    final String message = Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.11"); //$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.11" ); //$NON-NLS-1$
 
     return launchAnt( message, "setBasicModel", null, folder, monitor ); //$NON-NLS-1$
   }
@@ -651,7 +669,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.12"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.12" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -661,7 +679,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Returns a metadatum associated with this nature.
-   *
+   * 
    * @param key
    *          One of the METADATA_KEY_ conmstants.
    * @return The value of the given key; or <code>null</code> if not set.
@@ -691,7 +709,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.13") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.13" ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -712,13 +730,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       e.printStackTrace();
 
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString("org.kalypso.simulation.ui.calccase.ModelNature.14") + e.getLocalizedMessage(), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.14" ) + e.getLocalizedMessage(), e ) ); //$NON-NLS-1$
     }
   }
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   *
+   * 
    * @param cal
    * @return true when time is valid
    */
@@ -761,27 +779,26 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   {
     /**
      * FIXME refactoring
-     *
+     * 
      * <pre>
-     *
+     * 
      * final ISimulationRunner runner = SimulationRunnerFacotry.createRunner( typeID );
      * runner.getSpec();
-     *
+     * 
      * final String typeID = modeldata.getTypeID();
-     *
+     * 
      * // Übersetzung modeldata -&gt; hashmap
      * // - Ableich modelspec/modeldata
-     *
+     * 
      * // modelspec -&gt; Map&lt;String, Object&gt;
      * // - Literal: String, Double, Integer
      * // - ComplexValueType: Feature/Image
      * // - ComplexReferenceType: URL/URI
-     *
+     * 
      * final IStatus status = runner.run( Map &lt; String, Object &gt; inputs, List &lt; String &gt; outputs, progress );
-     *
+     * 
      * </pre>
      */
-
 
     final SubMonitor progress = SubMonitor.convert( monitor, STR_MODELLRECHNUNG_WIRD_DURCHGEFUEHRT, 1000 );
 
@@ -844,7 +861,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   *
+   * 
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for
