@@ -124,5 +124,4 @@ public class UrlUtilities
 
     return jarUrl;
   }
-
 }
