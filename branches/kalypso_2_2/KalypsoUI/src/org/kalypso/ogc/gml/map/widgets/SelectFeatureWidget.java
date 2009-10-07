@@ -660,23 +660,33 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     for( final IKalypsoFeatureTheme theme : themes )
     {
-      if( theme == null )
-        continue;
+      Feature grabbed = grabNextFeature( mapPanel, currentPos, theme, qnamesToSelect, geomQName );
+      if( grabbed != null )
+        return grabbed;
+    }
 
-      final FeatureList featureList = theme.getFeatureList();
-      if( featureList == null )
-        continue;
+    return null;
+  }
 
-      /* Grab next feature */
-      final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
-      final QName[] geomQNamesToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
-      final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNamesToSelect, qnamesToSelect );
-      if( foundFeature != null )
-      {
-        final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
-        if( visibles != null && visibles.contains( foundFeature ) )
-          return foundFeature;
-      }
+  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme theme, final QName[] qnamesToSelect, final QName geomQName )
+  {
+
+    if( theme == null )
+      return null;
+
+    final FeatureList featureList = theme.getFeatureList();
+    if( featureList == null )
+      return null;
+
+    /* Grab next feature */
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
+    final QName[] geomQNamesToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
+    final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNamesToSelect, qnamesToSelect );
+    if( foundFeature != null )
+    {
+      final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
+      if( visibles != null && visibles.contains( foundFeature ) )
+        return foundFeature;
     }
 
     return null;
