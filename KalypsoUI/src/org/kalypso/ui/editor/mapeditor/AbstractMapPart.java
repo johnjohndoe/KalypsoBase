@@ -558,7 +558,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
   {
-    if( m_mapModell != null )
+    // The next line contains a backport from Kalypso 2.3 head, do not merge 
+    if( m_mapModell != null && mapModell != m_mapModell )
       m_mapModell.dispose();
 
     m_mapModell = mapModell;
