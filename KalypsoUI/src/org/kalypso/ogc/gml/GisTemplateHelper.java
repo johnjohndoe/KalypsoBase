@@ -132,7 +132,7 @@ public class GisTemplateHelper
     // never instantiate this class
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final IFile file ) throws CoreException, IOException, JAXBException
+  public static final Featuretemplate loadGisFeatureTemplate( final IStorage file ) throws CoreException, IOException, JAXBException
   {
     InputStream is = null;
 
