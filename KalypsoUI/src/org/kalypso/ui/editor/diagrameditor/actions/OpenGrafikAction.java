@@ -78,7 +78,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
 
     try
     {
-      final Obsdiagview xml = DiagViewUtils.buildDiagramTemplateXML( diag );
+      final Obsdiagview xml = DiagViewUtils.buildDiagramTemplateXML( diag, null );
 
       final IEditorInput input = editor.getEditorInput();
       final IFolder dest;

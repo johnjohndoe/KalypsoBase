@@ -61,6 +61,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.bind.JaxbUtilities;
@@ -76,6 +77,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.template.obstableview.TypeColumn;
@@ -190,9 +192,13 @@ public final class TableViewUtils
   /**
    * Builds the xml binding object using the given the table view template
    * 
+   * @param context
+   *          If non-<code>null</code>, all data-pathes (href to observations) will be resolved as relative pathes
+   *          against this context. Only the relative pathes will be written into the xml.<br>
+   *          Set to <code>null</code>, if the pathes should be written as absolute pathes.
    * @return xml binding object (ready for marshalling for instance)
    */
-  public static Obstableview buildTableTemplateXML( final TableView template )
+  public static Obstableview buildTableTemplateXML( final TableView template, final IContainer context )
   {
     final Obstableview xmlTemplate = OTT_OF.createObstableview();
 
@@ -240,7 +246,11 @@ public final class TableViewUtils
         continue;
 
       final TypeObservation xmlObs = OTT_OF.createTypeObservation();
-      xmlObs.setHref( obs.getHref() );
+
+      final String href = obs.getHref();
+      final String xmlHref = ObsViewUtils.makeRelativ( context, href );
+      xmlObs.setHref( xmlHref );
+
       xmlObs.setLinktype( "zml" ); //$NON-NLS-1$
 
       xmlObsList.add( xmlObs );
@@ -317,7 +327,7 @@ public final class TableViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.4") + href ); //$NON-NLS-1$
+        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.4" ) + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -325,7 +335,7 @@ public final class TableViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.5") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.5" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -353,7 +363,7 @@ public final class TableViewUtils
    */
   public static IStatus saveDirtyColumns( final TableViewColumn[] columns, final IProgressMonitor monitor )
   {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.6" ) ); //$NON-NLS-1$
 
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.7" ), columns.length ); //$NON-NLS-1$
 
@@ -376,7 +386,6 @@ public final class TableViewUtils
 
     return status;
   }
-  
 
   /**
    * Return all observations of dirty columns.
