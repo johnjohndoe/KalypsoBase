@@ -256,7 +256,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       // HACK: only set the message, if at least one message was set. Else we may destroy the background color
       // of the message label
       if( normalMsgAreaBackground != null )
-        setErrorMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView0") ); //$NON-NLS-1$
+        setErrorMessage( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView0" ) ); //$NON-NLS-1$
     }
     else
     {
@@ -327,6 +327,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     workLayout.verticalSpacing = 0;
     m_workArea.setLayout( workLayout );
 
+    m_workArea.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+
     final Control top = createTitleArea( parent );
     resetWorkAreaAttachments( top );
 
@@ -335,6 +337,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     // initialize the dialog units
     initializeDialogUnits( m_workArea );
 
+    final Label titleBarSeparator = new Label( m_workArea, SWT.HORIZONTAL | SWT.SEPARATOR );
+    titleBarSeparator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     m_mainSash = new SashForm( m_workArea, SWT.HORIZONTAL );
     m_mainSash.setFont( m_workArea.getFont() );
     m_mainSash.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -342,12 +347,15 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     // Browser: to the left
     // Register a context menu on it, so we suppress the ugly explorer menu
     final Composite browserPanel = new Composite( m_mainSash, SWT.BORDER );
-    browserPanel.setLayout( new GridLayout() );
-    m_browser = new Browser( browserPanel, SWT.BORDER );
+    final GridLayout browserPanelLayout = new GridLayout();
+    browserPanelLayout.marginHeight = 0;
+    browserPanelLayout.marginWidth = 0;
+    browserPanel.setLayout( browserPanelLayout );
+
+    m_browser = new Browser( browserPanel, SWT.NONE );
     m_browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final MenuManager menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
     menuManager.setRemoveAllWhenShown( true );
-    // menuManager.addMenuListener( this );
     final Menu contextMenu = menuManager.createContextMenu( m_browser );
     m_browser.setMenu( contextMenu );
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
@@ -377,9 +385,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private void createRightPanel( final Composite parent )
   {
-    final Label titleBarSeparator = new Label( parent, SWT.HORIZONTAL | SWT.SEPARATOR );
-    titleBarSeparator.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-
     m_pageContainer = new Composite( parent, SWT.NONE );
     m_pageContainer.setLayout( m_stackLayout );
     m_pageContainer.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -438,10 +443,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   protected void createButtonsForButtonBar( final Composite parent )
   {
     // Reset button; will be invisible if current page is not resetable (see IResetableWizard).
-    createButton( parent, RESET_ID, Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView1"), "doReset", false ); //$NON-NLS-1$ //$NON-NLS-2$
+    createButton( parent, RESET_ID, Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView1" ), "doReset", false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_wizard instanceof IWizard2 && ((IWizard2) m_wizard).hasSaveButton() )
-      createButton( parent, SAVE_ID, Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView2"), "doSave", false ); //$NON-NLS-1$ //$NON-NLS-2$
+      createButton( parent, SAVE_ID, Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView2" ), "doSave", false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false ); //$NON-NLS-1$
@@ -678,7 +683,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       return false;
 
     if( !m_isMovingToPreviousPage )
-      // remember my previous page.
+    // remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
@@ -1042,7 +1047,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
           helpSystem.displayHelpResource( context.getRelatedTopics()[0].getHref() );
         }
         else
-          Logger.getLogger( WizardView.class.getName() ).warning( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView3") + helpId ); //$NON-NLS-1$
+          Logger.getLogger( WizardView.class.getName() ).warning( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView3" ) + helpId ); //$NON-NLS-1$
       }
     } );
 
@@ -1073,7 +1078,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
       if( wizard2.doAskForSave() )
       {
-        if( !MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView4"), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView4" ), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           return false;
       }
 
@@ -1085,7 +1090,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         }
       };
       final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView6"), Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.view.WizardView7"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView6" ), Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView7" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return true;
