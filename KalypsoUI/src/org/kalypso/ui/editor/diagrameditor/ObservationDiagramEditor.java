@@ -54,7 +54,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -145,17 +144,15 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.ui.IFileEditorInput)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     final DiagView template = (DiagView)getView();
     if( template == null )
       return;
 
-    final IFile file = input.getFile();
     final SetContentHelper helper = new SetContentHelper()
     {
       @Override

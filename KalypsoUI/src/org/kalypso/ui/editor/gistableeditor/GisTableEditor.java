@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.gistableeditor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
@@ -51,6 +52,7 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -139,6 +141,8 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     }
   };
 
+  private Gistableview m_tableTemplate;
+
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
@@ -152,10 +156,10 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   }
 
   /**
-   * File must exist!
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input )
+  protected void doSaveInternal( IProgressMonitor monitor, IFile file ) throws CoreException
   {
     if( m_layerTable == null )
       return;
@@ -168,8 +172,6 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
       // die Vorlagendatei ist klein, deswegen einfach in ein ByteArray
       // serialisieren
-      final IFile file = input.getFile();
-
       bos = new ByteArrayOutputStream();
       final OutputStreamWriter osw = new OutputStreamWriter( bos, file.getCharset() );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
@@ -222,8 +224,19 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     getSite().registerContextMenu( menuManager, m_layerTable );
     getSite().setSelectionProvider( getLayerTable() );
     m_layerTable.setMenu( menuManager );
+    
+    try
+    {
+      final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
+      final URL context = ResourceUtilities.createURL( inputFile );
 
-    load();
+      final LayerTableViewer viewer = m_layerTable;
+      viewer.applyTableTemplate( m_tableTemplate, context );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -237,19 +250,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.4" ), 1000 ); //$NON-NLS-1$
 
-    final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
-
-    final IFile inputFile = ((IFileEditorInput) getEditorInput()).getFile();
-    final URL context = ResourceUtilities.createURL( inputFile );
-
-    final LayerTableViewer viewer = m_layerTable;
-    getEditorSite().getShell().getDisplay().asyncExec( new Runnable()
-    {
-      public void run( )
-      {
-        viewer.applyTableTemplate( tableTemplate, context );
-      }
-    } );
+    m_tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
 
     monitor.worked( 1000 );
   }

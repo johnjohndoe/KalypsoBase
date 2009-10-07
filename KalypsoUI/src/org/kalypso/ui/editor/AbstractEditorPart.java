@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -58,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -165,7 +167,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     try
     {
       m_isSaving = true;
-      doSaveInternal( monitor, input );
+      doSaveInternal( monitor, input.getFile() );
       m_commandTarget.resetDirty();
       fireDirty();
     }
@@ -181,7 +183,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     }
   }
 
-  protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException;
+  protected abstract void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException;
 
   protected IActionBars getActionBars( final IWorkbenchPartSite site )
   {
@@ -247,7 +249,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       {
         monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
         final IFileEditorInput newInput = new FileEditorInput( file );
-        doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
+        doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput.getFile() );
         commandTarget.resetDirty();
         setInput( newInput );
 
@@ -280,7 +282,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     if( !(input instanceof IStorageEditorInput) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
     setInput( (IStorageEditorInput) input );
-    load();
   }
 
   /**
@@ -291,9 +292,13 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  protected final void setInput( final IStorageEditorInput input )
+  protected void setInput( final IStorageEditorInput input )
   {
+    if( ObjectUtils.equals( input, m_editorInput ) )
+      return;
+
     m_editorInput = input;
+    firePropertyChange( IEditorPart.PROP_INPUT );
 
     getSite().getShell().getDisplay().syncExec( new Runnable()
     {
@@ -304,13 +309,17 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
         firePropertyChange( IWorkbenchPart.PROP_TITLE );
       }
     } );
+
+    load( input );
   }
 
-  protected final void load( )
+  protected final void load( IStorageEditorInput input )
   {
-    final IStorageEditorInput input = getEditorInput();
+    System.out.println( "Loading: " + input.getName() );
+    
     try
     {
+      // TODO: general error handling
       loadInternal( new NullProgressMonitor(), input );
       fireDirty();
     }
@@ -333,27 +342,27 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
    */
   public void resourceChanged( final IResourceChangeEvent event )
   {
-    if( !(getEditorInput() instanceof IFileEditorInput) )
+    if( m_isSaving )
       return;
 
-    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
+    final IStorageEditorInput editorInput = getEditorInput();
+    if( !(editorInput instanceof IFileEditorInput) )
+      return;
 
-    if( event.getType() == IResourceChangeEvent.POST_CHANGE && input != null )
+    if( event.getType() != IResourceChangeEvent.POST_CHANGE )
+      return;
+
+    final IFile file = ((IFileEditorInput) editorInput).getFile();
+
+    final IResourceDelta rootDelta = event.getDelta();
+    final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
+    if( fileDelta == null )
+      return;
+
+    if( fileDelta.getKind() == IResourceDelta.CHANGED )
     {
-      final IResourceDelta delta = event.getDelta().findMember( input.getFile().getFullPath() );
-      if( delta != null && delta.getKind() == IResourceDelta.CHANGED )
-      {
-        // if its only a marker change, do not reload
-        if( delta.getFlags() != IResourceDelta.MARKERS )
-
-          // TODO: ask user?
-          // if( !m_isSaving
-          // && MessageDialog.openQuestion( getSite().getShell(),
-          // "FeatureEditor",
-          // "Die Vorlagendatei hat sich geändert. Neu laden?" ) )
-          if( !m_isSaving )
-            load();
-      }
+      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+        load( editorInput );
     }
   }
 

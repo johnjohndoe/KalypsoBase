@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.commons.command.ICommandTarget;
@@ -64,8 +63,11 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
+   */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     ByteArrayInputStream bis = null;
     OutputStreamWriter writer = null;
@@ -81,7 +83,6 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
       bos.close();
       monitor.worked( 1000 );
 
-      final IFile file = input.getFile();
       if( file.exists() )
         file.setContents( bis, false, true, monitor );
       else

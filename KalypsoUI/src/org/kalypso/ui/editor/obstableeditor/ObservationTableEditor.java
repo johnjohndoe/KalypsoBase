@@ -52,7 +52,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
@@ -67,7 +66,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * The Observation TableEditor.
- *
+ * 
  * @author schlienger
  */
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
@@ -140,16 +139,14 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.ui.IFileEditorInput)
+   *      org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     final TableView template = (TableView) getView();
     if( template == null )
       return;
-
-    final IFile file = input.getFile();
 
     final SetContentHelper helper = new SetContentHelper()
     {

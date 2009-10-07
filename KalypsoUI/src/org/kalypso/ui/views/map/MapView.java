@@ -40,18 +40,20 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -79,25 +81,6 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   private static final String MEMENTO_FILE = "mapFile"; //$NON-NLS-1$
 
-  private IFile m_memento_file;
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    super.createPartControl( parent );
-
-    // Stefan: Now we can restore the file if the map is configured to do so
-    final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
-    if( (m_memento_file != null) && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
-    {
-      setFile( m_memento_file );
-      startLoadJob( m_memento_file );
-    }
-  }
-
   /**
    * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
@@ -110,7 +93,10 @@ public class MapView extends AbstractMapPart implements IViewPart
       if( fullPath != null )
       {
         final IPath path = Path.fromPortableString( fullPath );
-        m_memento_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+        final IFile mementoFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+        final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
+        if( (mementoFile != null) && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
+          setInput( new FileEditorInput( mementoFile ) );
       }
     }
   }
@@ -120,7 +106,11 @@ public class MapView extends AbstractMapPart implements IViewPart
    */
   public void saveState( final IMemento memento )
   {
-    final IFile file = getFile();
+    IStorageEditorInput input = getEditorInput();
+    if( !(input instanceof IFileEditorInput) )
+      return;
+
+    final IFile file = ((IFileEditorInput) input).getFile();
     if( file != null )
     {
       final IPath fullPath = file.getFullPath();
@@ -141,10 +131,11 @@ public class MapView extends AbstractMapPart implements IViewPart
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
     if( "true".equalsIgnoreCase( saveOnCloseString ) ) //$NON-NLS-1$
     {
-      final IFile file = getFile();
       try
       {
-        saveMap( new NullProgressMonitor(), file );
+        final IStorageEditorInput editorInput = getEditorInput();
+        if( editorInput instanceof IFileEditorInput )
+          doSaveInternal( new NullProgressMonitor(), ((IFileEditorInput) editorInput).getFile() );
       }
       catch( final CoreException e )
       {
@@ -156,25 +147,25 @@ public class MapView extends AbstractMapPart implements IViewPart
   }
 
   /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#startLoadJob(org.eclipse.core.resources.IStorage)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#setInput(org.eclipse.ui.IStorageEditorInput)
    */
   @Override
-  public void startLoadJob( final IStorage storage )
+  public void setInput( IStorageEditorInput input )
   {
-    final IFile file = getFile();
-    if( file != null && !file.equals( storage ) )
+    final IStorageEditorInput editorInput = getEditorInput();
+    if( editorInput instanceof IFileEditorInput && !ObjectUtils.equals( input, editorInput ) )
     {
       try
       {
-        saveMap( new NullProgressMonitor(), file );
+        doSaveInternal( new NullProgressMonitor(), ((IFileEditorInput) editorInput).getFile() );
       }
-      catch( final CoreException e )
+      catch( CoreException e )
       {
         ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.views.map.MapView.6" ), Messages.getString( "org.kalypso.ui.views.map.MapView.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 
-    super.startLoadJob( storage );
+    super.setInput( input );
   }
 
   @SuppressWarnings("unchecked")
