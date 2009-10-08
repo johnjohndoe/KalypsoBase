@@ -77,6 +77,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
@@ -92,7 +93,7 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  */
 public class SimulationDelegate
 {
-  private static final String SERVER_INPUT_LOCAL = "local"; //$NON-NLS-1$
+  private static final String SERVER_INPUT_LOCAL = "InputLocal"; //$NON-NLS-1$
 
   /**
    * The id identifying the simulation.
@@ -112,13 +113,13 @@ public class SimulationDelegate
   /**
    * The URL to the wps service.
    */
-  private final String m_service;
+  private String m_service;
 
   /**
    * The path to the place on the server, where the client can put his files, as configured in the config.ini from
    * Kalypso.
    */
-  private final String m_input;
+  private String m_input;
 
   /**
    * The filesystem manager.
@@ -151,7 +152,14 @@ public class SimulationDelegate
     /* Initializing the variables from the properties of the config.ini. */
     m_service = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
     m_input = System.getProperty( "org.kalypso.service.wps.input" ); //$NON-NLS-1$
-
+    if( m_service == null || m_service.equals( "" ) ) //$NON-NLS-1$
+    {
+      m_service = WPSRequest.SERVICE_LOCAL;
+    }
+    if( m_input == null || m_input.equals( "" ) ) //$NON-NLS-1$
+    {
+      m_input = SERVER_INPUT_LOCAL;
+    }
     /* Variables that are initialized during run time. */
     m_fsManager = null;
     m_serverTmpDirectory = null;
@@ -387,7 +395,7 @@ public class SimulationDelegate
     try
     {
       // do not delete local input files (original files)
-      if( SERVER_INPUT_LOCAL.equals( m_input ) && m_serverTmpDirectory != null && m_serverTmpDirectory.exists() )
+      if( !SERVER_INPUT_LOCAL.equals( m_input ) && m_serverTmpDirectory != null && m_serverTmpDirectory.exists() )
       {
         VFSUtilities.deleteFiles( m_serverTmpDirectory );
       }
