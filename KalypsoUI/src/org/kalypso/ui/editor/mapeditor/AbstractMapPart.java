@@ -545,4 +545,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     m_statusBar.setText( message );
   }
+
+  @Override
+  public void setPartName( String partName )
+  {
+    super.setPartName( partName );
+  }
 }

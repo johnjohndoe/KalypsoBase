@@ -305,6 +305,9 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
+        if( input == null )
+          return;
+
         setPartName( input.getName() );
         firePropertyChange( IWorkbenchPart.PROP_TITLE );
       }
@@ -316,7 +319,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   protected final void load( IStorageEditorInput input )
   {
     System.out.println( "Loading: " + input.getName() );
-    
+
     try
     {
       // TODO: general error handling
