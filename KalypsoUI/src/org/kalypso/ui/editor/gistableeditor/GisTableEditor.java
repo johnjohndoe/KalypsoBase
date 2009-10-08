@@ -159,7 +159,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
    * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.resources.IFile)
    */
   @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFile file ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( m_layerTable == null )
       return;
@@ -233,7 +233,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
       final LayerTableViewer viewer = m_layerTable;
       viewer.applyTableTemplate( m_tableTemplate, context );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
     }
@@ -244,9 +244,6 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   {
     if( !(input instanceof IFileEditorInput) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.3" ) ); //$NON-NLS-1$
-
-    if( m_layerTable == null )
-      return;
 
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.4" ), 1000 ); //$NON-NLS-1$
 
