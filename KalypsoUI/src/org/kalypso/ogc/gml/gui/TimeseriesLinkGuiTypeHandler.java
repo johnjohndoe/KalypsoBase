@@ -128,12 +128,13 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+    text.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     text.setProperty( property.getQName() );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-    textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
+    textData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    textData.setGrabExcessHorizontalSpace( Boolean.TRUE );
+//    textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
