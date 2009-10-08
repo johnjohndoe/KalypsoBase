@@ -22,6 +22,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
@@ -118,14 +119,9 @@ public class MapViewInputContextHandler extends AbstractHandler
     {
       // there is a map view and a file
       final MapView mapView = (MapView) view;
-      final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
+      mapView.setInput( new FileEditorInput( iMap ) );
 
-      // only load if the file is not currently shown
-      final IFile currentFile = mapView.getFile();
-      if( !iMap.equals( currentFile ) )
-      {
-        mapView.startLoadJob( iMap );
-      }
+      final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
 
       // make sure that no theme is active when initializing this context
       final Job unsetActiveThemeJob = new Job( "" ) //$NON-NLS-1$
