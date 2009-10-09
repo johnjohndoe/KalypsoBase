@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
@@ -119,6 +120,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     {
       // there is a map view and a file
       final MapView mapView = (MapView) view;
+      mapView.doSave( new NullProgressMonitor() );
       mapView.setInput( new FileEditorInput( iMap ) );
 
       final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
