@@ -99,7 +99,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   {
     final int index = m_owner.indexOfComponent( comp );
     if( index == -1 )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Record.0") + comp ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.Record.0" ) + comp ); //$NON-NLS-1$
 
     return index;
   }
@@ -119,22 +119,33 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
    */
   public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
   {
+    setValue( index, value, false );
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object, boolean)
+   */
+  @Override
+  public void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException
+  {
     final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
       return;
 
     m_values.set( index, value );
 
-    if( m_owner != null )
+    if( !fireNoEvent && m_owner != null )
     {
       if( m_owner.invalidateSort( index ) )
         m_owner.fireRecordsChanged( null, TYPE.CHANGED );
       else
       {
         final ValueChange[] changes = new ValueChange[] { new ValueChange( this, index, oldValue, value ) };
-        m_owner.fireValuesChanged( changes );
+        if( !fireNoEvent )
+          m_owner.fireValuesChanged( changes );
       }
     }
+
   }
 
   /* default */void remove( final int index )
@@ -159,8 +170,8 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     final IComponent[] components = result.getComponents();
 
     final Record record = new Record( result, components );
-    for( final IComponent component : components )
-      record.setValue( component, getValue( component ) );
+    for( int i = 0; i < components.length; i++ )
+      record.setValue( i, getValue( i ),true );
 
     return record;
   }
@@ -180,4 +191,5 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
       m_values.set( index, value );
     }
   }
+
 }
