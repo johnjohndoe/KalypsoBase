@@ -1,5 +1,7 @@
 package org.kalypso.ogc.gml.map.widgets;
 
+import java.awt.Component;
+
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,6 +58,11 @@ public final class ActivateWidgetJob extends UIJob
         m_mapPanel.getWidgetManager().setActualWidget( m_widget );
 
       CommandUtilities.refreshElementsForWindow( PlatformUI.getWorkbench().getActiveWorkbenchWindow(), AbstractMapPart.MAP_COMMAND_CATEGORY );
+
+      // BUGFIX: force the focus on the map panel, in order to let it get key events
+      if( m_mapPanel instanceof Component )
+        ((Component)m_mapPanel).requestFocusInWindow();
+      
       return Status.OK_STATUS;
     }
     catch( final PartInitException e )

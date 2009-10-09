@@ -293,6 +293,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     if( m_control != null && !m_control.isDisposed() )
     {
+      m_control.setFocus();
       final IMapPanel mapPanel = m_mapPanel;
       if( mapPanel instanceof Component )
       {
@@ -300,7 +301,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         {
           public void run( )
           {
-            ((Component) mapPanel).requestFocus();
+            ((Component) mapPanel).requestFocusInWindow();
           }
         } );
       }
