@@ -83,33 +83,16 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
     final IParameterContainer pc = getParameterContainer();
 
     final String href = pc.getParameterValue( "href", null );
-    final String xpath = pc.getParameterValue( "gmlxpath", "" );
-    TupleResultDomainValueData< ? , ? > data = null;
+//    final String xpath = pc.getParameterValue( "gmlxpath", "" );
 
-    try
-    {
-      if( href == null )
-      {
-        return null;
-      }
+//    try
+//    {
+//      if( href == null )
+//      {
+//        return null;
+//      }
 
-      final GMLXPath path = new GMLXPath( xpath );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( getContext(), href ), null );
-
-      final Object object = GMLXPathUtilities.query( path, workspace );
-
-      if( object == workspace )
-      {
-      }
-      else if( object instanceof Feature )
-      {
-      }
-      else
-      {
-        Logger.logError( Logger.TOPIC_LOG_GENERAL, "bad path not set: " + xpath );
-        return null;
-      }
 
       final String observationId = getParameterContainer().getParameterValue( "observationId", null );
       final String domainComponentName = getParameterContainer().getParameterValue( "domainComponentId", null );
@@ -117,22 +100,22 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
 
       if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
       {
-        data = new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
+        return new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
       }
 
-    }
-    catch( final MalformedURLException e )
-    {
-      throw new ConfigurationException( "URL konnte nicht aufgelöst werden: " + href, e );
-    }
-    catch( final GMLXPathException e )
-    {
-      throw new ConfigurationException( "Ungültiger GML-XPATH: " + xpath, e );
-    }
-    catch( final Exception e )
-    {
-      throw new ConfigurationException( "GML Workspace konnte nicht geladen werden: " + xpath, e );
-    }
-    return data;
+//    }
+//    catch( final MalformedURLException e )
+//    {
+//      throw new ConfigurationException( "URL konnte nicht aufgelöst werden: " + href, e );
+//    }
+//    catch( final GMLXPathException e )
+//    {
+//      throw new ConfigurationException( "Ungültiger GML-XPATH: " + xpath, e );
+//    }
+//    catch( final Exception e )
+//    {
+//      throw new ConfigurationException( "GML Workspace konnte nicht geladen werden: " + xpath, e );
+//    }
+    return null;
   }
 }

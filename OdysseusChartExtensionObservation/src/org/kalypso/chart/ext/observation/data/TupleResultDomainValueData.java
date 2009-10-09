@@ -1,5 +1,6 @@
 package org.kalypso.chart.ext.observation.data;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -130,42 +131,50 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   private void createValueLists( )
   {
-    if( m_domainComponent != null && m_targetComponent != null )
+    // Value-Listen aufbauen
+    final ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
+    final ArrayList<T_target> targetValues = new ArrayList<T_target>();
+    for( int i = 0; i < m_result.size(); i++ )
     {
-      // Value-Listen aufbauen
-      final ArrayList<T_domain> domainValues = new ArrayList<T_domain>();
-      final ArrayList<T_target> targetValues = new ArrayList<T_target>();
-      for( int i = 0; i < m_result.size(); i++ )
+      final IRecord record = m_result.get( i );
+
+      /**
+       * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in einen Calendar umwandeln;
+       * Problem ist, dass der XMLGregorianCalendar nicht Comparable implementiert
+       */
+      final T_domain domainValue;
+      if( m_domainComponent == null )
+        domainValue = null;
+      else
       {
-        final IRecord record = m_result.get( i );
-        /**
-         * Hier muss ich prüfen, ob das ein XMLGregorianCalendar ist und ihn bei Bedarf in einen Calendar umwandeln;
-         * Problem ist, dass der XMLGregorianCalendar nicht Comparable implementiert
-         */
-        T_domain domainValue = null;
         final Object domainValueObj = record.getValue( m_domainComponent );
         if( domainValueObj instanceof XMLGregorianCalendar )
           domainValue = (T_domain) ((XMLGregorianCalendar) domainValueObj).toGregorianCalendar();
         else
           domainValue = (T_domain) domainValueObj;
+      }
 
-        T_target targetValue = null;
+      final T_target targetValue;
+      if( m_targetComponent == null )
+        targetValue = null;
+      else
+      {
         final Object targetValueObj = record.getValue( m_targetComponent );
         if( targetValueObj instanceof XMLGregorianCalendar )
           targetValue = (T_target) ((XMLGregorianCalendar) targetValueObj).toGregorianCalendar();
         else
           targetValue = (T_target) targetValueObj;
-
-        if( domainValue != null && targetValue != null )
-        {
-          domainValues.add( domainValue );
-          targetValues.add( targetValue );
-          Logger.logInfo( Logger.TOPIC_LOG_DATA, domainValue.toString() );
-        }
       }
-      setDomainValues( domainValues );
-      setTargetValues( targetValues );
+
+      if( domainValue != null && targetValue != null )
+      {
+        domainValues.add( domainValue );
+        targetValues.add( targetValue );
+        Logger.logInfo( Logger.TOPIC_LOG_DATA, domainValue.toString() );
+      }
     }
+    setDomainValues( domainValues );
+    setTargetValues( targetValues );
   }
 
   private void resolveComponents( )
@@ -207,12 +216,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_target[]) m_targetValues.toArray();
   }
 
-  public void setDomainValues( final List<T_domain> domainValues )
+  private void setDomainValues( final List<T_domain> domainValues )
   {
     m_domainValues = domainValues;
   }
 
-  public void setTargetValues( final List<T_target> targetValues )
+  private void setTargetValues( final List<T_target> targetValues )
   {
     m_targetValues = targetValues;
   }
