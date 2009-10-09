@@ -292,7 +292,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  protected void setInput( final IStorageEditorInput input )
+  public void setInput( final IStorageEditorInput input )
   {
     if( ObjectUtils.equals( input, m_editorInput ) )
       return;
@@ -318,8 +318,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   protected final void load( IStorageEditorInput input )
   {
-    System.out.println( "Loading: " + input.getName() );
-
     try
     {
       // TODO: general error handling

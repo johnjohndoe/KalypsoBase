@@ -40,14 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IStorageEditorInput;
@@ -55,7 +53,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -144,28 +141,6 @@ public class MapView extends AbstractMapPart implements IViewPart
     }
 
     super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#setInput(org.eclipse.ui.IStorageEditorInput)
-   */
-  @Override
-  public void setInput( IStorageEditorInput input )
-  {
-    final IStorageEditorInput editorInput = getEditorInput();
-    if( editorInput instanceof IFileEditorInput && !ObjectUtils.equals( input, editorInput ) )
-    {
-      try
-      {
-        doSaveInternal( new NullProgressMonitor(), ((IFileEditorInput) editorInput).getFile() );
-      }
-      catch( CoreException e )
-      {
-        ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.views.map.MapView.6" ), Messages.getString( "org.kalypso.ui.views.map.MapView.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
-
-    super.setInput( input );
   }
 
   @SuppressWarnings("unchecked")
