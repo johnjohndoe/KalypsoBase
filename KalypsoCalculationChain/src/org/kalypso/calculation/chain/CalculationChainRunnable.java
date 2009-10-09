@@ -1,6 +1,5 @@
 package org.kalypso.calculation.chain;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +8,13 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.refactoring.ISimulationRunner;
 import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -38,17 +37,24 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
   private final URL m_context;
 
+  private final ISimulationMonitor m_monitor;
+
   public CalculationChainRunnable( final URL context )
   {
-    m_context = context;
-
-    m_chainStatus = CHAIN_STATUS.INIT;
+    this( new ArrayList<CalculationChainMemberJobSpecification>(), context );
   }
 
   public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList, final URL context )
   {
-    this( context );
+    this( jobSpecificationList, context, null );
+  }
+
+  public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList, final URL context, ISimulationMonitor monitor )
+  {
+    m_monitor = monitor;
     m_jobSpecificationList.addAll( jobSpecificationList );
+    m_context = context;
+    m_chainStatus = CHAIN_STATUS.INIT;
   }
 
   public void initialize( )
@@ -71,7 +77,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     m_chainStatus = CHAIN_STATUS.RUNNING;
     IStatus status = Status.OK_STATUS;
@@ -79,6 +85,8 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     {
       for( final CalculationChainMemberJobSpecification job : m_jobSpecificationList )
       {
+        setTask( String.format( "Processing calculation chain member \"%s\"", job.getCalculationTypeID() ), monitor );
+
         if( status.isOK() )
         {
           System.out.println( String.format( "Starting calc job: %s", job.getCalculationTypeID() ) ); //$NON-NLS-1$
@@ -109,6 +117,8 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
           workspaceResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
       }
+
+      setTask( String.format( "Processed calculation chain" ), monitor );
     }
     catch( final Exception e )
     {
@@ -120,6 +130,18 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     }
     m_chainStatus = CHAIN_STATUS.FINISHED;
     return status;
+  }
+
+  private void setTask( String message, IProgressMonitor monitor )
+  {
+    if( m_monitor != null )
+    {
+      m_monitor.setMessage( message );
+    }
+    else if( monitor != null )
+    {
+      monitor.setTaskName( message );
+    }
   }
 
   private List<String> resolveOutputs( final List<Output> output )
