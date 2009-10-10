@@ -291,7 +291,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     setSite( site );
 
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "input must be instanceof IStorageEditorInput" ); //$NON-NLS-1$
     setInput( (IStorageEditorInput) input );
     load();
   }
@@ -394,7 +394,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   public void fireDirty( )
   {
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.ui.editor..AbstractEditorPart.1") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( "Fire Dirty" ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -404,6 +404,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
         return Status.OK_STATUS;
       }
     };
+    job.setSystem( true );
     job.schedule();
   }
 

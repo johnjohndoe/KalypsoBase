@@ -173,7 +173,8 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     m_text = null;
 
-    m_updateScaleJob = new UpdateScaleJob(Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.0")); //$NON-NLS-1$
+    m_updateScaleJob = new UpdateScaleJob("Updating scale box ..."); //$NON-NLS-1$
+    m_updateScaleJob.setSystem( true );
   }
 
   /**

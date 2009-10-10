@@ -128,13 +128,13 @@ public class GrenzenModel extends AbstractTableModel
   private void checkColumn( final int index ) throws IllegalArgumentException
   {
     if( index != 0 )
-      throw new IllegalArgumentException( Messages.getString("GrenzenModel.1") + index ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Invalid column index: " + index ); //$NON-NLS-1$
   }
 
   private void checkRow( final int index ) throws IllegalArgumentException
   {
     if( index < 0 || index >= m_data.size() )
-      throw new IllegalArgumentException( Messages.getString("GrenzenModel.2") + index ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Invalid row index: " + index ); //$NON-NLS-1$
   }
 
   public double[] getData( )

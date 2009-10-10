@@ -116,7 +116,7 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
       };
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_3"), Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_4"), false, IStatus.ERROR, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0"), Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_4"), false, IStatus.ERROR, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       job.setUser( true );
       job.setRule( calcCase.getProject() );
       job.schedule();

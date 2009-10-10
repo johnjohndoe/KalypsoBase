@@ -91,7 +91,7 @@ public class CopyCalcCaseDelegate extends AbstractHandler
     final IFile file = folder.getFile( ModelNature.CONTROL_NAME );
     if( !file.exists() )
     {
-      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.2"), Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.0"), Messages.getString("org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 

@@ -121,7 +121,7 @@ public class GrafikLauncher
   public final static String TPL_FILE_EXTENSION = "tpl"; //$NON-NLS-1$
 
   /** date format understood by the grafik tool */
-  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.2") ); //$NON-NLS-1$
+  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
 
   private final static NumberFormat GRAFIK_NF_W = NumberFormat.getIntegerInstance();
 
@@ -559,17 +559,17 @@ public class GrafikLauncher
 
     writer.write( gKurven.toVorlagentext() );
     writer.write( "\n" ); //$NON-NLS-1$
-    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.29") + odt.getTitle() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.31") + gAchsen.getBottomLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.33") + gAchsen.getLeftLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.35") + gAchsen.getRightLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( "HTitel:\t" + odt.getTitle() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( "xTitel:\t" + gAchsen.getBottomLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( "yTitel1:\t" + gAchsen.getLeftLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( "yTitel2:\t" + gAchsen.getRightLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // Scenario stuff as free text items
     if( scenarioName != null )
     {
       final double xPos = (xUpper.getTime() - xLower.getTime()) / 60000 / 2;
       final double yPos = (yUpper.doubleValue() - yLower.doubleValue()) / 2;
-      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.37") + xPos + " " + yPos + " 0 " + scenarioName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      writer.write( "Text1:" + xPos + " " + yPos + " 0 " + scenarioName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text //$NON-NLS-1$
       // items
     }
@@ -578,7 +578,7 @@ public class GrafikLauncher
     for( final Object element : xLines )
     {
       final String strDate = element.toString();
-      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.42") + strDate + '\n' ); //$NON-NLS-1$
+      writer.write( "Senkrechte:" + strDate + '\n' ); //$NON-NLS-1$
     }
     xLines.clear();
 
@@ -586,7 +586,7 @@ public class GrafikLauncher
     for( final Object element : yLines.keySet() )
     {
       final ValueAndColor vac = yLines.get( element );
-      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.43") + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' ); //$NON-NLS-1$ //$NON-NLS-2$
+      writer.write( "yKonst:" + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     yLines.clear();
 

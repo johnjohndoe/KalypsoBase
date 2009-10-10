@@ -142,7 +142,7 @@ public class MapPartHelper
       {
         final IStatus status = source.getStatus();
 
-        final UIJob job = new UIJob( Messages.getString("org.kalypso.ui.editor.mapeditor.MapPartHelper.0") ) //$NON-NLS-1$
+        final UIJob job = new UIJob( "Update status" ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )

@@ -777,7 +777,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final RasterSymbolizer symb = findRasterSymbolizer();
     if( symb == null )
     {
-      MessageDialog.openWarning( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.5"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.4"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.6") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -811,7 +811,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Speichere Styles", styles.length ); //$NON-NLS-1$
+        monitor.beginTask( "Saving Styles", styles.length );
 
         for( final UserStyle userStyle : styles )
         {
@@ -846,6 +846,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       for( final ColorMapEntry colorMapEntry : entries )
       {
+        // WHY? why do we not just ignore duplicate entries
         if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
           new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
         else
@@ -1152,7 +1153,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     handleCoveragesAdded( newCoverages );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.18"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.19"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.11"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.19"), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void handleCoveragesAdded( final ICoverage[] newCoverages )
@@ -1248,7 +1249,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.21"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.22"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.12"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.22"), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )

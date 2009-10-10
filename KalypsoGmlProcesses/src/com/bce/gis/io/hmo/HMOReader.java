@@ -91,7 +91,7 @@ public class HMOReader
 
       final FileInputStream fis = new FileInputStream( f );
       final InputStream is = p != null ? (InputStream) new ProgressableInputStream( fis, p ) : fis;
-      final Reader r = new InputStreamReader( is, Messages.getString("com.bce.gis.io.hmo.HMOReader.10") ); //$NON-NLS-1$
+      final Reader r = new InputStreamReader( is, "US-ASCII" ); //$NON-NLS-1$
       final LinearRing[] triangles = read( r );
       r.close();
 

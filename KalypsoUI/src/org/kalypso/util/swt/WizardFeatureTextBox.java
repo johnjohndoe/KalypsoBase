@@ -204,7 +204,7 @@ public class WizardFeatureTextBox
   {
     m_text = text;
 
-    new UIJob( Messages.getString( "org.kalypso.util.swt.WizardFeatureTextBox.4" ) ) //$NON-NLS-1$
+    final UIJob job = new UIJob( "updating text field..." ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -213,7 +213,9 @@ public class WizardFeatureTextBox
 
         return Status.OK_STATUS;
       }
-    }.schedule();
+    };
+    job.setSystem( true );
+    job.schedule();
 
     processListener();
   }

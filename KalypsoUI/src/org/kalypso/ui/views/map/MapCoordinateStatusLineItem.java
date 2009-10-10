@@ -184,7 +184,8 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     if( activePage != null )
       m_adapterListener.init( activePage );
 
-    m_updateLabelJob = new UpdateLabelJob( Messages.getString( "org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2" ) ); //$NON-NLS-1$
+    m_updateLabelJob = new UpdateLabelJob( "Updating position label ..." ); //$NON-NLS-1$
+    m_updateLabelJob.setSystem( true );
 
     return m_composite;
   }
