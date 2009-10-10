@@ -387,7 +387,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" , operationElement, feature )); //$NON-NLS-1$
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Found operation: %s%nfor feature: %s%n" , operationElement, feature )); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -400,7 +400,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" , result )); //$NON-NLS-1$
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Operation result: %s%n%n" , result )); //$NON-NLS-1$
 
             return result;
           }
@@ -483,7 +483,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
-        System.out.println( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.5" ) ); //$NON-NLS-1$
+        System.out.println( "ValidatorLabelType without property" ); //$NON-NLS-1$
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );

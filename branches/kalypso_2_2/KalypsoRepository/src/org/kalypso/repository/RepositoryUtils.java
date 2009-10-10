@@ -101,15 +101,15 @@ public class RepositoryUtils
   public static String replaceIdentifier( final String itemIdentifier, String repositoryIdentifier )
   {
     final String repository = getRepositoryId( itemIdentifier );
-    if( !repositoryIdentifier.endsWith( "://" ) )
-      repositoryIdentifier = String.format( "%s://", repositoryIdentifier );
+    if( !repositoryIdentifier.endsWith( "://" ) ) //$NON-NLS-1$
+      repositoryIdentifier = String.format( "%s://", repositoryIdentifier ); //$NON-NLS-1$
 
-    return String.format( "%s%s", repositoryIdentifier, itemIdentifier.substring( repository.length() ) );
+    return String.format( "%s%s", repositoryIdentifier, itemIdentifier.substring( repository.length() ) ); //$NON-NLS-1$
   }
 
   public static String getParentItemId( final String identifier )
   {
-    final int index = identifier.lastIndexOf( "." );
+    final int index = identifier.lastIndexOf( "." ); //$NON-NLS-1$
     if( index == -1 )
     {
       return RepositoryUtils.getRepositoryId( identifier );
@@ -120,12 +120,12 @@ public class RepositoryUtils
 
   public static String resolveItemName( final String identifier ) throws RepositoryException
   {
-    int index = identifier.lastIndexOf( "." );
+    int index = identifier.lastIndexOf( "." ); //$NON-NLS-1$
     if( index == -1 )
     {
-      index = identifier.indexOf( "://" );
+      index = identifier.indexOf( "://" ); //$NON-NLS-1$
       if( index == -1 )
-        throw new RepositoryException( String.format( "Couldn't resolve item name from identifier: %s", identifier ) );
+        throw new RepositoryException( String.format( "Couldn't resolve item name from identifier: %s", identifier ) ); //$NON-NLS-1$
 
       return identifier.substring( index + 3 );
     }

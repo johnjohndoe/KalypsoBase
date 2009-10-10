@@ -218,7 +218,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     setSite( site );
 
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.10" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "input must be instanceof IStorageEditorInput" ); //$NON-NLS-1$
     setInput( (IStorageEditorInput) input );
 
     initMapPanel( site );
@@ -250,7 +250,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final JobExclusiveCommandTarget commandTarget = getCommandTarget();
 
-    m_statusBar.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.4" ) ); //$NON-NLS-1$
+    m_statusBar.setText( "" ); //$NON-NLS-1$
 
     // both IViewSite und IEditorSite give access to actionBars
     final IActionBars actionBars = getActionBars( site );

@@ -35,6 +35,7 @@ public class KMLExportCommandHandler implements IHandler
     final File targetFile = (File) context.getVariable( IKMLExportSettings.CONST_TARGET_FILE );
 
     /* get mapView instance */
+    // FIXME: get MapPanel from MapHandlerUtils and only give the panel to the exporter
     MapView mapView = null;
 
     final IWorkbench workbench = PlatformUI.getWorkbench();

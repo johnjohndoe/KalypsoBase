@@ -7,8 +7,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.text.MessageFormat;
 
-import org.kalypso.gml.processes.i18n.Messages;
-
 import junit.framework.TestCase;
 
 import com.bce.util.MessageFormatUtility;
@@ -115,7 +113,7 @@ public class HMOReaderTest extends TestCase
     try
     {
       readString( hmoString );
-      fail( Messages.getString("com.bce.gis.io.hmo.HMOReaderTest.21") ); //$NON-NLS-1$
+      fail( "Exception erwartet" ); //$NON-NLS-1$
     }
     catch( final ParseException pe )
     {

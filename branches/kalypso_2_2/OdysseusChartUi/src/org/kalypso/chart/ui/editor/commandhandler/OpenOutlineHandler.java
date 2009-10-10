@@ -28,15 +28,15 @@ public class OpenOutlineHandler extends AbstractHandler
 
     IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( "No active part." ); //$NON-NLS-1$
 
     IWorkbenchPartSite site = part.getSite();
     if( site == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( "No active site." ); //$NON-NLS-1$
 
     IWorkbenchPage page = site.getPage();
     if( page == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler.2") ); //$NON-NLS-1$
+      throw new ExecutionException( "No active page." ); //$NON-NLS-1$
 
     ChartOutlinePopupDialog d = new ChartOutlinePopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), chartPart );
 

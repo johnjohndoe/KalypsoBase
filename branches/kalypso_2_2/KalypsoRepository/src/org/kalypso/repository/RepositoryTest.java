@@ -41,12 +41,12 @@ public class RepositoryTest extends TestCase
 {
   public void testRepositoryUtils()
   {
-    assertEquals( RepositoryUtils.getRepositoryId( "test://foo.bar" ), "test://" );
+    assertEquals( RepositoryUtils.getRepositoryId( "test://foo.bar" ), "test://" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
-      RepositoryUtils.getRepositoryId( "test:foo.bar" );
-      fail( "Exception should be thrown" );
+      RepositoryUtils.getRepositoryId( "test:foo.bar" ); //$NON-NLS-1$
+      fail( "Exception should be thrown" ); //$NON-NLS-1$
     }
     catch( IllegalArgumentException e )
     {

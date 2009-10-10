@@ -217,7 +217,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    */
   public String getTooltip( final Object element )
   {
-    Assert.isTrue( element == this, Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.19" ) ); //$NON-NLS-1$
+    Assert.isTrue( element == this, "'Element' must be this" ); //$NON-NLS-1$
 
     if( getStatus().isOK() )
       return m_provider.getLabel();
@@ -301,7 +301,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 // }
 
     // This thing is disabled !!!
-    getFeatureInfoResultProcessor.write( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.21" ) ); //$NON-NLS-1$
+    getFeatureInfoResultProcessor.write( "FIX ME" ); //$NON-NLS-1$
   }
 
   public String getSource( )

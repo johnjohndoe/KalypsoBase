@@ -170,7 +170,7 @@ public class ImportGridUtilities
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.2", destFile ), null ) ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", destFile ), null ) ); //$NON-NLS-1$
           }
           FileUtils.copyFile( gridFile, destFile );
           return destFile;

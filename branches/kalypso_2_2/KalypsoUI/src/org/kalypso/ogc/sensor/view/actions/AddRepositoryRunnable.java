@@ -136,7 +136,7 @@ public class AddRepositoryRunnable implements Runnable
     catch( final Exception e )
     {
       e.printStackTrace();
-      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.3"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 

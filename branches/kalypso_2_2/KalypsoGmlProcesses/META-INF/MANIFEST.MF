@@ -29,7 +29,6 @@ Export-Package: com.bce.apps.wspfli,
  jargs.test.gnu,
  org.kalypso.gml.processes,
  org.kalypso.gml.processes.constDelaunay,
- org.kalypso.gml.processes.floodDepth,
  org.kalypso.gml.processes.raster2vector,
  org.kalypso.gml.processes.raster2vector.collector,
  org.kalypso.gml.processes.schemata

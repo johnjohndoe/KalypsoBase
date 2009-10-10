@@ -495,7 +495,7 @@ public class GmlShapeFileImportDialog extends Dialog
   {
     if( m_root != null )
       return new KalypsoResourceSelectionDialog( getShell(), m_root, Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.16" ), fileResourceExtensions, m_root, new ResourceSelectionValidator() ); //$NON-NLS-1$
-    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.17" ), fileResourceExtensions, m_eclipseWorkspace, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.16" ), fileResourceExtensions, m_eclipseWorkspace, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   /**
