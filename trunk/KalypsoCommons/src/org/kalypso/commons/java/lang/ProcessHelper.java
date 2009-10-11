@@ -211,7 +211,7 @@ public class ProcessHelper
         }
 
         // TODO: canceling the process does not work
-        if( cancelable.isCanceled() )
+        if( cancelable != null && cancelable.isCanceled() )
         {
           process.destroy();
           if( procCtrlThread != null )
