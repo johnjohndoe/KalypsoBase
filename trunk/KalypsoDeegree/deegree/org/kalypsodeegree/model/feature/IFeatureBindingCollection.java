@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
  * {@link FWCls} <br>
- * TODO: move everyhting into FeatureList
+ * TODO: move everything into FeatureList
  * 
  * @author Gernot Belger
  * @author Dirk Kuch
@@ -59,17 +59,13 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Creates and Adds a new element of the specified type into the feature collection at the end of the feature
    * collection
    * 
-   * @param index
-   *          index at which the specified element is to be inserted.
    * @param newChildType
    *          the type of the element to add
-   * @throws UnsupportedOperationException
-   *           if the <tt>add</tt> method is not supported by this list.
    * @throws IllegalArgumentException
    *           if some aspect of the specified newChildType prevents it from being added to this list. E.g.
    *           <ul>
    *           <li/>newChildType is null
-   *           <li/>the underlaying feature collection does not accepts elements of the specified type
+   *           <li/>the underlying feature collection does not accepts elements of the specified type
    *           <li/>the type is not adaptable to the class {@link FWCls}
    *           </ul>
    */
@@ -103,23 +99,6 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt );
 
   /**
-   * To get the {@link FeatureList} which is being wrapped
-   * 
-   * @return the wrapped feature list
-   */
-  public FeatureList getWrappedList( );
-
-  /**
-   * Renove all reference to this feature from this list
-   * 
-   * @param toRemove
-   *          a wrapper wrapping the feature which reference is to be remove from this list
-   * @throws IllegalArgumentException
-   *           if the argument toRemove is null
-   */
-  public void removeAllRefs( FWCls toRemove ) throws IllegalArgumentException;
-
-  /**
    * Add this feature as reference to this list
    * 
    * @param toAdd
@@ -131,7 +110,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   public boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
 
   /**
-   * Answer all feature wrappers overlaping the selected zone
+   * Answer all feature wrappers overlapping the selected zone
    * 
    * @param selectionSurface
    *          the selection surface
@@ -146,8 +125,8 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    *          </ul>
    * @param checkedGeometryPropertyName
    *          the q-name of the feature property to check
-   * @return a list of feature overlaping the given surface
-   * @thorws {@link IllegalArgumentException} if selectionSurface is null
+   * @return a list of feature overlapping the given surface
+   * @throws {@link IllegalArgumentException} if selectionSurface is null
    */
   public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final QName qname, final boolean containedOnly );
 

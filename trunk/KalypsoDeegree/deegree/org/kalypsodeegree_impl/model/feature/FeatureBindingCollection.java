@@ -58,8 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
- * Class representing the wbGml:RangeSetFeature element. The feature contained in the range set need to be adaptable
- * into a {@link RangeSetCls} object
  * 
  * @author Gernot Belger
  * @author Dirk Kuch
@@ -502,22 +500,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       return super.equals( obj );
   }
 
-  public FeatureList getWrappedList( )
-  {
-    return getFeatureList();
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefs(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
-   */
-  public void removeAllRefs( final FWCls toRemove ) throws IllegalArgumentException
-  {
-    if( toRemove == null )
-      return;
-    final String gmlID = toRemove.getId();
-    getFeatureList().remove( gmlID );
-  }
-
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
    */
@@ -674,6 +656,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
    */
   public GM_Envelope getBoundingBox( )
   {
-    return getWrappedList().getBoundingBox();
+    return getFeatureList().getBoundingBox();
   }
 }
