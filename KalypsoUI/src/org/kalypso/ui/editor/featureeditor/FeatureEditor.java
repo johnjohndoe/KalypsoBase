@@ -190,7 +190,7 @@ public class FeatureEditor extends EditorPart
   @Override
   public boolean isDirty( )
   {
-    return m_commandTarget.isDirty();
+    return false;
   }
 
   /**
