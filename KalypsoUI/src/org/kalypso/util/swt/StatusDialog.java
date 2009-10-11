@@ -44,7 +44,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -69,7 +68,7 @@ public class StatusDialog extends AbstractStatusDialog
 {
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
-    this( parentShell, status, dialogTitle, new String[] { IDialogConstants.OK_LABEL }, 0 );
+    super( parentShell, status, dialogTitle );
   }
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )

@@ -58,10 +58,20 @@ public class AbstractStatusDialog extends MessageDialog
     this( parentShell, status, dialogTitle, new String[] { IDialogConstants.OK_LABEL }, 0 );
   }
 
+  public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String dialogMessage )
+  {
+    this( parentShell, status, dialogTitle, dialogMessage, toMessageType( status.getSeverity() ), new String[] { IDialogConstants.OK_LABEL }, 0 );
+  }
+
   public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
   {
-    super( parentShell, dialogTitle, null, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), dialogButtonLabels, defaultIndex );
+    this( parentShell, status, dialogTitle, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), dialogButtonLabels, defaultIndex );
+  }
 
+  public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String dialogMessage, final int severity, final String[] dialogButtonLabels, final int defaultIndex )
+  {
+    super( parentShell, dialogTitle, null, dialogMessage, severity, dialogButtonLabels, defaultIndex );
+    
     m_status = status;
   }
 
@@ -93,13 +103,4 @@ public class AbstractStatusDialog extends MessageDialog
         return MessageDialog.NONE;
     }
   }
-
-// /**
-// * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-// */
-// @Override
-// protected void createButtonsForButtonBar( final Composite parent )
-// {
-// createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
-// }
 }
