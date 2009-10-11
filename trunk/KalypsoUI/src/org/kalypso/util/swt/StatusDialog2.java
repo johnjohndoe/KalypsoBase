@@ -60,6 +60,11 @@ public class StatusDialog2 extends AbstractStatusDialog
     super( parentShell, status, dialogTitle );
   }
 
+  public StatusDialog2( final Shell parentShell, final IStatus status, final String dialogTitle, final String dialogMessage )
+  {
+    super( parentShell, status, dialogTitle, dialogMessage );
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
    */
