@@ -45,6 +45,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -55,6 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -714,6 +717,141 @@ public class SplitSort implements FeatureList
         return null;
       return m_items.get( 0 );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
+   */
+  @Override
+  public Feature addNew( final QName newChildType )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
+   */
+  @Override
+  public Feature addNew( final QName newChildType, final String newFeatureId )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
+   */
+  @Override
+  public Feature insertNew( final int index, final QName newChildType )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
+   */
+  @Override
+  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class, java.lang.Object[])
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      java.util.List)
+   */
+  @Override
+  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Point,
+   *      java.util.List)
+   */
+  @Override
+  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
