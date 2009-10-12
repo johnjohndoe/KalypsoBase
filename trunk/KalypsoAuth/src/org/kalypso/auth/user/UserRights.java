@@ -47,11 +47,11 @@ import java.util.Arrays;
  */
 public final class UserRights
 {
-  public static final String RIGHT_PROGNOSE = "Vorhersage";
+  public static final String RIGHT_PROGNOSE = "Vorhersage"; //$NON-NLS-1$
 
-  public static final String RIGHT_EXPERT = "Experte";
+  public static final String RIGHT_EXPERT = "Experte"; //$NON-NLS-1$
 
-  public static final String RIGHT_ADMIN = "Administration";
+  public static final String RIGHT_ADMIN = "Administration"; //$NON-NLS-1$
 
   /** Convenience constant = empty array = no rights */
   public static final String[] NO_RIGHTS = {};

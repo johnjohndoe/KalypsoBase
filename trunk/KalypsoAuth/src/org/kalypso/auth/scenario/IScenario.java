@@ -50,24 +50,24 @@ package org.kalypso.auth.scenario;
 public interface IScenario
 {
   /** this is the id of the default scenario, namely: the empty string */
-  public final static String ID_DEFAULT_SCENARIO = "";
+  public final static String ID_DEFAULT_SCENARIO = ""; //$NON-NLS-1$
   
   /** denotes the begin of a token */
-  public final static String TOKEN_BEGIN = ":";
+  public final static String TOKEN_BEGIN = ":"; //$NON-NLS-1$
   /** denotes the end of a token */
-  public final static String TOKEN_END = ":";
+  public final static String TOKEN_END = ":"; //$NON-NLS-1$
   
-  public final static String PROP_NAME = "NAME";
-  public final static String PROP_DESCRIPTION = "DESCRIPTION";
+  public final static String PROP_NAME = "NAME"; //$NON-NLS-1$
+  public final static String PROP_DESCRIPTION = "DESCRIPTION"; //$NON-NLS-1$
   
-  public final static String PROP_WIZARD_TITLE_RGB = "WIZARD_TITLE_RGB";
+  public final static String PROP_WIZARD_TITLE_RGB = "WIZARD_TITLE_RGB"; //$NON-NLS-1$
   
-  public final static String PROP_DIAG_BACKGROUND_IMAGE_URL = "DIAG_BACKGROUND_IMAGE_URL";
+  public final static String PROP_DIAG_BACKGROUND_IMAGE_URL = "DIAG_BACKGROUND_IMAGE_URL"; //$NON-NLS-1$
   
-  public static final String PROP_TABLE_HEADER_IMAGE_URL = "TABLE_HEADER_IMAGE_URL";
-  public static final String PROP_TABLE_HEADER_RGB = "TABLE_HEADER_RGB";
-  public static final String PROP_TABLE_HEADER_SHOWTEXT = "TABLE_HEADER_SHOWTEXT";
-  public static final String PROP_TABLE_HEADER_HEIGHT = "TABLE_HEADER_HEIGHT";
+  public static final String PROP_TABLE_HEADER_IMAGE_URL = "TABLE_HEADER_IMAGE_URL"; //$NON-NLS-1$
+  public static final String PROP_TABLE_HEADER_RGB = "TABLE_HEADER_RGB"; //$NON-NLS-1$
+  public static final String PROP_TABLE_HEADER_SHOWTEXT = "TABLE_HEADER_SHOWTEXT"; //$NON-NLS-1$
+  public static final String PROP_TABLE_HEADER_HEIGHT = "TABLE_HEADER_HEIGHT"; //$NON-NLS-1$
   
   /** used internally by Kalypso (id of default scenario is the empty string) */
   public String getId();

@@ -61,7 +61,7 @@ public class ScenarioUtilities
   public static boolean isDefaultScenario( final IScenario sce )
   {
     if( sce == null )
-      throw new IllegalArgumentException( "scenario is null" );
+      throw new IllegalArgumentException( "scenario is null" ); //$NON-NLS-1$
 
     return sce.getId().equals( IScenario.ID_DEFAULT_SCENARIO );
   }
