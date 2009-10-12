@@ -82,7 +82,6 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
 
   public ImportObservationWizard( )
   {
-    super();
     setHelpAvailable( false );
     setNeedsProgressMonitor( false );
     setWindowTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationWizard.0") ); //$NON-NLS-1$

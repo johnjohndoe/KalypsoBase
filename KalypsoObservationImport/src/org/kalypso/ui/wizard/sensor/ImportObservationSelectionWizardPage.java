@@ -318,7 +318,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       {
         m_targetFile = chooseFileZML( m_targetFile );
         validate();
-
       }
     } );
 
@@ -363,7 +362,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       dialog.setFileName( selectedFile.getName() );
       dialog.setFilterPath( selectedFile.getParent() );
     }
-    dialog.open();
+    if( dialog.open() == null )
+      return null;
     final String fileName = dialog.getFileName();
     final String filterPath = dialog.getFilterPath();
     return new File( filterPath, fileName );
