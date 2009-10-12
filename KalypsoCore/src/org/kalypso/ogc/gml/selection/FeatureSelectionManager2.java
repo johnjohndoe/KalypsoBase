@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +64,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   /** feature -> easyWrapper */
   private final Map<Feature, EasyFeatureWrapper> m_map = new HashMap<Feature, EasyFeatureWrapper>();
 
-  private final List<IFeatureSelectionListener> m_listener = new ArrayList<IFeatureSelectionListener>( 5 );
+  private final Set<IFeatureSelectionListener> m_listener = new LinkedHashSet<IFeatureSelectionListener>( 5 );
 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#setSelection(org.kalypso.ogc.gml.selection.EasyFeatureWrapper[])
