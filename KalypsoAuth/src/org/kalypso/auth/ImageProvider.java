@@ -47,8 +47,8 @@ public class ImageProvider
 {
   public static final ImageDescriptor id( final String location )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.auth", location );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.auth", location ); //$NON-NLS-1$
   }
   
-  public static final ImageDescriptor IMAGE_LOGIN = id( "icons/login.gif" );
+  public static final ImageDescriptor IMAGE_LOGIN = id( "icons/login.gif" ); //$NON-NLS-1$
 }

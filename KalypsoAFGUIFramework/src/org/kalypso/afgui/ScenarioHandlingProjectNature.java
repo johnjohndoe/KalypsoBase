@@ -178,8 +178,10 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
             if( parentFolder.equals( resource ) || newFolder.equals( resource ) )
             {
               // ignore scenario folder and .* resources
+              return true;
             }
-            else if( m_filter.shouldBeCopied( resource ) )
+
+            if( m_filter.shouldBeCopied( resource ) )
             {
               final IPath parentFolderPath = parentFolder.getFullPath();
               final IPath resourcePath = resource.getFullPath();
@@ -194,7 +196,12 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
               {
                 resource.copy( newFolder.getFullPath().append( relativePath ), true, new NullProgressMonitor() );
               }
+
+              return true;
             }
+
+            if( !m_filter.shouldBeCopied( resource ) && resource instanceof IFolder )
+              return false;
 
             return true;
           }
