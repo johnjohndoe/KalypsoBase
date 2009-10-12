@@ -170,7 +170,7 @@ public class ImportGridUtilities
           if( destFile.exists() )
           {
             destFile = null; // elese if will be deleted
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.2", destFile ), null ) ); //$NON-NLS-1$
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR,  Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", destFile ), null ) ); //$NON-NLS-1$
           }
           FileUtils.copyFile( gridFile, destFile );
           return destFile;
@@ -206,7 +206,7 @@ public class ImportGridUtilities
       public String queryOverwrite( final String pathString )
       {
         if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5"),//$NON-NLS-1$ 
-            Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6", pathString  )) ) //$NON-NLS-2$ 
+            Messages.getString("org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6", pathString  )) ) //$NON-NLS-1$ 
           return IOverwriteQuery.YES;
         return IOverwriteQuery.NO;
       }
