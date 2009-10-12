@@ -186,7 +186,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final JobExclusiveCommandTarget commandTarget = getCommandTarget();
 
-    m_statusBar.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.4" ) ); //$NON-NLS-1$
+    m_statusBar.setText( "" ); //$NON-NLS-1$
 
     // both IViewSite und IEditorSite give access to actionBars
     final IActionBars actionBars = getActionBars( site );
@@ -200,7 +200,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( final Composite parent )
+  public synchronized void createPartControl( final Composite parent )
   {
     final IWorkbenchPartSite site = getSite();
 
@@ -229,6 +229,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     if( m_control != null && !m_control.isDisposed() )
     {
+      m_control.setFocus();
       final IMapPanel mapPanel = m_mapPanel;
       if( mapPanel instanceof Component )
       {
@@ -236,7 +237,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         {
           public void run( )
           {
-            ((Component) mapPanel).requestFocus();
+            ((Component) mapPanel).requestFocusInWindow();
           }
         } );
       }
@@ -326,6 +327,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
+
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
       setMapModell( null, null );

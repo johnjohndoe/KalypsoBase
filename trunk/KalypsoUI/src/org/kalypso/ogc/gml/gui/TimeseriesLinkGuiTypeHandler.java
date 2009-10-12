@@ -134,7 +134,6 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     final GridDataType textData = factory.createGridDataType();
     textData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     textData.setGrabExcessHorizontalSpace( Boolean.TRUE );
-//    textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
