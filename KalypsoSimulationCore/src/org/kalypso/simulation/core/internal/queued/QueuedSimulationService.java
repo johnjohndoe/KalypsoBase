@@ -412,7 +412,7 @@ public class QueuedSimulationService implements ISimulationService
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.queued.QueuedSimulationService.4"), e ); //$NON-NLS-1$
+      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e ); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
