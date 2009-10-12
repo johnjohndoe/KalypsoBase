@@ -329,7 +329,7 @@ public class ArrayChooserPage extends WizardPage
   }
 
   /**
-   * This function sets the list of chooseables. If one is already set via the construtor, it will be replaced by this
+   * This function sets the list of chooseables. If one is already set via the constructor, it will be replaced by this
    * list.
    *
    * @param input
@@ -362,7 +362,7 @@ public class ArrayChooserPage extends WizardPage
       return;
 
     /* If there are less objects selected, than required, set an error message. */
-    if( m_checked.length < m_numToSelect )
+    if( m_checked == null || m_checked.length < m_numToSelect )
     {
       if( !firstTime )
         WizardPageUtilities.appendError( "Sie müssen mindestens " + String.valueOf( m_numToSelect ) + " Element(e) auswählen.", this );
