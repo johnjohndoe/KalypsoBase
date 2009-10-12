@@ -240,7 +240,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   protected void activateThemeContext( final IKalypsoTheme activeTheme )
   {
-    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelSourceProvider.1" ) ) //$NON-NLS-1$
+    final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
