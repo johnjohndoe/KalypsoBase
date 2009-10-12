@@ -8,7 +8,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoCalculationChain extends Plugin
 {
-  public static final String PLUGIN_ID = "org.kalypso.calculation.chain";
+  public static final String PLUGIN_ID = "org.kalypso.calculation.chain"; //$NON-NLS-1$
 
   private static KalypsoCalculationChain plugin;
 
