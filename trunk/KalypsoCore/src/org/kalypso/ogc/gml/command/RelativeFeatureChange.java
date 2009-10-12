@@ -92,45 +92,36 @@ public class RelativeFeatureChange extends FeatureChange
   @Override
   public Object getNewValue( )
   {
+    final IValuePropertyType propertyType = (IValuePropertyType) getProperty();
+    final Class< ? > valueClass = propertyType.getValueClass();
+    if( !Number.class.isAssignableFrom( valueClass ) )
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + valueClass ); //$NON-NLS-1$
+    
     final Feature feature = getFeature();
-    final Object rawProperty = feature.getProperty( getProperty() );
-    if( rawProperty instanceof Number )
-    {
-      final Number numericProperty = (Number) rawProperty;
-      if( "".equals( m_operator ) ) //$NON-NLS-1$
-      {
-        return m_operand;
-      }
-      else if( "=".equals( m_operator ) ) //$NON-NLS-1$
-      {        
-        return castDoubleAsType( numericProperty.getClass(), m_operand );
-      }
-      else if( "+".equals( m_operator ) ) //$NON-NLS-1$
-      {
-        return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$
-      }
-      else if( "-".equals( m_operator ) ) //$NON-NLS-1$
-      {
-        return calculate( numericProperty, m_operand, "subtract" ); //$NON-NLS-1$
-      }
-      else if( "*".equals( m_operator ) ) //$NON-NLS-1$
-      {
-        return calculate( numericProperty, m_operand, "multiply" ); //$NON-NLS-1$
-      }
-      else if( "/".equals( m_operator ) ) //$NON-NLS-1$
-      {
-        return calculate( numericProperty, m_operand, "divide" ); //$NON-NLS-1$
-      }
-      else
-      {
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.10") ); //$NON-NLS-1$
-      }
-    }
-    else
-    {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + rawProperty.getClass().getName() ); //$NON-NLS-1$
-    }
 
+    if( "".equals( m_operator ) ) //$NON-NLS-1$
+      return m_operand;
+
+    if( "=".equals( m_operator ) ) //$NON-NLS-1$
+      return castDoubleAsType( (Class< ? extends Number>) valueClass, m_operand );
+
+    final Number numericProperty = (Number) feature.getProperty( getProperty() );
+    if( numericProperty == null )
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + " null" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( "+".equals( m_operator ) ) //$NON-NLS-1$
+      return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$
+    
+    if( "-".equals( m_operator ) ) //$NON-NLS-1$
+      return calculate( numericProperty, m_operand, "subtract" ); //$NON-NLS-1$
+    
+    if( "*".equals( m_operator ) ) //$NON-NLS-1$
+      return calculate( numericProperty, m_operand, "multiply" ); //$NON-NLS-1$
+
+    if( "/".equals( m_operator ) ) //$NON-NLS-1$
+      return calculate( numericProperty, m_operand, "divide" ); //$NON-NLS-1$
+
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.10") ); //$NON-NLS-1$
   }
 
   /**
