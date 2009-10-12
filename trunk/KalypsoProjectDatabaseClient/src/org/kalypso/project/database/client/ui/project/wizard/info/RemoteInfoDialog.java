@@ -240,7 +240,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupChanges = new Group( parent, SWT.NULL );
     groupChanges.setLayout( new GridLayout() );
     groupChanges.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupChanges.setText( String.format( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.8" ) ) ); //$NON-NLS-1$
+    groupChanges.setText(  Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.8"  ) ); //$NON-NLS-1$
 
     final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );

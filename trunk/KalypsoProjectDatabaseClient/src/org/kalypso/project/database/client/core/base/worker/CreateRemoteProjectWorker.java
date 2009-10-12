@@ -148,7 +148,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       }
 
       if( uploaded == false )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker.1") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker.1" ) ) ); //$NON-NLS-1$
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
@@ -162,25 +162,42 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       service.createProject( bean, new URL( urlDestination ) );
 
-      new WorkspaceJob( "" ) //$NON-NLS-1$
+      WorkspaceJob updateDescription = new WorkspaceJob( "" ) //$NON-NLS-1$
       {
+        int updateCount = 0;
 
         @Override
         public IStatus runInWorkspace( final IProgressMonitor m ) throws CoreException
         {
-          final IProjectDescription description = project.getDescription();
-          description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
-          project.setDescription( description, m );
+          try
+          {
+            // FIXME *grummel* why .project file is always locked and project.setDescription() fails?
+            final IProjectDescription description = project.getDescription();
+            description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
+            project.setDescription( description, m );
 
-          final RemoteProjectNature remote = (RemoteProjectNature) project.getNature( RemoteProjectNature.NATURE_ID );
-          final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
-          preferences.setVersion( 0 );
-          preferences.setIsOnServer( true );
-          preferences.setModified( false );
+            final RemoteProjectNature remote = (RemoteProjectNature) project.getNature( RemoteProjectNature.NATURE_ID );
+            final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+            preferences.setVersion( 0 );
+            preferences.setIsOnServer( true );
+            preferences.setModified( false );
+          }
+          catch( Exception e )
+          {
+            updateCount += 1;
+            if( updateCount < 5 )
+              this.schedule( 250 );
+            else
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0"), e ) ); //$NON-NLS-1$
+
+            return Status.CANCEL_STATUS;
+          }
 
           return Status.OK_STATUS;
         }
-      }.schedule( 250 );
+      };
+
+      updateDescription.schedule( 250 );
 
       // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
       // file.close() reestablish this http-connection
