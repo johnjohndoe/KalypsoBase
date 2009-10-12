@@ -1,7 +1,5 @@
 package com.bce.gis.operation.hmo2fli;
 
-import org.kalypso.gml.processes.i18n.Messages;
-
 import junit.framework.TestCase;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
@@ -29,18 +27,18 @@ public class GetRingsOperationTest extends TestCase
     final GetRingsOperation op = new GetRingsOperation( TestData.triangles, null );
 
     final LinearRing[] rings1 = op.getAllContaining( TestData.cin1 );
-    assertNotNull( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.0"), rings1 ); //$NON-NLS-1$
-    assertEquals( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.1"), 1, rings1.length ); //$NON-NLS-1$
-    assertSame( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.2"), TestData.triangle1, rings1[0] ); //$NON-NLS-1$
+    assertNotNull( "Ergebnis darf nie null sein", rings1 ); //$NON-NLS-1$
+    assertEquals( "Genau eines überdeckt diesen Punkt", 1, rings1.length ); //$NON-NLS-1$
+    assertSame( "Es ist Dreieck1", TestData.triangle1, rings1[0] ); //$NON-NLS-1$
 
     final LinearRing[] rings2 = op.getAllContaining( TestData.cin2 );
-    assertNotNull( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.3"), rings2 ); //$NON-NLS-1$
-    assertEquals( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.4"), 1, rings2.length ); //$NON-NLS-1$
-    assertSame( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.5"), TestData.triangle2, rings2[0] ); //$NON-NLS-1$
+    assertNotNull( "Ergebnis darf nie null sein", rings2 ); //$NON-NLS-1$
+    assertEquals( "Genau eines überdeckt diesen Punkt", 1, rings2.length ); //$NON-NLS-1$
+    assertSame( "Es ist Dreieck2", TestData.triangle2, rings2[0] ); //$NON-NLS-1$
 
     final LinearRing[] rings4 = op.getAllContaining( TestData.cout );
-    assertNotNull( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.6"), rings4 ); //$NON-NLS-1$
-    assertEquals( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.7"), 0, rings4.length ); //$NON-NLS-1$
+    assertNotNull( "Ergebnis darf nie null sein", rings4 ); //$NON-NLS-1$
+    assertEquals( "Kein Dreieck überdeckt diesen Punkt", 0, rings4.length ); //$NON-NLS-1$
   }
 
   private Geometry checkSingleGeometry( final LinearRing ring, final Coordinate c )
@@ -49,20 +47,20 @@ public class GetRingsOperationTest extends TestCase
 
     final LinearRing[] rings = op.getAllContaining( c );
 
-    assertNotNull( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.8"), rings ); //$NON-NLS-1$
+    assertNotNull( "Ergebnis darf nie null sein", rings ); //$NON-NLS-1$
 
     final PointInRing pir = new SimplePointInRing( ring );
 
     if( pir.isInside( c ) )
     {
-      assertEquals( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.9"), 1, rings.length ); //$NON-NLS-1$
+      assertEquals( "Bei Schnitt muss ein Ergebnis da sein", 1, rings.length ); //$NON-NLS-1$
 
       final Geometry result = rings[0];
-      assertSame( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.10"), ring, result ); //$NON-NLS-1$
+      assertSame( "Das Ergebnis muss genau die übergebene Geometry sein", ring, result ); //$NON-NLS-1$
       return result;
     }
 
-    assertEquals( Messages.getString("com.bce.gis.operation.hmo2fli.GetRingsOperationTest.11"), 0, rings.length ); //$NON-NLS-1$
+    assertEquals( "Schneiden sich die beiden nicht, darf es kein Ergebnis geben", 0, rings.length ); //$NON-NLS-1$
     return null;
   }
 

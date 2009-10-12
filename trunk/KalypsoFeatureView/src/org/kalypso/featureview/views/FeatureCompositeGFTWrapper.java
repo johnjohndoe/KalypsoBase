@@ -157,18 +157,18 @@ public class FeatureCompositeGFTWrapper
      * loadGML() is at least called once.
      */
     if( workspace == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.0") ); //$NON-NLS-1$
+      throw new IllegalStateException( "Workspace not initialized." ); //$NON-NLS-1$
 
     /* If a FeatureComposite exists, then the listeners can be attached. */
     if( m_compFeature == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.1") ); //$NON-NLS-1$
+      throw new IllegalStateException( "There was no FeatureComposite." ); //$NON-NLS-1$
 
     /*
      * Are there already listeners created?
      */
     if( (m_ifFtrChLstner != null) )
       /* There are already listeners specified. Remove them first. */
-      throw new IllegalStateException( Messages.getString("org.kalypso.featureview.views.FeatureCompositeGFTWrapper.2") ); //$NON-NLS-1$
+      throw new IllegalStateException( "There are already listener attached, remove them first." ); //$NON-NLS-1$
 
     /* ModellListener erzeugen. */
     final ModellEventListener listener = new ModellEventListener()

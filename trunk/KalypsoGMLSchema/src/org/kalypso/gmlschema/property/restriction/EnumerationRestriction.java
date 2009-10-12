@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.annotation.IAnnotation;
 
 /**
@@ -54,10 +56,19 @@ public class EnumerationRestriction implements IRestriction
 {
   private final Map<Object, IAnnotation> m_map;
 
+  private final QName m_simpleType;
+
   public EnumerationRestriction( final Map<Object, IAnnotation> map )
   {
-    m_map = map;
+    this( map, null);
   }
+
+  public EnumerationRestriction( final Map<Object, IAnnotation> map, final QName simpleTypeQName )
+  {
+    m_map = map;
+    m_simpleType = simpleTypeQName;
+  }
+
 
   public Object[] getEnumeration( )
   {
@@ -76,6 +87,11 @@ public class EnumerationRestriction implements IRestriction
   public Map<Object, IAnnotation> getMapping( )
   {
     return m_map;
+  }
+
+  public QName getSimpleType( )
+  {
+    return m_simpleType;
   }
 
 }

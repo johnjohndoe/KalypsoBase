@@ -101,7 +101,6 @@ public class GeometryUtilities
 
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
 
-
   private GeometryUtilities( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class" );
@@ -181,7 +180,7 @@ public class GeometryUtilities
 
   /**
    * guess point that is on the surface
-   *
+   * 
    * @param surface
    *          surface that should contain the result point
    * @param pointGuess
@@ -595,7 +594,7 @@ public class GeometryUtilities
   /**
    * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
    * polygon is wrapped to a multi polygon.
-   *
+   * 
    * @param geomToCheck
    *          geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
@@ -643,7 +642,7 @@ public class GeometryUtilities
 
   /**
    * Finds the first geometry property of the given feature type.
-   *
+   * 
    * @param aPreferedGeometryClass
    *          If non null, the first property of this type is returned.
    */
@@ -682,7 +681,7 @@ public class GeometryUtilities
 
   /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
-   *
+   * 
    * @param newLine
    *          the input linestring
    * @param value
@@ -703,7 +702,7 @@ public class GeometryUtilities
 
   /**
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
-   *
+   * 
    * @param curve
    *          input curve to be simplified
    * @param epsThinning
@@ -761,11 +760,11 @@ public class GeometryUtilities
   /**
    * Same as {@link #findNearestFeature(GM_Point, double, FeatureList, QName)}, but only regards features of certain
    * qnames.
-   *
+   * 
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
-  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName, final QName[] allowedQNames )
+  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName[] geomQNames, final QName[] allowedQNames )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
     final List< ? > foundElements = modelList.query( reqEnvelope, null );
@@ -780,16 +779,18 @@ public class GeometryUtilities
       final Feature feature = FeatureHelper.getFeature( workspace, object );
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
-        final Object property = feature.getProperty( geoQName );
-
-        if( property instanceof GM_Object )
+        for( QName geomQName : geomQNames )
         {
-          final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
-          final double curDist = point.distance( geom );
-          if( min > curDist && curDist <= grabDistance )
+          final Object property = feature.getProperty( geomQName );
+          if( property instanceof GM_Object )
           {
-            nearest = feature;
-            min = curDist;
+            final GM_Object geom = (GM_Object) property;
+            final double curDist = point.distance( geom );
+            if( min > curDist && curDist <= grabDistance )
+            {
+              nearest = feature;
+              min = curDist;
+            }
           }
         }
       }
@@ -842,7 +843,7 @@ public class GeometryUtilities
 
   /**
    * Calculates the direction (in degrees) from one position to another.
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
@@ -859,7 +860,7 @@ public class GeometryUtilities
    * <p>
    * Orientation is anti.clockwise (i.e. positive).
    * </p>
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
    */
   public static double directionFromVector( final double vx, final double vy )
@@ -898,7 +899,7 @@ public class GeometryUtilities
 
   /**
    * checks, if a position lies inside or outside of an polygon defined by a position array
-   *
+   * 
    * @param pos
    *          position array of the polygon object
    * @param position
@@ -1048,13 +1049,13 @@ public class GeometryUtilities
       polygonPositions[i + firstPoses.length] = secondPoses[secondPoses.length - i - 1];
 
     polygonPositions[polygonPositions.length - 1] = polygonPositions[0];
-    
+
     return orientateRing( polygonPositions );
   }
 
   /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
-   *
+   * 
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1074,7 +1075,7 @@ public class GeometryUtilities
 
   /**
    * Orientates a ring counter clock wise.
-   *
+   * 
    * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
    */
   public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
@@ -1090,7 +1091,7 @@ public class GeometryUtilities
    * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
    * <b>It uses floats, so there can occur rounding problems!</b><br>
    * To avoid this, we substract all values with its minimum value. And add it later.
-   *
+   * 
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
   public static GM_Position[][] triangulateRing( final GM_Position[] ring )
