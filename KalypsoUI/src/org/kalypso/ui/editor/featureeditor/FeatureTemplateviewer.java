@@ -153,6 +153,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     m_commandtarget = commandtarget;
     m_marginHeight = marginHeight;
     m_marginWidth = marginWidth;
+    m_featureComposite.addChangeListener( m_changeListener );
   }
 
   /**
@@ -186,6 +187,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
+    m_pool.removePoolListener( this );
+
     m_template = template;
 
     final List<FeatureviewType> view = template.getView();
@@ -327,7 +330,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( feature != null )
       {
-        m_featureComposite.addChangeListener( m_changeListener );
         m_featureComposite.setFeature( feature );
 
         /* process rendering properties */

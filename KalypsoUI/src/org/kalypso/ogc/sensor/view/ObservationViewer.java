@@ -248,7 +248,8 @@ public class ObservationViewer extends Composite
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
-                setInput( m_txtHref.getText(), m_txtFilter.getText(), getShow() );
+                final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText(); //$NON-NLS-1$
+                setInput( m_txtHref.getText(), filterText, getShow() );
               }
             }
           }

@@ -175,7 +175,7 @@ public class StatusComposite extends Composite
   @Override
   public void setLayout( final Layout layout )
   {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.util.swt.StatusComposite.3" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "The layout of this composite is fixed." ); //$NON-NLS-1$
   }
 
   /**

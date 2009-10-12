@@ -216,9 +216,9 @@ public class MeasureMapWidget extends AbstractWidget
 
       /* update tooltip */
       if( Double.isNaN( size ) )
-        m_tooltip.setTooltip(  Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.8", currentPoint.getX(), currentPoint.getY() ) ); //$NON-NLS-1$
+        m_tooltip.setTooltip(  String.format("x = %.2f, y = %.2f", currentPoint.getX(), currentPoint.getY() ) ); //$NON-NLS-1$
       else
-        m_tooltip.setTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.9", m_delegate.sizeLabel, size ) ); //$NON-NLS-1$
+        m_tooltip.setTooltip( String.format("%s:\t\t%.2f", m_delegate.sizeLabel, size ) ); //$NON-NLS-1$
     }
   }
 

@@ -178,7 +178,7 @@ public class GMLSchemaEditor extends EditorPart
       }
       catch( final IOException e )
       {
-        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2" ), e ); //$NON-NLS-1$
+        throw new IllegalArgumentException( "Invalid IURIEditorInput input.", e ); //$NON-NLS-1$
       }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
@@ -223,7 +223,7 @@ public class GMLSchemaEditor extends EditorPart
       IOUtils.closeQuietly( contents );
     }
 
-    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3" ) ); //$NON-NLS-1$
+    throw new IllegalArgumentException( "Invalid editor input. Must be either IStorageEditorInput or GmlSchemaEditorInput." ); //$NON-NLS-1$
   }
 
   public IGMLSchema getSchema( )

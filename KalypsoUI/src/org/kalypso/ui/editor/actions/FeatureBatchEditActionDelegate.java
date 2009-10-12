@@ -43,23 +43,14 @@ package org.kalypso.ui.editor.actions;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.command.RelativeFeatureChange;
@@ -75,100 +66,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeatureBatchEditActionDelegate implements IActionDelegate
 {
-  /**
-   * Input dialog for selecting the action to take
-   */
-  private final class BatchEditParametersInputDialog extends InputDialog
-  {
-
-    private final class ButtonSelectionListener extends SelectionAdapter
-    {
-      ButtonSelectionListener( )
-      {
-      }
-
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        super.widgetSelected( e );
-        final Button button = (Button) e.widget;
-        if( button.getSelection() )
-        {
-          m_op = button.getText();
-        }
-      }
-    }
-
-    String m_op = "+"; //$NON-NLS-1$
-
-    /**
-     * Creates a new input dialog
-     */
-    public BatchEditParametersInputDialog( final Shell shell )
-    {
-      super( shell, Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.1" ), null, "0", null ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    @Override
-    protected Control createDialogArea( final Composite parent )
-    {
-      final Composite composite = (Composite) super.createDialogArea( parent );
-      final Group m_radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
-      m_radioButtonGroup.setText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.3" ) ); //$NON-NLS-1$
-      final FillLayout fillLayout = new FillLayout();
-      fillLayout.type = SWT.VERTICAL;
-      m_radioButtonGroup.setLayout( fillLayout );
-
-      final ButtonSelectionListener buttonSelectionListener = new ButtonSelectionListener();
-
-      final Button equalsButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      equalsButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.4" ) ); //$NON-NLS-1$
-      equalsButton.setText( "=" ); //$NON-NLS-1$
-      equalsButton.addSelectionListener( buttonSelectionListener );
-
-      final Button plusButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      plusButton.setText( "+" ); //$NON-NLS-1$
-      plusButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.7" ) ); //$NON-NLS-1$
-      plusButton.addSelectionListener( buttonSelectionListener );
-      plusButton.setSelection( true );
-
-      final Button minusButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      minusButton.setText( "-" ); //$NON-NLS-1$
-      minusButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.9" ) ); //$NON-NLS-1$
-      minusButton.addSelectionListener( buttonSelectionListener );
-
-      final Button timesButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      timesButton.setText( "*" ); //$NON-NLS-1$
-      timesButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.11" ) ); //$NON-NLS-1$
-      timesButton.addSelectionListener( buttonSelectionListener );
-
-      final Button divideButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      divideButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.12" ) ); //$NON-NLS-1$
-      divideButton.setText( "/" ); //$NON-NLS-1$
-      divideButton.addSelectionListener( buttonSelectionListener );
-
-      return composite;
-    }
-
-    public String getOperator( )
-    {
-      return m_op;
-    }
-
-    public double getAmount( )
-    {
-      return Double.parseDouble( getValue() );
-    }
-  }
-
   private IPropertyType m_focusedProperty;
 
   private Feature[] m_selectedFeatures;
 
   private CommandableWorkspace m_workspace;
+
+  private double m_focusedValue;
 
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -176,14 +80,14 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
   public void run( final IAction action )
   {
     final Shell shell = Display.getCurrent().getActiveShell();
-    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell );
-    dialog.open();
+    final BatchEditParametersInputDialog dialog = new BatchEditParametersInputDialog( shell, action.getText(), m_focusedValue );
+    if( dialog.open() == Window.CANCEL )
+      return;
+
     final String op = dialog.getOperator();
     final FeatureChange[] changeArray = new FeatureChange[m_selectedFeatures.length];
     for( int i = 0; i < m_selectedFeatures.length; i++ )
-    {
       changeArray[i] = new RelativeFeatureChange( m_selectedFeatures[i], (IValuePropertyType) m_focusedProperty, op, dialog.getAmount() );
-    }
 
     final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( m_workspace, changeArray );
 
@@ -207,6 +111,8 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
+    m_focusedValue = Double.NaN;
+
     if( selection instanceof IFeatureSelection )
     {
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
@@ -218,6 +124,13 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
         m_selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
         final Feature focusedFeature = featureSelection.getFocusedFeature();
         m_workspace = featureSelection.getWorkspace( focusedFeature );
+
+        if( m_focusedProperty != null && focusedFeature != null )
+        {
+          Object value =  focusedFeature.getProperty( m_focusedProperty );
+          if( value instanceof Number )
+            m_focusedValue = ((Number)value).doubleValue();
+        }
       }
       else
       {
