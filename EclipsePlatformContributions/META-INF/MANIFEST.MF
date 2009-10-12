@@ -20,6 +20,7 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui.intro.config,
  org.kalypso.contribs.eclipse.ui.views.contentoutline,
  org.kalypso.contribs.eclipse.ui.views.propertysheet,
+ org.kalypso.contribs.java.i18n,
  org.kalypso.contribs.java.net
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.editors;resolution:=optional,
