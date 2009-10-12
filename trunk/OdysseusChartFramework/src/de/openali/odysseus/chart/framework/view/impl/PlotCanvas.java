@@ -160,7 +160,8 @@ public class PlotCanvas extends Canvas implements PaintListener, Listener
       m_bufferImg.dispose();
       m_bufferImg = null;
     }
-    redraw();
+    if( !isDisposed())
+      redraw();
   }
 
   /**
