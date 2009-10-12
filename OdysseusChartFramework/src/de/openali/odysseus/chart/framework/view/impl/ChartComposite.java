@@ -57,7 +57,6 @@ public class ChartComposite extends Canvas implements IChartView
 
     createControl( this );
     setChartModel( model );
-
   }
 
   public IChartModel getChartModel( )
@@ -165,7 +164,6 @@ public class ChartComposite extends Canvas implements IChartView
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     super.setLayout( gridLayout );
-    setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final int axisContainerStyle = SWT.DOUBLE_BUFFERED;
 
@@ -272,8 +270,6 @@ public class ChartComposite extends Canvas implements IChartView
   @Override
   public void redraw( )
   {
-    // layout();
-
     final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
     final IAxis[] axes = mapperRegistry.getAxes();
     for( final IAxis axis : axes )
