@@ -72,6 +72,9 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
 
     for( int y = 0; y < sizeY; y++ )
     {
+      if( y % 100 == 0)
+        monitor.subTask( String.format( "%d/%d", y, sizeY ) );
+      
       for( int x = 0; x < sizeX; x++ )
       {
         final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, tmpCrd );

@@ -97,7 +97,7 @@
            point="org.kalypso.deegree.featureRule">
         <rule
               class="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
-              description="This rule validates, if the feature fullfils the restrictions of its gml application schema."
+              description="%rule.description"
               id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
               name="Schema restrictions Rule"/>
      </extension>
@@ -173,7 +173,7 @@
             category="org.kalypso.ui.preferences.KalypsoPreferencePage"
             class="org.kalypso.preferences.KalypsoDeegreePreferencePage"
             id="org.kalypso.deegree.preferences.KalypsoDeegreePreferencePage"
-            name="Koordinaten-Systeme">
+            name="%page.name">
       </page>
    </extension>
    <extension

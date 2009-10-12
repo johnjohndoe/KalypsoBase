@@ -53,7 +53,7 @@ public class CoordOrientation
   public static TYPE orientation2D_Polygon( final Coordinate[] coords ) throws CoordOrientationException
   {
     if( coords == null || coords.length < 3 || coords[0] != coords[coords.length - 1] )
-      LOG.warning( Messages.getString("com.bce.ext.jts.CoordOrientation.2") ); //$NON-NLS-1$
+      LOG.warning( "unable to filter coords: coord do not form a LinearRing" ); //$NON-NLS-1$
 
     // first find rightmost lowest vertex of the polygon
     int rmin = 0;

@@ -52,7 +52,10 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
  */
 public class ContentRestrictionFactory
 {
-  public static IRestriction[] createRestrictions( final Restriction restriction, final GMLSchema schema, final QName[] qnames )
+  /**
+   * @param simpleQName Non-<code>null</code>, if the restirction is defined by an top-level simple type. 
+   */
+  public static IRestriction[] createRestrictions( final QName simpleQName, final Restriction restriction, final GMLSchema schema, final QName[] qnames )
   {
     final List<IRestriction> result = new ArrayList<IRestriction>();
 
@@ -71,7 +74,7 @@ public class ContentRestrictionFactory
         map.put( stringValue, annotation );
       }
 
-      result.add( new EnumerationRestriction( map ) );
+      result.add( new EnumerationRestriction( map ,simpleQName) );
     }
 
     final Pattern[] patternArray = restriction.getPatternArray();

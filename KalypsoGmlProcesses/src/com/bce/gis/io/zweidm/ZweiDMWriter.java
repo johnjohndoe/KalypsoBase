@@ -77,7 +77,7 @@ public class ZweiDMWriter
         pw.print( " " ); //$NON-NLS-1$
       }
 
-      pw.println( Messages.getString("com.bce.gis.io.zweidm.ZweiDMWriter.8") ); //$NON-NLS-1$
+      pw.println( "1" ); //$NON-NLS-1$
     }
 
     // write nodes

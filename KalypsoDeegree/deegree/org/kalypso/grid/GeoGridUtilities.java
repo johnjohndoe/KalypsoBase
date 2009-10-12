@@ -93,7 +93,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper class for {@link IGeoGrid}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class GeoGridUtilities
@@ -105,7 +105,7 @@ public class GeoGridUtilities
 
   /**
    * Calclates the geo-position of the given cell.
-   *
+   * 
    * @param c
    *          If c is null, a new coordinate is returned, else its values are changed.
    */
@@ -131,7 +131,7 @@ public class GeoGridUtilities
   /**
    * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a grid point as a center point
    * representation.
-   *
+   * 
    * @param pos
    *          The search position, must be in the saem coordinate system as the grid.
    * @return The grid cell that contains the given position. Always returns a value, even if the position is not
@@ -200,7 +200,7 @@ public class GeoGridUtilities
 
   /**
    * Opens a {@link IGeoGrid} for a resource of a given mime-type.
-   *
+   * 
    * @param writeable
    *          if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid} will
    *          be returned.
@@ -246,7 +246,7 @@ public class GeoGridUtilities
 
   /**
    * This function creates the surface of a grid.
-   *
+   * 
    * @param grid
    *          The grid.
    * @param targetCRS
@@ -299,7 +299,7 @@ public class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a surface
    * with the grid point as center point of the surface.
-   *
+   * 
    * @param grid
    *          The grid.
    * @param x
@@ -390,7 +390,7 @@ public class GeoGridUtilities
    * geometry.<br>
    * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
    * ATTENTION: this does not work for every walker implementation! *
-   *
+   * 
    * @param walkingArea
    *          If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
@@ -417,7 +417,7 @@ public class GeoGridUtilities
 
   /**
    * This function creates a writable geo grid.
-   *
+   * 
    * @param mimeType
    *          The mime type for this grid (e.g. "image/bin").
    * @param file
@@ -451,9 +451,9 @@ public class GeoGridUtilities
   }
 
   /**
-   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is then added as a new coverage
-   * to the outputCoverages.
-   *
+   * Reads values from the given {@link IGeoGrid} and write it out with the scale factor of two (i.e. rounding to two
+   * important digits) into a new file which is then added as a new coverage to the outputCoverages.
+   * 
    * @param coverages
    *          The new coverage will be added to this collection.
    * @param grid
@@ -474,10 +474,38 @@ public class GeoGridUtilities
    */
   public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
+    return addCoverage( coverages, grid, 2, file, filePath, mimeType, monitor );
+  }
+
+  /**
+   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is then added as a new coverage
+   * to the outputCoverages.
+   * 
+   * @param coverages
+   *          The new coverage will be added to this collection.
+   * @param grid
+   *          The values of the new coverage will be read from this grid.
+   * @param scale
+   *          Scaling factor, i.e. number of important digits to round up the value
+   * @param file
+   *          The new coverage will be serialized to this file.
+   * @param filePath
+   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          file.
+   * @param mimeType
+   *          The mime type of the created underlying file.
+   * @throws GeoGridException
+   *           If the access to the given grid fails.
+   * @throws IOException
+   *           If writing to the output file fails.
+   * @throws CoreException
+   *           If the monitor is canceled.
+   */
+  public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final int scale, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
+  {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
     /* Create new grid file and copy all values */
-    final int scale = 2;
     IWriteableGeoGrid outputGrid = null;
     try
     {
@@ -513,8 +541,9 @@ public class GeoGridUtilities
   }
 
   /**
-   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
-   *
+   * Reads values from the given {@link IGeoGrid} and write it out with the scale factor of two (i.e. rounding to two
+   * important digits) into a new file which is referenced by given coverage
+   * 
    * @param coverage
    *          The coverage that refers the grid
    * @param grid
@@ -535,9 +564,36 @@ public class GeoGridUtilities
    */
   public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
+    setCoverage( coverage, grid, 2, file, filePath, mimeType, monitor );
+  }
+
+  /**
+   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
+   * 
+   * @param coverage
+   *          The coverage that refers the grid
+   * @param grid
+   *          The values of the new coverage will be read from this grid.
+   * @param scale
+   *          Scaling factor, i.e. number of important digits to round up the value
+   * @param file
+   *          The new coverage will be serialized to this file.
+   * @param filePath
+   *          the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          file.
+   * @param mimeType
+   *          The mime type of the created underlying file.
+   * @throws GeoGridException
+   *           If the acces to the given grid fails.
+   * @throws IOException
+   *           If writing to the output file fails.
+   * @throws CoreException
+   *           If the monitor is cancelled.
+   */
+  public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final int scale, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
+  {
     final SubMonitor progress = SubMonitor.convert( monitor, "Coverage wird erzeugt", 100 );
 
-    final int scale = 2;
     IWriteableGeoGrid outputGrid = null;
     try
     {
@@ -785,7 +841,7 @@ public class GeoGridUtilities
 
   /**
    * This function transforms the coordinate crd from its coordinate system to the grid coordinate system.
-   *
+   * 
    * @param grid
    *          The grid.
    * @param crd
@@ -833,7 +889,7 @@ public class GeoGridUtilities
 
   /**
    * calculates the common envelope for an array of {@link ICoverageCollection}s.
-   *
+   * 
    * @param collections
    *          the collections
    * @param intersection
@@ -901,7 +957,7 @@ public class GeoGridUtilities
 
   /**
    * Flattens several grids into one grid, that has the value set for the category as cell value
-   *
+   * 
    * @param gridCategories
    *          the categories with which the grid get flattened
    * @param intersection
@@ -981,7 +1037,7 @@ public class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a polygon
    * with the grid point as center point of the polygon.
-   *
+   * 
    * @param grid
    *          The grid.
    * @param x
@@ -1020,7 +1076,7 @@ public class GeoGridUtilities
   /**
    * Returns the value of a grid at a given position. Returns {@link Double#NaN} if the coordinate is outside the
    * bounding box.
-   *
+   * 
    * @see IGeoGrid#getValueChecked(int, int)
    */
   public static double getValueChecked( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
@@ -1031,7 +1087,7 @@ public class GeoGridUtilities
 
   /**
    * Writes a value to the grid at a specified position. The value is written to the cell covering the given coordinate.
-   *
+   * 
    * @return <code>true</code>, if and only if the coordinate lies within the grid and the value could be written.
    * @see #cellFromPosition(IGeoGrid, Coordinate)
    */
