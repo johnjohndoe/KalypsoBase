@@ -144,7 +144,7 @@ public class FeatureEditor extends EditorPart
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
-      throw new PartInitException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.0") ); //$NON-NLS-1$
+      throw new PartInitException( "Can only use IStorageEditorInput" ); //$NON-NLS-1$
 
     setSite( site );
 
@@ -158,7 +158,7 @@ public class FeatureEditor extends EditorPart
   protected final void setInput( final IEditorInput input )
   {
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.1") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Only IStorageEditorInput supported" ); //$NON-NLS-1$
 
     super.setInput( input );
 

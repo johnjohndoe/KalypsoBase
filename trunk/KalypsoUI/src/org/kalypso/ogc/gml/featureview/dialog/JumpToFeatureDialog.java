@@ -43,15 +43,14 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A fake dialog, which instead of opening a Dialog fire the requestOpenDialog event.
@@ -78,6 +77,12 @@ public class JumpToFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
+    if( m_feature == null )
+    {
+      MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.0"), Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      return Window.CANCEL;
+    }
+    
     m_listener.openFeatureRequested( m_feature, m_ftp );
 
     // always return cancel, nothing should be done else
@@ -98,13 +103,9 @@ public class JumpToFeatureDialog implements IFeatureDialog
   public String getLabel( )
   {
     if( m_feature == null )
-      return "<" + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link") + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link"); //$NON-NLS-1$
 
-    final String label = FeatureHelper.getAnnotationValue( m_feature, IAnnotation.ANNO_LABEL );
-
-    return "'" + label + "' " + Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.edit"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    // return m_feature == null ? "<Link nicht gesetzt oder nicht gültig>" : "Link zu Feature: " + m_feature.getId();
+    return "..."; //$NON-NLS-1$
   }
 
 }

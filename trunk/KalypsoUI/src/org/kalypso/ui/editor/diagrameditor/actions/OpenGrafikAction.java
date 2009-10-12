@@ -91,7 +91,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
       {
         final IProject[] projects = ProjectUtilities.getSelectedProjects();
         if( projects.length > 0 )
-          dest = projects[0].getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.1") ); //$NON-NLS-1$
+          dest = projects[0].getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ); //$NON-NLS-1$
         else
         {
           final ResourceSelectionDialog dlg = new ResourceSelectionDialog( getShell(), ResourcesPlugin.getWorkspace()
@@ -105,7 +105,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
             return;
 
           if( results[0] instanceof IFolder )
-            dest = ( (IFolder)results[0] ).getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.3") ); //$NON-NLS-1$
+            dest = ( (IFolder)results[0] ).getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ); //$NON-NLS-1$
           else
           {
             MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4"), //$NON-NLS-1$

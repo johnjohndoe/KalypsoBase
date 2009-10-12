@@ -218,7 +218,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    if( data != null && data instanceof Map )
+    if( data != null && data instanceof Map<?,?> )
     {
       final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );

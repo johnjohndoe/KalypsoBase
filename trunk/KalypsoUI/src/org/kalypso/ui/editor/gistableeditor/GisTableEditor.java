@@ -220,8 +220,8 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
         appendSpaltenActions( manager );
       }
     } );
-
-    getSite().registerContextMenu( menuManager, m_layerTable );
+    
+    getEditorSite().registerContextMenu( menuManager, m_layerTable, false );
     getSite().setSelectionProvider( getLayerTable() );
     m_layerTable.setMenu( menuManager );
     

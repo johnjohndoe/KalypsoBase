@@ -72,7 +72,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
   private String m_fileName = null;
 
-  private void formatInternal( final String prefix, final String key, final String kind, final String val )
+  private void writeProperty( final String prefix, final String key, final String kind, final String val )
   {
     if( val == null || key == null || key == "" )// || key.equals( val ) ) //$NON-NLS-1$
       return;
@@ -135,8 +135,8 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
         final String ftLabel = ftAnno.getLabel();
         final String ftDescripion = ftAnno.getDescription();
 
-        formatInternal( ftPrefix, ftLocalPart, "label", ftLabel ); //$NON-NLS-1$
-        formatInternal( ftPrefix, ftLocalPart, "description", ftDescripion ); //$NON-NLS-1$
+        writeProperty( ftPrefix, ftLocalPart, "label", ftLabel ); //$NON-NLS-1$
+        writeProperty( ftPrefix, ftLocalPart, "description", ftDescripion ); //$NON-NLS-1$
 
         final IPropertyType[] properties = featureType.getProperties();
         for( final IPropertyType propertyType : properties )
@@ -147,15 +147,15 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
           final String ptPrefix = nsMapper.getPreferredPrefix( ptNamespaceURI, null );
           final String nsptURI2 = ptNamespaceURI.replace( ':', '_' ).replace( '/', '_' );
           m_properties.setProperty( nsptURI2, ptPrefix );
-          
+
           final IAnnotation pAnno = propertyType.getAnnotation();
 
           final String pLabel = pAnno.getLabel();
           final String pTooltip = pAnno.getTooltip();
           final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptPrefix; //$NON-NLS-1$ //$NON-NLS-2$
 
-          formatInternal( prefix, ptName.getLocalPart(), "label", pLabel ); //$NON-NLS-1$
-          formatInternal( prefix, ptName.getLocalPart(), "tooltip", pTooltip ); //$NON-NLS-1$
+          writeProperty( prefix, ptName.getLocalPart(), "label", pLabel ); //$NON-NLS-1$
+          writeProperty( prefix, ptName.getLocalPart(), "tooltip", pTooltip ); //$NON-NLS-1$
 
           if( propertyType instanceof IValuePropertyType )
           {
@@ -169,13 +169,21 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
                 final Map<Object, IAnnotation> map = enumRest.getMapping();
                 for( final Object obj : map.keySet() )
                 {
-                  final String key = obj.toString();
+
                   final IAnnotation anno = map.get( obj );
                   final String aLabel = anno.getLabel();
                   final String aTooltip = anno.getTooltip();
-                  final String enumPrefix = prefix + '_' + ptName.getLocalPart();
-                  formatInternal( enumPrefix, key, "label", aLabel ); //$NON-NLS-1$
-                  formatInternal( enumPrefix, key, "tooltip", aTooltip ); //$NON-NLS-1$
+                  final QName simpleType = enumRest.getSimpleType();
+                  if( simpleType == null )
+                  {
+                    writeProperty( prefix + '_' + ptName.getLocalPart(), obj.toString(), "label", aLabel ); //$NON-NLS-1$
+                    writeProperty( prefix + '_' + ptName.getLocalPart(), obj.toString(), "tooltip", aTooltip ); //$NON-NLS-1$
+                  }
+                  else
+                  {
+                    writeProperty( ftPrefix+"_"+simpleType.getLocalPart(), obj.toString(), "label", aLabel ); //$NON-NLS-1$ //$NON-NLS-2$
+                    writeProperty( ftPrefix+"_"+simpleType.getLocalPart(), obj.toString(), "tooltip", aTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
+                  }
                 }
               }
             }
@@ -185,7 +193,6 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     }
     try
     {
-
 
       m_properties.store( new FileOutputStream( m_fileName ), schema.getContext().toString() );
     }

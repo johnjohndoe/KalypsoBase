@@ -54,6 +54,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -191,8 +192,8 @@ public class SelectFeatureWidget extends AbstractWidget
       {
         /* Grab next feature */
         final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, GRAB_RADIUS * 2 );
-        final QName geomQName = findGeomQName( featureList, m_geomQName );
-        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQName, m_qnamesToSelect );
+        final QName[] geomQNames = findGeomQName( featureList, m_geomQName );
+        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNames, m_qnamesToSelect );
 
         /* grap to the first feature that you can get */
         if( m_foundFeature != null )
@@ -405,8 +406,9 @@ public class SelectFeatureWidget extends AbstractWidget
 
     if( m_foundFeature != null )
     {
-      final QName geomQName = m_geomQName != null ? m_geomQName : m_foundFeature.getFeatureType().getDefaultGeometryProperty().getQName();
-      MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, geomQName );
+      final QName[] geomQNames = findGeomQName( m_foundFeature.getFeatureType(), m_geomQName );
+      for( QName qName : geomQNames )
+        MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, qName );
     }
 
     super.paint( g );
@@ -439,6 +441,10 @@ public class SelectFeatureWidget extends AbstractWidget
       {
         e.printStackTrace();
       }
+      finally
+      {
+        mapPanel.repaintMap();
+      }
     }
   }
 
@@ -457,9 +463,9 @@ public class SelectFeatureWidget extends AbstractWidget
       if( featureList == null )
         continue;
 
-      final QName geomQName = findGeomQName( featureList, m_geomQName );
+      final QName[] geomQNames = findGeomQName( featureList, m_geomQName );
 
-      final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQName, m_intersectMode );
+      final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQNames, m_intersectMode );
       if( selectedSubList != null )
         selectedFeatures.addAll( selectedSubList );
     }
@@ -469,17 +475,27 @@ public class SelectFeatureWidget extends AbstractWidget
   }
 
   /**
-   * Finds the geometry property to select from.<br>
+   * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
-   * Else, the default geometry property of the target type of the list will be taken.
+   * Else, the all geometrie properties of the target type of the list will be taken.
    */
-  public static QName findGeomQName( final FeatureList featureList, final QName defaultGeometry )
+  public static QName[] findGeomQName( final FeatureList featureList, final QName defaultGeometries )
   {
-    if( defaultGeometry != null )
-      return defaultGeometry;
-
     final IFeatureType targetFeatureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-    return targetFeatureType.getDefaultGeometryProperty().getQName();
+    return findGeomQName( targetFeatureType, defaultGeometries );
+  }
+
+  public static QName[] findGeomQName( final IFeatureType targetFeatureType, final QName defaultGeometries )
+  {
+    if( defaultGeometries != null )
+      return new QName[]{defaultGeometries};
+
+    final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeomteryProperties();
+    final QName[] result = new QName[geomProperties.length];
+    for( int i = 0; i < geomProperties.length; i++ )
+      result[i] = geomProperties[i].getQName();
+
+    return result;
   }
 
   public static void changeSelection( final IFeatureSelectionManager selectionManager, final List<Feature> selectedFeatures, final IKalypsoFeatureTheme[] themes, final boolean add, final boolean toggle )
@@ -534,11 +550,11 @@ public class SelectFeatureWidget extends AbstractWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
+  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName[] geomQNames, final boolean intersectMode )
   {
     final Collection<Feature> selectedFeatures = new HashSet<Feature>();
 
-    // why the check here?
+    // Only works for surface geometries:: select everything that intersects this geometry
     if( selectGeometry instanceof GM_Surface )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
@@ -552,22 +568,27 @@ public class SelectFeatureWidget extends AbstractWidget
 
         if( GMLSchemaUtilities.substitutes( featureType, qnamesToSelect ) )
         {
-          final IPropertyType pt = featureType.getProperty( geomQName );
-          final Object property = feature.getProperty( pt );
-
-          if( pt.isList() )
+          for( QName geomQName : geomQNames )
           {
-            final List< ? > list = (List< ? >) property;
-            for( final Object elmt : list )
+            final IPropertyType pt = featureType.getProperty( geomQName );
+            if( pt == null )
+              continue;
+            
+            final Object property = feature.getProperty( pt );
+            if( pt.isList() )
             {
-              if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
+              final List< ? > list = (List< ? >) property;
+              for( final Object elmt : list )
+              {
+                if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
+                  selectedFeatures.add( feature );
+              }
+            }
+            else
+            {
+              if( intersects( selectGeometry, (GM_Object) property, intersectMode ) )
                 selectedFeatures.add( feature );
             }
-          }
-          else
-          {
-            if( intersects( selectGeometry, (GM_Object) property, intersectMode ) )
-              selectedFeatures.add( feature );
           }
         }
       }
@@ -639,23 +660,33 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     for( final IKalypsoFeatureTheme theme : themes )
     {
-      if( theme == null )
-        continue;
+      Feature grabbed = grabNextFeature( mapPanel, currentPos, theme, qnamesToSelect, geomQName );
+      if( grabbed != null )
+        return grabbed;
+    }
 
-      final FeatureList featureList = theme.getFeatureList();
-      if( featureList == null )
-        continue;
+    return null;
+  }
 
-      /* Grab next feature */
-      final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
-      final QName geomQNameToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
-      final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNameToSelect, qnamesToSelect );
-      if( foundFeature != null )
-      {
-        final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
-        if( visibles != null && visibles.contains( foundFeature ) )
-          return foundFeature;
-      }
+  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme theme, final QName[] qnamesToSelect, final QName geomQName )
+  {
+
+    if( theme == null )
+      return null;
+
+    final FeatureList featureList = theme.getFeatureList();
+    if( featureList == null )
+      return null;
+
+    /* Grab next feature */
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
+    final QName[] geomQNamesToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
+    final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNamesToSelect, qnamesToSelect );
+    if( foundFeature != null )
+    {
+      final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
+      if( visibles != null && visibles.contains( foundFeature ) )
+        return foundFeature;
     }
 
     return null;

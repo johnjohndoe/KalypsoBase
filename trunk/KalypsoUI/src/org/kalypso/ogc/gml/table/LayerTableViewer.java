@@ -51,17 +51,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -81,9 +76,8 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -281,7 +275,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl;
 
-  private final TableViewerFocusCellManager m_focusCellManager;
+  private ExcelTableCursor m_tableCursor;
 
   /**
    * @param parent
@@ -311,16 +305,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // disable capture to let selection of table and tableviewer in sync
     table.setCapture( false );
 
-    // Override the default TableViewerEditor:
-    // - multi-selection is enabled
-    // - there is a focused cell
-    // - right-click opens context-menu everywhere
-    // - single-click starts editing
-    final FocusCellHighlighter focusHighlighter = new FocusCellOwnerDrawHighlighter( this );
-    m_focusCellManager = new TableViewerFocusCellManager( this, focusHighlighter );
-    final ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy( this );
-    TableViewerEditor.create( this, m_focusCellManager, editorActivationStrategy, ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditor.TABBING_HORIZONTAL
-        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+    m_tableCursor = new ExcelTableCursor( this, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.DOWN, true );
   }
 
   public void dispose( )
@@ -340,7 +325,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
-      if( layer.getHref() != null )
+      if( layer.getHref() != null && !layer.getHref().trim().isEmpty() )
       {
         // Only dispose theme if we really replace it
         // TODO: check this: sometimes we get a theme from outside... what to do in that case?
@@ -1033,10 +1018,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( theme == null )
       return selection;
 
-    final ViewerCell focusCell = m_focusCellManager.getFocusCell();
-
-    final Feature focusedFeature = focusCell == null ? null : (Feature) focusCell.getElement();
-    final int column = focusCell == null ? -1 : focusCell.getColumnIndex();
+    final TableItem row = m_tableCursor.getRow();
+    final int column = m_tableCursor.getColumn();
+    final Feature focusedFeature = row == null ? null : (Feature) row.getData();
 
     final IPropertyType focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
 
@@ -1094,6 +1078,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     final Menu tablemenu = menuManager.createContextMenu( table );
     table.setMenu( tablemenu );
+    
+    final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
+    m_tableCursor.setMenu( cursormenu );
   }
 
   protected void handleStatusChanged( final IKalypsoTheme source )

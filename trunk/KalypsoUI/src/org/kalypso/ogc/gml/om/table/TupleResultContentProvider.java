@@ -294,6 +294,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   {
     m_updateColumnsJob.cancel();
     m_updateColumnsJob.schedule( 100 );
+    m_updateColumnsJob.setSystem( true );
   }
 
   /**
