@@ -201,7 +201,7 @@ public class SingleSimulationService implements ISimulationService
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.SingleSimulationService.1"), e ); //$NON-NLS-1$
+      throw new SimulationException( "Unable to initialize jaxb unmarshaller", e ); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
