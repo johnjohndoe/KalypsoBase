@@ -59,7 +59,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
@@ -98,7 +98,7 @@ public class SpatialIndexTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "File loaded in: " ); //$NON-NLS-1$
 
-    final SplitSort sort = new SplitSort( null, null );
+    final FeatureList sort = FeatureFactory.createFeatureList( null, null );
 
     final FeatureList featureList = (FeatureList) workspace.getRootFeature().getProperty( propQName );
     for( final Object object : featureList )
