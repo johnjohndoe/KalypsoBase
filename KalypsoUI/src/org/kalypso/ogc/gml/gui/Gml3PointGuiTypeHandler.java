@@ -46,7 +46,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -64,6 +63,8 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -164,7 +165,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return GM_Point.class;
   }
@@ -223,6 +224,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     double[] dbl_values = null;
 
     /* Sind mind. zwei Einträge vorhanden (CS und ein double-Wert)? */
+    final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( str_values.length > 1 )
     {
       /* Der erste Eintrag wird als das CS angenommen. */
@@ -241,7 +243,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       }
       else
       {
-        crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        crs = kalypsoCrs;
 
         /* Der erste Eintrag war kein CS. */
         dbl_values = new double[str_values.length];
@@ -265,13 +267,25 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       }
       else
       {
-        crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        crs = kalypsoCrs;
         pos = GeometryFactory.createGM_Position( new double[] { new Double( str_values[0] ) } );
       }
     }
 
     final GM_Point point = GeometryFactory.createGM_Point( pos, crs );
 
-    return point;
+    try
+    {
+      // REMARK: all geometries in memory MUST have the Kalypso CRS, we do transform,
+      // regardlesss what the user has entered
+      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
+      return geoTransformer.transform( point );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
   }
 }
