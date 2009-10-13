@@ -168,7 +168,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     final IFileEditorInput input = (IFileEditorInput) eInput;
     try
     {
-      m_isSaving = true;
+      setSaving( true );
       doSaveInternal( monitor, input.getFile() );
       m_commandTarget.resetDirty();
       fireDirty();
@@ -181,7 +181,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     }
     finally
     {
-      m_isSaving = false;
+      setSaving( false );
     }
   }
 
@@ -250,13 +250,21 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.7" ), 1000 ); //$NON-NLS-1$
-        final IFileEditorInput newInput = new FileEditorInput( file );
-        doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput.getFile() );
-        commandTarget.resetDirty();
-        setInput( newInput );
+        try
+        {
+          final IFileEditorInput newInput = new FileEditorInput( file );
+          doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput.getFile() );
+          commandTarget.resetDirty();
+          setSaving( true );
+          setInput( newInput );
 
-        monitor.done();
-        return Status.OK_STATUS;
+          return Status.OK_STATUS;
+        }
+        finally
+        {
+          setSaving( false );
+          monitor.done();
+        }
       }
     };
 
@@ -264,6 +272,11 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     // The content may already be disposed before the doSaveInternal is called.
     final IProgressService progressService = (IProgressService) getSite().getService( IProgressService.class );
     RunnableContextHelper.execute( progressService, true, true, operation );
+  }
+
+  protected void setSaving( final boolean isSaving )
+  {
+    m_isSaving = isSaving;
   }
 
   private IFile getSaveAsFile( final IStorageEditorInput input )
@@ -320,6 +333,9 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
   protected final void load( final IStorageEditorInput input )
   {
+    if( m_isSaving )
+      return;
+
     try
     {
       // TODO: general error handling
