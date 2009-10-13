@@ -63,7 +63,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -106,8 +105,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   private final QName[] m_qnamesToSelect;
 
   private final QName m_geomQName;
-
-  private FeatureList[] m_featureLists;
 
   private Feature m_foundFeature;
 
@@ -158,7 +155,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     m_geometryBuilder = new PointGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
 
     m_themes = null;
-    m_featureLists = null;
     m_foundFeature = null;
 
     final IMapPanel mapPanel = getMapPanel();
@@ -168,10 +164,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       m_themes = new IKalypsoFeatureTheme[1];
-      m_featureLists = new FeatureList[1];
-
       m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
-      m_featureLists[0] = m_themes == null ? null : m_themes[0].getFeatureList();
     }
   }
 
@@ -199,7 +192,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    if( m_featureLists == null || mapPanel == null )
+    if( m_themes == null || mapPanel == null )
       return;
 
     m_foundFeature = SelectFeatureWidget.grabNextFeature( mapPanel, currentPos, m_themes, m_qnamesToSelect, m_geomQName );
@@ -311,29 +304,5 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
 
     return sb.toString();
-  }
-
-  public void setThemes( final IKalypsoFeatureTheme[] themes )
-  {
-    m_themes = new IKalypsoFeatureTheme[themes.length];
-    m_themes = themes;
-
-    m_featureLists = new FeatureList[themes.length];
-
-    if( m_themes == null )
-    {
-      m_featureLists = null;
-      return;
-    }
-
-    for( int i = 0; i < m_themes.length; i++ )
-    {
-      if( m_themes[i] != null )
-      {
-        final FeatureList featureList = m_themes[i].getFeatureList();
-        if( featureList != null )
-          m_featureLists[i] = featureList;
-      }
-    }
   }
 }
