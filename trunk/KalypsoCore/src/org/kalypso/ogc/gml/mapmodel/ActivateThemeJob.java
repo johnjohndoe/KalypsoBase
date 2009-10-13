@@ -47,6 +47,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
+/**
+ * FIXME: instead of using the method getTypeContext, the theme to be activated should be found by other means.
+ * Probably, just using the qname of the target feature type should be enough.<br>
+ * The theme context itself does not exist any more.
+ * 
+ * @author Stefan Kurzbach
+ */
 public final class ActivateThemeJob extends Job
 {
   public static final String NO_THEME = "NO_THEME"; //$NON-NLS-1$
@@ -69,7 +76,7 @@ public final class ActivateThemeJob extends Job
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       maybeActivateTheme( theme );
     }
