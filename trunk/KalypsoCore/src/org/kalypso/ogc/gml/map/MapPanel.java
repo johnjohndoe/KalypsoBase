@@ -305,6 +305,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   public void componentResized( final ComponentEvent e )
   {
     final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
+    if( bbox != null )
     setBoundingBox( bbox, false );
   }
 
