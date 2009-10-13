@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.eclipse.core.commands.contexts.Context;
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,6 +54,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -63,13 +64,14 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.i18n.Messages;
+import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
  * Manages context and sources corresponding to the map.<br>
@@ -101,7 +103,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
-      activateThemeContext( nowActive );
+      fireSourceChanged();
     }
 
     /**
@@ -111,7 +113,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-      activateThemeContext( theme );
+      fireSourceChanged();
     }
   };
 
@@ -131,8 +133,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       if( newModel != null )
         newModel.addMapModelListener( m_mapModellListener );
 
-      final IKalypsoTheme activeTheme = newModel == null ? null : newModel.getActiveTheme();
-      activateThemeContext( activeTheme );
+      fireSourceChanged();
     }
   };
 
@@ -156,11 +157,9 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   private IMapPanel m_mapPanel;
 
-  private final IContextService m_contextService;
+  private final IContextActivation m_mapPanelContext;
 
-  private IContextActivation m_mapPanelContext;
-
-  private IContextActivation m_themeContext;
+  private final IServiceLocator m_serviceLocator;
 
   /**
    * Creates a new MapPanelSourceProvider on the given service locator.
@@ -176,14 +175,15 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
    */
   public MapPanelSourceProvider( final IServiceLocator serviceLocator, final IMapPanel mapPanel )
   {
+    m_serviceLocator = serviceLocator;
     m_mapPanel = mapPanel;
 
-    m_contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
+    final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
     registerServiceWithSources( serviceLocator, IHandlerService.class );
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
-    m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
+    m_mapPanelContext = contextService.activateContext( MAP_CONTEXT );
 
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapPanel.addSelectionChangedListener( m_selectionChangedListener );
@@ -197,7 +197,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       return null;
 
     service.addSourceProvider( this );
-
     m_registeredServices.add( service );
 
     return service;
@@ -208,16 +207,17 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
    */
   public void dispose( )
   {
+    // unregister the registered source provider
+    for( final IServiceWithSources service : m_registeredServices )
+      service.removeSourceProvider( this );
+
     m_mapPanel.removeMapPanelListener( m_mapPanelListener );
     m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
 
     m_mapPanel = null;
 
     if( m_mapPanelContext != null )
-      m_contextService.deactivateContext( m_mapPanelContext );
-
-    if( m_themeContext != null )
-      m_contextService.deactivateContext( m_themeContext );
+      m_mapPanelContext.getContextService().deactivateContext( m_mapPanelContext );
   }
 
   /**
@@ -238,10 +238,11 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     return PROVIDED_SOURCE_NAMES;
   }
 
-  protected void activateThemeContext( final IKalypsoTheme activeTheme )
+  public void fireSourceChanged( )
   {
     final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -249,7 +250,17 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
         // clear how that stuff works.
         fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_MAPPANEL_NAME, m_mapPanel );
 
-        activateThemeContextSWT( activeTheme );
+        try
+        {
+          // Refresh the ui elements (i.e. toolbar), but is this the best place...?
+          final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
+          if( commandService != null )
+            CommandUtilities.refreshElements( commandService, AbstractMapPart.MAP_COMMAND_CATEGORY, null );
+        }
+        catch( final CommandException e )
+        {
+          e.printStackTrace();
+        }
 
         return Status.OK_STATUS;
       }
@@ -259,49 +270,9 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     job.schedule();
   }
 
-  /**
-   * Same as {@link #activateThemeContext(IKalypsoTheme)}, but MUST run in the swt thread.
-   */
-  protected void activateThemeContextSWT( final IKalypsoTheme activeTheme )
-  {
-    if( m_themeContext != null )
-      m_contextService.deactivateContext( m_themeContext );
-
-    m_themeContext = null;
-
-    if( activeTheme != null )
-    {
-      // TODO: is this really still needed, probably not, because every test now goes against the mapCnotext, no more
-      // theme contextes..
-      final String contextId = activeTheme.getTypeContext();
-      final Context context = m_contextService.getContext( contextId );
-      if( !context.isDefined() )
-      {
-        final String parentId = MAP_CONTEXT;
-        context.define( contextId, contextId, parentId );
-      }
-
-      m_themeContext = m_contextService.activateContext( contextId );
-    }
-
-    // REMARK: in order to update the command contributions, we
-    // activate/deactivate the current map-context.
-    // This is better, as all items should be completely update()'d
-    // ( instead of just refreshed via an UIElement updater.
-    // This is for example necessary for the NewFeature-DropDown.
-    // There is probably a better way to do this, which one?
-    if( m_mapPanelContext != null )
-    {
-      m_contextService.deactivateContext( m_mapPanelContext );
-      m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
-    }
-  }
-
   protected void handleSelectionChanged( )
   {
     // Update contribution items that depend on the selection
-    IMapModell mapModell = m_mapPanel == null ? null : m_mapPanel.getMapModell();
-    IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
-    activateThemeContext( activeTheme );
+    fireSourceChanged( /* activeTheme */);
   }
 }

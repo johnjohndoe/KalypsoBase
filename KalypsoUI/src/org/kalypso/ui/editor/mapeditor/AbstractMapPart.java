@@ -68,6 +68,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
@@ -75,6 +77,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
@@ -117,8 +120,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 ); //$NON-NLS-1$
 
-  private IWorkbenchPartSite m_site;
-
   private IMapPanel m_mapPanel;
 
   private GisTemplateMapModell m_mapModell;
@@ -151,6 +152,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   };
 
   private MapPanelSourceProvider m_mapSourceProvider;
+
+  private final PartAdapter2 m_partListener = new PartAdapter2()
+  {
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      handlePartActivated( partRef );
+    }
+  };
 
   private GM_Envelope m_initialEnv;
 
@@ -222,6 +232,19 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
+   * We need to fire a source change event, in order to tell the map context which panel is the currently active one.
+   */
+  protected void handlePartActivated( final IWorkbenchPartReference partRef )
+  {
+    if( m_mapSourceProvider == null )
+      return;
+
+    final IWorkbenchPart part = partRef.getPart( false );
+    if( part == AbstractMapPart.this )
+      m_mapSourceProvider.fireSourceChanged();
+  }
+
+  /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
   @Override
@@ -255,21 +278,19 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getSite()
-   */
-  @Override
-  public IWorkbenchPartSite getSite( )
-  {
-    return m_site;
-  }
-
-  /**
    * @see org.eclipse.ui.part.WorkbenchPart#setSite(org.eclipse.ui.IWorkbenchPartSite)
    */
   @Override
   protected void setSite( final IWorkbenchPartSite site )
   {
-    m_site = site;
+    final IWorkbenchPartSite currentSite = getSite();
+    if( currentSite != null )
+      currentSite.getPage().addPartListener( m_partListener );
+
+    super.setSite( site );
+
+    if( site != null )
+      site.getPage().addPartListener( m_partListener );
   }
 
   /**
@@ -277,7 +298,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    *      org.eclipse.ui.IStorageEditorInput)
    */
   @Override
-  protected synchronized void loadInternal( IProgressMonitor monitor, IStorageEditorInput input ) throws Exception, CoreException
+  protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
@@ -371,7 +392,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public BaseMapSchedulingRule getSchedulingRule( )
   {
     final IFile file;
-    IStorageEditorInput input = getEditorInput();
+    final IStorageEditorInput input = getEditorInput();
     if( input instanceof IFileEditorInput )
       file = ((IFileEditorInput) input).getFile();
     else
@@ -447,7 +468,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     return label;
   }
 
-  protected void updatePanel( IMapModell mapModell, GM_Envelope initialEnv )
+  protected void updatePanel( final IMapModell mapModell, final GM_Envelope initialEnv )
   {
     if( m_mapPanel != null )
     {
@@ -533,6 +554,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void dispose( )
   {
+    getSite().getPage().removePartListener( m_partListener );
+
     m_mapSourceProvider.dispose();
 
     m_disposed = true;
@@ -550,7 +573,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   @Override
-  public void setPartName( String partName )
+  public void setPartName( final String partName )
   {
     super.setPartName( partName );
   }
