@@ -288,8 +288,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget
 
     if( m_foundFeature != null )
     {
-      final QName geomQName = m_geomQName != null ? m_geomQName : m_foundFeature.getFeatureType().getDefaultGeometryProperty().getQName();
-      MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, geomQName );
+      // we still paint all geometries for the found feature
+      // normally we should only paint the geoemtry, we found the feature by
+      final QName[] qNames = SelectFeatureWidget.findGeomQName( m_foundFeature.getFeatureType(), m_geomQName );
+      for( final QName qName : qNames )
+        MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, qName );
     }
   }
 

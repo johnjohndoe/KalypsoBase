@@ -175,7 +175,7 @@ public class SelectFeatureWidget extends AbstractWidget
 
     m_foundFeature = null;
 
-    if( m_themes == null )
+    if( m_themes == null || currentPos == null )
       return;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, GRAB_RADIUS * 2 );
