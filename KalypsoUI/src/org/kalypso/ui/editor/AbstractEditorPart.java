@@ -155,8 +155,10 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   public final void doSave( final IProgressMonitor monitor )
   {
     final IEditorInput eInput = getEditorInput();
+    if( eInput == null )
+      return;
 
-    if( !(eInput instanceof FileEditorInput) )
+    if( !(eInput instanceof IFileEditorInput) )
     {
       // If input is not a file, allow user to save as
       doSaveAs();
@@ -316,7 +318,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     load( input );
   }
 
-  protected final void load( IStorageEditorInput input )
+  protected final void load( final IStorageEditorInput input )
   {
     try
     {
