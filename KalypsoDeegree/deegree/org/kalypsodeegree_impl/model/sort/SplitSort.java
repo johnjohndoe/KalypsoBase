@@ -271,7 +271,7 @@ public class SplitSort implements FeatureList
       // TODO: slow!
       final boolean removed = m_items.remove( object );
 
-      if( m_index != null && env != null )
+      if( m_index != null )
         m_index.remove( env, object );
 
       return removed;
