@@ -42,12 +42,14 @@ package org.kalypso.ogc.gml.featureview.dialog;
 
 import java.util.Collection;
 
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -75,30 +77,38 @@ public class PointFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
-  public int open( Shell shell )
+  public int open( final Shell shell )
   {
-    GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
+    final GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
 
-    PointDialog dialog = null;
-
-    if( point != null )
-      dialog = new PointDialog( shell, point.getAsArray(), point.getCoordinateSystem() );
-    else
-      dialog = new PointDialog( shell, new double[] { 0.0, 0.0 }, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+    final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final String dlgCrs = point == null ? kalypsoCrs : point.getCoordinateSystem();
+    final PointDialog dialog = new PointDialog( shell, point.getAsArray(), dlgCrs );
 
     final int open = dialog.open();
 
     if( open == Window.OK )
     {
-      double[] values = dialog.getValues();
+      final double[] values = dialog.getValues();
+      final GM_Position newPos = GeometryFactory.createGM_Position( values );
+      final String newCrs = dialog.getCS_CoordinateSystem();
 
-      GM_Position pos = GeometryFactory.createGM_Position( values );
+      final GeoTransformer geoTransformer = new GeoTransformer( kalypsoCrs );
+      try
+      {
+        // REMARK: enw geometries MUST always be created in the current Kalypso coordinate system
+        final GM_Position newPosTransformed = geoTransformer.transformPosition( newPos, newCrs );
+        final GM_Point newPoint = GeometryFactory.createGM_Point( newPosTransformed, kalypsoCrs );
 
-      String crs = dialog.getCS_CoordinateSystem();
-
-      point = GeometryFactory.createGM_Point( pos, crs );
-
-      m_change = new FeatureChange( m_feature, m_ftp, point );
+        m_change = new FeatureChange( m_feature, m_ftp, newPoint );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        final String titel = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.data" ); //$NON-NLS-1$
+        final String message = e.toString();
+        ErrorDialog.openError( shell, titel, message, null );
+      }
     }
 
     return open;
@@ -107,7 +117,7 @@ public class PointFeatureDialog implements IFeatureDialog
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
-  public void collectChanges( Collection<FeatureChange> c )
+  public void collectChanges( final Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
