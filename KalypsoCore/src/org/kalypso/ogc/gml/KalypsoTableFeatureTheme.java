@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
@@ -108,7 +108,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     {
       final Feature singleFeature = (Feature) featureFromPath;
       final Feature parent = singleFeature.getOwner();
-      m_featureList = new SplitSort( parent, singleFeature.getParentRelation() );
+      m_featureList = FeatureFactory.createFeatureList( parent, singleFeature.getParentRelation() );
       m_featureList.add( singleFeature );
       m_featureType = singleFeature.getFeatureType();
     }

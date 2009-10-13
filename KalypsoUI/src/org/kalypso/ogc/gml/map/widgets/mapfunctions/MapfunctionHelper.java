@@ -94,7 +94,7 @@ public class MapfunctionHelper
     final GeoTransform transform = mapPanel.getProjection();
     final String coordinatesSystem = mapModell.getCoordinatesSystem();
 
-    final SplitSort geoIndex = new SplitSort( null, null, new EasyFeatureWrapperEnvelopeProvider() );
+    final FeatureList geoIndex = FeatureFactory.createFeatureList( null, null, new EasyFeatureWrapperEnvelopeProvider() );
     for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
       geoIndex.add( wrapper );
 

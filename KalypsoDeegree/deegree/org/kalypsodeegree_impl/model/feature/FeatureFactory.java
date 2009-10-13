@@ -59,6 +59,7 @@ import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
@@ -232,7 +233,12 @@ public class FeatureFactory
   {
     return new SplitSort( parentFeature, parentFTP );
   }
-
+ 
+  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
+  {
+    return new SplitSort( parentFeature, parentFTP, envelopeProvider );
+  }
+  
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();

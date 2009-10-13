@@ -87,7 +87,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
  * @author Andreas von Dömming
@@ -137,7 +136,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       final Feature singleFeature = (Feature) featureFromPath;
       final Feature parent = singleFeature.getOwner();
-      m_featureList = new SplitSort( parent, singleFeature.getParentRelation() );
+      m_featureList = FeatureFactory.createFeatureList( parent, singleFeature.getParentRelation() );
       m_featureList.add( singleFeature );
       m_featureType = singleFeature.getFeatureType();
       m_isSingleFeature = true;
