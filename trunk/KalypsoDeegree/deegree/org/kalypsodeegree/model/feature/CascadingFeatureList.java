@@ -49,7 +49,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -57,6 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * listcontents <br>
  * this featurelist is <b>readonly </b>
  * 
+ * @deprecated Only used for relation editing stuff, which also should be used no more...
  * @author doemming
  */
 public class CascadingFeatureList implements FeatureList
@@ -475,13 +476,21 @@ public class CascadingFeatureList implements FeatureList
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  @Override
+  public List<Feature> searchFeatures( GM_Object geometry )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
    */
   @Override
   public Feature addNew( final QName newChildType )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -490,8 +499,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public Feature addNew( final QName newChildType, final String newFeatureId )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -500,8 +508,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -511,8 +518,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -521,8 +527,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
   {
-    // TODO Auto-generated method stub
-    return false;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -531,8 +536,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public Feature insertNew( final int index, final QName newChildType )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -541,8 +545,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -551,8 +554,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -562,8 +564,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -573,8 +574,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -583,29 +583,6 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
   {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Point,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

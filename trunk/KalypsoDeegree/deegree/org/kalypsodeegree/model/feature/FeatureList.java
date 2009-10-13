@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
 /**
@@ -86,9 +86,10 @@ public interface FeatureList extends List, JMSpatialIndex
    */
   public Object first( );
 
-  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result );
-
-  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result );
+  /**
+   * Find all features that intersect with the given geometry.<br>
+   */
+  public List<Feature> searchFeatures( final GM_Object geometry );
 
   /**
    * Same as {@link #insertNew(getSize(), newChildType, 'uniqueRandomFeatureId', Feature.class)}

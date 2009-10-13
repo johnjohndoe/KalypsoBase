@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -57,7 +58,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -224,18 +224,19 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      java.util.List)
    */
-  public List query( final GM_Envelope queryEnv, List result )
+  public List<?> query( final GM_Envelope queryEnv, List result )
   {
     checkIndex();
 
     synchronized( m_lock )
     {
-      if( result == null )
-        result = new ArrayList();
       final Envelope env = JTSAdapter.export( queryEnv );
-      final List list = m_index.query( env );
-      for( final Object object : list )
-        result.add( object );
+      
+      final List<?> list = m_index.query( env );
+      if( result == null )
+        return list;
+      
+      result.addAll( list );
       return result;
     }
   }
@@ -244,10 +245,8 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
    */
-  public List query( final GM_Position pos, List result )
+  public List<?> query( final GM_Position pos, List result )
   {
-    if( result == null )
-      result = new ArrayList();
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
 
@@ -720,6 +719,36 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  @Override
+  public List<Feature> searchFeatures( final GM_Object geometry )
+  {
+    final Feature parentFeature = getParentFeature();
+    final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
+
+    final List<?> query = query( geometry.getEnvelope(), null );
+
+    final List<Feature> result = new LinkedList<Feature>();
+    for( Object object : query )
+    {
+      final Feature feature = FeatureHelper.resolveLinkedFeature( workspace, object );
+      
+      final GM_Object[] geometryPropertyValues = feature.getGeometryPropertyValues();
+      for( GM_Object gmObject : geometryPropertyValues )
+      {
+        if( gmObject != null && gmObject.intersects( geometry ) )
+        {
+          result.add( feature );
+          break;
+        }
+      }
+    }
+    
+    return result;
+  }
+  
+  /**
    * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
    */
   @Override
@@ -830,28 +859,6 @@ public class SplitSort implements FeatureList
   {
     // TODO Auto-generated method stub
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Point,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }
