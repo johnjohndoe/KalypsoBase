@@ -56,6 +56,15 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 {
+  /**
+   * (Comma separated) qnames of the properties which determines the qname of the selectable geometry of features in
+   * this theme.<br>
+   * Should be interpreted by selection widgets.<br>
+   * 
+   * @see QName#toString()
+   */
+  public final static String PROPERTY_SELECTABLE_GEOMETRIES = "selectableGeometries"; //$NON-NLS-1$
+
   public CommandableWorkspace getWorkspace( );
 
   public ISchedulingRule getSchedulingRule( );
