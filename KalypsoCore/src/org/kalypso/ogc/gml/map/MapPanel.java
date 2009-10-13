@@ -577,7 +577,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   }
 
   /**
-   * Paints contents of the map ni the following order:
+   * Paints contents of the map in the following order:
    * <ul>
    * <li>the buffered image containing the layers</li>
    * <li>the status, if not OK</li>
