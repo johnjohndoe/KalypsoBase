@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.sort;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -49,7 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
@@ -352,7 +353,7 @@ public class FilteredFeatureList implements FeatureList
     return filterList( m_original.query( env, result ), result );
   }
 
-  private List filterList( final List originalList, final List result )
+  private List<?> filterList( final List<?> originalList, final List<?> result )
   {
     final int oldlength = result == null ? 0 : result.size();
 
@@ -361,7 +362,7 @@ public class FilteredFeatureList implements FeatureList
     for( final Iterator< ? > sIt = sublist.iterator(); sIt.hasNext(); )
     {
       final Object next = sIt.next();
-      final Feature f = FeatureHelper.getFeature( m_original.getParentFeature().getWorkspace(), next );
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), next );
       if( !m_filterVisitor.matchesType( f ) )
       {
         sIt.remove();
@@ -371,6 +372,20 @@ public class FilteredFeatureList implements FeatureList
     return originalList;
   }
 
+  private List<Feature> filterList( final List<?> originalList )
+  {
+    final List<Feature> filteredList = new LinkedList<Feature>();
+    for( Object object : originalList )
+    {
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), object );
+      if( m_filterVisitor.matchesType( f ) )
+        filteredList.add( f );
+    }
+
+    return filteredList;
+  }
+
+  
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
@@ -441,6 +456,15 @@ public class FilteredFeatureList implements FeatureList
     return features[0];
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  @Override
+  public List<Feature> searchFeatures( GM_Object geometry )
+  {
+    return filterList( m_original.searchFeatures( geometry ) );
+  }
+  
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
    */
@@ -552,28 +576,6 @@ public class FilteredFeatureList implements FeatureList
   {
     // TODO Auto-generated method stub
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Envelope env, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#queryIntersectResolve(org.kalypsodeegree.model.geometry.GM_Point,
-   *      java.util.List)
-   */
-  @Override
-  public List<Feature> queryIntersectResolve( final GM_Point point, final List<Feature> result )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }

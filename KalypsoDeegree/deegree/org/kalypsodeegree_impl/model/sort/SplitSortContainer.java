@@ -355,10 +355,7 @@ public class SplitSortContainer
       for( int i = 0; i < 4; i++ )
       {
         if( m_subContainer[i].containsEnvelope( env ) )
-        {
-          result = m_subContainer[i].query( env, result );
-          return result;
-        }
+          return m_subContainer[i].query( env, result );
       }
       for( int i = 0; i < 4; i++ )
       {

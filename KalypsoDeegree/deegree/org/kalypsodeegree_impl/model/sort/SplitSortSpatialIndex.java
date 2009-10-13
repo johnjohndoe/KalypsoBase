@@ -36,7 +36,6 @@
 package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -85,11 +84,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
    */
   public List<Object> query( final Envelope searchEnv )
   {
-    final List<Object> result = new ArrayList<Object>();
-
-    m_rootContainer.query( searchEnv, result );
-
-    return result;
+    return m_rootContainer.query( searchEnv, null );
   }
 
   /**
