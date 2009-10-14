@@ -98,7 +98,7 @@ public class SelectFeatureWidget extends AbstractWidget
 {
   public static final int GRAB_RADIUS = 20;
 
-  private IGeometryBuilder m_selectionTypeDelegate;
+  private IGeometryBuilder m_geometryBuilder;
 
   private IKalypsoFeatureTheme[] m_themes;
 
@@ -106,7 +106,11 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private final QName m_geomQName;
 
-  private Feature m_foundFeature;
+  /** The feature the mouse is currently over */
+  private Feature m_hoverFeature;
+
+  /** The theme, the hover feature blongs to */
+  private IKalypsoFeatureTheme m_hoverTheme;
 
   private boolean m_toggleMode;
 
@@ -145,11 +149,12 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     // default: selection by Rectangle
     // TODO: get from outside
-    if( m_selectionTypeDelegate == null )
-      m_selectionTypeDelegate = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
+    if( m_geometryBuilder == null )
+      m_geometryBuilder = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
 
     m_themes = null;
-    m_foundFeature = null;
+    m_hoverFeature = null;
+    m_hoverTheme = null;
 
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -173,7 +178,8 @@ public class SelectFeatureWidget extends AbstractWidget
     final IMapPanel mapPanel = getMapPanel();
     final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
-    m_foundFeature = null;
+    m_hoverFeature = null;
+    m_hoverTheme = null;
 
     if( m_themes == null || currentPos == null )
       return;
@@ -190,18 +196,21 @@ public class SelectFeatureWidget extends AbstractWidget
       if( featureList == null )
         continue;
 
-      if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
+      if( m_geometryBuilder instanceof PointGeometryBuilder )
       {
         /* Grab next feature */
-        final QName[] geomQNames = findGeomQName( theme, m_geomQName );
+        final QName[] geomQNames = findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
 
         final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
 
-        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
+        m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
 
         /* grab to the first feature that you can get */
-        if( m_foundFeature != null )
+        if( m_hoverFeature != null )
+        {
+          m_hoverTheme = theme;
           break;
+        }
       }
     }
 
@@ -230,19 +239,19 @@ public class SelectFeatureWidget extends AbstractWidget
   public void leftPressed( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_selectionTypeDelegate == null )
+    if( mapPanel == null || m_geometryBuilder == null )
       return;
 
     try
     {
-      if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
+      if( m_geometryBuilder instanceof RectangleGeometryBuilder )
       {
         final GM_Point point = MapUtilities.transform( mapPanel, p );
-        final GM_Object object = m_selectionTypeDelegate.addPoint( point );
+        final GM_Object object = m_geometryBuilder.addPoint( point );
         if( object != null )
         {
           doSelect( object );
-          m_selectionTypeDelegate.reset();
+          m_geometryBuilder.reset();
         }
       }
     }
@@ -261,28 +270,28 @@ public class SelectFeatureWidget extends AbstractWidget
   public void leftClicked( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_selectionTypeDelegate == null )
+    if( mapPanel == null || m_geometryBuilder == null )
       return;
 
     try
     {
       GM_Point point = null;
-      if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
+      if( m_geometryBuilder instanceof PointGeometryBuilder )
       {
         /* just snap to grabbed feature */
-        if( m_foundFeature != null )
+        if( m_hoverFeature != null )
         {
           final List<Feature> selectedFeatures = new ArrayList<Feature>();
-          selectedFeatures.add( m_foundFeature );
+          selectedFeatures.add( m_hoverFeature );
           final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
           changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
         }
-        m_selectionTypeDelegate.reset();
+        m_geometryBuilder.reset();
       }
-      else if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
+      else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
       {
         point = MapUtilities.transform( mapPanel, p );
-        m_selectionTypeDelegate.addPoint( point );
+        m_geometryBuilder.addPoint( point );
       }
     }
     catch( final Exception e )
@@ -299,16 +308,16 @@ public class SelectFeatureWidget extends AbstractWidget
   public void doubleClickedLeft( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_selectionTypeDelegate == null )
+    if( mapPanel == null || m_geometryBuilder == null )
       return;
 
     final GM_Point point = MapUtilities.transform( mapPanel, p );
     try
     {
-      m_selectionTypeDelegate.addPoint( point );
-      final GM_Object selectGeometry = m_selectionTypeDelegate.finish();
+      m_geometryBuilder.addPoint( point );
+      final GM_Object selectGeometry = m_geometryBuilder.finish();
       doSelect( selectGeometry );
-      m_selectionTypeDelegate.reset();
+      m_geometryBuilder.reset();
 
     }
     catch( final Exception e )
@@ -357,7 +366,7 @@ public class SelectFeatureWidget extends AbstractWidget
         break;
       // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
-        m_selectionTypeDelegate.reset();
+        m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
         selectionManager.clear();
         break;
@@ -385,12 +394,12 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private void changeGeometryBuilder( final IMapPanel mapPanel )
   {
-    if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
-      m_selectionTypeDelegate = new PolygonGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
-    else if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
-      m_selectionTypeDelegate = new PointGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
+    if( m_geometryBuilder instanceof RectangleGeometryBuilder )
+      m_geometryBuilder = new PolygonGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
+    else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
+      m_geometryBuilder = new PointGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
     else
-      m_selectionTypeDelegate = new RectangleGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
+      m_geometryBuilder = new RectangleGeometryBuilder( mapPanel.getMapModell().getCoordinatesSystem() );
   }
 
   /**
@@ -399,21 +408,25 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    paintHoverFeature( g, getMapPanel(), m_geometryBuilder, m_currentPoint, m_hoverFeature, m_hoverTheme, m_geomQName );
+
+    super.paint( g );
+  }
+
+  public static void paintHoverFeature( final Graphics g, final IMapPanel mapPanel, final IGeometryBuilder geometryBuilder, final Point currentPoint, final Feature hoverFeature, final IKalypsoFeatureTheme hoverTheme, final QName geomQName )
+  {
     if( mapPanel == null )
       return;
 
-    if( m_selectionTypeDelegate != null )
-      m_selectionTypeDelegate.paint( g, mapPanel.getProjection(), m_currentPoint );
+    if( geometryBuilder != null && currentPoint != null )
+      geometryBuilder.paint( g, mapPanel.getProjection(), currentPoint );
 
-    if( m_foundFeature != null )
+    if( hoverFeature != null )
     {
-      final QName[] geomQNames = findGeomQName( m_foundFeature.getFeatureType(), m_geomQName );
+      final QName[] geomQNames = findGeomQName( hoverTheme, geomQName, IKalypsoFeatureTheme.PROPERTY_HOVER_GEOMETRIES, hoverFeature );
       for( final QName qName : geomQNames )
-        MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, qName );
+        MapUtils.paintGrabbedFeature( g, mapPanel, hoverFeature, qName );
     }
-
-    super.paint( g );
   }
 
   /**
@@ -423,20 +436,20 @@ public class SelectFeatureWidget extends AbstractWidget
   public void leftReleased( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_selectionTypeDelegate == null )
+    if( mapPanel == null || m_geometryBuilder == null )
       return;
 
-    if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
+    if( m_geometryBuilder instanceof RectangleGeometryBuilder )
     {
       final GM_Point point = MapUtilities.transform( mapPanel, p );
 
       try
       {
-        final GM_Object selectGeometry = m_selectionTypeDelegate.addPoint( point );
+        final GM_Object selectGeometry = m_geometryBuilder.addPoint( point );
         if( selectGeometry != null )
         {
           doSelect( selectGeometry );
-          m_selectionTypeDelegate.reset();
+          m_geometryBuilder.reset();
         }
       }
       catch( final Exception e )
@@ -470,7 +483,7 @@ public class SelectFeatureWidget extends AbstractWidget
       if( featureList == null )
         continue;
 
-      final QName[] geomQNames = findGeomQName( theme, m_geomQName );
+      final QName[] geomQNames = findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
 
       final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQNames, m_intersectMode );
       if( selectedSubList != null )
@@ -485,8 +498,14 @@ public class SelectFeatureWidget extends AbstractWidget
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
    * Else, the all geometrie properties of the target type of the list will be taken.
+   * 
+   * @param propertyName
+   *          The property of the theme, that may provide the geometry qname
+   * @param feature
+   *          The feature that provides the geometries. If <code>null</code>, the target feature type of the given theme
+   *          is analysed
    */
-  public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometrie )
+  public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometrie, final String propertyName, final Feature feature )
   {
     if( defaultGeometrie == null )
     {
@@ -494,7 +513,7 @@ public class SelectFeatureWidget extends AbstractWidget
       // theme.
       try
       {
-        final String selectionGeometries = theme.getProperty( IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+        final String selectionGeometries = theme.getProperty( propertyName, null );
         if( selectionGeometries != null )
         {
           final String[] geomNames = selectionGeometries.split( "," );
@@ -510,10 +529,17 @@ public class SelectFeatureWidget extends AbstractWidget
       }
     }
 
-    // Else, use the geometries of the feature-lists target feature type
-    final FeatureList featureList = theme.getFeatureList();
-    final IFeatureType targetFeatureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-    return findGeomQName( targetFeatureType, defaultGeometrie );
+    final IFeatureType featureType;
+    if( feature == null )
+    {
+      // Else, use the geometries of the feature-lists target feature type
+      final FeatureList featureList = theme.getFeatureList();
+      featureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
+    }
+    else
+      featureType = feature.getFeatureType();
+
+    return findGeomQName( featureType, defaultGeometrie );
   }
 
   public static QName[] findGeomQName( final IFeatureType targetFeatureType, final QName defaultGeometries )
@@ -647,9 +673,9 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     final StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
 
-    if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
+    if( m_geometryBuilder instanceof PolygonGeometryBuilder )
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.2" ) ); //$NON-NLS-1$
-    else if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
+    else if( m_geometryBuilder instanceof RectangleGeometryBuilder )
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.3" ) ); //$NON-NLS-1$
     else
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
@@ -667,42 +693,5 @@ public class SelectFeatureWidget extends AbstractWidget
   public void setThemes( final IKalypsoFeatureTheme[] themes )
   {
     m_themes = themes;
-  }
-
-  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme[] themes, final QName[] qnamesToSelect, final QName geomQName )
-  {
-    for( final IKalypsoFeatureTheme theme : themes )
-    {
-      final Feature grabbed = grabNextFeature( mapPanel, currentPos, theme, qnamesToSelect, geomQName );
-      if( grabbed != null )
-        return grabbed;
-    }
-
-    return null;
-  }
-
-  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme theme, final QName[] qnamesToSelect, final QName geomQName )
-  {
-    if( theme == null )
-      return null;
-
-    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( currentPos, grabDistance );
-
-    final FeatureList featureList = theme.getFeatureListVisible( reqEnvelope );
-    if( featureList == null )
-      return null;
-
-    /* Grab next feature */
-    final QName[] geomQNamesToSelect = SelectFeatureWidget.findGeomQName( theme, geomQName );
-    final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNamesToSelect, qnamesToSelect );
-    if( foundFeature != null )
-    {
-      final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
-      if( visibles != null && visibles.contains( foundFeature ) )
-        return foundFeature;
-    }
-
-    return null;
   }
 }
