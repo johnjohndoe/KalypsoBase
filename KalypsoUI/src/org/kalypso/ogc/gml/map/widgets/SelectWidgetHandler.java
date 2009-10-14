@@ -235,6 +235,8 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {
+    // TODO: icon and toolti should only be set once, but updateElement is called often
+    // Is this icon/tooltip stuff still in use?
     if( m_widgetIconFromExtension != null )
     {
       final ImageDescriptor iconFromBundle = getIconFromBundle( m_pluginIdFromExtension, m_widgetIconFromExtension );
@@ -249,16 +251,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IEvaluationContext context = handlerService.getCurrentState();
     
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-//    final IWorkbench workbench = PlatformUI.getWorkbench();
-//    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-//    if( window == null )
-//      return;
-//
-//    final IWorkbenchPart activePart = window.getPartService().getActivePart();
-//    if( activePart == null )
-//      return;
-//
-//    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+
     if( mapPanel != null )
     {
       final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
