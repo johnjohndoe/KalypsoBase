@@ -50,6 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -177,9 +178,9 @@ final public class GeometryFactory
    * creates a GM_CurveSegment from an array of points.
    * 
    * @param points
-   *            array of GM_Point
+   *          array of GM_Point
    * @param crs
-   *            spatial reference system of the curve
+   *          spatial reference system of the curve
    */
   public static GM_CurveSegment createGM_CurveSegment( final GM_Position[] points, final String crs ) throws GM_Exception
   {
@@ -190,9 +191,9 @@ final public class GeometryFactory
    * creates a GM_Curve from an array of GM_Positions.
    * 
    * @param positions
-   *            positions
+   *          positions
    * @param crs
-   *            geometries coordinate reference system
+   *          geometries coordinate reference system
    */
   public static GM_Curve createGM_Curve( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
@@ -205,7 +206,7 @@ final public class GeometryFactory
    * creates a GM_Curve from one curve segment.
    * 
    * @param segment
-   *            GM_CurveSegments
+   *          GM_CurveSegments
    */
   public static GM_Curve createGM_Curve( final GM_CurveSegment segment ) throws GM_Exception
   {
@@ -216,7 +217,7 @@ final public class GeometryFactory
    * creates a GM_Curve from an array of curve segments.
    * 
    * @param segments
-   *            array of GM_CurveSegments
+   *          array of GM_CurveSegments
    */
   public static GM_Curve createGM_Curve( final GM_CurveSegment[] segments ) throws GM_Exception
   {
@@ -247,13 +248,13 @@ final public class GeometryFactory
    * creates a GM_SurfacePatch from array(s) of GM_Position
    * 
    * @param exteriorRing
-   *            exterior ring of the patch
+   *          exterior ring of the patch
    * @param interiorRings
-   *            interior rings of the patch
+   *          interior rings of the patch
    * @param si
-   *            GM_SurfaceInterpolation
+   *          GM_SurfaceInterpolation
    * @param crs
-   *            spatial reference system of the surface patch
+   *          spatial reference system of the surface patch
    */
   public static GM_SurfacePatch createGM_SurfacePatch( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
   {
@@ -296,9 +297,9 @@ final public class GeometryFactory
    * creates a GM_Curve from a wkb.
    * 
    * @param wkb
-   *            byte stream that contains the wkb information
+   *          byte stream that contains the wkb information
    * @param crs
-   *            spatial reference system of the curve
+   *          spatial reference system of the curve
    */
   public static GM_Curve createGM_Curve( final byte[] wkb, final String crs ) throws GM_Exception
   {
@@ -374,13 +375,13 @@ final public class GeometryFactory
    * creates a GM_Surface composed of one GM_SurfacePatch from array(s) of GM_Position
    * 
    * @param exteriorRing
-   *            exterior ring of the patch
+   *          exterior ring of the patch
    * @param interiorRings
-   *            interior rings of the patch
+   *          interior rings of the patch
    * @param si
-   *            GM_SurfaceInterpolation
+   *          GM_SurfaceInterpolation
    * @param crs
-   *            spatial reference system of the surface patch
+   *          spatial reference system of the surface patch
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
   {
@@ -392,7 +393,7 @@ final public class GeometryFactory
    * creates a GM_Surface from an array of GM_SurfacePatch.
    * 
    * @param patch
-   *            patches that build the surface
+   *          patches that build the surface
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
   {
@@ -403,11 +404,11 @@ final public class GeometryFactory
    * creates a GM_Surface from a wkb.
    * 
    * @param wkb
-   *            byte stream that contains the wkb information
+   *          byte stream that contains the wkb information
    * @param crs
-   *            spatial reference system of the curve
+   *          spatial reference system of the curve
    * @param si
-   *            GM_SurfaceInterpolation
+   *          GM_SurfaceInterpolation
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final byte[] wkb, final String crs, final GM_SurfaceInterpolation si ) throws GM_Exception
   {
@@ -558,9 +559,9 @@ final public class GeometryFactory
    * <p>
    * 
    * @param bbox
-   *            envelope to be converted
+   *          envelope to be converted
    * @param crs
-   *            spatial reference system of the surface
+   *          spatial reference system of the surface
    * @return corresponding surface
    * @throws GM_Exception
    */
@@ -580,7 +581,7 @@ final public class GeometryFactory
    * <p>
    * 
    * @param crs
-   *            spatial reference system of the surface
+   *          spatial reference system of the surface
    * @return corresponding surface
    * @throws GM_Exception
    */
@@ -624,7 +625,7 @@ final public class GeometryFactory
    * creates a GM_MultiPoint from an array of GM_Point.
    * 
    * @param points
-   *            array of GM_Points
+   *          array of GM_Points
    */
   public static GM_MultiPoint createGM_MultiPoint( final GM_Point[] points )
   {
@@ -640,9 +641,9 @@ final public class GeometryFactory
    * creates a GM_MultiPoint from a wkb.
    * 
    * @param wkb
-   *            byte stream that contains the wkb information
+   *          byte stream that contains the wkb information
    * @param crs
-   *            spatial reference system of the curve
+   *          spatial reference system of the curve
    */
   public static GM_MultiPoint createGM_MultiPoint( final byte[] wkb, final String crs ) throws GM_Exception
   {
@@ -743,9 +744,9 @@ final public class GeometryFactory
    * creates a GM_MultiCurve from a wkb.
    * 
    * @param wkb
-   *            byte stream that contains the wkb information
+   *          byte stream that contains the wkb information
    * @param crs
-   *            spatial reference system of the curve
+   *          spatial reference system of the curve
    */
   public static GM_MultiCurve createGM_MultiCurve( final byte[] wkb, final String crs ) throws GM_Exception
   {
@@ -1097,13 +1098,18 @@ final public class GeometryFactory
     return new GM_TriangulatedSurface_Impl( crs );
   }
 
+  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( final String crs ) throws GM_Exception
+  {
+    return new GM_PolyhedralSurface_Impl<GM_Polygon>( crs );
+  }
+
   /**
    * creates a GM_Curve from an double array of GM_Positions.
    * 
    * @param positions
-   *            positions
+   *          positions
    * @param crs
-   *            geometries coordinate reference system
+   *          geometries coordinate reference system
    */
   public static GM_Curve[] createGM_Curve( final GM_Position[][] rings, final String crs ) throws GM_Exception
   {
@@ -1139,6 +1145,16 @@ final public class GeometryFactory
     GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( crs );
 
     for( GM_Triangle triangle : triangles )
+      triangulatedSurface.add( triangle );
+
+    return triangulatedSurface;
+  }
+
+  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( GM_Polygon[] polygons, String crs ) throws GM_Exception
+  {
+    GM_Surface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
+
+    for( GM_Polygon triangle : polygons )
       triangulatedSurface.add( triangle );
 
     return triangulatedSurface;
