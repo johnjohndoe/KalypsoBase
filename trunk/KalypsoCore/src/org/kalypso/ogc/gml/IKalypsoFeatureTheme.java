@@ -65,6 +65,14 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
    */
   public final static String PROPERTY_SELECTABLE_GEOMETRIES = "selectableGeometries"; //$NON-NLS-1$
 
+  /**
+   * (Comma separated) qnames of the properties that shall be painted when hovering over a feature in this theme.<br>
+   * Should be interpreted by selection widgets.<br>
+   * 
+   * @see QName#toString()
+   */
+  public final static String PROPERTY_HOVER_GEOMETRIES = "hoverGeometries"; //$NON-NLS-1$
+
   public CommandableWorkspace getWorkspace( );
 
   public ISchedulingRule getSchedulingRule( );
