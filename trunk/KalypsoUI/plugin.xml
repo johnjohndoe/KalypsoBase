@@ -1001,6 +1001,11 @@
 				<parameter name="forward" value="false" />
 				<parameter name="firstlast" value="true" />
 			</class>
+            <enabledWhen>
+                <with variable="activeMapPanel">
+                    <test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+                </with>
+            </enabledWhen>			
 		</handler>
 		<handler commandId="org.kalypso.ui.map.selectNextFeatureCommand">
 			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
@@ -1008,6 +1013,11 @@
 				<parameter name="rotate" value="false" />
 				<parameter name="image" value="icons/util/forward_nav.gif" />
 			</class>
+            <enabledWhen>
+                <with variable="activeMapPanel">
+                    <test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+                </with>
+            </enabledWhen>			
 		</handler>
 		<handler commandId="org.kalypso.ui.map.selectPreviousFeatureCommand">
 			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
@@ -1015,12 +1025,22 @@
 				<parameter name="rotate" value="false" />
 				<parameter name="image" value="icons/util/backward_nav.gif" />
 			</class>
+            <enabledWhen>
+                <with variable="activeMapPanel">
+                    <test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+                </with>
+            </enabledWhen>			
 		</handler>
         <handler commandId="org.kalypso.ui.map.selectLastFeatureCommand">
             <class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
                 <parameter name="forward" value="true" />
                 <parameter name="firstlast" value="true" />
             </class>
+            <enabledWhen>
+                <with variable="activeMapPanel">
+                    <test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+                </with>
+            </enabledWhen>            
         </handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler" commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryPrevHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand"/>

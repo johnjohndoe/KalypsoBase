@@ -51,6 +51,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.UIElement;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -68,7 +71,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class SelectNextFeatureHandler extends AbstractHandler implements IExecutableExtension
+public class SelectNextFeatureHandler extends AbstractHandler implements IElementUpdater, IExecutableExtension
 {
   /** Move forward (<code>true</code>) or backward (<code>false</code>) */
   private boolean m_forward = false;
@@ -248,10 +251,11 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
       final Object currentElement = selectionManager.getFirstElement();
       final Feature objectToSelect = findFeatureToSelect( featureTheme, featureList, currentElement );
 
-      if( objectToSelect == currentElement )
-        return false;
+      final boolean enabled = objectToSelect != currentElement && objectToSelect != null;
+// final String msg = String.format( "Checking enabled (forward: %s, last: %s): %s", m_forward, m_firstLast, enabled );
+// System.out.println( msg );
 
-      return objectToSelect != null;
+      return enabled;
     }
     catch( final ExecutionException e )
     {
@@ -262,12 +266,16 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
   }
 
   /**
-   * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public boolean isEnabled( )
+  public void updateElement( final UIElement element, final Map parameters )
   {
-    return super.isEnabled();
+    // Sttange: normally the framework should automatically call setEnabled, as
+    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    setEnabled( context );
   }
 
 }
