@@ -60,6 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.typeHandler.GM_EnvelopeBindingTypeHandler;
 import org.kalypsodeegree.model.typeHandler.GenericGM_ObjectBindingTypeHandler;
+import org.kalypsodeegree.model.typeHandler.PolyhedralSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.TriangulatedSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigDecimal;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigInteger;
@@ -259,6 +260,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
+    registry.registerTypeHandler( new PolyhedralSurfaceHandler() );
 
     // Coverages
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "File" ), FileType.class, false ) );

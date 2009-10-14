@@ -42,8 +42,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Triangle>
+public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Polygon>
 {
   private final Graphics m_gc;
 
@@ -72,19 +72,19 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
-  public boolean visit( final GM_Triangle triangle, final double elevationSample )
+  public boolean visit( final GM_Polygon polygon, final double elevationSample )
   {
-    getTriangleSurface( triangle );
+    getPolygonSurface( polygon );
     return true;
   }
 
-  private void getTriangleSurface( final GM_Triangle triangle )
+  private void getPolygonSurface( final GM_Polygon polygon )
   {
     // get value range of the triangle
     double minValue = Double.POSITIVE_INFINITY;
     double maxValue = Double.NEGATIVE_INFINITY;
 
-    final GM_Position[] positions = triangle.getExteriorRing();
+    final GM_Position[] positions = polygon.getExteriorRing();
 
     for( final GM_Position position : positions )
     {
@@ -105,11 +105,12 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
       final double startValue = m_colorModel.getFrom( currentClass );
       final double endValue = m_colorModel.getTo( currentClass );
 
-      if( triangleLiesInsideColorClass( minValue, maxValue, startValue, endValue ) == true )
+      if( polygonLiesInsideColorClass( minValue, maxValue, startValue, endValue ) == true )
       {
         /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
 
         /* Prüfung für jede Kante und deren Knotenhöhen, Vergleich mit Intervallgrenzen von - bis */
+        /*TODO: adapt this code for planar polygons (at least quadrilaterals) */ 
         if( startValue <= positions[0].getZ() && positions[0].getZ() <= endValue && startValue <= positions[1].getZ() && positions[1].getZ() <= endValue && startValue <= positions[2].getZ()
             && positions[2].getZ() <= endValue )
         {
@@ -357,7 +358,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
   }
 
-  private boolean triangleLiesInsideColorClass( final double min, final double max, final double from, final double to )
+  private boolean polygonLiesInsideColorClass( final double min, final double max, final double from, final double to )
   {
     if( (from <= min && min <= to) || (from <= max && max <= to) || (min <= from && to <= max) )
       return true;

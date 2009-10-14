@@ -74,6 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -303,21 +304,21 @@ public class DisplayElementFactory
 
   public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
-    if( !(geoProperty instanceof GM_TriangulatedSurface) )
+    if( !(geoProperty instanceof GM_Surface) )
       throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
 
     final PolygonColorMap colorMap = symbolizer.getColorMap();
-    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
-    final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+    final GM_Surface tin = (GM_Surface) geoProperty;
+    final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
     {
-      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+      public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
         return new SurfacePaintPolygonVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 
-    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, tin, null, visitorFactory );
   }
 
   /**
