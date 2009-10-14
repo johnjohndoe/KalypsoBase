@@ -45,8 +45,10 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -166,6 +168,10 @@ public class PropertyName extends Expression_Impl
         return object.toString();
       else if( object instanceof List )
         return object;
+      else if( object instanceof IFeatureWrapper2 )
+        return object;
+      else if( object instanceof XLinkedFeature_Impl )
+        return ((XLinkedFeature_Impl) object).getFeature();
 
       return FilterElementLabelProvider.toString( object );
     }

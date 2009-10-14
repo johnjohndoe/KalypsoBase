@@ -42,10 +42,13 @@
  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import javax.xml.namespace.QName;
+
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.framework.xml.NamespaceContext;
 import org.deegree.framework.xml.XMLParsingException;
 import org.deegree.ogcbase.CommonNamespaces;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -60,6 +63,8 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.model.feature.GMLUtilities;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -127,37 +132,31 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     boolean equals = false;
+
+    final Object propertyValue = propertyName.evaluate( feature );
+
+    if( propertyValue instanceof Feature )
+      return GMLSchemaUtilities.substitutes( ((Feature) propertyValue).getFeatureType(), new QName( typeName.getNamespace().toString(), typeName.getLocalName() ) );
     
-    final String value = propertyName.getValue();
-    final Object propertyValue;
-    if( value.contains( ":" ) )
+    final String localName = this.typeName.getLocalName();
+    if( "Point".equals( localName ) )
     {
-      propertyValue = feature.getProperty( value.substring( value.indexOf( ":" ) + 1 ) );
+      equals = propertyValue instanceof GM_Point || propertyValue instanceof GM_MultiPoint;
+    }
+    else if( "_Curve".equals( localName ) )
+    {
+      equals = propertyValue instanceof GM_Curve || propertyValue instanceof GM_MultiCurve;
+    }
+    else if( "_Surface".equals( localName ) )
+    {
+      equals = propertyValue instanceof GM_Surface || propertyValue instanceof GM_MultiSurface || propertyValue instanceof GM_SurfacePatch;
     }
     else
     {
-      propertyValue = feature.getProperty( value );
+      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.typeName + " is not a supported type to check for.";
+      throw new FilterEvaluationException( msg );
     }
-    
-      final String localName = this.typeName.getLocalName();
-      if( "Point".equals( localName ) )
-      {
-        equals = propertyValue instanceof GM_Point || propertyValue instanceof GM_MultiPoint;
-      }
-      else if( "_Curve".equals( localName ) )
-      {
-        equals = propertyValue instanceof GM_Curve || propertyValue instanceof GM_MultiCurve;
-      }
-      else if( "_Surface".equals( localName ) )
-      {
-        equals = propertyValue instanceof GM_Surface || propertyValue instanceof GM_MultiSurface || propertyValue instanceof GM_SurfacePatch;
-      }
-      else
-      {
-        final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.typeName + " is not a supported type to check for.";
-        throw new FilterEvaluationException( msg );
-      }
-    
+
     return equals;
   }
 
