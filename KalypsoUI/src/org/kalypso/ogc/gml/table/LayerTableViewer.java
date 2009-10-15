@@ -106,6 +106,8 @@ import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -151,7 +153,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
 
-  private final IFeatureModifierFactory m_featureControlFactory;
+  public static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
+
+  private final IFeatureModifierFactory m_featureModiferFactory;
 
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
@@ -177,7 +181,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( theme == null )
         return;
       final FeatureList featureList = theme.getFeatureList();
-      final List themeFeatures = featureList == null ? new ArrayList() : (List) featureList;
+      final List< ? > themeFeatures = featureList == null ? new ArrayList<Object>() : (List< ? >) featureList;
       globalFeatureList.retainAll( themeFeatures );
       final Feature[] globalFeatures = globalFeatureList.toArray( new Feature[globalFeatureList.size()] );
 
@@ -275,7 +279,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl;
 
-  private ExcelTableCursor m_tableCursor;
+  private ExcelTableCursor m_tableCursor = null;
 
   /**
    * @param parent
@@ -286,7 +290,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     super( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
 
-    m_featureControlFactory = featureControlFactory;
+    m_featureModiferFactory = featureControlFactory;
     m_templateTarget = templateTarget;
     m_selectionManager = selectionManager;
     m_fcl = fcl;
@@ -425,7 +429,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
 
     for( final Column ct : columnList )
-      addColumn( ct.getName(), ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
+      addColumn( ct.getName(), ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), ct.getModifier(), false );
   }
 
   public IKalypsoFeatureTheme getTheme( )
@@ -444,7 +448,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       element.dispose();
   }
 
-  public void addColumn( final String propertyName, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
@@ -459,6 +463,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
+    tc.setData( COLUMN_PROP_MODIFIER, modifier );
     tc.setToolTipText( tooltip );
     tc.setWidth( width );
     setColumnText( tc );
@@ -510,7 +515,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( featureType != null )
       {
         final IPropertyType property = featureType.getProperty( propertyName );
-
+        if( property == null )
+        {
+          final String msg = String.format( "Unknown property: " + propertyName );
+          return new String[] { msg, msg };
+        }
         final IAnnotation annotation = property.getAnnotation();
         result[0] = annotation.getLabel();
         result[1] = annotation.getTooltip();
@@ -634,7 +643,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final IPropertyType ftp = featureType.getProperty( propName );
       if( ftp != null )
       {
-        m_modifier[i] = m_featureControlFactory.createFeatureModifier( ftp, format, m_selectionManager, m_fcl );
+        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+
+        m_modifier[i] = createModifier( format, ftp, modifierId );
         editors[i] = m_modifier[i].createCellEditor( table );
         editors[i].setValidator( m_modifier[i] );
       }
@@ -642,9 +653,28 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     setCellEditors( editors );
   }
 
-  /**
-   *
-   */
+  private IFeatureModifier createModifier( final String format, final IPropertyType ftp, final String modifierId )
+  {
+    if( modifierId != null && !modifierId.isEmpty() )
+    {
+      try
+      {
+        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( modifierId );
+        if( modifierId == null )
+          System.out.println( "No feature modifier with id: " + modifierId );
+        else
+          return modifier;
+      }
+      catch( final CoreException e )
+      {
+        KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+        e.printStackTrace();
+      }
+    }
+
+    return m_featureModiferFactory.createFeatureModifier( ftp, format, m_selectionManager, m_fcl );
+  }
+
   private void refreshColumnProperties( )
   {
     final Table table = getTable();
@@ -1018,11 +1048,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( theme == null )
       return selection;
 
+    if( m_tableCursor == null )
+      return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, null, null );
+
     final TableItem row = m_tableCursor.getRow();
     final int column = m_tableCursor.getColumn();
     final Feature focusedFeature = row == null ? null : (Feature) row.getData();
+    final IFeatureModifier modifier = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column];
 
-    final IPropertyType focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
+    final IPropertyType focusedProperty = modifier == null ? null : modifier.getFeatureTypeProperty();
 
     return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, focusedFeature, focusedProperty );
   }
@@ -1078,7 +1112,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     final Menu tablemenu = menuManager.createContextMenu( table );
     table.setMenu( tablemenu );
-    
+
     final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
     m_tableCursor.setMenu( cursormenu );
   }

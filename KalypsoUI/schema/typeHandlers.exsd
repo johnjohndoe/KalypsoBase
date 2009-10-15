@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.ui">
+<schema targetNamespace="org.kalypso.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.kalypso.ui" id="typeHandlers" name="typeHandlers"/>
@@ -11,9 +11,17 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
-            <element ref="typeHandler" minOccurs="1" maxOccurs="unbounded"/>
+            <choice minOccurs="1" maxOccurs="unbounded">
+               <element ref="typeHandler"/>
+               <element ref="featureModifier"/>
+            </choice>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -44,13 +52,43 @@
 
    <element name="typeHandler">
       <complexType>
-         <attribute name="factory" type="string">
+         <attribute name="factory" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Must implement org.kalypso.gmlschema.types.ITypeHandlerFactory&lt;IGuiTypeHandler&gt;
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.gui.IGuiTypeHandler"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.gmlschema.types.ITypeHandlerFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="featureModifier">
+      <annotation>
+         <documentation>
+            Register feature modifiers with this element. Feature modifiers are used to show/edit table cells in the feature table.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A unique id of this modifier definition.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The implementing class for this feature modifier definition. Must implement org.kalypso.ogc.gml.featureview.IFeatureModifier.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.featureview.IFeatureModifier"/>
                </appInfo>
             </annotation>
          </attribute>

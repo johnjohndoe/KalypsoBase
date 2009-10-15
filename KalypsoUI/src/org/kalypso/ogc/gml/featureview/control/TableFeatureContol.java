@@ -170,7 +170,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           final Feature parentFeature = getFeature();
 
           maxOccurs = parentRelation.getMaxOccurs();
-          if( parentFeature instanceof List )
+          if( parentFeature instanceof List< ? > )
           {
             size = ((List< ? >) parentFeature).size();
             if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
@@ -354,7 +354,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         for( int i = 0; i < properties.length; i++ )
         {
           final IPropertyType ftp = properties[i];
-          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1 ); //$NON-NLS-1$
         }
       }
     }

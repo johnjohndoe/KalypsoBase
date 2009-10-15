@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -50,8 +52,10 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.gmlschema.types.ITypeHandlerFactory;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
@@ -65,6 +69,17 @@ public class KalypsoUIExtensions
   {
     // do not instantiate
   }
+
+  /* extension-point typeHandlers */
+  private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.ui.typeHandlers"; //$NON-NLS-1$
+
+  private static final String TYPE_HANDLER_ELEMENT_NAME = "typeHandler"; //$NON-NLS-1$
+
+  private static final String FEATURE_MODIFIER_ELEMENT_NAME = "featureModifier"; //$NON-NLS-1$
+
+  private static final String TYPE_HANDLER_FACTORY_CLASS = "factory"; //$NON-NLS-1$
+
+  private static Map<String, IConfigurationElement> THE_FEATURE_MODIFIERS_MAP = null;
 
   /* extension-point 'featureViewExtensionControl' */
   private final static String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl"; //$NON-NLS-1$
@@ -136,6 +151,64 @@ public class KalypsoUIExtensions
     KalypsoGisPlugin.getDefault().getLog().log( status );
 
     return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static ITypeHandlerFactory<IGuiTypeHandler>[] createGuiTypeHandlerFactories( )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( TYPE_HANDLERS_EXTENSION_POINT );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+
+    final List<ITypeHandlerFactory<IGuiTypeHandler>> factories = new ArrayList<ITypeHandlerFactory<IGuiTypeHandler>>( configurationElements.length );
+
+    for( final IConfigurationElement element : configurationElements )
+    {
+      try
+      {
+        if( TYPE_HANDLER_ELEMENT_NAME.equals( element.getName() ) )
+        {
+          final ITypeHandlerFactory<IGuiTypeHandler> factory = (ITypeHandlerFactory<IGuiTypeHandler>) element.createExecutableExtension( TYPE_HANDLER_FACTORY_CLASS );
+          factories.add( factory );
+        }
+      }
+      catch( final CoreException e )
+      {
+        KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+    return factories.toArray( new ITypeHandlerFactory[factories.size()] );
+  }
+
+  public static IFeatureModifier createFeatureModifier( final String id ) throws CoreException
+  {
+    final IConfigurationElement ce = getFeatureModifierElement( id );
+    if( ce == null )
+      return null;
+
+    return (IFeatureModifier) ce.createExecutableExtension( "class" );
+  }
+
+  private synchronized static IConfigurationElement getFeatureModifierElement( final String modifierId )
+  {
+    if( THE_FEATURE_MODIFIERS_MAP == null )
+    {
+      THE_FEATURE_MODIFIERS_MAP = new HashMap<String, IConfigurationElement>();
+
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( TYPE_HANDLERS_EXTENSION_POINT );
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+      for( final IConfigurationElement element : configurationElements )
+      {
+        if( FEATURE_MODIFIER_ELEMENT_NAME.equals( element.getName() ) )
+        {
+          final String id = element.getAttribute( "id" );
+          THE_FEATURE_MODIFIERS_MAP.put( id, element );
+        }
+      }
+    }
+
+    return THE_FEATURE_MODIFIERS_MAP.get( modifierId );
   }
 
 }

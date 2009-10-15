@@ -41,14 +41,14 @@
 package org.kalypso.ogc.gml.om.table.celleditor;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IInputProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -63,24 +63,66 @@ import org.eclipse.swt.widgets.Listener;
 
 /**
  * @author Dirk Kuch
+ * @deprecated Use {@link org.eclipse.jface.viewers.ComboBoxCellEditor} instead.
  */
+@Deprecated
 public class ComboBoxViewerCellEditor extends CellEditor
 {
+  /** Simple {@link IInputProvider} implementation that simply returns a fixed given object. */
+  private static class FixedInputProvider implements IInputProvider
+  {
+    private final Object m_input;
+
+    public FixedInputProvider( final Object input )
+    {
+      m_input = input;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IInputProvider#getInput()
+     */
+    @Override
+    public Object getInput( )
+    {
+      return m_input;
+    }
+  }
+
   protected ComboViewer m_viewer;
+
+  private final IInputProvider m_inputProvider;
 
   public ComboBoxViewerCellEditor( final IContentProvider prContent, final ILabelProvider prLabel, final Object input, final Composite parent, final int style )
   {
-    super( parent, style );
-
-    setup( prContent, prLabel, input );
+    this( prContent, prLabel, new FixedInputProvider( input ), parent, style );
   }
 
-  private void setup( final IContentProvider prContent, final ILabelProvider prLabel, final Object input )
+  public ComboBoxViewerCellEditor( final IContentProvider prContent, final ILabelProvider prLabel, final IInputProvider inputProvider, final Composite parent, final int style )
   {
-    // TODO: move this to createControl
+    super( parent, style );
+
+    m_inputProvider = inputProvider;
 
     m_viewer.setLabelProvider( prLabel );
     m_viewer.setContentProvider( prContent );
+  }
+
+  /**
+   * Applies the currently selected value and deactivates the cell editor
+   */
+  void applyEditorValueAndDeactivate( )
+  {
+    fireApplyEditorValue();
+    deactivate();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createControl( final Composite parent )
+  {
+    m_viewer = new ComboViewer( parent, getStyle() | SWT.READ_ONLY | SWT.DROP_DOWN );
 
     m_viewer.getCombo().addKeyListener( new KeyAdapter()
     {
@@ -117,16 +159,15 @@ public class ComboBoxViewerCellEditor extends CellEditor
       }
     } );
 
-    m_viewer.getCombo().addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusLost( final FocusEvent e )
-      {
-        ComboBoxViewerCellEditor.this.focusLost();
-      }
-    } );
+// m_viewer.getCombo().addFocusListener( new FocusAdapter()
+// {
+// @Override
+// public void focusLost( final FocusEvent e )
+// {
+// ComboBoxViewerCellEditor.this.focusLost();
+// }
+// } );
 
-    m_viewer.setInput( input );
     m_viewer.getCombo().layout();
 
     m_viewer.getCombo().addListener( SWT.MouseDown, new Listener()
@@ -136,35 +177,8 @@ public class ComboBoxViewerCellEditor extends CellEditor
         event.time += 100000;
       }
     } );
-  }
-
-  /**
-   * Applies the currently selected value and deactivates the cell editor
-   */
-  void applyEditorValueAndDeactivate( )
-  {
-    fireApplyEditorValue();
-    deactivate();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected Control createControl( final Composite parent )
-  {
-    m_viewer = new ComboViewer( parent, getStyle() | SWT.READ_ONLY | SWT.DROP_DOWN );
 
     return m_viewer.getControl();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#getControl()
-   */
-  @Override
-  public Control getControl( )
-  {
-    return super.getControl();
   }
 
   /**
@@ -181,15 +195,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
   }
 
   /**
-   * @see org.eclipse.jface.viewers.CellEditor#activate()
-   */
-  @Override
-  public void activate( )
-  {
-    super.activate();
-  }
-
-  /**
    * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
    */
   @Override
@@ -200,11 +205,21 @@ public class ComboBoxViewerCellEditor extends CellEditor
     if( selection instanceof StructuredSelection )
     {
       final StructuredSelection sel = (StructuredSelection) selection;
-      final Object element = sel.getFirstElement();
-      return element;
+      return sel.getFirstElement();
     }
 
     return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#activate(org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent)
+   */
+  @Override
+  public void activate( final ColumnViewerEditorActivationEvent activationEvent )
+  {
+    System.out.println( "activate" );
+    // TODO Auto-generated method stub
+    super.activate( activationEvent );
   }
 
   /**
@@ -213,21 +228,11 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   protected void doSetFocus( )
   {
-    final Combo combo = m_viewer.getCombo();
-    combo.setFocus();
+    System.out.println( "doSetFocus" );
 
-    final Event event = new Event();
-    event.count = 1;
-    event.type = SWT.MouseDown;
-    event.button = 1;
-    event.display = combo.getDisplay();
-    event.doit = true;
-    event.widget = combo;
-    event.stateMask = 0;
-    event.time = (int) System.currentTimeMillis();
-    event.x = 1;
-    event.y = 1;
-    combo.getDisplay().post( event );
+    final Combo combo = m_viewer.getCombo();
+    combo.setListVisible( true );
+    combo.setFocus();
   }
 
   /**
@@ -236,22 +241,26 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   protected void doSetValue( final Object value )
   {
-    if( (value != null) && !"".equals( value ) ) //$NON-NLS-1$
+    m_viewer.setInput( m_inputProvider.getInput() );
+
+    if( value != null && !"".equals( value ) ) //$NON-NLS-1$
     {
       final StructuredSelection selection = new StructuredSelection( value );
-      m_viewer.setSelection( selection );
+      m_viewer.setSelection( selection, true );
     }
+    else
+      m_viewer.setSelection( StructuredSelection.EMPTY );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
-   */
-  @Override
-  protected void focusLost( )
-  {
-    if( isActivated() )
-    {
-      applyEditorValueAndDeactivate();
-    }
-  }
+//  /**
+//   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
+//   */
+//  @Override
+//  protected void focusLost( )
+//  {
+//    if( isActivated() )
+//    {
+//      applyEditorValueAndDeactivate();
+//    }
+//  }
 }
