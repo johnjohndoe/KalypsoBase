@@ -68,9 +68,6 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 {
   private final SimpleTuppleModel m_model;
 
-  /**
-   * Constructor
-   */
   public ForecastTuppleModel( final ITuppleModel[] models ) throws SensorException
   {
     super( models[0].getAxisList() );
@@ -143,8 +140,12 @@ public class ForecastTuppleModel extends AbstractTuppleModel
           {
             if( targetAxes[colIx].isPersistable() )
             {
-            if( map[colIx] > -1 )
-              targetTupple[colIx] = model.getElement( rowIx, modelAxes[map[colIx]] );
+              if( map[colIx] > -1 )
+              {
+                targetTupple[colIx] = model.getElement( rowIx, modelAxes[map[colIx]] );
+                if( targetTupple[colIx] == null )
+                  System.out.println( "Achtung Achtung" );
+              }
             }
           }
           // tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );

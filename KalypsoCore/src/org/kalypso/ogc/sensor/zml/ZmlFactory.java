@@ -413,7 +413,7 @@ public class ZmlFactory
 
     final String href = context != null ? context.toExternalForm() : ""; //$NON-NLS-1$
 
-    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), null, metadata, model.getAxisList(), model );
+    final SimpleObservation zmlObs = new SimpleObservation( href, identifier, obs.getName(), obs.isEditable(), metadata, model.getAxisList(), model );
 
     return decorateObservation( zmlObs, href, context );
   }
@@ -829,7 +829,7 @@ public class ZmlFactory
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
-    return new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model );
+    return new SimpleObservation( null, null, name, true, new MetadataList(), axis, model );
   }
 
   /**

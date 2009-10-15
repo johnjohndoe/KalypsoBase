@@ -72,13 +72,6 @@ public interface IObservation extends IObservationEventProvider
   public boolean isEditable( );
 
   /**
-   * Returns the target object for which this observation has measurements.
-   * 
-   * @return target or null
-   */
-  public Object getTarget( );
-
-  /**
    * Returns the list of Metadata.
    * 
    * @return metadata

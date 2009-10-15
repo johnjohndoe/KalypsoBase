@@ -116,22 +116,22 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     m_zrxDateFormat.setTimeZone( timeZone );
     m_zrxDateFormatSec.setTimeZone( timeZone );
     // create axis
-    IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final IAxis[] axis = createAxis();
+    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( final File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
+  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
-    StringBuffer errorBuffer = new StringBuffer();
-    FileReader fileReader = new FileReader( source );
-    LineNumberReader reader = new LineNumberReader( fileReader );
+    final StringBuffer errorBuffer = new StringBuffer();
+    final FileReader fileReader = new FileReader( source );
+    final LineNumberReader reader = new LineNumberReader( fileReader );
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
@@ -152,7 +152,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             {
               date = m_zrxDateFormatSec.parse( matcher.group( 1 ) );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.11") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.12") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
@@ -164,7 +164,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             {
               date = m_zrxDateFormat.parse( matcher.group( 1 ) );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.14") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.15") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
@@ -174,7 +174,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           {
             value = new Double( matcher.group( 2 ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.17") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.18") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
@@ -198,7 +198,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           }
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.23") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.24") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
@@ -207,7 +207,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
     {
 
-      MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+      final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
       messageBox.setMessage( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.26") ); //$NON-NLS-1$
       messageBox.setText( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.27") ); //$NON-NLS-1$
       if( messageBox.open() == SWT.NO )
@@ -218,7 +218,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     // TODO handle error
     System.out.println( errorBuffer.toString() );
 
-    Object[][] tuppleData = new Object[dateCollector.size()][2];
+    final Object[][] tuppleData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tuppleData[i][0] = dateCollector.get( i );

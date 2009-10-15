@@ -70,13 +70,13 @@ public class AbstractObservationDecorator implements IObservation
     m_obs = obs;
   }
 
-  public void addListener( IObservationListener listener )
+  public void addListener( final IObservationListener listener )
   {
     m_obs.addListener( listener );
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return m_obs.equals( obj );
   }
@@ -101,12 +101,7 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.getName();
   }
 
-  public Object getTarget()
-  {
-    return m_obs.getTarget();
-  }
-
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     return m_obs.getValues( args );
   }
@@ -122,7 +117,7 @@ public class AbstractObservationDecorator implements IObservation
     return m_obs.isEditable();
   }
 
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     m_obs.removeListener( listener );
   }
@@ -132,7 +127,7 @@ public class AbstractObservationDecorator implements IObservation
     m_obs.fireChangedEvent( source );
   }
 
-  public void setValues( ITuppleModel values ) throws SensorException
+  public void setValues( final ITuppleModel values ) throws SensorException
   {
     m_obs.setValues( values );
   }

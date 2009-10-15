@@ -105,14 +105,14 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
-  public IObservation createObservationFromSource( File source ) throws Exception
+  public IObservation createObservationFromSource( final File source ) throws Exception
   {
     return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
-    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
+    final SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
@@ -122,27 +122,27 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
     m_dateFormat = format;
     final MetadataList metaDataList = new MetadataList();
     // create axis
-    IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final IAxis[] axis = createAxis();
+    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException, ParseException
+  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException, ParseException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
-    StringBuffer errorBuffer = new StringBuffer();
-    FileReader fileReader = new FileReader( source );
-    LineNumberReader reader = new LineNumberReader( fileReader );
+    final StringBuffer errorBuffer = new StringBuffer();
+    final FileReader fileReader = new FileReader( source );
+    final LineNumberReader reader = new LineNumberReader( fileReader );
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
     int valuesLine = 0;
     int lineNumber = 0;
     int step = SEARCH_BLOCK_HEADER;
-    StringBuffer buffer = new StringBuffer();
+    final StringBuffer buffer = new StringBuffer();
     long startDate = 0;
     while( (lineIn = reader.readLine()) != null )
     {
@@ -153,13 +153,13 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
       switch( step )
       {
         case SEARCH_BLOCK_HEADER:
-          Matcher matcher = m_dwdBlockPattern.matcher( lineIn );
+          final Matcher matcher = m_dwdBlockPattern.matcher( lineIn );
           if( matcher.matches() )
           {
             // String DWDID = matcher.group( 1 );
-            String startDateString = matcher.group( 2 );
-            Pattern m_datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
-            Matcher dateMatcher = m_datePattern.matcher( startDateString );
+            final String startDateString = matcher.group( 2 );
+            final Pattern m_datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
+            final Matcher dateMatcher = m_datePattern.matcher( startDateString );
             if( dateMatcher.matches() )
             {
               // System.out.println( "Startdatum Header:" + startDateString );
@@ -182,7 +182,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
           valuesLine = valuesLine + 1;
           for( int i = 0; i < 16; i++ )
           {
-            String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
+            final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
             Double value = (new Double( Double.parseDouble( valueString ) )) / 1000;
             // TODO: Write status
             if( value > 99.997 )
@@ -197,7 +197,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             valueCollector.add( value );
 
             buffer.append( " " ); // separator //$NON-NLS-1$
-            Date valueDate = new Date( startDate + (i) * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
+            final Date valueDate = new Date( startDate + (i) * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
             buffer.append( valueDate.toString() );
             dateCollector.add( valueDate );
             // }
@@ -212,7 +212,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
           break;
       }
     }
-    Object[][] tupelData = new Object[dateCollector.size()][2];
+    final Object[][] tupelData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tupelData[i][0] = dateCollector.get( i );

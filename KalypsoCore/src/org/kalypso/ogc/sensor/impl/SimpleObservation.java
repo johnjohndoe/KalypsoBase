@@ -67,8 +67,6 @@ public class SimpleObservation implements IObservation
 
   private final boolean m_editable;
 
-  private final Object m_target;
-
   private final MetadataList m_metadata;
 
   private final IAxis[] m_axes;
@@ -83,26 +81,25 @@ public class SimpleObservation implements IObservation
 
   public SimpleObservation( )
   {
-    this( "", "", "", false, null, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", "", false, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public SimpleObservation( final IAxis[] axes )
   {
-    this( "", "", "", false, null, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    this( "", "", "", false, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes )
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes )
   {
-    this( href, identifier, name, editable, target, metadata, axes, new SimpleTuppleModel( axes ) );
+    this( href, identifier, name, editable, metadata, axes, new SimpleTuppleModel( axes ) );
   }
 
-  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
+  public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final MetadataList metadata, final IAxis[] axes, final ITuppleModel model )
   {
     m_href = href;
     m_identifier = identifier;
     m_name = name;
     m_editable = editable;
-    m_target = target;
     m_metadata = metadata;
     m_axes = axes;
     m_tupples = model;
@@ -127,14 +124,6 @@ public class SimpleObservation implements IObservation
   public boolean isEditable( )
   {
     return m_editable;
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getTarget()
-   */
-  public Object getTarget( )
-  {
-    return m_target;
   }
 
   /**
