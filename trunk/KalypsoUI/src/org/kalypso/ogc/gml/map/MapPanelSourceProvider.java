@@ -103,7 +103,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
-      fireSourceChanged();
+      refreshUIelements();
     }
 
     /**
@@ -113,7 +113,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-      fireSourceChanged();
+      refreshUIelements();
     }
   };
 
@@ -133,7 +133,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       if( newModel != null )
         newModel.addMapModelListener( m_mapModellListener );
 
-      fireSourceChanged();
+      refreshUIelements();
     }
   };
 
@@ -142,7 +142,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      handleSelectionChanged();
+      refreshUIelements();
     }
   };
 
@@ -250,17 +250,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
         // clear how that stuff works.
         fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_MAPPANEL_NAME, m_mapPanel );
 
-        try
-        {
-          // Refresh the ui elements (i.e. toolbar), but is this the best place...?
-          final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
-          if( commandService != null )
-            CommandUtilities.refreshElements( commandService, AbstractMapPart.MAP_COMMAND_CATEGORY, null );
-        }
-        catch( final CommandException e )
-        {
-          e.printStackTrace();
-        }
+        refreshElements();
 
         return Status.OK_STATUS;
       }
@@ -270,9 +260,39 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     job.schedule();
   }
 
-  protected void handleSelectionChanged( )
+  public void refreshUIelements( )
   {
-    // Update contribution items that depend on the selection
-    fireSourceChanged( /* activeTheme */);
+    final UIJob job = new UIJob( "refresh ui elements" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        refreshElements();
+        return Status.OK_STATUS;
+      }
+    };
+    job.setRule( m_muteRule );
+    job.setSystem( true );
+    job.schedule();
   }
+
+  protected void refreshElements( )
+  {
+    try
+    {
+      final IEvaluationService evalService = (IEvaluationService) m_serviceLocator.getService( IEvaluationService.class );
+      if( evalService != null )
+        evalService.requestEvaluation( ACTIVE_MAPPANEL_NAME );
+
+      // Refresh the ui elements (i.e. toolbar), but is this the best place...?
+      final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
+      if( commandService != null )
+        CommandUtilities.refreshElements( commandService, AbstractMapPart.MAP_COMMAND_CATEGORY, null );
+    }
+    catch( final CommandException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
 }
