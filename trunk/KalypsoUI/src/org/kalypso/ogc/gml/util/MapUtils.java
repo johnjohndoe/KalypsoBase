@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -133,13 +134,17 @@ public class MapUtils
 
     if( feature == null )
       return;
-    final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
-    if( geom == null )
-      return;
 
     try
     {
+      final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
+      if( geom == null )
+        return;
       paintGrabbedGeometry( panel, g2, geom );
+    }
+    catch(IllegalArgumentException e)
+    {
+      e.printStackTrace();
     }
     catch( final GM_Exception e )
     {
