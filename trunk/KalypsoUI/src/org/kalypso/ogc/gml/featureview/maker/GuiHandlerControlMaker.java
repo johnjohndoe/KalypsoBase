@@ -98,6 +98,8 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
     final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
 
     final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilitites.OF_FEATUREVIEW );
+    if( controlElement == null )
+      return null;
 
     final ControlType type = controlElement.getValue();
 

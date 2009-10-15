@@ -264,8 +264,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
    */
   public void updateControl( )
   {
-    Feature feature = getFeature();
+    final Feature feature = getFeature();
     m_dialog = chooseDialog( feature, getFeatureTypeProperty(), m_listener );
+    if( m_dialog == null )
+      return;
 
     m_button.setText( m_dialog.getLabel() );
     

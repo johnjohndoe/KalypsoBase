@@ -44,6 +44,7 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -53,7 +54,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -63,7 +63,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ComboModifier implements IFeatureModifier
 {
-  private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboModifier.0"); //$NON-NLS-1$
+  protected static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboModifier.0" ); //$NON-NLS-1$
 
   private final Map<Object, String> m_comboEntries;
 
@@ -71,13 +71,26 @@ public class ComboModifier implements IFeatureModifier
 
   private ComboBoxViewerCellEditor m_comboBoxCellEditor;
 
-  private Feature m_feature;
-
   public ComboModifier( final IValuePropertyType ftp )
   {
     m_vpt = ftp;
 
-    m_comboEntries = PropertyUtils.createComboEntries( m_vpt );
+    m_comboEntries = createComboEntries( ftp );
+  }
+
+  /**
+   * Finds the entries to which will be displayed in the combo box.<br>
+   * Intended to be overwritten by implementors.<br>
+   * This method is called in the constructor, so be carfeul not to acces any members here.
+   */
+  protected Map<Object, String> createComboEntries( final IValuePropertyType ftp )
+  {
+    return PropertyUtils.createComboEntries( ftp );
+  }
+
+  protected Map<Object, String> getComboEntries( )
+  {
+    return m_comboEntries;
   }
 
   /**
@@ -117,16 +130,34 @@ public class ComboModifier implements IFeatureModifier
       }
     };
 
-    final Object[] input = m_comboEntries.keySet().toArray( new Object[m_comboEntries.keySet().size()] );
+    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ComboBoxViewerCellEditor#doSetValue(java.lang.Object)
+       */
+      @Override
+      protected void doSetValue( final Object value )
+      {
+        // always reset input in order to allow implementors change input depending on selected feature
+        setInput( getComboInput() );
 
-    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( cp, lp, input, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+        super.doSetValue( value );
+      }
+    };
 
+    m_comboBoxCellEditor.setActivationStyle( ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_KEY_ACTIVATION
+        | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
+    m_comboBoxCellEditor.setContenProvider( cp );
+    m_comboBoxCellEditor.setLabelProvider( lp );
     return m_comboBoxCellEditor;
   }
 
-  protected Feature getFeature( )
+  /**
+   * Will be called before every activation of the cell editor.
+   */
+  protected Object getComboInput( )
   {
-    return m_feature;
+    return m_comboEntries.keySet().toArray( new Object[m_comboEntries.keySet().size()] );
   }
 
   /**

@@ -19,6 +19,7 @@
 											<xs:attribute name="width" type="xs:int" use="optional" default="100"/>
 											<xs:attribute name="alignment" type="xs:string" use="optional" default="SWT.CENTER"/>
 											<xs:attribute name="format" type="xs:string" use="optional" default=""/>
+											<xs:attribute name="modifier" type="xs:string" use="optional" default=""/>
 										</xs:complexType>
 									</xs:element>
 									<xs:element name="sort" minOccurs="0" maxOccurs="1">
