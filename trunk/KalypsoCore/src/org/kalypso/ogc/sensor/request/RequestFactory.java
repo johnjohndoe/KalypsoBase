@@ -88,7 +88,7 @@ public class RequestFactory
     // return null;
     // final int i2 = href.indexOf( ZmlURLConstants.TAG_REQUEST2, i1 );
     // if( i2 == -1 )
-    String strRequestXml = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
+    final String strRequestXml = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
     if( strRequestXml == null )
       return null;
 
@@ -128,15 +128,15 @@ public class RequestFactory
     final String[] axesTypes = request.getAxisTypes();
     final String[] statusAxes = request.getAxisTypesWithStatus();
     final List<IAxis> axes = new Vector<IAxis>();
-    for( int i = 0; i < axesTypes.length; i++ )
+    for( final String axesType : axesTypes )
     {
-      final IAxis axis = TimeserieUtils.createDefaulAxis( axesTypes[i] );
+      final IAxis axis = TimeserieUtils.createDefaulAxis( axesType );
       axes.add( axis );
-      if( Arrays.binarySearch( statusAxes, axesTypes[i] ) >= 0 )
+      if( Arrays.binarySearch( statusAxes, axesType ) >= 0 )
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$

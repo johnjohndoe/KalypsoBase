@@ -162,23 +162,10 @@ public class ServiceRepositoryObservation implements IObservation
     {
       return getRemote( null ).isEditable();
     }
-    catch( SensorException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-  }
-
-  public Object getTarget( )
-  {
-    try
-    {
-      return getRemote( null ).getTarget();
-    }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      throw new IllegalStateException( e.getLocalizedMessage() );
+      return false;
     }
   }
 
@@ -208,7 +195,7 @@ public class ServiceRepositoryObservation implements IObservation
     {
       return getRemote( null ).getAxisList();
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
@@ -261,7 +248,7 @@ public class ServiceRepositoryObservation implements IObservation
 
       m_evtPrv.fireChangedEvent( null );
     }
-    catch( Exception e ) // generic for simplicity
+    catch( final Exception e ) // generic for simplicity
     {
       throw new SensorException( e );
     }
@@ -315,12 +302,12 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  public void addListener( IObservationListener listener )
+  public void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
 
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }

@@ -77,17 +77,15 @@ public class ZmlTest extends TestCase
 
   public void testZmls( ) throws SensorException, ParseException
   {
-    for( int i = 0; i < ZMLs.length; i++ )
+    for( final String obsID : ZMLs )
     {
-      System.out.println( "Testing: " + ZMLs[i] ); //$NON-NLS-1$
+      System.out.println( "Testing: " + obsID ); //$NON-NLS-1$
 
-      final String obsID = ZMLs[i];
-      final URL zmlURL = getClass().getResource( ZMLs[i] );
+      final URL zmlURL = getClass().getResource( obsID );
 
       final IObservation obs = ZmlFactory.parseXML( zmlURL, obsID );
 
       _testGetName( obs );
-      _testGetTarget( obs );
       _testGetAxisList( obs );
       _testGetIdentifier( obs, obsID );
       _testGetMetadataList( obs );
@@ -110,11 +108,6 @@ public class ZmlTest extends TestCase
   private void _testGetIdentifier( final IObservation obs, final String obsID )
   {
     assertTrue( obs.getIdentifier().equals( obsID ) );
-  }
-
-  private void _testGetTarget( final IObservation obs )
-  {
-    assertNull( obs.getTarget() );
   }
 
   private void _testGetMetadataList( final IObservation obs )

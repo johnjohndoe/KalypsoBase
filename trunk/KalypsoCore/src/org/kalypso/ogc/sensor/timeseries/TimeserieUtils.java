@@ -94,7 +94,8 @@ public class TimeserieUtils extends TimeserieConstants
   /** default date format used within some of the timeseries dependent properties */
 // TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
 // locale
-  /** @dperecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
+  /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
+  @Deprecated
   private final static DateFormat FORECAST_DF = DateFormat.getDateTimeInstance();
 
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties"; //$NON-NLS-1$

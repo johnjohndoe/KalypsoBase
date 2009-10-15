@@ -187,12 +187,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         return true;
       }
 
-      if( sourceObses.length == 0 || sourceObses[0] == null )
-      {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.2" ) + f.getId() );//$NON-NLS-1$
-        return true;
-      }
-
       final IObservation resultObs;
 
       // only do ForeCastFilter if we have more than one obs

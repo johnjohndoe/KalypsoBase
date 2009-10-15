@@ -91,12 +91,12 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
-  public IObservation createObservationFromSource( File source ) throws Exception
+  public IObservation createObservationFromSource( final File source ) throws Exception
   {
     return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
 
@@ -106,20 +106,20 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
 
     m_dwdSTDDateFormat.setTimeZone( timeZone );
     // create axis
-    IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_titel, false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis[] axis = createAxis();
+    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_titel, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
+  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
-    StringBuffer errorBuffer = new StringBuffer();
-    FileReader fileReader = new FileReader( source );
-    LineNumberReader reader = new LineNumberReader( fileReader );
+    final StringBuffer errorBuffer = new StringBuffer();
+    final FileReader fileReader = new FileReader( source );
+    final LineNumberReader reader = new LineNumberReader( fileReader );
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
@@ -129,7 +129,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
         return null;
       try
       {
-        Matcher matcher = m_dwdSTDPattern.matcher( lineIn );
+        final Matcher matcher = m_dwdSTDPattern.matcher( lineIn );
         if( matcher.matches() )
         {
           Date date = null;
@@ -139,7 +139,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
             m_titel = matcher.group( 1 );
             date = m_dwdSTDDateFormat.parse( matcher.group( 2 ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.7") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.8") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
@@ -147,17 +147,17 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
           try
           {
             valueLine = matcher.group( 3 );
-            long startDate = date.getTime();
+            final long startDate = date.getTime();
             for( int i = 0; i < 24; i++ )
             {
-              String valueString = valueLine.substring( i * 6, 6 * (i + 1) );
-              Double value = (new Double( Double.parseDouble( valueString ) )) / 1000;
+              final String valueString = valueLine.substring( i * 6, 6 * (i + 1) );
+              final Double value = (new Double( Double.parseDouble( valueString ) )) / 1000;
               valueCollector.add( value );
-              Date valueDate = new Date( startDate + (i) * 60 * 60 * 1000 );
+              final Date valueDate = new Date( startDate + (i) * 60 * 60 * 1000 );
               dateCollector.add( valueDate );
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             System.out.println( e.getStackTrace() );
             errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.10") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.11") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -170,13 +170,13 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
           numberOfErrors++;
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.16") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.17") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
-    Object[][] tupelData = new Object[dateCollector.size()][2];
+    final Object[][] tupelData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tupelData[i][0] = dateCollector.get( i );

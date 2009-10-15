@@ -89,12 +89,12 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
-  public IObservation createObservationFromSource( File source ) throws Exception
+  public IObservation createObservationFromSource( final File source ) throws Exception
   {
     return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
 
@@ -104,20 +104,20 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
 
     m_ex2DateFormat.setTimeZone( timeZone );
     // create axis
-    IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final IAxis[] axis = createAxis();
+    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
+  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
-    StringBuffer errorBuffer = new StringBuffer();
-    FileReader fileReader = new FileReader( source );
-    LineNumberReader reader = new LineNumberReader( fileReader );
+    final StringBuffer errorBuffer = new StringBuffer();
+    final FileReader fileReader = new FileReader( source );
+    final LineNumberReader reader = new LineNumberReader( fileReader );
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
@@ -127,18 +127,18 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
         return null;
       try
       {
-        Matcher matcher = m_ex2Pattern.matcher( lineIn );
+        final Matcher matcher = m_ex2Pattern.matcher( lineIn );
         if( matcher.matches() )
         {
-          String dateString = matcher.group( 1 );
-          Double value = new Double( matcher.group( 2 ) );
+          final String dateString = matcher.group( 1 );
+          final Double value = new Double( matcher.group( 2 ) );
 
-          String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-          Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2})" ); //$NON-NLS-1$
-          Matcher dateMatcher = m_datePattern.matcher( formatedDate );
+          final String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+          final Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2})" ); //$NON-NLS-1$
+          final Matcher dateMatcher = m_datePattern.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
-            StringBuffer buffer = new StringBuffer();
+            final StringBuffer buffer = new StringBuffer();
             for( int i = 1; i <= dateMatcher.groupCount(); i++ )
             {
               if( i > 1 )
@@ -165,13 +165,13 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
           numberOfErrors++;
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.20") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter.21") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
-    Object[][] tupelData = new Object[dateCollector.size()][2];
+    final Object[][] tupelData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tupelData[i][0] = dateCollector.get( i );

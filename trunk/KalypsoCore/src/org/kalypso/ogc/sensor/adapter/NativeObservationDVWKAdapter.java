@@ -80,7 +80,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 
   private String m_axisTypeValue;
 
-  private String m_SNAME = "titel"; //$NON-NLS-1$
+  private final String m_SNAME = "titel"; //$NON-NLS-1$
 
   private TimeZone m_timeZone;
 
@@ -115,18 +115,18 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( final File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
+  private ITuppleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;
 
-    StringBuffer errorBuffer = new StringBuffer();
-    FileReader fileReader = new FileReader( source );
-    LineNumberReader reader = new LineNumberReader( fileReader );
+    final StringBuffer errorBuffer = new StringBuffer();
+    final FileReader fileReader = new FileReader( source );
+    final LineNumberReader reader = new LineNumberReader( fileReader );
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
@@ -201,7 +201,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
                   dateCollector.add( calendar.getTime() );
                   valueCollector.add( value );
                 }
-                catch( Exception e )
+                catch( final Exception e )
                 {
                   errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.10") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.11") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                   numberOfErrors++;
@@ -214,7 +214,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
         else
           numberOfErrors++;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.13") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.14") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
@@ -223,7 +223,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
     {
 
-      MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+      final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
       messageBox.setMessage( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.16") ); //$NON-NLS-1$
       messageBox.setText( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.17") ); //$NON-NLS-1$
       if( messageBox.open() == SWT.NO )
@@ -234,7 +234,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     // TODO handle error
     System.out.println( errorBuffer.toString() );
 
-    Object[][] tuppleData = new Object[dateCollector.size()][2];
+    final Object[][] tuppleData = new Object[dateCollector.size()][2];
     for( int i = 0; i < dateCollector.size(); i++ )
     {
       tuppleData[i][0] = dateCollector.get( i );

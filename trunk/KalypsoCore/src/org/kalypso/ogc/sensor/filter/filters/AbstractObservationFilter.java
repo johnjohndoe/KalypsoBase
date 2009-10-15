@@ -113,14 +113,6 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     return m_obs.getName();
   }
 
-  public Object getTarget()
-  {
-    if( m_obs == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.5") ); //$NON-NLS-1$
-
-    return m_obs.getTarget();
-  }
-
   public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     if( m_obs == null )

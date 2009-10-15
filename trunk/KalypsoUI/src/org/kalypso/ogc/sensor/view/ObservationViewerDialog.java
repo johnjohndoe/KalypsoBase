@@ -170,12 +170,12 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener removeListener = new SelectionListener()
       {
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           setInput( null );
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
+        public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
         }
@@ -186,7 +186,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener newListener = new SelectionListener()
       {
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), m_axisTypes[0] );
           if( dialog.open() == Window.OK )
@@ -207,11 +207,11 @@ public class ObservationViewerDialog extends Dialog
                 values[row][ax] = dialog.getDefault();
             }
             final ITuppleModel model = new SimpleTuppleModel( axis, values );
-            setInput( new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model ) );
+            setInput( new SimpleObservation( null, null, name, true, new MetadataList(), axis, model ) );
           }
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
+        public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
         }
@@ -224,7 +224,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener newListener = new SelectionListener()
       {
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           final String name = Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
           final Calendar startDate = Calendar.getInstance();
@@ -244,10 +244,10 @@ public class ObservationViewerDialog extends Dialog
               values[row][ax] = new Double( 0 );
           }
           final ITuppleModel model = new SimpleTuppleModel( axis, values );
-          setInput( new SimpleObservation( null, null, name, true, null, new MetadataList(), axis, model ) );
+          setInput( new SimpleObservation( null, null, name, true, new MetadataList(), axis, model ) );
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
+        public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
         }
@@ -258,7 +258,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener exelImportListener = new SelectionListener()
       {
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
           final Object content = clipboard.getContents( TextTransfer.getInstance() );
@@ -273,7 +273,7 @@ public class ObservationViewerDialog extends Dialog
           clipboard.dispose();
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
+        public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
         }
@@ -284,7 +284,7 @@ public class ObservationViewerDialog extends Dialog
     {
       final SelectionListener exelExportListener = new SelectionListener()
       {
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
           final Object input = getInput();
@@ -295,7 +295,7 @@ public class ObservationViewerDialog extends Dialog
               final String content = ZmlFactory.createClipboardStringFrom( (IObservation) input, null );
               clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
             }
-            catch( SensorException e1 )
+            catch( final SensorException e1 )
             {
               // TODO messagebox ??
             }
@@ -303,7 +303,7 @@ public class ObservationViewerDialog extends Dialog
           clipboard.dispose();
         }
 
-        public void widgetDefaultSelected( SelectionEvent e )
+        public void widgetDefaultSelected( final SelectionEvent e )
         {
           // TODO Auto-generated method stub
         }
