@@ -161,6 +161,11 @@ import org.eclipse.swt.widgets.TypedListener;
  */
 public class TableCursor extends Canvas
 {
+  // it is difficult to debug thinks like event
+  // in eclipse debugmode, so here some printouts
+  // can be enabled
+  final boolean DEBUG = false;
+
   // By default, invert the list selection colors
   static final int BACKGROUND = SWT.COLOR_LIST_SELECTION_TEXT;
 
@@ -172,31 +177,31 @@ public class TableCursor extends Canvas
 
   TableColumn m_column = null;
 
-  Listener m_tableListener, m_resizeListener, m_disposeItemListener, m_disposeColumnListener;
+  Listener m_resizeListener, m_disposeItemListener, m_disposeColumnListener;
 
   /**
    * Constructs a new instance of this class given its parent table and a style value describing its behavior and
    * appearance.
    * <p>
    * The style value is either one of the style constants defined in class <code>SWT</code> which is applicable to
-   * instances of this class, or must be built by <em>bitwise OR</em>'ing together (that is, using the
-   * <code>int</code> "|" operator) two or more of those <code>SWT</code> style constants. The class description
-   * lists the style constants that are applicable to the class. Style bits are also inherited from superclasses.
+   * instances of this class, or must be built by <em>bitwise OR</em>'ing together (that is, using the <code>int</code>
+   * "|" operator) two or more of those <code>SWT</code> style constants. The class description lists the style
+   * constants that are applicable to the class. Style bits are also inherited from superclasses.
    * </p>
    * 
    * @param parent
-   *            a Table control which will be the parent of the new instance (cannot be null)
+   *          a Table control which will be the parent of the new instance (cannot be null)
    * @param style
-   *            the style of control to construct
+   *          the style of control to construct
    * @exception IllegalArgumentException
-   *                <ul>
-   *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+   *              </ul>
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
-   *                <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+   *              <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
+   *              </ul>
    * @see SWT#BORDER
    * @see Widget#checkSubclass()
    * @see Widget#getStyle()
@@ -210,7 +215,7 @@ public class TableCursor extends Canvas
 
     final Listener listener = new Listener()
     {
-      public void handleEvent( Event event )
+      public void handleEvent( final Event event )
       {
         switch( event.type )
         {
@@ -239,23 +244,23 @@ public class TableCursor extends Canvas
       addListener( element, listener );
     }
 
-    m_tableListener = new Listener()
-    {
-      public void handleEvent( final Event event )
-      {
-        switch( event.type )
-        {
-          case SWT.MouseDown:
-            tableMouseDown( event );
-            break;
-          case SWT.FocusIn:
-            tableFocusIn();
-            break;
-        }
-      }
-    };
-    m_table.addListener( SWT.FocusIn, m_tableListener );
-    m_table.addListener( SWT.MouseDown, m_tableListener );
+// m_tableListener = new Listener()
+// {
+// public void handleEvent( final Event event )
+// {
+// switch( event.type )
+// {
+// case SWT.MouseDown:
+// tableMouseDown( event );
+// break;
+// case SWT.FocusIn:
+// tableFocusIn();
+// break;
+// }
+// }
+// };
+// m_table.addListener( SWT.FocusIn, m_tableListener );
+// m_table.addListener( SWT.MouseDown, m_tableListener );
 
     m_disposeItemListener = new Listener()
     {
@@ -299,22 +304,21 @@ public class TableCursor extends Canvas
    * sending it one of the messages defined in the <code>SelectionListener</code> interface.
    * <p>
    * When <code>widgetSelected</code> is called, the item field of the event object is valid. If the reciever has
-   * <code>SWT.CHECK</code> style set and the check selection changes, the event object detail field contains the
-   * value <code>SWT.CHECK</code>. <code>widgetDefaultSelected</code> is typically called when an item is
-   * double-clicked.
+   * <code>SWT.CHECK</code> style set and the check selection changes, the event object detail field contains the value
+   * <code>SWT.CHECK</code>. <code>widgetDefaultSelected</code> is typically called when an item is double-clicked.
    * </p>
    * 
    * @param listener
-   *            the listener which should be notified
+   *          the listener which should be notified
    * @exception IllegalArgumentException
-   *                <ul>
-   *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+   *              </ul>
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    * @see SelectionListener
    * @see SelectionEvent
    * @see #removeSelectionListener(SelectionListener)
@@ -331,8 +335,6 @@ public class TableCursor extends Canvas
 
   void disposeInternal( )
   {
-    m_table.removeListener( SWT.FocusIn, m_tableListener );
-    m_table.removeListener( SWT.MouseDown, m_tableListener );
     if( m_column != null )
     {
       m_column.removeListener( SWT.Dispose, m_disposeColumnListener );
@@ -359,6 +361,9 @@ public class TableCursor extends Canvas
 
   void keyDown( final Event event )
   {
+    if( DEBUG )
+      System.out.println( "keyDown" );
+
     if( m_row == null )
       return;
     switch( event.character )
@@ -527,75 +532,14 @@ public class TableCursor extends Canvas
     }
     if( isFocusControl() )
     {
-      gc.setBackground( display.getSystemColor( SWT.COLOR_BLACK ) );
-      gc.setForeground( display.getSystemColor( SWT.COLOR_WHITE ) );
-      gc.drawFocus( 0, 0, size.x, size.y );
-    }
-  }
+// gc.setBackground( display.getSystemColor( SWT.COLOR_BLACK ) );
+// gc.setForeground( display.getSystemColor( SWT.COLOR_WHITE ) );
+// gc.drawFocus( 0, 0, size.x - 1, size.y - 1 );
 
-  void tableFocusIn( )
-  {
-    if( isDisposed() )
-      return;
-    if( isVisible() )
-      setFocus();
-  }
-
-  void tableMouseDown( final Event event )
-  {
-    if( isDisposed() || !isVisible() )
-      return;
-    final Point pt = new Point( event.x, event.y );
-    final int lineWidth = m_table.getLinesVisible() ? m_table.getGridLineWidth() : 0;
-    TableItem item = m_table.getItem( pt );
-    if( (m_table.getStyle() & SWT.FULL_SELECTION) != 0 )
-    {
-      if( item == null )
-        return;
+      gc.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+      gc.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
+      gc.drawRectangle( 0, 0, size.x - 1, size.y - 1 );
     }
-    else
-    {
-      final int start = item != null ? m_table.indexOf( item ) : m_table.getTopIndex();
-      final int end = m_table.getItemCount();
-      final Rectangle clientRect = m_table.getClientArea();
-      for( int i = start; i < end; i++ )
-      {
-        final TableItem nextItem = m_table.getItem( i );
-        final Rectangle rect = nextItem.getBounds( 0 );
-        if( pt.y >= rect.y && pt.y < rect.y + rect.height + lineWidth )
-        {
-          item = nextItem;
-          break;
-        }
-        if( rect.y > clientRect.y + clientRect.height )
-          return;
-      }
-      if( item == null )
-        return;
-    }
-    TableColumn newColumn = null;
-    final int columnCount = m_table.getColumnCount();
-    if( columnCount > 0 )
-    {
-      for( int i = 0; i < columnCount; i++ )
-      {
-        final Rectangle rect = item.getBounds( i );
-        rect.width += lineWidth;
-        rect.height += lineWidth;
-        if( rect.contains( pt ) )
-        {
-          newColumn = m_table.getColumn( i );
-          break;
-        }
-      }
-      if( newColumn == null )
-      {
-        newColumn = m_table.getColumn( 0 );
-      }
-    }
-    setRowColumn( item, newColumn, true );
-    setFocus();
-    return;
   }
 
 // void tableMouseDown( Event event )
@@ -628,6 +572,9 @@ public class TableCursor extends Canvas
 
   void localTraverse( final Event event )
   {
+    if( DEBUG )
+      System.out.println( "localtraverse" );
+
     switch( event.detail )
     {
       case SWT.TRAVERSE_ARROW_NEXT:
@@ -650,10 +597,12 @@ public class TableCursor extends Canvas
 
   void setRowColumn( final TableItem row, final TableColumn column, final boolean notify )
   {
+    if( DEBUG )
+      System.out.println( "setRowColumn" );
+
     if( this.m_row == row && this.m_column == column )
-    {
       return;
-    }
+
     if( this.m_row != null && this.m_row != row )
     {
       this.m_row.removeListener( SWT.Dispose, m_disposeItemListener );
@@ -683,38 +632,30 @@ public class TableCursor extends Canvas
         m_table.showColumn( column );
       }
       final int columnIndex = column == null ? 0 : m_table.indexOf( column );
-      setBounds( row.getBounds( columnIndex ) );
-      redraw();
-      if( notify )
+      if( isVisible() )
       {
-        notifyListeners( SWT.Selection, new Event() );
+        setBounds( row.getBounds( columnIndex ) );
+        redraw();
       }
+      if( notify )
+        notifyListeners( SWT.Selection, new Event() );
     }
-  }
-
-  @Override
-  public void setVisible( final boolean visible )
-  {
-    checkWidget();
-    if( visible )
-      resize();
-    super.setVisible( visible );
   }
 
   /**
    * Removes the listener from the collection of listeners who will be notified when the receiver's selection changes.
    * 
    * @param listener
-   *            the listener which should no longer be notified
+   *          the listener which should no longer be notified
    * @exception IllegalArgumentException
-   *                <ul>
-   *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+   *              </ul>
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    * @see SelectionListener
    * @see #addSelectionListener(SelectionListener)
    * @since 3.0
@@ -748,10 +689,10 @@ public class TableCursor extends Canvas
    * 
    * @return the column for the current position
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    */
   public int getColumn( )
   {
@@ -764,10 +705,10 @@ public class TableCursor extends Canvas
    * 
    * @return the item for the current position
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    */
   public TableItem getRow( )
   {
@@ -799,14 +740,14 @@ public class TableCursor extends Canvas
    * Does not notify any listeners.
    * 
    * @param row
-   *            the index of the row for the cell to select
+   *          the index of the row for the cell to select
    * @param column
-   *            the index of column for the cell to select
+   *          the index of column for the cell to select
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li> <li>ERROR_THREAD_INVALID_ACCESS -
+   *              if not called from the thread that created the receiver</li>
+   *              </ul>
    */
   public void setSelection( final int row, final int column )
   {
@@ -817,16 +758,16 @@ public class TableCursor extends Canvas
    * Positions the TableCursor over the cell at the given row and column in the parent table.
    * 
    * @param row
-   *            the index of the row for the cell to select
+   *          the index of the row for the cell to select
    * @param column
-   *            the index of column for the cell to select
+   *          the index of column for the cell to select
    * @param notify
-   *            notify the listeners
+   *          notify the listeners
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    */
   public void setSelection( final int row, final int column, final boolean notify )
   {
@@ -842,14 +783,14 @@ public class TableCursor extends Canvas
    * Positions the TableCursor over the cell at the given row and column in the parent table.
    * 
    * @param row
-   *            the TableItem of the row for the cell to select
+   *          the TableItem of the row for the cell to select
    * @param column
-   *            the index of column for the cell to select
+   *          the index of column for the cell to select
    * @exception SWTException
-   *                <ul>
-   *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *                </ul>
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
    */
   public void setSelection( final TableItem row, final int column )
   {
@@ -859,5 +800,17 @@ public class TableCursor extends Canvas
     if( row == null || row.isDisposed() || column < 0 || column > maxColumnIndex )
       SWT.error( SWT.ERROR_INVALID_ARGUMENT );
     setRowColumn( m_table.indexOf( row ), column, false );
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Composite#setFocus()
+   */
+  @Override
+  public boolean setFocus( )
+  {
+    if( DEBUG )
+      System.out.println( "setFocus" );
+
+    return super.setFocus();
   }
 }

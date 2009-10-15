@@ -5,6 +5,9 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -18,24 +21,22 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: merge code with TableCursor-Copy
- *
+ * 
  * @author Gernot Belger
  */
 public class ExcelTableCursor extends TableCursor
 {
-  // it is difficult to debug thinks like event
-  // in eclipse debugmode, so here some printouts
-  // can be enabled
-  private final boolean DEBUG = false;
-
   public static enum ADVANCE_MODE
   {
     DOWN
@@ -67,7 +68,7 @@ public class ExcelTableCursor extends TableCursor
   /**
    * allow editing with interactive mouse (e.g. toggle checkbox)
    */
-  private final MouseListener m_cellEditorMouseListener = new MouseAdapter()
+  private final MouseListener m_mouseListener = new MouseAdapter()
   {
     /**
      * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
@@ -93,21 +94,20 @@ public class ExcelTableCursor extends TableCursor
       if( DEBUG )
         System.out.println( "Key pressed: " + e.character );
 
+      final boolean allowUpDown = !(e.widget instanceof CCombo);
+      final boolean allowLeftRight = !(e.widget instanceof Text);
+
       // handle cursor moving
       int dx = 0, dy = 0;
 
-      /*
-       * If the user presses an arrow key, stop editing and move in this direction.<p>BUGFIX: don't do this for
-       * left/right because than we cannot move within the cell.
-       */
-      // if( e.keyCode == SWT.ARROW_LEFT )
-      // dx = -1;
-      // else if( e.keyCode == SWT.ARROW_RIGHT )
-      // dx = 1;
-      // else
-      if( e.keyCode == SWT.ARROW_UP )
+      if( e.keyCode == SWT.ARROW_LEFT && allowLeftRight )
+        dx = -1;
+      else if( e.keyCode == SWT.ARROW_RIGHT && allowLeftRight )
+        dx = 1;
+      else
+      if( e.keyCode == SWT.ARROW_UP && allowUpDown )
         dy = -1;
-      else if( e.keyCode == SWT.ARROW_DOWN )
+      else if( e.keyCode == SWT.ARROW_DOWN && allowUpDown )
         dy = 1;
       else if( e.keyCode == SWT.ESC )
       {
@@ -180,7 +180,7 @@ public class ExcelTableCursor extends TableCursor
    * handle start editing on pressed key <br>
    * handle CTRL and SHIFT and TAB keys
    */
-  final KeyListener m_keyListenerOnTableCursor = new KeyAdapter()
+  final KeyListener m_keyListener = new KeyAdapter()
   {
     @Override
     public void keyPressed( final KeyEvent e )
@@ -243,9 +243,6 @@ public class ExcelTableCursor extends TableCursor
         advanceCursor( null, dx, dy );
         return;
       }
-
-      setVisible( true );
-      setFocus();
     }
   };
 
@@ -279,6 +276,42 @@ public class ExcelTableCursor extends TableCursor
     }
   };
 
+  private final SelectionListener m_selectionListener = new SelectionListener()
+  {
+    /**
+     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+     */
+    @Override
+    public void widgetSelected( final SelectionEvent e )
+    {
+      handleWidgetSelected();
+    }
+
+    @Override
+    public void widgetDefaultSelected( final SelectionEvent e )
+    {
+      startEditing( null );
+    }
+  };
+
+  private final FocusListener m_tableFocusListener = new FocusAdapter()
+  {
+    @Override
+    public void focusGained( final org.eclipse.swt.events.FocusEvent e )
+    {
+      tableFocusIn();
+    }
+  };
+
+  private final MouseListener m_tableMouseListener = new MouseAdapter()
+  {
+    @Override
+    public void mouseDown( final MouseEvent e )
+    {
+      tableMouseDown( e );
+    }
+  };
+
   private final Color m_cannotEditColor;
 
   private final Color m_canEditColor;
@@ -289,56 +322,30 @@ public class ExcelTableCursor extends TableCursor
 
   private final Color m_errorColor;
 
+  private final boolean m_selectionFollowsCursor;
+
   public ExcelTableCursor( final TableViewer viewer, final int style, final ADVANCE_MODE mode, final boolean selectionFollowsCursor )
   {
     super( viewer.getTable(), style );
 
     m_viewer = viewer;
     m_mode = mode;
+    m_selectionFollowsCursor = selectionFollowsCursor;
 
     m_cannotEditColor = viewer.getTable().getDisplay().getSystemColor( SWT.COLOR_GRAY );
     m_canEditColor = getBackground();
     m_errorColor = viewer.getControl().getDisplay().getSystemColor( SWT.COLOR_RED );
 
     // add keylistener to start editing on key pressed
-    addKeyListener( m_keyListenerOnTableCursor );
+    addKeyListener( m_keyListener );
 
     // change background color when cell is not editable
-    addSelectionListener(
-    /**
-     * handle background color and default editing
-     */
-    new SelectionListener()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetSelected( final SelectionEvent e )
-      {
-        if( DEBUG )
-          System.out.println( "widgetSelected" );
-
-        final TableItem row = getRow();
-        final int widgetCol = getColumn();
-        // change background color when cell is not editable
-        final boolean canModify = checkCanModify( row, widgetCol );
-        setBackground( canModify ? getCanEditColor() : getCannotEditColor() );
-
-        if( selectionFollowsCursor )
-          ((Table) getParent()).setSelection( new TableItem[] { row } );
-      }
-
-      /**
-       * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        startEditing( null );
-      }
-    } );
+    addSelectionListener( m_selectionListener );
 
     final Table table = viewer.getTable();
     table.addKeyListener( m_tableKeyListener );
+    table.addFocusListener( m_tableFocusListener );
+    table.addMouseListener( m_tableMouseListener );
 
     // BUGFIX: always invalidate self if table was redrawn. Fixes: if a row was deleted/added,
     // the cursor showed still the old value
@@ -353,7 +360,26 @@ public class ExcelTableCursor extends TableCursor
       }
     } );
 
-    addMouseListener( m_cellEditorMouseListener );
+    addMouseListener( m_mouseListener );
+  }
+
+  protected void handleWidgetSelected( )
+  {
+    if( DEBUG )
+      System.out.println( "handleWidgetSelected" );
+
+    final TableItem row = getRow();
+    final int widgetCol = getColumn();
+    // change background color when cell is not editable
+    final boolean canModify = checkCanModify( row, widgetCol );
+    setBackground( canModify ? getCanEditColor() : getCannotEditColor() );
+
+    if( m_selectionFollowsCursor )
+    {
+      final Table table = (Table) getParent();
+      if( !m_viewer.isCellEditorActive() )
+        table.setSelection( new TableItem[] { row } );
+    }
   }
 
   protected TableViewer getViewer( )
@@ -378,6 +404,9 @@ public class ExcelTableCursor extends TableCursor
 
   protected void startEditing( final KeyEvent keyEvent )
   {
+    if( DEBUG )
+      System.out.println( "startEditing" );
+
     final int column = getColumn();
     final TableItem tableRow = getRow();
     if( tableRow == null )
@@ -395,19 +424,8 @@ public class ExcelTableCursor extends TableCursor
     // add the editorListener to the celleditor in order to refocus the
     // tablecursor
     final CellEditor cellEditor = m_viewer.getCellEditors()[column];
+    hookCellEditor( cellEditor );
 
-    cellEditor.addListener( new ValidateCellEditorListener( cellEditor, m_errorColor ) );
-    cellEditor.addListener( new StopEditingCellEditorListener( cellEditor, this, m_viewer ) );
-
-    // remove potential old listener
-    final Control control = cellEditor.getControl();
-    if( (control != null) && !control.isDisposed() )
-    {
-      control.removeKeyListener( m_keyListenerOnCell );
-      control.addKeyListener( m_keyListenerOnCell );
-      control.removeTraverseListener( m_dontTraverseListener );
-      control.addTraverseListener( m_dontTraverseListener );
-    }
     m_viewer.editElement( element, column );
 
     // eigentlich würde ich gerne direkt den event weiterschicken, das klappt
@@ -422,8 +440,8 @@ public class ExcelTableCursor extends TableCursor
     // ??
 
     // do not loose pressed character
-    //
-    if( (keyEvent != null) && (control != null) && !control.isDisposed() && (control instanceof Button) )
+    final Control control = cellEditor.getControl();
+    if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
       final Button button = (Button) control;
       button.setSelection( !button.getSelection() );
@@ -436,6 +454,25 @@ public class ExcelTableCursor extends TableCursor
         text.insert( "" + keyEvent.character );
     }
 
+  }
+
+  /**
+   * Hook listeners on current cell editor
+   */
+  void hookCellEditor( final CellEditor cellEditor )
+  {
+    cellEditor.addListener( new ValidateCellEditorListener( cellEditor, m_errorColor ) );
+    cellEditor.addListener( new StopEditingCellEditorListener( cellEditor, this, m_viewer ) );
+
+    // remove potential old listeners
+    final Control control = cellEditor.getControl();
+    if( (control != null) && !control.isDisposed() )
+    {
+      control.removeKeyListener( m_keyListenerOnCell );
+      control.addKeyListener( m_keyListenerOnCell );
+      control.removeTraverseListener( m_dontTraverseListener );
+      control.addTraverseListener( m_dontTraverseListener );
+    }
   }
 
   protected boolean checkCanModify( final TableItem row, final int column )
@@ -453,6 +490,9 @@ public class ExcelTableCursor extends TableCursor
 
   public void stopEditing( final Control cellEditorControl )
   {
+    if( DEBUG )
+      System.out.println( "stopEditing" );
+
     // leaf cell
     if( cellEditorControl != null )
     {
@@ -483,12 +523,15 @@ public class ExcelTableCursor extends TableCursor
 
   /**
    * Advances the cursor position by the given delta.
-   *
+   * 
    * @param control
    *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
   protected void advanceCursor( final Control control, final int dx, final int dy )
   {
+    if( DEBUG )
+      System.out.println( "advanceCursor" );
+
     if( dx == 0 && dy == 0 )
       return;
 
@@ -535,4 +578,111 @@ public class ExcelTableCursor extends TableCursor
       }
     } );
   }
+
+  void tableFocusIn( )
+  {
+    if( DEBUG )
+      System.out.println( "tableFocusIn" );
+
+    if( isDisposed() )
+      return;
+    if( isVisible() )
+      setFocus();
+  }
+
+  void tableMouseDown( final MouseEvent event )
+  {
+    if( DEBUG )
+      System.out.println( "tableMouseDown" );
+
+    if( isDisposed() || !isVisible() )
+      return;
+
+    final Point pt = new Point( event.x, event.y );
+    // Find clicked row
+    final int lineWidth = m_table.getLinesVisible() ? m_table.getGridLineWidth() : 0;
+    TableItem item = m_table.getItem( pt );
+    if( (m_table.getStyle() & SWT.FULL_SELECTION) != 0 )
+    {
+      if( item == null )
+        return;
+    }
+    else
+    {
+      final int start = item != null ? m_table.indexOf( item ) : m_table.getTopIndex();
+      final int end = m_table.getItemCount();
+      final Rectangle clientRect = m_table.getClientArea();
+      for( int i = start; i < end; i++ )
+      {
+        final TableItem nextItem = m_table.getItem( i );
+        final Rectangle rect = nextItem.getBounds( 0 );
+        if( pt.y >= rect.y && pt.y < rect.y + rect.height + lineWidth )
+        {
+          item = nextItem;
+          break;
+        }
+        if( rect.y > clientRect.y + clientRect.height )
+          return;
+      }
+      if( item == null )
+        return;
+    }
+
+    // Find clicked column
+    int column = -1;
+    final int columnCount = m_table.getColumnCount();
+    if( columnCount > 0 )
+    {
+      for( int i = 0; i < columnCount; i++ )
+      {
+        final Rectangle rect = item.getBounds( i );
+        rect.width += lineWidth;
+        rect.height += lineWidth;
+        if( rect.contains( pt ) )
+        {
+          column = i;
+          break;
+        }
+      }
+      if( column == -1 )
+        column = 0;
+    }
+
+    final TableColumn newColumn = column == -1 ? null : m_table.getColumn( column );
+
+    final boolean cellEditorActive = m_viewer.isCellEditorActive();
+    if( cellEditorActive )
+    {
+      setVisible( false );
+      final CellEditor[] cellEditors = m_viewer.getCellEditors();
+      hookCellEditor( cellEditors[column] );
+      setRowColumn( item, newColumn, false );
+    }
+    else
+    {
+      setRowColumn( item, newColumn, true );
+      setFocus();
+    }
+
+    return;
+  }
+
+  @Override
+  public void setVisible( final boolean visible )
+  {
+    if( DEBUG )
+      System.out.println( "setVisible: " + visible );
+
+    checkWidget();
+    if( visible )
+    {
+      // change background color when cell is not editable
+      final boolean canModify = checkCanModify( getRow(), getColumn() );
+      setBackground( canModify ? getCanEditColor() : getCannotEditColor() );
+      resize();
+    }
+
+    super.setVisible( visible );
+  }
+
 }
