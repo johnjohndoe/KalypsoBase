@@ -104,8 +104,7 @@ public class ExcelTableCursor extends TableCursor
         dx = -1;
       else if( e.keyCode == SWT.ARROW_RIGHT && allowLeftRight )
         dx = 1;
-      else
-      if( e.keyCode == SWT.ARROW_UP && allowUpDown )
+      else if( e.keyCode == SWT.ARROW_UP && allowUpDown )
         dy = -1;
       else if( e.keyCode == SWT.ARROW_DOWN && allowUpDown )
         dy = 1;
@@ -483,6 +482,9 @@ public class ExcelTableCursor extends TableCursor
     final String property = m_viewer.getColumnProperties()[column].toString();
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
+      return false;
+
+    if( row == null )
       return false;
 
     return modifier.canModify( row.getData(), property );
