@@ -66,6 +66,9 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
    */
   public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
+    if( ftp == null )
+      return null;
+
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;

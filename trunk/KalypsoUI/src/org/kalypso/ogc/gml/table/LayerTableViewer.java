@@ -515,14 +515,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       if( featureType != null )
       {
         final IPropertyType property = featureType.getProperty( propertyName );
-        if( property == null )
+        if( property != null )
         {
-          final String msg = String.format( "Unknown property: " + propertyName );
-          return new String[] { msg, msg };
+          final IAnnotation annotation = property.getAnnotation();
+          result[0] = annotation.getLabel();
+          result[1] = annotation.getTooltip();
         }
-        final IAnnotation annotation = property.getAnnotation();
-        result[0] = annotation.getLabel();
-        result[1] = annotation.getTooltip();
       }
 
       if( label != null )
@@ -641,11 +639,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
       final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
       final IPropertyType ftp = featureType.getProperty( propName );
-      if( ftp != null )
-      {
-        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+      final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
 
-        m_modifier[i] = createModifier( format, ftp, modifierId );
+      m_modifier[i] = createModifier( format, ftp, modifierId );
+      if( m_modifier[i] != null )
+      {
         editors[i] = m_modifier[i].createCellEditor( table );
         editors[i].setValidator( m_modifier[i] );
       }
