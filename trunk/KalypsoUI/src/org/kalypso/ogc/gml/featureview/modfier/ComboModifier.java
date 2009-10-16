@@ -63,7 +63,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ComboModifier implements IFeatureModifier
 {
-  protected static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboModifier.0" ); //$NON-NLS-1$
+  public static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboModifier.0" ); //$NON-NLS-1$
 
   private final Map<Object, String> m_comboEntries;
 

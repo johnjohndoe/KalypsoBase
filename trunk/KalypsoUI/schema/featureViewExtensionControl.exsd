@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.core">
+<schema targetNamespace="org.kalypso.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.kalypso.core" id="featureViewExtensionControl" name="featureViewExtensionControl"/>
@@ -13,6 +13,11 @@ Essentially, the extensions of this extension-point just refer to the implementi
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="extensionControl" minOccurs="1" maxOccurs="unbounded"/>
@@ -56,33 +61,17 @@ Essentially, the extensions of this extension-point just refer to the implementi
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The implementing class, must implement org.kalypso.template.featureview.IFeatureviewControlFactory.
+                  The implementing class, must implement org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.template.featureview.IFeatureviewControlFactory"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory"/>
                </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="examples"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -93,14 +82,6 @@ Essentially, the extensions of this extension-point just refer to the implementi
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
