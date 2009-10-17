@@ -376,8 +376,7 @@ public class ExcelTableCursor extends TableCursor
     if( m_selectionFollowsCursor )
     {
       final Table table = (Table) getParent();
-      if( !m_viewer.isCellEditorActive() )
-        table.setSelection( new TableItem[] { row } );
+      table.setSelection( new TableItem[] { row } );
     }
   }
 
