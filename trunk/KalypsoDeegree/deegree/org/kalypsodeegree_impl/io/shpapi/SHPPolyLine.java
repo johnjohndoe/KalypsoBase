@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 
 /**
@@ -58,12 +59,11 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 
 public class SHPPolyLine implements ISHPGeometry
 {
+  private final int numParts;
 
-  public int numParts;
+  private final int numPoints;
 
-  public int numPoints;
-
-  public SHPPoint[][] points = null;
+  private final SHPPoint[][] points;
 
   private final SHPEnvelope m_envelope;
 
@@ -72,35 +72,25 @@ public class SHPPolyLine implements ISHPGeometry
    */
   public SHPPolyLine( byte[] recBuf )
   {
-
-    int pointsStart = 0;
-    int sumPoints = 0;
-
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
     numParts = ByteUtils.readLEInt( recBuf, 36 );
     numPoints = ByteUtils.readLEInt( recBuf, 40 );
 
-    pointsStart = ShapeConst.PARTS_START + (numParts * 4);
+    int pointsStart = ShapeConst.PARTS_START + (numParts * 4);
 
     points = new SHPPoint[numParts][];
-
     for( int j = 0; j < numParts; j++ )
     {
-
-      int firstPointNo = 0;
-      int nextFirstPointNo = 0;
-      int offset = 0;
-      int lnumPoints = 0;
-
       // get number of first point of current part out of ESRI shape Record:
-      firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
+      int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      offset = pointsStart + (firstPointNo * 16);
+      int offset = pointsStart + (firstPointNo * 16);
 
       // get number of first point of next part ...
+      int nextFirstPointNo = 0;
       if( j < numParts - 1 )
       {
         // ... usually out of ESRI shape Record
@@ -114,8 +104,7 @@ public class SHPPolyLine implements ISHPGeometry
 
       // calculate number of points per part due to distance and
       // calculate some checksum for the total number of points to be worked
-      lnumPoints = nextFirstPointNo - firstPointNo;
-      sumPoints += lnumPoints;
+      int lnumPoints = nextFirstPointNo - firstPointNo;
 
       // allocate memory for the j-th part
       points[j] = new SHPPoint[lnumPoints];
@@ -133,14 +122,15 @@ public class SHPPolyLine implements ISHPGeometry
    */
   public SHPPolyLine( GM_Curve[] curves )
   {
-    double xmin = curves[0].getEnvelope().getMin().getX();
-    double xmax = curves[0].getEnvelope().getMax().getX();
-    double ymin = curves[0].getEnvelope().getMin().getY();
-    double ymax = curves[0].getEnvelope().getMax().getY();
+    GM_Envelope curve0env = curves[0].getEnvelope();
+    double xmin = curve0env.getMin().getX();
+    double xmax = curve0env.getMax().getX();
+    double ymin = curve0env.getMin().getY();
+    double ymax = curve0env.getMax().getY();
 
     numParts = curves.length;
 
-    numPoints = 0;
+    int numberPoints = 0;
 
     points = new SHPPoint[numParts][];
 
@@ -149,10 +139,9 @@ public class SHPPolyLine implements ISHPGeometry
       // create SHPPoints from the GM_Points array
       for( int i = 0; i < numParts; i++ )
       {
-
         GM_LineString ls = curves[i].getAsLineString();
 
-        numPoints += ls.getNumberOfPoints();
+        numberPoints += ls.getNumberOfPoints();
 
         points[i] = new SHPPoint[ls.getNumberOfPoints()];
 
@@ -183,6 +172,8 @@ public class SHPPolyLine implements ISHPGeometry
     {
       System.out.println( "SHPPolyLine:: " + e );
     }
+    
+    numPoints = numberPoints;
 
     m_envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
   }
@@ -281,7 +272,6 @@ public class SHPPolyLine implements ISHPGeometry
     ByteUtils.writeLEDouble( bytearray, offset, ymax );
 
     return bytearray;
-
   }
 
   /**
@@ -297,4 +287,18 @@ public class SHPPolyLine implements ISHPGeometry
     return m_envelope;
   }
 
+  public int getNumParts( )
+  {
+    return numParts;
+  }
+
+  public int getNumPoints( )
+  {
+    return numPoints;
+  }
+
+  public SHPPoint[][] getPoints( )
+  {
+    return points;
+  }
 } // end of class PolyLine

@@ -70,6 +70,12 @@ public class ShapeConst
   public static final int SHAPE_FILE_VERSION = 1000;
 
   /**
+   * start point of field parts in ESRI shape record
+   */
+  public static final int PARTS_START = 44;
+
+  
+  /**
    * The indicator for a null shape type. (0)
    */
   public static final byte SHAPE_TYPE_NULL = 0;
@@ -93,11 +99,6 @@ public class ShapeConst
    * The indicator for a multipoint shape type. (8)
    */
   public static final byte SHAPE_TYPE_MULTIPOINT = 8;
-
-  /**
-   * start point of field parts in ESRI shape record
-   */
-  public static final int PARTS_START = 44;
 
   /**
    * The indicator for a point shape type. (11)

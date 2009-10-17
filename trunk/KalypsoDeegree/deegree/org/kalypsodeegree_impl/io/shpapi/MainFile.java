@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
@@ -76,11 +77,10 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 public class MainFile
 {
-
   /*
-   * A buffer for current record's header.
+   * file suffixes for shp
    */
-  protected byte[] recHdr = new byte[ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
+  private final static String _shp = ".shp";
 
   /*
    * instance variables
@@ -88,11 +88,6 @@ public class MainFile
   private final FileHeader sfh;
 
   private final IndexFile shx;
-
-  /*
-   * file suffixes for shp
-   */
-  private final String _shp = ".shp";
 
   /*
    * references to the main file
@@ -104,16 +99,11 @@ public class MainFile
    */
   public MainFile( String url ) throws IOException
   {
-
-    /*
-     * creates rafShp
-     */
     rafShp = new RandomAccessFile( url + _shp, "r" );
 
     sfh = new FileHeader( rafShp );
 
     shx = new IndexFile( url );
-
   }
 
   /**
@@ -121,7 +111,6 @@ public class MainFile
    */
   public MainFile( String url, String rwflag ) throws IOException
   {
-
     // delet file if it exists
     File file = new File( url + _shp );
 
@@ -137,7 +126,6 @@ public class MainFile
     sfh = new FileHeader( rafShp );
 
     shx = new IndexFile( url, rwflag );
-
   }
 
   public void close( ) throws IOException
@@ -153,9 +141,7 @@ public class MainFile
    */
   public SHPEnvelope getFileMBR( )
   {
-
     return sfh.getFileMBR();
-
   }
 
   /**
@@ -164,195 +150,90 @@ public class MainFile
    */
   public int getRecordNum( )
   {
-
     return shx.getRecordNum();
-
   }
 
   /**
    * method: getRecordMBR(int RecNo) <BR>
    * returns the minimum bound rectangle of RecNo's Geometrie of the shape-file <BR>
    */
-  public SHPEnvelope getRecordMBR( int RecNo ) throws IOException
+  public SHPEnvelope getRecordMBR( final int recordNumber ) throws IOException
   {
+    final byte[] recBuf = readRecord( recordNumber );
+    final int shpType = ByteUtils.readLEInt( recBuf, 0 );
 
-    SHPEnvelope recordMBR = null;
-    byte[] recBuf = null;
+    /*
+     * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
+     */
+    if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ)
+        || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ) )
+      return new SHPEnvelope( recBuf );
 
-    // index in IndexArray (see IndexFile)
-    int iaIndex = RecNo - 1;
-
-    int off = shx.getRecordOffset( iaIndex );
-
-    // calculate length from 16-bit words (= 2 bytes) to lenght in bytes
-    int len = shx.getRecordLength( iaIndex ) * 2;
-
-    // off holds the offset of the shape-record in 16-bit words (= 2 byte)
-    // multiply with 2 gets number of bytes to seek
-    long rafPos = off * 2;
-
-    // fetch shape record
-    rafShp.seek( rafPos + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
-
-    recBuf = null;
-    recBuf = new byte[len];
-
-    if( rafShp.read( recBuf, 0, len ) != -1 )
-    {
-
-      int shpType = ByteUtils.readLEInt( recBuf, 0 );
-
-      /*
-       * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
-       */
-      if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ)
-          || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ) )
-      {
-
-        recordMBR = new SHPEnvelope( recBuf );
-
-      } // end if shpType
-
-    } // end if result
-
-    return recordMBR;
+    return null;
   }
 
   /**
    * method: getByRecNo (int RecNo) <BR>
-   * retruns a ShapeRecord-Geometry by RecorcNumber <BR>
+   * returns a ShapeRecord-Geometry by RecorcNumber <BR>
    */
-  public ISHPGeometry getByRecNo( int RecNo ) throws IOException
+  public ISHPGeometry getByRecNo( final int recordNumber ) throws IOException
   {
+    final byte[] recBuf = readRecord( recordNumber );
+    final int shpType = ByteUtils.readLEInt( recBuf, 0 );
 
-    ISHPGeometry shpGeom = null;
-    byte[] recBuf = null;
+    // create a geometry out of record buffer with shapetype
+    switch( shpType )
+    {
+      case ShapeConst.SHAPE_TYPE_NULL:
+        return null;
+      case ShapeConst.SHAPE_TYPE_POINT:
+        return new SHPPoint( recBuf );
+      case ShapeConst.SHAPE_TYPE_MULTIPOINT:
+        return new SHPMultiPoint( recBuf );
+      case ShapeConst.SHAPE_TYPE_POLYLINE:
+        return new SHPPolyLine( recBuf );
+      case ShapeConst.SHAPE_TYPE_POLYGON:
+        return new SHPPolygon( recBuf );
+      case ShapeConst.SHAPE_TYPE_POINTZ:
+        return new SHPPointz( recBuf );
+      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+        return new SHPPolyLinez( recBuf );
+      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+        return new SHPPolygonz( recBuf );
+      case ShapeConst.SHAPE_TYPE_MULTIPOINTZ:
+        return new SHPMultiPointz( recBuf );
+      default:
+        throw new NotImplementedException( "Unknown shape type: " + shpType );
+    }
+  }
 
+  private byte[] readRecord( int recordNumber ) throws IOException
+  {
     // index in IndexArray (see IndexFile)
-    int iaIndex = RecNo - 1;
+    final int iaIndex = recordNumber - 1;
 
-    int off = shx.getRecordOffset( iaIndex );
+    final int off = shx.getRecordOffset( iaIndex );
 
     // calculate length from 16-bit words (= 2 bytes) to lenght in bytes
-    int len = shx.getRecordLength( iaIndex ) * 2;
+    final int len = shx.getRecordLength( iaIndex ) * 2;
 
     // off holds the offset of the shape-record in 16-bit words (= 2 byte)
     // multiply with 2 gets number of bytes to seek
-    long rafPos = off * 2;
-
-    // fetch record header
-    rafShp.seek( rafPos );
-
-    recBuf = null;
-    recBuf = new byte[ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
+    final long rafPos = off * 2;
 
     // fetch shape record
     rafShp.seek( rafPos + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
 
-    recBuf = null;
-    recBuf = new byte[len];
+    final byte[] recBuf = new byte[len];
+    if( rafShp.read( recBuf, 0, len ) == -1 )
+      return null;
 
-    if( rafShp.read( recBuf, 0, len ) != -1 )
-    {
-
-      int shpType = ByteUtils.readLEInt( recBuf, 0 );
-
-      // create a geometry out of record buffer with shapetype
-      if( shpType == ShapeConst.SHAPE_TYPE_POINT )
-      {
-
-        SHPPoint shppoint = new SHPPoint( recBuf, 4 );
-        shpGeom = shppoint;
-
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT )
-      {
-
-        SHPMultiPoint shpmultipoint = new SHPMultiPoint( recBuf );
-        shpGeom = shpmultipoint;
-
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
-      {
-        SHPPolyLine shppolyline = new SHPPolyLine( recBuf );
-        shpGeom = shppolyline;
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
-      {
-        SHPPolygon shppolygon = new SHPPolygon( recBuf );
-        shpGeom = shppolygon;
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
-      {
-        SHPPointz shppointz = new SHPPointz( recBuf, 4, ShapeConst.SHAPE_TYPE_POINTZ );
-        shpGeom = shppointz;
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
-      {
-        SHPPolyLinez shppolyline = new SHPPolyLinez( recBuf );
-        shpGeom = shppolyline;
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_POLYGONZ )
-      {
-        SHPPolygonz shppolygonz = new SHPPolygonz( recBuf );
-        shpGeom = shppolygonz;
-      }
-      else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ )
-      {
-        SHPMultiPointz shpmultipointZ = new SHPMultiPointz( recBuf );
-        shpGeom = shpmultipointZ;
-      }
-
-    } // end if result
-
-    return shpGeom;
-
+    return recBuf;
   }
 
   public int getFileShapeType( )
   {
     return sfh.getFileShapeType();
-  }
-
-  /**
-   * returns the type of the RecNo'th Geometrie <BR>
-   * per definition a shape file contains onlay one shape type <BR>
-   * but null shapes are possible too! <BR>
-   */
-  public int getShapeTypeByRecNo( int RecNo ) throws IOException
-  {
-
-    byte[] recBuf = null;
-    int shpType = -1;
-
-    // index in IndexArray (see IndexFile)
-    int iaIndex = RecNo - 1;
-
-    int off = shx.getRecordOffset( iaIndex );
-    if( off == -1 )
-      return -1;
-
-    // calculate length from 16-bit words (= 2 bytes) to lenght in bytes
-    int len = shx.getRecordLength( iaIndex ) * 2;
-
-    // off holds the offset of the shape-record in 16-bit words (= 2 byte)
-    // multiply with 2 gets number of bytes to seek
-    long rafPos = off * 2;
-
-    // fetch shape record
-    rafShp.seek( rafPos + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
-
-    recBuf = null;
-    recBuf = new byte[len];
-
-    if( rafShp.read( recBuf, 0, len ) != -1 )// ck: && recBuf.length != 0)
-    {
-
-      shpType = ByteUtils.readLEInt( recBuf, 0 );
-
-    } // end if result
-
-    return shpType;
   }
 
   /**

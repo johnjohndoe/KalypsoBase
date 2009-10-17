@@ -62,7 +62,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 public class FileHeader
 {
-
   /*
    * The buffer that holds the 100 byte header.
    */
@@ -98,11 +97,9 @@ public class FileHeader
    */
   public FileHeader( RandomAccessFile rafShp_ ) throws IOException
   {
-
     rafShp = rafShp_;
 
     initHeader();
-
   }
 
   /**
@@ -114,9 +111,7 @@ public class FileHeader
 
   public SHPEnvelope getFileMBR()
   {
-
     return fileMBR;
-
   }
 
   /**
@@ -125,9 +120,7 @@ public class FileHeader
    */
   public long getFileLength()
   {
-
     return fileLength;
-
   }
 
   /**
@@ -136,9 +129,7 @@ public class FileHeader
    */
   public int getFileVersion()
   {
-
     return fileVersion;
-
   }
 
   /**
@@ -147,9 +138,7 @@ public class FileHeader
    */
   public int getFileShapeType()
   {
-
     return fileShapeType;
-
   }
 
   /**
@@ -159,22 +148,16 @@ public class FileHeader
    * After this function runs, the file pointer is set to byte 100, <BR>
    * the first byte of the first record in the file. <BR>
    */
-
   private void initHeader() throws IOException
   {
-
     int result = rafShp.read();
-
     if( result == -1 )
     {
-
       //File is empty, write a new one (what else???)
       writeHeader();
-
     }
 
     readHeader();
-
   }
 
   /**
@@ -183,7 +166,6 @@ public class FileHeader
    */
   public void writeHeader() throws IOException
   {
-
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
     ByteUtils.writeBEInt( header, 0, ShapeConst.SHAPE_FILE_CODE );
@@ -199,7 +181,6 @@ public class FileHeader
 
     rafShp.seek( 0 );
     rafShp.write( header, 0, ShapeConst.SHAPE_FILE_HEADER_LENGTH );
-
   }
 
   /**
@@ -208,7 +189,6 @@ public class FileHeader
    */
   public void writeHeader( int filelength, int shptype, SHPEnvelope mbr ) throws IOException
   {
-
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
     ByteUtils.writeBEInt( header, 0, ShapeConst.SHAPE_FILE_CODE );
@@ -227,7 +207,6 @@ public class FileHeader
    */
   private void readHeader() throws IOException
   {
-
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
     /*
@@ -240,20 +219,12 @@ public class FileHeader
     int fileCode = ByteUtils.readBEInt( header, 0 );
 
     if( fileCode != ShapeConst.SHAPE_FILE_CODE )
-    {
-
       throw new IOException( "Invalid file code, " + "probably not a shape file" );
-
-    }
 
     fileVersion = ByteUtils.readLEInt( header, 28 );
 
     if( fileVersion != ShapeConst.SHAPE_FILE_VERSION )
-    {
-
       throw new IOException( "Unable to read shape files with version " + fileVersion );
-
-    }
 
     fileLength = ByteUtils.readBEInt( header, 24 );
 
@@ -268,7 +239,6 @@ public class FileHeader
      * read ESRIBoundingBox and convert to SHPEnvelope
      */
     fileMBR = new SHPEnvelope( ShapeUtils.readBox( header, 36 ) );
-
   }
 
 } // endof class ShapeFileHeader

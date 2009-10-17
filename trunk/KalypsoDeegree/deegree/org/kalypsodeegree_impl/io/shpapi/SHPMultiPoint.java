@@ -66,7 +66,6 @@ public class SHPMultiPoint implements ISHPGeometry
    */
   public SHPMultiPoint( byte[] recBuf )
   {
-
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
     numPoints = ByteUtils.readLEInt( recBuf, 36 );
@@ -74,10 +73,7 @@ public class SHPMultiPoint implements ISHPGeometry
     points = new SHPPoint[numPoints];
 
     for( int i = 0; i < numPoints; i++ )
-    {
       points[i] = new SHPPoint( recBuf, 40 + i * 16 );
-    }
-
   }
 
   /**
@@ -85,43 +81,34 @@ public class SHPMultiPoint implements ISHPGeometry
    */
   public SHPMultiPoint( GM_MultiPoint multipoint )
   {
-
     double xmin = multipoint.getEnvelope().getMin().getX();
     double xmax = multipoint.getEnvelope().getMax().getX();
     double ymin = multipoint.getEnvelope().getMin().getY();
     double ymax = multipoint.getEnvelope().getMax().getY();
 
-    try
+    points = new SHPPoint[multipoint.getSize()];
+    for( int i = 0; i < multipoint.getSize(); i++ )
     {
-      points = new SHPPoint[multipoint.getSize()];
-      for( int i = 0; i < multipoint.getSize(); i++ )
+      points[i] = new SHPPoint( multipoint.getPointAt( i ) );
+      if( points[i].getX() > xmax )
       {
-        points[i] = new SHPPoint( multipoint.getPointAt( i ) );
-        if( points[i].getX() > xmax )
-        {
-          xmax = points[i].getX();
-        }
-        else if( points[i].getX() < xmin )
-        {
-          xmin = points[i].getX();
-        }
-        if( points[i].getY() > ymax )
-        {
-          ymax = points[i].getY();
-        }
-        else if( points[i].getY() < ymin )
-        {
-          ymin = points[i].getY();
-        }
+        xmax = points[i].getX();
       }
-    }
-    catch( Exception e )
-    {
-      System.out.println( "SHPMultiPoint::" + e );
+      else if( points[i].getX() < xmin )
+      {
+        xmin = points[i].getX();
+      }
+      if( points[i].getY() > ymax )
+      {
+        ymax = points[i].getY();
+      }
+      else if( points[i].getY() < ymin )
+      {
+        ymin = points[i].getY();
+      }
     }
 
     m_envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
-
   }
 
   /**
@@ -130,7 +117,6 @@ public class SHPMultiPoint implements ISHPGeometry
    */
   public byte[] writeShape( )
   {
-
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
     final byte[] byteArray = new byte[offset + size()];
 

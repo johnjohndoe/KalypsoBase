@@ -57,7 +57,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 public class SHPEnvelope implements Serializable
 {
-
   /**
    * this order: west, east, north, south
    */
@@ -86,22 +85,18 @@ public class SHPEnvelope implements Serializable
   // ------------- CONSTRUTOR IMPLEMENTATION BEGIN
   public SHPEnvelope( )
   {
-
     west = 0.0;
     east = 0.0;
     north = 0.0;
     south = 0.0;
-
   }
 
   public SHPEnvelope( double westbc, double eastbc, double northbc, double southbc )
   {
-
     this.west = westbc; // west bounding coordinate
     this.east = eastbc; // east bounding coordinate
     this.north = northbc; // north bounding coordinate
     this.south = southbc; // south bounding coordinate
-
   }
 
   /**
@@ -109,7 +104,6 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( SHPPoint min, SHPPoint max )
   {
-
     // west bounding coordinate = minEsri.x
     this.west = min.getX();
     // east bounding coordinate = maxEsri.x
@@ -118,7 +112,6 @@ public class SHPEnvelope implements Serializable
     this.north = max.getY();
     // south bounding coordinate = minEsri.y
     this.south = min.getY();
-
   }
 
   /**
@@ -126,7 +119,6 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( SHPEnvelope env )
   {
-
     // west bounding coordinate = Ebb.min.x
     this.west = env.west;
     // east bounding coordinate = Ebb.max.x
@@ -135,12 +127,10 @@ public class SHPEnvelope implements Serializable
     this.north = env.north;
     // south bounding coordinate = Ebb.min.y
     this.south = env.south;
-
   }
 
   public SHPEnvelope( byte[] recBuf )
   {
-
     // west bounding coordinate = xmin of rec-Box
     this.west = ByteUtils.readLEDouble( recBuf, recWest );
     // east bounding coordinate = xmax of rec-Box
@@ -149,7 +139,6 @@ public class SHPEnvelope implements Serializable
     this.north = ByteUtils.readLEDouble( recBuf, recNorth );
     // south bounding coordinate = ymin of rec-Box
     this.south = ByteUtils.readLEDouble( recBuf, recSouth );
-
   }
 
   public byte[] writeLESHPEnvelope( )
@@ -182,13 +171,10 @@ public class SHPEnvelope implements Serializable
     return recBuf;
   }
 
-  // ----------------- METHOD IMPLEMENTATION
   @Override
   public String toString( )
   {
-
     return "RECTANGLE" + "\n[west: " + this.west + "]" + "\n[east: " + this.east + "]" + "\n[north: " + this.north + "]" + "\n[south: " + this.south + "]";
-
   }
 
 }

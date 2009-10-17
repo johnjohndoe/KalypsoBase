@@ -334,137 +334,66 @@ public class ShapeFile
   @SuppressWarnings("unchecked")
   public GM_Object getGM_ObjectByRecNo( final int RecNo ) throws IOException
   {
-    GM_Object geom = null;
+    final ISHPGeometry shpGeom = shp.getByRecNo( RecNo );
+    if( shpGeom == null )
+      return null;
 
-    final int shpType = getShapeTypeByRecNo( RecNo );
+    if( shpGeom instanceof SHPPoint )
+      return shpwks.transformPoint( null, (SHPPoint) shpGeom );
 
-    if( shpType == ShapeConst.SHAPE_TYPE_POINT )
+    if( shpGeom instanceof SHPMultiPoint )
     {
-      final SHPPoint shppoint = (SHPPoint) shp.getByRecNo( RecNo );
+      final GM_Point[] points = shpwks.transformMultiPoint( null, (SHPMultiPoint) shpGeom );
+      if( points == null )
+        return null;
 
-      geom = shpwks.transformPoint( null, shppoint );
+      return GeometryFactory.createGM_MultiPoint( points );
     }
-    else if( shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT )
+    
+    if( shpGeom instanceof SHPPolyLine )
     {
-      final SHPMultiPoint shpmultipoint = (SHPMultiPoint) shp.getByRecNo( RecNo );
+      final GM_Curve[] curves = shpwks.transformPolyLine( null, (SHPPolyLine) shpGeom );
+      if( curves == null )
+        return null;
 
-      final GM_Point[] points = shpwks.transformMultiPoint( null, shpmultipoint );
-
-      if( points != null )
-      {
-        final GM_MultiPoint mp = GeometryFactory.createGM_MultiPoint( points );
-        geom = mp;
-      }
-      else
-      {
-        geom = null;
-      }
+      return GeometryFactory.createGM_MultiCurve( curves );
     }
-    else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE )
+    
+    if( shpGeom instanceof SHPPolygon )
     {
-      final SHPPolyLine shppolyline = (SHPPolyLine) shp.getByRecNo( RecNo );
+      final GM_Surface[] polygons = shpwks.transformPolygon( null, (SHPPolygon) shpGeom );
+      if( polygons == null || polygons.length <= 0 )
+        return null;
 
-      final GM_Curve[] curves = shpwks.transformPolyLine( null, shppolyline );
-
-      if( curves != null )
-      {
-        // create multi curve
-        final GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
-        geom = mc;
-      }
-      else
-      {
-        geom = null;
-      }
+      return GeometryFactory.createGM_MultiSurface( polygons, null );
     }
-    else if( shpType == ShapeConst.SHAPE_TYPE_POLYGON )
+    
+    if( shpGeom instanceof SHPPointz )
+      return shpwks.transformPointz( null, (SHPPointz) shpGeom );
+
+    if( shpGeom instanceof SHPPolyLinez )
     {
-      final SHPPolygon shppoly = (SHPPolygon) shp.getByRecNo( RecNo );
+      final GM_Curve[] curves = shpwks.transformPolyLinez( null, (SHPPolyLinez) shpGeom );
+      if( curves == null )
+        return null;
 
-      final GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
-
-      if( polygons != null && polygons.length > 0 )
-      {
-        // create multi surface
-        final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
-        geom = ms;
-      }
-      else
-      {
-        geom = null;
-      }
+      return GeometryFactory.createGM_MultiCurve( curves );
     }
-    else if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
+    
+    if( shpGeom instanceof SHPPolygonz )
     {
-      final SHPPointz shppointz = (SHPPointz) shp.getByRecNo( RecNo );
-
-      geom = shpwks.transformPointz( null, shppointz );
-    }
-    else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
-    {
-      final SHPPolyLinez shppolyline = (SHPPolyLinez) shp.getByRecNo( RecNo );
-
-      final GM_Curve[] curves = shpwks.transformPolyLinez( null, shppolyline );
-
-      if( curves != null )
-      {
-        // create multi curve
-        final GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
-        geom = mc;
-      }
-      else
-      {
-        geom = null;
-      }
-    }
-    else if( shpType == ShapeConst.SHAPE_TYPE_POLYGONZ )
-    {
-      final SHPPolygonz shppoly = (SHPPolygonz) shp.getByRecNo( RecNo );
-      // TODO!
-      final GM_Surface[] polygonsz = shpwks.transformPolygonz( null, shppoly );
-
+      final GM_Surface[] polygonsz = shpwks.transformPolygonz( null, (SHPPolygonz) shpGeom );
       if( polygonsz != null )
-      {
-        // create multi surface
-        final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygonsz, null );
-        geom = ms;
-      }
-      else
-      {
-        geom = null;
-      }
-    }
-    else if( shpType == ShapeConst.SHAPE_TYPE_NULL )
-    {
-      geom = null;
-    }
-    else
-    {
-      final String shapeConstantAsString = ShapeConst.getShapeConstantAsString( (byte) shpType );
-      if( shapeConstantAsString != null )
-      {
-        final String msg = String.format( "Shape Type %s cannot by handled.\n", shapeConstantAsString );
-        throw (new NotImplementedException( msg ));
-      }
-      else
-        throw (new NotImplementedException());
-    }
+        return GeometryFactory.createGM_MultiSurface( polygonsz, null );
 
-    return geom;
+      return null;
+    }
+    
+    throw new NotImplementedException( "Unknown shpe class: " + shpGeom );
   }
 
   /**
-   * returns the type of the RecNo'th Geometrie <BR>
-   * per definition a shape file contains onlay one shape type <BR>
-   * but null shapes are possible too! <BR>
-   */
-  private int getShapeTypeByRecNo( final int RecNo ) throws IOException
-  {
-    return shp.getShapeTypeByRecNo( RecNo );
-  }
-
-  /**
-   * returns a int array that containts all the record numbers that matches the search operation
+   * returns a int array that contains all the record numbers that matches the search operation
    */
   @SuppressWarnings("unchecked")
   public int[] getGeoNumbersByAttribute( final String column, final Comparable value ) throws IOException, DBaseIndexException
@@ -476,97 +405,6 @@ public class ShapeFile
 
     return index.search( value );
   }
-
-  /**
-   * returns a ArrayList that contains all geomeries of the shape file <BR>
-   * which mbr's are completly or partly within the rectangle r <BR>
-   * only Points, MultiPoints, PolyLines and Polygons are handled <BR>
-   */
-  public int[] getGeoNumbersByRect( final GM_Envelope r ) throws IOException
-  {
-    SHPPoint geom = null;
-    int[] num = null;
-    final int numRecs = getRecordNum();
-    final ArrayList<Integer> numbers = new ArrayList<Integer>();
-
-    GM_Envelope mbr = getFileMBR();
-
-    if( !mbr.intersects( r ) )
-      return null;
-
-    if( hasRTreeIndex )
-    {
-      try
-      {
-        // translate envelope (deegree) to bounding box (rtree)
-        final HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( r.getMin().getAsArray() ), new HyperPoint( r.getMax().getAsArray() ) );
-        final Object[] iNumbers = rti.intersects( box );
-        num = new int[iNumbers.length];
-
-        for( int i = 0; i < iNumbers.length; i++ )
-        {
-          num[i] = ((Integer) iNumbers[i]).intValue();
-        }
-
-        return num;
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    // for every geometry (record) within the shape file
-    // check if it's inside the search-rectangle r
-    for( int i = 0; i < numRecs; i++ )
-    {
-      if( getShapeTypeByRecNo( i + 1 ) == ShapeConst.SHAPE_TYPE_NULL )
-      {
-        // hm
-      }
-      else if( getShapeTypeByRecNo( i + 1 ) == ShapeConst.SHAPE_TYPE_POINT )
-      {
-        geom = (SHPPoint) shp.getByRecNo( i + 1 );
-
-        // is the Point within the seach rectangle?
-
-        if( r.contains( geom.getX(), geom.getY() ) )
-        {
-          numbers.add( new Integer( i + 1 ) );
-        }
-      }
-      else
-      {
-        // get minimum bounding rectangle of the i'th record
-        mbr = getMBRByRecNo( i + 1 );
-
-        // is the i'th record a geometrie having a mbr
-        // (only for PolyLines, Polygons and MultiPoints mbrs are defined)
-        if( mbr != null )
-        {
-          // if the tested rectangles are not disjunct the number of the
-          // actual record is added to the ArrayList
-          if( mbr.intersects( r ) )
-          {
-            numbers.add( new Integer( i + 1 ) );
-          }
-        }
-      }
-    }
-
-    if( numbers.size() > 0 )
-    {
-      num = new int[numbers.size()];
-
-      // put all numbers within numbers to an array
-      for( int i = 0; i < numbers.size(); i++ )
-      {
-        num[i] = numbers.get( i ).intValue();
-      }
-    }
-
-    return num;
-  } // end of getGeoNumbersByRect
 
   /**
    * is a property unique?
