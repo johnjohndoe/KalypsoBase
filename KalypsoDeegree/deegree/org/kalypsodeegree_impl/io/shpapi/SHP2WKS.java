@@ -99,12 +99,12 @@ public class SHP2WKS
    * transforms a SHPMultiPoint to a WKSGeometry <BR>
    * gets a multipoint that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPoint( final String srs, final SHPMultiPoint shpmultipoint )
+  public GM_Point[] transformMultiPoint( final String crs, final SHPMultiPoint shpmultipoint )
   {
     final GM_Point[] gm_points = new GM_Point[shpmultipoint.numPoints];
 
     for( int i = 0; i < shpmultipoint.numPoints; i++ )
-      gm_points[i] = GeometryFactory.createGM_Point( shpmultipoint.points[i].getX(), shpmultipoint.points[i].getY(), srs );
+      gm_points[i] = transformPoint( crs, shpmultipoint.points[i] );
 
     return gm_points;
   }
@@ -115,12 +115,12 @@ public class SHP2WKS
    * transforms a SHPMultiPointz to a WKSGeometry <BR>
    * gets a multipointz that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPointz( final String srs, final SHPMultiPointz shpmultipointz )
+  public GM_Point[] transformMultiPointz( final String crs, final SHPMultiPointz shpmultipointz )
   {
     final GM_Point[] gm_points = new GM_Point[shpmultipointz.numPoints];
 
     for( int i = 0; i < shpmultipointz.numPoints; i++ )
-      gm_points[i] = GeometryFactory.createGM_Point( shpmultipointz.pointsz[i].getX(), shpmultipointz.pointsz[i].getY(), shpmultipointz.pointsz[i].getZ(), srs );
+      gm_points[i] = transformPointz( crs, shpmultipointz.pointsz[i] );
 
     return gm_points;
   }
@@ -133,18 +133,19 @@ public class SHP2WKS
    */
   public GM_Curve[] transformPolyLine( final String crs, final SHPPolyLine shppolyline )
   {
-    final GM_Curve[] curve = new GM_Curve[shppolyline.numParts];
+    int numParts = shppolyline.getNumParts();
+    
+    final GM_Curve[] curve = new GM_Curve[numParts];
+    SHPPoint[][] points = shppolyline.getPoints();
 
     try
     {
-      for( int j = 0; j < shppolyline.numParts; j++ )
+      for( int j = 0; j < numParts; j++ )
       {
-        final GM_Position[] gm_points = new GM_Position[shppolyline.points[j].length];
+        final GM_Position[] gm_points = new GM_Position[points[j].length];
 
-        for( int i = 0; i < shppolyline.points[j].length; i++ )
-        {
-          gm_points[i] = GeometryFactory.createGM_Position( shppolyline.points[j][i].getX(), shppolyline.points[j][i].getY() );
-        }
+        for( int i = 0; i < points[j].length; i++ )
+          gm_points[i] = GeometryFactory.createGM_Position( points[j][i].getX(), points[j][i].getY() );
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
         curve[j] = GeometryFactory.createGM_Curve( cs );
@@ -176,9 +177,7 @@ public class SHP2WKS
         final GM_Position[] gm_points = new GM_Position[pointsz[j].length];
 
         for( int i = 0; i < pointsz[j].length; i++ )
-        {
           gm_points[i] = GeometryFactory.createGM_Position( pointsz[j][i].getX(), pointsz[j][i].getY(), pointsz[j][i].getZ() );
-        }
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
         curve[j] = GeometryFactory.createGM_Curve( cs );
@@ -271,21 +270,26 @@ public class SHP2WKS
   }
 
   /**
+   * FIXME Urgent: probably broken! TODO: do not use JTS code here, optimize!
+   * 
    * transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
   public GM_Surface[] transformPolygon( final String crs, final SHPPolygon shppolygon )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
-    final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.numRings );
-    final ArrayList<LinearRing> inner_rings = new ArrayList<LinearRing>( shppolygon.numRings );
+    final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.getNumRings() );
+    final ArrayList<LinearRing> inner_rings = new ArrayList<LinearRing>( shppolygon.getNumRings() );
 
-    for( int i = 0; i < shppolygon.numRings; i++ )
+    SHPPolyLine rings = shppolygon.getRings();
+    SHPPoint[][] points = rings.getPoints();
+    
+    for( int i = 0; i < shppolygon.getNumRings(); i++ )
     {
-      final Coordinate[] ring = new Coordinate[shppolygon.m_rings.points[i].length];
+      final Coordinate[] ring = new Coordinate[points[i].length];
 
-      for( int k = 0; k < shppolygon.m_rings.points[i].length; k++ )
-        ring[k] = new Coordinate( shppolygon.m_rings.points[i][k].getX(), shppolygon.m_rings.points[i][k].getY() );
+      for( int k = 0; k < points[i].length; k++ )
+        ring[k] = new Coordinate( points[i][k].getX(), points[i][k].getY() );
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
       final double area = JTSUtilities.calcSignedAreaOfRing( ring );
@@ -309,12 +313,12 @@ public class SHP2WKS
       final int count = inner_rings.size() - 1;
       final ArrayList<LinearRing> list = new ArrayList<LinearRing>( count + 2 );
       // find inner rings of the current outter ring
-      final PointInRing pir = new SIRtreePointInRing( out_ring );
+//      final PointInRing pir = new SIRtreePointInRing( out_ring );
       // pirs.get( out_ring );
 
       for( int k = count; k >= 0; k-- )
       {
-        final LinearRing in_ring = inner_rings.get( k );
+//        final LinearRing in_ring = inner_rings.get( k );
 
         // TODO why?
         // if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )

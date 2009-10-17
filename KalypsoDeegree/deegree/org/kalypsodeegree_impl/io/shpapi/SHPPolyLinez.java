@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 
 public class SHPPolyLinez implements ISHPGeometry
 {
-
   private final int numParts;
 
   private int numPoints;
@@ -67,25 +66,13 @@ public class SHPPolyLinez implements ISHPGeometry
    */
   public SHPPolyLinez( byte[] recBuf )
   {
+    m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
-    int pointsStart = 0;
-    int sumPoints = 0;
-    int byteposition = 0; // position of the bytes to be read
-
-    // bounding box
-    byteposition = 4;
-    m_envelope = ShapeUtils.readBox( recBuf, byteposition );
-
-    // number of line parts
-    byteposition = 36;
-    numParts = ByteUtils.readLEInt( recBuf, byteposition );
-
-    // total number of points
-    byteposition = 40;
-    numPoints = ByteUtils.readLEInt( recBuf, byteposition );
+    numParts = ByteUtils.readLEInt( recBuf, 36 );
+    numPoints = ByteUtils.readLEInt( recBuf, 40 );
 
     // index of the first point in part
-    pointsStart = ShapeConst.PARTS_START + (numParts * 4);
+    int pointsStart = ShapeConst.PARTS_START + (numParts * 4);
 
     // array of points for all parts
     pointsz = new SHPPointz[numParts][];
@@ -96,19 +83,15 @@ public class SHPPolyLinez implements ISHPGeometry
     for( int j = 0; j < numParts; j++ )
     {
 
-      int firstPointNo = 0;
-      int nextFirstPointNo = 0;
-      int offset = 0;
-      int lnumPoints = 0;
-
       // get number of first point of current part out of ESRI shape Record:
-      firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
+      int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      offset = pointsStart + (firstPointNo * 16);
+      int offset = pointsStart + (firstPointNo * 16);
 
       // get number of first point of next part ...
+      int nextFirstPointNo = 0;
       if( j < numParts - 1 )
       {
         // ... usually from ESRI shape Record
@@ -122,8 +105,7 @@ public class SHPPolyLinez implements ISHPGeometry
 
       // calculate number of points per part due to distance and
       // calculate some checksum for the total number of points to be worked
-      lnumPoints = nextFirstPointNo - firstPointNo;
-      sumPoints += lnumPoints;
+      int lnumPoints = nextFirstPointNo - firstPointNo;
 
       // allocate memory for the j-th part
       pointsz[j] = new SHPPointz[lnumPoints];
@@ -135,19 +117,19 @@ public class SHPPolyLinez implements ISHPGeometry
         count++;
 
         // allocate memory for the points of the j-th part
-        pointsz[j][i] = new SHPPointz( recBuf, offset + (i * 16), ShapeConst.SHAPE_TYPE_POLYLINEZ );
+        double x = ByteUtils.readLEDouble( recBuf, offset + (i * 16) );
+        double y = ByteUtils.readLEDouble( recBuf, offset + (i * 16) + 8 );
 
         // jump to the z-values of the points
-        byteposition = 44 + (4 * numParts) + (numPoints * 16) + 16 + ((count - 1) * 8);
+        int byteposition = 44 + (4 * numParts) + (numPoints * 16) + 16 + ((count - 1) * 8);
+        final double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
-        final double zValue = ByteUtils.readLEDouble( recBuf, byteposition );
-        pointsz[j][i].setZ( zValue );
+        pointsz[j][i] = new SHPPointz( x, y, z, 0.0 );
       }
-      byteposition = offset;
     }
 
     // next the z-range of the pointsz...
-    byteposition = 44 + (4 * numParts) + (numPoints * 16);
+    int byteposition = 44 + (4 * numParts) + (numPoints * 16);
     m_zrange = ShapeUtils.readZRange( recBuf, byteposition );
 
   }
@@ -157,7 +139,6 @@ public class SHPPolyLinez implements ISHPGeometry
    */
   public SHPPolyLinez( GM_Curve[] curve )
   {
-
     double xmin = curve[0].getEnvelope().getMin().getX();
     double xmax = curve[0].getEnvelope().getMax().getX();
     double ymin = curve[0].getEnvelope().getMin().getY();

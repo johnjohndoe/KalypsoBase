@@ -47,43 +47,29 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Class representing a three dimensional ESRI Polygonz <BR>
  * <!---------------------------------------------------------------------------->
- *
+ * 
  * @version 26.01.2007
  * @author Thomas Jung
  */
 
 public class SHPPolygonz implements ISHPGeometry
 {
+// public final SHPPointz[][] m_pointsZ = null;
 
-  private int m_numRings;
-
-  private int m_numPoints;
-
-  public final SHPPointz[][] m_pointsZ = null;
-
-  private SHPPolyLinez m_rings = null;
+  private final SHPPolyLinez m_rings;
 
   private SHPZRange m_zrange;
-
-  private SHPEnvelope m_envelope = null;
 
   /**
    * constructor: recieves a stream <BR>
    */
   public SHPPolygonz( final byte[] recBuf )
   {
-    m_envelope = ShapeUtils.readBox( recBuf, 4 );
-
     m_rings = new SHPPolyLinez( recBuf );
-
-    m_numPoints = m_rings.getNumPoints();
-    m_numRings = m_rings.getNumParts();
-
   }
 
   /**
@@ -91,15 +77,12 @@ public class SHPPolygonz implements ISHPGeometry
    */
   public SHPPolygonz( final GM_SurfacePatch[] surfacePatch )
   {
+    final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+    final String crs = surfacePatch[0].getCoordinateSystem();
 
-    Debug.debugMethodBegin( this, "SHPPolygonz" );
-
-    try
+    for( final GM_SurfacePatch element : surfacePatch )
     {
-      final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
-      final String crs = surfacePatch[0].getCoordinateSystem();
-
-      for( final GM_SurfacePatch element : surfacePatch )
+      try
       {
         final GM_Position[] exteriorRing = element.getExteriorRing();
 
@@ -124,21 +107,14 @@ public class SHPPolygonz implements ISHPGeometry
           }
         }
       }
-
-      m_rings = new SHPPolyLinez( curveList.toArray( new GM_Curve[curveList.size()] ) );
-
-      m_numPoints = m_rings.getNumPoints();
-      m_numRings = m_rings.getNumParts();
-
-      m_envelope = m_rings.getEnvelope();
-      m_zrange = m_rings.getZRange();
-    }
-    catch( final Exception e )
-    {
-      System.out.println( "SHPPolygonz::" + e );
+      catch( final Exception e )
+      {
+        System.out.println( "SHPPolygonz::" + e );
+      }
     }
 
-    Debug.debugMethodEnd();
+    m_rings = new SHPPolyLinez( curveList.toArray( new GM_Curve[curveList.size()] ) );
+    m_zrange = m_rings.getZRange();
   }
 
   /**
@@ -175,17 +151,17 @@ public class SHPPolygonz implements ISHPGeometry
     offset += (4 * 8);
 
     // write numRings
-    ByteUtils.writeLEInt( bytearray, offset, m_numRings );
+    ByteUtils.writeLEInt( bytearray, offset, m_rings.getNumParts() );
     offset += 4;
     // write numpoints
-    ByteUtils.writeLEInt( bytearray, offset, m_numPoints );
+    ByteUtils.writeLEInt( bytearray, offset, getNumPoints() );
     offset += 4;
 
     // save offset of the list of offsets for each polyline
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += (4 * m_numRings);
+    offset += (4 * m_rings.getNumParts());
 
     int count = 0;
     for( final SHPPointz[] element : pointsZ )
@@ -239,7 +215,7 @@ public class SHPPolygonz implements ISHPGeometry
 
         // write z-coordinate
         // jump to the z-values
-        byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_numRings) + (m_numPoints * 16) + 16 + ((count - 1) * 8);
+        byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_rings.getNumParts()) + (m_rings.getNumPoints() * 16) + 16 + ((count - 1) * 8);
         ByteUtils.writeLEDouble( bytearray, byteposition, element[j].getZ() );
       }
     }
@@ -257,7 +233,7 @@ public class SHPPolygonz implements ISHPGeometry
 
     // write z-range
     // jump to the z-range byte postition
-    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_numRings) + (m_numPoints * 16);
+    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * getNumRings()) + (getNumPoints() * 16);
     // write z-range to the byte array
     ByteUtils.writeLEDouble( bytearray, byteposition, zmin );
     offset += 8;
@@ -271,35 +247,35 @@ public class SHPPolygonz implements ISHPGeometry
    */
   public int size( )
   {
-    return 44 + m_numRings * 4 + m_numPoints * 16 + 16 + (8 * m_numPoints);
+    return 44 + getNumRings() * 4 + getNumPoints() * 16 + 16 + (8 * getNumPoints());
   }
 
   @Override
   public String toString( )
   {
 
-    return "WKBPOLYGON" + " numRings: " + m_numRings;
+    return "WKBPOLYGON" + " numRings: " + m_rings.getNumParts();
 
   }
 
   public SHPEnvelope getEnvelope( )
   {
-    return m_envelope;
+    return m_rings.getEnvelope();
   }
 
   public int getNumRings( )
   {
-    return m_numRings;
+    return m_rings.getNumParts();
   }
 
   public int getNumPoints( )
   {
-    return m_numPoints;
+    return m_rings.getNumPoints();
   }
 
   public SHPPointz[][] getPointsz( )
   {
-    return m_pointsZ;
+    return m_rings.getPointsz();
   }
 
   public SHPPolyLinez getRings( )

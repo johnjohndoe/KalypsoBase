@@ -50,12 +50,11 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 public class SHPMultiPointz implements ISHPGeometry
 {
+  public final SHPPointz[] pointsz;
 
-  public SHPPointz[] pointsz = null;
+  public final SHPZRange zrange;
 
-  public SHPZRange zrange;
-
-  public int numPoints = 0;
+  public final int numPoints;
 
   private SHPEnvelope m_envelope;
 
@@ -64,9 +63,6 @@ public class SHPMultiPointz implements ISHPGeometry
    */
   public SHPMultiPointz( byte[] recBuf )
   {
-
-    int byteposition = 0;
-
     // bounding box
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
@@ -77,24 +73,20 @@ public class SHPMultiPointz implements ISHPGeometry
 
     for( int i = 0; i < numPoints; i++ )
     {
+      // get x out of recordbuffer
+      double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
+      // get y out of recordbuffer
+      double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
 
-      // at first the x- and y-values of the points will be loaded
-      byteposition = 40 + i * 16;
-      pointsz[i] = new SHPPointz( recBuf, byteposition, ShapeConst.SHAPE_TYPE_MULTIPOINTZ );
+      // at last the z-values of the pointsz...
+      int byteposition = ShapeConst.SHAPE_FILE_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * i);
+      double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
+      pointsz[i] = new SHPPointz( x, y, z, 0.0 );
     }
 
     // next the z-range of the pointsz...
-    byteposition = 40 + numPoints * 16;
-    zrange = ShapeUtils.readZRange( recBuf, byteposition );
-
-    for( int j = 0; j < numPoints; j++ )
-    {
-      // at last the z-values of the pointsz...
-      byteposition = ShapeConst.SHAPE_FILE_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * j);
-      pointsz[j].setZ( ByteUtils.readLEDouble( recBuf, byteposition ) );
-    }
-
+    zrange = ShapeUtils.readZRange( recBuf, 40 + numPoints * 16 );
   }
 
   /**
@@ -110,44 +102,39 @@ public class SHPMultiPointz implements ISHPGeometry
     double zmin = multipointz.getEnvelope().getMin().getZ();
     double zmax = multipointz.getEnvelope().getMax().getZ();
 
-    try
+    numPoints = multipointz.getSize();
+    pointsz = new SHPPointz[numPoints];
+    for( int i = 0; i < multipointz.getSize(); i++ )
     {
-      pointsz = new SHPPointz[multipointz.getSize()];
-      for( int i = 0; i < multipointz.getSize(); i++ )
+      pointsz[i] = new SHPPointz( multipointz.getPointAt( i ).getPosition() );
+      if( pointsz[i].getX() > xmax )
       {
-        pointsz[i] = new SHPPointz( multipointz.getPointAt( i ).getPosition() );
-        if( pointsz[i].getX() > xmax )
-        {
-          xmax = pointsz[i].getX();
-        }
-        else if( pointsz[i].getX() < xmin )
-        {
-          xmin = pointsz[i].getX();
-        }
-        if( pointsz[i].getY() > ymax )
-        {
-          ymax = pointsz[i].getY();
-        }
-        else if( pointsz[i].getY() < ymin )
-        {
-          ymin = pointsz[i].getY();
-        }
-        if( pointsz[i].getZ() > zmax )
-        {
-          zmax = pointsz[i].getZ();
-        }
-        else if( pointsz[i].getZ() < zmin )
-        {
-          zmin = pointsz[i].getZ();
-        }
-
-        m_envelope = new SHPEnvelope( xmin, xmax, ymin, ymax );
+        xmax = pointsz[i].getX();
+      }
+      else if( pointsz[i].getX() < xmin )
+      {
+        xmin = pointsz[i].getX();
+      }
+      if( pointsz[i].getY() > ymax )
+      {
+        ymax = pointsz[i].getY();
+      }
+      else if( pointsz[i].getY() < ymin )
+      {
+        ymin = pointsz[i].getY();
+      }
+      if( pointsz[i].getZ() > zmax )
+      {
+        zmax = pointsz[i].getZ();
+      }
+      else if( pointsz[i].getZ() < zmin )
+      {
+        zmin = pointsz[i].getZ();
       }
     }
-    catch( Exception e )
-    {
-      System.out.println( "SHPMultiPointz::" + e );
-    }
+    
+    zrange = new SHPZRange( zmin, zmax );
+    m_envelope = new SHPEnvelope( xmin, xmax, ymin, ymax );
   }
 
   /**

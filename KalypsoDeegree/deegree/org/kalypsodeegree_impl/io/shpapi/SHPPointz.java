@@ -58,7 +58,7 @@ public class SHPPointz implements ISHPGeometry
 
   private double z;
 
-  private final double m = 0;
+  private final double m;
 
   private final SHPEnvelope m_envelope;
 
@@ -66,29 +66,25 @@ public class SHPPointz implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPointz( byte[] recBuf, int xStart, final byte shapeType )
+  public SHPPointz( byte[] recBuf )
   {
-    if( shapeType == ShapeConst.SHAPE_TYPE_POINTZ )
-    {
+    this( recBuf, 4 );
+  }
 
-      // get x out of recordbuffer
-      x = ByteUtils.readLEDouble( recBuf, xStart );
-      // get y out of recordbuffer
-      y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-      // get z out of recordbuffer
-      z = ByteUtils.readLEDouble( recBuf, xStart + 16 );
-      // get measure m out of recordbuffer
-// m = ByteUtils.readLEDouble( recBuf, xStart + 24 );
-    }
-    else
-    {
-      // get x out of recordbuffer
-      x = ByteUtils.readLEDouble( recBuf, xStart );
-      // get y out of recordbuffer
-      y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
-      // z-value is set at other position, because the byte address differs from the address of a real SHPPointZ
-    }
+  /**
+   * constructor: gets a stream and the start index <BR>
+   * of point on it <BR>
+   */
+  public SHPPointz( byte[] recBuf, int off )
+  {
+    // get x out of recordbuffer
+    x = ByteUtils.readLEDouble( recBuf, off );
+    // get y out of recordbuffer
+    y = ByteUtils.readLEDouble( recBuf, off + 8 );
+    // get z out of recordbuffer
+    z = ByteUtils.readLEDouble( recBuf, off + 16 );
+    // get measure m out of recordbuffer
+    m = ByteUtils.readLEDouble( recBuf, off + 24 );
 
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
@@ -98,11 +94,7 @@ public class SHPPointz implements ISHPGeometry
    */
   public SHPPointz( GM_Position position )
   {
-    x = position.getX();
-    y = position.getY();
-    z = position.getZ();
-
-    m_envelope = new SHPEnvelope( x, x, y, y );
+    this( position.getX(), position.getY(), position.getZ(), 0.0 );
   }
 
   /**
@@ -110,9 +102,16 @@ public class SHPPointz implements ISHPGeometry
    */
   public SHPPointz( GM_Point point )
   {
-    x = point.getX();
-    y = point.getY();
-    z = point.getZ();
+    this( point.getX(), point.getY(), point.getZ(), 0.0 );
+  }
+
+  @SuppressWarnings("hiding") 
+  public SHPPointz( double x, double y, double z, double m )
+  {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.m = m;
 
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
@@ -162,7 +161,7 @@ public class SHPPointz implements ISHPGeometry
   @Override
   public String toString( )
   {
-    return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "]";
+    return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "; " + this.m + "]";
   }
 
   public double getX( )
@@ -183,11 +182,6 @@ public class SHPPointz implements ISHPGeometry
   public double getM( )
   {
     return m;
-  }
-
-  public void setZ( final double z )
-  {
-    this.z = z;
   }
 
   public SHPEnvelope getEnvelope( )

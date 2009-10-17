@@ -41,7 +41,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Class representig a two dimensional point <BR>
+ * Class representing a two dimensional point <BR>
  * <B>Last changes <B>: <BR>
  * 25.05.00 chm: method writeSHPPoint implemented <BR>
  * 14.08.00 ap: import clause added <BR>
@@ -63,13 +63,21 @@ public class SHPPoint implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
+  public SHPPoint( byte[] recBuf )
+  {
+    this( recBuf, 4 );
+  }
+
+  
+  /**
+   * constructor: gets a stream and the start index <BR>
+   * of point on it <BR>
+   */
   public SHPPoint( byte[] recBuf, int xStart )
   {
-    // get x out of recordbuffer
     x = ByteUtils.readLEDouble( recBuf, xStart );
-    // get y out of recordbuffer
     y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
+    
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
