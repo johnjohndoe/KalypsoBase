@@ -36,8 +36,6 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -78,12 +76,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_MultiCurve_Impl( final GM_Curve[] gmc )
   {
-    super( null );
-
-    for( final GM_Curve element : gmc )
-    {
-      m_aggregate.add( element );
-    }
+    this( gmc, null );
   }
 
   /**
@@ -94,12 +87,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_MultiCurve_Impl( final GM_Curve[] gmc, final String crs )
   {
-    super( crs );
-
-    for( final GM_Curve element : gmc )
-    {
-      m_aggregate.add( element );
-    }
+    super( gmc, crs );
   }
 
   /**
@@ -265,7 +253,6 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
       final int dimSize2 = Math.min( pos.length, dimSize );
       for( int j = 0; j < dimSize2; j++ )
-// for( int j = 0; j < dimSize; j++ )
       {
         cen[j] += pos[j];
       }
@@ -318,7 +305,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     catch( final Exception ex )
     {
     }
-
+    // TODO: NPE here, if above exception is thrown
     return sp.getPositionAt( 0 ).getAsArray().length;
   }
 
@@ -328,15 +315,12 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   @Override
   public GM_Object clone( ) throws CloneNotSupportedException
   {
-    // kuch
     final GM_Curve[] curves = getAllCurves();
-    final List<GM_Curve> myCurves = new LinkedList<GM_Curve>();
-    for( final GM_Curve curve : curves )
-    {
-      myCurves.add( (GM_Curve) curve.clone() );
-    }
+    final GM_Curve[] clonedCurves = new GM_Curve[curves.length];
+    for( int i = 0; i < curves.length; i++ )
+      clonedCurves[i] = (GM_Curve) curves[i].clone();
 
-    return new GM_MultiCurve_Impl( myCurves.toArray( new GM_Curve[] {} ) );
+    return new GM_MultiCurve_Impl( clonedCurves, getCoordinateSystem() );
   }
 
   /**
@@ -344,10 +328,10 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    *      java.lang.String)
    */
   @Override
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
@@ -356,9 +340,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     final GM_Curve[] curves = new GM_Curve[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-    {
       curves[i] = (GM_Curve) getCurveAt( i ).transform( trans, targetOGCCS );
-    }
 
     Debug.debugMethodEnd();
     return GeometryFactory.createGM_MultiCurve( curves );

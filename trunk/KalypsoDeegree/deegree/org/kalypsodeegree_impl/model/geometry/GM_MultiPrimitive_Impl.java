@@ -70,10 +70,20 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   }
 
   /**
+   * Creates a new GM_MultiPrimitive_Impl object.
+   * 
+   * @param crs
+   */
+  public GM_MultiPrimitive_Impl( final GM_Object[] children, final String crs )
+  {
+    super( children, crs );
+  }
+
+  /**
    * merges this aggregation with another one
    * 
    * @exception GM_Exception
-   *                will be thrown if the submitted isn't the same type as the recieving one.
+   *              will be thrown if the submitted isn't the same type as the recieving one.
    */
   @Override
   public void merge( final GM_Aggregate aggregate ) throws GM_Exception
@@ -123,7 +133,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     throw new UnsupportedOperationException();
   }
