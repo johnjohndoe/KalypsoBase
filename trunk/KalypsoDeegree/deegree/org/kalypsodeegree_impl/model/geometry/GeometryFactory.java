@@ -54,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -256,9 +255,9 @@ final public class GeometryFactory
    * @param crs
    *          spatial reference system of the surface patch
    */
-  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
+  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
-    return new GM_Polygon_Impl( si, exteriorRing, interiorRings, crs );
+    return new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
   }
 
   public static GM_SurfacePatch createGM_SurfacePatch( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
@@ -274,7 +273,7 @@ final public class GeometryFactory
         in[j] = positionsFromDoubles( interior[j], dim );
     }
 
-    return createGM_SurfacePatch( ext, in, new GM_SurfaceInterpolation_Impl(), crs );
+    return createGM_SurfacePatch( ext, in, crs );
   }
 
   public static GM_SurfacePatch createGM_SurfacePatch( final GM_Ring exterior, final GM_Ring[] interior, final String crs ) throws GM_Exception
@@ -290,7 +289,7 @@ final public class GeometryFactory
         in[j] = interior[j].getPositions();
     }
 
-    return createGM_SurfacePatch( ext, in, new GM_SurfaceInterpolation_Impl(), crs );
+    return createGM_SurfacePatch( ext, in, crs );
   }
 
   /**
@@ -383,9 +382,9 @@ final public class GeometryFactory
    * @param crs
    *          spatial reference system of the surface patch
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
-    final GM_SurfacePatch sp = new GM_Polygon_Impl( si, exteriorRing, interiorRings, crs );
+    final GM_SurfacePatch sp = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
     return GeometryFactory.createGM_Surface( sp );
   }
 
@@ -410,7 +409,7 @@ final public class GeometryFactory
    * @param si
    *          GM_SurfaceInterpolation
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final byte[] wkb, final String crs, final GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final byte[] wkb, final String crs ) throws GM_Exception
   {
     int wkbtype = -1;
     int numRings = 0;
@@ -549,7 +548,7 @@ final public class GeometryFactory
       }
     }
 
-    final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( externalBoundary, internalBoundaries, si, crs );
+    final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( externalBoundary, internalBoundaries, crs );
 
     return GeometryFactory.createGM_Surface( patch );
   }
@@ -573,7 +572,7 @@ final public class GeometryFactory
 
     final GM_Position[] exteriorRing = new GM_Position[] { min, new GM_Position_Impl( max.getX(), min.getY() ), max, new GM_Position_Impl( min.getX(), max.getY() ), min };
 
-    return GeometryFactory.createGM_Surface( exteriorRing, null, new GM_SurfaceInterpolation_Impl(), crs );
+    return GeometryFactory.createGM_Surface( exteriorRing, null, crs );
   }
 
   /**
@@ -601,9 +600,7 @@ final public class GeometryFactory
         in[j] = positionsFromDoubles( interior[j], dim );
     }
 
-    // default - linear - interpolation
-    final GM_SurfaceInterpolation si = new GM_SurfaceInterpolation_Impl();
-    return GeometryFactory.createGM_Surface( ext, in, si, crs );
+    return GeometryFactory.createGM_Surface( ext, in, crs );
   }
 
   private static GM_Position[] positionsFromDoubles( final double[] exterior, final int dim )
@@ -876,7 +873,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface from a wkb
    */
-  public static GM_MultiSurface createGM_MultiSurface( final byte[] wkb, final String crs, final GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_MultiSurface createGM_MultiSurface( final byte[] wkb, final String crs ) throws GM_Exception
   {
     int wkbtype = -1;
     int numPoly = 0;
@@ -1046,7 +1043,7 @@ final public class GeometryFactory
         }
       }
 
-      final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( externalBoundary, internalBoundaries, si, crs );
+      final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( externalBoundary, internalBoundaries, crs );
 
       list.add( GeometryFactory.createGM_Surface( patch ) );
     }
