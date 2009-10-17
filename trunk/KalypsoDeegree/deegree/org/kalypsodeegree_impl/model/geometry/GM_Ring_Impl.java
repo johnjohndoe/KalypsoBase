@@ -335,13 +335,10 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   @Override
   public boolean contains( final GM_Object gmo )
   {
-
     try
     {
       if( m_sp == null )
-      {
-        m_sp = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), m_points, null, getCoordinateSystem() );
-      }
+        m_sp = new GM_Polygon_Impl( m_points, null, getCoordinateSystem() );
       return m_sp.contains( gmo );
     }
     catch( final Exception e )

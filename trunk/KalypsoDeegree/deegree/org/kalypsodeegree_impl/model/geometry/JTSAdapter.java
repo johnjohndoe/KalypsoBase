@@ -460,7 +460,7 @@ public class JTSAdapter
     {
       interiorRings[i] = createGMPositions( polygon.getInteriorRingN( i ) );
     }
-    final GM_Polygon patch = new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl(), exteriorRing, interiorRings, null );
+    final GM_Polygon patch = new GM_Polygon_Impl( exteriorRing, interiorRings, null );
 
     return new GM_Surface_Impl<GM_Polygon>( patch );
   }

@@ -143,7 +143,7 @@ public class RectifiedGridDomain
     final GM_Position pos3 = offsetY.move( pos0, (maxY - minY) - 1 );
     final GM_Position[] ring = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
     final String originCrs = origin.getCoordinateSystem();
-    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, new GM_SurfaceInterpolation_Impl(), originCrs );
+    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, originCrs );
 
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return surface;

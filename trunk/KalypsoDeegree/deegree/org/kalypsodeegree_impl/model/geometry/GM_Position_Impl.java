@@ -58,7 +58,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3780255674921824356L;
 
-  private final double MUTE = 0.000001;
+  private static final double MUTE = 0.000001;
 
   private final double[] m_point;
 

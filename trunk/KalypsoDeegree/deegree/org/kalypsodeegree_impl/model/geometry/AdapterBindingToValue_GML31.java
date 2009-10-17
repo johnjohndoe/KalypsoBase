@@ -310,7 +310,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     }
 
     final GM_Position[][] interiorRings = interiorList.toArray( new GM_Position[interiorList.size()][] );
-    return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
+    return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, co );
   }
 
   private GM_Position[] createGM_Positions( final AbstractRingType abstractRingType )

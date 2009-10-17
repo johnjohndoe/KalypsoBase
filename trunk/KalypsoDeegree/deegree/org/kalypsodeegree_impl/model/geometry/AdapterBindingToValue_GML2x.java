@@ -159,7 +159,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
       interiorRings[i] = createGM_PositionFrom( (LinearRingType) abstractGeometryType );
       i++;
     }
-    return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
+    return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, co );
   }
 
   private GM_Position[] createGM_PositionFrom( final LinearRingType linearRingType )

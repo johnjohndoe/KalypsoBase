@@ -47,8 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * TODO: this implementation does not implement GM_SurfacePath with is a BUG.<br>
- * TODO: implement it, but check, taht everything works still fine... default implementation of the GM_SurfacePatch
+ * default implementation of the GM_SurfacePatch
  * interface from package jago.model. the class is abstract because it should be specialized by derived classes
  * <code>GM_Polygon</code> for example ------------------------------------------------------------
  * 
@@ -60,13 +59,16 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
 
+  static GM_SurfaceInterpolation INTERPOLATION_NONE = new GM_SurfaceInterpolation_Impl( );
+  
   protected String m_crs = null;
 
   protected GM_Envelope m_envelope = null;
 
   protected GM_Point m_centroid = null;
 
-  protected GM_SurfaceInterpolation m_interpolation = null;
+  // Not used anywhere; so for the moment we can just return a constant...
+//  protected GM_SurfaceInterpolation m_interpolation = null;
 
   protected GM_Position[] m_exteriorRing = null;
 
@@ -85,7 +87,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_SurfacePatch_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
+  protected GM_SurfacePatch_Impl( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     m_crs = crs;
 
@@ -116,9 +118,9 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
       }
     }
 
-    m_interpolation = interpolation;
     m_exteriorRing = exteriorRing;
-    m_interiorRings = interiorRings;
+    // Memory Optimize: do not remember empty interior rings, we have to check for null anyway
+    m_interiorRings = interiorRings == null || interiorRings.length == 0 ? null : interiorRings;
 
     setValid( false );
   }
@@ -139,9 +141,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     return m_valid;
   }
 
-  /**
-   *  
-   */
   private void calculateEnvelope( )
   {
     final double[] min = m_exteriorRing[0].getAsArray().clone();
@@ -169,15 +168,15 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     m_envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() );
   }
 
-  /**
-   * The interpolation determines the surface interpolation mechanism used for this GM_SurfacePatch. This mechanism uses
-   * the control points and control parameters defined in the various subclasses to determine the position of this GM_
-   * SurfacePatch.
-   */
-  public GM_SurfaceInterpolation getInterpolation( )
-  {
-    return m_interpolation;
-  }
+//  /**
+//   * The interpolation determines the surface interpolation mechanism used for this GM_SurfacePatch. This mechanism uses
+//   * the control points and control parameters defined in the various subclasses to determine the position of this GM_
+//   * SurfacePatch.
+//   */
+//  public GM_SurfaceInterpolation getInterpolation( )
+//  {
+//    return INTERPOLATION_NONE;
+//  }
 
   /**
    * returns the bounding box of the surface patch
@@ -243,22 +242,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     if( (other == null) || !(other instanceof GM_SurfacePatch_Impl) )
     {
       return false;
-    }
-
-    // Assuming Interpolation can be null (not checked by Constructor)
-    if( getInterpolation() != null )
-    {
-      if( !getInterpolation().equals( ((GM_SurfacePatch) other).getInterpolation() ) )
-      {
-        return false;
-      }
-    }
-    else
-    {
-      if( ((GM_SurfacePatch) other).getInterpolation() != null )
-      {
-        return false;
-      }
     }
 
     // Assuming envelope cannot be null (always calculated)
@@ -457,7 +440,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   public String toString( )
   {
     String ret = "GM_SurfacePatch: ";
-    ret = "interpolation = " + m_interpolation + "\n";
+    ret = "interpolation = " + INTERPOLATION_NONE + "\n";
     ret += "exteriorRing = \n";
 
     for( final GM_Position element : m_exteriorRing )

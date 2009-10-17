@@ -164,7 +164,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     final GM_Position newPoint = GeometryFactory.createGM_Position( newArray );
     pos[poses.length] = newPoint;
 
-    return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], null, m_crs );
+    return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], m_crs );
   }
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )

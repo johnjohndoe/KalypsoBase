@@ -458,7 +458,7 @@ public class LegendElement_Impl implements LegendElement
     GM_Surface surface = null;
     try
     {
-      surface = GeometryFactory.createGM_Surface( pos, null, null, null );
+      surface = GeometryFactory.createGM_Surface( pos, null, null );
     }
     catch( final Exception ex )
     {
