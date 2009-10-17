@@ -364,7 +364,7 @@ public class ConstraintDelaunayHelper
 
       final GM_Position[] triangle = new GM_Position[] { points[p1], points[p2], points[p3], points[p1] };
 
-      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, null, crs );
+      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, crs );
 
       surfaces.add( surface );
 

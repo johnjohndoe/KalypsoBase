@@ -41,7 +41,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -53,26 +52,11 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 {
-  public static GM_SurfaceInterpolation PLANAR_INTERPOLATION;
-
-  static
-  {
-    try
-    {
-      PLANAR_INTERPOLATION = new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR );
-    }
-    catch( final GM_Exception e )
-    {
-      // will never happen
-      e.printStackTrace();
-    }
-  }
-
   protected double[] m_planarEquation;
 
   public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
-    super( PLANAR_INTERPOLATION, new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
+    super( new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
   }
 
   /**
@@ -82,15 +66,6 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   public String getCoordinateSystem( )
   {
     return m_crs;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Triangle#getInterpolation()
-   */
-  @Override
-  public GM_SurfaceInterpolation getInterpolation( )
-  {
-    return PLANAR_INTERPOLATION;
   }
 
   /**

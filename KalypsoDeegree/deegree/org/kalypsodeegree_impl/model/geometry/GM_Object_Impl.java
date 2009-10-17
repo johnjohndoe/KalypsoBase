@@ -217,7 +217,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * returns the bounding box / envelope of a geometry
    */
-  public final GM_Envelope getEnvelope( )
+  public GM_Envelope getEnvelope( )
   {
     if( !isValid() )
     {

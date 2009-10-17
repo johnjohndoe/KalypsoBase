@@ -47,7 +47,6 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerDouble;
 import org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -195,7 +194,7 @@ public class PolyhedralSurfaceContentHandler extends DefaultHandler
 
       try
       {
-        final GM_Polygon gmPolygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_polygon, null, GM_Triangle_Impl.PLANAR_INTERPOLATION, m_currentCrs );
+        final GM_Polygon gmPolygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_polygon, null, m_currentCrs );
         m_polygons.add( gmPolygon );
       }
       catch( final GM_Exception e )
