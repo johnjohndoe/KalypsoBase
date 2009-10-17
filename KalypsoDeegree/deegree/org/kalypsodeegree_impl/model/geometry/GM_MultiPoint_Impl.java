@@ -36,8 +36,6 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -78,12 +76,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_MultiPoint_Impl( final GM_Point[] gmp )
   {
-    super( null );
-    for( final GM_Point element : gmp )
-    {
-      m_aggregate.add( element );
-    }
-
+    super( gmp, null );
   }
 
   /**
@@ -94,12 +87,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   public GM_MultiPoint_Impl( final GM_Point[] gmp, final String crs )
   {
-    super( crs );
-
-    for( final GM_Point element : gmp )
-    {
-      m_aggregate.add( element );
-    }
+    super( gmp, crs );
   }
 
   /**
@@ -279,20 +267,17 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * returns a shallow copy of the geometry
+   * returns a deep copy of the geometry
    */
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
-    // kuch
     final GM_Point[] points = getAllPoints();
-    final List<GM_Point> myPoints = new LinkedList<GM_Point>();
-    for( final GM_Point point : points )
-    {
-      myPoints.add( (GM_Point) point.clone() );
-    }
+    final GM_Point[] clonedPoints = new GM_Point[points.length];
+    for( int i = 0; i < points.length; i++ )
+      clonedPoints[i] = (GM_Point) points[i].clone();
 
-    return new GM_MultiPoint_Impl( myPoints.toArray( new GM_Point[] {} ) );
+    return new GM_MultiPoint_Impl( clonedPoints, getCoordinateSystem() );
   }
 
   /**
@@ -300,10 +285,10 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    *      java.lang.String)
    */
   @Override
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 

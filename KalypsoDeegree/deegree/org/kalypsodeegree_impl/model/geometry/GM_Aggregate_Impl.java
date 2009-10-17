@@ -58,7 +58,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
 
-  protected List<GM_Object> m_aggregate = new ArrayList<GM_Object>( 500 );
+  protected List<GM_Object> m_aggregate;
 
   /**
    * Creates a new GM_Aggregate_Impl object.
@@ -68,6 +68,22 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   public GM_Aggregate_Impl( final String crs )
   {
     super( crs );
+
+    m_aggregate = new ArrayList<GM_Object>();
+  }
+
+  /**
+   * Creates a new GM_Aggregate_Impl object.
+   * 
+   * @param crs
+   */
+  public GM_Aggregate_Impl( final GM_Object[] children, final String crs )
+  {
+    super( crs );
+
+    m_aggregate = new ArrayList<GM_Object>( children.length );
+    for( final GM_Object gmObject : children )
+      m_aggregate.add( gmObject );
   }
 
   /**

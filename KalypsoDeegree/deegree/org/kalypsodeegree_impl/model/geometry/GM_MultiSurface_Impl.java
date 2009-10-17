@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementation of the GM_MultiSurface interface from package jago.model.
@@ -85,9 +84,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @param surface
    */
-  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surface )
+  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surfaces )
   {
-    this( surface, null );
+    this( surfaces, null );
   }
 
   /**
@@ -96,16 +95,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @param surface
    * @param crs
    */
-  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surface, final String crs )
+  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surfaces, final String crs )
   {
-    super( crs );
-
-    for( final GM_Surface< ? > element : surface )
-    {
-      m_aggregate.add( element );
-    }
-
-    setValid( false );
+    super( surfaces, crs );
   }
 
   /**
@@ -353,16 +345,12 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
-    // kuch
     final GM_Surface< ? >[] surfaces = getAllSurfaces();
-    final List<GM_Surface< ? >> mySurfaces = new LinkedList<GM_Surface< ? >>();
+    final GM_Surface< ? >[] clonedSurfaces = new GM_Surface[surfaces.length];
+    for( int i = 0; i < surfaces.length; i++ )
+      clonedSurfaces[i] = (GM_Surface< ? >) surfaces[i].clone();
 
-    for( final GM_Surface< ? > surface : surfaces )
-    {
-      mySurfaces.add( (GM_Surface< ? >) surface.clone() );
-    }
-
-    return new GM_MultiSurface_Impl( mySurfaces.toArray( new GM_Surface[] {} ) );
+    return new GM_MultiSurface_Impl( clonedSurfaces, getCoordinateSystem() );
   }
 
   /**
@@ -394,22 +382,18 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    *      org.opengis.cs.CS_CoordinateSystem)
    */
   @Override
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
-    Debug.debugMethodBegin( this, "transformMultiSurface" );
-
-    final GM_Surface[] surfaces = new GM_Surface[getSize()];
+    final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-    {
-      surfaces[i] = (GM_Surface) getSurfaceAt( i ).transform( trans, targetOGCCS );
-    }
-    Debug.debugMethodEnd();
+      surfaces[i] = (GM_Surface<GM_SurfacePatch>) getSurfaceAt( i ).transform( trans, targetOGCCS );
+
     return GeometryFactory.createGM_MultiSurface( surfaces, targetOGCCS );
   }
 }
