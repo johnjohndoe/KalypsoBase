@@ -70,13 +70,18 @@ public class SHP2WKS
 {
   private final static com.vividsolutions.jts.geom.GeometryFactory GF = new com.vividsolutions.jts.geom.GeometryFactory();
 
+  private SHP2WKS( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   /**
    * method: GM_Point transformPoint(CS_CoordinateSystem srs, <BR>
    * SHPPoint shppoint)) <BR>
    * transforms a SHPPoint to a WKSGeometry <BR>
    * gets a point that should be transformed <BR>
    */
-  public GM_Point transformPoint( final String crs, final SHPPoint shppoint )
+  public static GM_Point transformPoint( final String crs, final SHPPoint shppoint )
   {
     return GeometryFactory.createGM_Point( shppoint.getX(), shppoint.getY(), crs );
   }
@@ -87,7 +92,7 @@ public class SHP2WKS
    * transforms a SHPPointz to a WKSGeometry <BR>
    * gets a pointz that should be transformed <BR>
    */
-  public GM_Point transformPointz( final String crs, final SHPPointz shppointz )
+  public static GM_Point transformPointz( final String crs, final SHPPointz shppointz )
   {
     // return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
     return GeometryFactory.createGM_Point( shppointz.getX(), shppointz.getY(), shppointz.getZ(), crs );
@@ -99,7 +104,7 @@ public class SHP2WKS
    * transforms a SHPMultiPoint to a WKSGeometry <BR>
    * gets a multipoint that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPoint( final String crs, final SHPMultiPoint shpmultipoint )
+  public static GM_Point[] transformMultiPoint( final String crs, final SHPMultiPoint shpmultipoint )
   {
     final GM_Point[] gm_points = new GM_Point[shpmultipoint.numPoints];
 
@@ -115,7 +120,7 @@ public class SHP2WKS
    * transforms a SHPMultiPointz to a WKSGeometry <BR>
    * gets a multipointz that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPointz( final String crs, final SHPMultiPointz shpmultipointz )
+  public static GM_Point[] transformMultiPointz( final String crs, final SHPMultiPointz shpmultipointz )
   {
     final GM_Point[] gm_points = new GM_Point[shpmultipointz.numPoints];
 
@@ -131,12 +136,12 @@ public class SHP2WKS
    * transforms a SHPPolyLine to a WKSGeometry <BR>
    * gets a polyline that should be transformed <BR>
    */
-  public GM_Curve[] transformPolyLine( final String crs, final SHPPolyLine shppolyline )
+  public static GM_Curve[] transformPolyLine( final String crs, final SHPPolyLine shppolyline )
   {
-    int numParts = shppolyline.getNumParts();
-    
+    final int numParts = shppolyline.getNumParts();
+
     final GM_Curve[] curve = new GM_Curve[numParts];
-    SHPPoint[][] points = shppolyline.getPoints();
+    final SHPPoint[][] points = shppolyline.getPoints();
 
     try
     {
@@ -165,7 +170,7 @@ public class SHP2WKS
    * transforms a SHPPolyLinez to a WKSGeometry <BR>
    * gets a polylinez that should be transformed <BR>
    */
-  public GM_Curve[] transformPolyLinez( final String crs, final SHPPolyLinez shpPolyLineZ )
+  public static GM_Curve[] transformPolyLinez( final String crs, final SHPPolyLinez shpPolyLineZ )
   {
     final GM_Curve[] curve = new GM_Curve[shpPolyLineZ.getNumParts()];
 
@@ -199,7 +204,7 @@ public class SHP2WKS
    * @deprecated This method does not work properly!
    */
   @Deprecated
-  private boolean isInsideRing( final GM_Position[] ring, final GM_Position point )
+  private static boolean isInsideRing( final GM_Position[] ring, final GM_Position point )
   {
     int crossings = 0;
 
@@ -270,20 +275,18 @@ public class SHP2WKS
   }
 
   /**
-   * FIXME Urgent: probably broken! TODO: do not use JTS code here, optimize!
-   * 
-   * transforms the SHPPolygon to a WKSGeometry <BR>
+   * FIXME Urgent: probably broken! TODO: do not use JTS code here, optimize! transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
-  public GM_Surface[] transformPolygon( final String crs, final SHPPolygon shppolygon )
+  public static GM_Surface[] transformPolygon( final String crs, final SHPPolygon shppolygon )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.getNumRings() );
     final ArrayList<LinearRing> inner_rings = new ArrayList<LinearRing>( shppolygon.getNumRings() );
 
-    SHPPolyLine rings = shppolygon.getRings();
-    SHPPoint[][] points = rings.getPoints();
-    
+    final SHPPolyLine rings = shppolygon.getRings();
+    final SHPPoint[][] points = rings.getPoints();
+
     for( int i = 0; i < shppolygon.getNumRings(); i++ )
     {
       final Coordinate[] ring = new Coordinate[points[i].length];
@@ -313,12 +316,12 @@ public class SHP2WKS
       final int count = inner_rings.size() - 1;
       final ArrayList<LinearRing> list = new ArrayList<LinearRing>( count + 2 );
       // find inner rings of the current outter ring
-//      final PointInRing pir = new SIRtreePointInRing( out_ring );
+// final PointInRing pir = new SIRtreePointInRing( out_ring );
       // pirs.get( out_ring );
 
       for( int k = count; k >= 0; k-- )
       {
-//        final LinearRing in_ring = inner_rings.get( k );
+// final LinearRing in_ring = inner_rings.get( k );
 
         // TODO why?
         // if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )
@@ -350,7 +353,7 @@ public class SHP2WKS
    * transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
-  public GM_Surface[] transformPolygonz( final String crs, final SHPPolygonz shppolygonz )
+  public static GM_Surface[] transformPolygonz( final String crs, final SHPPolygonz shppolygonz )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygonz.getNumRings() );
