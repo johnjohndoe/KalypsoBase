@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Andreas Poth
  */
 
-public class SHPPoint implements ISHPGeometry
+public class SHPPoint implements ISHPPoint
 {
   private final double x;
 
@@ -63,7 +63,7 @@ public class SHPPoint implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPoint( byte[] recBuf )
+  public SHPPoint( final byte[] recBuf )
   {
     this( recBuf, 4 );
   }
@@ -73,7 +73,7 @@ public class SHPPoint implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPoint( byte[] recBuf, int xStart )
+  public SHPPoint( final byte[] recBuf, final int xStart )
   {
     x = ByteUtils.readLEDouble( recBuf, xStart );
     y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
@@ -84,7 +84,7 @@ public class SHPPoint implements ISHPGeometry
   /**
    * constructor: creates a SHPPoint from a WKS Geometrie <BR>
    */
-  public SHPPoint( GM_Position position )
+  public SHPPoint( final GM_Position position )
   {
     x = position.getX();
     y = position.getY();
@@ -95,7 +95,7 @@ public class SHPPoint implements ISHPGeometry
   /**
    * constructor: creates a SHPPoint from a GM_Point <BR>
    */
-  public SHPPoint( GM_Point point )
+  public SHPPoint( final GM_Point point )
   {
     x = point.getX();
     y = point.getY();
@@ -148,6 +148,24 @@ public class SHPPoint implements ISHPGeometry
   public double getY( )
   {
     return y;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.ISHPPoint#getZ()
+   */
+  @Override
+  public double getZ( )
+  {
+    return Double.NaN;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.ISHPPoint#getM()
+   */
+  @Override
+  public double getM( )
+  {
+    return Double.NaN;
   }
 
 }

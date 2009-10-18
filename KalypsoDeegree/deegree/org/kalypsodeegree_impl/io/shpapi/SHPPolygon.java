@@ -49,30 +49,20 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 
 /**
- * Class representig a two dimensional ESRI Polygon <BR>
- * <B>Last changes <B>: <BR>
- * 12.01.2000 ap: constructor re-declared <BR>
- * 25.01.2000 ap: constructor modified; 25.01.2000 ap: public variables numRings and numPoints declared <BR>
- * 21.03.2000 ap: parameter list of the second constructor modified <BR>
- * 14.08.2000 ap: constructor SHPPolygon (GM_Point[][] gm_points) added <BR>
- * 14.08.2000 ap: method writeSHPPolygon(..) added <BR>
- * 14.08.2000 ap: import clauses added <BR>
- * 14.08.2000 ap: method size() added <BR>
- * 16.08.2000 ap: constructor SHPPolygon (byte[] recBuf) modified <BR>
- * <!---------------------------------------------------------------------------->
+ * Class representing a two dimensional ESRI Polygon <BR>
  * 
  * @version 16.08.2000
  * @author Andreas Poth
  */
 
-public class SHPPolygon implements ISHPGeometry
+public class SHPPolygon implements ISHPParts
 {
   private final SHPPolyLine m_rings;
 
   /**
    * constructor: recieves a stream <BR>
    */
-  public SHPPolygon( byte[] recBuf )
+  public SHPPolygon( final byte[] recBuf )
   {
     m_rings = new SHPPolyLine( recBuf );
   }
@@ -80,39 +70,46 @@ public class SHPPolygon implements ISHPGeometry
   /**
    * constructor: recieves an array of arrays of GM_Points <BR>
    */
-  public SHPPolygon( GM_SurfacePatch[] surfacePatch )
+  public SHPPolygon( final GM_SurfacePatch[] surfacePatch )
+  {
+    final String crs = surfacePatch[0].getCoordinateSystem();
+    
+    final GM_Curve[] curves = orientCurves( surfacePatch, crs );
+
+    m_rings = new SHPPolyLine( curves );
+  }
+
+  static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch, final String crs )
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
-    for( int i = 0; i < surfacePatch.length; i++ )
+    for( final GM_SurfacePatch element : surfacePatch )
     {
       try
       {
-        final GM_Position[] exteriorRing = surfacePatch[i].getExteriorRing();
+        final GM_Position[] exteriorRing = element.getExteriorRing();
         // TODO: real necessary? why not also force positive orientation for interior rings below?
         final GM_Position[] positions = GM_PositionOrientation.orient( exteriorRing, TYPE.NEGATIV );
 
-        GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( positions, null );
+        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( positions, crs );
         curveList.add( GeometryFactory.createGM_Curve( cs ) );
 
-        final GM_Position[][] interiorRings = surfacePatch[i].getInteriorRings();
+        final GM_Position[][] interiorRings = element.getInteriorRings();
         if( interiorRings != null )
         {
-          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, null );
+          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, crs );
           if( rings != null )
           {
-            for( int j = 0; j < rings.length; j++ )
-              curveList.add( rings[j] );
+            for( final GM_Curve ring : rings )
+              curveList.add( ring );
           }
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         System.out.println( "SHPPolygon::" + e );
       }
-      
     }
-
-    m_rings = new SHPPolyLine( curveList.toArray( new GM_Curve[curveList.size()] ) );
+    return curveList.toArray( new GM_Curve[curveList.size()] );
   }
 
   /**
@@ -123,7 +120,7 @@ public class SHPPolygon implements ISHPGeometry
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
     final byte[] byteArray = new byte[offset + size()];
 
-    SHPPoint[][] points = m_rings.getPoints();
+    final ISHPPoint[][] points = m_rings.getPoints();
     double xmin = points[0][0].getX();
     double xmax = points[0][0].getX();
     double ymin = points[0][0].getY();
@@ -134,13 +131,13 @@ public class SHPPolygon implements ISHPGeometry
 
     offset += 4;
     // save offset of the bounding box
-    int tmp1 = offset;
+    final int tmp1 = offset;
 
     // increment offset with size of the bounding box
     offset += (4 * 8);
 
     // write numRings
-    ByteUtils.writeLEInt( byteArray, offset, getNumRings() );
+    ByteUtils.writeLEInt( byteArray, offset, getNumParts() );
     offset += 4;
     // write numpoints
     ByteUtils.writeLEInt( byteArray, offset, getNumPoints() );
@@ -150,47 +147,46 @@ public class SHPPolygon implements ISHPGeometry
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += (4 * getNumRings());
+    offset += (4 * getNumParts());
 
     int count = 0;
-    for( int i = 0; i < points.length; i++ )
+    for( final ISHPPoint[] point : points )
     {
-
       // stores the index of the i'th part
       ByteUtils.writeLEInt( byteArray, tmp2, count );
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
-      for( int j = 0; j < points[i].length; j++ )
+      for( final ISHPPoint element : point )
       {
         // number of the current point
         count++;
 
         // calculate bounding box
-        if( points[i][j].getX() > xmax )
+        if( element.getX() > xmax )
         {
-          xmax = points[i][j].getX();
+          xmax = element.getX();
         }
-        else if( points[i][j].getX() < xmin )
+        else if( element.getX() < xmin )
         {
-          xmin = points[i][j].getX();
+          xmin = element.getX();
         }
 
-        if( points[i][j].getY() > ymax )
+        if( element.getY() > ymax )
         {
-          ymax = points[i][j].getY();
+          ymax = element.getY();
         }
-        else if( points[i][j].getY() < ymin )
+        else if( element.getY() < ymin )
         {
-          ymin = points[i][j].getY();
+          ymin = element.getY();
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( byteArray, offset, points[i][j].getX() );
+        ByteUtils.writeLEDouble( byteArray, offset, element.getX() );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( byteArray, offset, points[i][j].getY() );
+        ByteUtils.writeLEDouble( byteArray, offset, element.getY() );
         offset += 8;
       }
     }
@@ -215,13 +211,13 @@ public class SHPPolygon implements ISHPGeometry
    */
   public int size( )
   {
-    return 44 + getNumRings() * 4 + getNumPoints() * 16;
+    return 44 + getNumParts() * 4 + getNumPoints() * 16;
   }
 
   @Override
   public String toString( )
   {
-    return "WKBPOLYGON" + " numRings: " + getNumRings();
+    return "WKBPOLYGON" + " numRings: " + getNumParts();
   }
 
   public SHPEnvelope getEnvelope( )
@@ -229,7 +225,7 @@ public class SHPPolygon implements ISHPGeometry
     return m_rings.getEnvelope();
   }
 
-  public int getNumRings( )
+  public int getNumParts( )
   {
     return m_rings.getNumParts();
   }
@@ -242,5 +238,14 @@ public class SHPPolygon implements ISHPGeometry
   public SHPPolyLine getRings( )
   {
     return m_rings;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.ISHPParts#getPoints()
+   */
+  @Override
+  public ISHPPoint[][] getPoints( )
+  {
+    return m_rings.getPoints();
   }
 }
