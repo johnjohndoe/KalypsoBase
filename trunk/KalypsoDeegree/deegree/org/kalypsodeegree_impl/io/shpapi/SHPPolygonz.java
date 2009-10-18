@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,33 +36,20 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_CurveSegment;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 
 /**
  * Class representing a three dimensional ESRI Polygonz <BR>
- * <!---------------------------------------------------------------------------->
  * 
  * @version 26.01.2007
  * @author Thomas Jung
  */
 
-public class SHPPolygonz implements ISHPGeometry
+public class SHPPolygonz implements ISHPParts
 {
-// public final SHPPointz[][] m_pointsZ = null;
-
   private final SHPPolyLinez m_rings;
-
-  private SHPZRange m_zrange;
 
   /**
    * constructor: recieves a stream <BR>
@@ -77,44 +64,10 @@ public class SHPPolygonz implements ISHPGeometry
    */
   public SHPPolygonz( final GM_SurfacePatch[] surfacePatch )
   {
-    final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
     final String crs = surfacePatch[0].getCoordinateSystem();
+    final GM_Curve[] curves = SHPPolygon.orientCurves( surfacePatch, crs );
 
-    for( final GM_SurfacePatch element : surfacePatch )
-    {
-      try
-      {
-        final GM_Position[] exteriorRing = element.getExteriorRing();
-
-        GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( exteriorRing, crs );
-
-        final GM_Position[] positions = GM_PositionOrientation.orient( cs.getPositions(), TYPE.NEGATIV );
-        cs = GeometryFactory.createGM_CurveSegment( positions, crs );
-        if( cs != null )
-          curveList.add( GeometryFactory.createGM_Curve( cs ) );
-
-        final GM_Position[][] interiorRings = element.getInteriorRings();
-
-        if( interiorRings != null )
-        {
-          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, crs );
-          if( rings != null )
-          {
-            for( final GM_Curve ring : rings )
-            {
-              curveList.add( ring );
-            }
-          }
-        }
-      }
-      catch( final Exception e )
-      {
-        System.out.println( "SHPPolygonz::" + e );
-      }
-    }
-
-    m_rings = new SHPPolyLinez( curveList.toArray( new GM_Curve[curveList.size()] ) );
-    m_zrange = m_rings.getZRange();
+    m_rings = new SHPPolyLinez( curves );
   }
 
   /**
@@ -130,9 +83,9 @@ public class SHPPolygonz implements ISHPGeometry
 
     int byteposition;
 
-    final SHPPointz[][] pointsZ = m_rings.getPointsz();
+    final ISHPPoint[][] pointsZ = m_rings.getPoints();
 
-    final SHPPointz point = pointsZ[0][0];
+    final ISHPPoint point = pointsZ[0][0];
 
     double xmin = point.getX();
     double xmax = point.getX();
@@ -164,59 +117,58 @@ public class SHPPolygonz implements ISHPGeometry
     offset += (4 * m_rings.getNumParts());
 
     int count = 0;
-    for( final SHPPointz[] element : pointsZ )
+    for( final ISHPPoint[] element : pointsZ )
     {
-
       // stores the index of the i'th part
       ByteUtils.writeLEInt( bytearray, tmp2, count );
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
-      for( int j = 0; j < element.length; j++ )
+      for( final ISHPPoint element2 : element )
       {
         // number of the current point
         count++;
 
         // calculate bounding box
-        if( element[j].getX() > xmax )
+        if( element2.getX() > xmax )
         {
-          xmax = element[j].getX();
+          xmax = element2.getX();
         }
-        else if( element[j].getX() < xmin )
+        else if( element2.getX() < xmin )
         {
-          xmin = element[j].getX();
-        }
-
-        if( element[j].getY() > ymax )
-        {
-          ymax = element[j].getY();
-        }
-        else if( element[j].getY() < ymin )
-        {
-          ymin = element[j].getY();
+          xmin = element2.getX();
         }
 
-        if( element[j].getZ() > zmax )
+        if( element2.getY() > ymax )
         {
-          zmax = element[j].getZ();
+          ymax = element2.getY();
         }
-        else if( element[j].getZ() < zmin )
+        else if( element2.getY() < ymin )
         {
-          zmin = element[j].getZ();
+          ymin = element2.getY();
+        }
+
+        if( element2.getZ() > zmax )
+        {
+          zmax = element2.getZ();
+        }
+        else if( element2.getZ() < zmin )
+        {
+          zmin = element2.getZ();
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, element[j].getX() );
+        ByteUtils.writeLEDouble( bytearray, offset, element2.getX() );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, element[j].getY() );
+        ByteUtils.writeLEDouble( bytearray, offset, element2.getY() );
         offset += 8;
 
         // write z-coordinate
         // jump to the z-values
         byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_rings.getNumParts()) + (m_rings.getNumPoints() * 16) + 16 + ((count - 1) * 8);
-        ByteUtils.writeLEDouble( bytearray, byteposition, element[j].getZ() );
+        ByteUtils.writeLEDouble( bytearray, byteposition, element2.getZ() );
       }
     }
     // jump back to the offset of the bounding box
@@ -233,7 +185,7 @@ public class SHPPolygonz implements ISHPGeometry
 
     // write z-range
     // jump to the z-range byte postition
-    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * getNumRings()) + (getNumPoints() * 16);
+    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * getNumParts()) + (getNumPoints() * 16);
     // write z-range to the byte array
     ByteUtils.writeLEDouble( bytearray, byteposition, zmin );
     offset += 8;
@@ -247,15 +199,13 @@ public class SHPPolygonz implements ISHPGeometry
    */
   public int size( )
   {
-    return 44 + getNumRings() * 4 + getNumPoints() * 16 + 16 + (8 * getNumPoints());
+    return 44 + getNumParts() * 4 + getNumPoints() * 16 + 16 + (8 * getNumPoints());
   }
 
   @Override
   public String toString( )
   {
-
     return "WKBPOLYGON" + " numRings: " + m_rings.getNumParts();
-
   }
 
   public SHPEnvelope getEnvelope( )
@@ -263,7 +213,7 @@ public class SHPPolygonz implements ISHPGeometry
     return m_rings.getEnvelope();
   }
 
-  public int getNumRings( )
+  public int getNumParts( )
   {
     return m_rings.getNumParts();
   }
@@ -273,9 +223,13 @@ public class SHPPolygonz implements ISHPGeometry
     return m_rings.getNumPoints();
   }
 
-  public SHPPointz[][] getPointsz( )
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.ISHPParts#getPoints()
+   */
+  @Override
+  public ISHPPoint[][] getPoints( )
   {
-    return m_rings.getPointsz();
+    return m_rings.getPoints();
   }
 
   public SHPPolyLinez getRings( )
@@ -285,7 +239,7 @@ public class SHPPolygonz implements ISHPGeometry
 
   public SHPZRange getZrange( )
   {
-    return m_zrange;
+    return m_rings.getZrange();
   }
 
 }

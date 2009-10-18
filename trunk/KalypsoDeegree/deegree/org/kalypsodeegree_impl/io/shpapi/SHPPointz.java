@@ -50,13 +50,13 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Thomas Jung
  */
 
-public class SHPPointz implements ISHPGeometry
+public class SHPPointz implements ISHPPoint
 {
   private final double x;
 
   private final double y;
 
-  private double z;
+  private final double z;
 
   private final double m;
 
@@ -66,7 +66,7 @@ public class SHPPointz implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPointz( byte[] recBuf )
+  public SHPPointz( final byte[] recBuf )
   {
     this( recBuf, 4 );
   }
@@ -75,7 +75,7 @@ public class SHPPointz implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPointz( byte[] recBuf, int off )
+  public SHPPointz( final byte[] recBuf, final int off )
   {
     // get x out of recordbuffer
     x = ByteUtils.readLEDouble( recBuf, off );
@@ -92,7 +92,7 @@ public class SHPPointz implements ISHPGeometry
   /**
    * constructor: creates a SHPPoint from a WKS Geometrie <BR>
    */
-  public SHPPointz( GM_Position position )
+  public SHPPointz( final GM_Position position )
   {
     this( position.getX(), position.getY(), position.getZ(), 0.0 );
   }
@@ -100,13 +100,13 @@ public class SHPPointz implements ISHPGeometry
   /**
    * constructor: creates a SHPPoint from a point <BR>
    */
-  public SHPPointz( GM_Point point )
+  public SHPPointz( final GM_Point point )
   {
     this( point.getX(), point.getY(), point.getZ(), 0.0 );
   }
 
   @SuppressWarnings("hiding") 
-  public SHPPointz( double x, double y, double z, double m )
+  public SHPPointz( final double x, final double y, final double z, final double m )
   {
     this.x = x;
     this.y = y;
