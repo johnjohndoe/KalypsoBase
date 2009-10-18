@@ -99,13 +99,14 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     ret = "interpolation = " + INTERPOLATION_NONE + "\n";
     ret += "exteriorRing = \n";
 
-    for( final GM_Position element : m_exteriorRing )
+    final GM_Position[] exteriorRing = getExteriorRing();
+    for( final GM_Position element : exteriorRing )
     {
       ret += (element + "\n");
     }
 
-    ret += ("interiorRings = " + m_interiorRings + "\n");
-    ret += ("envelope = " + m_envelope + "\n");
+    ret += ("interiorRings = " + getInteriorRings() + "\n");
+    ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
   }
 
@@ -128,7 +129,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     try
     {
-      return new GM_Polygon_Impl( clonedExteriorRing, clonedInterior, m_crs );
+      return new GM_Polygon_Impl( clonedExteriorRing, clonedInterior, getCoordinateSystem() );
     }
     catch( final GM_Exception e )
     {

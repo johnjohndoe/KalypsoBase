@@ -512,7 +512,7 @@ public class JTSAdapter
     return positions;
   }
 
-  public static GM_Envelope wrap( final Envelope env )
+  public static GM_Envelope wrap( final Envelope env, final String crs )
   {
     if( env.isNull() )
       return null;
@@ -522,7 +522,7 @@ public class JTSAdapter
 
     final GM_Position min = wrap( crdMin );
     final GM_Position max = wrap( crdMax );
-    return new GM_Envelope_Impl( min, max, null );
+    return new GM_Envelope_Impl( min, max, crs );
   }
 
   public static Envelope export( final GM_Envelope env )

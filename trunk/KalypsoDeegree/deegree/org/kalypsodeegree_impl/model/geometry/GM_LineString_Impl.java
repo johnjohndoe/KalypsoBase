@@ -95,15 +95,6 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   }
 
   /**
-   * returns the length of the curve in units of the related spatial reference system
-   */
-  @Override
-  public double getLength( )
-  {
-    return -1;
-  }
-
-  /**
    * returns a reference to itself
    */
   @Override

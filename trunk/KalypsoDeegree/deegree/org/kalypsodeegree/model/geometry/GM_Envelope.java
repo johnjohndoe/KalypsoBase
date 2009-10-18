@@ -121,14 +121,6 @@ public interface GM_Envelope extends Cloneable
   public String getCoordinateSystem( );
 
   /**
-   * This function sets the coordinate system, the coordinates of the contained positions are in.
-   *
-   * @param coordinateSystem
-   *            The coordinate system.
-   */
-  public void setCoordinateSystem( String coordinateSystem );
-
-  /**
    * Checks if this point is completly equal to the submitted geometry
    * 
    * @param exact

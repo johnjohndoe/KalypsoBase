@@ -236,17 +236,16 @@ public class MapModellHelper
 
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
+    {
       if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
-        if( boundingBox != null )
-          boundingBox.setCoordinateSystem( kalypsoTheme.getMapModell().getCoordinatesSystem() );
-
         if( result == null )
           result = boundingBox;
         else
           result = result.getMerged( boundingBox );
       }
+    }
 
     return result;
   }

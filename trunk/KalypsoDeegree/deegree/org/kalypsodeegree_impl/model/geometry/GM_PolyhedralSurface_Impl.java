@@ -375,7 +375,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   public GM_Envelope getEnvelope( )
   {
     if( m_envelope == null )
-      m_envelope = JTSAdapter.wrap( recalcEnvelope( m_items ) );
+      m_envelope = JTSAdapter.wrap( recalcEnvelope( m_items ), getCoordinateSystem() );
 
     return m_envelope;
   }
