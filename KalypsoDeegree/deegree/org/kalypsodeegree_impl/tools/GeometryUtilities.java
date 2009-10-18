@@ -64,6 +64,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -115,7 +116,7 @@ public class GeometryUtilities
     final double[] p1 = basePoint.getAsArray();
     final double distance = basePoint.getDistance( directionPoint );
     if( distance == 0 )
-      return GeometryFactory.createGM_Position( p1 );
+      return (GM_Position) basePoint.clone();
     final double[] p2 = directionPoint.getAsArray();
     final double factor = distanceFromBasePoint / distance;
     final double newPos[] = new double[p1.length];
@@ -779,7 +780,7 @@ public class GeometryUtilities
       final Feature feature = FeatureHelper.getFeature( workspace, object );
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
-        for( QName geomQName : geomQNames )
+        for( final QName geomQName : geomQNames )
         {
           final Object property = feature.getProperty( geomQName );
           if( property instanceof GM_Object )
@@ -1184,4 +1185,76 @@ public class GeometryUtilities
     return triangles;
   }
 
+  public static GM_Envelope envelopeFromRing( final GM_Position[] poses, final String crs )
+  {
+    double minX = poses[0].getX();
+    double maxX = poses[0].getX();
+    double minY = poses[0].getY();
+    double maxY = poses[0].getY();
+
+    for( int i = 1; i < poses.length; i++ )
+    {
+      minX = Math.min( minX, poses[i].getX() );
+      minY = Math.min( minY, poses[i].getY() );
+      maxX = Math.max( maxX, poses[i].getX() );
+      maxY = Math.max( maxY, poses[i].getY() );
+    }
+
+    return new GM_Envelope_Impl( minX, minY, maxX, maxY, crs );
+  }
+
+  /**
+   * calculates the centroid of a ring of points
+   * <p>
+   * taken from gems iv (modified)
+   * <p>
+   * </p>
+   * this method is only valid for the two-dimensional case.
+   */
+  public static GM_Position centroidFromRing( final GM_Position[] ring )
+  {
+    double ai;
+    double x;
+    double y;
+    double atmp = 0;
+    double xtmp = 0;
+    double ytmp = 0;
+
+    // move points to the origin of the coordinate space
+    // (to solve precision issues)
+    final double transX = ring[0].getX();
+    final double transY = ring[0].getY();
+
+    int i;
+    int j;
+    for( i = ring.length - 1, j = 0; j < ring.length; i = j, j++ )
+    {
+      final double x1 = ring[i].getX() - transX;
+      final double y1 = ring[i].getY() - transY;
+      final double x2 = ring[j].getX() - transX;
+      final double y2 = ring[j].getY() - transY;
+      ai = (x1 * y2) - (x2 * y1);
+      atmp += ai;
+      xtmp += ((x2 + x1) * ai);
+      ytmp += ((y2 + y1) * ai);
+    }
+
+    if( atmp != 0 )
+    {
+      x = xtmp / (3 * atmp) + transX;
+      y = ytmp / (3 * atmp) + transY;
+    }
+    else
+    {
+      x = ring[0].getX();
+      y = ring[0].getY();
+    }
+
+    return GeometryFactory.createGM_Position( x, y );
+  }
+
+  public static GM_Point centroidFromRing( final GM_Position[] poses, final String crs )
+  {
+    return GeometryFactory.createGM_Point( centroidFromRing( poses ), crs );
+  }
 }

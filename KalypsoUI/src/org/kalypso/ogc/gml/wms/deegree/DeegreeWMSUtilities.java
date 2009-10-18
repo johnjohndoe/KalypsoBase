@@ -508,33 +508,6 @@ public class DeegreeWMSUtilities
   }
 
   /**
-   * This function returns an transformed envelope.
-   *
-   * @param serverEnv
-   *          The server envelope.
-   * @param serverCRS
-   *          The server coordinate system.
-   * @param local
-   *          The local coordinate system.
-   * @return The transformed envelope.
-   */
-  public static GM_Envelope getTransformedEnvelope( final GM_Envelope serverEnv, final String serverCRS, final String local )
-  {
-    try
-    {
-      final GeoTransformer gt = new GeoTransformer( local );
-
-      return gt.transformEnvelope( serverEnv, serverCRS );
-    }
-    catch( final Exception ex )
-    {
-      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
-
-      return null;
-    }
-  }
-
-  /**
    * This function converts an envelope to a string representation.
    *
    * @param envelope

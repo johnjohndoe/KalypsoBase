@@ -93,8 +93,8 @@ public class PanToWidget extends AbstractWidget
 
     final GM_Envelope startExtent = m_world2screen.getSourceRect();
 
-    final GM_Position panMin = GeometryFactory.createGM_Position( startExtent.getMin().getAsArray() );
-    final GM_Position panMax = GeometryFactory.createGM_Position( startExtent.getMax().getAsArray() );
+    final GM_Position panMin = GeometryFactory.createGM_Position( startExtent.getMinX(), startExtent.getMinY() );
+    final GM_Position panMax = GeometryFactory.createGM_Position( startExtent.getMaxX(), startExtent.getMaxY() );
 
     panMin.translate( vector );
     panMax.translate( vector );

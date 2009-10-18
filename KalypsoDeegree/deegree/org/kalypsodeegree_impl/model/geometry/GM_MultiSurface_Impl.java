@@ -44,10 +44,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -229,102 +229,41 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   }
 
   /**
-   * calculates the bounding box / envelope of the aggregation
-   */
-  private void calculateEnvelope( )
-  {
-    if( getSize() == 0 )
-      return;
-
-    final GM_Envelope bb = getSurfaceAt( 0 ).getEnvelope();
-
-    final double[] min = bb.getMin().getAsArray().clone();
-    final double[] max = bb.getMax().getAsArray().clone();
-
-    final int size = getSize();
-    for( int i = 1; i < size; i++ )
-    {
-      final double[] pos1 = getSurfaceAt( i ).getEnvelope().getMin().getAsArray();
-      final double[] pos2 = getSurfaceAt( i ).getEnvelope().getMax().getAsArray();
-
-      for( int j = 0; j < pos1.length; j++ )
-      {
-        if( pos1[j] < min[j] )
-        {
-          min[j] = pos1[j];
-        }
-        else if( pos1[j] > max[j] )
-        {
-          max[j] = pos1[j];
-        }
-
-        if( pos2[j] < min[j] )
-        {
-          min[j] = pos2[j];
-        }
-        else if( pos2[j] > max[j] )
-        {
-          max[j] = pos2[j];
-        }
-      }
-    }
-
-    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
-  }
-
-  /**
    * calculates the centroid and area of the aggregation
    */
-  private void calculateCentroidArea( )
+  @Override
+  protected GM_Point calculateCentroid( )
   {
     area = 0;
 
     if( getSize() == 0 )
-      return;
+      return EMPTY_CENTROID;
 
     // REMARK: we reduce to dimension 2 here, because everyone else (GM_Surface, GM_Curve)
     // always only produce 2-dim centroids, causing an ArrayOutOfBoundsException here...
     // Maybe it would be nice to always have a 3-dim centroid if possible
     final int cnt = Math.min( 2, getCoordinateDimension() );
-    try
+    final double[] cen = new double[cnt];
+
+    for( int i = 0; i < getSize(); i++ )
     {
-      final double[] cen = new double[cnt];
+      final double a = getSurfaceAt( i ).getArea();
+      area = area + a;
 
-      for( int i = 0; i < getSize(); i++ )
-      {
-        final double a = getSurfaceAt( i ).getArea();
-        area = area + a;
-
-        final double[] pos = getSurfaceAt( i ).getCentroid().getAsArray();
-
-        for( int j = 0; j < cnt; j++ )
-        {
-          cen[j] = cen[j] + (pos[j] * a);
-        }
-      }
+      final double[] pos = getSurfaceAt( i ).getCentroid().getAsArray();
 
       for( int j = 0; j < cnt; j++ )
       {
-        cen[j] = cen[j] / area;
+        cen[j] = cen[j] + (pos[j] * a);
       }
-
-      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
     }
-    catch( final Exception e )
+
+    for( int j = 0; j < cnt; j++ )
     {
-      System.out.println( e );
+      cen[j] = cen[j] / area;
     }
-  }
 
-  /**
-   * calculates the centroid, area and envelope of the aggregation
-   */
-  @Override
-  protected void calculateParam( )
-  {
-    calculateEnvelope();
-    calculateCentroidArea();
-    setValid( true );
+    return GeometryFactory.createGM_Point( GeometryFactory.createGM_Position( cen ), getCoordinateSystem() );
   }
 
   /**
@@ -332,10 +271,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   public double getArea( )
   {
-    if( !isValid() )
-    {
-      calculateParam();
-    }
+    // TODO: Still a bit hacky: centroid and area are calculated at the same moment;
+    // we just make sure that the centroid is recalculated by calling getCentroid
+    getCentroid();
     return area;
   }
 
@@ -373,8 +311,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   public int getCoordinateDimension( )
   {
     final GM_SurfacePatch sp = getSurfaceAt( 0 ).get( 0 );
-
-    return sp.getExteriorRing()[0].getAsArray().length;
+    return sp.getExteriorRing()[0].getCoordinateDimension();
   }
 
   /**

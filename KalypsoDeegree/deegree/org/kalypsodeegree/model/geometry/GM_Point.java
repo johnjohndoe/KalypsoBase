@@ -76,6 +76,4 @@ public interface GM_Point extends GM_Primitive
    * returns the position of the point
    */
   public GM_Position getPosition();
-
-  /* #GM_Position lnkGM_Position; */
 }

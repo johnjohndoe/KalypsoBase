@@ -36,13 +36,17 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -94,7 +98,6 @@ public class SHP2WKS
    */
   public static GM_Point transformPointz( final String crs, final SHPPointz shppointz )
   {
-    // return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
     return GeometryFactory.createGM_Point( shppointz.getX(), shppointz.getY(), shppointz.getZ(), crs );
   }
 
@@ -154,6 +157,7 @@ public class SHP2WKS
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
         curve[j] = GeometryFactory.createGM_Curve( cs );
+        curve[j].setCoordinateSystem( crs );
       }
     }
     catch( final Exception e )
@@ -186,6 +190,7 @@ public class SHP2WKS
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
         curve[j] = GeometryFactory.createGM_Curve( cs );
+        curve[j].setCoordinateSystem( crs );
       }
     }
     catch( final Exception e )
@@ -278,7 +283,7 @@ public class SHP2WKS
    * FIXME Urgent: probably broken! TODO: do not use JTS code here, optimize! transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
-  public static GM_Surface[] transformPolygon( final String crs, final SHPPolygon shppolygon )
+  public static GM_Surface<GM_SurfacePatch>[] transformPolygon( final String crs, final SHPPolygon shppolygon )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.getNumRings() );
@@ -308,7 +313,7 @@ public class SHP2WKS
 
     }
 
-    final ArrayList<GM_Surface> wkslp = new ArrayList<GM_Surface>();
+    final List<GM_Surface<GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface<GM_SurfacePatch>>();
     for( int i = 0; i < outer_rings.size(); i++ )
     {
       final LinearRing out_ring = outer_rings.get( i );
@@ -336,7 +341,7 @@ public class SHP2WKS
       try
       {
         final Polygon polygon = GF.createPolygon( out_ring, inrings );
-        final GM_Surface sur = (GM_Surface) JTSAdapter.wrap( polygon );
+        final GM_Surface<GM_SurfacePatch> sur = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon );
         sur.setCoordinateSystem( crs );
         wkslp.add( sur );
       }
@@ -418,5 +423,61 @@ public class SHP2WKS
     }
 
     return wkslp.toArray( new GM_Surface[wkslp.size()] );
+  }
+
+  public static GM_Object transform( final String crs, final ISHPGeometry shpGeom )
+  {
+    if( shpGeom instanceof SHPPoint )
+      return SHP2WKS.transformPoint( crs, (SHPPoint) shpGeom );
+
+    if( shpGeom instanceof SHPMultiPoint )
+    {
+      final GM_Point[] points = SHP2WKS.transformMultiPoint( crs, (SHPMultiPoint) shpGeom );
+      if( points == null )
+        return null;
+
+      return GeometryFactory.createGM_MultiPoint( points, crs );
+    }
+
+    if( shpGeom instanceof SHPPolyLine )
+    {
+      final GM_Curve[] curves = SHP2WKS.transformPolyLine( crs, (SHPPolyLine) shpGeom );
+      if( curves == null )
+        return null;
+
+      return GeometryFactory.createGM_MultiCurve( curves, crs );
+    }
+
+    if( shpGeom instanceof SHPPolygon )
+    {
+      final GM_Surface<GM_SurfacePatch>[] polygons = SHP2WKS.transformPolygon( crs, (SHPPolygon) shpGeom );
+      if( polygons == null || polygons.length <= 0 )
+        return null;
+
+      return GeometryFactory.createGM_MultiSurface( polygons, crs );
+    }
+
+    if( shpGeom instanceof SHPPointz )
+      return SHP2WKS.transformPointz( crs, (SHPPointz) shpGeom );
+
+    if( shpGeom instanceof SHPPolyLinez )
+    {
+      final GM_Curve[] curves = SHP2WKS.transformPolyLinez( crs, (SHPPolyLinez) shpGeom );
+      if( curves == null )
+        return null;
+
+      return GeometryFactory.createGM_MultiCurve( curves, crs );
+    }
+
+    if( shpGeom instanceof SHPPolygonz )
+    {
+      final GM_Surface[] polygonsz = SHP2WKS.transformPolygonz( crs, (SHPPolygonz) shpGeom );
+      if( polygonsz != null )
+        return GeometryFactory.createGM_MultiSurface( polygonsz, crs );
+
+      return null;
+    }
+
+    throw new NotImplementedException( "Unknown shpe class: " + shpGeom );
   }
 } // end of class WKB2WKS

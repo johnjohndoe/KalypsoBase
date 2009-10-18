@@ -207,10 +207,7 @@ public class JTSAdapter
 
   public static GM_Position wrap( final Coordinate coord )
   {
-    if( Double.isNaN( coord.z ) )
-      return new GM_Position_Impl( coord.x, coord.y );
-
-    return new GM_Position_Impl( coord.x, coord.y, coord.z );
+    return GeometryFactory.createGM_Position( coord.x, coord.y, coord.z );
   }
 
   /**
@@ -414,12 +411,7 @@ public class JTSAdapter
     final Coordinate[] coords = line.getCoordinates();
     final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
-    {
-      if( !Double.isNaN( coords[i].z ) )
-        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y, coords[i].z );
-      else
-        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
-    }
+      positions[i] = GeometryFactory.createGM_Position( coords[i].x, coords[i].y, coords[i].z );
     return GeometryFactory.createGM_Curve( positions, null );
   }
 
@@ -495,7 +487,6 @@ public class JTSAdapter
    */
   private static GM_MultiPrimitive wrap( final GeometryCollection collection ) throws GM_Exception
   {
-
     final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( null );
     for( int i = 0; i < collection.getNumGeometries(); i++ )
     {
@@ -517,12 +508,7 @@ public class JTSAdapter
     final Coordinate[] coords = line.getCoordinates();
     final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
-    {
-      if( Double.isNaN( coords[i].z ) )
-        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
-      else
-        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y, coords[i].z );
-    }
+      positions[i] = GeometryFactory.createGM_Position( coords[i].x, coords[i].y, coords[i].z );
     return positions;
   }
 

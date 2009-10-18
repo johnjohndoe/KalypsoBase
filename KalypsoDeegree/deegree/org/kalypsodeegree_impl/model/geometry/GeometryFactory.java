@@ -73,9 +73,7 @@ final public class GeometryFactory
    */
   public static GM_Envelope createGM_Envelope( final double minx, final double miny, final double maxx, final double maxy, final String coordinateSystem )
   {
-    final GM_Position min = GeometryFactory.createGM_Position( minx < maxx ? minx : maxx, miny < maxy ? miny : maxy );
-    final GM_Position max = GeometryFactory.createGM_Position( minx > maxx ? minx : maxx, miny > maxy ? miny : maxy );
-    return new GM_Envelope_Impl( min, max, coordinateSystem );
+    return new GM_Envelope_Impl( minx, miny, maxx, maxy, coordinateSystem );
   }
 
   /**
@@ -91,7 +89,7 @@ final public class GeometryFactory
    */
   public static GM_Position createGM_Position( final double x, final double y )
   {
-    return new GM_Position_Impl( x, y );
+    return new GM_Position2D_Impl( x, y );
   }
 
   /**
@@ -99,7 +97,10 @@ final public class GeometryFactory
    */
   public static GM_Position createGM_Position( final double x, final double y, final double z )
   {
-    return new GM_Position_Impl( new double[] { x, y, z } );
+    if( Double.isNaN( z ) )
+      return new GM_Position2D_Impl( x, y );
+
+    return new GM_Position3D_Impl( x, y, z );
   }
 
   /**
@@ -107,7 +108,15 @@ final public class GeometryFactory
    */
   public static GM_Position createGM_Position( final double[] p )
   {
-    return new GM_Position_Impl( p );
+    if( p.length == 2 )
+      return new GM_Position2D_Impl( p[0], p[1] );
+
+    if( p.length == 3 )
+      return new GM_Position3D_Impl( p[0], p[1], p[2] );
+
+    // FIXME;
+// return new GM_Position_Impl( p );
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -348,7 +357,7 @@ final public class GeometryFactory
         offset += 8;
         y = ByteUtils.readBEDouble( wkb, offset );
         offset += 8;
-        points[i] = new GM_Position_Impl( x, y );
+        points[i] = new GM_Position2D_Impl( x, y );
       }
     }
     else
@@ -359,7 +368,7 @@ final public class GeometryFactory
         offset += 8;
         y = ByteUtils.readLEDouble( wkb, offset );
         offset += 8;
-        points[i] = new GM_Position_Impl( x, y );
+        points[i] = new GM_Position2D_Impl( x, y );
       }
     }
 
@@ -481,7 +490,7 @@ final public class GeometryFactory
         offset += 8;
         y = ByteUtils.readBEDouble( wkb, offset );
         offset += 8;
-        externalBoundary[i] = new GM_Position_Impl( x, y );
+        externalBoundary[i] = new GM_Position2D_Impl( x, y );
       }
     }
     else
@@ -493,7 +502,7 @@ final public class GeometryFactory
         offset += 8;
         y = ByteUtils.readLEDouble( wkb, offset );
         offset += 8;
-        externalBoundary[i] = new GM_Position_Impl( x, y );
+        externalBoundary[i] = new GM_Position2D_Impl( x, y );
       }
     }
 
@@ -521,7 +530,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readBEDouble( wkb, offset );
           offset += 8;
-          internalBoundaries[j - 1][i] = new GM_Position_Impl( x, y );
+          internalBoundaries[j - 1][i] = new GM_Position2D_Impl( x, y );
         }
       }
     }
@@ -543,7 +552,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readLEDouble( wkb, offset );
           offset += 8;
-          internalBoundaries[j - 1][i] = new GM_Position_Impl( x, y );
+          internalBoundaries[j - 1][i] = new GM_Position2D_Impl( x, y );
         }
       }
     }
@@ -566,11 +575,10 @@ final public class GeometryFactory
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Envelope bbox, final String crs ) throws GM_Exception
   {
-
     final GM_Position min = bbox.getMin();
     final GM_Position max = bbox.getMax();
 
-    final GM_Position[] exteriorRing = new GM_Position[] { min, new GM_Position_Impl( max.getX(), min.getY() ), max, new GM_Position_Impl( min.getX(), max.getY() ), min };
+    final GM_Position[] exteriorRing = new GM_Position[] { min, new GM_Position2D_Impl( max.getX(), min.getY() ), max, new GM_Position2D_Impl( min.getX(), max.getY() ), min };
 
     return GeometryFactory.createGM_Surface( exteriorRing, null, crs );
   }
@@ -738,6 +746,16 @@ final public class GeometryFactory
   }
 
   /**
+   * creates a GM_MultiCurve from an array of GM_Curves.
+   * 
+   * @param curves
+   */
+  public static GM_MultiCurve createGM_MultiCurve( final GM_Curve[] curves, final String crs )
+  {
+    return new GM_MultiCurve_Impl( curves, crs );
+  }
+
+  /**
    * creates a GM_MultiCurve from a wkb.
    * 
    * @param wkb
@@ -834,7 +852,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readBEDouble( wkb, offset );
           offset += 8;
-          points[j][i] = new GM_Position_Impl( x, y );
+          points[j][i] = new GM_Position2D_Impl( x, y );
         }
       }
       else
@@ -845,7 +863,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readLEDouble( wkb, offset );
           offset += 8;
-          points[j][i] = new GM_Position_Impl( x, y );
+          points[j][i] = new GM_Position2D_Impl( x, y );
         }
       }
     }
@@ -976,7 +994,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readBEDouble( wkb, offset );
           offset += 8;
-          externalBoundary[i] = new GM_Position_Impl( x, y );
+          externalBoundary[i] = new GM_Position2D_Impl( x, y );
         }
       }
       else
@@ -988,7 +1006,7 @@ final public class GeometryFactory
           offset += 8;
           y = ByteUtils.readLEDouble( wkb, offset );
           offset += 8;
-          externalBoundary[i] = new GM_Position_Impl( x, y );
+          externalBoundary[i] = new GM_Position2D_Impl( x, y );
         }
       }
 
@@ -1016,7 +1034,7 @@ final public class GeometryFactory
             offset += 8;
             y = ByteUtils.readBEDouble( wkb, offset );
             offset += 8;
-            internalBoundaries[j - 1][i] = new GM_Position_Impl( x, y );
+            internalBoundaries[j - 1][i] = new GM_Position2D_Impl( x, y );
           }
         }
       }
@@ -1038,7 +1056,7 @@ final public class GeometryFactory
             offset += 8;
             y = ByteUtils.readLEDouble( wkb, offset );
             offset += 8;
-            internalBoundaries[j - 1][i] = new GM_Position_Impl( x, y );
+            internalBoundaries[j - 1][i] = new GM_Position2D_Impl( x, y );
           }
         }
       }
@@ -1048,14 +1066,7 @@ final public class GeometryFactory
       list.add( GeometryFactory.createGM_Surface( patch ) );
     }
 
-    final GM_MultiSurface multisurface = new GM_MultiSurface_Impl( crs );
-
-    for( int i = 0; i < list.size(); i++ )
-    {
-      multisurface.addSurface( list.get( i ) );
-    }
-
-    return multisurface;
+    return new GM_MultiSurface_Impl( list.toArray( new GM_Surface[list.size()] ), crs );
   }
 
   public static GM_Point createGM_Point( final Point p, final GeoTransform transform, final String coordinatesSystem )
@@ -1070,11 +1081,9 @@ final public class GeometryFactory
     final List<GM_Position> myList = new LinkedList<GM_Position>();
 
     for( final GM_Position position : positions )
-    {
-      myList.add( GeometryFactory.createGM_Position( position.getAsArray() ) );
-    }
+      myList.add( (GM_Position) position.clone() );
 
-    return myList.toArray( new GM_Position[] {} );
+    return myList.toArray( new GM_Position[myList.size()] );
   }
 
   public static GM_Triangle_Impl createGM_Triangle( final GM_Position[] pos, final String crs ) throws GM_Exception
@@ -1137,21 +1146,21 @@ final public class GeometryFactory
     return new GM_Ring_Impl( positions, crs );
   }
 
-  public static GM_TriangulatedSurface createGM_TriangulatedSurface( GM_Triangle[] triangles, String crs ) throws GM_Exception
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( final GM_Triangle[] triangles, final String crs ) throws GM_Exception
   {
-    GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( crs );
+    final GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( crs );
 
-    for( GM_Triangle triangle : triangles )
+    for( final GM_Triangle triangle : triangles )
       triangulatedSurface.add( triangle );
 
     return triangulatedSurface;
   }
 
-  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( GM_Polygon[] polygons, String crs ) throws GM_Exception
+  public static GM_Surface<GM_Polygon> createGM_PolyhedralSurface( final GM_Polygon[] polygons, final String crs ) throws GM_Exception
   {
-    GM_Surface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
+    final GM_Surface<GM_Polygon> triangulatedSurface = createGM_PolyhedralSurface( crs );
 
-    for( GM_Polygon triangle : polygons )
+    for( final GM_Polygon triangle : polygons )
       triangulatedSurface.add( triangle );
 
     return triangulatedSurface;

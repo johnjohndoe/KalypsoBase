@@ -37,11 +37,13 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**
@@ -52,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
  * 
  * @version 5.6.2001
  * @author Andreas Poth
- *         <p>
  */
 class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimitive, Serializable
 {
@@ -77,6 +78,16 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   public GM_MultiPrimitive_Impl( final GM_Object[] children, final String crs )
   {
     super( children, crs );
+  }
+
+  /**
+   * @throws NotImplementedException
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Aggregate_Impl#calculateCentroid()
+   */
+  @Override
+  protected GM_Point calculateCentroid( )
+  {
+    throw new NotImplementedException();
   }
 
   /**
@@ -112,11 +123,6 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
     final GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
 
     return m_aggregate.toArray( gmos );
-  }
-
-  @Override
-  protected void calculateParam( )
-  {
   }
 
   public int getCoordinateDimension( )

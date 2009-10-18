@@ -325,7 +325,7 @@ public class GisTemplateHelper
         {
           // if srs attribute exists and it is not the target srs we have to convert it
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
-          return transformer.transformEnvelope( env, orgSRSName );
+          return transformer.transformEnvelope( env );
         }
       }
       catch( final Exception e )

@@ -58,7 +58,7 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   /**
    * the reference system
    */
-  public GM_Boundary_Impl( String srs )
+  public GM_Boundary_Impl( final String srs )
   {
     super( srs );
   }
@@ -69,5 +69,15 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   public boolean isCycle( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
+   */
+  @Override
+  protected GM_Boundary calculateBoundary( )
+  {
+    // TODO: implement,, what is the boundary of a boundary?
+    return GM_Object_Impl.EMPTY_BOUNDARY;
   }
 }

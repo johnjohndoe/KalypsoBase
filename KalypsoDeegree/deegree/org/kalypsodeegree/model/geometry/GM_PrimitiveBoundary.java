@@ -48,6 +48,5 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_PrimitiveBoundary extends GM_Boundary
 {}

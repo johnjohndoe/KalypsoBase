@@ -210,6 +210,7 @@ public class SplitSort implements FeatureList
    */
   public boolean add( final Object object )
   {
+    // TODO: not necessary if m_index is null, but calling this inside the synchronized block causes dead locks
     final Envelope env = getEnvelope( object );
 
     synchronized( m_lock )
@@ -224,7 +225,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      java.util.List)
    */
-  public List<?> query( final GM_Envelope queryEnv, List result )
+  public List<?> query( final GM_Envelope queryEnv, final List result )
   {
     checkIndex();
 
@@ -245,7 +246,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
    */
-  public List<?> query( final GM_Position pos, List result )
+  public List<?> query( final GM_Position pos, final List result )
   {
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
@@ -730,12 +731,12 @@ public class SplitSort implements FeatureList
     final List<?> query = query( geometry.getEnvelope(), null );
 
     final List<Feature> result = new LinkedList<Feature>();
-    for( Object object : query )
+    for( final Object object : query )
     {
       final Feature feature = FeatureHelper.resolveLinkedFeature( workspace, object );
       
       final GM_Object[] geometryPropertyValues = feature.getGeometryPropertyValues();
-      for( GM_Object gmObject : geometryPropertyValues )
+      for( final GM_Object gmObject : geometryPropertyValues )
       {
         if( gmObject != null && gmObject.intersects( geometry ) )
         {

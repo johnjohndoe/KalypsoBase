@@ -52,6 +52,14 @@ public interface GM_Envelope extends Cloneable
    */
   double getHeight( );
 
+  public double getMinX( );
+
+  public double getMinY( );
+
+  public double getMaxX( );
+
+  public double getMaxY( );
+
   /**
    * returns the minimum coordinates of bounding box
    */

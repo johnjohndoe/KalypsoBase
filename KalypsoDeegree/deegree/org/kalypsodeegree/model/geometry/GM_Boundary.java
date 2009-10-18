@@ -51,7 +51,6 @@ package org.kalypsodeegree.model.geometry;
 
 public interface GM_Boundary extends GM_Object
 {
-
   /**
    * A geometric object, which has no boundary is a cycle.
    */

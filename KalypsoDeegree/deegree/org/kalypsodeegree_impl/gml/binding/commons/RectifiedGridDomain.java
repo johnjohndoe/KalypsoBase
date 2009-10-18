@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -69,7 +68,7 @@ public class RectifiedGridDomain
 
     public GM_Position move( final GM_Position pos, final int number )
     {
-      if( pos.getAsArray().length > 2 )
+      if( pos.getCoordinateDimension() > 2 )
         return GeometryFactory.createGM_Position( pos.getX() + number * m_geoX, pos.getY() + number * m_geoY, pos.getZ() );
       else
         return GeometryFactory.createGM_Position( pos.getX() + number * m_geoX, pos.getY() + number * m_geoY );

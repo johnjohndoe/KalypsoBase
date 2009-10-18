@@ -37,11 +37,14 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -55,7 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * 
  * @version 5.6.2001
  * @author Andreas Poth
- *         <p>
  */
 final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Serializable
 {
@@ -64,16 +66,16 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   private final GM_Position m_position;
 
-  /**
-   * constructor. initializes a point to the coordinate 0/0
-   * 
-   * @param crs
-   *          spatial reference system of the point
-   */
-  public GM_Point_Impl( final String crs )
-  {
-    this( new GM_Position_Impl(), crs );
-  }
+// /**
+// * constructor. initializes a point to the coordinate 0/0
+// *
+// * @param crs
+// * spatial reference system of the point
+// */
+// public GM_Point_Impl( final String crs )
+// {
+// this( new GM_Position_Impl(), crs );
+// }
 
   /**
    * constructor for initializing a point within a two-dimensional coordinate system
@@ -87,7 +89,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final double x, final double y, final String crs )
   {
-    this( new GM_Position_Impl( x, y ), crs );
+    this( GeometryFactory.createGM_Position( x, y ), crs );
   }
 
   /**
@@ -104,7 +106,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final double x, final double y, final double z, final String crs )
   {
-    this( new GM_Position_Impl( x, y, z ), crs );
+    this( GeometryFactory.createGM_Position( x, y, z ), crs );
   }
 
   /**
@@ -115,7 +117,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public GM_Point_Impl( final GM_Point gmo )
   {
-    this( new GM_Position_Impl( gmo.getAsArray() ), gmo.getCoordinateSystem() );
+    this( GeometryFactory.createGM_Position( gmo.getAsArray() ), gmo.getCoordinateSystem() );
   }
 
   /**
@@ -133,8 +135,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     Assert.isNotNull( gmo );
 
     m_position = gmo;
-    setEmpty( false );
-    setCentroid( this );
   }
 
   /**
@@ -149,7 +149,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     if( super.equals( other ) && (other instanceof GM_Point) )
     {
       final GM_Point p = (GM_Point) other;
-      boolean flagEq = (Math.abs( getX() - p.getX() ) < MUTE) && (Math.abs( getY() - p.getY() ) < MUTE);
+      boolean flagEq = (Math.abs( getX() - p.getX() ) < GM_Position.MUTE) && (Math.abs( getY() - p.getY() ) < GM_Position.MUTE);
       if( getCoordinateDimension() == 3 )
       {
         final double z1 = getZ();
@@ -158,7 +158,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
         if( Double.isNaN( z1 ) && Double.isNaN( z2 ) )
           flagEq = flagEq && true;
         else
-          flagEq = flagEq && (Math.abs( z1 - z2 ) < MUTE);
+          flagEq = flagEq && (Math.abs( z1 - z2 ) < GM_Position.MUTE);
       }
       return flagEq;
     }
@@ -183,7 +183,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    */
   public int getCoordinateDimension( )
   {
-    return m_position.getAsArray().length;
+    return m_position.getCoordinateDimension();
   }
 
   /**
@@ -198,6 +198,15 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
       return new GM_Point_Impl( getX(), getY(), getZ(), system );
 
     return new GM_Point_Impl( getX(), getY(), system );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( )
+  {
+    return false;
   }
 
   /**
@@ -239,8 +248,8 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public void translate( final double[] d )
   {
-    setValid( false );
     m_position.translate( d );
+    invalidate();
   }
 
   public GM_Position getPosition( )
@@ -324,14 +333,41 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * recalculates internal parameters
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
    */
   @Override
-  protected void calculateParam( )
+  protected GM_Envelope calculateEnvelope( )
   {
-    setEnvelope( GeometryFactory.createGM_Envelope( getPosition(), getPosition(), getCoordinateSystem() ) );
+    return GeometryFactory.createGM_Envelope( getPosition(), getPosition(), getCoordinateSystem() );
+  }
 
-    setValid( true );
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
+   */
+  @Override
+  protected GM_Boundary calculateBoundary( )
+  {
+    // TODO: implement: what is the boundary of a point?
+    return GM_Object_Impl.EMPTY_BOUNDARY;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getCentroid()
+   */
+  @Override
+  public final GM_Point getCentroid( )
+  {
+    return this;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
+   */
+  @Override
+  protected GM_Point calculateCentroid( )
+  {
+    // We implement getCentroid ourself's, so this should never be called
+    throw new NotImplementedException();
   }
 
   @Override
@@ -354,7 +390,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
