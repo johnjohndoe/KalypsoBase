@@ -60,27 +60,14 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#getCoordinateSystem()
+   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#invalidate()
    */
   @Override
-  public String getCoordinateSystem( )
+  public void invalidate( )
   {
-    return m_crs;
-  }
+    m_planarEquation = null;
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#calculateParam()
-   */
-  @Override
-  protected void calculateParam( )
-  {
-    final GM_Position[] exteriorRing = getExteriorRing();
-    final Coordinate c0 = JTSAdapter.export( exteriorRing[0] );
-    final Coordinate c1 = JTSAdapter.export( exteriorRing[1] );
-    final Coordinate c2 = JTSAdapter.export( exteriorRing[2] );
-    final Coordinate[] coords = new Coordinate[] { c0, c1, c2 };
-    m_planarEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
-    super.calculateParam();
+    super.invalidate();
   }
 
   /**
@@ -98,12 +85,19 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
    */
   public double getValue( final GM_Position position )
   {
-    if( !isValid() )
-    {
-      calculateParam();
-    }
     final double x = position.getX();
     final double y = position.getY();
+
+    if( m_planarEquation == null )
+    {
+      final GM_Position[] exteriorRing = getExteriorRing();
+      final Coordinate c0 = JTSAdapter.export( exteriorRing[0] );
+      final Coordinate c1 = JTSAdapter.export( exteriorRing[1] );
+      final Coordinate c2 = JTSAdapter.export( exteriorRing[2] );
+      final Coordinate[] coords = new Coordinate[] { c0, c1, c2 };
+      m_planarEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+    }
+
     return JTSUtilities.calculateTriangleZ( m_planarEquation, x, y );
   }
 

@@ -314,12 +314,11 @@ public class SplitSort implements FeatureList
       final Envelope bbox = m_index.getBoundingBox();
       if( bbox == null )
         return null;
-      final GM_Envelope env = JTSAdapter.wrap( bbox );
       // REMARK: we just set here the default crs, as we assume, that all geometries already have been translated to
       // this one.
       // To be more precise, we should set a crs in the constructor of the SplitSort, and transform all added envelopes
       // to this one.
-      env.setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Envelope env = JTSAdapter.wrap( bbox, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       return env;
     }
   }

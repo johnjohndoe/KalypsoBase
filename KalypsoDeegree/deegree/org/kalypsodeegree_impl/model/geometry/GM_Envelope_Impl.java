@@ -70,7 +70,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * The coordinate system of the positions, contained in this envelope.
    */
-  private String m_coordinateSystem;
+  private final String m_coordinateSystem;
 
   /**
    * Creates a new GM_Envelope_Impl object.
@@ -383,14 +383,6 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public String getCoordinateSystem( )
   {
     return m_coordinateSystem;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Envelope#setCoordinateSystem(java.lang.String)
-   */
-  public void setCoordinateSystem( final String coordinateSystem )
-  {
-    m_coordinateSystem = coordinateSystem;
   }
 }
 

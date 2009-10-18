@@ -65,22 +65,23 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /** Placeholder if the centroid cannot be created */
   protected static final GM_Point EMPTY_CENTROID = new GM_Point_Impl( Double.NaN, Double.NaN, null );
 
-  protected String m_crs = null;
+  /** Placeholder if the envelope cannot be created */
+  protected static final GM_Envelope EMPTY_ENVELOPE = new GM_Envelope_Impl( Double.NaN, Double.NaN, Double.NaN, Double.NaN, null );
 
-  protected GM_Envelope m_envelope = null;
+  private String m_crs = null;
+
+  private GM_Envelope m_envelope = null;
 
   private GM_Point m_centroid = null;
 
   // Not used anywhere; so for the moment we can just return a constant...
 // protected GM_SurfaceInterpolation m_interpolation = null;
 
-  protected GM_Position[] m_exteriorRing = null;
+  private GM_Position[] m_exteriorRing = null;
 
-  protected GM_Position[][] m_interiorRings = null;
+  private GM_Position[][] m_interiorRings = null;
 
-  private double m_area = 0;
-
-  protected boolean m_valid = false;
+  private double m_area = Double.NaN;
 
   /**
    * Creates a new GM_SurfacePatch_Impl object.
@@ -125,43 +126,40 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     m_exteriorRing = exteriorRing;
     // Memory Optimize: do not remember empty interior rings, we have to check for null anyway
     m_interiorRings = interiorRings == null || interiorRings.length == 0 ? null : interiorRings;
-
-    setValid( false );
   }
 
   /**
-   * invalidates the calculated parameters of the GM_Object
-   */
-  protected void setValid( final boolean valid )
-  {
-    m_valid = valid;
-  }
-
-  /**
-   * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
-   */
-  protected boolean isValid( )
-  {
-    return m_valid;
-  }
-
-  private void calculateEnvelope( )
-  {
-    m_envelope = GeometryUtilities.envelopeFromRing( m_exteriorRing, getCoordinateSystem() );
-  }
-
-  /**
-   * returns the bounding box of the surface patch
+   * returns the bounding box / envelope of a geometry
    */
   public GM_Envelope getEnvelope( )
   {
-    if( !isValid() )
+    if( m_envelope == null )
     {
-      calculateParam();
+      // Only recalculate envelope if invalid (=null)
+      try
+      {
+        m_envelope = calculateEnvelope();
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+        // TODO: we should throw this exception
+        m_envelope = EMPTY_ENVELOPE;
+      }
     }
+
+    // if empty, just return null
+    if( m_envelope == EMPTY_ENVELOPE )
+      return null;
+
     return m_envelope;
   }
 
+  @SuppressWarnings("unused")
+  protected GM_Envelope calculateEnvelope( ) throws GM_Exception
+  {
+    return GeometryUtilities.envelopeFromRing( m_exteriorRing, getCoordinateSystem() );
+  }
   /**
    * returns a reference to the exterior ring of the surface
    */
@@ -320,15 +318,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   }
 
   /**
-   * calculates the centroid and the area of the surface patch
-   */
-  protected void calculateParam( )
-  {
-    calculateEnvelope();
-    setValid( true );
-  }
-
-  /**
    * calculates the area of the surface patch
    * <p>
    * </p>
@@ -374,7 +363,9 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
 
   public void invalidate( )
   {
-    m_valid = false;
+    m_envelope = null;
+    m_centroid = null;
+    m_area = Double.NaN;
   }
 
   /**

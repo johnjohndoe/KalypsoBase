@@ -41,7 +41,8 @@ import org.deegree.crs.transformations.CRSTransformation;
 /**
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made
  * of one exterior ring and 0..n interior rings. By definition there can't be a surface patch with no exterior ring. A
- * polygon is a specialized surface patch. -----------------------------------------------------
+ * polygon is a specialized surface patch.<br>
+ * -----------------------------------------------------
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$

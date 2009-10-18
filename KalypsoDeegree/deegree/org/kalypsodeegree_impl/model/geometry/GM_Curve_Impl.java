@@ -67,7 +67,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4060425075179654976L;
 
-  protected ArrayList<GM_CurveSegment> m_segments = null;
+  protected List<GM_CurveSegment> m_segments;
 
   /**
    * initialize the curve by submitting a spatial reference system and an array of curve segments. the orientation of
@@ -117,10 +117,18 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    * calculates the envelope of the Curve
    */
   @Override
-  protected GM_Envelope calculateEnvelope( ) throws GM_Exception
+  protected GM_Envelope calculateEnvelope( )
   {
-    final GM_Position[] positions = getAsLineString().getPositions();
-    return GeometryUtilities.envelopeFromRing( positions, getCoordinateSystem() );
+    GM_Envelope env = null;
+    final String crs = getCoordinateSystem();
+    for( final GM_CurveSegment segment : m_segments )
+    {
+      final GM_Position[] positions = segment.getPositions();
+      final GM_Envelope posEnv = GeometryUtilities.envelopeFromRing( positions, crs );
+      env = env == null ? posEnv : env.getMerged( posEnv );
+    }
+
+    return env;
   }
 
   /**
@@ -232,21 +240,12 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
    */
   public double getLength( )
   {
-    try
-    {
-      double result = 0;
-      final GM_Position[] positions = getAsLineString().getPositions();
-      for( int i = 1; i < positions.length; i++ )
-      {
-        result += positions[i].getDistance( positions[i - 1] );
-      }
-      return result;
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      return 0;
-    }
+    double length = 0;
+
+    for( final GM_CurveSegment segment : m_segments )
+      length += segment.getLength();
+
+    return length;
   }
 
   /**

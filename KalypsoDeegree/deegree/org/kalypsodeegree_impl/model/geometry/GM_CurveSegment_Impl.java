@@ -154,7 +154,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * checks if this curve segment is completly equal to the submitted geometry
    * 
    * @param other
-   *            object to compare to
+   *          object to compare to
    */
   @Override
   public boolean equals( final Object other )
@@ -233,7 +233,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
       e.printStackTrace();
     }
 
-    throw (new IllegalStateException());
+    throw new IllegalStateException();
   }
 
   /**
@@ -241,7 +241,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public boolean intersects( final GM_Object gmo )
   {
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
   /**
@@ -249,7 +249,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public GM_LineString getAsLineString( )
   {
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
   /**
@@ -257,6 +257,9 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    */
   public double getLength( )
   {
-    return points.length;
+    double result = 0;
+    for( int i = 1; i < points.length; i++ )
+      result += points[i].getDistance( points[i - 1] );
+    return result;
   }
 }

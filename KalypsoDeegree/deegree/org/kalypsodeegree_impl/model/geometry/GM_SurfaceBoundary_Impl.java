@@ -249,7 +249,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   @Override
   protected GM_Envelope calculateEnvelope( )
   {
-    return (GM_Envelope) ((GM_Envelope_Impl) m_exterior.getEnvelope()).clone();
+    return m_exterior.getEnvelope();
   }
 
   /**

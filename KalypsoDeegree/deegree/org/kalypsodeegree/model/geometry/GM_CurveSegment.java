@@ -87,10 +87,4 @@ public interface GM_CurveSegment extends GM_GenericCurve
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    */
   boolean contains( GM_Object gmo );
-
-  /**
-   * @link aggregationByValue
-   * @clientCardinality 2..*
-   */
-  /* #GM_Position lnkGM_Position; */
 }
