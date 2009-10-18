@@ -42,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.CoreException;
@@ -53,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -80,6 +82,9 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   private final List<T> m_items;
 
+  // Optimization: we do not always want to recalculate the complete envelope, so we manage it ourselfs
+  private GM_Envelope m_envelope = null;
+
   public GM_PolyhedralSurface_Impl( final String crs ) throws GM_Exception
   {
     this( new ArrayList<T>(), crs );
@@ -88,8 +93,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   public GM_PolyhedralSurface_Impl( final List<T> items, final String crs ) throws GM_Exception
   {
     super( crs );
-
-    setValid( true );
 
     m_items = items;
 
@@ -204,12 +207,14 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   /**
-   * TODO: if this surface is changed via this iterator, the index does not gets updated
+   * TODO: if this surface is changed via this iterator, the index does not gets updated<br>
    * 
    * @see java.util.List#iterator()
    */
   public Iterator<T> iterator( )
   {
+    // TODO + CHECK: see TODO above; beter do this
+// return Collections.unmodifiableList( m_items ).iterator();
     return m_items.iterator();
   }
 
@@ -218,6 +223,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    */
   public int lastIndexOf( final Object o )
   {
+    // TODO: see iterator()
     return m_items.lastIndexOf( o );
   }
 
@@ -228,6 +234,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    */
   public ListIterator<T> listIterator( )
   {
+    // TODO: see iterator()
     return m_items.listIterator();
   }
 
@@ -238,6 +245,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
    */
   public ListIterator<T> listIterator( final int index )
   {
+    // TODO: see iterator()
     return m_items.listIterator( index );
   }
 
@@ -361,13 +369,45 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateParam()
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getEnvelope()
    */
   @Override
-  protected void calculateParam( )
+  public GM_Envelope getEnvelope( )
   {
-    setEnvelope( JTSAdapter.wrap( recalcEnvelope( m_items ) ) );
-    // TODO:: other parameters: centroid, ...?
+    if( m_envelope == null )
+      m_envelope = JTSAdapter.wrap( recalcEnvelope( m_items ) );
+
+    return m_envelope;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
+   */
+  @Override
+  protected GM_Envelope calculateEnvelope( )
+  {
+    // We overwrite getEnvelope, so this should never be called
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
+   */
+  @Override
+  protected GM_Boundary calculateBoundary( )
+  {
+    // TODO: implement, what is the boundary this?
+    return GM_Object_Impl.EMPTY_BOUNDARY;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
+   */
+  @Override
+  protected GM_Point calculateCentroid( )
+  {
+    // TODO: implement, what is the centroid this?
+    return EMPTY_CENTROID;
   }
 
   private static <T extends GM_Polygon> Envelope recalcEnvelope( final List<T> items )
@@ -490,23 +530,26 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     {
       final GM_Envelope polygonEnv = polygon.getEnvelope();
 
-      final GM_Envelope envelope = getEnvelope();
-      if( envelope == null )
-        setEnvelope( polygonEnv );
+      if( m_envelope == null )
+        m_envelope = polygonEnv;
       else
-        setEnvelope( envelope.getMerged( polygonEnv ) );
+        m_envelope = m_envelope.getMerged( polygonEnv );
     }
   }
 
   @SuppressWarnings("unchecked")
   private void removeFromIndex( final Object o )
   {
+    // TODO: consider envelope
+    // probably we should delegate the whole envelope stuff to the index
     if( o instanceof GM_Polygon )
     {
       final T gmPoly = (T) o;
       final Envelope env = JTSAdapter.export( gmPoly.getEnvelope() );
       m_index.remove( env, o );
     }
+
+    m_envelope = null;
   }
 
   /**

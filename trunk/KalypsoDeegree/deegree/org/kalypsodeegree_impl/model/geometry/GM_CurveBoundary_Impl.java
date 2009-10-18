@@ -40,6 +40,7 @@ import java.io.Serializable;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -73,8 +74,6 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
 
     m_sp = sp;
     m_ep = ep;
-
-    setValid( false );
   }
 
   /**
@@ -94,7 +93,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
    */
   public int getCoordinateDimension( )
   {
-    return getStartPoint().getAsArray().length;
+    return getStartPoint().getCoordinateDimension();
   }
 
   /**
@@ -225,34 +224,22 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * calculates the envelope of the curve boundary
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
    */
-  private void calculateEnvelope( )
+  @Override
+  protected GM_Point calculateCentroid( )
   {
-    final double[] min = m_sp.getAsArray().clone();
-    final double[] max = m_ep.getAsArray().clone();
-
-    for( int i = 0; i < min.length; i++ )
-    {
-      if( min[i] > max[i] )
-      {
-        final double d = min[i];
-        min[i] = max[i];
-        max[i] = d;
-      }
-    }
-
-    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
+    // TODO: implement
+    return EMPTY_CENTROID;
   }
 
   /**
    * calculates the envelope of the curve boundary
    */
   @Override
-  protected void calculateParam( )
+  protected GM_Envelope calculateEnvelope( )
   {
-    calculateEnvelope();
-    setValid( true );
+    return GeometryFactory.createGM_Envelope( m_sp, m_ep, getCoordinateSystem() );
   }
 
   @Override
@@ -268,7 +255,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 

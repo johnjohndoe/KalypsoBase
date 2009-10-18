@@ -63,7 +63,14 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 130728662284673112L;
 
-  protected static final double MUTE = 0.000000001;
+  /** Placeholder if the boundary cannot be created */
+  protected static final GM_Boundary EMPTY_BOUNDARY = new GM_CurveBoundary_Impl( null, null, null );
+
+  /** Placeholder if the centroid cannot be created */
+  protected static final GM_Point EMPTY_CENTROID = new GM_Point_Impl( Double.NaN, Double.NaN, null );
+
+  /** Placeholder if the envelope cannot be created */
+  protected static final GM_Envelope EMPTY_ENVELOPE = new GM_Envelope_Impl( Double.NaN, Double.NaN, Double.NaN, Double.NaN, null );
 
   private String m_crs = null;
 
@@ -73,15 +80,13 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   private GM_Point m_centroid = null;
 
-  private boolean m_empty = true;
-
   private boolean m_valid = false;
 
   /**
    * constructor that sets the spatial reference system
    * 
    * @param crs
-   *            new spatial reference system
+   *          new spatial reference system
    */
   protected GM_Object_Impl( final String crs )
   {
@@ -100,15 +105,15 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * sets the spatial reference system
    * 
    * @param crs
-   *            new spatial reference system
+   *          new spatial reference system
    */
   public void setCoordinateSystem( final String crs )
   {
-    this.m_crs = crs;
+    m_crs = crs;
   }
 
   /**
-   * returns a shallow copy of the geometry. this isn't realized at this level so a CloneNotSupportedException will be
+   * returns a deep copy of the geometry. this isn't realized at this level so a CloneNotSupportedException will be
    * thrown.
    */
   @Override
@@ -118,19 +123,13 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   }
 
   /**
-   * returns true if no geometry values resp. points stored within the geometry.
+   * returns true if no geometry values resp. points stored within the geometry.<br>
+   * Currently not implemented, always returns true<br>
+   * TODO: decide if it should be implemented or be thrown away
    */
   public boolean isEmpty( )
   {
-    return m_empty;
-  }
-
-  /**
-   * indicates the geometry as empty
-   */
-  protected final void setEmpty( final boolean empty )
-  {
-    m_empty = empty;
+    return true;
   }
 
   /**
@@ -138,24 +137,41 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    */
   public final GM_Boundary getBoundary( )
   {
-    if( !isValid() )
+    // only recalculate the boundary if null
+    if( m_boundary == null )
     {
-      calculateParam();
+      try
+      {
+        m_boundary = calculateBoundary();
+      }
+      catch( final GM_Exception e )
+      {
+        // TODO: exception should be thrown by this method
+        e.printStackTrace();
+        m_boundary = EMPTY_BOUNDARY;
+      }
     }
+
+    // if boundary is empty, return null
+    if( m_boundary == EMPTY_BOUNDARY )
+      return null;
+
     return m_boundary;
   }
 
-  protected final void setBoundary( final GM_Boundary boundary )
-  {
-    m_boundary = boundary;
-  }
+  /**
+   * Calculate the boundary of this geometry.<br>
+   * Must be overridden by implementors.<br>
+   * Default implementation returns the invalid boundary.
+   */
+  abstract protected GM_Boundary calculateBoundary( ) throws GM_Exception;
 
   /**
    * dummy implementation of this method
    */
   public void translate( final double[] d )
   {
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -196,40 +212,63 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
    * be on the object. For heterogeneous collections of primitives, the centroid only takes into account those of the
    * largest dimension. For example, when calculating the centroid of surfaces, an average is taken weighted by area.
-   * Since curves have no area they do not contribute to the average.
-   * <p>
-   * </p>
+   * Since curves have no area they do not contribute to the average. <br>
+   * TODO: check this comment; this seems not be always implemented like described...
    */
-  public final GM_Point getCentroid( )
+  public GM_Point getCentroid( )
   {
-    if( !isValid() )
+    if( m_centroid == null )
     {
-      calculateParam();
+      // Only recalculate centroid if invalid (=null)
+      try
+      {
+        m_centroid = calculateCentroid();
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+        // TODO: we should throw this exception
+        m_centroid = EMPTY_CENTROID;
+      }
     }
+
+    // if empty, just return null
+    if( m_centroid == EMPTY_CENTROID )
+      return null;
+
     return m_centroid;
   }
 
-  protected final void setCentroid( final GM_Point centroid )
-  {
-    m_centroid = centroid;
-  }
+  protected abstract GM_Point calculateCentroid( ) throws GM_Exception;
 
   /**
    * returns the bounding box / envelope of a geometry
    */
   public GM_Envelope getEnvelope( )
   {
-    if( !isValid() )
+    if( m_envelope == null )
     {
-      calculateParam();
+      // Only recalculate envelope if invalid (=null)
+      try
+      {
+        m_envelope = calculateEnvelope();
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+        // TODO: we should throw this exception
+        m_envelope = EMPTY_ENVELOPE;
+      }
     }
+
+    // if empty, just return null
+    if( m_envelope == EMPTY_ENVELOPE )
+      return null;
+
     return m_envelope;
   }
 
-  protected final void setEnvelope( final GM_Envelope envelope )
-  {
-    m_envelope = envelope;
-  }
+  abstract protected GM_Envelope calculateEnvelope( ) throws GM_Exception;
 
   /**
    * The operation "convexHull" shall return a GM_Object that represents the convex hull of this GM_Object.
@@ -241,10 +280,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    */
   public GM_Object getConvexHull( ) throws GM_Exception
   {
-    if( !isValid() )
-    {
-      calculateParam();
-    }
     // let JTS do this stuff (doemming)
     final Geometry geometry = JTSAdapter.export( this );
     final Geometry convexHull = geometry.convexHull();
@@ -283,7 +318,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * 
    * @param that
-   *            the GM_Object to test (whether is is contained)
+   *          the GM_Object to test (whether is is contained)
    * @return true if the given object is contained, else false
    */
   public boolean contains( final GM_Object that )
@@ -294,7 +329,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       final Geometry jtsThis = JTSAdapter.export( this );
       final Geometry jtsThat = JTSAdapter.export( that );
       return jtsThis.contains( jtsThat );
-
     }
     catch( final GM_Exception e )
     {
@@ -309,7 +343,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * 
    * @param position
-   *            GM_Position to test (whether is is contained)
+   *          GM_Position to test (whether is is contained)
    * @return true if the given object is contained, else false
    */
   public boolean contains( final GM_Position position )
@@ -321,10 +355,9 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
-   * <p>
    * 
    * @param that
-   *            the GM_Object to intersect with
+   *          the GM_Object to intersect with
    * @return true if the objects intersects, else false
    */
   public boolean intersects( final GM_Object that )
@@ -335,7 +368,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       final Geometry jtsThis = JTSAdapter.export( this );
       final Geometry jtsThat = JTSAdapter.export( that );
       return jtsThis.intersects( jtsThat );
-
     }
     catch( final GM_Exception e )
     {
@@ -349,7 +381,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * 
    * @param that
-   *            the GM_Object to unify
+   *          the GM_Object to unify
    * @return intersection or null, if computation failed
    */
   public GM_Object union( final GM_Object that )
@@ -377,17 +409,16 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   }
 
   /**
-   * The "intersection" operation shall return the set theoretic intersection of this <tt>GM_Object</tt> and the
-   * passed <tt>GM_Object</tt>.
+   * The "intersection" operation shall return the set theoretic intersection of this <tt>GM_Object</tt> and the passed
+   * <tt>GM_Object</tt>.
    * <p>
    * 
    * @param that
-   *            the GM_Object to intersect with
+   *          the GM_Object to intersect with
    * @return intersection or null, if it is empty (or computation failed)
    */
   public GM_Object intersection( final GM_Object that )
   {
-
     GM_Object intersection = null;
 
     try
@@ -421,7 +452,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * 
    * @param that
-   *            the GM_Object to calculate the difference with
+   *          the GM_Object to calculate the difference with
    * @return difference or null, if it is empty (or computation failed)
    */
   public GM_Object difference( final GM_Object that )
@@ -433,7 +464,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
       // let JTS do the hard work
       final Geometry jtsThis = JTSAdapter.export( this );
       final Geometry jtsThat = JTSAdapter.export( that );
-     
+
       final Geometry jtsDifference = jtsThis.difference( jtsThat );
 
       if( !jtsDifference.isEmpty() )
@@ -450,7 +481,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     {
       System.out.println( e );
     }
-    
+
     return difference;
   }
 
@@ -459,7 +490,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * 
    * @param that
-   *            the GM_Object to test for equality
+   *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
    */
   public @Override
@@ -521,14 +552,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   }
 
   /**
-   * invalidates the calculated parameters of the GM_Object
-   */
-  protected void setValid( final boolean valid )
-  {
-    m_valid = valid;
-  }
-
-  /**
    * returns true if the calculated parameters of the GM_Object are valid and false if they must be recalculated
    */
   protected boolean isValid( )
@@ -536,18 +559,12 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     return m_valid;
   }
 
-  /**
-   * recalculates internal parameters
-   */
-  protected abstract void calculateParam( );
-
   @Override
   public String toString( )
   {
     String ret = null;
     ret = "CoordinateSystem = " + m_crs + "\n";
-    ret += ("empty = " + m_empty + "\n");
-    ret += ("mute = " + MUTE + "\n");
+    ret += ("mute = " + GM_Position.MUTE + "\n");
     return ret;
   }
 
@@ -556,6 +573,9 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    */
   public void invalidate( )
   {
+    m_boundary = null;
+    m_centroid = null;
+    m_envelope = null;
     m_valid = false;
   }
 

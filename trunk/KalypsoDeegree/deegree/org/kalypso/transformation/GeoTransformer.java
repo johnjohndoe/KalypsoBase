@@ -64,7 +64,6 @@ import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -161,7 +160,7 @@ public class GeoTransformer
    * @param source
    *          The name of the source coordinate system.
    * @return The transformed envelope.
-   * @deprecated Use {@link #transformEnvelope(GM_Envelope)} sinetad, GM_Evnelope's do have their own srs now. If you
+   * @deprecated Use {@link #transformEnvelope(GM_Envelope)} instead, GM_Evnelope's do have their own srs now. If you
    *             have en envelop without, create a new on e with the known srs.
    */
   @Deprecated
@@ -173,9 +172,10 @@ public class GeoTransformer
     if( source == null || source.equalsIgnoreCase( m_target ) )
       return envelope;
 
-    // TODO: this can be improved....
-    final GM_Surface< ? > asSurface = GeometryFactory.createGM_Surface( envelope, source );
-    return transform( asSurface ).getEnvelope();
+    final GM_Position min = transformPosition( envelope.getMin(), source );
+    final GM_Position max = transformPosition( envelope.getMax(), source );
+
+    return GeometryFactory.createGM_Envelope( min, max, m_target );
   }
 
   /**

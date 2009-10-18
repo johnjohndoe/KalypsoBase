@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.ObjectUtils;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.CoreException;
@@ -50,11 +51,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -84,11 +87,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
 
-// private final List<T> m_list;
-
   private T m_patch;
-
-  private double area = 0;
 
   /**
    * initializes the surface with default orientation submitting one surface patch.
@@ -113,8 +112,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
 // m_list = Collections.singletonList( surfacePatch );
     m_patch = surfacePatch;
-
-    setValid( false );
   }
 
   /**
@@ -136,86 +133,65 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public GM_Surface_Impl( final char orientation, final GM_SurfaceBoundary boundary ) throws GM_Exception
   {
-    // todo
-    // extracting surface patches from the boundary
     super( boundary.getCoordinateSystem(), orientation );
 
 // m_list = Collections.emptyList();
     m_patch = (T) GeometryFactory.createGM_SurfacePatch( boundary.getExteriorRing(), boundary.getInteriorRings(), boundary.getCoordinateSystem() );
-
-    setBoundary( boundary );
   }
-
-//  /**
-//   * calculates the centroid and area of the surface
-//   */
-//  private void calculateCentroidArea( )
-//  {
-//    setCentroid( m_patch.getCentroid() );
-//    area = m_patch.getArea();
-//  }
 
   /**
    * calculates the boundary and area of the surface
    */
-  private void calculateBoundary( )
+  @Override
+  protected GM_Boundary calculateBoundary( ) throws GM_Exception
   {
-    try
-    {
-      final GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
-      final GM_Position[][] inn_ = m_patch.getInteriorRings();
-      GM_Ring[] inn = null;
+    final GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
+    final GM_Position[][] inn_ = m_patch.getInteriorRings();
+    GM_Ring[] inn = null;
 
-      if( inn_ != null )
+    if( inn_ != null )
+    {
+      inn = new GM_Ring_Impl[inn_.length];
+
+      for( int i = 0; i < inn_.length; i++ )
       {
-        inn = new GM_Ring_Impl[inn_.length];
-
-        for( int i = 0; i < inn_.length; i++ )
-        {
-          inn[i] = new GM_Ring_Impl( inn_[i], getCoordinateSystem() );
-        }
+        inn[i] = new GM_Ring_Impl( inn_[i], getCoordinateSystem() );
       }
+    }
 
-      setBoundary( new GM_SurfaceBoundary_Impl( ext, inn ) );
-    }
-    catch( final Exception e )
-    {
-      System.out.println( e );
-    }
+    return new GM_SurfaceBoundary_Impl( ext, inn );
   }
 
   /**
-   * calculates area, centroid and the envelope of the surface
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
    */
   @Override
-  protected void calculateParam( )
+  protected GM_Point calculateCentroid( )
   {
-//    calculateCentroidArea();
-//    calculateEnvelope();
-    calculateBoundary();
-    setValid( true );
-    setCentroid( GeometryUtilities.guessPointOnSurface( this, m_patch.getCentroid(), 3 ) );
+    return GeometryUtilities.guessPointOnSurface( this, m_patch.getCentroid(), 3 );
   }
 
-//  /**
-//   * calculates the envelope of the surface
-//   */
-//  private void calculateEnvelope( )
-//  {
-//    setEnvelope( m_patch.getEnvelope() );
-//  }
-
   /**
+   * Optimization: we do not need to instantiate a new envelope, just get the one from the patch
+   * 
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getEnvelope()
    */
   @Override
   public GM_Envelope getEnvelope( )
   {
-    // TODO Auto-generated method stub
-//    return super.getEnvelope();
     return m_patch.getEnvelope();
   }
-  
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
+   */
+  @Override
+  protected GM_Envelope calculateEnvelope( )
+  {
+    // as we overwrite getEnvelope, this should never be called
+    throw new NotImplementedException();
+  }
+
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */
@@ -232,10 +208,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   public double getArea( )
   {
     return m_patch.getArea();
-//    if( !isValid() )
-//      calculateParam();
-//
-//    return area;
   }
 
   /**
@@ -243,9 +215,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public GM_SurfaceBoundary getSurfaceBoundary( )
   {
-    if( !isValid() )
-      calculateParam();
-
     return (GM_SurfaceBoundary) getBoundary();
   }
 
@@ -283,7 +252,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     if( !(other instanceof GM_Surface_Impl) )
       return false;
 
-// Makes no sens: next call to getEnvelope() will do the same again
+// Makes no sense: next call to getEnvelope() will do the same again
 // if( getEnvelope() == null )
 // {
 // calculateEnvelope();
@@ -292,7 +261,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
       return false;
 
-    return ObjectUtils.equals( m_patch, ((GM_Surface< ? >) m_patch) );
+    return ObjectUtils.equals( m_patch, (m_patch) );
   }
 
   /**
@@ -312,7 +281,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public int getCoordinateDimension( )
   {
-    return m_patch.getExteriorRing()[0].getAsArray().length;
+    return m_patch.getExteriorRing()[0].getCoordinateDimension();
   }
 
   /**
@@ -359,7 +328,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
         }
       }
     }
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -375,9 +344,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   @Override
   public boolean intersects( final GM_Object gmo )
   {
-    if( !isValid() )
-      calculateParam();
-    
     return m_patch.contains( gmo ) || getBoundary().intersects( gmo );
   }
 
@@ -401,9 +367,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   @Override
   public boolean contains( final GM_Object gmo )
   {
-    if( !isValid() )
-      calculateParam();
-
     return getBoundary().contains( gmo );
   }
 
@@ -553,7 +516,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     if( index == 0 )
       return m_patch;
-    
+
     throw new ArrayIndexOutOfBoundsException( index );
 // return m_list.get( index );
   }
@@ -600,9 +563,9 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public Iterator<T> iterator( )
   {
-      List<T> l = Collections.emptyList();
-      return l.iterator();
-//    return m_list.iterator();
+    final List<T> l = Collections.singletonList( m_patch );
+    return l.iterator();
+// return m_list.iterator();
   }
 
   /**
@@ -613,7 +576,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   public int lastIndexOf( final Object o )
   {
     return indexOf( o );
-//    return m_list.lastIndexOf( o );
+// return m_list.lastIndexOf( o );
   }
 
   /**
@@ -632,8 +595,8 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public ListIterator<T> listIterator( final int index )
   {
-    return Collections.singletonList( m_patch ).listIterator(index);
-    //    return m_list.listIterator( index );
+    return Collections.singletonList( m_patch ).listIterator( index );
+    // return m_list.listIterator( index );
   }
 
   /**
@@ -645,7 +608,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
     throw new UnsupportedOperationException();
-//    return m_list.remove( index );
+// return m_list.remove( index );
   }
 
   /**
@@ -657,7 +620,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
     throw new UnsupportedOperationException();
-//    return m_list.remove( o );
+// return m_list.remove( o );
   }
 
   /**
@@ -669,7 +632,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
     throw new UnsupportedOperationException();
-//    return m_list.removeAll( c );
+// return m_list.removeAll( c );
   }
 
   /**
@@ -681,7 +644,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
     throw new UnsupportedOperationException();
-//    return m_list.retainAll( c );
+// return m_list.retainAll( c );
   }
 
   /**
@@ -694,7 +657,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     // Makes no sense: m_list was immutable, so this will throw an UnsupportedExceptionAnyway
     throw new UnsupportedOperationException();
-//    return m_list.set( index, element );
+// return m_list.set( index, element );
   }
 
   /**
@@ -704,8 +667,8 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   public int size( )
   {
     return 1;
-    
-//    return m_list.size();
+
+// return m_list.size();
   }
 
   /**
@@ -718,7 +681,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     throw new UnsupportedOperationException();
 
-//    return m_list.subList( fromIndex, toIndex );
+// return m_list.subList( fromIndex, toIndex );
   }
 
   /**
@@ -727,9 +690,9 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public Object[] toArray( )
   {
-    return new Object[]{m_patch};
-    
-//    return m_list.toArray();
+    return new Object[] { m_patch };
+
+// return m_list.toArray();
   }
 
   /**
@@ -740,13 +703,11 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    */
   public <S> S[] toArray( final S[] a )
   {
-    S[] r = a.length >= 1 ? a :
-      (S[])java.lang.reflect.Array
-      .newInstance(a.getClass().getComponentType(), 1);
+    final S[] r = a.length >= 1 ? a : (S[]) java.lang.reflect.Array.newInstance( a.getClass().getComponentType(), 1 );
 
     r[0] = (S) m_patch;
     return r;
-//    return m_list.toArray( a );
+// return m_list.toArray( a );
   }
 
   /**
@@ -760,12 +721,12 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     visitor.visit( m_patch, Double.NaN );
 
     ProgressUtilities.done( monitor );
-    
-//    for( final T patch : m_list )
-//    {
-//      visitor.visit( patch, Double.NaN );
-//      ProgressUtilities.worked( monitor, 1 );
-//    }
+
+// for( final T patch : m_list )
+// {
+// visitor.visit( patch, Double.NaN );
+// ProgressUtilities.worked( monitor, 1 );
+// }
   }
 
   /**
@@ -779,7 +740,9 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
-    return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), m_patch );
+    final GM_SurfacePatch patch = (GM_SurfacePatch) m_patch.transform( trans, targetOGCCS );
+
+    return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), patch );
   }
 
   /**

@@ -50,6 +50,8 @@ import org.deegree.crs.transformations.CRSTransformation;
  */
 public interface GM_Position
 {
+  public static final double MUTE = 0.000001;
+
   /**
    * returns the x-value of the point
    */
@@ -66,6 +68,12 @@ public interface GM_Position
   public double getZ( );
 
   /**
+   * Returns the dimension (usually 2 or 3) of this position.
+   */
+  public short getCoordinateDimension( );
+
+  /**
+   * Disouraged!<br>
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
@@ -73,7 +81,7 @@ public interface GM_Position
 
   /**
    * translates the coordinates of the position. the first coordinate of the position will be translated by the first
-   * field of <tt>d</tt> the second coordinate by the second field of <tt>d</tt> and so on...
+   * field of <tt>d</tt> the second coordinate by the second field of <tt>d</tt> and so on... <br>
    */
   public void translate( double[] d );
 
@@ -84,10 +92,5 @@ public interface GM_Position
    */
   public GM_Position transform( final CRSTransformation trans ) throws Exception;
 
-  /**
-   * @param exact
-   *          If <code>false</code>, positions are considered as equal, even if they differ by a small amount
-   * @see GM_Position_Impl#MUTE
-   */
-  public boolean equals( GM_Position min, boolean exact );
+  public Object clone( );
 }

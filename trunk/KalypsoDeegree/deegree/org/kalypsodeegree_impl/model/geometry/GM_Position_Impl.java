@@ -58,14 +58,12 @@ class GM_Position_Impl implements GM_Position, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -3780255674921824356L;
 
-  private static final double MUTE = 0.000001;
-
   private final double[] m_point;
 
   /**
    * constructor. initializes a point to the coordinate 0/0
    */
-  GM_Position_Impl( )
+  private GM_Position_Impl( )
   {
     m_point = new double[] { 0, 0, 0 };
   }
@@ -78,7 +76,7 @@ class GM_Position_Impl implements GM_Position, Serializable
    * @param y
    *          y-value of the point
    */
-  GM_Position_Impl( final double x, final double y )
+  private GM_Position_Impl( final double x, final double y )
   {
     m_point = new double[] { x, y };
   }
@@ -93,7 +91,7 @@ class GM_Position_Impl implements GM_Position, Serializable
    * @param z
    *          z-value of the point
    */
-  GM_Position_Impl( final double x, final double y, final double z )
+  private GM_Position_Impl( final double x, final double y, final double z )
   {
     m_point = new double[] { x, y, z };
   }
@@ -101,7 +99,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * Copies the content of the given array, does NOT keep a reference to it.
    */
-  GM_Position_Impl( final double[] coords )
+  private GM_Position_Impl( final double[] coords )
   {
     Assert.isNotNull( coords );
 
@@ -145,6 +143,15 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
+   * @see org.kalypsodeegree.model.geometry.GM_Position#getCoordinateDimension()
+   */
+  @Override
+  public short getCoordinateDimension( )
+  {
+    return (short) m_point.length;
+  }
+
+  /**
    * returns the position as a array the first field contains the x- the second field the y-value etc.
    */
   public double[] getAsArray( )
@@ -158,10 +165,11 @@ class GM_Position_Impl implements GM_Position, Serializable
    */
   public void translate( final double[] d )
   {
-    for( int i = 0; i < d.length; i++ )
-    {
+    if( d.length > m_point.length )
+      throw new IllegalArgumentException();
+
+    for( int i = 0; i < m_point.length; i++ )
       m_point[i] += d[i];
-    }
   }
 
   /**
@@ -225,20 +233,8 @@ class GM_Position_Impl implements GM_Position, Serializable
    */
   public double getDistance( final GM_Position other )
   {
-    final double[] otherPoint = other.getAsArray();
-
-    // final double[] pos = getAsArray();
-    // double square = 0;
-    // for( int j = 0; j < 2; j++ )
-    // square += Math.pow( pos[j] - otherPos[j], 2d );
-    //
-    // return Math.pow( square, 0.5d );
-
-    // RMARK: calculating the square / power of 2 directly instead via Math.pow
-    // is noticeable faster.
-
-    final double dx = m_point[0] - otherPoint[0];
-    final double dy = m_point[1] - otherPoint[1];
+    final double dx = getX() - other.getX();
+    final double dy = getY() - other.getY();
     final double d = dx * dx + dy * dy;
 
     return Math.sqrt( d );

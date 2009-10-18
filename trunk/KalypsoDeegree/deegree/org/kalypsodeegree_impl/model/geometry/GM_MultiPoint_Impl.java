@@ -103,9 +103,9 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
-   *            GM_Point to insert.
+   *          GM_Point to insert.
    * @param index
-   *            position where to insert the new GM_Point
+   *          position where to insert the new GM_Point
    */
   public void insertPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
@@ -113,13 +113,13 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be
-   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
+   * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be removed.
+   * if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
-   *            GM_Point to set.
+   *          GM_Point to set.
    * @param index
-   *            position where to set the new GM_Point
+   *          position where to set the new GM_Point
    */
   public void setPointAt( final GM_Point gmp, final int index ) throws GM_Exception
   {
@@ -164,73 +164,26 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * updates the bounding box of the aggregation
+   * calculates the centroid of the surface
    */
-  private void calculateEnvelope( )
+  @Override
+  protected GM_Point calculateCentroid( )
   {
     final GM_Point gmp = getPointAt( 0 );
 
-    final double[] min = gmp.getAsArray().clone();
-    final double[] max = min.clone();
+    final double[] cen = new double[gmp.getAsArray().length];
 
-    for( int i = 1; i < getSize(); i++ )
+    for( int i = 0; i < getSize(); i++ )
     {
       final double[] pos = getPointAt( i ).getAsArray();
 
       for( int j = 0; j < pos.length; j++ )
       {
-        if( pos[j] < min[j] )
-        {
-          min[j] = pos[j];
-        }
-        else if( pos[j] > max[j] )
-        {
-          max[j] = pos[j];
-        }
+        cen[j] += (pos[j] / getSize());
       }
     }
 
-    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
-  }
-
-  /**
-   * calculates the centroid of the surface
-   */
-  private void calculateCentroid( )
-  {
-    try
-    {
-      final GM_Point gmp = getPointAt( 0 );
-
-      final double[] cen = new double[gmp.getAsArray().length];
-
-      for( int i = 0; i < getSize(); i++ )
-      {
-        final double[] pos = getPointAt( i ).getAsArray();
-
-        for( int j = 0; j < pos.length; j++ )
-        {
-          cen[j] += (pos[j] / getSize());
-        }
-      }
-
-      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
-    }
-    catch( final Exception ex )
-    {
-      // nothing
-    }
-  }
-
-  /**
-   * calculates the centroid and envelope of the aggregation
-   */
-  @Override
-  protected void calculateParam( )
-  {
-    calculateCentroid();
-    calculateEnvelope();
-    setValid( true );
+    return GeometryFactory.createGM_Point( GeometryFactory.createGM_Position( cen ), getCoordinateSystem() );
   }
 
   /**
@@ -263,7 +216,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       // nothing
     }
 
-    return sp.getAsArray().length;
+    return sp.getCoordinateDimension();
   }
 
   /**

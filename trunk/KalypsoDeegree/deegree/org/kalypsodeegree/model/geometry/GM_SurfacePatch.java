@@ -89,13 +89,6 @@ public interface GM_SurfacePatch extends GM_GenericSurface
   public double getArea( );
 
   /**
-   * @link aggregationByValue
-   * @clientCardinality 1..*
-   */
-
-  /* #GM_GenericCurve lnkGM_GenericCurve; */
-
-  /**
    * handles the geo-coordinate-transformation for a {@link GM_Object}
    */
   public GM_GenericSurface transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception;

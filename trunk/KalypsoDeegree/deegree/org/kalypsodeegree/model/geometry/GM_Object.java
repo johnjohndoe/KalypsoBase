@@ -58,7 +58,8 @@ public interface GM_Object extends IAdaptable
   GM_Envelope getEnvelope( );
 
   /**
-   * returns the boundary of a geometry
+   * returns the boundary of a geometry.<br>
+   * Currently not implemented. Always returns true
    */
   GM_Boundary getBoundary( );
 
@@ -81,7 +82,7 @@ public interface GM_Object extends IAdaptable
    */
   String getCoordinateSystem( );
 
-  /**
+ /**
    * returns true if no geometry values resp. points stored within the geometry.
    */
   boolean isEmpty( );

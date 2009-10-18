@@ -67,7 +67,6 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
@@ -420,11 +419,7 @@ public class ShapeSerializer
       {
         if( i % 100 == 0 )
           moni.subTask( String.format( "%d / %d", i, count ) ); //$NON-NLS-1$
-        final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
-        final Object geom = fe.getProperty( geomProperty );
-        if( geom != null )
-          ((GM_Object) geom).setCoordinateSystem( sourceCrs );
-
+        final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, sourceCrs );
         workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
 
         if( i % 100 == 0 )
@@ -469,7 +464,7 @@ public class ShapeSerializer
       final Collection<Feature> features = new ArrayList<Feature>( recordNum );
       for( int i = 0; i < recordNum; i++ )
       {
-        final Feature feature = dbf.getFRow( null, null, i + 1, true );
+        final Feature feature = dbf.getFRow( null, null, i + 1 );
         features.add( feature );
       }
 

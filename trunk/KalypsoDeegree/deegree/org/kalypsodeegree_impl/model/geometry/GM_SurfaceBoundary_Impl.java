@@ -42,7 +42,9 @@ import java.util.List;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
@@ -72,7 +74,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     super( exterior.getCoordinateSystem() );
     m_exterior = exterior;
     m_interior = interior;
-    setValid( false );
   }
 
   /**
@@ -95,7 +96,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * checks if this curve is completly equal to the submitted geometry
    * 
    * @param other
-   *            object to compare to
+   *          object to compare to
    */
   @Override
   public boolean equals( final Object other )
@@ -148,7 +149,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    */
   public int getCoordinateDimension( )
   {
-    return m_exterior.getPositions()[0].getAsArray().length;
+    return m_exterior.getPositions()[0].getCoordinateDimension();
   }
 
   /**
@@ -245,62 +246,46 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   /**
    * calculates the envelope of the surface boundary
    */
-  private void calculateEnvelope( )
+  @Override
+  protected GM_Envelope calculateEnvelope( )
   {
-    setEnvelope( (GM_Envelope) ((GM_Envelope_Impl) m_exterior.getEnvelope()).clone() );
+    return (GM_Envelope) ((GM_Envelope_Impl) m_exterior.getEnvelope()).clone();
   }
 
   /**
    * calculates the centroid of the surface boundary
    */
-  private void calculateCentroid( )
+  @Override
+  protected GM_Point calculateCentroid( ) throws GM_Exception
   {
-    try
+    final double[] cen = m_exterior.getCentroid().getAsArray().clone();
+    double cnt = m_exterior.getAsCurveSegment().getNumberOfPoints();
+
+    for( int i = 0; i < cen.length; i++ )
     {
-      final double[] cen = m_exterior.getCentroid().getAsArray().clone();
-      double cnt = m_exterior.getAsCurveSegment().getNumberOfPoints();
+      cen[i] *= cnt;
+    }
 
-      for( int i = 0; i < cen.length; i++ )
+    if( m_interior != null )
+    {
+      for( final GM_Ring element : m_interior )
       {
-        cen[i] *= cnt;
-      }
+        final double[] pos = element.getCentroid().getAsArray();
+        cnt += element.getAsCurveSegment().getNumberOfPoints();
 
-      if( m_interior != null )
-      {
-        for( final GM_Ring element : m_interior )
+        for( int j = 0; j < pos.length; j++ )
         {
-          final double[] pos = element.getCentroid().getAsArray();
-          cnt += element.getAsCurveSegment().getNumberOfPoints();
-
-          for( int j = 0; j < pos.length; j++ )
-          {
-            cen[j] += (pos[j] * element.getAsCurveSegment().getNumberOfPoints());
-          }
+          cen[j] += (pos[j] * element.getAsCurveSegment().getNumberOfPoints());
         }
       }
-
-      for( int j = 0; j < cen.length; j++ )
-      {
-        cen[j] /= cnt;
-      }
-
-      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() ) );
     }
-    catch( final Exception ex )
+
+    for( int j = 0; j < cen.length; j++ )
     {
-      System.out.println( ex );
+      cen[j] /= cnt;
     }
-  }
 
-  /**
-   * calculates the centroid and the envelope of the surface boundary
-   */
-  @Override
-  protected void calculateParam( )
-  {
-    calculateEnvelope();
-    calculateCentroid();
-    setValid( true );
+    return new GM_Point_Impl( GeometryFactory.createGM_Position( cen ), getCoordinateSystem() );
   }
 
   @Override
@@ -329,10 +314,10 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 

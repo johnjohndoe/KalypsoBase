@@ -253,7 +253,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
         buffer.append( AdapterValueToBinding_GML2x.TUPPLE_SEPARATOR );
       final GM_Position position = positions[i];
       final double[] posArray = position.getAsArray();
-      final int max = posArray.length;
+      final int max = position.getCoordinateDimension();
       for( int j = 0; j < max; j++ )
       {
         if( j > 0 )

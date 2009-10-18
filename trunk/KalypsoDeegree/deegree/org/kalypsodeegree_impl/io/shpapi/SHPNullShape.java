@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 public class SHPNullShape implements ISHPGeometry
 {
-
   /**
    * method: writeNullShape: writes a NullShape Object to a recBuffer <BR>
    */

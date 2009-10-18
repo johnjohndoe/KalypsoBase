@@ -471,6 +471,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       while( coordinatesTokenizer.hasMoreTokens() )
       {
         final String coordinate = coordinatesTokenizer.nextToken();
+        // TODO: only replace, if decimal != '.'; optimize performance: use char's (test for length of deicmal == 1)?
         pos[i] = Double.parseDouble( coordinate.replace( decimal, "." ) ); // FIXME: possible performance problem
         i++;
       }

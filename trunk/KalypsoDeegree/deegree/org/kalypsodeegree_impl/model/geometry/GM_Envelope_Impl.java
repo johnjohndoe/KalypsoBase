@@ -59,9 +59,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1081219767894344990L;
 
-  private final GM_Position m_max;
+  private final double m_minX;
 
-  private final GM_Position m_min;
+  private final double m_minY;
+
+  private final double m_maxX;
+
+  private final double m_maxY;
 
   /**
    * The coordinate system of the positions, contained in this envelope.
@@ -73,8 +77,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope_Impl( )
   {
-    m_min = new GM_Position_Impl();
-    m_max = new GM_Position_Impl();
+    m_minX = 0.0;
+    m_minY = 0.0;
+    m_maxX = 0.0;
+    m_maxY = 0.0;
     m_coordinateSystem = null;
   }
 
@@ -90,8 +96,20 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope_Impl( final GM_Position min, final GM_Position max, final String coordinateSystem )
   {
-    m_min = GeometryFactory.createGM_Position( min.getX() < max.getX() ? min.getX() : max.getX(), min.getY() < max.getY() ? min.getY() : max.getY() );
-    m_max = GeometryFactory.createGM_Position( min.getX() > max.getX() ? min.getX() : max.getX(), min.getY() > max.getY() ? min.getY() : max.getY() );
+    m_minX = Math.min( min.getX(), max.getX() );
+    m_minY = Math.min( min.getY(), max.getY() );
+    m_maxX = Math.max( min.getX(), max.getX() );
+    m_maxY = Math.max( min.getY(), max.getY() );
+
+    m_coordinateSystem = coordinateSystem;
+  }
+
+  public GM_Envelope_Impl( final double minX, final double minY, final double maxX, final double maxY, final String coordinateSystem )
+  {
+    m_minX = minX;
+    m_minY = minY;
+    m_maxX = maxX;
+    m_maxY = maxY;
     m_coordinateSystem = coordinateSystem;
   }
 
@@ -101,7 +119,27 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   @Override
   public Object clone( )
   {
-    return new GM_Envelope_Impl( (GM_Position) ((GM_Position_Impl) m_min).clone(), (GM_Position) ((GM_Position_Impl) m_max).clone(), m_coordinateSystem );
+    return new GM_Envelope_Impl( m_minX, m_minY, m_maxX, m_maxY, m_coordinateSystem );
+  }
+
+  public double getMinX( )
+  {
+    return m_minX;
+  }
+
+  public double getMinY( )
+  {
+    return m_minY;
+  }
+
+  public double getMaxX( )
+  {
+    return m_maxX;
+  }
+
+  public double getMaxY( )
+  {
+    return m_maxY;
   }
 
   /**
@@ -109,7 +147,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Position getMin( )
   {
-    return m_min;
+    return GeometryFactory.createGM_Position( m_minX, m_minY );
   }
 
   /**
@@ -117,7 +155,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Position getMax( )
   {
-    return m_max;
+    return GeometryFactory.createGM_Position( m_maxX, m_maxY );
   }
 
   /**
@@ -125,7 +163,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public double getWidth( )
   {
-    return this.getMax().getX() - this.getMin().getX();
+    return m_maxX - m_minX;
   }
 
   /**
@@ -133,7 +171,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public double getHeight( )
   {
-    return this.getMax().getY() - this.getMin().getY();
+    return m_maxY - m_minY;
   }
 
   /**
@@ -141,7 +179,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public boolean contains( final double pointX, final double pointY )
   {
-    return (pointX >= m_min.getX()) && (pointX <= m_max.getX()) && (pointY >= m_min.getY()) && (pointY <= m_max.getY());
+    return (pointX >= m_minX) && (pointX <= m_maxX) && (pointY >= m_minY) && (pointY <= m_maxY);
   }
 
   /**
@@ -162,98 +200,22 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       return true;
 
     // coordinates of this GM_Envelope's BBOX
-    final double minx1 = m_min.getX();
-    final double miny1 = m_min.getY();
-    final double maxx1 = m_max.getX();
-    final double maxy1 = m_max.getY();
+    final double minx1 = m_minX;
+    final double miny1 = m_minY;
+    final double maxx1 = m_maxX;
+    final double maxy1 = m_maxY;
 
     // coordinates of the other GM_Envelope's BBOX
-    final double minx2 = bb.getMin().getX();
-    final double miny2 = bb.getMin().getY();
-    final double maxx2 = bb.getMax().getX();
-    final double maxy2 = bb.getMax().getY();
+    final double minx2 = bb.getMinX();
+    final double miny2 = bb.getMinY();
+    final double maxx2 = bb.getMaxX();
+    final double maxy2 = bb.getMaxY();
 
     if( !(Math.max( minx1, minx2 ) <= Math.min( maxx1, maxx2 )) )
       return false;
     if( !(Math.max( miny1, miny2 ) <= Math.min( maxy1, maxy2 )) )
       return false;
     return true;
-    // // special cases: box2 lays completly inside box1
-    // if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && (
-    // north1 >= north2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && (
-    // north1 <= north2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // // in any other case of intersection, at least one line of the BBOX has
-    // // to cross a line of the other BBOX
-    // // check western boundary of box 1
-    // // "touching" boxes must not intersect
-    // if( ( west1 >= west2 ) && ( west1 < east2 ) )
-    // {
-    // if( ( south1 <= south2 ) && ( north1 > south2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // if( ( south1 < north2 ) && ( north1 >= north2 ) )
-    // {
-    // return true;
-    // }
-    // }
-    //
-    // // check eastern boundary of box 1
-    // // "touching" boxes must not intersect
-    // if( ( east1 > west2 ) && ( east1 <= east2 ) )
-    // {
-    // if( ( south1 <= south2 ) && ( north1 > south2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // if( ( south1 < north2 ) && ( north1 >= north2 ) )
-    // {
-    // return true;
-    // }
-    // }
-    //
-    // // check southern boundary of box 1
-    // // "touching" boxes must not intersect
-    // if( ( south1 >= south2 ) && ( south1 < north2 ) )
-    // {
-    // if( ( west1 <= west2 ) && ( east1 > west2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // if( ( west1 < east2 ) && ( east1 >= east2 ) )
-    // {
-    // return true;
-    // }
-    // }
-    //
-    // // check northern boundary of box 1
-    // // "touching" boxes must not intersect
-    // if( ( north1 > south2 ) && ( north1 <= north2 ) )
-    // {
-    // if( ( west1 <= west2 ) && ( east1 > west2 ) )
-    // {
-    // return true;
-    // }
-    //
-    // if( ( west1 < east2 ) && ( east1 >= east2 ) )
-    // {
-    // return true;
-    // }
-    // }
-    //
-    // return false;
   }
 
   /**
@@ -302,11 +264,8 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     final double xmax = rect.getX() + rect.getWidth();
     final double ymax = rect.getY() + rect.getHeight();
 
-    final GM_Position p1 = new GM_Position_Impl( xmin, ymin );
-    final GM_Position p2 = new GM_Position_Impl( xmax, ymax );
-
     // TODO Check coordinate systems, if equal.
-    return new GM_Envelope_Impl( p1, p2, m_coordinateSystem );
+    return new GM_Envelope_Impl( xmin, ymin, xmax, ymax, m_coordinateSystem );
   }
 
   /**
@@ -335,14 +294,28 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( !ObjectUtils.equals( m_coordinateSystem, otherEnvelope.getCoordinateSystem() ) )
       return false;
 
-    return m_min.equals( otherEnvelope.getMin(), exact ) && m_max.equals( otherEnvelope.getMax(), exact );
+    final double mute = exact ? Double.MIN_NORMAL : GM_Position.MUTE;
+
+    if( Math.abs( m_minX - otherEnvelope.getMinX() ) > mute )
+      return false;
+    if( Math.abs( m_minY - otherEnvelope.getMinY() ) > mute )
+      return false;
+    if( Math.abs( m_maxX - otherEnvelope.getMaxX() ) > mute )
+      return false;
+    if( Math.abs( m_maxY - otherEnvelope.getMaxY() ) > mute )
+      return false;
+
+    return true;
   }
 
   public GM_Envelope getBuffer( final double b )
   {
-    final GM_Position bmin = new GM_Position_Impl( new double[] { m_min.getX() - b, m_min.getY() - b } );
-    final GM_Position bmax = new GM_Position_Impl( new double[] { m_max.getX() + b, m_max.getY() + b } );
-    return GeometryFactory.createGM_Envelope( bmin, bmax, m_coordinateSystem );
+    final double minX = m_minX - b;
+    final double minY = m_minY - b;
+    final double maxX = m_maxX + b;
+    final double maxY = m_maxY + b;
+
+    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, m_coordinateSystem );
   }
 
   public GM_Envelope getMerged( final GM_Position pos )
@@ -350,10 +323,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( pos == null )
       return this;
 
-    final double minx = Math.min( m_min.getX(), pos.getX() );
-    final double miny = Math.min( m_min.getY(), pos.getY() );
-    final double maxx = Math.max( m_max.getX(), pos.getX() );
-    final double maxy = Math.max( m_max.getY(), pos.getY() );
+    final double minx = Math.min( m_minX, pos.getX() );
+    final double miny = Math.min( m_minY, pos.getY() );
+    final double maxx = Math.max( m_maxX, pos.getX() );
+    final double maxy = Math.max( m_maxY, pos.getY() );
 
     // TODO Check coordinate systems, if equal.
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
@@ -368,10 +341,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     if( envelope == null )
       return this;
 
-    final double minx = Math.min( m_min.getX(), envelope.getMin().getX() );
-    final double miny = Math.min( m_min.getY(), envelope.getMin().getY() );
-    final double maxx = Math.max( m_max.getX(), envelope.getMax().getX() );
-    final double maxy = Math.max( m_max.getY(), envelope.getMax().getY() );
+    final double minx = Math.min( m_minX, envelope.getMin().getX() );
+    final double miny = Math.min( m_minY, envelope.getMin().getY() );
+    final double maxx = Math.max( m_maxX, envelope.getMax().getX() );
+    final double maxy = Math.max( m_maxY, envelope.getMax().getY() );
 
     // TODO Check coordinate systems, if equal.
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
@@ -381,8 +354,10 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public String toString( )
   {
     String ret = null;
-    ret = "min = " + m_min;
-    ret += (" max = " + m_max + "\n");
+    ret = "minX = " + m_minX + "\n";
+    ret += "minY = " + m_minY + "\n";
+    ret += "maxX = " + m_maxX + "\n";
+    ret += "maxY = " + m_maxY + "\n";
     return ret;
   }
 

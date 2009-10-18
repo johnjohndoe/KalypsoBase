@@ -40,7 +40,6 @@ import java.io.Serializable;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -181,60 +180,17 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * calculates the bounding box / envelope of the aggregation
-   */
-  protected void calculateEnvelope( )
-  {
-    final int size = getSize();
-    if( size == 0 )
-      return;
-
-    final GM_Envelope bb = getCurveAt( 0 ).getEnvelope();
-
-    final double[] min = bb.getMin().getAsArray().clone();
-    final double[] max = bb.getMax().getAsArray().clone();
-
-    for( int i = 1; i < size; i++ )
-    {
-      final double[] pos1 = getCurveAt( i ).getEnvelope().getMin().getAsArray();
-      final double[] pos2 = getCurveAt( i ).getEnvelope().getMax().getAsArray();
-
-      for( int j = 0; j < pos1.length; j++ )
-      {
-        if( pos1[j] < min[j] )
-        {
-          min[j] = pos1[j];
-        }
-        else if( pos1[j] > max[j] )
-        {
-          max[j] = pos1[j];
-        }
-
-        if( pos2[j] < min[j] )
-        {
-          min[j] = pos2[j];
-        }
-        else if( pos2[j] > max[j] )
-        {
-          max[j] = pos2[j];
-        }
-      }
-    }
-
-    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
-  }
-
-  /**
    * calculates the centroid of the aggregation
    */
-  protected void calculateCentroid( )
+  @Override
+  protected GM_Point calculateCentroid( )
   {
     double cnt = 0;
 
     final int size = getSize();
     // If we are empty we dont have a centroid
     if( size == 0 )
-      return;
+      return EMPTY_CENTROID;
 
     final GM_Point gmp = getCurveAt( 0 ).getCentroid();
 
@@ -263,18 +219,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       cen[j] = cen[j] / cnt / size;
     }
 
-    setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
-  }
-
-  /**
-   * calculates the centroid and envelope of the aggregation
-   */
-  @Override
-  protected void calculateParam( )
-  {
-    calculateCentroid();
-    calculateEnvelope();
-    setValid( true );
+    return GeometryFactory.createGM_Point( GeometryFactory.createGM_Position( cen ), getCoordinateSystem() );
   }
 
   /**
@@ -306,7 +251,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     {
     }
     // TODO: NPE here, if above exception is thrown
-    return sp.getPositionAt( 0 ).getAsArray().length;
+    return sp.getPositionAt( 0 ).getCoordinateDimension();
   }
 
   /**

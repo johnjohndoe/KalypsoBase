@@ -45,11 +45,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * default implementation of the GM_SurfacePatch
- * interface from package jago.model. the class is abstract because it should be specialized by derived classes
- * <code>GM_Polygon</code> for example ------------------------------------------------------------
+ * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
+ * should be specialized by derived classes <code>GM_Polygon</code> for example
+ * ------------------------------------------------------------
  * 
  * @version 11.6.2001
  * @author Andreas Poth
@@ -59,22 +60,25 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
 
-  static GM_SurfaceInterpolation INTERPOLATION_NONE = new GM_SurfaceInterpolation_Impl( );
-  
+  static GM_SurfaceInterpolation INTERPOLATION_NONE = new GM_SurfaceInterpolation_Impl();
+
+  /** Placeholder if the centroid cannot be created */
+  protected static final GM_Point EMPTY_CENTROID = new GM_Point_Impl( Double.NaN, Double.NaN, null );
+
   protected String m_crs = null;
 
   protected GM_Envelope m_envelope = null;
 
-  protected GM_Point m_centroid = null;
+  private GM_Point m_centroid = null;
 
   // Not used anywhere; so for the moment we can just return a constant...
-//  protected GM_SurfaceInterpolation m_interpolation = null;
+// protected GM_SurfaceInterpolation m_interpolation = null;
 
   protected GM_Position[] m_exteriorRing = null;
 
   protected GM_Position[][] m_interiorRings = null;
 
-  protected double area = 0;
+  private double m_area = 0;
 
   protected boolean m_valid = false;
 
@@ -143,40 +147,8 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
 
   private void calculateEnvelope( )
   {
-    final double[] min = m_exteriorRing[0].getAsArray().clone();
-    final double[] max = min.clone();
-    final int ENV_DIM = min.length;// dim taken from first position
-
-    for( int i = 1; i < m_exteriorRing.length; i++ )
-    {
-      final double[] pos = m_exteriorRing[i].getAsArray();
-
-      // j<ENV_DIM allows cohabitation of point with differen dimention
-      for( int j = 0; (j < pos.length) && (j < ENV_DIM); j++ )
-      {
-        if( pos[j] < min[j] )
-        {
-          min[j] = pos[j];
-        }
-        else if( pos[j] > max[j] )
-        {
-          max[j] = pos[j];
-        }
-      }
-    }
-
-    m_envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() );
+    m_envelope = GeometryUtilities.envelopeFromRing( m_exteriorRing, getCoordinateSystem() );
   }
-
-//  /**
-//   * The interpolation determines the surface interpolation mechanism used for this GM_SurfacePatch. This mechanism uses
-//   * the control points and control parameters defined in the various subclasses to determine the position of this GM_
-//   * SurfacePatch.
-//   */
-//  public GM_SurfaceInterpolation getInterpolation( )
-//  {
-//    return INTERPOLATION_NONE;
-//  }
 
   /**
    * returns the bounding box of the surface patch
@@ -226,9 +198,9 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
    * This function sets the coordinate system.
    * 
    * @param crs
-   *            The coordinate system.
+   *          The coordinate system.
    */
-  public void setCoordinateSystem( String crs )
+  public void setCoordinateSystem( final String crs )
   {
     m_crs = crs;
   }
@@ -289,16 +261,18 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     return true;
   }
 
-  /**
-   * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
-   * be on the object.
-   */
   public GM_Point getCentroid( )
   {
-    if( !isValid() )
+    if( m_centroid == null )
     {
-      calculateParam();
+      // Only recalculate centroid if invalid (=null)
+      m_centroid = calculateCentroidArea();
     }
+
+    // if empty, just return null
+    if( m_centroid == EMPTY_CENTROID )
+      return null;
+
     return m_centroid;
   }
 
@@ -309,19 +283,18 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
    */
   public double getArea( )
   {
-    if( !isValid() )
-    {
-      calculateParam();
-    }
-    return area;
+    // TODO: Still a bit hacky: centroid and area are calculated at the same moment;
+    // we just make sure that the centroid is recalculated by calling getCentroid
+    getCentroid();
+    return m_area;
   }
 
   /**
    * calculates the centroid and area of the surface patch. this method is only valid for the two-dimensional case.
    */
-  private void calculateCentroidArea( )
+  protected GM_Point calculateCentroidArea( )
   {
-    final GM_Position centroid_ = calculateCentroid( m_exteriorRing );
+    final GM_Position centroid_ = GeometryUtilities.centroidFromRing( m_exteriorRing );
     double varea = calculateArea( m_exteriorRing );
 
     double x = centroid_.getX();
@@ -335,15 +308,15 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
       for( final GM_Position[] element : m_interiorRings )
       {
         final double dum = -1 * calculateArea( element );
-        final GM_Position temp = calculateCentroid( element );
+        final GM_Position temp = GeometryUtilities.centroidFromRing( element );
         x += (temp.getX() * dum);
         y += (temp.getY() * dum);
         varea += dum;
       }
     }
 
-    area = varea;
-    m_centroid = new GM_Point_Impl( x / varea, y / varea, m_crs );
+    m_area = varea;
+    return new GM_Point_Impl( x / varea, y / varea, m_crs );
   }
 
   /**
@@ -352,7 +325,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   protected void calculateParam( )
   {
     calculateEnvelope();
-    calculateCentroidArea();
     setValid( true );
   }
 
@@ -383,57 +355,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     }
 
     return Math.abs( atmp / 2 );
-  }
-
-  /**
-   * calculates the centroid of the surface patch
-   * <p>
-   * taken from gems iv (modified)
-   * <p>
-   * </p>
-   * this method is only valid for the two-dimensional case.
-   */
-  protected GM_Position calculateCentroid( final GM_Position[] point )
-  {
-
-    int i;
-    int j;
-    double ai;
-    double x;
-    double y;
-    double atmp = 0;
-    double xtmp = 0;
-    double ytmp = 0;
-
-    // move points to the origin of the coordinate space
-    // (to solve precision issues)
-    final double transX = point[0].getX();
-    final double transY = point[0].getY();
-
-    for( i = point.length - 1, j = 0; j < point.length; i = j, j++ )
-    {
-      final double x1 = point[i].getX() - transX;
-      final double y1 = point[i].getY() - transY;
-      final double x2 = point[j].getX() - transX;
-      final double y2 = point[j].getY() - transY;
-      ai = (x1 * y2) - (x2 * y1);
-      atmp += ai;
-      xtmp += ((x2 + x1) * ai);
-      ytmp += ((y2 + y1) * ai);
-    }
-
-    if( atmp != 0 )
-    {
-      x = xtmp / (3 * atmp) + transX;
-      y = ytmp / (3 * atmp) + transY;
-    }
-    else
-    {
-      x = point[0].getX();
-      y = point[0].getY();
-    }
-
-    return new GM_Position_Impl( x, y );
   }
 
   @Override

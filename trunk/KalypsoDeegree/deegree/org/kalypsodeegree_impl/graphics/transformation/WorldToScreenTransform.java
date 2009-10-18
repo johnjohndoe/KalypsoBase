@@ -373,7 +373,7 @@ public class WorldToScreenTransform implements GeoTransform
     {
       // transform the bounding box of the request to EPSG:4326
       final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" ); //$NON-NLS-1$
-      return transformer.transformEnvelope( m_sourceRect, crs );
+      return transformer.transformEnvelope( m_sourceRect );
     }
     catch( final Exception e )
     {

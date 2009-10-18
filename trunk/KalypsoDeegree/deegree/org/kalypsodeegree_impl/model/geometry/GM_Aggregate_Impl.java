@@ -43,6 +43,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -112,7 +114,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       this.add( aggregate.getObjectAt( i ) );
     }
 
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -122,7 +124,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     m_aggregate.add( gmo );
 
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -148,7 +150,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     m_aggregate.add( index, gmo );
 
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -174,7 +176,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     m_aggregate.set( index, gmo );
 
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -202,7 +204,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       Debug.debugException( e, "" );
     }
 
-    setValid( false );
+    invalidate();
 
     return gmo_;
   }
@@ -227,7 +229,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     final GM_Object gmo = m_aggregate.remove( index );
 
-    setValid( false );
+    invalidate();
 
     return gmo;
   }
@@ -238,8 +240,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   public void removeAll( )
   {
     m_aggregate.clear();
-    setEnvelope( null );
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -303,7 +304,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
       {
         ((GM_Object_Impl) getObjectAt( i )).setCoordinateSystem( crs );
       }
-      setValid( false );
+      invalidate();
     }
   }
 
@@ -320,13 +321,12 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
         final GM_Object gmo = getObjectAt( i );
         gmo.translate( d );
       }
-      setValid( false );
     }
     catch( final Exception e )
     {
       Debug.debugException( e, "" );
     }
-    setValid( false );
+    invalidate();
   }
 
   @Override
@@ -441,4 +441,46 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
     return super.getAdapter( adapter );
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
+   */
+  @Override
+  protected GM_Boundary calculateBoundary( )
+  {
+    // TODO: implement: what is the boundary of a GM_Aggregate?
+    return GM_Object_Impl.EMPTY_BOUNDARY;
+  }
+
+  /**
+   * calculates the bounding box / envelope of the aggregation
+   */
+  @Override
+  protected GM_Envelope calculateEnvelope( )
+  {
+    if( getSize() == 0 )
+      return EMPTY_ENVELOPE;
+
+    final GM_Envelope bb = getObjectAt( 0 ).getEnvelope();
+
+    double minX = bb.getMinX();
+    double minY = bb.getMinY();
+    double maxX = bb.getMaxX();
+    double maxY = bb.getMaxY();
+
+    final int size = getSize();
+    for( int i = 1; i < size; i++ )
+    {
+      final GM_Object object = getObjectAt( i );
+      final GM_Envelope envelope = object.getEnvelope();
+
+      minX = Math.min( minX, envelope.getMinX() );
+      minY = Math.min( minY, envelope.getMinY() );
+      maxX = Math.max( maxX, envelope.getMaxX() );
+      maxY = Math.max( maxY, envelope.getMaxY() );
+    }
+
+    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, getCoordinateSystem() );
+  }
+
 }

@@ -40,9 +40,11 @@ import java.util.Arrays;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -52,6 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * default implementation of the GM_Ring interface of the
@@ -93,29 +96,10 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * calculates the envelope
    */
-  private void calculateEnvelope( )
+  @Override
+  protected GM_Envelope calculateEnvelope( )
   {
-    final double[] min = m_points[0].getAsArray().clone();
-    final double[] max = min.clone();
-
-    for( int i = 1; i < m_points.length; i++ )
-    {
-      final double[] pos = m_points[i].getAsArray();
-
-      for( int j = 0; j < pos.length; j++ )
-      {
-        if( pos[j] < min[j] )
-        {
-          min[j] = pos[j];
-        }
-        else if( pos[j] > max[j] )
-        {
-          max[j] = pos[j];
-        }
-      }
-    }
-
-    setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
+    return GeometryUtilities.envelopeFromRing( m_points, getCoordinateSystem() );
   }
 
   /**
@@ -151,7 +135,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    */
   public int getCoordinateDimension( )
   {
-    return getPositions()[0].getAsArray().length;
+    return getPositions()[0].getCoordinateDimension();
   }
 
   /**
@@ -193,7 +177,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       throw new GM_Exception( "StartPoint of ring isn't equal to EndPoint!" );
     }
 
-    setValid( false );
+    invalidate();
   }
 
   /**
@@ -364,30 +348,20 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * calculates the centroid of the ring
    */
-  protected void calculateCentroid( )
+  @Override
+  protected GM_Point calculateCentroid( )
   {
-    final double[] cen = new double[getCoordinateDimension()];
-
-    for( final GM_Position element : m_points )
-    {
-      for( int j = 0; j < getCoordinateDimension(); j++ )
-      {
-        cen[j] += (element.getAsArray()[j] / m_points.length);
-      }
-    }
-
-    setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), getCoordinateSystem() ) );
+    return GeometryUtilities.centroidFromRing( m_points, getCoordinateSystem() );
   }
 
   /**
-   * calculates the centroid and the envelope of the ring
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
    */
   @Override
-  protected void calculateParam( )
+  protected GM_Boundary calculateBoundary( )
   {
-    calculateCentroid();
-    calculateEnvelope();
-    setValid( true );
+    // TODO: implement,, what is the boundary of a boundary?
+    return GM_Object_Impl.EMPTY_BOUNDARY;
   }
 
   @Override
@@ -417,7 +391,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
