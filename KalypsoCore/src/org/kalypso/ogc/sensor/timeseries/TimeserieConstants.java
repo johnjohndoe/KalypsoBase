@@ -136,6 +136,7 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   // METADATEN
 
+  // FIXME: internationalisierung zurücknehmen!
   public final static String MD_TIMEZONE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.17" ); //$NON-NLS-1$
 
   public final static String MD_WQWECHMANN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.18" ); //$NON-NLS-1$
@@ -171,8 +172,15 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
+   * 
+   * @deprecated Es sollte nur noch {@link #MD_VORHERSAGE_START} und {@link #MD_VORHERSAGE_ENDE} benutzt werden.
    */
+  @Deprecated
   public final static String MD_VORHERSAGE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.33" ); //$NON-NLS-1$
+
+  public final static String MD_VORHERSAGE_START = "Vorhersage Start"; //$NON-NLS-1$
+
+  public final static String MD_VORHERSAGE_ENDE = "Vorhersage Ende"; //$NON-NLS-1$
 
   public final static String MD_DATE_BEGIN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.34" ); //$NON-NLS-1$
 

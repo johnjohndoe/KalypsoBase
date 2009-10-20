@@ -253,8 +253,8 @@ public class TimeserieUtils extends TimeserieConstants
       final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
       final String toStr = DateUtilities.printDateTime( to, timeZone );
-      final String fromTo = String.format( "%s;%s", fromStr, toStr ); //$NON-NLS-1$
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, fromTo ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
     }
   }
 
@@ -273,6 +273,18 @@ public class TimeserieUtils extends TimeserieConstants
       return null;
 
     final MetadataList mdl = obs.getMetadataList();
+
+    final String forecastFrom = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE_START );
+    final String forecastTo = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE_ENDE );
+    if( forecastFrom != null || forecastTo != null )
+    {
+      // new version: if one of the two is set, we assume that the zml is in new format
+      final Date from = forecastFrom == null ? null : DateUtilities.parseDateTime( forecastFrom );
+      final Date to = forecastTo == null ? null : DateUtilities.parseDateTime( forecastTo );
+      return new DateRange( from, to );
+    }
+
+    // Backwards compability: still try to parse old 'Vorhersage' metadata
     final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
     if( range != null )
     {
