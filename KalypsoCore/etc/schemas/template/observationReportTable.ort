@@ -1,0 +1,15 @@
+<observationReportTable>
+	<rows>
+		<observation xlink:href="Ergebnisse/Vorhersage/Ditfurt.zml"/>
+		<observation xlink:href="Ergebnisse/Vorhersage/Hadmersleben.zml"/>
+	</rows>
+	<columns>
+		<metadata name="Wiski_StationName" defaultValue="<Unbekannte Station>"/>					
+		<timeValueBlock start="${VorhersageStart}" number="17" field="HOUR" offset="6" timeAxis="date" timeFormat="TODO">
+		  <valueAxis name="W" noValue="-">
+		      <format from="${VorhersageStart}" to="${UnsichereVorhersageStart}" >%.0f</format>
+		      <format from="${UnsichereVorhersageStart}" to="${UnsichereVorhersageEnde}">(%.0f)</format>
+		  </valueAxis>
+		</timeValueBlock>
+	</columns>
+</observationReportTable>

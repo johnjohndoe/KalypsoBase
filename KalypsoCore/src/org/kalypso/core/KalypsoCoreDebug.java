@@ -60,5 +60,9 @@ public class KalypsoCoreDebug
 
   public static Debug GISMAPVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
 
+  public static Debug FEATUREVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
+
+  public static Debug OBSTABLEREPORT_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/obstablereport" ); //$NON-NLS-1$
+
   public static Debug PERF_SERIALIZE_GML = new Debug( KalypsoCorePlugin.getDefault(), "/perf/serialization/gml" ); //$NON-NLS-1$
 }
