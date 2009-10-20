@@ -63,30 +63,30 @@
       <complexContent>
         <extension base="ort:AbstractColumnType">
           <sequence>
-            <element name="valueAxis">
+            <element name="valueAxis" minOccurs="1" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element name="format">
+                  <element name="format" minOccurs="1" maxOccurs="unbounded">
                     <complexType>
                       <simpleContent>
                         <extension base="string">
-                          <attribute name="from" type="date" />
-                          <attribute name="to" type="date" />
+                          <attribute name="from" type="string" />
+                          <attribute name="to" type="string" />
                         </extension>
                       </simpleContent>
                     </complexType>
                   </element>
                 </sequence>
-                <attribute name="name" type="string" use="required" />
+                <attribute name="axisType" type="string" use="required" />
                 <attribute name="noValue" type="string" use="optional" />
               </complexType>
             </element>
           </sequence>
-          <attribute name="start" type="date" use="required"></attribute>
+          <attribute name="start" type="string" use="required"></attribute>
           <attribute name="number" type="int" use="required"></attribute>
           <attribute name="field" type="string" use="required"></attribute>
           <attribute name="offset" type="int" use="required"></attribute>
-          <attribute name="timeAxis" type="string" use="required"></attribute>
+          <attribute name="timeAxisType" type="string" use="required"></attribute>
           <attribute name="timeFormat" type="string" default="%t"></attribute>
         </extension>
       </complexContent>
