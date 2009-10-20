@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="observationReportTable.template.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ort="observationReportTable.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd"></import>
+
+  <element name="observationReportTable">
+    <complexType>
+      <sequence>
+        <element name="rows" minOccurs="1" maxOccurs="1">
+          <annotation>
+            <documentation>Contains the elements that represent rows of the table.</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element name="observation" minOccurs="1" maxOccurs="unbounded">
+                <annotation>
+                  <documentation>A row represented by an observation.</documentation>
+                </annotation>
+                <complexType>
+                  <attribute ref="xlink:href" use="required"></attribute>
+                </complexType>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+
+        <element name="columns" minOccurs="1" maxOccurs="1">
+          <annotation>
+            <documentation>Contains the elements that represent columns of the table.</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element ref="ort:abstractColumn" minOccurs="1" maxOccurs="unbounded" />
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="abstractColumn" type="ort:AbstractColumnType">
+    <annotation>
+      <documentation>An element representing one or more columns.</documentation>
+    </annotation>
+  </element>
+
+  <complexType name="AbstractColumnType" />
+
+  <element name="metadata" substitutionGroup="ort:abstractColumn">
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractColumnType">
+          <attribute name="name" type="string" use="required" />
+          <attribute name="defaultValue" type="string" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="timeValueBlock" substitutionGroup="ort:abstractColumn">
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractColumnType">
+          <sequence>
+            <element name="valueAxis">
+              <complexType>
+                <sequence>
+                  <element name="format">
+                    <complexType>
+                      <simpleContent>
+                        <extension base="string">
+                          <attribute name="from" type="date" />
+                          <attribute name="to" type="date" />
+                        </extension>
+                      </simpleContent>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="name" type="string" use="required" />
+                <attribute name="noValue" type="string" use="optional" />
+              </complexType>
+            </element>
+          </sequence>
+          <attribute name="start" type="date" use="required"></attribute>
+          <attribute name="number" type="int" use="required"></attribute>
+          <attribute name="field" type="string" use="required"></attribute>
+          <attribute name="offset" type="int" use="required"></attribute>
+          <attribute name="timeAxis" type="string" use="required"></attribute>
+          <attribute name="timeFormat" type="string" default="%t"></attribute>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>

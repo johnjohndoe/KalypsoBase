@@ -54,7 +54,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -88,9 +87,14 @@ public class TemplateUtilitites
   public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
 
   /* Featureview */
+  public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
+
   public static final org.kalypso.template.featureview.ObjectFactory OF_FEATUREVIEW = new org.kalypso.template.featureview.ObjectFactory();
 
-  public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
+  /* Observation table report */
+  public static final JAXBContext JC_OBSREPORTTABLE = JaxbUtilities.createQuiet( org.kalypso.template.observationreporttable.ObjectFactory.class );
+
+  public static final org.kalypso.template.observationreporttable.ObjectFactory OF_OBSREPORTTABLE = new org.kalypso.template.observationreporttable.ObjectFactory();
 
   private TemplateUtilitites( )
   {
@@ -100,6 +104,11 @@ public class TemplateUtilitites
   public static Schema getFeatureviewSchema( )
   {
     return getTemplateSchema( "featureview.xsd" ); //$NON-NLS-1$
+  }
+
+  public static Schema getObstablereportSchema( )
+  {
+    return getTemplateSchema( "observationReportTable.xsd" ); //$NON-NLS-1$
   }
 
   public static synchronized Schema getGismapviewSchema( )
@@ -150,7 +159,7 @@ public class TemplateUtilitites
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( KalypsoCoreDebug.GISMAPVIEW_VALIDATE.isEnabled() )
       unmarshaller.setSchema( getGismapviewSchema() );
 
     return unmarshaller;
@@ -160,8 +169,18 @@ public class TemplateUtilitites
   {
     final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
 
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/featureview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( KalypsoCoreDebug.FEATUREVIEW_VALIDATE.isEnabled() )
       unmarshaller.setSchema( TemplateUtilitites.getFeatureviewSchema() );
+
+    return unmarshaller;
+  }
+
+  public static Unmarshaller createObservationReportTableUnmarshaller( ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = JC_OBSREPORTTABLE.createUnmarshaller();
+
+// if( KalypsoCoreDebug.OBSTABLEREPORT_VALIDATE.isEnabled() )
+      unmarshaller.setSchema( TemplateUtilitites.getObstablereportSchema() );
 
     return unmarshaller;
   }
