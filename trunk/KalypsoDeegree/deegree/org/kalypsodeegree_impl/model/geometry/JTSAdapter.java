@@ -146,35 +146,48 @@ public class JTSAdapter
    * <p>
    * 
    * @param geometry
-   *            the JTS- <tt>Geometry</tt> to be converted
+   *          the JTS- <tt>Geometry</tt> to be converted
+   * @param crs
+   *          The corrdinate system, will be set to the converted {@link GM_Object}
    * @return the corresponding <tt>GM_Object</tt>
    * @throws GM_Exception
-   *             if type unsupported or conversion failed
+   *           if type unsupported or conversion failed
    */
-  public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
+  public static GM_Object wrap( final Geometry geometry, final String crs ) throws GM_Exception
   {
     if( geometry instanceof Point )
-      return wrap( (Point) geometry );
+      return wrap( (Point) geometry, crs );
 
     if( geometry instanceof MultiPoint )
-      return wrap( (MultiPoint) geometry );
+      return wrap( (MultiPoint) geometry, crs );
 
     if( geometry instanceof LineString )
-      return wrap( (LineString) geometry );
+      return wrap( (LineString) geometry, crs );
 
     if( geometry instanceof MultiLineString )
-      return wrap( (MultiLineString) geometry );
+      return wrap( (MultiLineString) geometry, crs );
 
     if( geometry instanceof Polygon )
-      return wrap( (Polygon) geometry );
+      return wrap( (Polygon) geometry, crs );
 
     if( geometry instanceof MultiPolygon )
-      return wrap( (MultiPolygon) geometry );
+      return wrap( (MultiPolygon) geometry, crs );
 
     if( geometry instanceof GeometryCollection )
-      return wrap( (GeometryCollection) geometry );
+      return wrap( (GeometryCollection) geometry, crs );
 
     throw new GM_Exception( "JTSAdapter.wrap does not support type '" + geometry.getClass().getName() + "'!" );
+  }
+
+  /**
+   * Same as {@link #wrap(Geometry, null)}.
+   * 
+   * @deprecated Use {@link #wrap(Geometry, String)} instead. The coordonate system should always be known.
+   */
+  @Deprecated
+  public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
+  {
+    return wrap( geometry, null );
   }
 
   /**
@@ -370,13 +383,13 @@ public class JTSAdapter
    *            a <tt>Point</tt> object
    * @return the corresponding <tt>GM_Point</tt>
    */
-  private static GM_Point wrap( final Point point )
+  private static GM_Point wrap( final Point point, final String crs )
   {
     final Coordinate coord = point.getCoordinate();
     if( Double.isNaN( coord.z ) )
-      return new GM_Point_Impl( coord.x, coord.y, null );
+      return new GM_Point_Impl( coord.x, coord.y, crs );
 
-    return new GM_Point_Impl( coord.x, coord.y, coord.z, null );
+    return new GM_Point_Impl( coord.x, coord.y, coord.z, crs );
   }
 
   /**
@@ -387,14 +400,14 @@ public class JTSAdapter
    *            a <tt>MultiPoint</tt> object
    * @return the corresponding <tt>GM_MultiPoint</tt>
    */
-  private static GM_MultiPoint wrap( final MultiPoint multi )
+  private static GM_MultiPoint wrap( final MultiPoint multi, final String crs )
   {
     final GM_Point[] gmPoints = new GM_Point[multi.getNumGeometries()];
     for( int i = 0; i < gmPoints.length; i++ )
     {
-      gmPoints[i] = wrap( (Point) multi.getGeometryN( i ) );
+      gmPoints[i] = wrap( (Point) multi.getGeometryN( i ), crs );
     }
-    return new GM_MultiPoint_Impl( gmPoints, null );
+    return new GM_MultiPoint_Impl( gmPoints, crs );
   }
 
   /**
@@ -406,13 +419,13 @@ public class JTSAdapter
    * @return the corresponding <tt>GM_Curve</tt>
    * @throws GM_Exception
    */
-  private static GM_Curve wrap( final LineString line ) throws GM_Exception
+  private static GM_Curve wrap( final LineString line, final String crs ) throws GM_Exception
   {
     final Coordinate[] coords = line.getCoordinates();
     final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
       positions[i] = GeometryFactory.createGM_Position( coords[i].x, coords[i].y, coords[i].z );
-    return GeometryFactory.createGM_Curve( positions, null );
+    return GeometryFactory.createGM_Curve( positions, crs );
   }
 
   /**
@@ -424,14 +437,14 @@ public class JTSAdapter
    * @return the corresponding <tt>GM_MultiCurve</tt>
    * @throws GM_Exception
    */
-  private static GM_MultiCurve wrap( final MultiLineString multi ) throws GM_Exception
+  private static GM_MultiCurve wrap( final MultiLineString multi, final String crs ) throws GM_Exception
   {
     final GM_Curve[] curves = new GM_Curve[multi.getNumGeometries()];
     for( int i = 0; i < curves.length; i++ )
     {
-      curves[i] = wrap( (LineString) multi.getGeometryN( i ) );
+      curves[i] = wrap( (LineString) multi.getGeometryN( i ), crs );
     }
-    return GeometryFactory.createGM_MultiCurve( curves );
+    return GeometryFactory.createGM_MultiCurve( curves, crs );
   }
 
   /**
@@ -443,7 +456,7 @@ public class JTSAdapter
    * @return the corresponding <tt>GM_Surface</tt> object
    * @throws GM_Exception
    */
-  private static GM_Surface<GM_Polygon> wrap( final Polygon polygon ) throws GM_Exception
+  private static GM_Surface<GM_Polygon> wrap( final Polygon polygon, final String crs ) throws GM_Exception
   {
     final GM_Position[] exteriorRing = createGMPositions( polygon.getExteriorRing() );
     final GM_Position[][] interiorRings = new GM_Position[polygon.getNumInteriorRing()][];
@@ -452,7 +465,7 @@ public class JTSAdapter
     {
       interiorRings[i] = createGMPositions( polygon.getInteriorRingN( i ) );
     }
-    final GM_Polygon patch = new GM_Polygon_Impl( exteriorRing, interiorRings, null );
+    final GM_Polygon patch = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
 
     return new GM_Surface_Impl<GM_Polygon>( patch );
   }
@@ -466,14 +479,14 @@ public class JTSAdapter
    * @return the corresponding <tt>GM_MultiSurface</tt> object
    * @throws GM_Exception
    */
-  private static GM_MultiSurface wrap( final MultiPolygon multiPolygon ) throws GM_Exception
+  private static GM_MultiSurface wrap( final MultiPolygon multiPolygon, final String crs ) throws GM_Exception
   {
     final GM_Surface< ? >[] surfaces = new GM_Surface[multiPolygon.getNumGeometries()];
     for( int i = 0; i < surfaces.length; i++ )
     {
-      surfaces[i] = wrap( (Polygon) multiPolygon.getGeometryN( i ) );
+      surfaces[i] = wrap( (Polygon) multiPolygon.getGeometryN( i ), crs );
     }
-    return new GM_MultiSurface_Impl( surfaces );
+    return new GM_MultiSurface_Impl( surfaces, crs );
   }
 
   /**
@@ -485,9 +498,9 @@ public class JTSAdapter
    * @return the corresponding <tt>GM_MultiPrimitive</tt> object
    * @throws GM_Exception
    */
-  private static GM_MultiPrimitive wrap( final GeometryCollection collection ) throws GM_Exception
+  private static GM_MultiPrimitive wrap( final GeometryCollection collection, final String crs ) throws GM_Exception
   {
-    final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( null );
+    final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( crs );
     for( int i = 0; i < collection.getNumGeometries(); i++ )
     {
       multi.setObjectAt( wrap( collection.getGeometryN( i ) ), i );
