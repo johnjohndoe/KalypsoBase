@@ -1014,15 +1014,15 @@ public class JTSUtilities
   }
 
   /**
-   * Calculates the fractions some polygons are covering one base polygons.
+   * Calculates the fractions some polygons are covering one base geometry (should be a geometry with an area).
    * 
-   * @see #fractionAreaOf(Polygon, Polygon)
+   * @see #fractionAreaOf(Geometry, Polygon)
    */
-  public static double[] fractionAreasOf( final Polygon basePolygon, final Polygon[] coverPolygons )
+  public static double[] fractionAreasOf( final Geometry baseGeometry, final Polygon[] coverPolygons )
   {
     final double[] factors = new double[coverPolygons.length];
     for( int i = 0; i < coverPolygons.length; i++ )
-      factors[i] = JTSUtilities.fractionAreaOf( basePolygon, coverPolygons[i] );
+      factors[i] = JTSUtilities.fractionAreaOf( baseGeometry, coverPolygons[i] );
 
     return factors;
   }
@@ -1030,25 +1030,25 @@ public class JTSUtilities
   /**
    * Calculates the part (as fraction) of one polygon covering another.
    * 
-   * @param basePolygon
-   *          The polygon, that is covered (by the calculated fraction) by the <code>coverPolygon</code>. May NOT be
-   *          <code>null</code>.
+   * @param baseGeometry
+   *          The geometry (should be a geometry with an area), that is covered (by the calculated fraction) by the
+   *          <code>coverPolygon</code>. May NOT be <code>null</code>.
    * @param coverPolygon
    *          The polygon covering (or not) the basePolygon. My be <code>null</code> (in that case, <code>0.0</code> is
    *          returned).
    */
-  public static double fractionAreaOf( final Polygon basePolygon, final Polygon coverPolygon )
+  public static double fractionAreaOf( final Geometry baseGeometry, final Polygon coverPolygon )
   {
-    Assert.isNotNull( basePolygon );
+    Assert.isNotNull( baseGeometry );
 
     if( coverPolygon == null )
       return 0.0;
 
-    final Geometry geometry = basePolygon.intersection( coverPolygon );
+    final Geometry geometry = baseGeometry.intersection( coverPolygon );
     if( geometry == null )
       return 0.0;
 
-    final double totalArea = basePolygon.getArea();
+    final double totalArea = baseGeometry.getArea();
     final double subArea = geometry.getArea();
 
     return subArea / totalArea;
