@@ -154,7 +154,7 @@ public class RunCalculationTask extends Task
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
       // REMARK: getActiveWorkbenchWindow return null here, because we are not in the display thread
-      // so we just take the shell from the first window, this is ok in most cases
+      // so we just take the shell from the first window, this is ok in most cases  
       final IWorkbenchWindow window = workbench.getWorkbenchWindows()[0];
       final Shell shell = window == null ? null : window.getShell();
       if( !status.isOK() )

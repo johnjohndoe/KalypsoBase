@@ -269,11 +269,14 @@ public class WPSRequest
           return doUnknownState( exState );
 
         /* If the user aborted the job. */
-        if( monitor.isCanceled() && doCanceled().matches( IStatus.CANCEL ) )
+        // TODO 
+        if( monitor.isCanceled() )
         {
-          // this check ensures that the job is cancelled only if possible
-          // doCanceled() may return an ERROR_STATUS instead
-          return Status.CANCEL_STATUS;
+          IStatus doCanceled = doCanceled();
+          if( doCanceled.matches( IStatus.CANCEL | IStatus.ERROR | IStatus.WARNING ))
+            return doCanceled;
+          
+          // Other cases: just continue, cancel not possible, hut the user should not know it...
         }
 
         /* If the timeout is reached. */
