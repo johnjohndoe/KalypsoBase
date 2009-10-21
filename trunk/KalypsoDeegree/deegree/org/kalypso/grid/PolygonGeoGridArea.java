@@ -107,6 +107,7 @@ public class PolygonGeoGridArea implements IGeoGridArea
     if( y > m_yEnd || y < m_yStart )
       return false;
 
+    // TODO: Can be optimizes (point in ring) ...
     return m_geom.contains( GF.createPoint( coordinate ) );
   }
 
