@@ -8,7 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.2.jar" sourcepath="lib/commons-io-1.2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.1.jar" sourcepath="lib/commons-lang-2.1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-commons-resolver-1.1.jar" sourcepath="KalypsoCommonssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.jar" sourcepath="KalypsoCommonssrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.jar" sourcepath="lib/commons-collections-3.2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar" sourcepath="KalypsoCommonssrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-adapters-1.1.jar" sourcepath="KalypsoCommonssrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-api-1.1.jar" sourcepath="KalypsoCommonssrc.zip"/>
