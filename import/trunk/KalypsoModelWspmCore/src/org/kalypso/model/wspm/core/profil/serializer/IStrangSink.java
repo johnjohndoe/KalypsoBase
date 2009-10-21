@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.serializer;
 
-import java.io.Writer;
-
-import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author kimwerner
  *
  */
-public interface IStrangSink extends IProfilSink
+public interface IStrangSink 
 {
-  public void write( final IProfil[] profiles, final Writer writer );
+  public void write( final String source, final String destination );
 }
