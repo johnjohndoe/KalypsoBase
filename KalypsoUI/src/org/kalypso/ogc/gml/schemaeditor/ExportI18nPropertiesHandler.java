@@ -119,11 +119,11 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     for( final IFeatureType featureType : featureTypes )
     {
-      final QName ftName = featureType.getQName();
-      final String ftNamespaceURI = ftName.getNamespaceURI();
+      final QName ftQName = featureType.getQName();
+      final String ftNamespaceURI = ftQName.getNamespaceURI();
       if( ftNamespaceURI.equals( targetNamespace ) )
       {
-        final String ftLocalPart = ftName.getLocalPart();
+        final String ftLocalPart = ftQName.getLocalPart();
         final String ftPrefix = nsMapper.getPreferredPrefix( ftNamespaceURI, null );
 
         final String nsURI = ftNamespaceURI.replace( ':', '_' );
@@ -134,9 +134,11 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
         final IAnnotation ftAnno = featureType.getAnnotation();
         final String ftLabel = ftAnno.getLabel();
         final String ftDescripion = ftAnno.getDescription();
+        final String ftName = ftAnno.getValue( IAnnotation.ANNO_NAME );
 
         writeProperty( ftPrefix, ftLocalPart, "label", ftLabel ); //$NON-NLS-1$
         writeProperty( ftPrefix, ftLocalPart, "description", ftDescripion ); //$NON-NLS-1$
+        writeProperty( ftPrefix, ftLocalPart, "name", ftName ); //$NON-NLS-1$
 
         final IPropertyType[] properties = featureType.getProperties();
         for( final IPropertyType propertyType : properties )
@@ -152,7 +154,7 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
           final String pLabel = pAnno.getLabel();
           final String pTooltip = pAnno.getTooltip();
-          final String prefix = ftPrefix + "_" + ftName.getLocalPart() + "_" + ptPrefix; //$NON-NLS-1$ //$NON-NLS-2$
+          final String prefix = ftPrefix + "_" + ftQName.getLocalPart() + "_" + ptPrefix; //$NON-NLS-1$ //$NON-NLS-2$
 
           writeProperty( prefix, ptName.getLocalPart(), "label", pLabel ); //$NON-NLS-1$
           writeProperty( prefix, ptName.getLocalPart(), "tooltip", pTooltip ); //$NON-NLS-1$
