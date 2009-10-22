@@ -118,6 +118,6 @@ public class CoordinatePair implements Comparable<CoordinatePair>
   @Override
   public int compareTo( CoordinatePair o )
   {
-    return Double.compare( this.getDistance(), o.getDistance() );
+    return Double.compare( getDistance(), o.getDistance() );
   }
 }
