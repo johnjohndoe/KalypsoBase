@@ -70,6 +70,11 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   private long m_started;
 
   /**
+   * The checkpoint time in millies.
+   */
+  private long m_checkpoint;
+
+  /**
    * The end time in millies.
    */
   private long m_ended;
@@ -86,6 +91,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
     m_totalWork = 0;
     m_worked = 0;
     m_started = 0;
+    m_checkpoint = 0;
     m_ended = 0;
   }
 
@@ -100,6 +106,7 @@ public class SystemOutProgressMonitor implements IProgressMonitor
 
     /* Time. */
     m_started = System.currentTimeMillis();
+    m_checkpoint = m_started;
 
     /* Log the message to System.out. */
     System.out.println( String.format( "Begin task (%d): %s", totalWork, name ) );
@@ -115,7 +122,8 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   public void done( )
   {
     /* Time. */
-    m_ended = System.currentTimeMillis();
+    m_checkpoint = System.currentTimeMillis();
+    m_ended = m_checkpoint;
 
     /* Log the message to System.out. */
     System.out.println( "Done ..." );
@@ -149,9 +157,16 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   @Override
   public void setCanceled( boolean value )
   {
+    /* Time. */
+    long checkpoint = System.currentTimeMillis();
+
     /* Log the message to System.out. */
     System.out.println( "Should be canceled ..." );
-    System.out.println( String.format( "Checkpoint at: %d", System.currentTimeMillis() ) );
+    System.out.println( String.format( "Checkpoint at: %d", checkpoint ) );
+    System.out.println( String.format( "Time elapsed: %d seconds", (checkpoint - m_checkpoint) / 1000 ) );
+
+    /* Time. */
+    m_checkpoint = checkpoint;
 
     m_monitor.setCanceled( value );
   }
@@ -162,9 +177,16 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   @Override
   public void setTaskName( String name )
   {
+    /* Time. */
+    long checkpoint = System.currentTimeMillis();
+
     /* Log the message to System.out. */
     System.out.println( String.format( "Task name: %s", name ) );
-    System.out.println( String.format( "Checkpoint at: %d", System.currentTimeMillis() ) );
+    System.out.println( String.format( "Checkpoint at: %d", checkpoint ) );
+    System.out.println( String.format( "Time elapsed: %d seconds", (checkpoint - m_checkpoint) / 1000 ) );
+
+    /* Time. */
+    m_checkpoint = checkpoint;
 
     m_monitor.setTaskName( name );
   }
@@ -175,9 +197,16 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   @Override
   public void subTask( String name )
   {
+    /* Time. */
+    long checkpoint = System.currentTimeMillis();
+
     /* Log the message to System.out. */
     System.out.println( String.format( "Sub task: %s", name ) );
-    System.out.println( String.format( "Checkpoint at: %d", System.currentTimeMillis() ) );
+    System.out.println( String.format( "Checkpoint at: %d", checkpoint ) );
+    System.out.println( String.format( "Time elapsed: %d seconds", (checkpoint - m_checkpoint) / 1000 ) );
+
+    /* Time. */
+    m_checkpoint = checkpoint;
 
     m_monitor.subTask( name );
   }
@@ -188,12 +217,19 @@ public class SystemOutProgressMonitor implements IProgressMonitor
   @Override
   public void worked( int work )
   {
+    /* Time. */
+    long checkpoint = System.currentTimeMillis();
+
     /* Increase the work done. */
     m_worked = m_worked + work;
 
     /* Log the message to System.out. */
     System.out.println( String.format( "Worked (%d / %d): %d", m_worked, m_totalWork, work ) );
-    System.out.println( String.format( "Checkpoint at: %d", System.currentTimeMillis() ) );
+    System.out.println( String.format( "Checkpoint at: %d", checkpoint ) );
+    System.out.println( String.format( "Time elapsed: %d seconds", (checkpoint - m_checkpoint) / 1000 ) );
+
+    /* Time. */
+    m_checkpoint = checkpoint;
 
     m_monitor.worked( work );
   }
