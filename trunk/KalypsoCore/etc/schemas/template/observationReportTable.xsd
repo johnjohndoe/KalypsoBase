@@ -13,14 +13,7 @@
           </annotation>
           <complexType>
             <sequence>
-              <element name="observation" minOccurs="1" maxOccurs="unbounded">
-                <annotation>
-                  <documentation>A row represented by an observation.</documentation>
-                </annotation>
-                <complexType>
-                  <attribute ref="xlink:href" use="required"></attribute>
-                </complexType>
-              </element>
+              <element ref="ort:_row" minOccurs="1" maxOccurs="unbounded" />
             </sequence>
           </complexType>
         </element>
@@ -31,7 +24,7 @@
           </annotation>
           <complexType>
             <sequence>
-              <element ref="ort:abstractColumn" minOccurs="1" maxOccurs="unbounded" />
+              <element ref="ort:_column" minOccurs="1" maxOccurs="unbounded" />
             </sequence>
           </complexType>
         </element>
@@ -39,7 +32,40 @@
     </complexType>
   </element>
 
-  <element name="abstractColumn" type="ort:AbstractColumnType">
+  <element name="_row" type="ort:AbstractRowType">
+    <annotation>
+      <documentation>A row represented by an observation.</documentation>
+    </annotation>
+  </element>
+
+  <complexType name="AbstractRowType" />
+
+  <element name="header" substitutionGroup="ort:_row">
+    <annotation>
+      <documentation>A row that is a header.</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractRowType"/>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="observation" substitutionGroup="ort:_row">
+    <annotation>
+      <documentation>A row represented by an observation.</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractRowType">
+          <attribute ref="xlink:href" use="required"></attribute>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+
+  <element name="_column" type="ort:AbstractColumnType">
     <annotation>
       <documentation>An element representing one or more columns.</documentation>
     </annotation>
@@ -47,18 +73,19 @@
 
   <complexType name="AbstractColumnType" />
 
-  <element name="metadata" substitutionGroup="ort:abstractColumn">
+  <element name="metadata" substitutionGroup="ort:_column">
     <complexType>
       <complexContent>
         <extension base="ort:AbstractColumnType">
           <attribute name="name" type="string" use="required" />
           <attribute name="defaultValue" type="string" />
+          <attribute name="header" type="string" />
         </extension>
       </complexContent>
     </complexType>
   </element>
 
-  <element name="timeValueBlock" substitutionGroup="ort:abstractColumn">
+  <element name="timeValueBlock" substitutionGroup="ort:_column">
     <complexType>
       <complexContent>
         <extension base="ort:AbstractColumnType">
