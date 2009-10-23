@@ -204,6 +204,4 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   {
     m_obs = observation;
   }
-
-
 }

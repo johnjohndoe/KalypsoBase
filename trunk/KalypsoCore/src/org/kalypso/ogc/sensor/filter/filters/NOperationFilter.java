@@ -80,7 +80,7 @@ public class NOperationFilter extends AbstractObservationFilter
     else if( operator.equals( "/" ) ) //$NON-NLS-1$
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.4") + operator + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.4" ) + operator + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public NOperationFilter( final int operation, final IObservation[] innerObservations ) throws SensorException
@@ -95,7 +95,8 @@ public class NOperationFilter extends AbstractObservationFilter
   public void initFilter( final Object conf, final IObservation baseObs, final URL context ) throws SensorException
   {
     super.initFilter( null, baseObs, null );
-    m_innerObservations = (IObservation[])conf;
+
+    m_innerObservations = (IObservation[]) conf;
   }
 
   @Override
@@ -104,12 +105,13 @@ public class NOperationFilter extends AbstractObservationFilter
     final ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
     for( int i = 0; i < models.length; i++ )
       models[i] = m_innerObservations[i].getValues( args );
+
     return new NOperationTupplemodel( models, m_operation );
   }
 
   @Override
   public void setValues( final ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.6") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.6" ) ); //$NON-NLS-1$
   }
 }

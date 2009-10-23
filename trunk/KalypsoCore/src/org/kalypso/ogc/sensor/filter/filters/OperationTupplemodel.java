@@ -70,13 +70,13 @@ public class OperationTupplemodel extends AbstractTuppleModel
     m_baseModel = baseModel;
   }
 
-  public int getCount() throws SensorException
+  public int getCount( ) throws SensorException
   {
     return m_baseModel.getCount();
   }
 
   @Override
-  public int hashCode()
+  public int hashCode( )
   {
     return m_baseModel.hashCode();
   }
@@ -92,32 +92,34 @@ public class OperationTupplemodel extends AbstractTuppleModel
     IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
     if( index >= m_baseModel.getCount() )
       return null;
-    
+
     Object object = m_baseModel.getElement( index, a );
-    if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis(axis))
+    if( object == null || object instanceof Date || KalypsoStatusUtils.isStatusAxis( axis ) )
       return object;
+    
     if( object instanceof Number ) // let it be a Number here so we can handle integers and such
     {
-      double value = ( (Number)object ).doubleValue();
+      double value = ((Number) object).doubleValue();
       switch( m_operation )
       {
-      case OperationFilter.OPERATION_PLUS:
-        return new Double( value + m_operand );
-      case OperationFilter.OPERATION_MINUS:
-        return new Double( value - m_operand );
-      case OperationFilter.OPERATION_MAL:
-        return new Double( value * m_operand );
-      case OperationFilter.OPERATION_DURCH:
-        return new Double( value / m_operand );
+        case OperationFilter.OPERATION_PLUS:
+          return new Double( value + m_operand );
+        case OperationFilter.OPERATION_MINUS:
+          return new Double( value - m_operand );
+        case OperationFilter.OPERATION_MAL:
+          return new Double( value * m_operand );
+        case OperationFilter.OPERATION_DURCH:
+          return new Double( value / m_operand );
       }
     }
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.0") //$NON-NLS-1$
-        + object.getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.1") ); //$NON-NLS-1$
+    
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.0" ) //$NON-NLS-1$
+        + object.getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2" ) ); //$NON-NLS-1$
     // TODO support it
   }
 
@@ -125,8 +127,9 @@ public class OperationTupplemodel extends AbstractTuppleModel
   {
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.3") //$NON-NLS-1$
-        + axis.getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.4") ); //$NON-NLS-1$
+    
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.3" ) //$NON-NLS-1$
+        + axis.getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.4" ) ); //$NON-NLS-1$
     // TODO support it
   }
 }

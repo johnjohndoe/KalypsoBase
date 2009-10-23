@@ -118,5 +118,4 @@ public class OperationFilter extends AbstractObservationFilter
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.6" ) ); //$NON-NLS-1$
   }
-
 }

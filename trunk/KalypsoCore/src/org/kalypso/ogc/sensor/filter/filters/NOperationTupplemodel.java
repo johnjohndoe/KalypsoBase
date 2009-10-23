@@ -95,6 +95,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
       if( index >= m_baseModels[0].getCount() )
         return null;
+
       double value = ((Number) m_baseModels[0].getElement( index, a )).doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
@@ -116,12 +117,13 @@ public class NOperationTupplemodel extends AbstractTuppleModel
           case OperationFilter.OPERATION_MAL:
             value *= nextValue;
             break;
-            // macht das sinn, bei mehr als zwei ?
+          // macht das sinn, bei mehr als zwei ?
           case OperationFilter.OPERATION_DURCH:
             value /= nextValue;
             break;
         }
       }
+
       return new Double( value );
     }
 
@@ -134,6 +136,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
       final int value = KalypsoStati.BIT_OK;
       return new Integer( value );
     }
+
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0" ) //$NON-NLS-1$
         + axis.getDataClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
@@ -148,6 +151,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_baseModels[0].indexOf( element, axis );
+
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.3" ) //$NON-NLS-1$
         + axis.getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.4" ) ); //$NON-NLS-1$
   }
