@@ -546,6 +546,7 @@ public class NonBlockingWPSRequest
       return (String) literalValue;
     }
 
+    // TODO: handle null
     throw new UnsupportedOperationException();
   }
 
