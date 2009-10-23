@@ -45,7 +45,7 @@ import org.kalypso.ogc.sensor.IAxis;
 
 /**
  * Default implementation of the IAxis interface. This class is immutable.
- *
+ * 
  * @author schlienger
  */
 public final class DefaultAxis extends AbstractAxis implements IAxis
@@ -54,7 +54,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
 
   private final String m_unit;
 
-  private final Class<?> m_dataClass;
+  private final Class< ? > m_dataClass;
 
   private final String m_type;
 
@@ -63,17 +63,21 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   private final boolean m_persistable;
 
   /**
+   * The hash code can be cached, because this axis is immutable.
+   */
+  private Integer m_hashCode;
+
+  /**
    * Constructor. Calls the full constructor with the persistable argument set to true.
    */
-  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass,
-      final boolean isKey )
+  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass, final boolean isKey )
   {
     this( label, type, unit, dataClass, isKey, true );
   }
 
   /**
    * Constructor
-   *
+   * 
    * @param label
    *          label of the axis
    * @param type
@@ -87,11 +91,10 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
    * @param persistable
    *          true if the axis should be persisted once observation is saved
    */
-  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass,
-      final boolean isKey, final boolean persistable )
+  public DefaultAxis( final String label, final String type, final String unit, final Class< ? > dataClass, final boolean isKey, final boolean persistable )
   {
     if( dataClass == null )
-      throw new IllegalArgumentException(Messages.getString("org.kalypso.ogc.sensor.impl.DefaultAxis.0")); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.impl.DefaultAxis.0" ) ); //$NON-NLS-1$
 
     m_label = label;
     m_type = type;
@@ -99,6 +102,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
     m_dataClass = dataClass;
     m_isKey = isKey;
     m_persistable = persistable;
+    m_hashCode = null;
   }
 
   /**
@@ -112,7 +116,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getUnit()
    */
-  public String getUnit()
+  public String getUnit( )
   {
     return m_unit;
   }
@@ -120,7 +124,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_label;
   }
@@ -128,7 +132,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
    */
-  public Class<?> getDataClass()
+  public Class< ? > getDataClass( )
   {
     return m_dataClass;
   }
@@ -136,7 +140,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#getType()
    */
-  public String getType()
+  public String getType( )
   {
     return m_type;
   }
@@ -144,7 +148,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#isKey()
    */
-  public boolean isKey()
+  public boolean isKey( )
   {
     return m_isKey;
   }
@@ -152,8 +156,20 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
   /**
    * @see org.kalypso.ogc.sensor.IAxis#isPersistable()
    */
-  public boolean isPersistable()
+  public boolean isPersistable( )
   {
     return m_persistable;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.impl.AbstractAxis#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    if( m_hashCode == null )
+      m_hashCode = new Integer( super.hashCode() );
+
+    return m_hashCode.intValue();
   }
 }

@@ -141,11 +141,7 @@ public class ForecastTuppleModel extends AbstractTuppleModel
             if( targetAxes[colIx].isPersistable() )
             {
               if( map[colIx] > -1 )
-              {
                 targetTupple[colIx] = model.getElement( rowIx, modelAxes[map[colIx]] );
-                if( targetTupple[colIx] == null )
-                  System.out.println( "Achtung Achtung" );
-              }
             }
           }
           // tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
