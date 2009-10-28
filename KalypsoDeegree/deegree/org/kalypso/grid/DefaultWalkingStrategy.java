@@ -55,7 +55,7 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
    * <p>
    * Override in order to optimize according to the underlying (real) grid.
    * </p>
-   *
+   * 
    * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
    *      org.kalypso.grid.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -72,9 +72,9 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
 
     for( int y = 0; y < sizeY; y++ )
     {
-      if( y % 100 == 0)
+      if( monitor != null && y % 100 == 0 )
         monitor.subTask( String.format( "%d/%d", y, sizeY ) );
-      
+
       for( int x = 0; x < sizeX; x++ )
       {
         final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, tmpCrd );
