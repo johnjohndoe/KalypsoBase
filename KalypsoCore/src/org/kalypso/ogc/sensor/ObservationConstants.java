@@ -57,7 +57,4 @@ public interface ObservationConstants
 
   /** Some information about the Origin of the observation */
   public final static String MD_ORIGIN = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.2"); //$NON-NLS-1$
-
-  /** Some information about the Scenario into which this observation got delivered */
-  public final static String MD_SCENARIO = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.3"); //$NON-NLS-1$
 }

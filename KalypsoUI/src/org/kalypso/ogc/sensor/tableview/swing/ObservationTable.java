@@ -47,17 +47,12 @@ import java.awt.Panel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -72,21 +67,14 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import org.kalypso.auth.KalypsoAuthPlugin;
-import org.kalypso.auth.scenario.IScenario;
-import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.swing.jtable.PopupMenu;
-import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
@@ -356,49 +344,6 @@ public class ObservationTable extends Panel implements IObsViewEventListener
           m_dateRenderer.addMarker( new ForecastLabelMarker( dr, BG_COLOR ) );
         else
           m_dateRenderer.removeMarker( new ForecastLabelMarker( dr, BG_COLOR ) );
-      }
-
-      final MetadataList mdl = obs.getMetadataList();
-
-      // add a scenario-label if obs has scenario specific metadata property
-      if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
-      {
-        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
-
-        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && isLabelSet() )
-        {
-          Icon icon = null;
-          final String imageURL = scenario.getProperty( IScenario.PROP_TABLE_HEADER_IMAGE_URL, null );
-          if( imageURL != null )
-          {
-            try
-            {
-              icon = new ImageIcon( new URL( imageURL ) );
-            }
-            catch( final MalformedURLException e )
-            {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3" ), e ); //$NON-NLS-1$
-            }
-          }
-
-          Color color = null;
-          final String strc = scenario.getProperty( IScenario.PROP_TABLE_HEADER_RGB, null );
-          if( strc != null )
-            color = StringUtilities.stringToColor( strc );
-
-          Integer height = null;
-          final String strHeight = scenario.getProperty( IScenario.PROP_TABLE_HEADER_HEIGHT, null );
-          if( strHeight != null )
-            height = Integer.valueOf( strHeight );
-
-          Boolean showTxt = null;
-          final String strShow = scenario.getProperty( IScenario.PROP_TABLE_HEADER_SHOWTEXT, null );
-          if( strShow != null )
-            showTxt = Boolean.valueOf( strShow );
-
-          m_currentScenarioName = scenario.getName();
-          setLabel( m_currentScenarioName, icon, color, height, showTxt );
-        }
       }
     }
   }

@@ -93,8 +93,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
 import org.kalypso.auth.KalypsoAuthPlugin;
-import org.kalypso.auth.scenario.IScenario;
-import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.runtime.LogAnalyzer;
@@ -503,8 +501,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     final KalypsoAuthPlugin authPlugin = KalypsoAuthPlugin.getDefault();
     final IKalypsoUser currentUser = authPlugin.getCurrentUser();
-    final String currentScenarioId = currentUser.getScenario();
-    final IScenario currentScenario = authPlugin.getScenario( currentScenarioId );
     final Date now = new Date();
 
     // auf x stunden vorher runden! hängt von der Modellspec ab
@@ -538,11 +534,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     cal.add( Calendar.HOUR_OF_DAY, -simDiff );
 
     attributes.setProperty( "kalypso.startsim", DatatypeConverter.printDateTime( cal ) ); //$NON-NLS-1$
-
-    attributes.setProperty( "kalypso.currentScenario", currentScenario.getId() ); //$NON-NLS-1$
-    attributes.setProperty( "kalypso.currentScenarioId", currentScenario.getId() ); //$NON-NLS-1$
-    attributes.setProperty( "kalypso.currentScenarioName", currentScenario.getName() ); //$NON-NLS-1$
-    attributes.setProperty( "kalypso.currentScenarioDescription", currentScenario.getDescription() ); //$NON-NLS-1$
 
     attributes.setProperty( "kalypso.currentUser", currentUser.getUserName() ); //$NON-NLS-1$
 
@@ -842,21 +833,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       progress.done();
     }
-  }
-
-  /**
-   * Returns the scenario for the given calcCase
-   */
-  public IScenario getScenario( final IContainer calcCase ) throws CoreException
-  {
-    final Object result = loadCalculationAndReadProperty( calcCase, "scenarioId" ); //$NON-NLS-1$
-    final String scenarioId = result == null ? "" : result.toString(); //$NON-NLS-1$
-
-    final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
-    if( scenario == null )
-      return Scenario.DEFAULT_SCENARIO;
-
-    return scenario;
   }
 
   /**
