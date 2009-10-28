@@ -81,6 +81,7 @@ public interface IRepositoryService
   
   public void setItemData( String identifier, Object data ) throws RepositoryException;
 
+  public void setItemName( String identifier, String name ) throws RepositoryException;
   /**
    * Forces the refresh of the remote repository.
    * 

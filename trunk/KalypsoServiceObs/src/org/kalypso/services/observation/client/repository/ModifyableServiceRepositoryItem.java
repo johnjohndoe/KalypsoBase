@@ -48,8 +48,7 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem implements IModifyableRepositoryItem
 {
@@ -67,6 +66,16 @@ public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem imple
   {
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     srv.setItemData( getIdentifier(), data );
+  }
+
+  /**
+   * @see org.kalypso.repository.IModifyableRepositoryItem#setName(java.lang.String)
+   */
+  @Override
+  public void setName( final String name ) throws RepositoryException
+  {
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+    srv.setItemName( getIdentifier(), name );
   }
 
 }

@@ -346,7 +346,10 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    */
   public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
-    return m_repository.hasChildren();
+    final String id = parent.getId();
+    final IRepositoryItem item = m_repository.findItem( id );
+
+    return item.hasChildren();
   }
 
   /**
@@ -518,5 +521,23 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         modifyable.setData( data );
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemName(java.lang.String, java.lang.String)
+   */
+  @Override
+  public void setItemName( final String identifier, final String name ) throws RepositoryException
+  {
+    if( m_repository instanceof IModifyableRepository )
+    {
+      final IRepositoryItem item = m_repository.findItem( identifier );
+      if( item instanceof IModifyableRepositoryItem )
+      {
+        final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+        modifyable.setName( name );
+      }
+    }
+
   }
 }

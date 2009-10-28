@@ -228,4 +228,13 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     throw new IllegalStateException( "This should never happen" );
   }
+
+  /**
+   * @see org.kalypso.repository.IModifyableRepositoryItem#setName(java.lang.String)
+   */
+  @Override
+  public void setName( final String itemName ) throws RepositoryException
+  {
+    throw new IllegalStateException( "This should never happen" );
+  }
 }
