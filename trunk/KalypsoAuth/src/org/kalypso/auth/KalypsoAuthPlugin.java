@@ -4,8 +4,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.auth.scenario.IScenario;
-import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.auth.user.KalypsoUser;
 import org.kalypso.auth.user.UserRights;
@@ -27,7 +25,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * kalypso bypassing the login procedure. Once the login procedure is started, the user is set to null unless
    * authentication succeeded.
    */
-  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[] { Scenario.DEFAULT_SCENARIO } ); //$NON-NLS-1$ //$NON-NLS-2$
+  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS ); //$NON-NLS-1$ //$NON-NLS-2$
 
   /**
    * The constructor.
@@ -107,33 +105,6 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       throw new IllegalStateException( "No user" ); //$NON-NLS-1$
 
     return m_user;
-  }
-
-  /**
-   * Returns a scenario from the available scenarios
-   */
-  public IScenario getScenario( final String scenarioId )
-  {
-    final IScenario[] scenarios = m_user.getAvailableScenarios();
-    for( final IScenario scenario : scenarios )
-    {
-      if( scenario.getId().equals( scenarioId ) )
-        return scenario;
-    }
-
-    return null;
-  }
-
-  /**
-   * This is a shorthand for calling <code>
-   * getScenario( getCurrentUser().getScenario() )
-   * </code>
-   * 
-   * @return the scenario associated to the current user
-   */
-  public IScenario getScenarioForCurrentUser( )
-  {
-    return getScenario( getCurrentUser().getScenario() );
   }
 
   public void setCurrentUser( final IKalypsoUser user )

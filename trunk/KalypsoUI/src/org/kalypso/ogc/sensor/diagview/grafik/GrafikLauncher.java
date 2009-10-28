@@ -73,9 +73,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.auth.KalypsoAuthPlugin;
-import org.kalypso.auth.scenario.IScenario;
-import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -91,7 +88,6 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -365,7 +361,7 @@ public class GrafikLauncher
     final GrafikAchsen gAchsen = new GrafikAchsen( odt.getAxis() );
     final GrafikKurven gKurven = new GrafikKurven( gAchsen );
 
-    String scenarioName = null;
+    final String scenarioName = null;
     Date xLower = null;
     Date xUpper = null;
     Number yLower = new Double( Double.MAX_VALUE );
@@ -506,23 +502,6 @@ public class GrafikLauncher
       catch( final SensorException e )
       {
         e.printStackTrace();
-      }
-
-      // check observation for specific scenario
-
-      // TODO: get the scenario stuff from the templates
-
-      if( scenarioName == null ) // not already set in this session?
-      {
-        final MetadataList mdl = obs.getMetadataList();
-        final String scenarioId = mdl.getProperty( ObservationConstants.MD_SCENARIO );
-
-        if( !ScenarioUtilities.isDefaultScenario( scenarioId ) )
-        {
-          final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( scenarioId );
-          if( scenario != null )
-            scenarioName = scenario.getName();
-        }
       }
 
       // is this obs a forecast?

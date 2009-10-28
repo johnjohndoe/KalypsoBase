@@ -41,17 +41,12 @@ v.doemming@tuhh.de
 
 package org.kalypso.auth.user;
 
-import org.kalypso.auth.scenario.IScenarioProvider;
-
 /**
  * @author schlienger
  */
-public interface IKalypsoUser extends IScenarioProvider
+public interface IKalypsoUser
 {
   public String getUserName();
   
   public boolean hasRight( final String right );
-  
-  /** Return the scenario-id selected by this user */
-  public String getScenario();
 }
