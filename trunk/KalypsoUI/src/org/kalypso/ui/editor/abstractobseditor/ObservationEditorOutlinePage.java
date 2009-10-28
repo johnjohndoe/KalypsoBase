@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -78,9 +81,25 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     tv.addCheckStateListener( this );
 
+    tv.addDoubleClickListener( new IDoubleClickListener()
+    {
+
+      @Override
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        handleTreeDoubleClick();
+      }
+    } );
+
     m_editThemeAction = new EditDiagCurveAction( this );
     m_removeThemeAction = new RemoveThemeAction( this );
     m_setIgnoreTypesAction = new SetIgnoreTypesAction( this );
+  }
+
+  protected void handleTreeDoubleClick( )
+  {
+    if( m_editor instanceof ObservationDiagramEditor )
+      m_editThemeAction.run();
   }
 
   /**
@@ -226,11 +245,12 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   public void setActionBars( final IActionBars actionBars )
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    toolBarManager.add( m_removeThemeAction );
     toolBarManager.add( m_setIgnoreTypesAction );
-    
+
+    toolBarManager.add( new Separator( "curveActions" ) );
     if( m_editor instanceof ObservationDiagramEditor )
       toolBarManager.add( m_editThemeAction );
+    toolBarManager.add( m_removeThemeAction );
 
     actionBars.updateActionBars();
   }
