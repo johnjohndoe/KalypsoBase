@@ -5,6 +5,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 
+import org.eclipse.core.runtime.SafeRunner;
+import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+import org.kalypso.project.database.KalypsoProjectDatabase;
+
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletContextListener;
 
@@ -31,7 +35,22 @@ public class WSProxyServlet extends WSServlet
     /* Get the servlet context. */
     final ServletContext context = servletConfig.getServletContext();
 
-// System.out.println( "[NNNN] WS_Proxy_Servlet: Setting JAX-WS Runtime..." );
+    // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
+    // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
+    final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoProjectDatabase.class.getClassLoader() )
+    {
+      @Override
+      protected void runWithContextClassLoader( ) throws Exception
+      {
+        initContextListener( context );
+      }
+    };
+    SafeRunner.run( runnable );
+
+    final Throwable exception = runnable.getException();
+    if( exception != null )
+      throw new ServletException( "Failed to initialize Observation-Service", exception );
+
     /* We just simulate the initialization of the servlet. */
     m_servletContextListener.contextInitialized( new ServletContextEvent( context ) );
 
@@ -62,6 +81,12 @@ public class WSProxyServlet extends WSServlet
     super.init( servletConfig );
   }
 
+  protected void initContextListener( final ServletContext context )
+  {
+    /* We just simulate the initialisation of the servlet. */
+    m_servletContextListener.contextInitialized( new ServletContextEvent( context ) );
+  }
+
   /**
    * @see javax.servlet.GenericServlet#destroy()
    */
@@ -73,6 +98,5 @@ public class WSProxyServlet extends WSServlet
     super.destroy();
 
     m_servletContextListener.contextDestroyed( new ServletContextEvent( servletContext ) );
-// m_delegate.destroy();
   }
 }

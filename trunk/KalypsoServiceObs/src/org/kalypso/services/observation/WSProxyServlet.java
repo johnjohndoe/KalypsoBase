@@ -5,6 +5,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 
+import org.eclipse.core.runtime.SafeRunner;
+import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletContextListener;
 
@@ -29,13 +32,29 @@ public class WSProxyServlet extends WSServlet
     /* Get the servlet context. */
     final ServletContext context = servletConfig.getServletContext();
 
-    /* Debug. */
-    System.out.println( "[NNNN] WS_Proxy_Servlet: Setting JAX-WS Runtime..." ); //$NON-NLS-1$
+    // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
+    // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
+    final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObsActivator.class.getClassLoader() )
+    {
+      @Override
+      protected void runWithContextClassLoader( ) throws Exception
+      {
+        initContextListener( context );
+      }
+    };
+    SafeRunner.run( runnable );
 
-    /* We just simulate the initialisation of the servlet. */
-    m_servletContextListener.contextInitialized( new ServletContextEvent( context ) );
+    final Throwable exception = runnable.getException();
+    if( exception != null )
+      throw new ServletException( "Failed to initialize Observation-Service", exception );
 
     super.init( servletConfig );
+  }
+
+  protected void initContextListener( final ServletContext context )
+  {
+    /* We just simulate the initialisation of the servlet. */
+    m_servletContextListener.contextInitialized( new ServletContextEvent( context ) );
   }
 
   /**

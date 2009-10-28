@@ -8,7 +8,9 @@ import java.util.Hashtable;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.services.observation.client.OcsURLStreamHandler;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -50,7 +52,8 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
 
   /**
    * Registers the OCS-StreamURLHAndler iun order to support the 'kalypso-ocs' protocoll.<br>
-   * Should be called from the application this stuff is running in, else it is not enforced that the protocol is registered before its first use.<br>
+   * Should be called from the application this stuff is running in, else it is not enforced that the protocol is
+   * registered before its first use.<br>
    * Maybe we should introduce some kind of 'protocol' extension point that is triggered in KalypsoCore or similar?
    */
   public static void registerOCSUrlHandler( final BundleContext context )
@@ -90,38 +93,42 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
   {
     if( m_observationService == null )
     {
-      final Thread currentThread = Thread.currentThread();
-      final ClassLoader contextClassLoader = currentThread.getContextClassLoader();
-      try
+      // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
+      // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
+      final ThreadContextClassLoaderRunnable runnable = new ThreadContextClassLoaderRunnable( KalypsoServiceObsActivator.class.getClassLoader() )
       {
-        // REMARK: see JaxbUtilities for an explanation.
-        // Applies to JAX-WS instead of JAXB in this case (same mechanism).
-        if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" )  ) //$NON-NLS-1$
-          currentThread.setContextClassLoader( KalypsoServiceObsActivator.class.getClassLoader() );
+        @Override
+        protected void runWithContextClassLoader( ) throws Exception
+        {
+          initObservationService();
+        }
+      };
+      SafeRunner.run( runnable );
 
-        final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
-        final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
-
-        final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" ); //$NON-NLS-1$
-        final URL wsdlLocation = new URL( wsdlLocationProperty );
-        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
-        final Service service = Service.create( wsdlLocation, serviceName );
-
-        m_observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-        return null;
-      }
-      finally
-      {
-        // Always restore old context class loader, who knows what happens else...
-        currentThread.setContextClassLoader( contextClassLoader );
-      }
+      final Throwable exception = runnable.getException();
+      if( exception != null )
+        exception.printStackTrace();
     }
 
     return m_observationService;
+  }
+
+  protected void setObservationService( final IObservationService observationService )
+  {
+    m_observationService = observationService;
+  }
+
+  protected void initObservationService( ) throws MalformedURLException
+  {
+    final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
+    final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
+
+    final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" ); //$NON-NLS-1$
+    final URL wsdlLocation = new URL( wsdlLocationProperty );
+    final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
+    final Service service = Service.create( wsdlLocation, serviceName );
+    final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
+    m_observationService = observationService;
   }
 
   public static String getID( )
