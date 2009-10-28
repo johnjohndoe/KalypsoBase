@@ -7,6 +7,8 @@
   <element name="observationReportTable">
     <complexType>
       <sequence>
+        <element name="referenceObservation" type="ort:ObservationRowType"/>
+
         <element name="rows" minOccurs="1" maxOccurs="1">
           <annotation>
             <documentation>Contains the elements that represent rows of the table.</documentation>
@@ -15,6 +17,7 @@
             <sequence>
               <element ref="ort:_row" minOccurs="1" maxOccurs="unbounded" />
             </sequence>
+            <attribute name="rowOffset" type="int" use="optional" default="0" />
           </complexType>
         </element>
 
@@ -46,24 +49,24 @@
     </annotation>
     <complexType>
       <complexContent>
-        <extension base="ort:AbstractRowType"/>
+        <extension base="ort:AbstractRowType" />
       </complexContent>
     </complexType>
   </element>
 
-  <element name="observation" substitutionGroup="ort:_row">
+  <element name="observation" type="ort:ObservationRowType" substitutionGroup="ort:_row">
     <annotation>
       <documentation>A row represented by an observation.</documentation>
     </annotation>
-    <complexType>
-      <complexContent>
-        <extension base="ort:AbstractRowType">
-          <attribute ref="xlink:href" use="required"></attribute>
-        </extension>
-      </complexContent>
-    </complexType>
   </element>
 
+  <complexType name="ObservationRowType">
+    <complexContent>
+      <extension base="ort:AbstractRowType">
+        <attribute ref="xlink:href" use="required"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
 
   <element name="_column" type="ort:AbstractColumnType">
     <annotation>
