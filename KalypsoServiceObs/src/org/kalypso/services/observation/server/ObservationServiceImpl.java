@@ -360,4 +360,14 @@ public class ObservationServiceImpl implements IObservationService
   {
     getDelegate().setItemData( identifier, data );
   }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IRepositoryService#setItemName(java.lang.String, java.lang.String)
+   */
+  @Override
+  public void setItemName( final String identifier, final String name ) throws RepositoryException
+  {
+    getDelegate().setItemName( identifier, name );
+
+  }
 }

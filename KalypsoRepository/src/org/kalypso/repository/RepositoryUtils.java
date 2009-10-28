@@ -128,7 +128,7 @@ public class RepositoryUtils
     return identifier.substring( 0, index );
   }
 
-  public static String resolveItemName( final String identifier ) throws RepositoryException
+  public static String resolveItemIdPart( final String identifier ) throws RepositoryException
   {
     int index = identifier.lastIndexOf( "." ); //$NON-NLS-1$
     if( index == -1 )

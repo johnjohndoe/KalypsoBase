@@ -84,4 +84,5 @@ public interface IObservationService extends IRepositoryService
    * The given zml will be used to update the values of the server-side observation.
    */
   public void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException;
+
 }

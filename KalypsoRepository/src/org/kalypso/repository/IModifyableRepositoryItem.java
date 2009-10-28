@@ -47,4 +47,6 @@ package org.kalypso.repository;
 public interface IModifyableRepositoryItem extends IRepositoryItem
 {
   void setData( Object observation ) throws RepositoryException;
+
+  void setName( String itemName ) throws RepositoryException;
 }
