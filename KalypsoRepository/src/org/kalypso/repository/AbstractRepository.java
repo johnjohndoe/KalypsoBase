@@ -135,7 +135,6 @@ public abstract class AbstractRepository implements IRepository
     for( final Object element2 : m_listeners )
     {
       final IRepositoryListener element = (IRepositoryListener) element2;
-
       element.onRepositoryStructureChanged();
     }
   }
