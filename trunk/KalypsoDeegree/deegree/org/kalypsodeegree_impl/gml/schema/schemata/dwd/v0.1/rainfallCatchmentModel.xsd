@@ -5,7 +5,11 @@
 			Has not so much to do with DWD stuff, but is of course related (maybe the omrbometer-stations are maintained by the DWD.) ]]>
 		</documentation>
 	</annotation>
-
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="../../gml2_2002/feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="../../obslink/obslink.xsd"/>
 
