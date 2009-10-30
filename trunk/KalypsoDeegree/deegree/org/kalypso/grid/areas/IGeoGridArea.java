@@ -38,66 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.grid;
+package org.kalypso.grid.areas;
+
+import org.kalypso.grid.GeoGridException;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
+ * Area that defines the part of a grid to be walked by a walking strategy.
+ * 
  * @author Holger Albert
  * @author Gernot Belger
  */
-public class EnvelopeGeoGridArea implements IGeoGridArea
+public interface IGeoGridArea
 {
-  private final IGeoGrid m_grid;
-
-  private final Envelope m_envelope;
-
-  private int m_yStart;
-
-  private int m_yEnd;
-
-  private int m_xStart;
-
-  private int m_xEnd;
-
-  private boolean m_hasInit = false;
-
-  public EnvelopeGeoGridArea( IGeoGrid grid, Envelope envelope )
-  {
-    m_grid = grid;
-    m_envelope = envelope;
-  }
-
-  private void init( ) throws GeoGridException
-  {
-    if( m_hasInit )
-      return;
-
-    final GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( m_envelope.getMinX(), m_envelope.getMinY() ) );
-    final GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( m_envelope.getMaxX(), m_envelope.getMaxY() ) );
-
-    m_yStart = Math.max( 0, Math.min( minMinCell.y, maxMaxCell.y ) );
-    m_yEnd = Math.min( m_grid.getSizeY(), Math.max( minMinCell.y, maxMaxCell.y ) + 1 );
-    m_xStart = Math.max( 0, Math.min( minMinCell.x, maxMaxCell.x ) );
-    m_xEnd = Math.min( m_grid.getSizeX(), Math.max( minMinCell.x, maxMaxCell.x ) + 1 );
-
-    m_hasInit = true;
-  }
+  /**
+   * This function checks, if the cell defined by this coordinates should be walked. It checks for containment.
+   * 
+   * @param x
+   *          The x coordinate of the cell.
+   * @param y
+   *          The y coordinate of the cell.
+   * @param coordinate
+   *          The coordinates as coordinate. The z coordinate contains the value if the cell.
+   * @return True, if the cell should be walked.
+   */
+  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException;
 
   /**
-   * @see org.kalypso.grid.IGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
+   * This function checks, if the cell, defined by this coordinates should be walked. It checks for overlapping.
+   * 
+   * @param x
+   *          The x coordinate of the cell.
+   * @param y
+   *          The y coordinate of the cell.
+   * @param coordinate
+   *          The coordinates as coordinate. The z coordinate contains the value if the cell.
+   * @return The fraction of the area, the cell overlaps. It is > 0.0, if the cell should be walked.
    */
-  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
-  {
-    init();
-
-    if( x > m_xEnd || x < m_xStart )
-      return false;
-
-    if( y > m_yEnd || y < m_yStart )
-      return false;
-
-    return true;
-  }
+  public double overlaps( int x, int y, Coordinate coordinate ) throws GeoGridException;
 }

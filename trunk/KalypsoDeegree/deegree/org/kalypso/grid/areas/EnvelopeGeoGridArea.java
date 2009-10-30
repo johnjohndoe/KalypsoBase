@@ -38,36 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.grid;
+package org.kalypso.grid.areas;
 
-import com.vividsolutions.jts.algorithm.SimplePointInAreaLocator;
+import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.IGeoGrid;
+
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Location;
 
 /**
- * Visits all grid cells that lie inside the given geometry.
+ * Visits all grid cells that lie inside the envelope of the given geometry.
  * 
  * @author Holger Albert
  * @author Gernot Belger
  */
-public class LinearRingGeoGridArea implements IGeoGridArea
+public class EnvelopeGeoGridArea extends AbstractGeoGridArea
 {
-  private IGeoGrid m_grid;
-
-  private Geometry m_geom;
-
-  private int m_yStart;
-
-  private int m_yEnd;
-
-  private int m_xStart;
-
-  private int m_xEnd;
-
-  private boolean m_hasInit;
-
   /**
    * The constructor.
    * 
@@ -76,47 +62,17 @@ public class LinearRingGeoGridArea implements IGeoGridArea
    * @param geom
    *          The area geometry.
    */
-  public LinearRingGeoGridArea( IGeoGrid grid, Geometry geom )
+  public EnvelopeGeoGridArea( IGeoGrid grid, Geometry geom )
   {
-    m_grid = grid;
-    m_geom = geom;
-    m_hasInit = false;
-  }
-
-  private void init( ) throws GeoGridException
-  {
-    if( m_hasInit )
-      return;
-
-    Envelope envelope = m_geom.getEnvelopeInternal();
-    GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
-    GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
-
-    m_yStart = Math.max( 0, Math.min( minMinCell.y, maxMaxCell.y ) );
-    m_yEnd = Math.min( m_grid.getSizeY(), Math.max( minMinCell.y, maxMaxCell.y ) + 1 );
-    m_xStart = Math.max( 0, Math.min( minMinCell.x, maxMaxCell.x ) );
-    m_xEnd = Math.min( m_grid.getSizeX(), Math.max( minMinCell.x, maxMaxCell.x ) + 1 );
-
-    m_hasInit = true;
+    super( grid, geom );
   }
 
   /**
-   * @see org.kalypso.grid.IGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
+   * @see org.kalypso.grid.areas.AbstractGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
+  @Override
   public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
   {
-    init();
-
-    if( x > m_xEnd || x < m_xStart )
-      return false;
-
-    if( y > m_yEnd || y < m_yStart )
-      return false;
-
-    int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
-    if( locate != Location.INTERIOR )
-      return false;
-
-    return true;
+    return super.contains( x, y, coordinate );
   }
 }

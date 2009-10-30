@@ -61,6 +61,7 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.grid.areas.IGeoGridArea;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;

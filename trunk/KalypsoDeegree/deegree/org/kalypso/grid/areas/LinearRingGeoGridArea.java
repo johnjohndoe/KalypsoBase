@@ -38,17 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.grid;
+package org.kalypso.grid.areas;
 
+import org.kalypso.grid.GeoGridException;
+import org.kalypso.grid.IGeoGrid;
+
+import com.vividsolutions.jts.algorithm.SimplePointInAreaLocator;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Location;
 
 /**
- * Area that defines the part of a grid to be walked by a walking strategy.
+ * Visits all grid cells that lie inside the given geometry.
  * 
  * @author Holger Albert
  * @author Gernot Belger
  */
-public interface IGeoGridArea
+public class LinearRingGeoGridArea extends AbstractGeoGridArea
 {
-  boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException;
+  /**
+   * The area geometry.
+   */
+  private Geometry m_geom;
+
+  /**
+   * The constructor.
+   * 
+   * @param grid
+   *          The grid.
+   * @param geom
+   *          The area geometry.
+   */
+  public LinearRingGeoGridArea( IGeoGrid grid, Geometry geom )
+  {
+    super( grid, geom );
+
+    m_geom = geom;
+  }
+
+  /**
+   * @see org.kalypso.grid.areas.AbstractGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
+   */
+  @Override
+  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
+  {
+    boolean contains = super.contains( x, y, coordinate );
+    if( contains == false )
+      return false;
+
+    int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
+    if( locate != Location.INTERIOR )
+      return false;
+
+    return true;
+  }
 }

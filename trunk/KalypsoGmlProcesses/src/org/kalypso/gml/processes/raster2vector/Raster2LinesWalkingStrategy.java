@@ -46,9 +46,9 @@ import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.grid.IGeoGridArea;
 import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
+import org.kalypso.grid.areas.IGeoGridArea;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
