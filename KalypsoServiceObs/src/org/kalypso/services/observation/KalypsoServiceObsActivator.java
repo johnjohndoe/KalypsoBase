@@ -8,8 +8,8 @@ import java.util.Hashtable;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.services.observation.client.OcsURLStreamHandler;
@@ -22,7 +22,7 @@ import org.osgi.service.url.URLStreamHandlerService;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoServiceObsActivator extends AbstractUIPlugin
+public class KalypsoServiceObsActivator extends Plugin
 {
   public final static String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
 
@@ -113,9 +113,17 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
     return m_observationService;
   }
 
-  protected void setObservationService( final IObservationService observationService )
+  public void setObservationService( final IObservationService observationService )
   {
     m_observationService = observationService;
+  }
+
+  public boolean isObservationServiceInitialized( )
+  {
+    if( m_observationService == null )
+      return false;
+
+    return true;
   }
 
   protected void initObservationService( ) throws MalformedURLException

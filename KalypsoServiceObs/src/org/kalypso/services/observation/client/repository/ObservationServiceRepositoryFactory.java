@@ -40,9 +40,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
+import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.sei.IObservationService;
+import org.kalypso.services.observation.server.ObservationServiceImpl;
 
 /**
  * @author schlienger
@@ -61,6 +71,32 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
    */
   public boolean configureRepository( )
   {
+    final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
+    if( !plugin.isObservationServiceInitialized() )
+    {
+      final String wsdlLocationProperty = getConfiguration();
+      if( wsdlLocationProperty != null && !wsdlLocationProperty.isEmpty() )
+      {
+
+        try
+        {
+          final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
+          final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
+
+          final URL wsdlLocation = new URL( wsdlLocationProperty );
+          final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
+          final Service service = Service.create( wsdlLocation, serviceName );
+          final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
+
+          plugin.setObservationService( observationService );
+        }
+        catch( final MalformedURLException e )
+        {
+          plugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+    }
+    
     return true;
   }
 
@@ -69,6 +105,12 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
    */
   public IRepository createRepository( ) throws RepositoryException
   {
+    final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
+    if( !plugin.isObservationServiceInitialized() )
+    {
+      configureRepository();
+    }
+
     return new ObservationServiceRepository( getRepositoryName(), getClass().getName(), isReadOnly() );
   }
 }
