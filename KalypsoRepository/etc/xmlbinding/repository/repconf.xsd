@@ -37,6 +37,14 @@
 									instance.</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
+						<xs:attribute name="label" type="xs:string" 
+							use="optional">
+							<xs:annotation>
+								<xs:documentation>The name of the repository. 
+									The name will be displayed in the user 
+									interface.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
 						<xs:attribute name="readOnly" type="xs:boolean" 
 							use="optional" default="false">
 							<xs:annotation>

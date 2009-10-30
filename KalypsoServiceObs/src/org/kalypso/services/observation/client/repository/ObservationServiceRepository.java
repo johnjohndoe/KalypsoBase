@@ -66,9 +66,9 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @throws ServiceException
    *           when the underlying service is not available
    */
-  public ObservationServiceRepository( final String name, final String factory, final boolean readOnly ) throws RepositoryException
+  public ObservationServiceRepository( final String name, final String label, final String factory, final boolean readOnly ) throws RepositoryException
   {
-    super( name, factory, "", readOnly, "observation-service-repository" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( name, label, factory, "", readOnly, "observation-service-repository" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     if( srv == null )

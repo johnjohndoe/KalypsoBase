@@ -56,14 +56,37 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
 
   private String m_name;
 
+  private String m_label;
+
   public String getRepositoryName()
   {
     return m_name;
   }
 
-  public void setRepositoryName( String name )
+  public void setRepositoryName( final String name )
   {
     m_name = name;
+  }
+
+  /**
+   * @see org.kalypso.repository.factory.IRepositoryFactory#setRepositoryLabel(java.lang.String)
+   */
+  @Override
+  public void setRepositoryLabel( final String label )
+  {
+    m_label = label;
+  }
+
+  /**
+   * @see org.kalypso.repository.factory.IRepositoryFactory#getRepositoryLabel()
+   */
+  @Override
+  public String getRepositoryLabel( )
+  {
+    if( m_label == null )
+      return m_name;
+
+    return m_label;
   }
 
   public String getConfiguration()

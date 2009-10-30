@@ -85,7 +85,7 @@ public class RepositoryConfigUtils
 
       for( final Repository elt : list )
       {
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getLabel(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
         fConfs.add( item );
       }
 

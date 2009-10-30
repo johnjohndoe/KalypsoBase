@@ -78,6 +78,7 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
 
       setRepositoryName( dlg.getIdentifier() );
 
+
       b = true;
     }
 

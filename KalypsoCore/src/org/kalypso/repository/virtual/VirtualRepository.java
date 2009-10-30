@@ -92,7 +92,7 @@ public class VirtualRepository extends AbstractRepository
    */
   public VirtualRepository( final String factory, final String identifier, final String location, final boolean readOnly ) throws RepositoryException
   {
-    super( identifier, factory, location, readOnly, identifier + "://" ); //$NON-NLS-1$
+    super( identifier, identifier, factory, location, readOnly, identifier + "://" ); //$NON-NLS-1$
     m_location = location;
     try
     {

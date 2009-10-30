@@ -76,7 +76,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * @param filter
    * @return instance of FileRepository
    */
-  public FileRepository createRepository( String conf, String location, String id, boolean ro, FileFilter filter )
+  public FileRepository createRepository( final String conf, final String location, final String id, final boolean ro, final FileFilter filter )
   {
     return new FileRepository( getClass().getName(), conf, location, id, ro, filter );
   }
