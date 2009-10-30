@@ -46,9 +46,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
- * Visits all grid cells that lie inside the given geometry.<br>
- * TODO: this is not the fastest way... better would be to test containement with the PointInRing stuff from JTS.
- * Implement a new LinearRingGeoGridArea to do this.
+ * Visits all grid cells that lie inside the given geometry.
  * 
  * @author Holger Albert
  * @author Gernot Belger
@@ -107,8 +105,6 @@ public class PolygonGeoGridArea implements IGeoGridArea
     if( y > m_yEnd || y < m_yStart )
       return false;
 
-    // TODO: Can be optimizes (point in ring) ...
     return m_geom.contains( GF.createPoint( coordinate ) );
   }
-
 }

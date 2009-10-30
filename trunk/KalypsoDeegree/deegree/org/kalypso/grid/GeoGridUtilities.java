@@ -133,7 +133,7 @@ public class GeoGridUtilities
    * representation.
    * 
    * @param pos
-   *          The search position, must be in the saem coordinate system as the grid.
+   *          The search position, must be in the same coordinate system as the grid.
    * @return The grid cell that contains the given position. Always returns a value, even if the position is not
    *         contained inside the grid.
    */
@@ -726,8 +726,10 @@ public class GeoGridUtilities
     final double centerX = crd11.x;
     final double centerY = crd11.y;
 
+    // TODO This assumes the raster is (left to right / xMin to xMax) and (bottom to up / yMin to yMax) ...
+    // What if the raster is alignt in a different way?
     final int cellShiftX = crd.x < centerX ? -1 : 1;
-    final int cellShiftY = crd.y < centerY ? 1 : -1;
+    final int cellShiftY = crd.y < centerY ? -1 : 1;
 
     final GeoGridCell c12 = new GeoGridCell( c11.x + cellShiftX, c11.y );
     final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + cellShiftY );

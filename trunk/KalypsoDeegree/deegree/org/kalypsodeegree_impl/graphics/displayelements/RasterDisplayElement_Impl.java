@@ -116,9 +116,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   private double m_min;
 
   private double m_max;
-  
+
   // TODO m_min and m_max values are calculated, but that values are never used
-  
 
   @SuppressWarnings("unchecked")
   RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
@@ -287,8 +286,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress.newChild( 95 ) );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
-// paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, progress.newChild( 1 )
-    // );
+    // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, progress.newChild( 1 ) );
   }
 
   /**
@@ -725,8 +723,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * This function paints the cells and/or the cells center points.
    */
   @SuppressWarnings("unused")
-  // REMARK: not used, normally; but is used for debugging the raster stuff. Maybe add tracing option to switch this
-  // on/off
+  // REMARK: not used, normally; but is used for debugging the raster stuff.
+  // Maybe add tracing option to switch this on/off
   private void paintCells( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final GeoGridCell minCell, final GeoGridCell maxCell, final boolean cells, final boolean centerPoints, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Painting cells", maxCell.x - minCell.x );
@@ -742,6 +740,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       /* Define how the center point will be drawn. */
       final PointSymbolizer centerPointSymbolizer = new PointSymbolizer_Impl();
+
       /* Create the mark. */
       final Mark mark = StyleFactory.createMark( "square", Color.BLACK, Color.BLACK, 2 );
       final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 2, 0 );
