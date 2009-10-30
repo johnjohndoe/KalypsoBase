@@ -70,9 +70,12 @@ public abstract class AbstractRepository implements IRepository
 
   private String m_identifier;
 
-  public AbstractRepository( final String name, final String factory, final String conf, final boolean readOnly, final String identifier )
+  private final String m_label;
+
+  public AbstractRepository( final String name, final String label, final String factory, final String conf, final boolean readOnly, final String identifier )
   {
     m_name = name;
+    m_label = label;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
@@ -156,6 +159,18 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
+   * @see org.kalypso.repository.IRepository#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    if( m_label == null )
+      return m_name;
+
+    return m_label;
+  }
+
+  /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
   public IRepositoryItem getParent( )
@@ -197,9 +212,9 @@ public abstract class AbstractRepository implements IRepository
   {
     final String desc = getDescription();
     if( (desc != null) && (desc.length() > 0) )
-      return getName() + " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      return getLabel() + " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    return getName();
+    return getLabel();
   }
 
   /**

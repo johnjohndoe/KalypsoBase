@@ -77,7 +77,7 @@ public class FileRepository extends AbstractRepository
    */
   public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final FileFilter filter )
   {
-    super( identifier, factory, conf, readOnly, identifier );
+    super( identifier, identifier, factory, conf, readOnly, identifier );
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();

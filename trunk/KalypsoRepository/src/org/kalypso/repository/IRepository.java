@@ -68,6 +68,11 @@ public interface IRepository extends IRepositoryItem
   public String getName( );
 
   /**
+   * @return display name of the repository
+   */
+  public String getLabel( );
+
+  /**
    * @return some description
    */
   public String getDescription( );
@@ -154,4 +159,5 @@ public interface IRepository extends IRepositoryItem
    * string.
    */
   public void setIdentifier( String identifier );
+
 }
