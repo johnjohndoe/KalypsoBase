@@ -1044,6 +1044,11 @@ public class JTSUtilities
     if( coverPolygon == null )
       return 0.0;
 
+    /* The intersect function is much faster, than the intersection function. */
+    /* So you should use it to check for intersection, even if you need the polygon of the overlapping area. */
+    if( !baseGeometry.intersects( coverPolygon ) )
+      return 0.0;
+
     final Geometry geometry = baseGeometry.intersection( coverPolygon );
     if( geometry == null )
       return 0.0;

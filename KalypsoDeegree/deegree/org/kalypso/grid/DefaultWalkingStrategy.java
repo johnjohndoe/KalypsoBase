@@ -42,6 +42,7 @@ package org.kalypso.grid;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.grid.areas.IGeoGridArea;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
