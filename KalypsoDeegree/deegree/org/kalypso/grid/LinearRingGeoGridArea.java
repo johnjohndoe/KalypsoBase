@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import com.vividsolutions.jts.algorithm.SimplePointInAreaLocator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Location;
 
 /**
  * Visits all grid cells that lie inside the given geometry.
@@ -51,13 +52,11 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * @author Holger Albert
  * @author Gernot Belger
  */
-public class PolygonGeoGridArea implements IGeoGridArea
+public class LinearRingGeoGridArea implements IGeoGridArea
 {
-  private static GeometryFactory GF = new GeometryFactory();
+  private IGeoGrid m_grid;
 
-  private final IGeoGrid m_grid;
-
-  private final Geometry m_geom;
+  private Geometry m_geom;
 
   private int m_yStart;
 
@@ -67,12 +66,21 @@ public class PolygonGeoGridArea implements IGeoGridArea
 
   private int m_xEnd;
 
-  private boolean m_hasInit = false;
+  private boolean m_hasInit;
 
-  public PolygonGeoGridArea( final IGeoGrid grid, final Geometry geom )
+  /**
+   * The constructor.
+   * 
+   * @param grid
+   *          The grid.
+   * @param geom
+   *          The area geometry.
+   */
+  public LinearRingGeoGridArea( IGeoGrid grid, Geometry geom )
   {
     m_grid = grid;
     m_geom = geom;
+    m_hasInit = false;
   }
 
   private void init( ) throws GeoGridException
@@ -80,9 +88,9 @@ public class PolygonGeoGridArea implements IGeoGridArea
     if( m_hasInit )
       return;
 
-    final Envelope envelope = m_geom.getEnvelopeInternal();
-    final GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
-    final GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
+    Envelope envelope = m_geom.getEnvelopeInternal();
+    GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
+    GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
 
     m_yStart = Math.max( 0, Math.min( minMinCell.y, maxMaxCell.y ) );
     m_yEnd = Math.min( m_grid.getSizeY(), Math.max( minMinCell.y, maxMaxCell.y ) + 1 );
@@ -105,6 +113,10 @@ public class PolygonGeoGridArea implements IGeoGridArea
     if( y > m_yEnd || y < m_yStart )
       return false;
 
-    return m_geom.contains( GF.createPoint( coordinate ) );
+    int locate = SimplePointInAreaLocator.locate( coordinate, m_geom );
+    if( locate != Location.INTERIOR )
+      return false;
+
+    return true;
   }
 }
