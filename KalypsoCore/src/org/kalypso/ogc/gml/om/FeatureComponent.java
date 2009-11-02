@@ -44,6 +44,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
@@ -70,6 +71,10 @@ public class FeatureComponent extends AbstractComponent
 
   public FeatureComponent( final Feature itemDef, final String uri )
   {
+    // TODO: check if this works for all old code;
+    // TODO: remove null checks below
+    Assert.isNotNull( itemDef );
+
     m_itemDef = itemDef;
     m_uri = uri;
   }
@@ -122,6 +127,9 @@ public class FeatureComponent extends AbstractComponent
     if( m_itemDef instanceof XLinkedFeature_Impl )
       return ((XLinkedFeature_Impl) m_itemDef).getHref();
 
+    if( m_itemDef == null )
+      return m_uri;
+
     if( m_uri == null )
       return m_itemDef.getId();
 
@@ -142,6 +150,9 @@ public class FeatureComponent extends AbstractComponent
 
   public IPhenomenon getPhenomenon( )
   {
+    if( m_itemDef == null )
+      return null;
+
     final Object phenomProperty = m_itemDef.getProperty( ObservationFeatureFactory.SWE_PROPERTY );
     if( phenomProperty instanceof String )
       return new DictionaryPhenomenon( (String) phenomProperty, null, null );

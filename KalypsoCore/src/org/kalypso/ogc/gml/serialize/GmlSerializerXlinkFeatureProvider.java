@@ -87,11 +87,8 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
       {
         // TODO: maybe add listener to workspace in order to be informed of deletion of my feature?
         final GMLWorkspace contextWorkspace = getContext();
-        /* We are probably still loading the workspace, just return null here. */
-        if( contextWorkspace == null )
-          return null;
 
-        final URL context = contextWorkspace.getContext();
+        final URL context = contextWorkspace == null ? null : contextWorkspace.getContext();
         final URL url = m_urlResolver.resolveURL( context, uri );
 
         m_workspace = GmlSerializer.createGMLWorkspace( url, m_factory );
