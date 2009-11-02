@@ -51,7 +51,5 @@ public interface SpatialIndexExt extends SpatialIndex
 
   public Envelope getBoundingBox( );
 
-  public void clear( );
-
   public boolean contains( final Envelope itemEnv, Object item );
 }

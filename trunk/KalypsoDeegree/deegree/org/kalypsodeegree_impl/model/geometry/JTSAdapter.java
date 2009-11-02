@@ -212,10 +212,7 @@ public class JTSAdapter
    */
   public static Coordinate export( final GM_Position pos )
   {
-    final double[] asArray = pos.getAsArray();
-    if( asArray.length > 2 )
-      return new Coordinate( asArray[0], asArray[1], asArray[2] );
-    return new Coordinate( asArray[0], asArray[1] );
+     return new Coordinate( pos.getX(), pos.getY(), pos.getZ() );
   }
 
   public static GM_Position wrap( final Coordinate coord )

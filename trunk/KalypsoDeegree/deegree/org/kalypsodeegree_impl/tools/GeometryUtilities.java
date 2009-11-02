@@ -666,21 +666,6 @@ public class GeometryUtilities
   }
 
   /**
-   * Return the envelope for the given geometry. If its a point, return the singular envelope containing this point.<br>
-   * TODO Very dubious... why does the point does not provide an envelope?
-   */
-  public static GM_Envelope getEnvelope( final GM_Object geometry )
-  {
-    if( geometry instanceof GM_Point )
-    {
-      final GM_Position pos = ((GM_Point) geometry).getPosition();
-      return GeometryFactory.createGM_Envelope( pos, pos, geometry.getCoordinateSystem() );
-    }
-
-    return geometry.getEnvelope();
-  }
-
-  /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
    * 
    * @param newLine

@@ -66,17 +66,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   private final GM_Position m_position;
 
-// /**
-// * constructor. initializes a point to the coordinate 0/0
-// *
-// * @param crs
-// * spatial reference system of the point
-// */
-// public GM_Point_Impl( final String crs )
-// {
-// this( new GM_Position_Impl(), crs );
-// }
-
   /**
    * constructor for initializing a point within a two-dimensional coordinate system
    * 

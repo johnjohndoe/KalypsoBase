@@ -88,62 +88,7 @@ public class TransformVisitor implements FeatureVisitor
   {
     try
     {
-      final IFeatureType featureType = f.getFeatureType();
-
-      final IPropertyType[] ftps = featureType.getProperties();
-      for( final IPropertyType ftp : ftps )
-      {
-        if( ftp.isVirtual() )
-          continue;
-
-        if( f instanceof Feature_Impl )
-        {
-          if( ((Feature_Impl) f).isFunctionProperty( ftp ) )
-            continue;
-        }
-
-        boolean wasTransformed = false;
-
-        if( GeometryUtilities.isGeometry( ftp ) )
-        {
-          if( ftp.isList() )
-          {
-            final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
-            final int size = geomList.size();
-            for( int i = 0; i < size; i++ )
-            {
-              final GM_Object geom = geomList.get( i );
-              final GM_Object transformedGeom = transformProperty( geom );
-
-              wasTransformed = wasTransformed | (geom != transformedGeom);
-
-              geomList.set( i, transformedGeom );
-            }
-          }
-          else
-          {
-            final GM_Object object = (GM_Object) f.getProperty( ftp );
-            final GM_Object transformedGeom = transformProperty( object );
-
-            wasTransformed = object != transformedGeom;
-
-            f.setProperty( ftp, transformedGeom );
-          }
-
-          // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
-          // correctly set.
-          if( wasTransformed )
-          {
-            final Feature parent = f.getParent();
-            if( parent != null )
-            {
-              final Object parentList = parent.getProperty( f.getParentRelation() );
-              if( parentList instanceof FeatureList )
-                ((FeatureList) parentList).invalidate();
-            }
-          }
-        }
-      }
+      doVisit( f );
     }
     catch( final Exception e )
     {
@@ -152,6 +97,77 @@ public class TransformVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  private void doVisit( final Feature f ) throws Exception
+  {
+    final IFeatureType featureType = f.getFeatureType();
+
+    final IPropertyType[] ftps = featureType.getProperties();
+    for( final IPropertyType ftp : ftps )
+    {
+      final boolean wasTransformed = transformProperty( f, ftp );
+      if( wasTransformed )
+        invalidateFeatureList( f );
+    }
+  }
+
+  private boolean transformProperty( Feature f, IPropertyType ftp ) throws Exception
+  {
+    if( ftp.isVirtual() )
+      return false;
+
+    if( (f instanceof Feature_Impl) && ((Feature_Impl) f).isFunctionProperty( ftp ) )
+      return false;
+
+
+    if( !GeometryUtilities.isGeometry( ftp ) )
+      return false;
+
+    if( ftp.isList() )
+      return transformList( f, ftp );
+
+    return transformNonList( f, ftp );
+  }
+
+  private boolean transformNonList( Feature f, IPropertyType ftp ) throws Exception
+  {
+    final GM_Object object = (GM_Object) f.getProperty( ftp );
+    final GM_Object transformedGeom = transformProperty( object );
+    f.setProperty( ftp, transformedGeom );
+
+    return object != transformedGeom;
+  }
+
+  private boolean transformList( Feature f, IPropertyType ftp ) throws Exception
+  {
+    boolean wasTransformed = false;
+    final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
+    final int size = geomList.size();
+    for( int i = 0; i < size; i++ )
+    {
+      final GM_Object geom = geomList.get( i );
+      final GM_Object transformedGeom = transformProperty( geom );
+
+      wasTransformed = wasTransformed | (geom != transformedGeom);
+
+      geomList.set( i, transformedGeom );
+    }
+
+    return wasTransformed;
+  }
+
+  private void invalidateFeatureList( Feature f )
+  {
+    // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
+    // correctly set.
+    final Feature parent = f.getParent();
+    if( parent == null )
+      return;
+
+    final Object parentList = parent.getProperty( f.getParentRelation() );
+    if( parentList instanceof FeatureList )
+      ((FeatureList) parentList).invalidate();
   }
 
   private GM_Object transformProperty( final GM_Object object ) throws Exception

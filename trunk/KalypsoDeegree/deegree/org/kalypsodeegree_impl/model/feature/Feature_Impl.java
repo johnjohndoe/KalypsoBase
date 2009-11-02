@@ -179,15 +179,11 @@ public class Feature_Impl extends PlatformObject implements Feature
     final GM_Object[] geoms = getGeometryProperties();
     for( final GM_Object geometry : geoms )
     {
-      final GM_Envelope geomEnv = GeometryUtilities.getEnvelope( geometry );
+      final GM_Envelope geomEnv = geometry.getEnvelope();
       if( env == null )
-      {
         env = geomEnv;
-      }
       else
-      {
         env = env.getMerged( geomEnv );
-      }
     }
     m_envelope = env;
   }
