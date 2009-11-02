@@ -346,14 +346,14 @@ public class ShapeSerializer
     }
   }
 
-  public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final Object shapeFileType )
+  public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final int shapeFileType )
   {
     final IGMLSchema schema = featureType.getGMLSchema();
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
     final String schemaLocation = schema instanceof GMLSchema ? ((GMLSchema) schema).getContext().toExternalForm() : null;
     new GMLWorkspace_Impl( schema, featureTypes, rootFeature, null, null, schemaLocation, null );
-    rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, shapeFileType );
+    rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, new Integer( shapeFileType ) );
     return rootFeature;
   }
 
