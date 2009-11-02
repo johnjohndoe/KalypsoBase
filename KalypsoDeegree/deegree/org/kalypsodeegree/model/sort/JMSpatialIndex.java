@@ -44,13 +44,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 public interface JMSpatialIndex<T>
 {
-  public boolean add( final T object );
-
   public List<T> query( final GM_Envelope env, final List<T> result );
 
   public List<T> query( final GM_Position env, final List<T> result );
-
-  public boolean remove( final Object object );
 
   /** Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made. */
   public void invalidate( );
@@ -63,7 +59,7 @@ public interface JMSpatialIndex<T>
    */
   public void invalidate( final Object o );
 
-  /** Paints the quad-tree as rectangles */
+  /** Paints the internal representation of the geo-index. Used for debugging purposes. */
   public void paint( final Graphics g, final GeoTransform geoTransform );
 
   public GM_Envelope getBoundingBox( );

@@ -50,7 +50,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -62,57 +61,11 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Envelope;
 
 public class SplitSort implements FeatureList
 {
-  private final IEnvelopeProvider DEFAULT_ENV_PROVIDER = new IEnvelopeProvider()
-  {
-    public GM_Envelope getEnvelope( final Object object )
-    {
-      if( object instanceof DisplayElement )
-      {
-        final DisplayElement de = (DisplayElement) object;
-        return getEnvelope( de.getFeature() );
-      }
-      else if( object instanceof Feature )
-      {
-        final Feature fe = (Feature) object;
-
-        // HACK: if the workspace is null, we are probably still loading
-        // so we do not access the envelope, which may cause problems now
-        final GMLWorkspace workspace = fe.getWorkspace();
-        if( workspace == null )
-          return null;
-
-        return fe.getEnvelope();
-      }
-      else if( object instanceof String )
-      {
-        final GMLWorkspace workspace = getParentFeature().getWorkspace();
-        final Feature fe = workspace == null ? null : workspace.getFeature( (String) object );
-        if( fe != null )
-          return fe.getEnvelope();
-      }
-      else if( object instanceof GM_Object )
-      {
-        final GM_Object geometry = (GM_Object) object;
-        return GeometryUtilities.getEnvelope( geometry );
-      }
-
-      return null;
-    }
-  };
-
-  /**
-   * Used to synchronize access to m_items and m_index
-   */
-  private final Object m_lock = new Object();
-
-  private SpatialIndexExt m_index;
-
   private final List<Object> m_items = new ArrayList<Object>();
 
   private final Feature m_parentFeature;
@@ -120,6 +73,8 @@ public class SplitSort implements FeatureList
   private final IRelationType m_parentFeatureTypeProperty;
 
   private final IEnvelopeProvider m_envelopeProvider;
+
+  private SpatialIndexExt m_index;
 
   /**
    * The constructor.
@@ -152,9 +107,10 @@ public class SplitSort implements FeatureList
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
+    GMLWorkspace workspace = m_parentFeature.getWorkspace();
+    m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( workspace ) : envelopeProvider;
 
-    // Index is initially invalid. This is necessary, as loading the features ads them to this list,
+    // Index is initially invalid. This is necessary, as loading the features adds them to this list,
     // but the features often have no envelope; so we rather wait for the first query.
     m_index = null;
   }
@@ -191,7 +147,7 @@ public class SplitSort implements FeatureList
             bbox.expandToInclude( env );
       }
 
-      synchronized( m_lock )
+      synchronized( this )
       {
         // create index
         m_index = createIndex( bbox );
@@ -213,7 +169,7 @@ public class SplitSort implements FeatureList
     // TODO: not necessary if m_index is null, but calling this inside the synchronized block causes dead locks
     final Envelope env = getEnvelope( object );
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       if( m_index != null )
         m_index.insert( env, object );
@@ -225,18 +181,18 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      java.util.List)
    */
-  public List<?> query( final GM_Envelope queryEnv, final List result )
+  public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
     checkIndex();
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       final Envelope env = JTSAdapter.export( queryEnv );
-      
-      final List<?> list = m_index.query( env );
+
+      final List< ? > list = m_index.query( env );
       if( result == null )
         return list;
-      
+
       result.addAll( list );
       return result;
     }
@@ -246,7 +202,7 @@ public class SplitSort implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
    */
-  public List<?> query( final GM_Position pos, final List result )
+  public List< ? > query( final GM_Position pos, final List result )
   {
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
@@ -258,18 +214,9 @@ public class SplitSort implements FeatureList
    */
   public boolean remove( final Object object )
   {
-    Envelope env = null;
+    final Envelope env = getEnvelope( object );
 
-    try
-    {
-      env = getEnvelope( object );
-    }
-    catch( final IllegalStateException ex )
-    {
-      ex.printStackTrace();
-    }
-
-    synchronized( m_lock )
+    synchronized( this )
     {
       // TODO: slow!
       final boolean removed = m_items.remove( object );
@@ -295,7 +242,7 @@ public class SplitSort implements FeatureList
   {
     checkIndex();
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       m_index.paint( g, geoTransform );
     }
@@ -309,17 +256,12 @@ public class SplitSort implements FeatureList
   {
     checkIndex();
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       final Envelope bbox = m_index.getBoundingBox();
       if( bbox == null )
         return null;
-      // REMARK: we just set here the default crs, as we assume, that all geometries already have been translated to
-      // this one.
-      // To be more precise, we should set a crs in the constructor of the SplitSort, and transform all added envelopes
-      // to this one.
-      final GM_Envelope env = JTSAdapter.wrap( bbox, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      return env;
+      return JTSAdapter.wrap( bbox, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     }
   }
 
@@ -328,7 +270,7 @@ public class SplitSort implements FeatureList
    */
   public int size( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.size();
     }
@@ -339,7 +281,7 @@ public class SplitSort implements FeatureList
    */
   public void clear( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       m_items.clear();
       m_index = null;
@@ -359,7 +301,7 @@ public class SplitSort implements FeatureList
    */
   public Object[] toArray( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.toArray( new Object[m_items.size()] );
     }
@@ -370,7 +312,7 @@ public class SplitSort implements FeatureList
    */
   public Object get( final int index )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.get( index );
     }
@@ -381,11 +323,11 @@ public class SplitSort implements FeatureList
    */
   public Object remove( final int index )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
-        // We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
+        // FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
         m_index.remove( null, removedItem );
       return removedItem;
     }
@@ -400,7 +342,7 @@ public class SplitSort implements FeatureList
   {
     final Envelope env = getEnvelope( item );
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       m_items.add( index, item );
       if( m_index != null )
@@ -415,7 +357,7 @@ public class SplitSort implements FeatureList
   @Deprecated
   public int indexOf( final Object item )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.indexOf( item );
     }
@@ -428,7 +370,7 @@ public class SplitSort implements FeatureList
   @Deprecated
   public int lastIndexOf( final Object item )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.lastIndexOf( item );
     }
@@ -442,7 +384,7 @@ public class SplitSort implements FeatureList
     final Envelope env = getEnvelope( item );
     checkIndex();
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       // TODO: slow, as the index may be recalculated, check if possible to avoid this
       return m_index.contains( env, item );
@@ -462,7 +404,7 @@ public class SplitSort implements FeatureList
       newItems.put( item, envelope );
     }
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       final boolean added = m_items.addAll( index, c );
       if( m_index != null )
@@ -485,7 +427,7 @@ public class SplitSort implements FeatureList
       newItems.put( item, envelope );
     }
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       final boolean added = m_items.addAll( c );
       if( m_index != null )
@@ -510,7 +452,7 @@ public class SplitSort implements FeatureList
 
     checkIndex();
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       // TODO: see contains()
       for( final Entry<Object, Envelope> entry : newItems.entrySet() )
@@ -599,7 +541,7 @@ public class SplitSort implements FeatureList
   {
     final Envelope newEnv = getEnvelope( newItem );
 
-    synchronized( m_lock )
+    synchronized( this )
     {
       final Object oldItem = m_items.set( index, newItem );
       if( m_index != null )
@@ -617,7 +559,7 @@ public class SplitSort implements FeatureList
    */
   public Object[] toArray( final Object[] a )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       return m_items.toArray( a );
     }
@@ -628,7 +570,7 @@ public class SplitSort implements FeatureList
    */
   public Feature[] toFeatures( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       // FIXME: this will probably not work, as the list may contain non-features
       return m_items.toArray( new Feature[m_items.size()] );
@@ -682,7 +624,7 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       m_index = null;
     }
@@ -693,7 +635,7 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       if( m_index != null )
       {
@@ -710,7 +652,7 @@ public class SplitSort implements FeatureList
    */
   public Object first( )
   {
-    synchronized( m_lock )
+    synchronized( this )
     {
       if( size() == 0 )
         return null;
@@ -727,13 +669,13 @@ public class SplitSort implements FeatureList
     final Feature parentFeature = getParentFeature();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
 
-    final List<?> query = query( geometry.getEnvelope(), null );
+    final List< ? > query = query( geometry.getEnvelope(), null );
 
     final List<Feature> result = new LinkedList<Feature>();
     for( final Object object : query )
     {
       final Feature feature = FeatureHelper.resolveLinkedFeature( workspace, object );
-      
+
       final GM_Object[] geometryPropertyValues = feature.getGeometryPropertyValues();
       for( final GM_Object gmObject : geometryPropertyValues )
       {
@@ -744,10 +686,10 @@ public class SplitSort implements FeatureList
         }
       }
     }
-    
+
     return result;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
    */
