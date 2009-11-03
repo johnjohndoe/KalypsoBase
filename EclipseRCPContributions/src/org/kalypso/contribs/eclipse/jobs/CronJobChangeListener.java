@@ -66,34 +66,40 @@ public class CronJobChangeListener extends JobChangeAdapter
    * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
   @Override
-  public void done( final IJobChangeEvent event )
+  public void done( IJobChangeEvent event )
   {
     /* Get the job. */
-    final Job job = event.getJob();
+    Job job = event.getJob();
 
     /* Is it a cron job? */
     if( !(job instanceof CronJob) )
       return;
 
     /* Cast. */
-    final CronJob cronJob = (CronJob) job;
+    CronJob cronJob = (CronJob) job;
+
+    /* Get the name, mutex string and reschedule delay. */
+    String name = cronJob.getName();
+    String mutexString = cronJob.getMutexString();
+    long rescheduleDelay = cronJob.getRescheduleDelay();
 
     if( Debug.CRON_JOB.isEnabled() )
     {
       /* Get the result. */
-      final IStatus result = cronJob.getResult();
+      IStatus result = cronJob.getResult();
 
       /* Log. */
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "The cron job ('" + cronJob.getName() + "') has finished ..." ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') has finished execution ...", name ) ) );
       EclipseRCPContributionsPlugin.getDefault().getLog().log( result );
     }
-
-    /* Get the reschedule delay. */
-    final long rescheduleDelay = cronJob.getRescheduleDelay();
 
     /* Don't reschedule, if there is a negative value given. */
     if( rescheduleDelay < 0 )
     {
+      /* Log. */
+      if( Debug.CRON_JOB.isEnabled() )
+        EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will be deactivated ...", name ) ) );
+
       /* Remove myself as listener. */
       job.removeJobChangeListener( this );
 
@@ -102,7 +108,7 @@ public class CronJobChangeListener extends JobChangeAdapter
 
     /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('" + cronJob.getName() + "') will be rescheduled in %d ms ...", rescheduleDelay ) ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s) ...", name, rescheduleDelay, mutexString ) ) );
 
     /* Schedule (leave myself as listener). */
     job.schedule( rescheduleDelay );

@@ -1,15 +1,12 @@
 package org.kalypso.contribs.eclipse;
 
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
-import org.kalypso.contribs.eclipse.jobs.CronJob;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.kalypso.contribs.eclipse.jobs.CronJobMutexCache;
 import org.kalypso.contribs.eclipse.jobs.CronJobUtilities;
-import org.kalypso.contribs.eclipse.utils.Debug;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -30,71 +27,31 @@ public class EclipseRCPContributionsPlugin extends Plugin
   /**
    * Resource bundle.
    */
-  private ResourceBundle resourceBundle;
+  private ResourceBundle m_resourceBundle;
 
+  /**
+   * A cache for mutexes of defined cron jobs.
+   */
+  private CronJobMutexCache m_cronJobMutexCache;
+
+  /**
+   * The constructor.
+   */
+  public EclipseRCPContributionsPlugin( )
+  {
+  }
+
+  /**
+   * This function returns the ID of the plug-in.
+   * 
+   * @return The plug-in id.
+   */
   public static String getID( )
   {
     // return getDefault().getBundle().getSymbolicName();
-
-    // TRICKY: directly return the ID because this plugin is sometimes
-    // used outside of the eclipse framework (server side for calc service...)
+    // TRICKY: directly return the ID because this plugin is sometimes used outside of the eclipse framework (server
+    // side for calc service...)
     return ID;
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void start( BundleContext context ) throws Exception
-  {
-    super.start( context );
-
-    plugin = this;
-
-    try
-    {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.EclipseRCPContributionsPluginResources" );
-    }
-    catch( MissingResourceException x )
-    {
-      resourceBundle = null;
-    }
-
-    List<CronJob> cronJobs = CronJobUtilities.getCronJobs();
-    if( cronJobs.size() > 0 )
-    {
-      for( int i = 0; i < cronJobs.size(); i++ )
-      {
-        /* Get the cron job. */
-        CronJob cronJob = cronJobs.get( i );
-
-        /* Start the cron job. */
-        IStatus status = CronJobUtilities.startCronJob( cronJob );
-
-        if( Debug.CRON_JOB.isEnabled() )
-        {
-          /* Get the log. */
-          ILog log = getLog();
-
-          /* Log the result. */
-          log.log( status );
-        }
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void stop( BundleContext context ) throws Exception
-  {
-    /* Cancel all remaining cron jobs. */
-    CronJobUtilities.cancelAllCronJobs();
-
-    plugin = null;
-
-    super.stop( context );
   }
 
   /**
@@ -125,12 +82,69 @@ public class EclipseRCPContributionsPlugin extends Plugin
   }
 
   /**
+   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void start( BundleContext context ) throws Exception
+  {
+    super.start( context );
+
+    plugin = this;
+
+    try
+    {
+      m_resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.EclipseRCPContributionsPluginResources" );
+    }
+    catch( MissingResourceException x )
+    {
+      m_resourceBundle = null;
+    }
+
+    /* Create a new cache for mutexes of defined cron jobs. */
+    m_cronJobMutexCache = new CronJobMutexCache();
+
+    /* Start all cron jobs. */
+    CronJobUtilities.startAllCronJobs();
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void stop( BundleContext context ) throws Exception
+  {
+    /* Cancel all remaining cron jobs. */
+    CronJobUtilities.cancelAllCronJobs();
+
+    /* Discard the cache for mutexes of defined cron jobs. */
+    m_cronJobMutexCache = null;
+
+    m_resourceBundle = null;
+    plugin = null;
+
+    super.stop( context );
+  }
+
+  /**
    * Returns the plugin's resource bundle.
    * 
    * @return The plugin's resource bundle.
    */
   public ResourceBundle getResourceBundle( )
   {
-    return resourceBundle;
+    return m_resourceBundle;
+  }
+
+  /**
+   * This function returns a mutex for the given mutex string.
+   * 
+   * @see CronJobMutexCache#getMutex(String)
+   * @param mutexString
+   *          The mutex string.
+   * @return The mutex for the given mutex string.
+   */
+  public ISchedulingRule getCronJobMutex( String mutexString )
+  {
+    return m_cronJobMutexCache.getMutex( mutexString );
   }
 }

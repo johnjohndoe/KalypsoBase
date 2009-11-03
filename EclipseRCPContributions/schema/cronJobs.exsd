@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.kalypso.contribs.eclipsercp" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.kalypso.contribs.eclipsercp" id="cronJobs" name="cronJobs"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter description of this extension point.]
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -57,7 +57,7 @@
          <attribute name="identifier" type="string" use="required">
             <annotation>
                <documentation>
-                  Enter the identifier of this cron job here. A cron job is only allowed to run once at a time. This is checked via the identifier.
+                  Enter the identifier of this cron job here. A cron job is only allowed to be defined once at a time. This is checked via the identifier. If two cron jobs with the same id exist, only the first found will be scheduled and (if it is a reoccuring cron job) rescheduled.
                </documentation>
             </annotation>
          </attribute>
@@ -73,45 +73,52 @@
                <documentation>
                   Specify the class of the cron job here.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.kalypso.contribs.eclipse.jobs.CronJob:"/>
-               </appinfo>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="mutex" type="string">
+            <annotation>
+               <documentation>
+                  Optional value for defining a mutex. Different cron jobs with the same mutex will be normally scheduled (as defined by them), but executed seperately behind each other.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiinfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
