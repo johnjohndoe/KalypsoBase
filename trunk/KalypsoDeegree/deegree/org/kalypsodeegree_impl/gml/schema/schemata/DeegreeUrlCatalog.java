@@ -41,22 +41,24 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * Dieser Katalog gib fest-verdrahtet die Schemata hier im Code zurück. die gleichen Schemata (zumindest obslink) werden
- * auch fürs binding benutzt ist sind dadurch endlich wirklich nur noch einmal vorhanden.<br>
- * this catalog resolves some schemas that a related to kalypso, but not to ogc<br>
+ * Dieser Katalog gib fest verdrahtet die Schemata hier im Code zurück. Die gleichen Schemata (zumindest obslink) werden
+ * auch fürs Binding benutzt und sind dadurch endlich wirklich nur noch einmal vorhanden.<br>
+ * This catalog resolves some schemas that are related to Kalypso, but not to OGC.<br>
  * TODO rename in URLCatalogKalypso
  * 
  * @author gernot
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
+  /**
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
+   */
   @Override
-  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // schemas related close to ogc have been moved to URLCatalogOGC
-    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
-    catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
     catalog.put( "org.kalypso.dwd.rcm", myClass.getResource( "dwd/v0.1/rainfallCatchmentModel.xsd" ) ); // Rainfall-Catchment-Model
+    catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
     catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
   }
 }
