@@ -350,16 +350,29 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
    * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
    */
   @Override
-  public boolean isCellEditable( int rowIndex, final int columnIndex )
+  public boolean isCellEditable( final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
-      rowIndex++; // fake, just to remove compile warnings
-
       if( columnIndex == 0 )
         return false;
 
       return m_columns.get( columnIndex - 1 ).isEditable();
+    }
+  }
+
+  /**
+   * TODO: real real ugly: the column inedx here and in {@link #isCellEditable(int, int)} are interpreted differently,
+   * obviously they are used from different contexts (with/without first key-column)
+   * 
+   * @see org.kalypso.ogc.sensor.tableview.swing.tablemodel.IObservationTableModel#isEditable(int)
+   */
+  @Override
+  public boolean isEditable( final int column )
+  {
+    synchronized( m_columns )
+    {
+      return m_columns.get( column ).isEditable();
     }
   }
 
