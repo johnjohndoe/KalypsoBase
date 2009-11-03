@@ -167,14 +167,14 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
 
       if( m_forward )
       {
-        index++;
-        if( index == featureList.size() )
+        index--;
+        if( index < 0 )
           return null;
       }
       else
       {
-        index--;
-        if( index < 0 )
+        index++;
+        if( index == featureList.size() )
           return null;
       }
     }
