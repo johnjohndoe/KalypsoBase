@@ -46,7 +46,6 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -92,14 +91,9 @@ public class CronJobUtilities
         /* Start the cron job. */
         IStatus status = CronJobUtilities.startCronJob( cronJob );
 
+        /* Log the result. */
         if( Debug.CRON_JOB.isEnabled() )
-        {
-          /* Get the log. */
-          ILog log = EclipseRCPContributionsPlugin.getDefault().getLog();
-
-          /* Log the result. */
-          log.log( status );
-        }
+          EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
       }
     }
   }

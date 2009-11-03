@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -83,14 +82,11 @@ public class CronJobChangeListener extends JobChangeAdapter
     String mutexString = cronJob.getMutexString();
     long rescheduleDelay = cronJob.getRescheduleDelay();
 
+    /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
     {
-      /* Get the result. */
-      IStatus result = cronJob.getResult();
-
-      /* Log. */
       EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') has finished execution ...", name ) ) );
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( result );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( cronJob.getResult() );
     }
 
     /* Don't reschedule, if there is a negative value given. */
