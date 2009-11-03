@@ -107,7 +107,7 @@ public class SplitSort implements FeatureList
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    GMLWorkspace workspace = m_parentFeature.getWorkspace();
+    GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( workspace ) : envelopeProvider;
 
     // Index is initially invalid. This is necessary, as loading the features adds them to this list,
