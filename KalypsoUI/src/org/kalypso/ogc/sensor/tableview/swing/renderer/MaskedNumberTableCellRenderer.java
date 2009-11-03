@@ -79,7 +79,6 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
   public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
     final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-
     // reset visual settings
     label.setToolTipText( null );
     label.setForeground( null );
@@ -97,7 +96,11 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     if( isSelected )
     {
       if( hasFocus )
-        label.setBackground( Color.LIGHT_GRAY );
+      {
+        final boolean isEditable = m_model.isEditable( column );
+        if( !isEditable )
+          label.setBackground( Color.LIGHT_GRAY );
+      }
       else
       {
         label.setForeground( table.getSelectionForeground() );
@@ -107,26 +110,26 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 
     // apply rendering rule
     String ttext = table.getColumnName( column );
-    for( int i = 0; i < r.length; i++ )
+    for( final RenderingRule element : r )
     {
       // TOOLTIP
-      ttext += "; " + r[i].getTooltipText(); //$NON-NLS-1$
+      ttext += "; " + element.getTooltipText(); //$NON-NLS-1$
 
       // FONT
-      final Font f = r[i].getFont();
+      final Font f = element.getFont();
       label.setFont( f );
 
-      final Icon ic = r[i].getIcon();
+      final Icon ic = element.getIcon();
       label.setIcon( ic );
 
       if( !isSelected )
       {
         // FOREGROUND
-        final Color fgc = r[i].getForegroundColor();
+        final Color fgc = element.getForegroundColor();
         label.setForeground( fgc );
 
         // BACKGROUND
-        final Color bgc = r[i].getBackgroundColor();
+        final Color bgc = element.getBackgroundColor();
         label.setBackground( bgc );
       }
     }

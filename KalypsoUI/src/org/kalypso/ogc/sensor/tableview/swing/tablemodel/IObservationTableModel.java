@@ -55,4 +55,6 @@ public interface IObservationTableModel
   public RenderingRule[] findRules( int row, int column );
 
   public NumberFormat getNumberFormat( int column );
+
+  public boolean isEditable( int column );
 }

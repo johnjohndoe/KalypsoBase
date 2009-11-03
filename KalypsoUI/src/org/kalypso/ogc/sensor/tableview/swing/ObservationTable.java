@@ -44,8 +44,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Panel;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -196,24 +194,6 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
-
-    addKeyListener( new KeyListener()
-    {
-      public void keyPressed( final KeyEvent e )
-      {
-        System.out.println( "keyPressed" ); //$NON-NLS-1$
-      }
-
-      public void keyReleased( final KeyEvent e )
-      {
-        System.out.println( "keyReleased" ); //$NON-NLS-1$
-      }
-
-      public void keyTyped( final KeyEvent e )
-      {
-        System.out.println( "keyTyped" ); //$NON-NLS-1$
-      }
-    } );
   }
 
   public void dispose( )
@@ -442,7 +422,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     }
   }
 
-  private static class RowHeaderColumnModel extends DefaultTableColumnModel
+  protected static class RowHeaderColumnModel extends DefaultTableColumnModel
   {
     // just fist column, other are ignored
     @Override
