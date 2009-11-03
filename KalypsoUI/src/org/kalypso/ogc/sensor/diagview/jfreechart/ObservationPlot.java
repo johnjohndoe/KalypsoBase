@@ -391,7 +391,7 @@ public class ObservationPlot extends XYPlot
         if( !m_markers.containsKey( begin ) )
         {
           final long end = fr.getTo().getTime();
-          final Marker marker = createMarker( begin.doubleValue(), end, TimeserieConstants.MD_VORHERSAGE_START, TimeserieUtils.getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
+          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeserieUtils.getColorForMD( TimeserieConstants.MD_VORHERSAGE ) );
 
           addDomainMarker( marker, Layer.BACKGROUND );
 

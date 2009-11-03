@@ -45,7 +45,6 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
@@ -98,19 +97,15 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
     final List<String> ignoreTypes = view.getIgnoreTypesAsList();
 
-    for( final Iterator<TypeCurve> it = xmlObs.getCurve().iterator(); it.hasNext(); )
+    for( final TypeCurve tcurve : xmlObs.getCurve() )
     {
-      final TypeCurve tcurve = it.next();
-
       final List<TypeAxisMapping> tmaps = tcurve.getMapping();
       final List<AxisMapping> mappings = new ArrayList<AxisMapping>( tmaps.size() );
 
       boolean useThisCurve = true;
 
-      for( final Iterator<TypeAxisMapping> itm = tmaps.iterator(); itm.hasNext(); )
+      for( final TypeAxisMapping tmap : tmaps )
       {
-        final TypeAxisMapping tmap = itm.next();
-
         try
         {
           final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tmap
