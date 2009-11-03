@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.IFeatureModifierExtension;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
@@ -181,13 +182,18 @@ public class KalypsoUIExtensions
     return factories.toArray( new ITypeHandlerFactory[factories.size()] );
   }
 
-  public static IFeatureModifier createFeatureModifier( IPropertyType ftp, final String id ) throws CoreException
+  public static IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String id ) throws CoreException
   {
     final IConfigurationElement ce = getFeatureModifierElement( id );
     if( ce == null )
       return null;
 
-    return (IFeatureModifier) ce.createExecutableExtension( "class" );
+    final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" );
+
+    if( modifier instanceof IFeatureModifierExtension )
+      ((IFeatureModifierExtension) modifier).init( ftp );
+
+    return modifier;
   }
 
   private synchronized static IConfigurationElement getFeatureModifierElement( final String modifierId )
