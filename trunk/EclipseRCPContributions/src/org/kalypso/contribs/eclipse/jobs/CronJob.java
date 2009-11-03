@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * This is a default implementation for a cron job.
@@ -60,6 +62,11 @@ public abstract class CronJob extends Job
   private String m_identifier;
 
   /**
+   * The mutex string.
+   */
+  private String m_mutexString;
+
+  /**
    * The constructor.<br>
    * <br>
    * The identifier of this job by default will be "CronJob". <br>
@@ -76,6 +83,7 @@ public abstract class CronJob extends Job
     super( "CronJob" );
 
     m_identifier = "CronJob";
+    m_mutexString = "none";
 
     setUser( false );
     setSystem( true );
@@ -101,14 +109,59 @@ public abstract class CronJob extends Job
    * This function returns the identifier of this job.<br>
    * <br>
    * <strong>Note:</strong><br>
-   * If there are more then one job with the same identifier (which should never happen, by the way), only one of them
-   * can run at a time.
+   * If there are more then one jobs with the same identifier (which should never happen, by the way), only one of them
+   * will be handled.
    * 
    * @return The identifier of this job.
    */
   public String getIdentifier( )
   {
     return m_identifier;
+  }
+
+  /**
+   * This function sets the mutex string.<br>
+   * <br>
+   * <strong>Note:</strong><br>
+   * A scheduling rule (a mutex) will be set, using the given mutex string.
+   * 
+   * @see EclipseRCPContributionsPlugin#getCronJobMutex(String)
+   * @param mutexString
+   *          The mutex string.
+   */
+  public void setMutexString( String mutexString )
+  {
+    /* Reset the mutex string. */
+    m_mutexString = "none";
+
+    /* Reset the mutex for this cron job. */
+    setRule( null );
+
+    if( mutexString != null && mutexString.length() > 0 )
+    {
+      /* Store the mutex string. */
+      m_mutexString = mutexString;
+
+      /* Get the mutex for this cron job. */
+      ISchedulingRule mutex = EclipseRCPContributionsPlugin.getDefault().getCronJobMutex( mutexString );
+
+      /* Set the mutex for this cron job. */
+      setRule( mutex );
+    }
+  }
+
+  /**
+   * This function returns the mutex string.<br>
+   * <br>
+   * <strong>Note:</strong><br>
+   * A scheduling rule (a mutex) was set, using the returned mutex string.
+   * 
+   * @see EclipseRCPContributionsPlugin#getCronJobMutex(String)
+   * @return The mutex string.
+   */
+  public String getMutexString( )
+  {
+    return m_mutexString;
   }
 
   /**

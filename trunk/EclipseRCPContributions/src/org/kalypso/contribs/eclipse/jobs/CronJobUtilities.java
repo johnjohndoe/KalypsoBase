@@ -46,12 +46,15 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This class provides functions for dealing with cron jobs.
@@ -73,12 +76,41 @@ public class CronJobUtilities
   }
 
   /**
+   * This function starts all cron jobs.
+   */
+  public static void startAllCronJobs( ) throws CoreException
+  {
+    /* Get all cron jobs. */
+    List<CronJob> cronJobs = getCronJobs();
+    if( cronJobs.size() > 0 )
+    {
+      for( int i = 0; i < cronJobs.size(); i++ )
+      {
+        /* Get the cron job. */
+        CronJob cronJob = cronJobs.get( i );
+
+        /* Start the cron job. */
+        IStatus status = CronJobUtilities.startCronJob( cronJob );
+
+        if( Debug.CRON_JOB.isEnabled() )
+        {
+          /* Get the log. */
+          ILog log = EclipseRCPContributionsPlugin.getDefault().getLog();
+
+          /* Log the result. */
+          log.log( status );
+        }
+      }
+    }
+  }
+
+  /**
    * This function reads the extension registry and creates a list of the registered cron jobs. If there are none
    * registered, the list will be emtpy.
    * 
    * @return The list of registered cron jobs.
    */
-  public static List<CronJob> getCronJobs( ) throws CoreException
+  private static List<CronJob> getCronJobs( ) throws CoreException
   {
     /* The memory for the results. */
     List<CronJob> jobs = new ArrayList<CronJob>();
@@ -98,10 +130,14 @@ public class CronJobUtilities
       /* Get the name. */
       String name = element.getAttribute( "name" );
 
+      /* Get the mutex string. */
+      String mutexString = element.getAttribute( "mutex" );
+
       /* Create the cron job. */
       CronJob job = (CronJob) element.createExecutableExtension( "job" );
       job.setIdentifier( identifier );
       job.setName( name );
+      job.setMutexString( mutexString );
 
       /* Only use the job, if it has a valid schedule delay. */
       if( job.getScheduleDelay() >= 0 )
@@ -112,7 +148,7 @@ public class CronJobUtilities
   }
 
   /**
-   * This function starts the cron job.
+   * This function starts one cron job.
    * 
    * @param job
    *          The cron job.
@@ -122,17 +158,20 @@ public class CronJobUtilities
   {
     /* Is it a cron job? */
     if( !(job instanceof CronJob) )
-      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be scheduled, because it is no cron job ..." );
+      return StatusUtilities.createWarningStatus( "The job ('" + job.getName() + "') should not be activated, because it is no cron job ..." );
 
     /* Cast. */
     CronJob cronJob = (CronJob) job;
 
-    /* Get the schedule delay. */
+    /* Get the identifier, name, mutex string and schedule delay. */
+    String identifier = cronJob.getIdentifier();
+    String name = cronJob.getName();
+    String mutexString = cronJob.getMutexString();
     long scheduleDelay = cronJob.getScheduleDelay();
 
     /* This job should not be started. */
     if( scheduleDelay < 0 )
-      return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be scheduled, due to a negative delay ..." );
+      return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, due to a negative schedule delay ..." );
 
     /* Get the job manager. */
     IJobManager jobManager = CronJob.getJobManager();
@@ -143,7 +182,7 @@ public class CronJobUtilities
     /* If the given cron job is already running, ignore it. */
     for( int i = 0; i < runningCronJobs.length; i++ )
     {
-      /* Get running the cron job. */
+      /* Get the running cron job. */
       Job runningJob = runningCronJobs[i];
 
       /* Don't handle other jobs, which should happen to have the same family, but are no cron jobs. */
@@ -153,9 +192,9 @@ public class CronJobUtilities
       /* Cast. */
       CronJob runningCronJob = (CronJob) runningJob;
 
-      /* Our cron job is already running, ignore it. */
-      if( runningCronJob.getIdentifier().equals( cronJob.getIdentifier() ) )
-        return StatusUtilities.createWarningStatus( "The cron job ('" + cronJob.getName() + "') should not be scheduled, because a cron job with its id is already running ..." );
+      /* If our cron job is already running, ignore it. */
+      if( runningCronJob.getIdentifier().equals( identifier ) )
+        return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, because a cron job with its id is already activated ..." );
     }
 
     /* Okay, he can be started. */
@@ -167,7 +206,7 @@ public class CronJobUtilities
     /* Finally start it. */
     cronJob.schedule( scheduleDelay );
 
-    return StatusUtilities.createInfoStatus( "The cron job ('" + cronJob.getName() + "') was scheduled ..." );
+    return StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') was activated with a schedule delay of %d ms (mutex used: %s) ...", name, scheduleDelay, mutexString ) );
   }
 
   /**
