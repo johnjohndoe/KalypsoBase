@@ -63,6 +63,26 @@ import org.kalypso.contribs.eclipse.utils.Debug;
 public class CronJobUtilities
 {
   /**
+   * The identifier attribute (string).
+   */
+  private static final String IDENTIFIER = "identifier";
+
+  /**
+   * The name attribute (string).
+   */
+  private static final String NAME = "name";
+
+  /**
+   * The mutex attribute (string).
+   */
+  private static final String MUTEX = "mutex";
+
+  /**
+   * The job attribute (class).
+   */
+  private static final String JOB = "job";
+
+  /**
    * This listener is responsible for rescheduling the cron jobs.
    */
   public static final IJobChangeListener CRON_JOB_CHANGE_LISTENER = new CronJobChangeListener();
@@ -119,16 +139,16 @@ public class CronJobUtilities
     for( IConfigurationElement element : elements )
     {
       /* Get the identifier. */
-      String identifier = element.getAttribute( "identifier" );
+      String identifier = element.getAttribute( IDENTIFIER );
 
       /* Get the name. */
-      String name = element.getAttribute( "name" );
+      String name = element.getAttribute( NAME );
 
       /* Get the mutex string. */
-      String mutexString = element.getAttribute( "mutex" );
+      String mutexString = element.getAttribute( MUTEX );
 
       /* Create the cron job. */
-      CronJob job = (CronJob) element.createExecutableExtension( "job" );
+      CronJob job = (CronJob) element.createExecutableExtension( JOB );
       job.setIdentifier( identifier );
       job.setName( name );
       job.setMutexString( mutexString );
