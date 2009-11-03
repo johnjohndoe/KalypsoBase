@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
@@ -180,7 +181,7 @@ public class KalypsoUIExtensions
     return factories.toArray( new ITypeHandlerFactory[factories.size()] );
   }
 
-  public static IFeatureModifier createFeatureModifier( final String id ) throws CoreException
+  public static IFeatureModifier createFeatureModifier( IPropertyType ftp, final String id ) throws CoreException
   {
     final IConfigurationElement ce = getFeatureModifierElement( id );
     if( ce == null )

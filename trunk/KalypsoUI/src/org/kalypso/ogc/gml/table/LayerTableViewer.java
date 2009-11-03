@@ -657,7 +657,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     {
       try
       {
-        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( modifierId );
+        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( ftp, modifierId );
         if( modifierId == null )
           System.out.println( "No feature modifier with id: " + modifierId );
         else
