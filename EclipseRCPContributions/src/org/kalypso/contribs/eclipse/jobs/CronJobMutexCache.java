@@ -74,7 +74,7 @@ public class CronJobMutexCache
    *          The mutex string.
    * @return The mutex for the given mutex string.
    */
-  public ISchedulingRule getMutex( String mutexString )
+  public synchronized ISchedulingRule getMutex( String mutexString )
   {
     if( !m_mutexes.containsKey( mutexString ) )
       m_mutexes.put( mutexString, new MutexRule( mutexString ) );
