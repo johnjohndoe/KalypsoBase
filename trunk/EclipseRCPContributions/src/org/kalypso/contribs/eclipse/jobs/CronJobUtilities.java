@@ -43,6 +43,7 @@ package org.kalypso.contribs.eclipse.jobs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -99,6 +100,8 @@ public class CronJobUtilities
    */
   public static void startAllCronJobs( ) throws CoreException
   {
+    ResourcesPlugin.getPlugin();
+    
     /* Get all cron jobs. */
     List<CronJob> cronJobs = getCronJobs();
     if( cronJobs.size() > 0 )
