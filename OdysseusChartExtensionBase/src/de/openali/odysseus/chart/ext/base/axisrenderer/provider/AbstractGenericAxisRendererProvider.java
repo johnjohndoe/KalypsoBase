@@ -99,13 +99,14 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     return calendarAxisRenderer;
   }
 
-  public abstract ITickCalculator getTickCalculator( );
-
-  public abstract ILabelCreator getLabelCreator( );
-
   private int getFixedWidth( )
   {
     return Integer.parseInt( getParameterContainer().getParameterValue( "fixed_width", "0" ) );
+  }
+
+  private int getGap( )
+  {
+    return Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) );
   }
 
   private boolean getHideCut( )
@@ -114,10 +115,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     return getParameterContainer().getParsedParameterValue( "hide_cut", "false", bp );
   }
 
-  private Number getMinTickInteval( )
-  {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "min_tick_interval", "0" ) );
-  }
+  public abstract ILabelCreator getLabelCreator( );
 
   private Insets getLabelInsets( )
   {
@@ -131,10 +129,12 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     return new Insets( insetLabel_top, insetLabel_left, insetLabel_bottom, insetLabel_right );
   }
 
-  private int getGap( )
+  private Number getMinTickInteval( )
   {
-    return Integer.parseInt( getParameterContainer().getParameterValue( "gap", "0" ) );
+    return Integer.parseInt( getParameterContainer().getParameterValue( "min_tick_interval", "0" ) );
   }
+
+  public abstract ITickCalculator getTickCalculator( );
 
   private Insets getTickInsets( )
   {
