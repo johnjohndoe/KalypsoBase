@@ -30,6 +30,7 @@
 package org.kalypso.repository;
 
 
+
 /**
  * RepositoryUtils provides some utility methods in a static way
  * 
@@ -162,6 +163,25 @@ public class RepositoryUtils
     }
 
     return true;
+  }
+
+  public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
+  {
+    if( item instanceof IRepository )
+      return item.getIdentifier();
+
+    String base = "";
+
+    IRepositoryItem parent = item.getParent();
+    if( parent != null )
+      base += resolveItemName( parent );
+
+    if( base.endsWith( "/" ) || base.endsWith( "." ) )
+      base += item.getName();
+    else
+      base += "." + item.getName();
+
+    return base;
   }
 
 }
