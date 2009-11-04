@@ -550,10 +550,10 @@
 		<image commandId="org.kalypso.ogc.gml.map.Screenshot" icon="icons/map/screenshot.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" icon="icons/map/themeInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" icon="icons/map/show_outline.gif" />
-		<image commandId="org.kalypso.ui.map.selectFirstFeatureCommand" icon="icons/map/firstFeature.gif" />
-		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" icon="icons/map/nextFeature.gif" />
-		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" icon="icons/map/prevFeature.gif" />
-		<image commandId="org.kalypso.ui.map.selectLastFeatureCommand" icon="icons/map/lastFeature.gif" />
+		<image commandId="org.kalypso.ui.map.selectFirstFeatureCommand" disabledIcon="icons/map/firstFeature_gray.gif" icon="icons/map/firstFeature.gif" />
+		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" disabledIcon="icons/map/nextFeature_gray.gif" icon="icons/map/nextFeature.gif" />
+		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" disabledIcon="icons/map/prevFeature_gray.gif" icon="icons/map/prevFeature.gif" />
+		<image commandId="org.kalypso.ui.map.selectLastFeatureCommand" disabledIcon="icons/map/lastFeature_gray.gif" icon="icons/map/lastFeature.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
