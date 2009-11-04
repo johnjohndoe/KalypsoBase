@@ -63,7 +63,9 @@ import org.vafada.swtcalendar.SWTCalendarListener;
 
 /**
  * @author Dirk Kuch
+ * @deprecated Use {@link org.kalypso.contribs.eclipse.swt.widgets.DateTimeDialog} instead.
  */
+@Deprecated
 public class DateTimeDialog extends TitleAreaDialog
 {
   private final TimeZone m_displayTimeZone;
