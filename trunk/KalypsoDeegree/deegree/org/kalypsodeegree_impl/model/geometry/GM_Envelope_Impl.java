@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * <P>
  * ------------------------------------------------------------
  * </P>
- *
+ * 
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  * @author Markus Bedel href="mailto:bedel@giub.uni-bonn.de"
  * @version $Id$
@@ -86,13 +86,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
   /**
    * Creates a new GM_Envelope_Impl object.
-   *
+   * 
    * @param min
-   *            The min position.
+   *          The min position.
    * @param max
-   *            The max position.
+   *          The max position.
    * @param coordinateSystem
-   *            The coordinate system of the positions, contained in this envelope.
+   *          The coordinate system of the positions, contained in this envelope.
    */
   public GM_Envelope_Impl( final GM_Position min, final GM_Position max, final String coordinateSystem )
   {
@@ -104,12 +104,12 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     m_coordinateSystem = coordinateSystem;
   }
 
-  public GM_Envelope_Impl( final double minX, final double minY, final double maxX, final double maxY, final String coordinateSystem )
+  public GM_Envelope_Impl( final double x1, final double y1, final double x2, final double y2, final String coordinateSystem )
   {
-    m_minX = minX;
-    m_minY = minY;
-    m_maxX = maxX;
-    m_maxY = maxY;
+    m_minX = Math.min( x1, x2 );
+    m_minY = Math.min( y1, y2 );
+    m_maxX = Math.max( x1, x2 );
+    m_maxY = Math.max( y1, y2 );
     m_coordinateSystem = coordinateSystem;
   }
 
@@ -233,11 +233,11 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   }
 
   /**
-   * returns a new GM_Envelope object representing the intersection of this GM_Envelope with the specified GM_Envelope. *
-   * Note: If there is no intersection at all GM_Envelope will be null.
-   *
+   * returns a new GM_Envelope object representing the intersection of this GM_Envelope with the specified GM_Envelope.
+   * * Note: If there is no intersection at all GM_Envelope will be null.
+   * 
    * @param bb
-   *            the GM_Envelope to be intersected with this GM_Envelope
+   *          the GM_Envelope to be intersected with this GM_Envelope
    * @return the largest GM_Envelope contained in both the specified GM_Envelope and in this GM_Envelope.
    */
   public GM_Envelope createIntersection( final GM_Envelope bb )
@@ -279,7 +279,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
   /**
    * Checks if this point is completly equal to the submitted geometry
-   *
+   * 
    * @param exact
    *          If <code>false</code>, the positions are compared by {@link GM_Position#equals(Object, false)}
    * @see GM_Position#equals(Object, boolean)
@@ -387,37 +387,34 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 }
 
 /*
- * Changes to this class. What the people haven been up to: $Log$
- * Changes to this class. What the people haven been up to: Revision 1.21  2008/05/22 15:26:59  devgernot
- * Changes to this class. What the people haven been up to: Changed KalypsoDeegree file header.
- * Changes to this class. What the people haven been up to:
- * Changes to this class. What the people haven been up to: Revision 1.20  2008/05/05 12:57:33  thuel
- * Changes to this class. What the people haven been up to: envelope calculation made more mathematical
- * Changes to this class. What the people haven been up to:
- * Changes to this class. What the people haven been up to: Revision 1.19  2008/03/27 17:18:20  albert
- * Changes to this class. What the people haven been up to: - transformation of raster
- * Changes to this class. What the people haven been up to: Changes to this class. What
- * the people haven been up to: Revision 1.18 2008/01/16 15:12:04 skurzbach Changes to this class. What the people haven
- * been up to: model adaptors based on gml feature type, theme factory extension for maps, adaptor for discretization
- * model (dm): no inverted edges anymore, introduced version 1.0 of dm, removed wrappers for inverted edges, adapted
- * geometry drawing and import/export (2d) of dm, removed double usage of xerces (profiling error) Changes to this
- * class. What the people haven been up to: Changes to this class. What the people haven been up to: Revision 1.17
- * 2007/08/09 17:58:20 devgernot Changes to this class. What the people haven been up to: Some code cleanup for
- * WMS-Theme. Removed unnecessary image transformation stuff. Changes to this class. What the people haven been up to:
- * Revision 1.16 2006/05/28 15:47:16 devgernot - GML-Version is now determined automatically! Use annotations, default
- * is 2.1; - some yellow thingies - repaired some tests (KalypsoCommon, Core is clean, some Test in KalypsoTest are
- * still not running due to GMLSchemaParser/Writer Problems) Revision 1.15 2005/09/29 12:35:21 doemming *** empty log
- * message *** Revision 1.14 2005/09/18 16:22:58 belger *** empty log message *** Revision 1.13 2005/07/21 02:56:47
- * doemming *** empty log message *** Revision 1.12 2005/06/19 15:10:01 doemming *** empty log message *** Revision 1.11
- * 2005/04/17 21:19:24 doemming *** empty log message *** Revision 1.10 2005/03/08 11:01:04 doemming *** empty log
- * message *** Revision 1.9 2005/03/02 18:17:17 doemming *** empty log message *** Revision 1.8 2005/02/20 18:56:50
- * doemming *** empty log message *** Revision 1.7 2005/02/15 17:13:49 doemming *** empty log message *** Revision 1.6
- * 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.5 2004/10/07 14:09:10 doemming *** empty log
- * message *** Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 13:54:32
- * doemming *** empty log message *** Revision 1.13 2004/03/02 07:38:14 poth no message Revision 1.12 2004/02/23
- * 07:47:50 poth no message Revision 1.11 2004/01/27 07:55:44 poth no message Revision 1.10 2004/01/08 09:50:22 poth no
- * message Revision 1.9 2003/09/14 14:05:08 poth no message Revision 1.8 2003/07/10 15:24:23 mrsnyder Started to
- * implement LabelDisplayElements that are bound to a Polygon. Fixed error in
+ * Changes to this class. What the people haven been up to: $Log$ Changes to this class. What the people haven been up
+ * to: Revision 1.21 2008/05/22 15:26:59 devgernot Changes to this class. What the people haven been up to: Changed
+ * KalypsoDeegree file header. Changes to this class. What the people haven been up to: Changes to this class. What the
+ * people haven been up to: Revision 1.20 2008/05/05 12:57:33 thuel Changes to this class. What the people haven been up
+ * to: envelope calculation made more mathematical Changes to this class. What the people haven been up to: Changes to
+ * this class. What the people haven been up to: Revision 1.19 2008/03/27 17:18:20 albert Changes to this class. What
+ * the people haven been up to: - transformation of raster Changes to this class. What the people haven been up to:
+ * Changes to this class. What the people haven been up to: Revision 1.18 2008/01/16 15:12:04 skurzbach Changes to this
+ * class. What the people haven been up to: model adaptors based on gml feature type, theme factory extension for maps,
+ * adaptor for discretization model (dm): no inverted edges anymore, introduced version 1.0 of dm, removed wrappers for
+ * inverted edges, adapted geometry drawing and import/export (2d) of dm, removed double usage of xerces (profiling
+ * error) Changes to this class. What the people haven been up to: Changes to this class. What the people haven been up
+ * to: Revision 1.17 2007/08/09 17:58:20 devgernot Changes to this class. What the people haven been up to: Some code
+ * cleanup for WMS-Theme. Removed unnecessary image transformation stuff. Changes to this class. What the people haven
+ * been up to: Revision 1.16 2006/05/28 15:47:16 devgernot - GML-Version is now determined automatically! Use
+ * annotations, default is 2.1; - some yellow thingies - repaired some tests (KalypsoCommon, Core is clean, some Test in
+ * KalypsoTest are still not running due to GMLSchemaParser/Writer Problems) Revision 1.15 2005/09/29 12:35:21 doemming
+ * *** empty log message *** Revision 1.14 2005/09/18 16:22:58 belger *** empty log message *** Revision 1.13 2005/07/21
+ * 02:56:47 doemming *** empty log message *** Revision 1.12 2005/06/19 15:10:01 doemming *** empty log message ***
+ * Revision 1.11 2005/04/17 21:19:24 doemming *** empty log message *** Revision 1.10 2005/03/08 11:01:04 doemming ***
+ * empty log message *** Revision 1.9 2005/03/02 18:17:17 doemming *** empty log message *** Revision 1.8 2005/02/20
+ * 18:56:50 doemming *** empty log message *** Revision 1.7 2005/02/15 17:13:49 doemming *** empty log message ***
+ * Revision 1.6 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.5 2004/10/07 14:09:10 doemming ***
+ * empty log message *** Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31
+ * 13:54:32 doemming *** empty log message *** Revision 1.13 2004/03/02 07:38:14 poth no message Revision 1.12
+ * 2004/02/23 07:47:50 poth no message Revision 1.11 2004/01/27 07:55:44 poth no message Revision 1.10 2004/01/08
+ * 09:50:22 poth no message Revision 1.9 2003/09/14 14:05:08 poth no message Revision 1.8 2003/07/10 15:24:23 mrsnyder
+ * Started to implement LabelDisplayElements that are bound to a Polygon. Fixed error in
  * GM_MultiSurface_Impl.calculateCentroidArea(). Revision 1.7 2003/07/03 12:32:26 poth no message Revision 1.6
  * 2003/03/20 12:10:29 mrsnyder Rewrote intersects() method. Revision 1.5 2003/03/19 15:30:04 axel_schaefer Intersects:
  * crossing envelopes, but points are not in envelope
