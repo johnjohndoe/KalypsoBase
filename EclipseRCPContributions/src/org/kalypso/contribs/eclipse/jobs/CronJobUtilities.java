@@ -100,8 +100,13 @@ public class CronJobUtilities
    */
   public static void startAllCronJobs( ) throws CoreException
   {
+    /* TODO: This is only quick and dirty. */
+    /* The resources plugin is activated later by one cron job and can not be started, */
+    /* because its activation uses a different rule than the cron job (mutex rule). */
+    /* So the outer rule (mutex rule) does not match the rule of the activation. */
+    /* This enforces the activation, before the cron jobs are started. */
     ResourcesPlugin.getPlugin();
-    
+
     /* Get all cron jobs. */
     List<CronJob> cronJobs = getCronJobs();
     if( cronJobs.size() > 0 )
