@@ -71,9 +71,9 @@ final public class GeometryFactory
   /**
    * creates a GM_Envelope object out from two corner coordinates
    */
-  public static GM_Envelope createGM_Envelope( final double minx, final double miny, final double maxx, final double maxy, final String coordinateSystem )
+  public static GM_Envelope createGM_Envelope( final double x1, final double y1, final double x2, final double y2, final String coordinateSystem )
   {
-    return new GM_Envelope_Impl( minx, miny, maxx, maxy, coordinateSystem );
+    return new GM_Envelope_Impl( x1, y1, x2, y2, coordinateSystem );
   }
 
   /**
