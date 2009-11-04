@@ -8,7 +8,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
-import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -60,7 +59,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     m_data.open();
 
-    final TupleResult result = m_data.getTupleResult();
+  //  final TupleResult result = m_data.getTupleResult();
 
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
@@ -69,8 +68,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainValues[0].getClass() );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetValues[0].getClass() );
+      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass());//domainValues[0].getClass() );
+      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass());//targetValues[0].getClass() );
 
       if( dopDomain == null || dopTarget == null )
         return;
