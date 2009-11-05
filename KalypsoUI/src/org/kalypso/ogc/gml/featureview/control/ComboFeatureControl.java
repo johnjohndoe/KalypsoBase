@@ -113,11 +113,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
    */
   private final ViewerFilter m_filter;
 
-  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator, final ViewerFilter filter )
-  {
-    this( null, ftp, entries, comparator, filter );
-  }
-
   public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator, final ViewerFilter filter )
   {
     super( feature, ftp );
@@ -364,5 +359,10 @@ public class ComboFeatureControl extends AbstractFeatureControl
         foundFeatures.add( linkedFeature );
       }
     }
+  }
+
+  protected ComboViewer getComboViewer( )
+  {
+    return m_comboViewer;
   }
 }
