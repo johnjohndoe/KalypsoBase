@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 /**
  * @author Gernot Belger
  */
-public class LaengsschnittLayerProvider extends AbstractLayerProvider
+public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
 {
 
   /**
@@ -62,7 +62,6 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( final URL context )
   {
-
     return new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
@@ -76,9 +75,9 @@ public class LaengsschnittLayerProvider extends AbstractLayerProvider
 
     final String href = pc.getParameterValue( "href", null );
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null );
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponentId", null );
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponentId", null );
+    final String observationId = pc.getParameterValue( "observationId", null );
+    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
+    final String targetComponentName = pc.getParameterValue( "targetComponentId", null );
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
     {

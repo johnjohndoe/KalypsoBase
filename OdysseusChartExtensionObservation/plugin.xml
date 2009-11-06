@@ -7,7 +7,7 @@
             class="org.kalypso.chart.ext.observation.layer.provider.LineLayerProvider"
             id="org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider"/>
       <provider
-            class="org.kalypso.chart.ext.observation.layer.provider.LaengsschnittLayerProvider"
+            class="org.kalypso.chart.ext.observation.layer.provider.DefaultTupleResultLayerProvider"
             id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"/>
       <provider
             class="org.kalypso.chart.ext.observation.layer.provider.BranchLayerProvider"
