@@ -131,7 +131,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     UPDATE_JOB.schedule();
   }
 
-  protected void fireWorkspaceChanged( )
+  protected synchronized void fireWorkspaceChanged( )
   {
     new WorkspaceJob( "" ) //$NON-NLS-1$
     {
@@ -148,7 +148,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     }.schedule();
   }
 
-  protected void fireConnectionStatusChanged( )
+  protected synchronized void fireConnectionStatusChanged( )
   {
     new WorkspaceJob( "" ) //$NON-NLS-1$
     {
