@@ -44,6 +44,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +66,7 @@ import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.NameScope;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -770,5 +772,25 @@ public class FileUtilities
     fileName = fileName.replaceAll( "\\.", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return fileName.trim();
+  }
+
+  public static File[] getFiles( final File fDir, final String regex )
+  {
+    Assert.isTrue( fDir.isDirectory() );
+    final String myRegEx = regex.toLowerCase();
+
+    final File[] files = fDir.listFiles( new FileFilter()
+    {
+      public boolean accept( final File pathname )
+      {
+        final String name = pathname.getName().toLowerCase();
+        if( name.matches( myRegEx ) )
+          return true;
+
+        return false;
+      }
+    } );
+
+    return files;
   }
 }
