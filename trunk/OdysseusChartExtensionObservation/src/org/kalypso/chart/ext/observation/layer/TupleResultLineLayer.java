@@ -8,11 +8,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -59,7 +62,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     m_data.open();
 
-  //  final TupleResult result = m_data.getTupleResult();
+    // final TupleResult result = m_data.getTupleResult();
 
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
@@ -68,8 +71,10 @@ public class TupleResultLineLayer extends AbstractLineLayer
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass());//domainValues[0].getClass() );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass());//targetValues[0].getClass() );
+      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );// domainValues[0].getClass()
+      // );
+      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );// targetValues[0].getClass()
+      // );
 
       if( dopDomain == null || dopTarget == null )
         return;
@@ -130,9 +135,46 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    if( !isVisible() )
+      return null;
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
+    final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
+    final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
+    final Object[] domainValues = m_data.getDomainValues();
+    final Object[] targetValues = m_data.getTargetValues();
 
+    for( int i = 0; i < domainValues.length; i++ )
+    {
+      final Object domainValue = domainValues[i];
+      final Object targetValue = targetValues[i];
+      if( targetValue == null )
+        continue;
+      final Point pValue = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
+      final Rectangle hover = RectangleUtils.buffer( pValue );
+      if( hover == null )
+        continue;
+
+      if( hover.contains( pos ) )
+      {
+        if( pValue == null )
+          return new EditInfo( this, null, null, i, "Station", RectangleUtils.getCenterPoint( hover ) );
+
+        return new EditInfo( this, null, null, i, "Station", pValue );
+      }
+    }
+
+    return null;
+  }
   protected void setData( final TupleResultDomainValueData data )
   {
     m_data = data;
   }
+
 }

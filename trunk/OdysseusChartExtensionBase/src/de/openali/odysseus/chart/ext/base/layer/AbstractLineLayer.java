@@ -7,11 +7,16 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -19,7 +24,7 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author alibu
  */
-public abstract class AbstractLineLayer extends AbstractChartLayer
+public abstract class AbstractLineLayer extends AbstractChartLayer implements ITooltipChartLayer
 {
 
   private final ILineStyle m_lineStyle;
@@ -171,5 +176,14 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   public void dispose( )
   {
 
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    return null;
   }
 }
