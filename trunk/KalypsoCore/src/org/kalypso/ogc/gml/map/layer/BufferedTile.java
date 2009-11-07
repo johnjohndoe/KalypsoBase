@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.map.layer;
 import java.awt.Graphics;
 
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
+import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -57,9 +58,9 @@ public class BufferedTile extends BufferPaintJob
 {
   private final GeoTransform m_world2screen;
 
-  public BufferedTile( final IPaintable paintable, final GeoTransform world2screen )
+  public BufferedTile( final IPaintable paintable, final GeoTransform world2screen, ImageCache imageCache )
   {
-    super( paintable );
+    super( paintable, imageCache );
     m_world2screen = world2screen;
   }
 

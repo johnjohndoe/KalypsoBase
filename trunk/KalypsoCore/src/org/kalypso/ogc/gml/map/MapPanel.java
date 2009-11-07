@@ -76,6 +76,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
+import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.contribs.eclipse.jobs.TextPaintable;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
@@ -124,7 +125,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * 
    * @see java.awt.Component#repaint(long)
    */
-  private static final long LAYER_REPAINT_MILLIS = 750;
+  private static final long LAYER_REPAINT_MILLIS = 500;
 
   private static interface IListenerRunnable
   {
@@ -229,6 +230,18 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
   private final ISchedulingRule m_painterMutex = new MutexRule();
 
+  /**
+   * An image cache is used to provide the buffered images for the panel and also the buffered layers.<br>
+   * This reduces the impact of recreating lots of buffered images when mutiple layers get repainted.
+   */
+  private final ImageCache m_imageCache = new ImageCache( 1, m_backgroundColor, true );
+
+  /**
+   * An image cache is used to provide the buffered images for the panel and also the buffered layers.<br>
+   * This reduces the impact of recreating lots of buffered images when mutiple layers get repainted.
+   */
+  private final ImageCache m_layerImageCache = new ImageCache( 5, new Color( 255, 255, 255, 0 ), false );
+
   private IStatus m_status = Status.OK_STATUS;
 
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
@@ -306,7 +319,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     final GM_Envelope bbox = m_wishBBox != null ? m_wishBBox : m_boundingBox;
     if( bbox != null )
-    setBoundingBox( bbox, false );
+      setBoundingBox( bbox, false );
   }
 
   /**
@@ -339,10 +352,15 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_mapPanelListeners.clear();
     m_paintListeners.clear();
 
-    if( m_bufferPaintJob != null )
+    synchronized( this )
     {
-      m_bufferPaintJob.dispose();
-      m_bufferPaintJob = null;
+      if( m_bufferPaintJob != null )
+      {
+        m_bufferPaintJob.dispose();
+        m_bufferPaintJob = null;
+      }
+
+      m_imageCache.clear();
     }
   }
 
@@ -522,36 +540,37 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   public void invalidateMap( )
   {
-    final IMapModell mapModell = getMapModell();
-    if( mapModell == null )
-      return;
-
-    final IPaintable paintable = createPaintable( mapModell );
-
-    final BufferPaintJob bufferPaintJob = new BufferPaintJob( paintable );
-    bufferPaintJob.setRule( m_painterMutex );
-    bufferPaintJob.setPriority( Job.SHORT );
-    bufferPaintJob.setUser( false );
-
-    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", bufferPaintJob, 5000 ) //$NON-NLS-1$
-    {
-      @Override
-      protected void jobRunning( )
-      {
-        MapPanel.this.repaintMap();
-      }
-    };
-    repaintJob.setSystem( true );
-    repaintJob.schedule();
-
-    /* Cancel old job if still running. */
     synchronized( this )
     {
+      /* Cancel old job if still running. */
       if( m_bufferPaintJob != null )
       {
         m_bufferPaintJob.dispose();
         m_bufferPaintJob = null;
       }
+
+      final IMapModell mapModell = getMapModell();
+      if( mapModell == null )
+        return;
+
+      final IPaintable paintable = createPaintable( mapModell );
+
+      final BufferPaintJob bufferPaintJob = new BufferPaintJob( paintable, m_imageCache );
+      bufferPaintJob.setRule( m_painterMutex );
+      bufferPaintJob.setPriority( Job.SHORT );
+      bufferPaintJob.setSystem( true );
+
+      /* This jobs observes the paint-job and repaints the map all 5seconds and once after painting is done */
+      final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", bufferPaintJob, 1000 ) //$NON-NLS-1$
+      {
+        @Override
+        protected void jobRunning( )
+        {
+          MapPanel.this.repaintMap();
+        }
+      };
+      repaintJob.setSystem( true );
+      repaintJob.schedule();
 
       m_bufferPaintJob = bufferPaintJob;
       // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
@@ -574,7 +593,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
 
     final IMapLayer[] layers = getLayersForRendering();
-    return new MapPanelPainter( layers, mapModell, projection, m_backgroundColor );
+    return new MapPanelPainter( layers, mapModell, projection );
   }
 
   /**
@@ -604,7 +623,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       bufferGraphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
       bufferGraphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
-      final BufferPaintJob bufferPaintJob = m_bufferPaintJob; // get copy (for thread safety)
+      final BufferPaintJob bufferPaintJob = m_bufferPaintJob; // get copy (for more thread safety)
       final BufferedImage image = bufferPaintJob == null ? null : bufferPaintJob.getImage();
       if( image != null )
       {
@@ -970,13 +989,13 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
         // Render asynchronous: no
         // Repaint during rendering: yes
-        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, true, LAYER_REPAINT_MILLIS );
+        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, true, m_layerImageCache, LAYER_REPAINT_MILLIS );
       }
       else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) ) //$NON-NLS-1$
       {
         // Render asynchronously: yes (own mutex)
         // Repaint during rendering: no
-        newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), false );
+        newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), false, m_layerImageCache );
       }
       else if( theme.getClass().getName().endsWith( "KalypsoScaleTheme" ) ) //$NON-NLS-1$
         newLayer = new DirectMapLayer( this, theme );
@@ -986,7 +1005,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       {
         // Render asynchronous: no
         // Repaint during rendering: no
-        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, false );
+        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, false, m_layerImageCache );
       }
 
       m_layers.put( theme, newLayer );
