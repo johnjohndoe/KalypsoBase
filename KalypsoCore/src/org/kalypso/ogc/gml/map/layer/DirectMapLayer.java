@@ -82,6 +82,9 @@ public class DirectMapLayer extends AbstractMapLayer
   protected void invalidate( final GM_Envelope invalidExtent )
   {
     // nothing to do: we have no state to invalidate
+
+    // only invalidate the map, so the paint method will be called
+    getMapPanel().invalidateMap();
   }
 
 }

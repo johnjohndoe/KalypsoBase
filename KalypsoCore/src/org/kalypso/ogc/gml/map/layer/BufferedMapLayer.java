@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
+import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -62,13 +63,15 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class BufferedMapLayer extends AbstractMapLayer implements IPaintable
 {
   // We do not use it as job yet, just as image container
-  private final BufferPaintJob m_paintJob = new BufferPaintJob( this );
+  private final BufferPaintJob m_paintJob;
 
   private GeoTransform m_world2screen;
 
-  public BufferedMapLayer( final IMapPanel panel, final IKalypsoTheme theme )
+  public BufferedMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ImageCache imageCache )
   {
     super( panel, theme );
+
+    m_paintJob = new BufferPaintJob( this, imageCache );
   }
 
   /**
@@ -164,6 +167,8 @@ public class BufferedMapLayer extends AbstractMapLayer implements IPaintable
   {
     if( extent == null || m_world2screen != null && m_world2screen.getSourceRect().intersects( extent ) )
       m_paintJob.dispose();
+
+    getMapPanel().invalidateMap();
   }
 
 }

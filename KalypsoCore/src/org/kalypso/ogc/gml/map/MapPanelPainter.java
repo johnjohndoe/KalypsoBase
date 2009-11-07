@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -70,20 +69,17 @@ public class MapPanelPainter implements IPaintable
 
   private final IMapLayer[] m_layers;
 
-  private final Color m_bgColor;
-
   /**
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
    *
    * @param bgColor
    *          If set, the buffer image is filled with this color before any layer will be painted.
    */
-  public MapPanelPainter( final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen, final Color bgColor )
+  public MapPanelPainter( final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen )
   {
     m_layers = layers;
     m_modell = modell;
     m_world2screen = world2screen;
-    m_bgColor = bgColor;
   }
 
   public GeoTransform getWorld2screen( )
@@ -97,7 +93,7 @@ public class MapPanelPainter implements IPaintable
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.MapPanelPainter.0") + m_modell.getLabel( m_modell ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_modell.getLabel( m_modell ) ); //$NON-NLS-1$
   }
 
   /**
@@ -119,18 +115,14 @@ public class MapPanelPainter implements IPaintable
   @Override
   public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.1" ), m_layers.length + 1 ); //$NON-NLS-1$
+
     /* Draw background */
+    monitor.subTask( "Drawing Background" );
     final int screenWidth = (int) m_world2screen.getDestWidth();
     final int screenHeight = (int) m_world2screen.getDestHeight();
     // setClip, necessary, as some display element use the clip bounds to determine the screen-size
     g.setClip( 0, 0, screenWidth, screenHeight );
-    if( m_bgColor != null )
-    {
-      g.setColor( m_bgColor );
-      g.fillRect( 0, 0, screenWidth, screenHeight );
-    }
-
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.MapPanelPainter.1"), m_layers.length ); //$NON-NLS-1$
 
     for( final IMapLayer layer : m_layers )
     {

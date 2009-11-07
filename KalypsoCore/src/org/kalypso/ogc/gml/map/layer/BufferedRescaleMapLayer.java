@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -74,13 +75,17 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
   private final boolean m_paintRunningTile;
 
+  private final ImageCache m_imageCache;
+
   /**
    * When constructed with this constructed, no repaint happens during painting of the theme.<br>
    * Same as {@link #BufferedRescaleMapLayer(IMapPanel, IKalypsoTheme, ISchedulingRule, Long.MAX_Value)}
    */
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile )
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final ImageCache imageCache )
   {
-    this( panel, theme, rule, paintRunningTile, Long.MAX_VALUE );
+    this( panel, theme, rule, paintRunningTile, imageCache, Long.MAX_VALUE );
+
+
   }
 
   /**
@@ -90,11 +95,12 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
    *          If <code>true</code>, an already scheduled buffer will be painted; else, only finished tiles will be
    *          drawn.
    */
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final long repaintMillis )
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final ImageCache imageCache, final long repaintMillis )
   {
     super( panel, theme );
 
     m_paintRunningTile = paintRunningTile;
+    m_imageCache = imageCache;
     m_repaintMillis = repaintMillis;
     m_rule = rule;
 
@@ -105,7 +111,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
    * @see org.kalypso.ogc.gml.map.IMapLayer#dispose()
    */
   @Override
-  public void dispose( )
+  public synchronized void dispose( )
   {
     super.dispose();
 
@@ -171,7 +177,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
    * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#invalidate(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  protected void invalidate( final GM_Envelope extent )
+  protected synchronized void invalidate( final GM_Envelope extent )
   {
     // Force repaint: reschedule, will eventually replace the current tile
     if( m_tile != null && m_tile.intersects( extent ) )
@@ -190,7 +196,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
    * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#handleExtentChanged(org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
-  protected void handleExtentChanged( final GeoTransform world2screen )
+  protected synchronized void handleExtentChanged( final GeoTransform world2screen )
   {
     // Fetch current state here (avoid synchronised blocks)
     final BufferedTile tile = m_tile;
@@ -217,7 +223,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       return;
 
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
-    final BufferedTile runningTile = new BufferedTile( paintable, world2screen );
+    final BufferedTile runningTile = new BufferedTile( paintable, world2screen, m_imageCache );
 
     final JobObserverJob repaintJob = new JobObserverJob( Messages.getString("org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.1"), runningTile, m_repaintMillis ) //$NON-NLS-1$
     {
@@ -241,31 +247,37 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
     runningTile.setUser( false );
     runningTile.setRule( m_rule );
-    runningTile.schedule( 250 );
+    runningTile.schedule( 100 );
 
     m_runningTile = runningTile;
   }
 
   public void applyTile( final BufferedTile tile, final IStatus result )
   {
-    // Ignore cancel, can happen any time, i.e. the extent changes
-    if( result.matches( IStatus.CANCEL ) )
-      return;
-
-    m_tile = tile;
-    m_runningTile = null;
-    getMapPanel().invalidateMap();
-
-    if( !result.isOK() )
+    synchronized( this )
     {
-      m_runningTile = null;
+      // Ignore cancel, can happen any time, i.e. the extent changes
+      if( result.matches( IStatus.CANCEL ) )
+        return;
 
-      // TODO: do something with the status, so it gets seen in the outline!
-      // Other idea: paint status into image, when this tile gets painted
-      final Throwable exception = result.getException();
-      if( exception != null )
-        exception.printStackTrace();
+      if( m_tile != null )
+        m_tile.dispose();
+
+      m_tile = tile;
+      m_runningTile = null;
+      if( !result.isOK() )
+      {
+        m_runningTile = null;
+
+        // TODO: do something with the status, so it gets seen in the outline!
+        // Other idea: paint status into image, when this tile gets painted
+        final Throwable exception = result.getException();
+        if( exception != null )
+          exception.printStackTrace();
+      }
     }
+
+    getMapPanel().invalidateMap();
   }
 
 }

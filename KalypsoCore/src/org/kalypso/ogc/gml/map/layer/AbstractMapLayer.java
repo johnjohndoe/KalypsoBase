@@ -146,9 +146,9 @@ public abstract class AbstractMapLayer implements IMapLayer
 
   protected final void handeRepaintRequested( final GM_Envelope extent )
   {
-    invalidate( extent );
+    // TODO: This is a main entry point for a potentially great number of events. 
 
-    getMapPanel().invalidateMap();
+    invalidate( extent );
   }
 
   /**
