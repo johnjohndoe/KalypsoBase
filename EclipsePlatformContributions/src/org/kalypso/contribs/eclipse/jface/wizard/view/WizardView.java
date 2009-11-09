@@ -228,7 +228,6 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       // by m_wizard.dispose();
       setWizardTitleImage( null );
 
-      // todo: maybe ask for unsaved data?
       m_wizard.setContainer( null );
       m_wizard.dispose();
       m_wizard = null;
