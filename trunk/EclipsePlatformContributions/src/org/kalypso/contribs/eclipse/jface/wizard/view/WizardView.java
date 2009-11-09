@@ -181,6 +181,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private final ListenerList pageChangingListeners = new ListenerList();
 
+  private boolean m_useDefaultButton = true;
+
   /** If set to true, the background color of error messages is the same as normal messages. */
   public void setErrorBackgroundBehaviour( final boolean useNormalBackground )
   {
@@ -268,7 +270,14 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         final int wizardInitialBrowserSize = ((IWizard2) m_wizard).getInitialBrowserSize();
         // force into [5, 95]
         initialBrowserSize = Math.min( 95, Math.max( 5, wizardInitialBrowserSize ) );
+
+        m_useDefaultButton = ((IWizard2) m_wizard).useDefaultButton();
+        if( !m_useDefaultButton )
+          getShell().setDefaultButton( null );
       }
+      else
+        m_useDefaultButton = true;
+
       m_mainSash.setWeights( new int[] { initialBrowserSize, 100 - initialBrowserSize } );
     }
 
@@ -532,7 +541,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
         buttonPressed( handlerMethod );
       }
     } );
-    if( defaultButton )
+    if( m_useDefaultButton && defaultButton )
     {
       final Shell shell = parent.getShell();
       if( shell != null )
@@ -748,13 +757,16 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       resetButton.setEnabled( canReset );
     }
 
-    // finish is default unless it is diabled and next is enabled
+    // finish is default unless it is disabled and next is enabled
     // if( canFlipToNextPage && !canFinish )
     // cancel is default unless it is disabled or non-existent
-    if( canFlipToNextPage && nextButton != null )
-      getShell().setDefaultButton( nextButton );
-    else
-      getShell().setDefaultButton( finishButton );
+    if( m_useDefaultButton )
+    {
+      if( canFlipToNextPage && nextButton != null )
+        getShell().setDefaultButton( nextButton );
+      else
+        getShell().setDefaultButton( finishButton );
+    }
   }
 
   /**

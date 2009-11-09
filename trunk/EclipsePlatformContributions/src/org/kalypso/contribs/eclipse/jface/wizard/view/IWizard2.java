@@ -59,18 +59,18 @@ public interface IWizard2 extends IWizard
    * @return false, if something went wrong. Don't change the page now.
    */
   public boolean finishPage( final IWizardPage page );
-  
-  public boolean hasCancelButton();
-  
+
+  public boolean hasCancelButton( );
+
   /** The initial browser size in percent of the whole area */
-  public int getInitialBrowserSize();
-  
+  public int getInitialBrowserSize( );
+
   /** The context-id which to show if help is invoked */
-  public String getHelpId();
-  
+  public String getHelpId( );
 
   /**
    * Saves the contents/state of all pages.
+   * 
    * @throws CoreException
    */
   public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException;
@@ -84,4 +84,10 @@ public interface IWizard2 extends IWizard
    * @return If the user should be aksed before any save.
    */
   public boolean doAskForSave( );
+
+  /**
+   * Return <code>false</code>, if the wizard should not set the shell-default button (usually the next or finish
+   * buttons in the normal wizard container implementations).
+   */
+  public boolean useDefaultButton( );
 }
