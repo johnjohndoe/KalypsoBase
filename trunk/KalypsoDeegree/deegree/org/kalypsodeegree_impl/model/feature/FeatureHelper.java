@@ -51,8 +51,6 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
@@ -78,6 +76,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -254,7 +255,7 @@ public class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
-   *
+   * 
    * @throws CloneNotSupportedException
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
@@ -281,10 +282,10 @@ public class FeatureHelper
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
       if( targetFTP == null )
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-      
+
       final Object object = sourceFeature.getProperty( sourceFTP );
       final Object newobject;
-      
+
       if( object == null )
         newobject = null;
       else if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
@@ -293,13 +294,13 @@ public class FeatureHelper
       {
         final IMarshallingTypeHandler sourceTypeHandler = sourceFTP.getTypeHandler();
         final IMarshallingTypeHandler targetTypeHandler = targetFTP.getTypeHandler();
-        
+
         String objectAsString;
         if( sourceTypeHandler instanceof ISimpleMarshallingTypeHandler )
-          objectAsString = ((ISimpleMarshallingTypeHandler)sourceTypeHandler).convertToXMLString( object );
-        else 
-          objectAsString =  object.toString();
-        
+          objectAsString = ((ISimpleMarshallingTypeHandler) sourceTypeHandler).convertToXMLString( object );
+        else
+          objectAsString = object.toString();
+
         try
         {
           newobject = targetTypeHandler.parseType( objectAsString );
@@ -315,8 +316,8 @@ public class FeatureHelper
         targetFeature.setProperty( targetFTP, Arrays.asList( newobject ) );
       else if( sourceFTP.isList() && !targetFTP.isList() )
       {
-        final List<?> newlist = (List< ? >) newobject;
-        if( newlist.isEmpty())
+        final List< ? > newlist = (List< ? >) newobject;
+        if( newlist.isEmpty() )
           targetFeature.setProperty( targetFTP, null );
         else
           targetFeature.setProperty( targetFTP, newlist.get( 0 ) );
@@ -328,7 +329,7 @@ public class FeatureHelper
 
   /**
    * Clones a feature and puts it into the given parent feature at the given property.
-   *
+   * 
    * @param newParentFeature
    *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
    * @param relation
@@ -540,7 +541,7 @@ public class FeatureHelper
 
   /**
    * Checks if one of the feature properties is a collection.
-   *
+   * 
    * @param f
    * @return It returns true after the first occurrenc of a list
    */
@@ -618,7 +619,7 @@ public class FeatureHelper
 
   /**
    * Create properties by using the property-value of the given feature for each of the replace-tokens
-   *
+   * 
    * @param tokens
    *          replace-tokens (tokenKey-featurePropertyName;...)
    */
@@ -685,7 +686,7 @@ public class FeatureHelper
 
   /**
    * copys all simple type properties from the source feature into the target feature
-   *
+   * 
    * @param srcFE
    * @param targetFE
    * @throws MultiException
@@ -753,7 +754,7 @@ public class FeatureHelper
    * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
    * the list.</li>
    * </ul>
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public static void addProperty( final Feature feature, final IPropertyType pt, final Object newValue )
@@ -787,7 +788,7 @@ public class FeatureHelper
 
   /**
    * Adds a new member to a property of the given feature. The property must be a feature list.
-   *
+   * 
    * @param newFeatureName
    *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
    *          is taken.
@@ -823,7 +824,7 @@ public class FeatureHelper
 
   /**
    * Only works for non list feature property
-   *
+   * 
    * @param feature
    *          feature which list property receive the new feature
    * @param listProperty
@@ -896,7 +897,7 @@ public class FeatureHelper
 
   /**
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
-   *
+   * 
    * @param qname
    *          Must denote a property of type IRelationType of maxoccurs 1.
    * @param followXLinks
@@ -930,7 +931,7 @@ public class FeatureHelper
 
   /**
    * Resolves and adapts the linked feature. Note that the real feature is wrapped and return not the xlinked feature.
-   *
+   * 
    * @param feature
    *          the link property holder
    * @param propertyQName
@@ -983,7 +984,7 @@ public class FeatureHelper
    * set a workspace local link between 2 feature wrappers; i.e. the object feature is set as property with the given
    * name of the subject feature.<br/>
    * <b>Note that no check is made to assert whether the property exists or is not a list feature</b>
-   *
+   * 
    * @param subjectFeature
    *          the feature wrapper whose property is to be set
    * @param propertyQName
@@ -1035,7 +1036,7 @@ public class FeatureHelper
 
   /**
    * Creates a data object suitable for a feature property out of string.
-   *
+   * 
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
@@ -1090,7 +1091,7 @@ public class FeatureHelper
    * <p>
    * This method creates directly a feature of the target feature type of the given property.
    * </p>
-   *
+   * 
    * @throws IllegalArgumentException
    *           If the target feature type of the given property is abstract.
    */
@@ -1201,7 +1202,7 @@ public class FeatureHelper
 
   /**
    * This function creates separate lists of features by qname and collects them in a hash map.
-   *
+   * 
    * @param parent
    *          The parent feature, containing the original feature list.
    * @param propertyQName
@@ -1357,7 +1358,7 @@ public class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   *
+   * 
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final Feature[] features )
@@ -1506,21 +1507,17 @@ public class FeatureHelper
    * Reads a property for every feature of an array of features and puts them into a new array.
    */
   @SuppressWarnings("unchecked")
-  public static <T> T[] getProperties( final Feature[] features, final String path, final T[] a )
+  public static <T> T[] getProperties( final Feature[] features, final GMLXPath xPath, final T[] a ) throws GMLXPathException
   {
-    final FeaturePath featurePath = new FeaturePath( path );
-
     final T[] properties = a == null ? a : (T[]) Array.newInstance( a.getClass().getComponentType(), features.length );
 
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       if( feature == null )
-      {
         continue;
-      }
 
-      properties[i] = (T) featurePath.getFeatureForSegment( feature.getWorkspace(), feature, 0 );
+      properties[i] = (T) GMLXPathUtilities.query( xPath, feature );
     }
 
     return properties;
@@ -1528,7 +1525,7 @@ public class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   *
+   * 
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
