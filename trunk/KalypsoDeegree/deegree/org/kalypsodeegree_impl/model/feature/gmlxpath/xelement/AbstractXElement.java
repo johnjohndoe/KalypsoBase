@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
@@ -48,9 +49,14 @@ public abstract class AbstractXElement implements IXElement
   /**
    * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object)
    */
-  public Object evaluate( Object context, boolean featureTypeLevel ) throws GMLXPathException
+  public Object evaluate( final Object context, final boolean featureTypeLevel ) throws GMLXPathException
   {
-    if( context instanceof Feature )
+    if( context instanceof XLinkedFeature_Impl )
+    {
+      final Feature xlinkedFeature = ((XLinkedFeature_Impl) context).getFeature();
+      return evaluateFeature( xlinkedFeature, featureTypeLevel );
+    }
+    else if( context instanceof Feature )
       return evaluateFeature( (Feature) context, featureTypeLevel );
     return evaluateOther( context, featureTypeLevel );
   }
