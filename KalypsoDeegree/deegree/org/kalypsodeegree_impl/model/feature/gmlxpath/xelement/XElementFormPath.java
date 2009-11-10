@@ -119,7 +119,7 @@ public class XElementFormPath extends AbstractXElement
     final String nsuri = qname.getNamespaceURI();
     final String localPart = qname.getLocalPart();
 
-    if( nsuri == XMLConstants.NULL_NS_URI )
+    if( XMLConstants.NULL_NS_URI.equals( nsuri ) )
       return featureType.getProperty( localPart );
 
     return featureType.getProperty( qname );

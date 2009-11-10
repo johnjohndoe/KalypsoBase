@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
@@ -190,61 +189,64 @@ public class FeaturePath
   {
     private final static String ID_MARKER = "#fid#";
 
-    private final QName m_name;
+    private final String m_name;
 
-    private final String m_id;
+    private final boolean m_isId;
 
     /** Path may be filtered with type (Applies only to End of Path) */
     private final QName m_typename;
 
     public Segment( final String segment )
     {
-      final boolean isId = segment.startsWith( ID_MARKER );
+      m_isId = segment.startsWith( ID_MARKER );
 
       // FeatureID?: '#fid#pegel_123'
-      if( isId )
+      if( m_isId )
       {
-        m_id = segment.substring( ID_MARKER.length() );
+        m_name = segment.substring( ID_MARKER.length() );
         m_typename = null;
-        m_name = null;
       }
       else
       {
-        m_id = null;
         if( segment.endsWith( "]" ) )
         {
           final int start = segment.lastIndexOf( '[' );
           m_typename = QName.valueOf( segment.substring( start + 1, segment.length() - 1 ) );
-          m_name = QName.valueOf( segment.substring( 0, start ) );
+          m_name = segment.substring( 0, start );
         }
         else
         {
           m_typename = null;
-          m_name = QName.valueOf( segment );
+          m_name = segment;
         }
       }
     }
 
     public Segment( final Feature feature )
     {
-      m_id = feature.getId();
-      m_name = null;
+      m_name = feature.getId();
       m_typename = null;
+      m_isId = true;
+    }
+
+    public final String getName( )
+    {
+      return m_name;
     }
 
     public boolean isID( )
     {
-      return m_id != null;
+      return m_isId;
     }
 
     public Object getValue( final GMLWorkspace workspace, final Feature feature )
     {
-      if( isID() )
-        return workspace.getFeature( m_id );
+      final String name = getName();
 
-      final IFeatureType featureType = feature.getFeatureType();
-      final IPropertyType pt = findPropertyType( featureType );
-      final Object value = feature.getProperty( pt );
+      if( isID() )
+        return workspace.getFeature( name );
+
+      final Object value = feature.getProperty( name );
 
       // falls ein bestimmter typ gewünscht ist, jetzt filtern
       // geht natürlich nur bei FeatureListen
@@ -259,28 +261,12 @@ public class FeaturePath
       return value;
     }
 
-    private IPropertyType findPropertyType( final IFeatureType featureType )
-    {
-      final IPropertyType pt = featureType.getProperty( m_name );
-      if( pt != null )
-        return pt;
-
-      if( XMLConstants.NULL_NS_URI.equals( m_name.getNamespaceURI() ) )
-      {
-        final IPropertyType localNamePt = featureType.getProperty( m_name.getLocalPart() );
-        if( localNamePt != null )
-          return localNamePt;
-      }
-
-      throw new IllegalArgumentException( String.format( "Unknown prperty: %s", m_name ) );
-    }
-
     public IFeatureType getType( final GMLWorkspace workspace, final IFeatureType featureType )
     {
       if( isID() )
-        return workspace.getFeature( m_id ).getFeatureType();
+        return workspace.getFeature( getName() ).getFeatureType();
 
-      final IPropertyType ftp = findPropertyType( featureType );
+      final IPropertyType ftp = featureType.getProperty( getName() );
       if( ftp instanceof IRelationType )
       {
         final IRelationType relationPT = (IRelationType) ftp;
@@ -288,7 +274,7 @@ public class FeaturePath
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contextSchema = workspace.getGMLSchema();
-
+          
           final String namespaceURI = m_typename.getNamespaceURI();
           if( namespaceURI != null && !namespaceURI.isEmpty() )
           {
@@ -296,7 +282,7 @@ public class FeaturePath
             if( foundFT != null && foundFT.getQName().equals( m_typename ) )
               return foundFT;
           }
-
+          
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
           for( final IFeatureType substType : associationFeatureTypes )
           {
@@ -321,12 +307,9 @@ public class FeaturePath
       final StringBuffer buffer = new StringBuffer();
 
       if( isID() )
-      {
         buffer.append( ID_MARKER );
-        buffer.append( m_id );
-      }
-      else
-        buffer.append( m_name );
+
+      buffer.append( m_name );
 
       if( m_typename != null )
         buffer.append( '[' ).append( m_typename ).append( ']' );
