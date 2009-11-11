@@ -78,7 +78,7 @@ public class TransformUtilities
    */
   public static boolean shouldTransform( )
   {
-    final String transform = getTransformProperty();
+    String transform = getTransformProperty();
     if( (transform != null) && (transform.equalsIgnoreCase( "false" )) )
     {
       Debug.TRANSFORM.printf( "Should not transform ...\n" );
@@ -110,15 +110,15 @@ public class TransformUtilities
    *          The transformation.
    * @return The transformed point.
    */
-  public static GM_Point transform( final GM_Point geo, final CRSTransformation trans )
+  public static GM_Point transform( GM_Point geo, CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
       return geo;
 
     /* Get the coordinate systems. */
-    final CoordinateSystem sourceCRS = trans.getSourceCRS();
-    final CoordinateSystem targetCRS = trans.getTargetCRS();
+    CoordinateSystem sourceCRS = trans.getSourceCRS();
+    CoordinateSystem targetCRS = trans.getTargetCRS();
 
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
@@ -164,15 +164,15 @@ public class TransformUtilities
    *          The transformation.
    * @return The transformed position.
    */
-  public static GM_Position transform( final GM_Position pos, final CRSTransformation trans )
+  public static GM_Position transform( GM_Position pos, CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
       return pos;
 
     /* Get the coordinate systems. */
-    final CoordinateSystem sourceCRS = trans.getSourceCRS();
-    final CoordinateSystem targetCRS = trans.getTargetCRS();
+    CoordinateSystem sourceCRS = trans.getSourceCRS();
+    CoordinateSystem targetCRS = trans.getTargetCRS();
 
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS.equals( targetCRS ) )
@@ -196,8 +196,8 @@ public class TransformUtilities
     }
 
     /* Transform. */
-    final Point3d coords = new Point3d( geoX, geoY, geoZ );
-    final Point3d newCoords = trans.doTransform( coords );
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = trans.doTransform( coords );
 
     /* Convert back to degrees, if necessary. */
     if( targetCRS.getUnits().equals( Unit.RADIAN ) )
@@ -223,11 +223,11 @@ public class TransformUtilities
    *          The transformation.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( final GM_Position[] pos, final CRSTransformation trans )
+  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans )
   {
-    final ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
+    ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 
-    for( final GM_Position po : pos )
+    for( GM_Position po : pos )
       newPos.add( transform( po, trans ) );
 
     return newPos.toArray( new GM_Position[] {} );
