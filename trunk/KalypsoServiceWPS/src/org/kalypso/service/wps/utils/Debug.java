@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils;
 
-import org.eclipse.core.runtime.Platform;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 
 /**
  * This class is a helper for debugging.
@@ -57,27 +57,12 @@ public class Debug
   }
 
   /**
-   * This function will print a given Message on the console, if the tracing option is set to true.
-   * 
-   * @param message
-   *            The debug message.
+   * @deprecated Use KalypsoServiceWPSDebug.DEBUG.printf( msg ) instead.
    */
-  public static void println( String message )
+  @Deprecated
+  public static void println( final String msg )
   {
-    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/debug" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      System.out.println( "DEBUG: " + message ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( msg );
   }
 
-  /**
-   * This function will return true, if the temp files of the calc jobs should remain untouched.
-   * 
-   * @return True, if the temp files should not be deleted.
-   */
-  public static boolean doNotDeleteTmpFiles( )
-  {
-    if( "true".equals( Platform.getDebugOption( "org.kalypso.service.wps/doNotDeleteTempFiles" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      return true;
-
-    return false;
-  }
 }
