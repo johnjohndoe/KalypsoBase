@@ -460,6 +460,8 @@ public class VFSUtilities
     final Proxy proxy = ProxyUtilities.getProxy();
     KalypsoCommonsDebug.DEBUG.printf( "Should use proxy: %s%n", String.valueOf( proxy.useProxy() ) ); //$NON-NLS-1$
 
+    // TODO: VFS usually accepts file-pathes (without protocoll), but creating an url here will prohibit this.
+    // TODO: handle file pathes differently
     if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
     {
       final String proxyHost = proxy.getProxyHost();
