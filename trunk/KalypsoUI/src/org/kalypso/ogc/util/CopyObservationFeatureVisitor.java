@@ -40,24 +40,19 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -69,7 +64,6 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
-import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
@@ -78,7 +72,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.Observation;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -205,17 +198,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       // put additional metadata that we got from outside
       final MetadataList resultMetadata = resultObs.getMetadataList();
-      String metaName = null;
-      for( final Entry<Object, Object> element : m_metadata.entrySet() )
-      {
-        final Entry<Object, Object> entry = element;
-        final String metaValue = replaceMetadata( f, (String) entry.getValue() );
-        final String metaKey = (String) entry.getKey();
-        resultMetadata.put( metaKey, metaValue );
-
-        if( ObservationConstants.MD_NAME.equals( metaKey ) )
-          metaName = metaValue;
-      }
+      resultMetadata.putAll( m_metadata );
 
       // protocol the observations here and inform the user
       KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger );
@@ -227,22 +210,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       final IPath location = targetfile.getLocation();
       final File file = location.toFile();
-      OutputStream stream = null;
-      try
-      {
-        if( !file.getParentFile().exists() )
-          file.getParentFile().mkdirs();
-        stream = new BufferedOutputStream( new FileOutputStream( file ) );
-        final Observation type = ZmlFactory.createXML( resultObs, null );
-        // Overwrite name of obs if metadata name was changed.
-        if( metaName != null )
-          type.setName( metaName );
-        ZmlFactory.getMarshaller().marshal( type, stream );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( stream );
-      }
+      file.getParentFile().mkdirs();
+      ZmlFactory.writeToFile( resultObs, file );
     }
     catch( final Exception e )
     {
