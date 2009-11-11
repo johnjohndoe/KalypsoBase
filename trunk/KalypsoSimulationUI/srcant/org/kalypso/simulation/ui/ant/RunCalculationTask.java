@@ -147,6 +147,7 @@ public class RunCalculationTask extends Task
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
       status = StatusUtilities.statusFromThrowable( t );
     }
 

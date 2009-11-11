@@ -829,6 +829,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       return status;
     }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      throw e;
+    }
     finally
     {
       progress.done();
