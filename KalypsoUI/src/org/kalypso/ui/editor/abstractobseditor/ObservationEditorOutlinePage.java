@@ -135,8 +135,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   public void onObsViewChanged( final ObsViewEvent evt )
   {
     final TreeViewer tv = getTreeViewer();
-    final Control control = tv.getControl();
-    if( tv != null && !control.isDisposed() )
+    final Control control = tv == null ? null : tv.getControl();
+    if( control != null && !control.isDisposed() )
     {
       control.getDisplay().asyncExec( new Runnable()
       {
