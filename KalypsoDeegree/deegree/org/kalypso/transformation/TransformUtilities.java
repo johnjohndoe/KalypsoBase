@@ -44,12 +44,16 @@ import java.util.ArrayList;
 
 import javax.vecmath.Point3d;
 
+import org.deegree.crs.components.Unit;
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
+import org.deegree.crs.projections.ProjectionUtils;
 import org.deegree.crs.transformations.CRSTransformation;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 /**
  * This class provides some functions for the GeoTransformer.
@@ -93,7 +97,9 @@ public class TransformUtilities
    */
   private static String getTransformProperty( )
   {
-    return FrameworkProperties.getProperty( "org.kalypso.kalypsodegree.transform" );
+    Bundle bundle = KalypsoDeegreePlugin.getDefault().getBundle();
+    BundleContext bundleContext = bundle.getBundleContext();
+    return bundleContext.getProperty( "org.kalypso.kalypsodegree.transform" );
   }
 
   /**
@@ -119,15 +125,33 @@ public class TransformUtilities
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
       return geo;
 
+    /* Debug. */
     Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
+    /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
+    double geoX = geo.getX();
+    double geoY = geo.getY();
+    double geoZ = geo.getZ();
+    if( sourceCRS.getUnits().equals( Unit.RADIAN ) )
+    {
+      geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
+      geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
+    }
+
     /* Transform. */
-    final Point3d coords = new Point3d( geo.getX(), geo.getY(), geo.getZ() );
-    final Point3d newCoords = trans.doTransform( coords );
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = trans.doTransform( coords );
+
+    /* Convert back to degrees, if necessary. */
+    if( targetCRS.getUnits().equals( Unit.RADIAN ) )
+    {
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
+    }
 
     // REMARK: here we have to write a z-value in any case!
-    // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
-    // dimensions)
+    // We only have to check if the z value was transformed because of a 3d transformation
+    // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
     return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : geo.getZ(), targetCRS.getIdentifier() );
   }
@@ -154,18 +178,38 @@ public class TransformUtilities
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS.equals( targetCRS ) )
       return pos;
-// TODO: check: why did we use getIdAndName instead of euqals?
-// if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
-// return pos;
 
+    // TODO: check: why did we use getIdAndName instead of equals?
+    // if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
+    // return pos;
+
+    /* Debug. */
     Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
-    final Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
+    /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
+    double geoX = pos.getX();
+    double geoY = pos.getY();
+    double geoZ = pos.getZ();
+    if( sourceCRS.getUnits().equals( Unit.RADIAN ) )
+    {
+      geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
+      geoY = ProjectionUtils.normalizeLatitude( Math.toRadians( geoY ) );
+    }
+
+    /* Transform. */
+    final Point3d coords = new Point3d( geoX, geoY, geoZ );
     final Point3d newCoords = trans.doTransform( coords );
 
+    /* Convert back to degrees, if necessary. */
+    if( targetCRS.getUnits().equals( Unit.RADIAN ) )
+    {
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
+    }
+
     // REMARK: here we have to write a z-value in any case!
-    // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
-    // dimensions)
+    // We only have to check if the z value was transformed because of a 3d transformation
+    // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
     return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : pos.getZ() );
   }
