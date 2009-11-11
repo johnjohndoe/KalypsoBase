@@ -41,7 +41,7 @@ public class WPSService implements IOGCService
    * @see org.kalypso.service.ogc.IOGCService#executeOperation(org.kalypso.service.ogc.RequestBean,
    *      org.kalypso.service.ogc.ResponseBean)
    */
-  public void executeOperation( RequestBean request, ResponseBean responseBean ) throws OWSException
+  public void executeOperation( final RequestBean request, final ResponseBean responseBean ) throws OWSException
   {
     String parameterValue = null;
     if( request.isPost() && request.getBody() != null )
@@ -49,17 +49,17 @@ public class WPSService implements IOGCService
       try
       {
         /* POST with XML. */
-        String xml = request.getBody();
+        final String xml = request.getBody();
 
         /* Check if ALL parameter are available. */
-        Object object = MarshallUtilities.unmarshall( xml );
+        final Object object = MarshallUtilities.unmarshall( xml );
 
         if( object instanceof RequestBaseType )
         {
-          RequestBaseType baseRequest = (RequestBaseType) object;
+          final RequestBaseType baseRequest = (RequestBaseType) object;
 
           /* Need the XML attribute service. */
-          String service = baseRequest.getService();
+          final String service = baseRequest.getService();
           if( service == null || service.length() == 0 )
           {
             Debug.println( "Missing attribute Service!" ); //$NON-NLS-1$
@@ -67,7 +67,7 @@ public class WPSService implements IOGCService
           }
 
           /* Need the XML attribute version. */
-          String version = baseRequest.getVersion();
+          final String version = baseRequest.getVersion();
           if( version == null || version.length() == 0 )
           {
             Debug.println( "Missing attribute Version!" ); //$NON-NLS-1$
@@ -88,8 +88,8 @@ public class WPSService implements IOGCService
         else if( object instanceof JAXBElement )
         {
           // check type of contained value
-          JAXBElement< ? > element = (JAXBElement< ? >) object;
-          Object value = element.getValue();
+          final JAXBElement< ? > element = (JAXBElement< ? >) object;
+          final Object value = element.getValue();
           if( value instanceof GetCapabilitiesType )
             parameterValue = "GetCapabilities"; //$NON-NLS-1$
 
@@ -98,7 +98,7 @@ public class WPSService implements IOGCService
 
         // TODO What, if none of this matches? Throw an exception?
       }
-      catch( JAXBException e )
+      catch( final JAXBException e )
       {
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getLocalizedMessage(), "" ); //$NON-NLS-1$
       }
@@ -121,7 +121,7 @@ public class WPSService implements IOGCService
 
     /* Check, if the operation is available. */
     Debug.println( "Searching for operation \"" + parameterValue + "\" ..." ); //$NON-NLS-1$ //$NON-NLS-2$
-    IOperation operation = m_operations.get( parameterValue );
+    final IOperation operation = m_operations.get( parameterValue );
     if( operation == null )
     {
       Debug.println( "Unsupported operation \"" + parameterValue + "\"!" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -130,20 +130,19 @@ public class WPSService implements IOGCService
 
     /* Execute the operation. */
     Debug.println( "Found operation \"" + parameterValue + "\"." ); //$NON-NLS-1$ //$NON-NLS-2$
-    StringBuffer buffer = operation.executeOperation( request );
+    final StringBuffer buffer = operation.executeOperation( request );
 
     /* Handle the response. */
     if( buffer != null )
     {
-      OutputStream outputStream = responseBean.getOutputStream();
-      OutputStreamWriter writer = new OutputStreamWriter( outputStream );
+      final OutputStream outputStream = responseBean.getOutputStream();
+      final OutputStreamWriter writer = new OutputStreamWriter( outputStream );
       try
       {
         writer.write( buffer.toString() );
         writer.close();
-        writer.close();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         Debug.println( "Sending the response failed: " + e.getLocalizedMessage() ); //$NON-NLS-1$
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, Messages.getString("org.kalypso.service.wps.server.WPSService.4") + e.getLocalizedMessage(), "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -154,12 +153,12 @@ public class WPSService implements IOGCService
   /**
    * @see org.kalypso.service.ogc.IOGCService#responsibleFor(org.kalypso.service.ogc.RequestBean)
    */
-  public boolean responsibleFor( RequestBean request )
+  public boolean responsibleFor( final RequestBean request )
   {
     if( request.isPost() )
     {
       /* Post request. */
-      String body = request.getBody();
+      final String body = request.getBody();
 
       /* If no body is present, the wps service is not responsible. */
       if( body == null )
@@ -169,13 +168,13 @@ public class WPSService implements IOGCService
       {
         /* Check if the wps service could be responsible for this input. */
         Debug.println( "Checking if the WPS service is responsible for this input ..." ); //$NON-NLS-1$
-        Object object = MarshallUtilities.unmarshall( body );
+        final Object object = MarshallUtilities.unmarshall( body );
         // requestBase can be of any known type, needs checking
         Debug.println( "Marshalling was successfull." ); //$NON-NLS-1$
 
         if( object instanceof RequestBaseType )
         {
-          RequestBaseType requestBase = (RequestBaseType) object;
+          final RequestBaseType requestBase = (RequestBaseType) object;
           if( !requestBase.getService().equals( "WPS" ) ) //$NON-NLS-1$
           {
             Debug.println( "No, the request was send to another service using the same binding classes." ); //$NON-NLS-1$
@@ -188,8 +187,8 @@ public class WPSService implements IOGCService
         else if( object instanceof JAXBElement )
         {
           // check type of contained value
-          JAXBElement< ? > element = (JAXBElement< ? >) object;
-          Object value = element.getValue();
+          final JAXBElement< ? > element = (JAXBElement< ? >) object;
+          final Object value = element.getValue();
           if( value instanceof GetCapabilitiesType )
           {
             Debug.println( "This is a GetCababilities request. This WPS feels responsible for it." ); //$NON-NLS-1$
@@ -203,7 +202,7 @@ public class WPSService implements IOGCService
         Debug.println( "No, the request was send to another service using the same binding classes." ); //$NON-NLS-1$
         return false;
       }
-      catch( JAXBException e )
+      catch( final JAXBException e )
       {
         Debug.println( "No, marshalling has failed: " + e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
@@ -212,7 +211,7 @@ public class WPSService implements IOGCService
     else
     {
       /* Get request. */
-      String parameterValue = request.getParameterValue( "Service" ); //$NON-NLS-1$
+      final String parameterValue = request.getParameterValue( "Service" ); //$NON-NLS-1$
 
       if( parameterValue != null && parameterValue.equals( "WPS" ) ) //$NON-NLS-1$
         return true;
