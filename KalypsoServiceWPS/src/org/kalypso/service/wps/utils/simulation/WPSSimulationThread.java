@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.service.wps.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
@@ -87,27 +88,27 @@ public class WPSSimulationThread extends Thread
   /**
    * The simulation.
    */
-  private ISimulation m_job;
+  private final ISimulation m_job;
 
   /**
    * The info about the running simulation.
    */
-  private WPSSimulationInfo m_jobInfo;
+  private final WPSSimulationInfo m_jobInfo;
 
   /**
    * The input data provider.
    */
-  private ISimulationDataProvider m_inputData;
+  private final ISimulationDataProvider m_inputData;
 
   /**
    * The results will go in here.
    */
-  private WPSSimulationResultEater m_resultEater;
+  private final WPSSimulationResultEater m_resultEater;
 
   /**
    * The temporary directory.
    */
-  private File m_tmpDir;
+  private final File m_tmpDir;
 
   /**
    * The constructor.
@@ -180,9 +181,10 @@ public class WPSSimulationThread extends Thread
    */
   public void dispose( )
   {
-    if( Debug.doNotDeleteTmpFiles() )
+    if( KalypsoServiceWPSDebug.DO_NOT_DELETE_TEMP_FILES.isEnabled() )
     {
       /* Debug-Information. */
+
       Debug.println( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ..." ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
@@ -216,7 +218,7 @@ public class WPSSimulationThread extends Thread
   {
     m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
 
-    String jobID = m_jobInfo.getId();
+    final String jobID = m_jobInfo.getId();
     try
     {
       LOGGER.info( "Calling run for ID: " + jobID ); //$NON-NLS-1$

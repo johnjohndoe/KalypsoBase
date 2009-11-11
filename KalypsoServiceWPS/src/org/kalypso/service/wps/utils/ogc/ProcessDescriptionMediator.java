@@ -56,12 +56,16 @@ import net.opengeospatial.ows.MetadataType;
 import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.simulation.core.ISimulation;
@@ -74,7 +78,6 @@ import org.kalypso.simulation.core.simspec.Modelspec;
  */
 public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.wps._1_0.ProcessDescriptions, net.opengeospatial.wps.ProcessDescriptions>
 {
-
   public ProcessDescriptionMediator( final String version )
   {
     super( version );
@@ -145,9 +148,17 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    /* Build all content for the process description. */
+    // 
     final String identifier = modelSpec.getTypeID();
+    if( !ObjectUtils.equals( typeID, identifier ) )
+    {
+      final String msg = String.format( "Simulation specifikation-id does not match corresponding typeID. Specification says '%s', but typeID is '%s'", identifier, typeID );
+      throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, msg ) );
+    }
 
+    /* Build all content for the process description. */
+    // FIXME: this switch is ugly! The version should be decided at service level and different DescribeProcess
+    // implementation should be used.
     switch( getVersion() )
     {
       case V040:
@@ -187,7 +198,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
    * Returns the process description wrapper object for input and output descriptions
    */
   @SuppressWarnings("unchecked")
-  private Object getProcessDescription( final String identifier, final String title, final String abstrakt, final List inputDescriptions, final List outputDescriptions, boolean storeSupported, boolean statusSupported )
+  private Object getProcessDescription( final String identifier, final String title, final String abstrakt, final List inputDescriptions, final List outputDescriptions, final boolean storeSupported, final boolean statusSupported )
   {
     switch( getVersion() )
     {
