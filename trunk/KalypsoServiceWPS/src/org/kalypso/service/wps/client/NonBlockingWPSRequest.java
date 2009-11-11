@@ -71,6 +71,7 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 import net.opengeospatial.wps.ProcessDescriptionType.ProcessOutputs;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -86,6 +87,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.utils.Debug;
@@ -228,6 +230,14 @@ public class NonBlockingWPSRequest
 
       /* Monitor. */
       monitor.worked( 300 );
+
+      final ProcessDescriptionType processDescription = processDescriptionList.get( 0 );
+      final String receivedIdentifier = processDescription.getIdentifier().getValue();
+      if( !ObjectUtils.equals( m_identifier, receivedIdentifier ) )
+      {
+        final String msg = String.format( "DescribeProcess returned wrong process-identifier. Received '%s', asked for '%s'.", receivedIdentifier, m_identifier );
+        throw new CoreException( new Status( IStatus.ERROR, Activator.PLUGIN_ID, -1, msg, null ) );
+      }
 
       /* We will always take the first one. */
       m_processDescription = processDescriptionList.get( 0 );

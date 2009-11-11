@@ -163,8 +163,10 @@ public class WPSUtilities
 
     /* Build the method. */
     final PostMethod post = new PostMethod( url );
-    // TODO: this is maybe a bit heavy, if the request is big (got an OutOfMemory once at marshalling the xml string)
 
+    // TODO: this is maybe a bit heavy, if the request is big (got an OutOfMemory once at marshalling the xml string)^
+    // Instead we should provide an overloaded method that accepts the stringRequestEntity from outside (allowing for
+    // stream or file-based entities)
     post.setRequestEntity( new StringRequestEntity( xml, "text/xml", null ) ); //$NON-NLS-1$
 
     /* Let the method handle the authentication, if any. */
@@ -189,7 +191,14 @@ public class WPSUtilities
     if( is == null )
       return null;
 
-    return MarshallUtilities.fromInputStream( is );
+    try
+    {
+      return IOUtils.toString( is );
+    }
+    finally
+    {
+      is.close();
+    }
   }
 
   public static List<ProcessDescriptionType> callDescribeProcess( final String serviceEndpoint, final String... processIds ) throws CoreException
@@ -207,7 +216,8 @@ public class WPSUtilities
     Object describeProcessObject = null;
     try
     {
-      final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), serviceEndpoint );
+      final String describeProcessMsg = MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 );
+      final String describeProcessResponse = WPSUtilities.send( describeProcessMsg, serviceEndpoint );
 
       /* Try to unmarshall. */
       describeProcessObject = MarshallUtilities.unmarshall( describeProcessResponse, WPS_VERSION.V040 );

@@ -115,7 +115,7 @@ public class MarshallUtilities
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 // m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
-
+// FIXME: namespace definitions are missing in resulting xml-document!
     /* Marshall ... */
     m.marshal( object, sw );
     sw.close();
@@ -191,7 +191,9 @@ public class MarshallUtilities
    * @param is
    *          The input stream.
    * @return The string.
+   * @deprecated Use {@link IOUtils#toString(InputStream )} instead;
    */
+  @Deprecated
   public static String fromInputStream( final InputStream is ) throws IOException
   {
     // default buffer size from IOUtils
