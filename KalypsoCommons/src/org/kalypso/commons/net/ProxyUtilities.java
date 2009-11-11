@@ -99,10 +99,10 @@ public class ProxyUtilities
    *             {@link #getConfiguredHttpClient(int, URL, int)}. If you have no appropriate URL, leave it null.
    */
   @Deprecated
-  public static HttpClient getConfiguredHttpClient( int timeout, int retries )
+  public static HttpClient getConfiguredHttpClient( final int timeout, final int retries )
   {
     /* Create the new http client. */
-    HttpClient client = new HttpClient();
+    final HttpClient client = new HttpClient();
 
     /* Client should always authenticate before making a connection. */
     client.getParams().setAuthenticationPreemptive( true );
@@ -113,26 +113,26 @@ public class ProxyUtilities
       client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( retries, true ) );
 
     /* Get the proxy object. */
-    Proxy proxy = getProxy();
+    final Proxy proxy = getProxy();
 
     /* If the proxy should be used, configure the client with it. */
     if( proxy.useProxy() )
     {
       /* Get the proxy data. */
-      String proxyHost = proxy.getProxyHost();
-      int proxyPort = proxy.getProxyPort();
+      final String proxyHost = proxy.getProxyHost();
+      final int proxyPort = proxy.getProxyPort();
 
       /* Set the proxy information. */
       client.getHostConfiguration().setProxy( proxyHost, proxyPort );
 
       /* Get the credentials. */
-      String user = proxy.getUser();
-      String password = proxy.getPassword();
+      final String user = proxy.getUser();
+      final String password = proxy.getPassword();
 
       /* Set them, if the credentials are complete. */
       if( user != null && password != null )
       {
-        Credentials credentials = new UsernamePasswordCredentials( user, password );
+        final Credentials credentials = new UsernamePasswordCredentials( user, password );
         client.getState().setProxyCredentials( AuthScope.ANY, credentials );
       }
     }
@@ -164,10 +164,10 @@ public class ProxyUtilities
    *         will be a normal http client with the given timeout and retries. If url is null, the check for non proxy
    *         hosts is omitted.
    */
-  public static HttpClient getConfiguredHttpClient( int timeout, URL url, int retries )
+  public static HttpClient getConfiguredHttpClient( final int timeout, final URL url, final int retries )
   {
     /* Create the new http client. */
-    HttpClient client = new HttpClient();
+    final HttpClient client = new HttpClient();
 
     /* Client should always authenticate before making a connection. */
     client.getParams().setAuthenticationPreemptive( true );
@@ -178,26 +178,26 @@ public class ProxyUtilities
       client.getParams().setParameter( HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler( retries, true ) );
 
     /* Get the proxy object. */
-    Proxy proxy = getProxy();
+    final Proxy proxy = getProxy();
 
     /* If the proxy should be used, configure the client with it. */
     if( proxy.useProxy() && !isNonProxyHost( url ) )
     {
       /* Get the proxy data. */
-      String proxyHost = proxy.getProxyHost();
-      int proxyPort = proxy.getProxyPort();
+      final String proxyHost = proxy.getProxyHost();
+      final int proxyPort = proxy.getProxyPort();
 
       /* Set the proxy information. */
       client.getHostConfiguration().setProxy( proxyHost, proxyPort );
 
       /* Get the credentials. */
-      String user = proxy.getUser();
-      String password = proxy.getPassword();
+      final String user = proxy.getUser();
+      final String password = proxy.getPassword();
 
       /* Set them, if the credentials are complete. */
       if( user != null && password != null )
       {
-        Credentials credentials = new UsernamePasswordCredentials( user, password );
+        final Credentials credentials = new UsernamePasswordCredentials( user, password );
         client.getState().setProxyCredentials( AuthScope.ANY, credentials );
       }
     }
@@ -206,27 +206,34 @@ public class ProxyUtilities
   }
 
   /**
-   * This function schecks if the host of an url is one of the non proxy hosts.
+   * This function checks if the host of an url is one of the non proxy hosts.
    * 
    * @param url
-   *            The url to check.
+   *          The url to check.
    * @return True, if the host, contained in the url should not use a proxy.
    */
-  public static boolean isNonProxyHost( URL url )
+  public static boolean isNonProxyHost( final URL url )
   {
     /* Without a URL, proxy settings should be applied normally. */
     if( url == null )
       return false;
 
+    final String protocol = url.getProtocol();
+    if( "file".equals( protocol ) )
+      return true;
+
+    final String host = url.getHost();
+    if( host == null || host.isEmpty() )
+      return true;
+
     /* Get the proxy object. */
-    Proxy proxy = getProxy();
+    final Proxy proxy = getProxy();
 
     /* All hosts, that should use no proxy. */
-    List<String> nonProxyHosts = proxy.getNonProxyHosts();
-
-    for( int i = 0; i < nonProxyHosts.size(); i++ )
+    final List<String> nonProxyHosts = proxy.getNonProxyHosts();
+    for( final String nonProxyHost : nonProxyHosts )
     {
-      if( url.getHost().equals( nonProxyHosts.get( i ) ) )
+      if( host.equals( nonProxyHost ) )
         return true;
     }
 
