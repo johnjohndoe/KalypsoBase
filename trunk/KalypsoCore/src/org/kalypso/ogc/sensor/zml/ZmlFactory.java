@@ -117,6 +117,8 @@ import org.kalypso.zml.request.Request;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 import org.xml.sax.InputSource;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+
 /**
  * Factory for ZML-Files. ZML is a flexible format that covers following possibilities:
  * <ul>
@@ -131,6 +133,8 @@ import org.xml.sax.InputSource;
  */
 public class ZmlFactory
 {
+  public final static NamespacePrefixMapper ZML_PREFIX_MAPPER = new ZmlNamespacePrefixMapper();
+
   public final static ObjectFactory OF = new ObjectFactory();
 
   public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -520,6 +524,7 @@ public class ZmlFactory
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
+      String metaName = null;
       for( final Entry<Object, Object> entry : obs.getMetadataList().entrySet() )
       {
         final String mdKey = (String) entry.getKey();
@@ -534,6 +539,9 @@ public class ZmlFactory
           mdType.setData( XMLUtilities.encapsulateInCDATA( mdValue ) );
         else
           mdType.setValue( mdValue );
+
+        if( ObservationConstants.MD_NAME.equals( mdKey ) )
+          metaName = mdValue;
 
         metadataList.add( mdType );
       }
@@ -607,6 +615,9 @@ public class ZmlFactory
           axisList.add( axisType );
         }
       }
+
+      if( metaName != null )
+        obsType.setName( metaName );
 
       return obsType;
     }
@@ -683,14 +694,24 @@ public class ZmlFactory
     }
   }
 
+  /**
+   * @deprecated Do not use any more, except from this class.<br>
+   *             Introduce and use helper methods in this class instead (for streams, files, etc.). We should especially
+   *             use an {@link javax.xml.stream.XMLStreamWriter} configured with standard namespaces to write zml.
+   */
+  @Deprecated
   public static Marshaller getMarshaller( ) throws JAXBException
   {
     final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-
+    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", ZML_PREFIX_MAPPER );
     return marshaller;
   }
 
+  /**
+   * @deprecated See {@link #getMarshaller()}. We should provide helper methods here to read from files, streams, etc.
+   */
+  @Deprecated
   public static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
     final Unmarshaller unmarshaller = JC.createUnmarshaller();
@@ -714,9 +735,9 @@ public class ZmlFactory
    * @throws SensorException
    *           if an IOException or a FactoryException is thrown internally
    */
-  public static void writeToFile( final IObservation filteredObs, final File file ) throws SensorException
+  public static void writeToFile( final IObservation obs, final File file ) throws SensorException
   {
-    writeToFile( filteredObs, file, null );
+    writeToFile( obs, file, null );
   }
 
   /**
@@ -733,15 +754,13 @@ public class ZmlFactory
     OutputStream outs = null;
     try
     {
-      final Observation xml = createXML( obs, request );
-
       outs = new BufferedOutputStream( new FileOutputStream( file ) );
 
-      getMarshaller().marshal( xml, outs );
+      writeToStream( obs, outs, request );
 
       outs.close();
     }
-    catch( final Exception e )
+    catch( final IOException e )
     {
       LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
 
@@ -751,6 +770,33 @@ public class ZmlFactory
     {
       IOUtils.closeQuietly( outs );
     }
+  }
+
+  /**
+   * Writes an {@link IObservation} as zml into the given stream. The stream WILL NOT be closed after this operations,
+   * this is the responsibility of the caller.
+   */
+  public static void writeToStream( final IObservation obs, final OutputStream os, final IRequest request ) throws SensorException
+  {
+    try
+    {
+      final Observation xml = createXML( obs, request );
+      final Marshaller marshaller = getMarshaller();
+      marshaller.marshal( xml, os );
+    }
+    catch( final JAXBException e )
+    {
+      LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
+
+      throw new SensorException( e );
+    }
+    catch( final FactoryException e )
+    {
+      LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
+
+      throw new SensorException( e );
+    }
+
   }
 
   /**
