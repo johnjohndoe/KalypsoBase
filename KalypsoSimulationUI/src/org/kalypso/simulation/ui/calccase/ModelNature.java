@@ -120,8 +120,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 {
   public static final String METADATA_KEY_CALCCASE_CONTINUE_ALLOWED = "CALCCASE_CONTINUE_ALLOWED"; //$NON-NLS-1$
 
-  public static final JAXBContext JC_TRANSFORM = JaxbUtilities.createQuiet( org.kalypso.model.xml.ObjectFactory.class );
-
   // TODO Move this to KalypsoSimulationCore plugin
   public static final JAXBContext JC_SPEC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
 
