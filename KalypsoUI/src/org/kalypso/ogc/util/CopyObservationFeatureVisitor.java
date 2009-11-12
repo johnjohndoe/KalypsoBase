@@ -69,9 +69,11 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -80,6 +82,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.request.Request;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -373,22 +376,22 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( sourceProperty );
     if( sourcelink == null )
       return null;
-    // keine Zeitreihe verlink, z.B. kein Pegel am
-    // Knoten in KalypsoNA
-    final String href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter );
+
+    final String sourceHref = sourcelink.getHref();
+    final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, filter );
 
     // filter variable might also contain request spec
-    String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( range ) );
+    String hrefWithFilterAndRange = ZmlURL.insertRequest( hrefWithFilter, new ObservationRequest( range ) );
 
     // token replacement
     if( m_tokens != null && m_tokens.length() > 0 )
     {
       final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
 
-      sourceref = ObsViewUtils.replaceTokens( sourceref, properties );
+      hrefWithFilterAndRange = ObsViewUtils.replaceTokens( hrefWithFilterAndRange, properties );
     }
 
-    final URL sourceURL = new UrlResolver().resolveURL( m_context, sourceref );
+    final URL sourceURL = new UrlResolver().resolveURL( m_context, hrefWithFilterAndRange );
 
     try
     {
@@ -396,8 +399,15 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     }
     catch( final SensorException e )
     {
-      // tricky: wrap the exception with timeserie-link as text to have a better error message
-      throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + sourceref, e );//$NON-NLS-1$
+      final Request requestType = RequestFactory.parseRequest( hrefWithFilterAndRange );
+      if( requestType == null )
+        throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, e );//$NON-NLS-1$
+
+      // obs could not be created, use the request now
+      final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge syntetische Zeitreihe.", sourceHref );
+      m_logger.log( Level.WARNING, -1, message ); //$NON-NLS-1$
+      final IObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
+      return FilterFactory.createFilterFrom( filter, synteticObservation, null );
     }
   }
 
