@@ -48,7 +48,7 @@ import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.DescribeProcess;
 
 import org.junit.Test;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -77,7 +77,7 @@ public class HttpsAcceptCertificate
     // File clientCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
     // File serverCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
     // SSLUtilities.configureWhole( clientCert.toURL(), "key4ssl", serverCert.toURL(), "key4ssl" );
-    
+
     /* ... or like this. */
     System.setProperty( "javax.net.ssl.keyStoreType", "JKS" );
     System.setProperty( "javax.net.ssl.keyStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
@@ -92,11 +92,11 @@ public class HttpsAcceptCertificate
     DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
-    Debug.println( "Asking for a process description ..." );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process description ...\n" );
     String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), "https://informdss.bafg.de/bridge/ogc?" );
 
     /* Handle the response. */
-    Debug.println( "Response:\n" + describeProcessResponse );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + describeProcessResponse + "\n" );
   }
 
   /**

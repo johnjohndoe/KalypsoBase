@@ -79,7 +79,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
@@ -158,7 +158,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final CoreException e1 )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.0"), e1 ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.0" ), e1 ); //$NON-NLS-1$
     }
 
     m_execute = executeMediator.getV04();
@@ -183,7 +183,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.1"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.1" ), e ); //$NON-NLS-1$
     }
     checkExpectedOutput();
   }
@@ -194,7 +194,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   public void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_outputList.containsKey( id ) )
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.2") + id, null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.2" ) + id, null ); //$NON-NLS-1$
 
     // if( !m_outputListClient.containsKey( id ) )
     // throw new SimulationException( "Client doesn't expect the output with the ID: " + id, null );
@@ -247,7 +247,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
           }
           catch( final GmlSerializeException e )
           {
-            throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.3"), e ); //$NON-NLS-1$
+            throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.3" ), e ); //$NON-NLS-1$
           }
         }
         else
@@ -266,41 +266,41 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         if( result instanceof String )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.4") + id + "' must be a String (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.4" ) + id + "' must be a String (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else if( value.endsWith( "int" ) ) //$NON-NLS-1$
       {
         if( result instanceof Integer )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.5") + id + "' must be an Integer (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.5" ) + id + "' must be an Integer (Literal): " + result, null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else if( value.endsWith( "double" ) ) //$NON-NLS-1$
       {
         if( result instanceof Double )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.6", id ), null ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.6", id ), null ); //$NON-NLS-1$
       }
       else if( value.endsWith( "boolean" ) ) //$NON-NLS-1$
       {
         if( result instanceof Boolean )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$ 
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$ 
       }
       else
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.8") + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.8" ) + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else if( boundingBoxOutput != null )
     {
       if( result instanceof BoundingBoxType )
         valueFormChoice = result;
       else
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.9", id ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.9", id ), null ); //$NON-NLS-1$ 
     }
     else
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.10", id ), null ); //$NON-NLS-1$ 
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.10", id ), null ); //$NON-NLS-1$ 
 
     /* Build io value. */
     final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
@@ -322,19 +322,19 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         if( FileType.FOLDER.equals( source.getType() ) )
         {
           /* Directory copy. */
-          Debug.println( "Copy directory " + source.getName() + " to " + destination.getName() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          KalypsoServiceWPSDebug.DEBUG.printf( "Copy directory " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           VFSUtilities.copyDirectoryToDirectory( source, destination );
         }
         else if( FileType.FILE.equals( source.getType() ) )
         {
           /* File copy. */
-          Debug.println( "Copy file " + source.getName() + " to " + destination.getName() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          KalypsoServiceWPSDebug.DEBUG.printf( "Copy file " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           VFSUtilities.copyFileTo( source, destination );
         }
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.11",sourceFile), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.11", sourceFile ), e ); //$NON-NLS-1$
       }
     }
 
@@ -358,7 +358,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       /* Getting the relative path to the source file. */
       final String relativePathToSource = FileUtilities.getRelativePathTo( m_tmpDir, sourceFile );
       if( relativePathToSource == null )
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.12", sourceFile) ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.12", sourceFile ) ); //$NON-NLS-1$
       final String uri = m_resultDir.getURL().toExternalForm() + "/" + relativePathToSource; //$NON-NLS-1$
 
       final FileObject destination = m_vfsManager.resolveFile( uri );
@@ -379,7 +379,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
     catch( final IOException e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.13", sourceFile), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.13", sourceFile ), e ); //$NON-NLS-1$
     }
   }
 
@@ -387,7 +387,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   {
     /* Resolving the result file object. */
     if( m_resultDir == null )
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.14"), null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.14" ), null ); //$NON-NLS-1$
   }
 
   /**
@@ -500,7 +500,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     {
       final String clientKey = clientKeys.next();
       if( !m_outputList.containsKey( clientKey ) )
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.15",clientKey ), null ); //$NON-NLS-1$ /
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.15", clientKey ), null ); //$NON-NLS-1$ /
     }
 
     /* Ok, everything is fine. The client did not expect things, the server cannot do. */

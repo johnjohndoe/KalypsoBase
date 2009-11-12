@@ -74,7 +74,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.DescribeProcessMediator;
@@ -110,7 +110,7 @@ public class DescribeProcessOperation implements IOperation
     try
     {
       /* Start the operation. */
-      Debug.println( "Operation \"DescribeProcess\" started." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Operation \"DescribeProcess\" started.\n" ); //$NON-NLS-1$
 
       /* Get the identifiers out of the request. */
       final List<String> identifiers = getIdentifier( request );
@@ -152,9 +152,9 @@ public class DescribeProcessOperation implements IOperation
         final Object describeProcessRequest = MarshallUtilities.unmarshall( xml );
         final DescribeProcessMediator describeProcessMediator = new DescribeProcessMediator( describeProcessRequest );
         simulationTypes = describeProcessMediator.getProcessIdentifiers();
-     
+
         m_version = describeProcessMediator.getVersion().toString();
-        
+
       }
       catch( final JAXBException e )
       {
@@ -178,8 +178,8 @@ public class DescribeProcessOperation implements IOperation
 
     if( simulationTypes.size() == 0 )
     {
-      Debug.println( "Missing parameter Identifier!" ); //$NON-NLS-1$
-      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, Messages.getString("org.kalypso.service.wps.server.operations.DescribeProcessOperation.0"), "Identifier" ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Missing parameter Identifier!\n" ); //$NON-NLS-1$
+      throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, Messages.getString( "org.kalypso.service.wps.server.operations.DescribeProcessOperation.0" ), "Identifier" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return simulationTypes;

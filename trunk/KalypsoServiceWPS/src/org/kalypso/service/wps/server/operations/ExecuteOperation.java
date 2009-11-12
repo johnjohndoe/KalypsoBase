@@ -49,7 +49,7 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
@@ -75,8 +75,9 @@ public class ExecuteOperation implements IOperation
   public StringBuffer executeOperation( final RequestBean request ) throws OWSException
   {
     final StringBuffer response = new StringBuffer();
+
     /* Start the operation. */
-    Debug.println( "Operation \"Execute\" started." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Operation \"Execute\" started.\n" ); //$NON-NLS-1$
 
     /* Gets the identifier, but also unmarshalls the request, so it has to be done! */
     final String requestXml = request.getBody();

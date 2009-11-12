@@ -50,12 +50,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
 /**
  * @author kuch
- *
  */
 public class DefaultWpsObserver implements IWPSObserver
 {
@@ -64,7 +63,7 @@ public class DefaultWpsObserver implements IWPSObserver
    * @see org.kalypso.service.wps.client.IWPSObserver#handleAccepted(net.opengeospatial.wps.ExecuteResponseType)
    */
   @Override
-  public void handleAccepted( final  ExecuteResponseType exState )
+  public void handleAccepted( final ExecuteResponseType exState )
   {
     // nothing to do
   }
@@ -75,7 +74,7 @@ public class DefaultWpsObserver implements IWPSObserver
   @Override
   public IStatus handleCancel( )
   {
-   return Status.CANCEL_STATUS;
+    return Status.CANCEL_STATUS;
   }
 
   /**
@@ -94,7 +93,8 @@ public class DefaultWpsObserver implements IWPSObserver
   }
 
   /**
-   * @see org.kalypso.service.wps.client.IWPSObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor, net.opengeospatial.wps.ExecuteResponseType)
+   * @see org.kalypso.service.wps.client.IWPSObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor,
+   *      net.opengeospatial.wps.ExecuteResponseType)
    */
   @Override
   public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState )
@@ -127,9 +127,9 @@ public class DefaultWpsObserver implements IWPSObserver
   @Override
   public IStatus handleTimeout( )
   {
-    Debug.println( "Timeout reached ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Timeout reached ...\n" ); //$NON-NLS-1$
 
-    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWpsObserver.2") ); //$NON-NLS-1$
+    return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWpsObserver.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -138,7 +138,7 @@ public class DefaultWpsObserver implements IWPSObserver
   @Override
   public final IStatus handleUnknownState( final ExecuteResponseType exState )
   {
-    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWpsObserver.3") ); //$NON-NLS-1$
+    return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWpsObserver.3" ) ); //$NON-NLS-1$
   }
 
 }

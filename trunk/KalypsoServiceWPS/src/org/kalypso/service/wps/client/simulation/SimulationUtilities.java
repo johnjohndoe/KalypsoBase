@@ -53,7 +53,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
@@ -84,14 +84,14 @@ public class SimulationUtilities
       URL url = new URL( path );
 
       /* If it is a file URL, it is no remote URL. */
-      if( url.getProtocol().equals( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.0" ) ) ) //$NON-NLS-1$
+      if( url.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
-        Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.1" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoServiceWPSDebug.DEBUG.printf( "Input '" + path + "' was a local file URL ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 
       /* It is a remote URL. */
-      Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.3" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Input '" + path + "' was a remote URL ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return url;
     }
@@ -101,7 +101,7 @@ public class SimulationUtilities
     }
 
     /* If it was no parseable URL, it is probably a file path. */
-    Debug.println( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.5" ) + path + Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Input '" + path + "' was no URL ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
@@ -128,8 +128,7 @@ public class SimulationUtilities
   {
     String endPoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
     if( endPoint == null )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, //
-      Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.7", WPSRequest.SYSTEM_PROP_WPS_ENDPOINT ), null ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.7", WPSRequest.SYSTEM_PROP_WPS_ENDPOINT ), null ) ); //$NON-NLS-1$
 
     return endPoint;
   }
