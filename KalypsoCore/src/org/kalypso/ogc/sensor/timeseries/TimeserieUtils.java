@@ -246,14 +246,30 @@ public class TimeserieUtils extends TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
+  public final static void setForecast( final IObservation obs, final DateRange range )
+  {
+    if( range == null )
+      return;
+
+    setForecast( obs, range.getFrom(), range.getTo() );
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
   public final static void setForecast( final IObservation obs, final Date from, final Date to )
   {
-    if( from != null && to != null )
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    if( from != null )
     {
-      final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
       final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      final String toStr = DateUtilities.printDateTime( to, timeZone );
       obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_START, fromStr ); //$NON-NLS-1$
+    }
+
+    if( to != null )
+    {
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
       obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
     }
   }

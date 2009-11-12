@@ -68,6 +68,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
@@ -105,6 +106,7 @@ import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoriesExtensions;
+import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
@@ -290,26 +292,31 @@ public class ZmlFactory
 
       final String itemId = splittedUrlBase[0];
       final String itemParameters = splittedUrlBase[1];
-      if( ZmlURL.isEmpty( url.toString() ) )
-      {
-        return RequestFactory.createDefaultObservation( urlBase );
-      }
 
-      /** resolve IObservation from proxy repository */
-      final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
-      final IRepository repository = factory.createRepository();
-
-      final IRepositoryItem item = repository.findItem( itemId );
-      final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-
-      // apply filter on observation
-      return FilterFactory.createFilterFrom( itemParameters, observation, null );
+      final IObservation proxyObservation = fetchZmlProxyXml( urlBase, itemId );
+      return FilterFactory.createFilterFrom( itemParameters, proxyObservation, null );
+    }
+    catch( final SensorException e )
+    {
+      throw e;
     }
     catch( final Exception ex )
     {
       throw new SensorException( "Parsing zml-proxy observation failed.", ex ); //$NON-NLS-1$
     }
+  }
 
+  private static IObservation fetchZmlProxyXml( final String urlBase, final String itemId ) throws SensorException, CoreException, RepositoryException
+  {
+    if( ZmlURL.isEmpty( urlBase ) )
+      return RequestFactory.createDefaultObservation( urlBase );
+
+    /** resolve IObservation from proxy repository */
+    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
+    final IRepository repository = factory.createRepository();
+
+    final IRepositoryItem item = repository.findItem( itemId );
+    return (IObservation) item.getAdapter( IObservation.class );
   }
 
   /**

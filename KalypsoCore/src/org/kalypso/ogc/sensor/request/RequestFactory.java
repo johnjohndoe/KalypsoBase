@@ -120,7 +120,7 @@ public class RequestFactory
    * this extension is merged with the observation created here. You can use this for instance to have some default
    * W/Q-Table in the metadata.
    * 
-   * @return a new instance of SimpleObservation that will statisfy the request specification
+   * @return a new instance of SimpleObservation that will satisfy the request specification
    */
   public static IObservation createDefaultObservation( final Request xmlReq )
   {
