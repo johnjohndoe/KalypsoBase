@@ -56,6 +56,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -81,6 +82,10 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Name der Feature-Property, welche den Link enthält, an welche Stelle das Ergebnis geschrieben wird.
    */
   private String m_targetobservation;
+
+  private String m_targetFrom;
+
+  private String m_targetTo;
 
   /**
    * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
@@ -128,19 +133,24 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   @Override
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
   {
-    Date forecastFrom = null;
-    if( m_forecastFrom != null )
-      forecastFrom = DateUtilities.parseDateTime(  m_forecastFrom );
+    final Date forecastFrom = parseDateTime( m_forecastFrom );
+    final Date forecastTo = parseDateTime( m_forecastTo );
+    final Date targetFrom = parseDateTime( m_targetFrom );
+    final Date targetTo = parseDateTime( m_targetTo );
 
-    Date forecastTo = null;
-    if( m_forecastTo != null )
-      forecastTo = DateUtilities.parseDateTime( m_forecastTo );
+    final DateRange forecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( forecastFrom, forecastTo );
+    final DateRange targetRange = CopyObservationFeatureVisitor.createDateRangeOrNull( targetFrom, targetTo );
 
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
-    if( m_targetObservationDir != null )
-      return new CopyObservationFeatureVisitor( context, resolver, m_targetObservationDir, srcs, m_metadata, forecastFrom, forecastTo, logger, m_tokens );
+    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, m_targetObservationDir, srcs, m_metadata, targetRange, forecastRange, logger, m_tokens );
+  }
 
-    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, srcs, m_metadata, forecastFrom, forecastTo, logger, m_tokens );
+  private Date parseDateTime( final String lexicalDate )
+  {
+    if( lexicalDate == null )
+      return null;
+
+    return DateUtilities.parseDateTime( lexicalDate );
   }
 
   public final String getTargetobservation( )
@@ -162,12 +172,15 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     final Date fromDate = DateUtilities.parseDateTime( from );
     final Date toDate = DateUtilities.parseDateTime( to );
+
+    final DateRange range = CopyObservationFeatureVisitor.createDateRangeOrNull( fromDate, toDate );
+
     final String filter = source.getFilter();
     final Project project2 = getProject();
     if( project2 != null )
       project2.log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
 
-    m_sources.add( new CopyObservationFeatureVisitor.Source( property, fromDate, toDate, filter ) );
+    m_sources.add( new CopyObservationFeatureVisitor.Source( property, range, filter ) );
   }
 
   public void addConfiguredMetadata( final Metadata metadata )
@@ -256,6 +269,16 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   public final void setForecastTo( final String forecastTo )
   {
     m_forecastTo = forecastTo;
+  }
+
+  public final void setTargetFrom( final String targetFrom )
+  {
+    m_targetFrom = targetFrom;
+  }
+
+  public final void setTargetTo( final String targetTo )
+  {
+    m_targetTo = targetTo;
   }
 
   public String getTokens( )
