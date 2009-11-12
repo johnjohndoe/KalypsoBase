@@ -48,7 +48,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 		</delete>
 	</target>
 
-	<target name="generate" description="erzeugt die sourcen">
+	<target name="generate" description="erzeugt die sourcen" depends="clean" >
 		<echo message="Generating binding sources für ${gen.srcbind}" />
 		<mkdir dir="${gen.srcbind}" />
 		<xjc destdir="${gen.srcbind}" extension="true" removeoldoutput="true" source="2.0">
