@@ -48,6 +48,7 @@ import java.net.URL;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.i18n.Messages;
 
 /**
  * This class contains functions for dealing with the http client.
@@ -91,12 +92,12 @@ public class HttpClientUtilities
       /* Execute the method. */
       int status = httpClient.executeMethod( method );
       if( status != 200 )
-        throw new Exception( String.format( "Die Anfrage beim Server ist fehlgeschlagen. Status-Code: %d", status ) );
+        throw new Exception( String.format( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.0" ), status ) ); //$NON-NLS-1$
 
       /* Get the response. */
       is = method.getResponseBodyAsStream();
       if( is == null )
-        throw new Exception( "Keine Antwort vom Server erhalten ..." );
+        throw new Exception( Messages.getString( "org.kalypso.commons.net.HttpClientUtilities.1" ) ); //$NON-NLS-1$
 
       /* Create the output stream. */
       os = new FileOutputStream( targetFile );
