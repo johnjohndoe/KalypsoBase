@@ -38,7 +38,9 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -60,13 +62,14 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 {
-  private static double MIN_DRAG_DISTANCE_PIXEL = 20;
+//  private static double MIN_DRAG_DISTANCE_PIXEL = 20;
+  private static double MIN_DRAG_DISTANCE_PIXEL = 0.02;
 
   // points in pixel coordinates
-  private final List<Point> m_points = new ArrayList<Point>();
+  private final List< GM_Point > m_points = new ArrayList< GM_Point >();
 
   // this is the point currently under the mouse
-  private Point m_currentPoint = null;
+  private GM_Point m_currentPoint = null;
 
   private GM_Object m_validGeometryValue;
 
@@ -89,7 +92,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @throws GM_Exception
    * @throws NotEnoughPointsExeption
    */
-  private GM_Object createGeometry( final List<Point> pixelArray ) throws GM_Exception, NotEnoughPointsExeption
+  private GM_Object createGeometry( final List< GM_Point > pixelArray ) throws GM_Exception, NotEnoughPointsExeption
   {
     final Class geoClass = getGeometryClass();
     if( geoClass == GeometryUtilities.getPolygonClass() && pixelArray.size() < 3 )
@@ -97,7 +100,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     if( geoClass == GeometryUtilities.getLineStringClass() && pixelArray.size() < 2 )
       throw new NotEnoughPointsExeption();
 
-    final List<GM_Position> posArray = getPositionArray( pixelArray );
+    final List< GM_Position > posArray = getAsGM_Positions( pixelArray );//getPositionArray( pixelArray );
     GM_Object result = null;
     if( geoClass == GeometryUtilities.getPolygonClass() )
       result = getPolygon( posArray );
@@ -110,6 +113,15 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     return result;
   }
 
+  private List<GM_Position> getAsGM_Positions( List<GM_Point> pixelArray )
+  {
+    List< GM_Position > lListResult = new ArrayList< GM_Position >();
+    for( final GM_Point lGMPoint: pixelArray ){
+      lListResult.add( lGMPoint.getPosition() );
+    }
+    return lListResult;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
@@ -119,13 +131,14 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     if( !canEdit() )
       return;
 
-    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).equals( p ) )
+    GM_Point lGMPoint = transform( getMapPanel(), p ); 
+    if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).equals( lGMPoint ) )
       return;
     // first test if vaild...
-    final List<Point> testList = new ArrayList<Point>();
-    for( final Point point : m_points )
+    final List< GM_Point > testList = new ArrayList< GM_Point >();
+    for( final GM_Point point : m_points )
       testList.add( point );
-    testList.add( p );
+    testList.add( lGMPoint );
 
     try
     {
@@ -134,7 +147,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       if( geometry.isValid() && geometry.isSimple() )
       {
         m_validGeometryValue = gm_geometry;
-        m_points.add( p );
+        m_points.add( lGMPoint );
         if( getGeometryClass() == GeometryUtilities.getPointClass() )
           perform();
       }
@@ -143,7 +156,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     }
     catch( final NotEnoughPointsExeption e )
     {
-      m_points.add( p );
+      m_points.add( lGMPoint );
       m_validGeometryValue = null;
     }
     catch( final GM_Exception e )
@@ -151,7 +164,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       e.printStackTrace();
       m_validGeometryValue = null;
     }
-    m_currentPoint = p;
+    m_currentPoint = lGMPoint;
   }
 
   /**
@@ -160,7 +173,8 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   @Override
   public void dragged( final Point p )
   {
-    if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
+    GM_Point lGMPoint = transform( getMapPanel(), p );
+    if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( lGMPoint ) > MIN_DRAG_DISTANCE_PIXEL )
       leftClicked( p );
 
     // TODO: check if this repaint is really necessary
@@ -178,7 +192,8 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   {
     if( !m_points.isEmpty() )
     {
-      m_currentPoint = p;
+      GM_Point lGMPoint = transform( getMapPanel(), p ); 
+      m_currentPoint = lGMPoint;
 
 // TODO: check if this repaint is necessary for the widget
       final IMapPanel panel = getMapPanel();
@@ -197,8 +212,9 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       return;
     if( !m_points.isEmpty() && m_currentPoint != null )
     {
-      final int[] arrayX = getXArrayPixel();
-      final int[] arrayY = getYArrayPixel();
+      final int[][] lArrPositionToDrow = getXYArrayPixel();
+      final int[] arrayX = lArrPositionToDrow[ 0 ];
+      final int[] arrayY = lArrPositionToDrow[ 1 ];
       final Class geoClass = getGeometryClass();
       if( geoClass == GeometryUtilities.getPolygonClass() )
       {
@@ -227,37 +243,25 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   }
 
   /**
-   * @return all the y poaints as array including the current point
+   * @return all the x and y points as int[][] array including the current point
    */
-  private int[] getYArrayPixel( )
-  {
+  private int[][] getXYArrayPixel( ){
+    final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      final Point p = m_points.get( i );
-      yArray.add( new Integer( (int) p.getY() ) );
+      xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_points.get( i ).getX() ) ) );
+      yArray.add( new Integer( (int) getMapPanel().getProjection().getDestY( m_points.get( i ).getY() ) ) );
     }
-    if( m_currentPoint != null )
-      yArray.add( new Integer( m_currentPoint.y ) );
-    return ArrayUtils.toPrimitive( yArray.toArray( new Integer[m_points.size()] ) );
-  }
-
-  /**
-   * @return all the x points as array including the current point
-   */
-  private int[] getXArrayPixel( )
-  {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    for( int i = 0; i < m_points.size(); i++ )
-    {
-      final Point p = m_points.get( i );
-      xArray.add( new Integer( (int) p.getX() ) );
+    if( m_currentPoint != null ){
+      xArray.add( new Integer(  (int) getMapPanel().getProjection().getDestX( m_currentPoint.getX() ) ) );
+      yArray.add( new Integer(  (int) getMapPanel().getProjection().getDestY( m_currentPoint.getY() ) ) );
     }
-    if( m_currentPoint != null )
-      xArray.add( new Integer( m_currentPoint.x ) );
-    return ArrayUtils.toPrimitive( xArray.toArray( new Integer[m_points.size()] ) );
+    int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[m_points.size()] ) );
+    int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[m_points.size()] ) );
+    return new int[][] { xs, ys };
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
@@ -282,23 +286,40 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     clear();
   }
 
+  /**
+   * This method transforms the AWT-Point to a GM_Point.
+   *
+   * @param mapPanel
+   *          The MapPanel of the map.
+   * @param p
+   *          The AWT-Point.
+   */
+  protected static GM_Point transform( final IMapPanel mapPanel, final Point p )
+  {
+    if( p == null )
+      return null;
+
+    final GeoTransform projection = mapPanel.getProjection();
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null || projection == null )
+      return null;
+
+    String coordinatesSystem = mapModell.getCoordinatesSystem();
+    if( coordinatesSystem == null )
+    {
+      coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    }
+
+    final double x = p.getX();
+    final double y = p.getY();
+
+    return GeometryFactory.createGM_Point( projection.getSourceX( x ), projection.getSourceY( y ), coordinatesSystem );
+  }
+  
   protected abstract void performIntern( final GM_Object validGeometryValue ) throws Exception;
 
-  private List<GM_Position> getPositionArray( final List<Point> listPoints )
-  {
-    final List<GM_Position> positions = new ArrayList<GM_Position>();
-    for( int i = 0; i < listPoints.size(); i++ )
-    {
-      final Point p = listPoints.get( i );
-      final int x = (int) p.getX();
-      final int y = (int) p.getY();
-      final GM_Position pos = GeometryFactory.createGM_Position( getProjection().getSourceX( x ), getProjection().getSourceY( y ) );
-      positions.add( pos );
-    }
-    return positions;
-  }
 
-  private GM_Surface getPolygon( final List<GM_Position> posArray ) throws GM_Exception
+  private GM_Surface getPolygon( final List< GM_Position > posArray ) throws GM_Exception
   {
     // close the ring
     posArray.add( posArray.get( 0 ) );
