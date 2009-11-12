@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 
 /**
  * @author Dirk Kuch
@@ -55,8 +55,11 @@ import org.kalypso.service.wps.utils.Debug;
 public class AsynchronousWPSWatchdog
 {
   private final IWPSObserver m_observer;
+
   private final IWPSProcess m_process;
+
   private final long m_timeout;
+
   private int m_alreadyWorked;
 
   public AsynchronousWPSWatchdog( final IWPSProcess process, final IWPSObserver observer, final long timeout )
@@ -70,7 +73,7 @@ public class AsynchronousWPSWatchdog
   {
     try
     {
-      Debug.println( "Checking state file of the server ..." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Checking state file of the server ...\n" ); //$NON-NLS-1$
 
       /* Poll to update the status. */
       final boolean run = true;
@@ -78,8 +81,8 @@ public class AsynchronousWPSWatchdog
 
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
       final String title = m_process.getTitle();
-      
-      monitor.beginTask( Messages.getString("org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.0") + title, 100 ); // 100% //$NON-NLS-1$
+
+      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.0" ) + title, 100 ); // 100% //$NON-NLS-1$
 
       while( run )
       {
@@ -95,12 +98,12 @@ public class AsynchronousWPSWatchdog
 
         final ExecuteResponseType exState = m_process.getExecuteResponse();
         if( exState == null )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.1") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.1" ) ); //$NON-NLS-1$
 
         final Integer percentage = m_process.getPercentCompleted();
         final String statusDescription = m_process.getStatusDescription();
         tickMonitor( statusDescription, percentage, monitor );
-        
+
         final StatusType state = exState.getStatus();
         if( state.getProcessAccepted() != null )
           m_observer.handleAccepted( exState );
@@ -125,8 +128,8 @@ public class AsynchronousWPSWatchdog
       return StatusUtilities.statusFromThrowable( e );
     }
   }
-  
-  private void tickMonitor( final String description, final Integer percent, final IProgressMonitor monitor ) 
+
+  private void tickMonitor( final String description, final Integer percent, final IProgressMonitor monitor )
   {
     int percentCompleted = 0;
     if( percent != null )

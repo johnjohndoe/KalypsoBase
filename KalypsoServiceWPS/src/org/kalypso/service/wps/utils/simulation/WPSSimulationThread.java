@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
-import org.kalypso.service.wps.utils.Debug;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.simulation.core.ISimulation;
@@ -171,7 +170,7 @@ public class WPSSimulationThread extends Thread
       final InputDescriptionType inputDescription = (InputDescriptionType) entry.getValue();
       if( inputDescription.getMinimumOccurs().intValue() == 1 && inputList.get( id ) == null )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationThread.0", id )); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationThread.0", id ) ); //$NON-NLS-1$
       }
     }
   }
@@ -184,13 +183,12 @@ public class WPSSimulationThread extends Thread
     if( KalypsoServiceWPSDebug.DO_NOT_DELETE_TEMP_FILES.isEnabled() )
     {
       /* Debug-Information. */
-
-      Debug.println( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ..." ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoServiceWPSDebug.DEBUG.printf( "The tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' will remain untouched ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
       /* Debug-Information. */
-      Debug.println( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ..." ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Delete the tmp-data. */
       FileUtilities.deleteRecursive( m_tmpDir );

@@ -90,7 +90,7 @@ import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.Activator;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -208,11 +208,11 @@ public class NonBlockingWPSRequest
 
   private void initProcessDescription( IProgressMonitor monitor ) throws CoreException
   {
-    Debug.println( "Initializing ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Initializing ...\n" ); //$NON-NLS-1$
 
     /* Monitor. */
     monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.0" ), 300 ); //$NON-NLS-1$
-    Debug.println( "Asking for a process description ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process description ...\n" ); //$NON-NLS-1$
 
     // decide between local and remote invocation
     if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
@@ -283,18 +283,18 @@ public class NonBlockingWPSRequest
 
     /* Monitor. */
     monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.2" ), 200 ); //$NON-NLS-1$
-    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Checking for service URL ...\n" ); //$NON-NLS-1$
 
     /* Check, if we have a service endpoint. */
     if( m_serviceEndpoint == null )
     {
-      Debug.println( "No URL to the service is given." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "No URL to the service is given.\n" ); //$NON-NLS-1$
       return StatusUtilities.statusFromThrowable( new WPSException( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.3" ) ) ); //$NON-NLS-1$
     }
 
     /* Send the request. */
     monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.4" ) ); //$NON-NLS-1$
-    Debug.println( "Start the simulation ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Start the simulation ...\n" ); //$NON-NLS-1$
 
     ExecuteResponseType executeResponse;
     final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier ); //$NON-NLS-1$
@@ -639,18 +639,18 @@ public class NonBlockingWPSRequest
         catch( final Exception e )
         {
           /* An error has occured while copying the file. */
-          Debug.println( "An error has occured with the message: " + e.getLocalizedMessage() ); //$NON-NLS-1$
+          KalypsoServiceWPSDebug.DEBUG.printf( "An error has occured with the message: " + e.getLocalizedMessage() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
           /* If a certain amount (here 2) of retries was reached before, rethrow the error. */
           if( cnt >= 2 )
           {
-            Debug.println( "The second retry has failed, rethrowing the error ..." ); //$NON-NLS-1$
+            KalypsoServiceWPSDebug.DEBUG.printf( "The second retry has failed, rethrowing the error ...\n" ); //$NON-NLS-1$
             throw e;
           }
 
           /* Retry the copying of the file. */
           cnt++;
-          Debug.println( "Retry: " + String.valueOf( cnt ) ); //$NON-NLS-1$
+          KalypsoServiceWPSDebug.DEBUG.printf( "Retry: " + String.valueOf( cnt ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
           success = false;
 
           /* Wait for some milliseconds. */

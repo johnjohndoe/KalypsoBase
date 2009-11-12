@@ -23,7 +23,7 @@ import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -71,7 +71,7 @@ public class GetCapabilitiesOperation implements IOperation
     try
     {
       /* Start the operation. */
-      Debug.println( "Operation \"GetCapabilities\" started." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Operation \"GetCapabilities\" started.\n" ); //$NON-NLS-1$
 
       String acceptVersions = getAcceptVersions( request );
       if( acceptVersions != null )
@@ -81,7 +81,7 @@ public class GetCapabilitiesOperation implements IOperation
         if( !acceptVersions.equals( WPSUtilities.WPS_VERSION.V040.toString() ) )
         {
           /* Versions does not match. */
-          throw new OWSException( OWSException.ExceptionCode.VERSION_NEGPTIOATON_FAILED, Messages.getString("org.kalypso.service.wps.server.operations.GetCapabilitiesOperation.0"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+          throw new OWSException( OWSException.ExceptionCode.VERSION_NEGPTIOATON_FAILED, Messages.getString( "org.kalypso.service.wps.server.operations.GetCapabilitiesOperation.0" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -99,7 +99,7 @@ public class GetCapabilitiesOperation implements IOperation
         URL spezifikation = simulation.getSpezifikation();
         if( spezifikation == null )
         {
-          Debug.println( "Simulation has no specification and will be ignored: " + simulation.getClass().getName() ); //$NON-NLS-1$
+          KalypsoServiceWPSDebug.DEBUG.printf( "Simulation has no specification and will be ignored: " + simulation.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
           continue;
         }
 
@@ -146,7 +146,7 @@ public class GetCapabilitiesOperation implements IOperation
    * Checks for the parameter AcceptVersions and returns it. No POST/XML allowed!
    * 
    * @param request
-   *            The request.
+   *          The request.
    * @return The AcceptVersions parameter or null if not present.
    */
   private String getAcceptVersions( RequestBean request )

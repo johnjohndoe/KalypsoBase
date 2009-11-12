@@ -57,7 +57,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
 import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
@@ -220,7 +220,7 @@ public class WPSQueuedSimulationService
     final WPSSimulationThread cjt = findJobThread( jobID );
 
     if( cjt.isAlive() )
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSQueuedSimulationService.0"), null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSQueuedSimulationService.0" ), null ); //$NON-NLS-1$
 
     cjt.dispose();
 
@@ -249,7 +249,7 @@ public class WPSQueuedSimulationService
     final String typeID = executeMediator.getProcessId();
     if( typeID == null || typeID.length() == 0 )
     {
-      Debug.println( "Missing parameter Identifier!" ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Missing parameter Identifier!\n" ); //$NON-NLS-1$
       throw new SimulationException( "Process identifier is missing!" ); //$NON-NLS-1$
     }
 

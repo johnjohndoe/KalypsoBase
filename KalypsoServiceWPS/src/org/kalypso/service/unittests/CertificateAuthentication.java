@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -96,7 +96,7 @@ public class CertificateAuthentication
     // File clientCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
     // File serverCert = new File( "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
     // SSLUtilities.configureWhole( clientCert.toURL(), "key4ssl", serverCert.toURL(), "key4ssl" );
-    
+
     /* ... or like this. */
     System.setProperty( "javax.net.ssl.keyStoreType", "JKS" );
     System.setProperty( "javax.net.ssl.keyStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Client/keystore.jks" );
@@ -112,12 +112,12 @@ public class CertificateAuthentication
     get.setDoAuthentication( true );
 
     /* Execute the method. */
-    Debug.println( "Asking for a directory listing ..." );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a directory listing ...\n" );
 
     int status = client.executeMethod( get );
 
     /* Handle the response. */
-    Debug.println( "Status code: " + String.valueOf( status ) );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Status code: " + String.valueOf( status ) + "\n" );
 
     if( status != 200 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Request failed! The server responded :" + String.valueOf( status ) ) );
@@ -126,7 +126,7 @@ public class CertificateAuthentication
     if( is != null )
     {
       /* Print the response. */
-      Debug.println( MarshallUtilities.fromInputStream( is ) );
+      KalypsoServiceWPSDebug.DEBUG.printf( MarshallUtilities.fromInputStream( is ) + "\n" );
     }
 
     if( true )
@@ -138,10 +138,10 @@ public class CertificateAuthentication
     DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
-    Debug.println( "Asking for a process describtion ..." );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process describtion ...\n" );
     String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), SERVICE_URL );
 
     /* Handle the response. */
-    Debug.println( "Response:\n" + describeProcessResponse );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + describeProcessResponse + "\n" );
   }
 }

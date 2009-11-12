@@ -80,7 +80,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
@@ -173,10 +173,10 @@ public class SimulationDelegate
     /* The file system manager needs to be set. */
     initVFSManager();
 
-    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Checking for service URL ...\n" ); //$NON-NLS-1$
     if( m_service == null )
     {
-      Debug.println( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "No URL to the service is given. Be sure to check the config.ini for the org.kalypso.service.wps.service property.\n" ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.0" ), null ) ); //$NON-NLS-1$
     }
   }
@@ -258,16 +258,16 @@ public class SimulationDelegate
       /* If the directory is not initialized, it will be generated and created (if necessary). */
       if( m_serverTmpDirectory == null )
       {
-        Debug.println( "Checking for server URL, where the input data can be copied ..." ); //$NON-NLS-1$
+        KalypsoServiceWPSDebug.DEBUG.printf( "Checking for server URL, where the input data can be copied ...\n" ); //$NON-NLS-1$
         if( m_input == null )
         {
-          Debug.println( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property." ); //$NON-NLS-1$
+          KalypsoServiceWPSDebug.DEBUG.printf( "No URL to the server of the service is given, where the input data can be copied. Be sure to check the config.ini for the org.kalypso.service.wps.input property.\n" ); //$NON-NLS-1$
           throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.3" ) ); //$NON-NLS-1$
         }
         else if( SERVER_INPUT_LOCAL.equals( m_input ) )
         {
           // do not use server directory, but calculate in calcCaseFolder
-          Debug.println( "Local calculation! Using calcCaseFolder as input directory." ); //$NON-NLS-1$
+          KalypsoServiceWPSDebug.DEBUG.printf( "Local calculation! Using calcCaseFolder as input directory.\n" ); //$NON-NLS-1$
           final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
           m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation );
         }
@@ -279,7 +279,7 @@ public class SimulationDelegate
 
           if( !m_serverTmpDirectory.exists() )
           {
-            Debug.println( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
+            KalypsoServiceWPSDebug.DEBUG.printf( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
             m_serverTmpDirectory.createFolder();
           }
         }
@@ -444,7 +444,7 @@ public class SimulationDelegate
     {
       /* Monitor. */
       monitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.7" ), 500 ); //$NON-NLS-1$
-      Debug.println( "Collecting data ..." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Collecting data ...\n" ); //$NON-NLS-1$
 
       /* Need the filesystem manager. */
       final FileSystemManager fsManager = VFSUtilities.getManager();
@@ -587,7 +587,7 @@ public class SimulationDelegate
       /* Monitor. */
       monitor.worked( 200 );
       monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.11" ) ); //$NON-NLS-1$
-      Debug.println( "Copy to the server ..." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Copy to the server ...\n" ); //$NON-NLS-1$
 
       /* Copy all collected files. */
       final IFile[] files = visitor.getFiles();

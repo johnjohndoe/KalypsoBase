@@ -70,7 +70,7 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
 /**
@@ -227,7 +227,7 @@ public class WPSRequest
     final FileObject statusFile = null;
     try
     {
-      Debug.println( "Checking state file of the server ..." ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Checking state file of the server ...\n" ); //$NON-NLS-1$
       ExecuteResponseType exState = null;
 
       /* Poll to update the status. */
@@ -269,13 +269,13 @@ public class WPSRequest
           return doUnknownState( exState );
 
         /* If the user aborted the job. */
-        // TODO 
+        // TODO
         if( monitor.isCanceled() )
         {
           IStatus doCanceled = doCanceled();
-          if( doCanceled.matches( IStatus.CANCEL | IStatus.ERROR | IStatus.WARNING ))
+          if( doCanceled.matches( IStatus.CANCEL | IStatus.ERROR | IStatus.WARNING ) )
             return doCanceled;
-          
+
           // Other cases: just continue, cancel not possible, hut the user should not know it...
         }
 
@@ -311,7 +311,7 @@ public class WPSRequest
 
   protected IStatus doTimeout( )
   {
-    Debug.println( "Timeout reached ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Timeout reached ...\n" ); //$NON-NLS-1$
     return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.3" ) ); //$NON-NLS-1$
   }
 
@@ -331,7 +331,7 @@ public class WPSRequest
   protected IStatus doProcessSucceeded( final ExecuteResponseType exState )
   {
     /* Check if the results are ready. */
-    Debug.println( "The simulation has finished ..." ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "The simulation has finished ...\n" ); //$NON-NLS-1$
 
     /* Get the process outputs. */
     final net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = exState.getProcessOutputs();
@@ -489,9 +489,7 @@ public class WPSRequest
       if( boundingBox != null )
       {
         if( m_boundingBoxes == null )
-        {
           m_boundingBoxes = new LinkedHashMap<String, BoundingBoxType>();
-        }
 
         m_boundingBoxes.put( ioValue.getIdentifier().getValue(), boundingBox );
 
@@ -503,9 +501,7 @@ public class WPSRequest
       if( complexValue != null )
       {
         if( m_complexValues == null )
-        {
           m_complexValues = new LinkedHashMap<String, ComplexValueType>();
-        }
 
         m_complexValues.put( ioValue.getIdentifier().getValue(), complexValue );
 
@@ -555,5 +551,4 @@ public class WPSRequest
   {
     return m_complexValues;
   }
-
 }

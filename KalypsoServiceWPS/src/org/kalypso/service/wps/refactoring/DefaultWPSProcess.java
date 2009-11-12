@@ -82,7 +82,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.i18n.Messages;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider;
@@ -144,8 +144,8 @@ public class DefaultWPSProcess implements IWPSProcess
   {
     if( m_processDescription == null )
     {
-      monitor.beginTask( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.0"), 300 ); //$NON-NLS-1$
-      Debug.println( "Asking for a process description ..." ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.0" ), 300 ); //$NON-NLS-1$
+      KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process description ...\n" ); //$NON-NLS-1$
 
 // // decide between local and remote invocation
 // if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
@@ -158,7 +158,7 @@ public class DefaultWPSProcess implements IWPSProcess
       final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
       if( processDescriptionList.size() != 1 )
       {
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.1"), null ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.1" ), null ) ); //$NON-NLS-1$
       }
 
       ProgressUtilities.worked( monitor, 300 );
@@ -190,7 +190,7 @@ public class DefaultWPSProcess implements IWPSProcess
     if( status.getProcessFailed() != null )
       return ProcessStatus.FAILED;
 
-    throw new IllegalStateException( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.2") + status.toString() ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.2" ) + status.toString() ); //$NON-NLS-1$
   }
 
   /**
@@ -254,7 +254,7 @@ public class DefaultWPSProcess implements IWPSProcess
     if( processSucceeded != null )
       return processSucceeded;
 
-    return Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.3"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.3" ); //$NON-NLS-1$
   }
 
   /**
@@ -267,8 +267,8 @@ public class DefaultWPSProcess implements IWPSProcess
     Assert.isTrue( m_executionResponse == null );
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.4"), 200 ); //$NON-NLS-1$
-    Debug.println( "Checking for service URL ..." ); //$NON-NLS-1$
+    monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.4" ), 200 ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Checking for service URL ...\n" ); //$NON-NLS-1$
 
     /* Get the process description. */
     final ProcessDescriptionType processDescription = getProcessDescription( monitor );
@@ -278,8 +278,8 @@ public class DefaultWPSProcess implements IWPSProcess
     m_outputDefinitions = WPSUtilities.createOutputDefinitions( processDescription, outputs );
 
     /* Send the request. */
-    monitor.setTaskName( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.5") ); //$NON-NLS-1$
-    Debug.println( "Start the simulation ..." ); //$NON-NLS-1$
+    monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.5" ) ); //$NON-NLS-1$
+    KalypsoServiceWPSDebug.DEBUG.printf( "Start the simulation ...\n" ); //$NON-NLS-1$
 
 // final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
 
@@ -386,7 +386,7 @@ public class DefaultWPSProcess implements IWPSProcess
       if( inputDescription.getMinimumOccurs().intValue() == 1 )
       {
         /* Ooops, it is a mandatory one, but it is missing in our model data. */
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.service.wps.refactoring.DefaultWPSProcess.6"), inputId ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.6" ), inputId ) ); //$NON-NLS-1$
       }
     }
 
@@ -573,7 +573,6 @@ public class DefaultWPSProcess implements IWPSProcess
         m_output = collectOutput( m_executionResponse.getProcessOutputs() );
     }
 
-    // TODO Auto-generated method stub
     return m_output.get( id );
   }
 
@@ -653,5 +652,4 @@ public class DefaultWPSProcess implements IWPSProcess
     final Object[] objects = map.get( id );
     map.put( id, ArrayUtils.add( objects, value ) );
   }
-
 }

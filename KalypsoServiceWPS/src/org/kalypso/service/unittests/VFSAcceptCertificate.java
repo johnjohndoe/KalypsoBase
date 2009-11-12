@@ -50,7 +50,7 @@ import org.apache.commons.vfs.FileObject;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.service.wps.utils.Debug;
+import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 
 /**
@@ -82,7 +82,7 @@ public class VFSAcceptCertificate
 
     FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1210650775870/simulation.log" );
 
-    Debug.println( "Sending request ..." );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Sending request ...\n" );
 
     File file = new File( FileUtilities.TMP_DIR, "vfs_test.tmp" );
     FileObject localFile = VFSUtilities.getManager().toFileObject( file );
@@ -96,7 +96,7 @@ public class VFSAcceptCertificate
 
     String content = MarshallUtilities.fromInputStream( inputStream );
 
-    Debug.println( "Content:" );
-    Debug.println( content );
+    KalypsoServiceWPSDebug.DEBUG.printf( "Content:\n" );
+    KalypsoServiceWPSDebug.DEBUG.printf( content + "\n" );
   }
 }
