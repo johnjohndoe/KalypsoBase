@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
@@ -72,7 +73,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  */
 public class ObservationUtilities
 {
-  private static final String MSG_ERROR_NOAXISTYPE = Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.0"); //$NON-NLS-1$
+  private static final String MSG_ERROR_NOAXISTYPE = Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.0" ); //$NON-NLS-1$
 
   private static final Comparator<IAxis> AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
@@ -222,7 +223,7 @@ public class ObservationUtilities
    * 
    * @return all axes which are compatible with desired Classtype
    */
-  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class<?>[] desired )
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class< ? >[] desired )
   {
     final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
@@ -360,7 +361,7 @@ public class ObservationUtilities
           {
             e.printStackTrace();
 
-            writer.write( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.1") ); //$NON-NLS-1$
+            writer.write( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.1" ) ); //$NON-NLS-1$
           }
 
           if( j < axes.length - 1 )
@@ -417,7 +418,7 @@ public class ObservationUtilities
       {
         e.printStackTrace();
 
-        sb.append( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.2") ); //$NON-NLS-1$
+        sb.append( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.2" ) ); //$NON-NLS-1$
       }
 
       if( i < axes.length - 1 )
@@ -468,7 +469,7 @@ public class ObservationUtilities
       catch( NoSuchElementException e )
       {
         if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.3") + destAxes[i] + Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.4") + dest + Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.5") + source ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.3" ) + destAxes[i] + Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.4" ) + dest + Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.5" ) + source ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         // else ignored, try with next one
       }
@@ -589,12 +590,12 @@ public class ObservationUtilities
     for( int i = 0; i < testAxes.length; i++ )
     {
       int hits = 0;
-      if( !testAxes[i].getType().equals( compareAxis.getType() ) || !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
+      if( !ObjectUtils.equals( testAxes[i].getType(), compareAxis.getType() ) || !ObjectUtils.equals( testAxes[i].getDataClass(), compareAxis.getDataClass() ) )
         continue;
       hits++;
-      if( testAxes[i].getUnit().equals( compareAxis.getUnit() ) )
+      if( ObjectUtils.equals( testAxes[i].getUnit(), compareAxis.getUnit() ) )
         hits++;
-      if( testAxes[i].getName().equals( compareAxis.getName() ) )
+      if( ObjectUtils.equals( testAxes[i].getName(), compareAxis.getName() ) )
         hits++;
       if( hits > maxHits )
       {
@@ -691,8 +692,7 @@ public class ObservationUtilities
    *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
    * @throws SensorException
    */
-  public static ITuppleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange,
-      final int bufferField, final int bufferAmount ) throws SensorException
+  public static ITuppleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange, final int bufferField, final int bufferAmount ) throws SensorException
   {
 
     if( dateRange == null )
