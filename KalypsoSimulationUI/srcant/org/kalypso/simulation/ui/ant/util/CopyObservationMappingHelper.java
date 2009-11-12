@@ -30,7 +30,6 @@
 package org.kalypso.simulation.ui.ant.util;
 
 import java.net.URL;
-import java.util.Date;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -43,6 +42,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -99,7 +99,7 @@ public class CopyObservationMappingHelper
    *          reference to the ZML-output, usually used as target by a CopyObservationTask
    * @throws Exception
    */
-  public static void addMapping( GMLWorkspace workspace, String filterInline, String outHref ) throws Exception
+  public static void addMapping( final GMLWorkspace workspace, final String filterInline, final String outHref ) throws Exception
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
@@ -124,10 +124,10 @@ public class CopyObservationMappingHelper
   }
 
   /**
-   * this mapping updates only the measured time periode, the forecast periode will be taken from the target before
-   * overwriting it. So only measured periode will update.
+   * this mapping updates only the measured time period, the forecast period will be taken from the target before
+   * overwriting it. So only measured period will update.
    */
-  public static void runMapping( final GMLWorkspace workspace, final IUrlResolver resolver, final URL srcContext, final ILogger logger, boolean keepForecast, final Date sourceFrom, final Date sourceTo, final Date targetFrom, final Date targetTo, final Date forecastFrom, final Date forecastTo )
+  public static void runMapping( final GMLWorkspace workspace, final IUrlResolver resolver, final URL srcContext, final ILogger logger, final boolean keepForecast, final DateRange measuredRange, final DateRange doNotOverwriteRange, final DateRange forecastRange )
   {
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
@@ -136,17 +136,20 @@ public class CopyObservationMappingHelper
       // so we put the target-obs in the first place since it is
       // the first element that will be backed by the forecast-filter
       // forecast and measured
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP.getLocalPart(), targetFrom, targetTo, null ),
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), sourceFrom, sourceTo, null ) };
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
       // measured
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), sourceFrom, sourceTo, null ), };
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+
     // REMARK: forecastFrom and forecastTo where formerly not set which resultet in
     // strange behaviour: run from the runtime workspace, the forecast range
     // was set, from the deployed application it was not, however both used
     // exactly the same plugins. Setting it here succeeded however.
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP.getLocalPart(), sources, new Properties(), forecastFrom, forecastTo, logger, null );
+
+    final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP.getLocalPart(), null, sources, new Properties(), completeRange, forecastRange, logger, null );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,14 +63,19 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
+import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.ObjectFactory;
@@ -100,9 +106,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final ILogger m_logger;
 
-  private final Date m_forecastFrom;
+  private final DateRange m_forecastRange;
 
-  private final Date m_forecastTo;
+  private final DateRange m_targetRange;
 
   private final Properties m_metadata;
 
@@ -116,6 +122,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    */
   private final String m_tokens;
 
+  /** TODO: Only used by KalypsoNA */
   private final File m_targetobservationDir;
 
   /**
@@ -125,40 +132,17 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    *          resolver for urls
    * @param metadata
    *          All entries will be added to the target observation
-   * @param targetobservation
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom, final Date forecastTo, final ILogger logger, final String tokens )
-  {
-    m_context = context;
-    m_urlResolver = urlResolver;
-    m_targetobservation = targetobservation;
-    m_targetobservationDir = null;
-    m_sources = sources;
-    m_metadata = metadata;
-    m_forecastFrom = forecastFrom;
-    m_forecastTo = forecastTo;
-    m_logger = logger;
-    m_tokens = tokens;
-  }
-
-  /**
-   * @param context
-   *          context to resolve relative url
-   * @param urlResolver
-   *          resolver for urls
-   * @param metadata
-   *          All entries will be added to the target observation
-   */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final File targetobservationDir, final Source[] sources, final Properties metadata, final Date forecastFrom, final Date forecastTo, final ILogger logger, final String tokens )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final String targetobservation, final File targetobservationDir, final Source[] sources, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
     m_targetobservationDir = targetobservationDir;
-    m_targetobservation = null;
+    m_targetobservation = targetobservation;
     m_sources = sources;
     m_metadata = metadata;
-    m_forecastFrom = forecastFrom;
-    m_forecastTo = forecastTo;
+    m_forecastRange = forecastRange;
+    m_targetRange = targetRange;
     m_logger = logger;
     m_tokens = tokens;
   }
@@ -171,47 +155,21 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     try
     {
       final IObservation[] sourceObses = getObservations( f );
+      final DateRange[] sourceRanges = getSourceRanges();
 
-      final TimeseriesLinkType targetlink = getTargetLink( f );
-
-      if( targetlink == null )
-      {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() );//$NON-NLS-1$
+      final IFile targetfile = createTargetFile( f );
+      if( targetfile == null )
         return true;
-      }
 
-      final IObservation resultObs;
+      final IObservation resultObs = combineResultObservation( sourceObses, sourceRanges );
 
-      // only do ForeCastFilter if we have more than one obs
-      if( sourceObses.length < 2 || sourceObses[1] == null )
-        resultObs = sourceObses[0];
-      else
-      {
-        final ForecastFilter fc = new ForecastFilter();
-        fc.initFilter( sourceObses, sourceObses[0], null );
-        resultObs = fc;
-      }
+      setForecastAndAddMetadata( resultObs, f );
 
-      // set forecast metadata, might be used in diagram for instance
-      // to mark the forecast range
-      TimeserieUtils.setForecast( resultObs, m_forecastFrom, m_forecastTo );
+      final IRequest request = new ObservationRequest( m_targetRange );
+      // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
+      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( request ), m_logger );
 
-      // put additional metadata that we got from outside
-      final MetadataList resultMetadata = resultObs.getMetadataList();
-      resultMetadata.putAll( m_metadata );
-
-      // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger );
-
-      // remove query part if present, href is also used as file name here!
-      final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
-
-      final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
-
-      final IPath location = targetfile.getLocation();
-      final File file = location.toFile();
-      file.getParentFile().mkdirs();
-      ZmlFactory.writeToFile( resultObs, file );
+      wrtieTargetObservation( targetfile, resultObs, request );
     }
     catch( final Exception e )
     {
@@ -221,6 +179,75 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  private DateRange[] getSourceRanges( )
+  {
+    final DateRange[] ranges = new DateRange[m_sources.length];
+
+    for( int i = 0; i < m_sources.length; i++ )
+      ranges[i] = m_sources[i].getRange();
+
+    return ranges;
+  }
+
+  private IFile createTargetFile( final Feature f ) throws MalformedURLException
+  {
+    final TimeseriesLinkType targetlink = getTargetLink( f );
+    if( targetlink == null )
+    {
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() );//$NON-NLS-1$
+      return null;
+    }
+    // remove query part if present, href is also used as file name here!
+    final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
+    return ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
+  }
+
+  private void wrtieTargetObservation( final IFile targetfile, final IObservation resultObs, final IRequest request ) throws SensorException
+  {
+    final IPath location = targetfile.getLocation();
+    final File file = location.toFile();
+    file.getParentFile().mkdirs();
+    ZmlFactory.writeToFile( resultObs, file, request );
+  }
+
+  private void setForecastAndAddMetadata( final IObservation resultObs, final Feature feature )
+  {
+    // set forecast metadata, might be used in diagram for instance
+    // to mark the forecast range
+    TimeserieUtils.setForecast( resultObs, m_forecastRange );
+
+    // put additional metadata that we got from outside
+    final MetadataList resultMetadata = resultObs.getMetadataList();
+    for( final Entry<Object, Object> element : m_metadata.entrySet() )
+    {
+      final Entry<Object, Object> entry = element;
+      final String metaValue = replaceMetadata( feature, (String) entry.getValue() );
+      final String metaKey = (String) entry.getKey();
+      resultMetadata.put( metaKey, metaValue );
+    }
+  }
+
+  private IObservation combineResultObservation( final IObservation[] sourceObses, final DateRange[] sourceRanges ) throws SensorException
+  {
+    // only do ForeCastFilter if we have more than one obs
+    if( sourceObses.length < 2 || sourceObses[1] == null )
+      return sourceObses[0];
+
+    final ITuppleModel[] models = new ITuppleModel[sourceObses.length];
+    for( int i = 0; i < sourceObses.length; i++ )
+      models[i] = sourceObses[i].getValues( new ObservationRequest( sourceRanges[i] ) );
+
+    final ForecastTuppleModel tuppleModel = new ForecastTuppleModel( models );
+
+    final MetadataList metadataList = (MetadataList) sourceObses[0].getMetadataList().clone();
+    final IAxis[] axes = sourceObses[0].getAxisList();
+    return new SimpleObservation( null, null, null, false, metadataList, axes, tuppleModel );
+
+// final ForecastFilter fc = new ForecastFilter();
+// fc.initFilter( sourceObses, sourceObses[0], null );
+// return fc;
   }
 
   /**
@@ -282,6 +309,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     if( m_targetobservationDir != null )
     {
+      // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
       String name = (String) f.getProperty( "name" ); //$NON-NLS-1$
       if( name == null || name.length() < 1 )
         name = f.getId();
@@ -295,6 +323,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       link.setHref( relativePathTo );
       return link;
     }
+
     return (TimeseriesLinkType) f.getProperty( m_targetobservation );
   }
 
@@ -320,7 +349,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       try
       {
-        result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo(), source.getFilter() ) );
+        result.add( getObservation( f, source.getProperty(), source.getRange(), source.getFilter() ) );
       }
       catch( final Exception e )
       {
@@ -336,7 +365,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return result.toArray( new IObservation[result.size()] );
   }
 
-  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from, final Date to, final String filter ) throws MalformedURLException, SensorException
+  private IObservation getObservation( final Feature feature, final String sourceProperty, final DateRange range, final String filter ) throws MalformedURLException, SensorException
   {
     if( sourceProperty == null )
       return null;
@@ -349,7 +378,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     final String href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter );
 
     // filter variable might also contain request spec
-    String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
+    String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( range ) );
 
     // token replacement
     if( m_tokens != null && m_tokens.length() > 0 )
@@ -376,23 +405,20 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     private final String property;
 
-    private final Date from;
-
-    private final Date to;
+    private final DateRange range;
 
     private final String filter;
 
-    public Source( final String prop, final Date dfrom, final Date dto, final String filt )
+    public Source( final String prop, final DateRange dateRange, final String filt )
     {
       this.property = prop;
-      this.from = dfrom;
-      this.to = dto;
+      this.range = dateRange;
       this.filter = filt;
     }
 
-    public final Date getFrom( )
+    public final DateRange getRange( )
     {
-      return from;
+      return range;
     }
 
     public final String getProperty( )
@@ -400,14 +426,18 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       return property;
     }
 
-    public final Date getTo( )
-    {
-      return to;
-    }
-
     public String getFilter( )
     {
       return filter;
     }
   }
+
+  public static DateRange createDateRangeOrNull( final Date from, final Date to )
+  {
+    if( from == null || to == null )
+      return null;
+
+    return new DateRange( from, to );
+  }
+
 }
