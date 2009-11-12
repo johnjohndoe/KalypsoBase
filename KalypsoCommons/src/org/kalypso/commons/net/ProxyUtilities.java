@@ -89,10 +89,10 @@ public class ProxyUtilities
    * </pre>
    * 
    * @param timeout
-   *            The socket timeout in milliseconds.
+   *          The socket timeout in milliseconds.
    * @param retries
-   *            The number of retries, the http client is going to make. Set to a value lower then 0 to leave it at the
-   *            default value.
+   *          The number of retries, the http client is going to make. Set to a value lower then 0 to leave it at the
+   *          default value.
    * @return The configured http client. If no proxy is set, it will be a normal http client with the given timeout and
    *         retries.
    * @deprecated This method should not be used any more, because its functionality is covered completely by the method
@@ -154,12 +154,12 @@ public class ProxyUtilities
    * </pre>
    * 
    * @param timeout
-   *            The socket timeout in milliseconds.
+   *          The socket timeout in milliseconds.
    * @param url
-   *            The url, for which the client is needed. Could be null.
+   *          The url, for which the client is needed. Could be null.
    * @param retries
-   *            The number of retries, the http client is going to make. Set to a value lower then 0 to leave it at the
-   *            default value.
+   *          The number of retries, the http client is going to make. Set to a value lower then 0 to leave it at the
+   *          default value.
    * @return The configured http client. If no proxy is set or the host, included in the url is a non proxy host, it
    *         will be a normal http client with the given timeout and retries. If url is null, the check for non proxy
    *         hosts is omitted.
@@ -218,10 +218,12 @@ public class ProxyUtilities
     if( url == null )
       return false;
 
+    /* Get the protocol. A file protocol denotes a local resource, so no proxy is needed. */
     final String protocol = url.getProtocol();
     if( "file".equals( protocol ) )
       return true;
 
+    /* Get the host. A empty host denotes a local resource, so no proxy is needed. */
     final String host = url.getHost();
     if( host == null || host.isEmpty() )
       return true;
