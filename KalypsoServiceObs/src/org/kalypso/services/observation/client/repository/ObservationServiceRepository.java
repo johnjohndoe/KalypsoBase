@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,7 +225,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IModifyableRepositoryItem#setData(java.lang.Object)
    */
   @Override
-  public void setData( final Object observation )
+  public void setData( final Serializable observation )
   {
     throw new IllegalStateException( "This should never happen" );
   }

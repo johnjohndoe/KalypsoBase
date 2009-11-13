@@ -43,6 +43,7 @@ package org.kalypso.services.observation.server;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -510,15 +512,23 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
    */
   @Override
-  public void setItemData( final String identifier, final Object data ) throws RepositoryException
+  public void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
     if( m_repository instanceof IModifyableRepository )
     {
       final IRepositoryItem item = m_repository.findItem( identifier );
       if( item instanceof IModifyableRepositoryItem )
       {
-        final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
-        modifyable.setData( data );
+        if( serializable instanceof Serializable )
+        {
+          final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+          modifyable.setData( (Serializable) serializable );
+        }
+        else
+        {
+          throw new NotImplementedException();
+        }
+
       }
     }
   }

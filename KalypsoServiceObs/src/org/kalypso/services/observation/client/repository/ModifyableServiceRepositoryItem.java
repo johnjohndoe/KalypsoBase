@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
+import java.io.Serializable;
+
 import org.kalypso.repository.IModifyableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
@@ -62,7 +64,7 @@ public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem imple
    * @see org.kalypso.repository.IModifyableRepositoryItem#setData(java.lang.Object)
    */
   @Override
-  public void setData( final Object data ) throws RepositoryException
+  public void setData( final Serializable data ) throws RepositoryException
   {
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
     srv.setItemData( getIdentifier(), data );

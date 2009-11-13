@@ -79,7 +79,7 @@ public interface IRepositoryService
 
   public void deleteItem( String identifier ) throws RepositoryException;
   
-  public void setItemData( String identifier, Object data ) throws RepositoryException;
+  public void setItemData( String identifier, Object serializable ) throws RepositoryException;
 
   public void setItemName( String identifier, String name ) throws RepositoryException;
   /**
