@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class TuppleModesLinearAdd
+public class TuppleModelsLinearAdd
 {
   private final String m_sourceValueType;
 
@@ -66,7 +66,7 @@ public class TuppleModesLinearAdd
 
   private final IAxis m_targetStatusAxis;
 
-  public TuppleModesLinearAdd( final String sourceValueType, final IAxis targetDateAxis, final IAxis targetValueAxis, final IAxis targetStatusAxis )
+  public TuppleModelsLinearAdd( final String sourceValueType, final IAxis targetDateAxis, final IAxis targetValueAxis, final IAxis targetStatusAxis )
   {
     Assert.isLegal( targetDateAxis.getDataClass() == Date.class );
     Assert.isLegal( targetValueAxis.getDataClass() == Double.class );
