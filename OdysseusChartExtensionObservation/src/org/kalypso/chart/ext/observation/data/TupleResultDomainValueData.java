@@ -19,6 +19,16 @@ import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
+  public String getDomainComponentName( )
+  {
+    return m_domainComponentName;
+  }
+
+  public String getTargetComponentName( )
+  {
+    return m_targetComponentName;
+  }
+
   final private String m_observationId;
 
   final private String m_domainComponentName;
@@ -40,6 +50,11 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_observationId = observationId;
     m_domainComponentName = domainComponentName;
     m_targetComponentName = targetComponentName;
+  }
+
+  public TupleResult getResult( )
+  {
+    return m_result;
   }
 
   public TupleResultDomainValueData( final TupleResult result, final String domainComponentName, final String targetComponentName )
@@ -93,7 +108,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_domain[]) getValues( m_domainComponentName );
   }
 
-  private Object[] getValues( final String compName )
+  protected Object[] getValues( final String compName )
   {
     open();
     if( !m_isOpen )

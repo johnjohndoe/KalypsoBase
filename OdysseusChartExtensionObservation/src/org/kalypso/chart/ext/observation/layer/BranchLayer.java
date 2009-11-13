@@ -151,7 +151,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       if( !m_mapping.containsKey( value ) )
       {
 
-        IPointStyle iconStyle = mapper.numericToScreen( dop.logicalToNumeric( value ), getPointStyle() );
+        IPointStyle iconStyle = mapper.numericToScreen( dop.logicalToNumeric( value ), (IPointStyle)getPointStyle() );
         if( !ArrayUtils.contains( smallStyles, value ) )
         {
           iconStyle.setHeight( 16 );
@@ -438,7 +438,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       Object iconVal = record.getValue( m_iconComponent );
       IDataOperator iop = mapper.getDataOperator( iconVal.getClass() );
 
-      m_hoverStyle = mapper.numericToScreen( iop.logicalToNumeric( iconVal ), getPointStyle() );
+      m_hoverStyle = mapper.numericToScreen( iop.logicalToNumeric( iconVal ), (IPointStyle)getPointStyle() );
       m_hoverStyle.getStroke().setVisible( true );
       m_hoverStyle.setWidth( 20 );
       m_hoverStyle.setHeight( 20 );
