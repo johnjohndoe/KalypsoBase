@@ -17,7 +17,6 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   private Point[] m_leftTopPoints;
 
   /**
-   * 
    * @param points
    *          center position of the figure
    */
@@ -28,6 +27,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
 
   }
 
+  
   @Override
   protected void paintFigure( GC gc )
   {

@@ -7,18 +7,16 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -101,18 +99,19 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   {
     if( m_pointFigure == null )
     {
-      IPointStyle ps = getPointStyle();
+      IStyle ps = getPointStyle();
       m_pointFigure = new PointFigure();
-      m_pointFigure.setStyle( ps );
+      m_pointFigure.setStyle( (IPointStyle)ps );
     }
     return m_pointFigure;
   }
 
-  protected IPointStyle getPointStyle( )
+  protected IStyle getPointStyle( )
   {
-    if( m_pointStyle == null )
-      return StyleUtils.getDefaultPointStyle();
-    return m_pointStyle;
+    if( m_pointStyle != null )
+      return m_pointStyle;
+    return StyleUtils.getDefaultPointStyle();
+
   }
 
   /**

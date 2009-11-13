@@ -15,16 +15,17 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-  private TupleResultDomainValueData m_data;
+  protected TupleResultDomainValueData< ? , ? > m_data;
 
-  public TupleResultLineLayer( final TupleResultDomainValueData data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
+
+  public TupleResultLineLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( lineStyle, pointStyle );
     m_data = data;
@@ -135,6 +136,20 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final IDataRange<Number> numRange = new DataRange<Number>( dop.logicalToNumeric( min ), dop.logicalToNumeric( max ) );
     return numRange;
   }
+
+  protected String getTooltip( final int index )
+  {
+    final int targetComponentIndex = m_data.getResult().indexOfComponent( m_data.getTargetComponentName() );
+    final int domainComponentIndex = m_data.getResult().indexOfComponent( m_data.getDomainComponentName() );
+    final String targetComponentLabel = m_data.getResult().getComponent( targetComponentIndex ).getName();
+    final String domainComponentLabel = m_data.getResult().getComponent( domainComponentIndex ).getName();
+    final String targetComponentUnit = m_data.getResult().getComponent( targetComponentIndex ).getUnit();
+    final Object x = m_data.getResult().get( index ).getValue( targetComponentIndex );
+    final Object y = m_data.getResult().get( index ).getValue( domainComponentIndex );
+    
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, targetComponentLabel, y, targetComponentUnit } );
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
@@ -164,17 +179,12 @@ public class TupleResultLineLayer extends AbstractLineLayer
       if( hover.contains( pos ) )
       {
         if( pValue == null )
-          return new EditInfo( this, null, null, i, "Station", RectangleUtils.getCenterPoint( hover ) );
+          return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
 
-        return new EditInfo( this, null, null, i, "Station", pValue );
+        return new EditInfo( this, null, null, i, getTooltip( i ), pValue );
       }
     }
 
     return null;
   }
-  protected void setData( final TupleResultDomainValueData data )
-  {
-    m_data = data;
-  }
-
 }
