@@ -19,6 +19,7 @@
 	<path id="@dot.classpath">
 		<pathelement location="${project}/../KalypsoRepository/build/bin" />
 		<pathelement location="${project}/../KalypsoCore/build/bin" />
+		<fileset dir="${project}/../KalypsoCommons/lib" includes="**/*.jar" />
 		<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.equinox.common*.jar" />
 		<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.core.jobs*.jar" />
 	</path>
