@@ -40,11 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import javax.activation.DataHandler;
 import javax.jws.WebService;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -356,9 +358,15 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
    */
   @Override
-  public void setItemData( final String identifier, final Object data ) throws RepositoryException
+  public void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
-    getDelegate().setItemData( identifier, data );
+    if( serializable instanceof Serializable )
+    {
+      getDelegate().setItemData( identifier, serializable );
+    }
+    else
+      throw new NotImplementedException();
+
   }
 
   /**

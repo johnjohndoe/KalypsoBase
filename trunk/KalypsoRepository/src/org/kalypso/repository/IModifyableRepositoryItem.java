@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import java.io.Serializable;
 
 /**
  * @author Dirk Kuch
  */
 public interface IModifyableRepositoryItem extends IRepositoryItem
 {
-  void setData( Object observation ) throws RepositoryException;
+  void setData( Serializable serializeable ) throws RepositoryException;
 
   void setName( String itemName ) throws RepositoryException;
 }
