@@ -92,10 +92,10 @@ public class ResourcePool
   /** key -> KeyInfo */
   private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
 
-  private IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
+  private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
     @Override
-    public void resourceChanged( IResourceChangeEvent event )
+    public void resourceChanged( final IResourceChangeEvent event )
     {
       handleResourceChanged( event );
     }
@@ -218,7 +218,7 @@ public class ResourcePool
           infosToSave.add( info );
     }
 
-    // REMARK: we do not save inside the sync-block, because saving may cause acces to
+    // REMARK: we do not save inside the sync-block, because saving may cause access to
     // the pool (Example: saving a GML might cause access to Xlinked properties)
     // TODO: monitor handling wrong!
     for( final KeyInfo keyInfo : infosToSave )
@@ -310,7 +310,7 @@ public class ResourcePool
     return m_keyInfos.get( poolKey );
   }
 
-  protected void handleResourceChanged( IResourceChangeEvent event )
+  protected void handleResourceChanged( final IResourceChangeEvent event )
   {
     // allways true, because of the bitmask set on adding this listener
     if( event.getType() == IResourceChangeEvent.POST_CHANGE )

@@ -68,6 +68,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
+import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -173,7 +174,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   {
     try
     {
-      m_pool.saveObject( m_workspace, monitor );
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      final KeyInfo infoForKey = pool.getInfoForKey( m_key );
+      if( infoForKey.isDirty() )
+        m_pool.saveObject( m_workspace, monitor );
     }
     catch( final Exception e )
     {
