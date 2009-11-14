@@ -828,7 +828,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable ) throws InvocationTargetException, InterruptedException
   {
-    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+    final IProgressService progressService = (IProgressService) getSite().getService( IProgressService.class );
     progressService.run( fork, cancelable, runnable );
   }
 
