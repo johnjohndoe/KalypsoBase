@@ -387,7 +387,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Found operation: %s%nfor feature: %s%n" , operationElement, feature )); //$NON-NLS-1$
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Found operation: %s%nfor feature: %s%n", operationElement, feature ) ); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -400,7 +400,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Operation result: %s%n%n" , result )); //$NON-NLS-1$
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Operation result: %s%n%n", result ) ); //$NON-NLS-1$
 
             return result;
           }
@@ -710,7 +710,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Radiobutton radioType = (Radiobutton) controlType;
 
       final Object valueToSet = radioType.getValueToSet();
-
       final String text = getAnnotation( annotation, radioType.getText(), IAnnotation.ANNO_LABEL );
 
       final RadioFeatureControl rfc = new RadioFeatureControl( feature, ftp, valueToSet, text );

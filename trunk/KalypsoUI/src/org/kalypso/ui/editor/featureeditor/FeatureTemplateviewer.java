@@ -175,6 +175,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     try
     {
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      if( m_key == null )
+        return Status.OK_STATUS;
       final KeyInfo infoForKey = pool.getInfoForKey( m_key );
       if( infoForKey.isDirty() )
         m_pool.saveObject( m_workspace, monitor );
