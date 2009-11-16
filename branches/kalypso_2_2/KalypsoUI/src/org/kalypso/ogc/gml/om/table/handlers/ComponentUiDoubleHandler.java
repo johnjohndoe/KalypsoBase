@@ -49,18 +49,19 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles double values.
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
 public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
 {
-  final NumberFormat m_nf = NumberFormat.getInstance( Locale.getDefault() );
+  // final NumberFormat m_nf = NumberFormat.getInstance( Locale.getDefault() );
 
   public ComponentUiDoubleHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
@@ -106,15 +107,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final String text )
   {
-    try
-    {
-      return m_nf.parse( text ).doubleValue();
-    }
-    catch( final ParseException e )
-    {
-      throw new NumberFormatException( e.getLocalizedMessage() );
-    }
-
+    return NumberUtils.parseDouble( text );
   }
 
   /**
@@ -126,7 +119,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals(value, oldValue ) )
+    if( !ObjectUtils.equals( value, oldValue ) )
 
       record.setValue( getComponent(), value );
   }
