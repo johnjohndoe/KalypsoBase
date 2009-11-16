@@ -41,6 +41,7 @@
 
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -96,8 +99,27 @@ public class RadioFeatureControl extends AbstractFeatureControl
   {
     super( feature, ftp );
 
-    m_valueToSet = valueToSet;
+    m_valueToSet = convertValueToSet( ftp, valueToSet );
     m_text = text;
+  }
+
+  private Object convertValueToSet( IPropertyType ftp, Object valueToSet )
+  {
+    try
+    {
+      if( valueToSet instanceof String )
+      {
+        IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
+        return typeHandler.parseType( (String) valueToSet );
+      }
+
+      return null;
+    }
+    catch( ParseException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
