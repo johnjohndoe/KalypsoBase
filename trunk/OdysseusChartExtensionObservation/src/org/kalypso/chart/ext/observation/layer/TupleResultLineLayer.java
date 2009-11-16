@@ -23,7 +23,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
 {
   protected TupleResultDomainValueData< ? , ? > m_data;
 
-  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
+  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [%s]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
 
   public TupleResultLineLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
@@ -144,12 +144,18 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final String targetComponentLabel = m_data.getResult().getComponent( targetComponentIndex ).getName();
     final String domainComponentLabel = m_data.getResult().getComponent( domainComponentIndex ).getName();
     final String targetComponentUnit = m_data.getResult().getComponent( targetComponentIndex ).getUnit();
+    final String domainComponentUnit = m_data.getResult().getComponent( domainComponentIndex ).getUnit();
     final Object x = m_data.getResult().get( index ).getValue( targetComponentIndex );
     final Object y = m_data.getResult().get( index ).getValue( domainComponentIndex );
     
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, targetComponentLabel, y, targetComponentUnit } );
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit,targetComponentLabel, y, targetComponentUnit } );
   }
 
+  protected Rectangle getHoverRect(final Point screen,final int index)
+  {
+    return RectangleUtils.buffer( screen );
+  }
+  
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
@@ -172,7 +178,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
       if( targetValue == null )
         continue;
       final Point pValue = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
-      final Rectangle hover = RectangleUtils.buffer( pValue );
+      final Rectangle hover = getHoverRect( pValue,i );
       if( hover == null )
         continue;
 
