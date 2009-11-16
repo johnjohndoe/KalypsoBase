@@ -332,7 +332,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IContainer folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( progressText, IProgressMonitor.UNKNOWN );
+    monitor.beginTask( progressText, 1000 );
 
     // TODO: check, if already another ant-task is running in the platform
     // if yes, wait until it has finished
@@ -362,7 +362,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // add user-variables to variable-manager (so they can also be used within
       // the launch-file
       userVariables = registerValueVariablesFromProperties( svm, userProperties );
-      monitor.worked( 1000 );
+      monitor.worked( 10 );
 
       // Find the log file, if defined
       final File logFile = findLogFile( lc );
@@ -370,7 +370,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         logFile.getParentFile().mkdirs();
 
       // TODO prüfen ob der launch überhaupt asynchron laufen kann?
-      final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 1000 ) );
+      // Genau dann wenn das true wird:
+// lc.getAttribute( "org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" )
+      // dann blockiert der launch, while kann weg... uind der ProgressMonitor kann sauber umgeetzt werden...
+
+      final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 900 ) );
 
       // TODO: timeout konfigurierbar machen?
       final int minutes = 720;
