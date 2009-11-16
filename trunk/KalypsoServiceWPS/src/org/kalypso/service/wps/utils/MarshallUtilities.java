@@ -114,9 +114,8 @@ public class MarshallUtilities
 
     /* Set the properties. */
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    // m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
-    // FIXME: namespace definitions are missing in resulting xml-document!
-
+// m.setProperty( "com.sun.xml.bind.namespacePrefixMapper", NAMESPACE_PREFIX_MAPPER );
+// FIXME: namespace definitions are missing in resulting xml-document!
     /* Marshall ... */
     m.marshal( object, sw );
     sw.close();
@@ -135,13 +134,30 @@ public class MarshallUtilities
     {
       final XPath xpath = m_xpFactory.newXPath();
       final XPathExpression expr = xpath.compile( "//@version" ); //$NON-NLS-1$
+      final XPathExpression expr2 = xpath.compile( "//AcceptVersions/Version/text()" ); //$NON-NLS-1$
 
       final DocumentBuilder builder = m_factory.newDocumentBuilder();
       final InputSource is = new InputSource( new StringReader( xml ) );
       final Document doc = builder.parse( is );
 
-      final Node node = (Node) expr.evaluate( doc, XPathConstants.NODE );
-      final String version = node.getTextContent();
+      // try both expressions
+      final String version;
+      Node node = (Node) expr.evaluate( doc, XPathConstants.NODE );
+      if( node == null )
+      {
+        node = (Node) expr2.evaluate( doc, XPathConstants.NODE );
+      }
+
+      if( node == null )
+      {
+        // fallback to version 0.4.0
+        version = "0.4.0";
+      }
+      else
+      {
+        version = node.getTextContent();
+      }
+
       final WPS_VERSION wpsVersion = WPSUtilities.WPS_VERSION.getValue( version );
       return unmarshall( xml, wpsVersion );
     }
