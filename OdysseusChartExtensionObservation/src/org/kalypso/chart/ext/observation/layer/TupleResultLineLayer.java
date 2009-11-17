@@ -9,6 +9,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -31,6 +33,11 @@ public class TupleResultLineLayer extends AbstractLineLayer
     m_data = data;
   }
 
+  public IObservation<TupleResult> getObservation()
+  {
+    return m_data.getObservation();
+  }
+  
   @Override
   public void drawIcon( final Image img )
   {
@@ -139,14 +146,15 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   protected String getTooltip( final int index )
   {
-    final int targetComponentIndex = m_data.getResult().indexOfComponent( m_data.getTargetComponentName() );
-    final int domainComponentIndex = m_data.getResult().indexOfComponent( m_data.getDomainComponentName() );
-    final String targetComponentLabel = m_data.getResult().getComponent( targetComponentIndex ).getName();
-    final String domainComponentLabel = m_data.getResult().getComponent( domainComponentIndex ).getName();
-    final String targetComponentUnit = m_data.getResult().getComponent( targetComponentIndex ).getUnit();
-    final String domainComponentUnit = m_data.getResult().getComponent( domainComponentIndex ).getUnit();
-    final Object x = m_data.getResult().get( index ).getValue( targetComponentIndex );
-    final Object y = m_data.getResult().get( index ).getValue( domainComponentIndex );
+    final TupleResult tr = m_data.getObservation().getResult();
+    final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
+    final int domainComponentIndex = tr.indexOfComponent( m_data.getDomainComponentName() );
+    final String targetComponentLabel = tr.getComponent( targetComponentIndex ).getName();
+    final String domainComponentLabel = tr.getComponent( domainComponentIndex ).getName();
+    final String targetComponentUnit = tr.getComponent( targetComponentIndex ).getUnit();
+    final String domainComponentUnit = tr.getComponent( domainComponentIndex ).getUnit();
+    final Object x =tr.get( index ).getValue( targetComponentIndex );
+    final Object y = tr.get( index ).getValue( domainComponentIndex );
     
     return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit,targetComponentLabel, y, targetComponentUnit } );
   }

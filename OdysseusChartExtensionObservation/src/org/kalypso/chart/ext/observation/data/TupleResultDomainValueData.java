@@ -39,7 +39,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   final private URL m_context;
 
-  private TupleResult m_result;
+  private IObservation<TupleResult> m_observation;
 
   private boolean m_isOpen = false;
 
@@ -52,12 +52,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_targetComponentName = targetComponentName;
   }
 
-  public TupleResult getResult( )
+  public IObservation<TupleResult> getObservation( )
   {
-    return m_result;
+    return m_observation;
   }
 
-  public TupleResultDomainValueData( final TupleResult result, final String domainComponentName, final String targetComponentName )
+  public TupleResultDomainValueData( final IObservation observation, final String domainComponentName, final String targetComponentName )
   {
     // Die Observation ist schon vorhanden, also kann das Layer gleich als open ausgegeben werden
     m_isOpen = true;
@@ -66,7 +66,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_href = null;
     m_domainComponentName = domainComponentName;
     m_targetComponentName = targetComponentName;
-    m_result = result;
+    m_observation = observation;
 
   }
 
@@ -82,8 +82,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
         {
           Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
         }
-        final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( feature );
-        m_result = observation == null ? null : observation.getResult();
+        m_observation = ObservationFeatureFactory.toObservation( feature );
       }
       catch( final Exception e )
       {
@@ -113,12 +112,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     open();
     if( !m_isOpen )
       return new Object[] {};
-    final int iComp = m_result.indexOfComponent( compName );
+    final int iComp = m_observation.getResult().indexOfComponent( compName );
     if( iComp < 0 )
       return new Object[] {};
-    final Object[] objArr = new Object[m_result.size()];
+    final Object[] objArr = new Object[m_observation.getResult().size()];
     int index = 0;
-    for( final IRecord record : m_result )
+    for( final IRecord record : m_observation.getResult() )
     {
       final Object objVal = record.getValue( iComp );
       if( objVal instanceof XMLGregorianCalendar )
@@ -140,7 +139,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   @Override
   public void close( )
   {
-    m_result = null;
+    m_observation = null;
     m_isOpen = false;
 
   }
