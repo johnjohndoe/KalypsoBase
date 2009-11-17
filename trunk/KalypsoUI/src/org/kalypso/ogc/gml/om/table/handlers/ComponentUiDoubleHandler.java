@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
@@ -106,14 +107,14 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final String text )
   {
-    try
-    {
-      return m_nf.parse( text ).doubleValue();
-    }
-    catch( final ParseException e )
-    {
-      throw new NumberFormatException( e.getLocalizedMessage() );
-    }
+//    try
+//    {
+     return NumberUtils.parseDouble( text );// return m_nf.parse( text ).doubleValue();
+//    }
+//    catch( final ParseException e )
+//    {
+//      throw new NumberFormatException( e.getLocalizedMessage() );
+//    }
 
   }
 
