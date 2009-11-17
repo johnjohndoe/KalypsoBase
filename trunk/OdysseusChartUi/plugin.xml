@@ -216,6 +216,15 @@
             </reference>
          </visibleWhen>
          </command>
+         <separator
+               name="additions">
+         </separator>
+         <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
          </toolbar>
       </menuContribution>
       <menuContribution
