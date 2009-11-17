@@ -84,7 +84,7 @@ public class RepositoryUtils
   /**
    * looks for an equivalent item in an different repository
    */
-  public static IRepositoryItem findEquivalentItem( final IRepositoryItem baseItem, final IRepository destinationRepository ) throws RepositoryException
+  public static IRepositoryItem findEquivalentItem( final IRepository destinationRepository, final IRepositoryItem baseItem ) throws RepositoryException
   {
     final String id = resolveDestinationId( baseItem, destinationRepository );
 
@@ -94,7 +94,7 @@ public class RepositoryUtils
   /**
    * looks for an equivalent item in an different repository
    */
-  public static IRepositoryItem findEquivalentItem( final String id, final IRepository repository ) throws RepositoryException
+  public static IRepositoryItem findEquivalentItem( final IRepository repository, final String id ) throws RepositoryException
   {
     final String identifier = replaceIdentifier( id, repository.getIdentifier() );
 
