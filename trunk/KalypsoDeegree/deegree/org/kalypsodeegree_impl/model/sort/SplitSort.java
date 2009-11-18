@@ -107,8 +107,7 @@ public class SplitSort implements FeatureList
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
-    GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
-    m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( workspace ) : envelopeProvider;
+    m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( parentFeature ) : envelopeProvider;
 
     // Index is initially invalid. This is necessary, as loading the features adds them to this list,
     // but the features often have no envelope; so we rather wait for the first query.
@@ -327,7 +326,7 @@ public class SplitSort implements FeatureList
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
-        // FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
+    	// FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
         m_index.remove( null, removedItem );
       return removedItem;
     }

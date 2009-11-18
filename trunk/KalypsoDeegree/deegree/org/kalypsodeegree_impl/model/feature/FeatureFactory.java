@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -78,7 +78,7 @@ public class FeatureFactory
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
    * IFeatureType.
-   *
+   * 
    * @param id
    *          unique id of the <CODE>Feature</CODE>
    * @param featureType
@@ -104,12 +104,11 @@ public class FeatureFactory
 
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
-   *
+   * 
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
-  @SuppressWarnings("unchecked")
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
     final IPropertyType[] ftp = featureType.getProperties();
@@ -233,12 +232,12 @@ public class FeatureFactory
   {
     return new SplitSort( parentFeature, parentFTP );
   }
- 
+
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
     return new SplitSort( parentFeature, parentFTP, envelopeProvider );
   }
-  
+
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
