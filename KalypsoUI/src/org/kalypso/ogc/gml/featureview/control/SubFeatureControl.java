@@ -6,6 +6,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -34,6 +36,8 @@ public class SubFeatureControl extends AbstractFeatureControl
   private final IFeatureviewFactory m_featureviewFactory;
 
   private QName m_selector;
+
+  private Composite m_container;
 
   public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final boolean showOk, final IFeatureviewFactory featureviewFactory )
   {
@@ -67,8 +71,17 @@ public class SubFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
+  @Override
   public Control createControl( final Composite parent, final int style )
   {
+    if( m_container == null )
+    {
+      // on first call to createControl the container is set up
+      m_container = new Composite( parent, style );
+      m_container.setLayout( new GridLayout( 1, false ) );
+      m_container.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    }
+
     try
     {
       final Feature featureToSet = findFeatuereToSet();
@@ -107,7 +120,7 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    return m_fc.createControl( parent, SWT.NONE );
+    return m_fc.createControl( m_container, SWT.NONE );
   }
 
   private Feature findFeatuereToSet( )
@@ -122,37 +135,13 @@ public class SubFeatureControl extends AbstractFeatureControl
     if( m_selector == null )
     {
       Assert.isTrue( !rt.isList() );
-
       final Object property = feature.getProperty( rt );
-      featureToSet = FeatureHelper.getFeature( feature.getWorkspace(), property );
+      featureToSet = FeatureHelper.resolveLinkedFeature( feature.getWorkspace(), property );
     }
     else
     {
-// try
-// {
       final Object link = feature.getProperty( m_selector );
-      // TODO: also handle external links
-      // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
-      featureToSet = FeatureHelper.getFeature( feature.getWorkspace(), link );
-// }
-// catch( final Exception e )
-// {
-// // Do not do this!
-// // This could be a property of the Combo-Feature-Control to select the first element, if nothing is selected
-// beforehand
-//
-// f = ((Feature) ((List) property).get( 0 ));
-// // final String xpath = feature.getWorkspace().getContext() + "#" + f.getId();
-// // final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( feature, f.getParentRelation(),
-// // f.getFeatureType(), xpath, "", "", "", "", "" );
-// // System.out.println( "WARNING: control.gml, xlink to active model broken, first model used as default;
-// // temp xlink
-// // set
-// // to " + xpath );
-// // TODO: also handle external links
-// // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
-// feature.setProperty( m_selector, f.getId() );
-// }
+      featureToSet = FeatureHelper.resolveLinkedFeature( feature.getWorkspace(), link );
     }
     return featureToSet;
   }
@@ -163,7 +152,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   @Override
   public void dispose( )
   {
-    m_fc.dispose();
+    m_container.dispose();
   }
 
   /**
@@ -171,14 +160,17 @@ public class SubFeatureControl extends AbstractFeatureControl
    */
   public void updateControl( )
   {
-    // TODO: this is not always enough
-    // Better: cdestroy m_fc and recreate it from scratch
-    // In order to do this, m_fc must be put into an extra Composite (when createComposite is called)
-
     final Feature findFeatureToSet = findFeatuereToSet();
     final Feature currentFeature = m_fc.getFeature();
+
     if( !ObjectUtils.equals( findFeatureToSet, currentFeature ) )
-      m_fc.setFeature( findFeatureToSet );
+    {
+      // re-create control
+      m_fc.dispose();
+      createControl( null, m_container.getStyle() );
+      m_container.layout();
+    }
+
     // Is updateControl always necessary?
     m_fc.updateControl();
   }
