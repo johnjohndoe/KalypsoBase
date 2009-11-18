@@ -83,6 +83,7 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -348,23 +349,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
             m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
           }
 
-          // FIXME ask gernot for an existing helper which can interpret swt-flags
           final String swtflag = m_template.getSwtflags();
-          final String[] flags = swtflag.split( " | " ); //$NON-NLS-1$
-          for( final String flag : flags )
-          {
-            if( flag.length() < 1 )
-              continue;
-
-            final String f = flag.trim();
-            if( "SWT.BORDER".equals( f ) ) //$NON-NLS-1$
-            {
-              style = style | SWT.BORDER;
-            }
-            else
-              throw new NotImplementedException();
-          }
-
+          style = SWTUtilities.createStyleFromString( swtflag );
         }
 
         final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
