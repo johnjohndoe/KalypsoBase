@@ -134,7 +134,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.0"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.0" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     updateControl();
@@ -184,7 +184,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       // given user a chance to use save-as
       // TODO: sehr witzig! Save as geht nämlich nicht....
-      MessageDialog.openInformation( getSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.2"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.3") + "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      MessageDialog.openInformation( getSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.2" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.3" ) + "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           + "" + "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return;
@@ -212,13 +212,13 @@ public class ChartEditor extends EditorPart implements IChartPart
     {
       final IStatus status = e.getStatus();
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.4"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.4" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final IOException e )
     {
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
       KalypsoChartUiPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.4"), Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.4" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -301,7 +301,7 @@ public class ChartEditor extends EditorPart implements IChartPart
       if( m_chartType == null )
       {
         final Label label = new Label( m_composite, SWT.NONE );
-        label.setText( Messages.getString("org.kalypso.chart.ui.editor.ChartEditor.6") ); //$NON-NLS-1$
+        label.setText( Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.6" ) ); //$NON-NLS-1$
       }
       else
       {
@@ -491,7 +491,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {
-      if( m_outlinePage == null )
+      if( m_outlinePage == null && this.getChartComposite() != null )
       {
         final IChartModel model = this.getChartComposite().getChartModel();
         m_outlinePage = new ChartEditorTreeOutlinePage( model );

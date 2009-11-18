@@ -8,9 +8,9 @@ public class OvalMarker extends AbstractMarker
 
   public void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground )
   {
-    if( drawForeground )
-      gc.fillOval( p.x, p.y, width, height );
     if( drawBackground )
+      gc.fillOval( p.x, p.y, width, height );
+    if(  drawForeground)
       gc.drawOval( p.x, p.y, width, height );
   }
 
