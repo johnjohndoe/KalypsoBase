@@ -167,7 +167,12 @@ public final class KeyInfo extends Job
         LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + m_object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
-      m_object = null;
+      if( m_object != null )
+      {
+        m_loader.release( m_object );
+        m_object = null;
+      }
+      
       // TODO: better would be to cancel any old job and always start a new one
       if( getState() == Job.NONE )
         schedule();
