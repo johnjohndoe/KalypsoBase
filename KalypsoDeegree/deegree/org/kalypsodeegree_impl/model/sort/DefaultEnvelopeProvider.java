@@ -48,13 +48,13 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 final class DefaultEnvelopeProvider implements IEnvelopeProvider
 {
-  private final GMLWorkspace m_workspace;
+  private final Feature m_parentFeature;
 
-  public DefaultEnvelopeProvider( final GMLWorkspace workspace )
+  public DefaultEnvelopeProvider( final Feature parentFeature )
   {
-    m_workspace = workspace;
+    m_parentFeature = parentFeature;
   }
-  
+
   public GM_Envelope getEnvelope( final Object object )
   {
     if( object instanceof DisplayElement )
@@ -78,7 +78,8 @@ final class DefaultEnvelopeProvider implements IEnvelopeProvider
 
     if( object instanceof String )
     {
-      final Feature fe = m_workspace == null ? null : m_workspace.getFeature( (String) object );
+      final GMLWorkspace workspace = m_parentFeature.getWorkspace();
+      final Feature fe = workspace == null ? null : workspace.getFeature( (String) object );
       if( fe == null )
         return null;
       return fe.getEnvelope();
