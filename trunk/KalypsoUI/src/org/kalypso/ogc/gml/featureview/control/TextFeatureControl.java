@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -83,6 +84,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     super( feature, ftp );
 
+    Assert.isNotNull( ftp, "Unknown Feature-Property" );
+    
     m_modifier = new StringModifier( ftp, format );
   }
 
