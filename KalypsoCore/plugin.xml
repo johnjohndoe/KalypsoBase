@@ -4,7 +4,6 @@
 
      <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
    <extension-point id="featureVisitor" name="featureVisitor" schema="schema/featureVisitor.exsd"/>
-   <extension-point id="obsManipulator" name="Observation Manipulator Extension Point" schema="schema/observationManipulator.exsd"/>
    <extension-point id="catalogContribution" name="add or extend catalogs" schema="schema/catalogContribution.exsd"/>
    <extension-point id="componentHandler" name="componentHandler" schema="schema/componentHandler.exsd"/>
    <extension-point id="featureviewComparator" name="featureviewComparator" schema="schema/featureviewComparator.exsd"/>

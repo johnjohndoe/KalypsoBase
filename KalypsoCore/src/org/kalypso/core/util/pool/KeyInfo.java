@@ -154,7 +154,7 @@ public final class KeyInfo extends Job
 
   private void reloadInternal( )
   {
-    // check, if any of our registered resourdces is locked for load
+    // check, if any of our registered resources is locked for load
     if( isLocked() )
       return;
 
