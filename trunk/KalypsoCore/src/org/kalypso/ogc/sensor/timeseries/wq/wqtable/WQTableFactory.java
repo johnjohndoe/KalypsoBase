@@ -105,7 +105,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
 
       return new WQTableSet( tables, xmlTableList.getFromType(), xmlTableList.getToType() );
     }
-    catch( Exception e ) // generic exception caught for simplicity
+    catch( final Exception e ) // generic exception caught for simplicity
     {
       throw new WQException( e );
     }
@@ -120,22 +120,21 @@ public class WQTableFactory implements ISerializer<WQTableSet>
   {
     try
     {
-      
       final RatingTableList xmlTables = OF.createRatingTableList();
       
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
       final WQTable[] tables = wqset.getTables();
-      for( int i = 0; i < tables.length; i++ )
+      for( final WQTable table : tables )
       {
         final RatingTable xmlTable = OF.createRatingTable();
         final Calendar cal = Calendar.getInstance();
-        cal.setTime( tables[i].getValidity() );
+        cal.setTime( table.getValidity() );
         xmlTable.setValidity( cal );
-        xmlTable.setOffset( tables[i].getOffset() );
+        xmlTable.setOffset( table.getOffset() );
 
-        final WQPair[] pairs = tables[i].getPairs();
+        final WQPair[] pairs = table.getPairs();
         final double[] W = new double[pairs.length];
         final double[] Q = new double[pairs.length];
         WQPair.convert2doubles( pairs, W, Q );
@@ -188,7 +187,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
       final String xml = createXMLString( object );
       os.write( xml.getBytes() );
     }
-    catch( WQException e )
+    catch( final WQException e )
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );
