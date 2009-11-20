@@ -43,7 +43,6 @@ package org.kalypso.ui.editor.featureeditor;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
