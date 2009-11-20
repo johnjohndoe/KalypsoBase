@@ -270,7 +270,7 @@
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
                id="org.kalypso.chart.ui.editor.menu"
-               label="ChartMenu">
+               label="Chart">
             <visibleWhen
                   checkEnabled="true">
                <reference
@@ -314,6 +314,9 @@
                style="push">
 
          </command>
+         <separator
+               name="additions">
+         </separator>
          </menu>
       </menuContribution>
       
