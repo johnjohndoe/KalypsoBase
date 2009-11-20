@@ -121,7 +121,11 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
 
+  /** virtual time series data source */
+  public static final String TYPE_DATA_SRC = "DATA_SRC"; //$NON-NLS-1$
+
   public static final String[] TYPES_ALL;
+
 
   /**
    * to enable seaching in types the array must be sorted
