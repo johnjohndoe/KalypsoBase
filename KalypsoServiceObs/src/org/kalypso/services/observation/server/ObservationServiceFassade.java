@@ -41,7 +41,6 @@
 package org.kalypso.services.observation.server;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -65,7 +64,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.manipulator.IObservationManipulator;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
@@ -88,7 +86,6 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
-import org.kalypso.zml.Observation;
 import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
 
@@ -108,9 +105,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
 
   private ItemBean m_repositoryBean = null;
 
-  /** Repository-ID(String) --> IObservationManipulator */
-  private final Map<String, IObservationManipulator> m_mapRepId2Manip;
-
   /** Data-ID(String) --> File */
   private final Map<String, File> m_mapDataId2File;
 
@@ -125,7 +119,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    */
   public ObservationServiceFassade( ) throws RepositoryException
   {
-    m_mapRepId2Manip = new Hashtable<String, IObservationManipulator>();
     m_mapDataId2File = new Hashtable<String, File>( 128 );
 
     m_logger = Logger.getLogger( ObservationServiceFassade.class.getName() );
@@ -235,13 +228,11 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     // and eventually manipulate the observation
     updateObservation( obs, obean.getId() );
 
-    FileOutputStream fos = null;
     try
     {
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final Observation obsType = ZmlFactory.createXML( obs, request, null );
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
@@ -252,36 +243,21 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir ); //$NON-NLS-1$
 
       // we say delete on exit even if we allow the client to delete the file
-      // explicitely in the clearTempData() service call. This allows us to
+      // explicitly in the clearTempData() service call. This allows us to
       // clear temp files on shutdown in the case the client forgets it.
       f.deleteOnExit();
 
-      fos = new FileOutputStream( f );
-      ZmlFactory.getMarshaller().marshal( obsType, fos );
-      fos.close();
+      ZmlFactory.writeToFile( obs, f );
 
       final DataBean data = new DataBean( f.toString(), new DataHandler( new FileDataSource( f ) ) );
       m_mapDataId2File.put( data.getId(), f );
 
       return data;
     }
-    catch( final Exception e ) // generic exception used for simplicity
+    catch( final IOException e ) // generic exception used for simplicity
     {
       m_logger.throwing( getClass().getName(), "readData", e ); //$NON-NLS-1$
       throw new SensorException( e.getLocalizedMessage(), e );
-    }
-    finally
-    {
-      if( fos != null )
-        try
-        {
-          fos.close();
-        }
-        catch( final IOException e )
-        {
-          m_logger.severe( e.getLocalizedMessage() );
-          throw new SensorException( "Error closing the output stream", e ); //$NON-NLS-1$
-        }
     }
   }
 
@@ -433,21 +409,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     // always update the observation metadata with the ocs-id
     final MetadataList md = obs.getMetadataList();
     md.setProperty( ZmlURLConstants.MD_OCS_ID, ZmlURL.addServerSideId( id ) );
-
-    // look if there is a manipulator and let it update the observation
-    final String repId = RepositoryUtils.getRepositoryId( id );
-    final IObservationManipulator oman = m_mapRepId2Manip.get( repId );
-    if( oman != null )
-      try
-      {
-        oman.manipulate( obs, id );
-      }
-      catch( final SensorException e )
-      {
-        m_logger.throwing( getClass().getName(), "updateMetadata", e ); //$NON-NLS-1$
-        m_logger.info( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.2", id ) ); //$NON-NLS-1$
-      }
-
     return md;
   }
 
