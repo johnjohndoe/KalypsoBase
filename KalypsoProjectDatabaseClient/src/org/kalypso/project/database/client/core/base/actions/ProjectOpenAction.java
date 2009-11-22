@@ -80,6 +80,7 @@ public class ProjectOpenAction implements IProjectAction
 
   protected final IKalypsoModule m_module;
 
+  // FIXME: ugly, implement different open actions instead!
   public enum OPEN_TYPE
   {
     eLocal,
