@@ -48,7 +48,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.i18n.Messages;
 
 /**
@@ -73,10 +75,30 @@ public class CopyToClipboardHandler extends AbstractHandler
     // if there is nothing selected, select all
     final boolean fullSelection = table.getSelectionCount() == 0;
 
+    final String tableAsString = dumpTable( table, fullSelection );
+
+    final StringSelection stsel = new StringSelection( tableAsString );
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
+
+    return null;
+  }
+
+  private String dumpTable( final Table table, final boolean fullSelection )
+  {
     final StringBuffer sbf = new StringBuffer();
 
     final int columnCount = table.getColumnCount();
 
+    // copy table header
+    final TableColumn[] columns = table.getColumns();
+    final String [] headerLabels = new String[columns.length-1];
+    for( int i = 0; i < headerLabels.length; i++ )
+      headerLabels[i] = columns[i+1].getText();
+    final String header = Arrays.implode( headerLabels, "\t", 0, headerLabels.length - 1 );
+    
+    sbf.append( header );
+    sbf.append("\n");
+    
     // walk through every row (item)
     for( int i = 0; i < table.getItemCount(); i++ )
     {
@@ -96,11 +118,8 @@ public class CopyToClipboardHandler extends AbstractHandler
         sbf.append( "\n" ); //$NON-NLS-1$
       }
     }
-
-    final StringSelection stsel = new StringSelection( sbf.toString() );
-    Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stsel, stsel );
-
-    return null;
+    
+    return sbf.toString();
   }
 
 }
