@@ -63,14 +63,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * This page lists a list of objects from which the user can choose from.
  *
  * @author Gernot Belger, Holger Albert
  */
+@SuppressWarnings("restriction")
 public class ArrayChooserPage extends WizardPage
 {
+  static String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
+
+  static String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
+
   /**
    * The objects, that are available to the user.
    */
@@ -302,7 +308,7 @@ public class ArrayChooserPage extends WizardPage
     final Button button = new Button( parent, SWT.PUSH );
 
     button.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    button.setText( select ? "&Alle wählen" : "Alle a&bwählen" );
+    button.setText( select ?  SELECT_ALL_TITLE : DESELECT_ALL_TITLE );
 
     button.addSelectionListener( new SelectionAdapter()
     {
