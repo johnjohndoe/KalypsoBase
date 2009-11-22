@@ -85,6 +85,13 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     {
       handleStatusChanged();
     }
+
+    // HACK: at the moment, we know this event is sent when the data has been loaded. So we refresah all in that case
+    @Override
+    public void contextChanged( IKalypsoTheme source )
+    {
+      handleStatusChanged();
+    };
   };
 
   private final IFeatureSelectionManager m_selectionManager;
