@@ -545,6 +545,13 @@ public class TableCursor extends Canvas
   {
     if( isDisposed() || !isVisible() )
       return;
+    
+    /* Only change the selection on left clicks */
+    // This is not yet perfect, but better than loose the selection when opening the context menu (right click)
+    // However, at the moment the table moves the selection (if only one line is selected) but the cursor is not moved.
+    if( event.button != 1 )
+      return;
+    
     final Point pt = new Point( event.x, event.y );
     final int lineWidth = m_table.getLinesVisible() ? m_table.getGridLineWidth() : 0;
     TableItem item = m_table.getItem( pt );
