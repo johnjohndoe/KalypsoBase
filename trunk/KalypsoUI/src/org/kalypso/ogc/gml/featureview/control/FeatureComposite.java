@@ -143,11 +143,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private static final String DATA_CONTROL_TYPE = "controlType"; //$NON-NLS-1$
 
-  /** Holds enable state if the control is explicitely enabled/diabled by an 'enable' or 'enableOperation' attribute. */
-  private static final String DATA_EXPLICIT_ENABLED = "explicitEnabled"; //$NON-NLS-1$
-
   private static final LayoutDataType NULL_LAYOUT_DATA_TYPE = new LayoutDataType();
-
 
   /**
    * The flag, indicating, if the green hook should be displayed.
@@ -379,25 +375,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     final Object enabledOperation = controlType.getEnabledOperation();
     final boolean enabled = evaluateOperation( getFeature(), enabledOperation, controlType.isEnabled() );
-    control.setData( DATA_EXPLICIT_ENABLED, enabled  );
-    enableControl(control, enabled);
-  }
-
-  private void enableControl( Control control, boolean enabled )
-  {
     if( control.getEnabled() != enabled )
       control.setEnabled( enabled );
-    
-    if( control instanceof Composite )
-    {
-      final Control[] children = ((Composite) control).getChildren();
-      for( final Control child : children )
-      {
-        Boolean isExplicitEnabled = (Boolean) child.getData( DATA_EXPLICIT_ENABLED );
-        if( isExplicitEnabled == null || isExplicitEnabled == true )
-          enableControl( child, enabled );
-      }
-    }
   }
 
   private boolean evaluateOperation( final Feature feature, final Object operationElement, final boolean defaultValue )
@@ -482,6 +461,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
+        // ?? This seems to be breaking FeatureView's 
         item.setControl( tabControl );
       }
 

@@ -135,4 +135,11 @@ public interface BaseFeature extends IAdaptable
   @Deprecated
   public void invalidEnvelope( );
 
+  /* 
+   * Added for caching of objects geometry. 
+   * Notably (up to 2x) improves redraw performance 
+   */
+  public Object getCachedGeometry( );
+  public void setCachedGeometry( Object value );
+
 }

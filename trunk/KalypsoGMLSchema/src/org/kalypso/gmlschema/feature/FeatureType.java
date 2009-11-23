@@ -41,6 +41,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -69,6 +70,9 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 {
   private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
+  private final long m_fullID;
+  private final long m_localID;
+  
   private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
   private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<String, IPropertyType>();
@@ -94,6 +98,10 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     super( gmlSchema, element, QualifiedElement.createQName( gmlSchema, element ) );
 
     final QName qname = getQName();
+
+    m_fullID = QNameUtilities.getFullID( qname );
+    m_localID = QNameUtilities.getLocalID( qname );
+
     final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( gmlSchema.getResourceBundle(), new QName[] { qname }, qname.getLocalPart() );
     if( annotation == null )
       m_annotation = AnnotationUtilities.annotationForElement( element.getAnnotation(), element.getName(), true );
@@ -398,6 +406,18 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
+  }
+
+  @Override
+  public long getFullID()
+  {
+    return m_fullID;
+  }
+  
+  @Override
+  public long getLocalID()
+  {
+    return m_localID;
   }
 
 }

@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -359,17 +360,24 @@ public class FilteredFeatureList implements FeatureList
 
     // only remove new elements, which do not match type
     final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
+    List< Object > lListActualResult = new ArrayList< Object >();
+    lListActualResult.addAll( originalList.subList( 0, oldlength ) );
     for( final Iterator< ? > sIt = sublist.iterator(); sIt.hasNext(); )
     {
-      final Object next = sIt.next();
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), next );
-      if( !m_filterVisitor.matchesType( f ) )
+      final Object lObjNext = sIt.next();
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), lObjNext );
+      if( m_filterVisitor.matchesType( f ) )
       {
-        sIt.remove();
+        lListActualResult.add( lObjNext );
+        // removing elements from ArrayList is SLOW!
+        // instead of removing elements from an existing list one by one, 
+        // it's better to create a new ArrayList on the fly, then 
+        // sIt.remove();
       }
     }
 
-    return originalList;
+//    return originalList;
+    return lListActualResult;
   }
 
   private List<Feature> filterList( final List<?> originalList )

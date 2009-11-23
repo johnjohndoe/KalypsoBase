@@ -462,15 +462,29 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @deprecated SLOW: TODO: better comment, make deprecated in interface
+   *  SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
    * @see java.util.List#removeAll(java.util.Collection)
    */
-  @Deprecated
   public boolean removeAll( final Collection c )
   {
+
     boolean result = false;
-    for( final Object object : c )
-      result |= remove( object );
+    synchronized( this )
+    {
+      for( final Object lObj : c )
+      {
+        final Envelope env = getEnvelope( lObj );
+        if( m_index != null && env != null )
+          m_index.remove( env, lObj );
+      }
+      result = m_items.removeAll( c );
+    }
+    
+    // VERY SLOW! removes elements from ArrayList one by one
+    // which causes re-creation and copying of the whole array every time
+//    boolean result = false;
+//    for( final Object object : c )
+//      result |= remove( object );
 
     return result;
   }

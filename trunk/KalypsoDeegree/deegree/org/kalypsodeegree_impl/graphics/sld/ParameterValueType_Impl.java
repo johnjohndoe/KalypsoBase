@@ -136,7 +136,8 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    */
   public String evaluate( Feature feature ) throws FilterEvaluationException
   {
-    StringBuffer sb = new StringBuffer();
+//    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     for( int i = 0; i < components.size(); i++ )
     {
@@ -181,7 +182,8 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer();
+//    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for( int i = 0; i < components.size(); i++ )
     {
       Object component = components.get( i );

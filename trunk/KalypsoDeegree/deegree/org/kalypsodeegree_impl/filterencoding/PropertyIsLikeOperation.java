@@ -55,6 +55,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   private PropertyName m_propertyName;
 
   private Literal m_literal;
+  
+  private String m_strLiteral; 
 
   // attributes of <PropertyIsLike>
   private char m_wildCard;
@@ -71,6 +73,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     m_wildCard = wildCard;
     m_singleChar = singleChar;
     m_escapeChar = escapeChar;
+    m_strLiteral = m_literal.getValue();
   }
 
   public char getWildCard( )
@@ -170,6 +173,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   public void setLiteral( Literal literal )
   {
     this.m_literal = literal;
+    this.m_strLiteral = m_literal.getValue();
   }
 
   /** Produces an indented XML representation of this object. */
@@ -194,14 +198,12 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   {
 
     Object value1 = null;
-    Object value2 = null;
     try
     {
       value1 = m_propertyName.evaluate( feature );
-      value2 = m_literal.getValue();
-      if( value1 == null || value2 == null )
+      if( value1 == null || m_strLiteral == null )
         return false;
-      return matches( value2.toString(), value1.toString() );
+      return matches( m_strLiteral, value1.toString() );
     }
     catch( Exception e )
     {
@@ -228,9 +230,19 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     if( pattern.length() == 0 && buffer.length() == 0 )
       return true;
 
+    if( buffer == null || buffer.length() == 0 ){
+      return false;
+    }
+
+    
+    if( !pattern.contains( "" + m_wildCard ) && pattern.hashCode() != buffer.hashCode() ){
+      return false;
+    }
+//    System.out.println( "Pattern: " + pattern + "; buffer: " + buffer );
     // build the prefix that has to match the beginning of the buffer
     // prefix ends at the first (unescaped!) wildcard / singlechar character
-    StringBuffer sb = new StringBuffer();
+//    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     boolean escapeMode = false;
     int length = pattern.length();
     char specialChar = '\0';

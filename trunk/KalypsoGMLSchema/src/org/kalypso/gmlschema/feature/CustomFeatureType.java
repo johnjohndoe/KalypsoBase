@@ -51,6 +51,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -69,6 +70,9 @@ import org.kalypso.gmlschema.xml.ElementReference;
 public class CustomFeatureType implements IFeatureType
 {
   private final QName m_qName;
+  
+  private final long m_fullID;
+  private final long m_localID;
 
   private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
 
@@ -133,6 +137,10 @@ public class CustomFeatureType implements IFeatureType
   {
     m_schema = schema;
     m_qName = qName;
+
+    m_fullID = QNameUtilities.getFullID( qName );
+    m_localID = QNameUtilities.getLocalID( qName );
+    
     m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     int geoPos = -1;
     final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
@@ -236,6 +244,18 @@ public class CustomFeatureType implements IFeatureType
     return m_qName;
   }
 
+  @Override
+  public long getFullID()
+  {
+    return m_fullID;
+  }
+  
+  @Override
+  public long getLocalID()
+  {
+    return m_localID;
+  }
+  
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
    */
@@ -322,9 +342,16 @@ public class CustomFeatureType implements IFeatureType
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof IFeatureType )
+    if( obj instanceof CustomFeatureType ){
+      final CustomFeatureType lEl = ((CustomFeatureType) obj);
+      if (m_fullID == 0 || lEl.m_fullID == 0)
+        return false;
+      if( m_fullID == lEl.m_fullID )
+        return true;
+    }
+    else if( obj instanceof IFeatureType ){
       return ObjectUtils.equals( m_qName, ((IFeatureType) obj).getQName() );
-
+    }
     return false;
   }
 
@@ -334,6 +361,6 @@ public class CustomFeatureType implements IFeatureType
   @Override
   public int hashCode( )
   {
-    return ObjectUtils.hashCode( m_qName );
+    return m_qName.hashCode();
   }
 }

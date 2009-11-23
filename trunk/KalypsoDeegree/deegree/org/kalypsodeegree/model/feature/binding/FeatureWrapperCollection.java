@@ -449,6 +449,21 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     }
   }
 
+  // use instead of removeAll to remove ALL elements at once
+  public boolean removeAllAtOnce( final Collection< ? > c )
+  {
+    boolean bRes = false;
+    try {
+      bRes = getFeatureList().removeAll( c );
+      
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+      
+    return bRes;
+  }
+  
+
   public boolean removeAll( final Collection< ? > c )
   {
     boolean ret = false;
@@ -581,6 +596,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       return;
     final String gmlID = toRemove.getGmlID();
     getFeatureList().remove( gmlID );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefsForCollectionOfIds(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
+   */
+  public void removeAllRefsAtOnce( final Collection< ? > c ) throws IllegalArgumentException
+  {
+    if( c == null )
+      return;
+    getFeatureList().removeAll( c );
   }
 
   /**

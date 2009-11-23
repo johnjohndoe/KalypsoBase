@@ -56,6 +56,8 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 public class FeatureTypeVisitor implements FeatureVisitor
 {
   private final QName m_typename;
+  private final long m_fullID;
+  private final long m_localID;
 
   /** Falls true, werden auch features acceptiert, welche den angegebenen Typ substituieren */
   private final boolean m_acceptIfSubstituting;
@@ -64,13 +66,19 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   public FeatureTypeVisitor( final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
   {
-    this( visitor, ft.getQName(), acceptIfSubstituting );
+    m_fullID = ft.getFullID();
+    m_localID = ft.getLocalID();
+    m_visitor = visitor;
+    m_typename = ft.getQName();
+    m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
-  public FeatureTypeVisitor( final FeatureVisitor visitor, final QName typeName, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final QName typename, final boolean acceptIfSubstituting )
   {
+    m_fullID = QNameUtilities.getFullID( typename );
+    m_localID = QNameUtilities.getLocalID( typename );
     m_visitor = visitor;
-    m_typename = typeName;
+    m_typename = typename;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
@@ -101,11 +109,11 @@ public class FeatureTypeVisitor implements FeatureVisitor
       return false;
 
     final IFeatureType featureType = f.getFeatureType();
-    if( QNameUtilities.equalsLocal( m_typename, featureType.getQName() ) )
+    if (m_localID == featureType.getLocalID()) 
       return true;
-
+    
     if( m_acceptIfSubstituting )
-      return GMLSchemaUtilities.substitutes( featureType, m_typename );
+      return GMLSchemaUtilities.substitutes( featureType, m_typename, m_fullID, m_localID );
 
     return false;
   }

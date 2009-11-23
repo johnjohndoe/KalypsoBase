@@ -267,16 +267,24 @@ public class DisplayElementFactory
    *
    * @return Either a {@link GM_Object} or a {@link List} of {@link GM_Object}'s.
    */
+  @SuppressWarnings("deprecation")
   private static Object findGeometryObject( final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException, IncompatibleGeometryTypeException
   {
+    Object lGeometry = feature.getCachedGeometry();
+    if( lGeometry != null ){
+      return lGeometry;
+    }
+    
     final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
     if( geometry == null )
       return feature.getDefaultGeometryProperty();
 
     final PropertyName propertyName = geometry.getPropertyName();
     final Object value = propertyName.evaluate( feature );
-    if( value == null || value instanceof GM_Object || value instanceof List )
+    if( value == null || value instanceof GM_Object || value instanceof List ){
+      feature.setCachedGeometry( value );
       return value;
+    }
 
     final String msg = String.format( "PropertyName '%s' does not evaluate to a geometry: %s", propertyName, value );
     throw new IncompatibleGeometryTypeException( msg );
