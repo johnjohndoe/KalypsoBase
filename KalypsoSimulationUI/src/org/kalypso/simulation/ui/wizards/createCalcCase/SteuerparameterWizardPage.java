@@ -43,8 +43,6 @@ package org.kalypso.simulation.ui.wizards.createCalcCase;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -66,9 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
-import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -93,8 +89,6 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
 
-  private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
-
   private boolean m_update;
 
   private Button m_checkUpdate;
@@ -112,17 +106,26 @@ public class SteuerparameterWizardPage extends WizardPage
     super( "EditCalcCaseControlPage", Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0"), image ); //$NON-NLS-1$ //$NON-NLS-2$
     m_canGoBack = canGoBack;
 
-    final Collection<ICommand> changes = m_changes;
+    final FeatureComposite featureComposite = m_featureComposite;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       public void featureChanged( final ICommand changeCommand )
       {
-        changes.add( changeCommand );
+        try
+        {
+          changeCommand.process();
+          // We know that we are the only one who changes our workspace, so calling updateControl is enough
+          // else, we would have to register a workspace-listener
+          featureComposite.updateControl();
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
       }
 
       public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
       {
-        // TODO:
       }
     } );
 
@@ -137,6 +140,9 @@ public class SteuerparameterWizardPage extends WizardPage
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
+    
+    if( m_workspace != null )
+      m_workspace.dispose();
   }
 
   /**
@@ -155,27 +161,7 @@ public class SteuerparameterWizardPage extends WizardPage
 
   public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1"), 2000 ); //$NON-NLS-1$
-
-    // COMMITTEN
-    final Collection<ICommand> changes = m_changes;
-    final ICommand[] commands = changes.toArray( new ICommand[changes.size()] );
-    changes.clear();
-
-    getControl().getDisplay().syncExec( new CatchRunnable()
-    {
-      @Override
-      public void runIntern( ) throws Exception
-      {
-        // BUG command wird nicht ausgeführt
-        // Änderungen committen
-        final CompositeCommand compositeCommand = new CompositeCommand( "" ); //$NON-NLS-1$
-        compositeCommand.addCommands( commands );
-        compositeCommand.process();
-      }
-    } );
-
-    monitor.worked( 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1"), 1000 ); //$NON-NLS-1$
 
     // SPEICHERN
     final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
