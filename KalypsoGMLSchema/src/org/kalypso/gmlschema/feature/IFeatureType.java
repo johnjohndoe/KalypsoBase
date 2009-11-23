@@ -86,7 +86,11 @@ public interface IFeatureType extends IInitialize
 
   public IFeatureType getSubstitutionGroupFT( );
 
-  public QName getQName( );
+  public QName getQName();
+
+  public long getFullID();
+  public long getLocalID();
+
 
   /**
    * @return namespace

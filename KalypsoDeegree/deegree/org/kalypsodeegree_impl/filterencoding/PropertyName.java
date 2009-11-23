@@ -160,6 +160,9 @@ public class PropertyName extends Expression_Impl
       final Object object = GMLXPathUtilities.query( m_path, feature );
       if( object == null )
         return null;
+        // inserted string case at top position as the most often appearing one
+      else if( object instanceof String )
+        return object;
       else if( object instanceof Number )
         return object;
       else if( object instanceof GM_Object )

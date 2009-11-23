@@ -137,6 +137,7 @@ public class GMLSchemaUtilities
   private static final Map<QName, Map<String, FindSubstitutesGMLSchemaVisitor>> m_substitutesResultMap = new HashMap<QName, Map<String, FindSubstitutesGMLSchemaVisitor>>();
 
   private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
+  private static final Map< Long , Map< Long, Boolean>> m_substitutesIDCache = new HashMap< Long, Map< Long, Boolean>>();
 
   /**
    * @param substitueeName
@@ -177,6 +178,53 @@ public class GMLSchemaUtilities
       }
     }
 
+    return substitutesResult;
+  }
+  
+  /**
+   * @param substitueeName
+   *          Name of the type which may or may not be substituted by type
+   */
+  public static synchronized boolean substitutes( final IFeatureType type1, final QName pQName, final long mFullID, final long mLocalID ) // IFeatureType type2 )
+  {
+    // everyone is substituting himself
+    if( type1.getFullID() == mFullID )
+      return true;
+    
+    // this comparison comes up as one of the very often used operations
+    // using static comparison might be slightly faster then using isEmpty()
+    // if check for string being null has to be done use StringUtils.isEmpty( pQName.getNamespaceURI() )
+
+    if( "".equals( pQName.getNamespaceURI() ) && type1.getLocalID() == mLocalID )
+      return true;
+    
+    final IFeatureType substitutionGroupFT = type1.getSubstitutionGroupFT();
+    final boolean substitutesResult;
+    if( substitutionGroupFT == null )
+      substitutesResult = false;
+    else
+    {
+      final long lIntFullID = substitutionGroupFT.getFullID();
+      Map< Long, Boolean > substitutesMap = m_substitutesIDCache.get( lIntFullID );
+      if( substitutesMap == null )
+      {
+        substitutesMap = new HashMap< Long, Boolean >();
+        m_substitutesIDCache.put( lIntFullID, substitutesMap );
+      }
+      
+        
+      final Boolean cachedResult = substitutesMap.get( mFullID );
+      if( cachedResult != null )
+      {
+        substitutesResult = cachedResult;
+      }
+      else
+      {
+        substitutesResult = substitutes( substitutionGroupFT, pQName, mFullID, mLocalID );
+        substitutesMap.put( mFullID, substitutesResult );
+      }
+    }
+    
     return substitutesResult;
   }
 

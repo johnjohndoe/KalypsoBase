@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
 
@@ -54,11 +55,14 @@ public class QualifiedElement
 
   private final QName m_qName;
 
+  private long m_fullIDHash;
+  
   public QualifiedElement( final GMLSchema gmlSchema, final Element element, final QName qName )
   {
     m_gmlSchema = gmlSchema;
     m_element = element;
     m_qName = qName;
+    m_fullIDHash = QNameUtilities.getFullID( qName );
   }
 
   public final GMLSchema getGMLSchema( )
@@ -109,8 +113,13 @@ public class QualifiedElement
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof QualifiedElement )
-      return ObjectUtils.equals( m_qName, ((QualifiedElement) obj).m_qName );
+    if( obj instanceof QualifiedElement ){
+      final QualifiedElement lEl = ((QualifiedElement) obj);
+      if( m_fullIDHash == lEl.m_fullIDHash )
+          return true;
+    }
+//    if( obj instanceof QualifiedElement )
+//      return ObjectUtils.equals( m_qName, ((QualifiedElement) obj).m_qName );
 
     return false;
   }
@@ -121,6 +130,6 @@ public class QualifiedElement
   @Override
   public int hashCode( )
   {
-    return ObjectUtils.hashCode( m_qName );
+    return m_qName.hashCode();
   }
 }

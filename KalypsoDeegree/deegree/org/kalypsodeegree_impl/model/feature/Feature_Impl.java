@@ -65,6 +65,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class Feature_Impl extends PlatformObject implements Feature
 {
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
+  
+  private Object m_Geometry = null;
+  
 
   /**
    * all property-values are stored here in sequential order (as defined in application-schema) properties with
@@ -568,4 +571,23 @@ public class Feature_Impl extends PlatformObject implements Feature
 
     return super.getAdapter( adapter );
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
+   */
+  @Override
+  public void setCachedGeometry( Object value )
+  {
+    m_Geometry = value;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
+   */
+  @Override
+  public Object getCachedGeometry( )
+  {
+    return m_Geometry;
+  }
+
 }

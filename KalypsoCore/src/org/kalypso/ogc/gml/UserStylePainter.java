@@ -40,16 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import ogc31.www.opengis.net.gml.RoughConversionToPreferredUnit;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
+import org.j3d.util.HashSet;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -63,7 +70,11 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
+import org.kalypsodeegree_impl.filterencoding.LogicalOperation;
+import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
+import org.kalypsodeegree_impl.graphics.sld.RoughnessRule;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -100,10 +111,119 @@ public class UserStylePainter
     for( final FeatureTypeStyle element : fts )
     {
       final SubMonitor childProgres = progress.newChild( 1 );
-      paintFeatureTypeStyle( workspace, scale, visibleFeatures, selected, childProgres, element, paintDelegate );
+
+      // hack, for speed only, is there any clearer 
+      // see RoughnessFilter and RoughnessRule
+      if ("Roughness style".equals( this.m_style.getName()  )) {
+        paintRoughnessStyle( workspace, scale, visibleFeatures, selected, childProgres, element, paintDelegate );
+      } else {
+        paintFeatureTypeStyle( workspace, scale, visibleFeatures, selected, childProgres, element, paintDelegate );
+      }
+
       ProgressUtilities.done( childProgres );
     }
   }
+
+  private void paintRoughnessStyle( GMLWorkspace workspace, Double scale, List< ? > visibleFeatures, Boolean selected, SubMonitor childProgress, FeatureTypeStyle element, IPaintDelegate paintDelegate ) throws CoreException
+  {
+    final QName qname = element.getFeatureTypeName();
+    final Rule[] rules = element.getRules();
+    
+    // collect ALL roughness rules and put them in the filter
+    final RoughnessRule lRoughRule = new RoughnessRule();
+    for( final Rule rule : rules )
+      lRoughRule.put( rule.getTitle(), rule );
+
+    paintRule( workspace, scale, visibleFeatures, selected, childProgress, lRoughRule, qname, paintDelegate );
+  }
+
+//  private void paintRoughnessStyle2( final GMLWorkspace workspace, final Double scale, final List< ? > features, final Boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element, final IPaintDelegate delegate ) throws CoreException
+//  {
+//    // prepare rules 
+//    final QName qname = element.getFeatureTypeName();
+//    final Rule[] rules = element.getRules();
+//
+//    final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
+//
+//
+//    HashMap<String, Rule> lRulesSet = new HashMap<String, Rule>();
+//    Rule lRuleDefault;
+//    for( final Rule rule : rules )
+//      lRulesSet.put( rule.getTitle(), rule );
+//      
+////    IRoughnessPolygon.PROP_ROUGHNESS_STYLE
+//    final PropertyName lPropertyName = new PropertyName( "roughnessStyle", null );
+//    
+//    // cycle over all features and look for matches
+//    for( final Object o : features )
+//    {
+//      final Feature feature = (Feature) o;
+//
+//      /* Check for selection */
+//      try
+//      {
+//        /* Only paint really visible features */
+//        /* Is selected/unselected ? */
+//        if( selected != null )
+//        {
+//          final boolean featureIsSelected = m_selectionManager.isSelected( feature );
+//          if( selected && !featureIsSelected )
+//            continue;
+//          
+//          if( !selected && featureIsSelected )
+//            continue;
+//        }
+//
+//        /* Only paint features which applies to the given qname */
+//        if( qname != null && GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname ) )
+//          continue;
+//
+////        filter.evaluate( feature );
+////        Object value1 = RoughnessStyleUpdateService.POLYGON_LAYER_NAME.evaluate( feature );
+//        Object value1 = lPropertyName.evaluate( feature );
+//        if( value1 == null )
+//          continue;
+//
+//        String lStrRoughness = value1.toString();
+//        
+//        // get the roughness string
+//        Rule rule = lRulesSet.get( lStrRoughness );
+//        if (rule == null)
+//          continue;
+//        
+//        final Symbolizer[] symbolizers = rule.getSymbolizers();
+//        for( final Symbolizer symbolizer : symbolizers )
+//        {
+//          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+//          // TODO: should'nt there be at least some debug output if this happens?
+//          if( displayElement != null )
+//          {
+//            /* does scale apply? */
+//            if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
+//              delegate.paint( displayElement, progress.newChild( 100 ) );
+//          }
+//        }
+//      
+//      }
+//      catch( final CoreException e )
+//      {
+//        if( !e.getStatus().matches( IStatus.CANCEL ) )// do not print cancel stuff
+//          e.printStackTrace();
+//        throw e;
+//      }
+//      catch( final Exception e )
+//      {
+//        e.printStackTrace();
+//        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+//      }
+//
+//    }
+//    
+//    ProgressUtilities.done( progress );
+//
+//    
+//  }
+
 
   /**
    * @param selected
@@ -158,8 +278,12 @@ public class UserStylePainter
       final Filter filter = rule.getFilter();
       if( filterFeature( feature, selected, filter ) )
       {
+        // use hashes for faster GMLSchemaUtilities.substitutes call
+        final long m_fullID = QNameUtilities.getFullID( qname );
+        final long m_localID = QNameUtilities.getLocalID( qname );
+
         /* Only paint features which applies to the given qname */
-        if( qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname ) )
+        if( qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname, m_fullID, m_localID ) )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
           for( final Symbolizer symbolizer : symbolizers )

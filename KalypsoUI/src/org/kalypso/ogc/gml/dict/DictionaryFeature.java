@@ -336,4 +336,21 @@ public class DictionaryFeature implements Feature
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#getCachedGeometry()
+   */
+  @Override
+  public Object getCachedGeometry( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.BaseFeature#setCachedGeometry(java.lang.Object)
+   */
+  @Override
+  public void setCachedGeometry( Object value )
+  {
+  }
 }

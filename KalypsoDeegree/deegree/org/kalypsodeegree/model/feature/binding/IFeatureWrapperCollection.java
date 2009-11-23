@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree.model.feature.binding;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -114,6 +115,12 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    *             if the argument toRemove is null
    */
   public void removeAllRefs( FWCls toRemove ) throws IllegalArgumentException;
+  
+  
+  public void removeAllRefsAtOnce( final Collection< ? > c ) throws IllegalArgumentException;
+  
+  
+  public boolean removeAllAtOnce( final Collection< ? > c );
 
   /**
    * Add this feature as reference to this list

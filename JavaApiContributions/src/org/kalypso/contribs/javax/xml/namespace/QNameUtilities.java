@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.javax.xml.namespace;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -50,11 +53,49 @@ import javax.xml.namespace.QName;
  */
 public class QNameUtilities
 {
+  static private HashMap<String, Long> m_mLocalIDs = new HashMap<String, Long>();
+  static private long  m_iNextFullID = 0;
+  
+  static HashMap<String, Long> m_mFullIDs = new HashMap<String, Long>();
+  static private long m_iNextLocalID = 0;
+  
+  
   private QNameUtilities( )
   {
     // never instantiate
   }
 
+  public static long getFullID( final QName name )
+  {
+    if (name == null)
+      return 0;
+    
+    final String l_sName = name.toString();
+    if (m_mFullIDs.containsKey( l_sName ) ) {
+      return m_mFullIDs.get( l_sName );
+    }
+    m_iNextFullID++;
+    long id = m_iNextFullID;
+    m_mFullIDs.put( l_sName, id );
+    return id;
+  }
+
+  public static long getLocalID( final QName name )
+  {
+    if (name == null)
+      return 0;
+
+    final String l_sName = name.getLocalPart().toString();
+    if (m_mLocalIDs.containsKey( l_sName ) ) {
+      return m_mLocalIDs.get( l_sName );
+    }
+    m_iNextLocalID++;
+    long id = m_iNextLocalID;
+    m_mLocalIDs.put( l_sName, id );
+    return id;
+  }
+
+  
   public static boolean equals( final QName qname, final String namespace, final String localPart )
   {
     return qname.equals( new QName( namespace, localPart ) );

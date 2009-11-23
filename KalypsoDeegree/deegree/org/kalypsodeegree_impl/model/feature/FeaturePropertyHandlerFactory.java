@@ -73,13 +73,16 @@ public class FeaturePropertyHandlerFactory
    */
   public IFeaturePropertyHandler getHandler( final IFeatureType featureType )
   {
-    if( m_handlers.containsKey( featureType ) )
-      return m_handlers.get( featureType );
+  // very often called method - removed containsKey call, since
+  // get method returns null if the key is not present
+    IFeaturePropertyHandler lHandler = m_handlers.get( featureType );
+    if( lHandler != null )
+      return lHandler;
 
-    final IFeaturePropertyHandler handler = createHandler( featureType );
-    m_handlers.put( featureType, handler );
+    lHandler = createHandler( featureType );
+    m_handlers.put( featureType, lHandler );
 
-    return handler;
+    return lHandler;
   }
 
   private IFeaturePropertyHandler createHandler( final IFeatureType featureType )

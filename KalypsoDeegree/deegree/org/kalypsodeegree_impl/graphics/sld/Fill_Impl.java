@@ -94,8 +94,14 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 
     if( cssParam != null )
     {
-      String s = cssParam.getValue( feature ).replaceAll("##", "#");
+      String s = cssParam.getValue( feature );
 
+      // EXTREMELY SLOW! used only for checking if string begins with ## 
+      //cssParam.getValue( feature ).replaceAll("##", "#");
+
+      if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
+        s = s.substring( 1 );
+        
       try
       {
         awtColor =  Color.decode( s );
@@ -109,6 +115,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 
     return awtColor;
   }
+  
 
   /**
    * sets the value of the fill's CssParameter 'fill' as a simple color
@@ -119,8 +126,8 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   public void setFill( Color color )
   {
 
-    String hex = StyleFactory.getColorAsHex( color );
-    CssParameter fill = StyleFactory.createCssParameter( "fill", hex );
+    String s = StyleFactory.getColorAsHex( color );
+    CssParameter fill = StyleFactory.createCssParameter( "fill", s );
 
     cssParams.put( "fill", fill );
   }
