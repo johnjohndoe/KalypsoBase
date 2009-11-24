@@ -48,6 +48,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -294,11 +295,14 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
     if( href != null )// its a xlink
     {
+     
+      String trimmedHref =  href.trim();
+      
       // REMARK: for backwards compability, we still set the href as property-value
       // for internal links. This should be changed soon...
       if( href.startsWith( "#" ) )
       {
-        final String refID2 = href.substring( 1 );
+        final String refID2 = trimmedHref.substring( 1 );
         FeatureHelper.addChild( parentFeature, parentRelation, refID2 );
       }
       else
@@ -310,7 +314,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
         final String actuate = AttributesUtilities.getAttributeValue( atts, NS.XLINK, "actuate", "onRequest" );
 
         final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
-        final Feature childFeature = new XLinkedFeature_Impl( parentFeature, parentRelation, targetFeatureType, href, role, arcrole, title, show, actuate );
+        final Feature childFeature = new XLinkedFeature_Impl( parentFeature, parentRelation, targetFeatureType, trimmedHref, role, arcrole, title, show, actuate );
         FeatureHelper.addChild( parentFeature, parentRelation, childFeature );
       }
 
