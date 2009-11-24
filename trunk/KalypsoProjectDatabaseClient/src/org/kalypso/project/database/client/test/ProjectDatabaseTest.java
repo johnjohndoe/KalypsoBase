@@ -52,18 +52,19 @@ public class ProjectDatabaseTest
 {
   private static final String PROJECT_TYPE = "PlanerClientProject"; //$NON-NLS-1$
 
-  @Test
-  public void testCreateProjects( )
-  {
-    for( int i = 0; i < 10; i++ )
-    {
-      createProject( "project_one", i ); //$NON-NLS-1$
-      createProject( "project_two", i ); //$NON-NLS-1$
-    }
-  }
+  // FIXME: clean this test or remove it
+// @Test
+// public void testCreateProjects( )
+// {
+// for( int i = 0; i < 10; i++ )
+// {
+//      createProject( "project_one", i ); //$NON-NLS-1$
+//      createProject( "project_two", i ); //$NON-NLS-1$
+// }
+// }
 
-  public void createProject( final String name, final int version )
-  {
+// public void createProject( final String name, final int version )
+// {
 // try
 // {
 // // copy project.zip to server incoming directory
@@ -117,7 +118,7 @@ public class ProjectDatabaseTest
 // {
 // e.printStackTrace();
 // }
-  }
+// }
 
   @Test
   public void testGetProjects( )
