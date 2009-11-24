@@ -135,11 +135,16 @@ public interface BaseFeature extends IAdaptable
   @Deprecated
   public void invalidEnvelope( );
 
-  /* 
-   * Added for caching of objects geometry. 
-   * Notably (up to 2x) improves redraw performance 
+  /**
+   * FIXME dimitri, ilya - this is not allowed for basic features <br>
+   * <br>
+   * Please define your own Feature Binding and let this binding derive from AbstractCachedFeature. So you can easily
+   * adjust your implementation and cache geometries whitout changing the default behaviour of features.<br>
+   * <br>
+   * Notably (up to 2x) improves redraw performance
    */
   public Object getCachedGeometry( );
+
   public void setCachedGeometry( Object value );
 
 }
