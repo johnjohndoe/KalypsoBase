@@ -170,7 +170,7 @@ public class VFSUtilities
         }
         catch( final CoreException e )
         {
-          throw new FileSystemException( Messages.getString("org.kalypso.commons.io.VFSUtilities.0") + scheme, e ); //$NON-NLS-1$
+          throw new FileSystemException( Messages.getString( "org.kalypso.commons.io.VFSUtilities.0" ) + scheme, e ); //$NON-NLS-1$
         }
       }
     }
@@ -255,7 +255,7 @@ public class VFSUtilities
   {
     if( source.equals( destination ) )
     {
-      KalypsoCommonsDebug.DEBUG.printf( Messages.getString("org.kalypso.commons.io.VFSUtilities.1"), source.getName(), destination.getName() ); //$NON-NLS-1$
+      KalypsoCommonsDebug.DEBUG.printf( Messages.getString( "org.kalypso.commons.io.VFSUtilities.1" ), source.getName(), destination.getName() ); //$NON-NLS-1$
       return;
     }
 
@@ -268,7 +268,7 @@ public class VFSUtilities
       try
       {
         if( FileType.FOLDER.equals( source.getType() ) )
-          throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.2") ); //$NON-NLS-1$
+          throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.io.VFSUtilities.2" ) ); //$NON-NLS-1$
 
         /* If the destination is only a directory, use the sources filename for the destination file. */
         FileObject destinationFile = destination;
@@ -335,12 +335,12 @@ public class VFSUtilities
   public static void copyDirectoryToDirectory( final FileObject source, final FileObject destination, final boolean overwrite ) throws IOException
   {
     if( !FileType.FOLDER.equals( source.getType() ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.3") + source.getURL() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.io.VFSUtilities.3" ) + source.getURL() ); //$NON-NLS-1$
 
     if( destination.exists() )
     {
       if( !FileType.FOLDER.equals( destination.getType() ) )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.io.VFSUtilities.4") + destination.getURL() ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.io.VFSUtilities.4" ) + destination.getURL() ); //$NON-NLS-1$
     }
     else
     {
@@ -417,6 +417,12 @@ public class VFSUtilities
     }
   }
 
+  public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
+  {
+    final FileSystemManager fsManager = getManager();
+    return createTempDirectory( prefix, parentDir, fsManager );
+  }
+
   /**
    * This function creates a temporary directory, which has a unique file name.
    * 
@@ -426,10 +432,8 @@ public class VFSUtilities
    *          The parent directory. In it the new directory will be created.
    * @return The new unique directory.
    */
-  public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
+  public static FileObject createTempDirectory( final String prefix, final FileObject parentDir, final FileSystemManager fsManager ) throws FileSystemException
   {
-    final FileSystemManager fsManager = getManager();
-
     while( true )
     {
       final String dirParent = parentDir.getURL().toExternalForm();
