@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.gmlschema
 Bundle-SymbolicName: org.kalypso.gmlschema; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 2.2.0.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.wst.common.uriresolver,
  org.kalypso.commons;bundle-version="0.0.1";visibility:=reexport
