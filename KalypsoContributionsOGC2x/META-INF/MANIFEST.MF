@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoOGCContributions 2x Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc2x;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 2.2.0.qualifier
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.commons;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
