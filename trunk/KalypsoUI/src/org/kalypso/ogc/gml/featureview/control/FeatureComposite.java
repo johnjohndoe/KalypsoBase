@@ -330,6 +330,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private void updateLayoutData( final Control control )
   {
+    if( control.isDisposed() )
+      return;
+
     final Feature feature = getFeature();
 
     /* Update the layout data */
