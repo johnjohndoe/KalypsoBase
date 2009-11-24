@@ -825,9 +825,8 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       if( !status.isOK() )
         return status;
 
-      delegate.finish();
-
       delegate.copyResults( simulationJob.getReferences() );
+      delegate.finish();
 
       return status;
     }
