@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDebugServlet Plug-in
 Bundle-SymbolicName: org.kalypso.debug.servlet;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 2.2.0.qualifier
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.http.registry

@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.base.feature"
       label="%Feature.featureName"
-      version="0.1.0"
+      version="2.2.0.qualifier"
       provider-name="%Feature.providerName"
       plugin="org.kalypso.base"
       image="kalypso_128.jpg">
@@ -29,65 +29,13 @@
          version="0.0.0"
          search-location="both"/>
 
-   <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.net"/>
-      <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.ui.browser"/>
-      <import plugin="org.eclipse.ui.intro"/>
-      <import plugin="org.eclipse.core.runtime.compatibility.auth"/>
-      <import plugin="org.eclipse.ui.forms" version="3.3.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.ant"/>
-      <import plugin="org.kalypso.commons" version="0.0.1" match="greaterOrEqual"/>
-      <import plugin="javax.servlet"/>
-      <import plugin="org.eclipse.equinox.http.registry" version="1.0.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
-      <import plugin="org.eclipse.core.expressions" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide.application" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.core.resources" version="3.4.0" match="compatible"/>
-      <import plugin="org.eclipse.compare" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.externaltools" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.4.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.debug.core" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ant.ui" version="3.3.1" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.simulation.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.variables" version="3.2.100" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.auth" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.service.wps" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.ui" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.kalypso.gmlschema" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.navigator"/>
-      <import plugin="javax.servlet" version="2.4.0" match="greaterOrEqual"/>
-      <import plugin="de.openali.odysseus.service.ows" version="0.2.0" match="greaterOrEqual"/>
-      <import plugin="de.openali.odysseus.chart.factory" version="0.2.0" match="greaterOrEqual"/>
-      <import plugin="de.openali.odysseus.chart.ext.base" version="0.2.0" match="greaterOrEqual"/>
-      <import plugin="de.openali.odysseus.chart.ext.base" version="0.2.0" match="perfect"/>
-      <import plugin="org.eclipse.ui.navigator.resources"/>
-      <import plugin="de.renew.workflow.connector" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.project.database" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.forms" version="3.3.101" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="org.kalypso.contribs.eclipsercp" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.help.ui" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.help.base" version="3.1.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.cheatsheets" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.ide.application" version="1.0.0" match="compatible"/>
-   </requires>
+   <includes
+         id="org.eclipse.rcp"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.equinox.p2.user.ui"
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.contribs.java"
@@ -301,13 +249,6 @@
 
    <plugin
          id="de.renew.workflow.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
