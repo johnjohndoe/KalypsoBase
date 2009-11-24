@@ -22,6 +22,7 @@ import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.GmlSourceType;
 import org.kalypso.gml.util.GmlTargetType;
 import org.kalypso.gml.util.Gmlconvert;
+import org.kalypso.gml.util.Gmlnew;
 import org.kalypso.gml.util.ObjectFactory;
 import org.kalypso.gml.util.RegisterSourceType;
 import org.kalypso.gml.util.ShpSourceType;
@@ -30,6 +31,7 @@ import org.kalypso.gml.util.TargetType;
 import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
 import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
+import org.kalypso.ogc.gml.convert.source.GmlNewHandler;
 import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
 import org.kalypso.ogc.gml.convert.source.ISourceHandler;
 import org.kalypso.ogc.gml.convert.source.RegisterSourceHandler;
@@ -114,22 +116,34 @@ public class GmlConvertFactory
   public static final GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source, final Map< ? , ? > externData ) throws GmlConvertException
   {
     // switch over source-type
-    final ISourceHandler handler;
-    if( source instanceof FeaturemappingSourceType )
-      handler = new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType) source, externData );
-    else if( source instanceof ChangeSourceType )
-      handler = new ChangeSourceTypeHandler( resolver, context, (ChangeSourceType) source, externData );
-    else if( source instanceof CsvSourceType )
-      handler = new CsvSourceHandler( resolver, context, (CsvSourceType) source );
-    else if( source instanceof ShpSourceType )
-      handler = new ShpSourceHandler( resolver, context, (ShpSourceType) source );
-    else if( source instanceof GmlSourceType )
-      handler = new GmlSourceHandler( resolver, context, (GmlSourceType) source );
-    else if( source instanceof RegisterSourceType )
-      handler = new RegisterSourceHandler( (RegisterSourceType) source, externData );
-    else
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactory.2") + source.getClass().getName() ); //$NON-NLS-1$
+    final ISourceHandler handler = createSourceHandler( resolver, context, source, externData );
     return handler.getWorkspace();
+  }
+
+  private static ISourceHandler createSourceHandler( final IUrlResolver resolver, final URL context, final SourceType source, final Map< ? , ? > externData ) throws GmlConvertException
+  {
+    if( source instanceof FeaturemappingSourceType )
+      return new FeaturemappingSourceHandler( resolver, context, (FeaturemappingSourceType) source, externData );
+
+    if( source instanceof ChangeSourceType )
+      return new ChangeSourceTypeHandler( resolver, context, (ChangeSourceType) source, externData );
+
+    if( source instanceof CsvSourceType )
+      return new CsvSourceHandler( resolver, context, (CsvSourceType) source );
+
+    if( source instanceof ShpSourceType )
+      return new ShpSourceHandler( resolver, context, (ShpSourceType) source );
+
+    if( source instanceof GmlSourceType )
+      return new GmlSourceHandler( resolver, context, (GmlSourceType) source );
+
+    if( source instanceof Gmlnew )
+      return new GmlNewHandler( context, (Gmlnew) source );
+
+    if( source instanceof RegisterSourceType )
+      return new RegisterSourceHandler( (RegisterSourceType) source, externData );
+
+    throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactory.2" ) + source.getClass().getName() ); //$NON-NLS-1$
   }
 
   /**

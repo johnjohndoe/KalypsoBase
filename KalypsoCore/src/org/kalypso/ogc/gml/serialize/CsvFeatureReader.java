@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,7 @@ public final class CsvFeatureReader
 
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
     final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    List<Feature> list = (List<Feature>) rootFeature.getProperty( memberRelation );
+    final List<Feature> list = (List<Feature>) rootFeature.getProperty( memberRelation );
     loadCSVIntoList( rootFeature, memberRelation, ft, list, reader, comment, delemiter, lineskip );
 
     final GMLSchema schema = null;
@@ -135,8 +134,9 @@ public final class CsvFeatureReader
 
       final Object data = FeatureHelper.createFeaturePropertyFromStrings( vpt, format, input );
 
-      if( data == null )
-        throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.9") + vpt.getQName() ); //$NON-NLS-1$
+// Quatsch: this can always happen for empty strings (typeHandler returns null in this case)
+//      if( data == null )
+//        throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.9") + vpt.getQName() ); //$NON-NLS-1$
 
       return data;
     }

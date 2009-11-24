@@ -9,8 +9,8 @@
 		<xs:annotation>
 			<xs:documentation>
 				<pr>Konvertiert eine GML-Datenquelle in ein GML-Datenziel.</pr>
-				<pr>Dabei k�n sowohl w㧲end des Lesens oder w㧲end des Schreibens verschiedenen
-					Konvertierungen durchgef�erden.</pr>
+				<pr>Dabei können sowohl während des Lesens oder w㧲end des Schreibens verschiedenen
+					Konvertierungen durchgeführt werden.</pr>
 				<pr>Wie, was, warum etwas konvertiert wird, wird in der jeweiligen Quelle bzw. im
 					jeweiligen Ziel definiert.</pr>
 				<pr>Auf Codeseite ist es die Klasse org.kalypso.ogc.gml.convert.GmlConvertFactory um
@@ -124,6 +124,18 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:element name="gmlnew" substitutionGroup="source">
+		<xs:annotation>
+			<xs:documentation>Erzeugt ein neues GML aus dem nichts.</xs:documentation>
+		</xs:annotation>
+    	<xs:complexType>
+    		<xs:complexContent>
+    			<xs:extension base="SourceType">
+                    <xs:attribute name="featureQName" type="xs:QName"/>
+    			</xs:extension>
+    		</xs:complexContent>
+    	</xs:complexType>
+	</xs:element>
 
 	<xs:element name="shpsource" type="ShpSourceType" substitutionGroup="source">
 		<xs:annotation>

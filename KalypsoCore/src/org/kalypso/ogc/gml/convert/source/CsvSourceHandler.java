@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.CsvSourceType;
@@ -66,6 +67,10 @@ public class CsvSourceHandler implements ISourceHandler
         }
         final QName qname = new QName( "namespace", element.getName() ); //$NON-NLS-1$
         final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
+
+        if( typeHandler == null )
+          throw new GmlConvertException( String.format( "No TypeHandler for '%s'with type '%s'", element.getName(), element.getType() ) );
+
         final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
         reader.addInfo( ftp, info );
@@ -73,9 +78,15 @@ public class CsvSourceHandler implements ISourceHandler
       final URL url = m_resolver.resolveURL( m_context, href );
       final URLConnection connection = url.openConnection();
       stream = connection.getInputStream();
-      final String encoding = connection.getContentEncoding();
+
+      final String encoding = UrlUtilities.findEncoding( connection );
+
       final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
       return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
+    }
+    catch( final GmlConvertException e )
+    {
+      throw e;
     }
     catch( final Exception e )
     {
