@@ -61,7 +61,9 @@ import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -124,7 +126,7 @@ public class SimulationDelegate
   /**
    * The filesystem manager.
    */
-  private FileSystemManager m_fsManager;
+  private FileSystemManagerWrapper m_fsManager;
 
   /**
    * The temporary directory on the server.
@@ -191,7 +193,7 @@ public class SimulationDelegate
       if( m_fsManager == null )
       {
         /* The file system manager needs to be set. */
-        m_fsManager = VFSUtilities.getManager();
+        m_fsManager = VFSUtilities.getNewManager();
       }
     }
     catch( final Exception ex )
@@ -237,7 +239,7 @@ public class SimulationDelegate
 
       /* Create the file objects. */
       final FileObject source = m_fsManager.toFileObject( file );
-      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo ); //$NON-NLS-1$
+      final FileObject destination = VFSUtilities.checkProxyFor( m_serverTmpDirectory.getName() + "/" + relativePathTo, m_fsManager ); //$NON-NLS-1$
 
       /* Copy file. */
       VFSUtilities.copyFileTo( source, destination );
@@ -269,13 +271,13 @@ public class SimulationDelegate
           // do not use server directory, but calculate in calcCaseFolder
           KalypsoServiceWPSDebug.DEBUG.printf( "Local calculation! Using calcCaseFolder as input directory.\n" ); //$NON-NLS-1$
           final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
-          m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation );
+          m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation, m_fsManager );
         }
         else
         {
           /* Get the directory for server access. */
-          final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input );
-          m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory ); //$NON-NLS-1$
+          final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input, m_fsManager );
+          m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory, m_fsManager ); //$NON-NLS-1$
 
           if( !m_serverTmpDirectory.exists() )
           {
@@ -328,7 +330,7 @@ public class SimulationDelegate
         {
           /* Building the source object. */
           final String reference = complexValueReference.getReference();
-          final FileObject source = VFSUtilities.checkProxyFor( reference );
+          final FileObject source = VFSUtilities.checkProxyFor( reference, m_fsManager );
 
           /* Building the destination object. */
           final Output output = SimulationUtilities.findOutput( key, outputs );
@@ -385,6 +387,10 @@ public class SimulationDelegate
       /* If an error has occurred while deleting the files, finish the job without error. A warning should be ok. */
       // TODO Perhaps show a warning.
     }
+    finally
+    {
+      m_fsManager.close();
+    }
   }
 
   /**
@@ -403,6 +409,17 @@ public class SimulationDelegate
     catch( final Exception ex )
     {
       throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.6" ), ex ); //$NON-NLS-1$
+    }
+    finally
+    {
+      try
+      {
+        m_serverTmpDirectory.close();
+      }
+      catch( final FileSystemException e )
+      {
+        // ignore
+      }
     }
   }
 
@@ -447,7 +464,7 @@ public class SimulationDelegate
       KalypsoServiceWPSDebug.DEBUG.printf( "Collecting data ...\n" ); //$NON-NLS-1$
 
       /* Need the filesystem manager. */
-      final FileSystemManager fsManager = VFSUtilities.getManager();
+      final FileSystemManager fsManager = m_fsManager;
 
       /* Get the list with the input. */
       final Map<String, Object> wpsInputs = new HashMap<String, Object>();
