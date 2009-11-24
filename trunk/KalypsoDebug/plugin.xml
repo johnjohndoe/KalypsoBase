@@ -15,15 +15,6 @@
             id="org.kalypso.debug.view.pool"/>
    </extension>
    <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            launcher="org.kalypso.debug.editor.GmlConvertLauncher"
-            default="false"
-            name="GML Converter"
-            id="org.kalypso.debug.editor.gmlconvert"
-            extensions="gmc"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             description="Kommandos für die Behandlung von GML"

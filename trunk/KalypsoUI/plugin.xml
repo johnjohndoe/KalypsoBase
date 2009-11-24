@@ -32,6 +32,7 @@
 		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml">
 		</editor>
 		<editor launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher" icon="icons/observation/grafik-icon.gif" default="false" name="%org.kalypso.ui.editorLauncher.GrafikEditorLauncher" id="org.kalypso.zml.grafik" extensions="zml,tpl,odt" />
+        <editor launcher="org.kalypso.ui.editor.gmlconvert.GmlConvertLauncher" default="false" name="GML Converter" id="org.kalypso.debug.editor.gmlconvert" extensions="gmc"/>		
 	</extension>
 	<extension id="views" name="views" point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
