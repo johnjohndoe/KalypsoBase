@@ -136,15 +136,20 @@ public interface BaseFeature extends IAdaptable
   public void invalidEnvelope( );
 
   /**
-   * FIXME dimitri, ilya - this is not allowed for basic features <br>
+   * FIXME dimitri, ilya - *grmmml* this is not allowed for basic features <br>
    * <br>
-   * Please define your own Feature Binding and let this binding derive from AbstractCachedFeature. So you can easily
-   * adjust your implementation and cache geometries whitout changing the default behaviour of features.<br>
+   * Please define your own Feature Binding and let the binding derive from AbstractCachedFeature. So you can easily
+   * adjust your implementation and cache geometries without changing the default behavior of features.<br>
    * <br>
    * Notably (up to 2x) improves redraw performance
    */
+  @Deprecated
   public Object getCachedGeometry( );
 
+  /**
+   * see getCachedGeometry
+   */
+  @Deprecated
   public void setCachedGeometry( Object value );
 
 }
