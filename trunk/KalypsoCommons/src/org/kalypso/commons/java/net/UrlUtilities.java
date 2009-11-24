@@ -45,8 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 
@@ -123,5 +127,26 @@ public class UrlUtilities
     final URL jarUrl = new URL( "jar:" + zipUrl.toExternalForm() + refInZip ); //$NON-NLS-1$
 
     return jarUrl;
+  }
+
+  /**
+   * Find content encoding for the given connection. If the connection denotes a platform-url, we fetch the encoding
+   * from the underlying resource, as the connection will not return a valid charset.
+   */
+  public static String findEncoding( final URLConnection connection )
+  {
+    final IFile file = ResourceUtilities.findFileFromURL( connection.getURL() );
+    if( file == null )
+      return connection.getContentEncoding();
+
+    try
+    {
+      return file.getCharset();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return connection.getContentEncoding();
+    }
   }
 }
