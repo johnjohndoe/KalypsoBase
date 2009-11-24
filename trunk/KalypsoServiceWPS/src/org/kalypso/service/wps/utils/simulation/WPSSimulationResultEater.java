@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -191,7 +192,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
-  public void addResult( final String id, final Object result ) throws SimulationException
+  public synchronized void addResult( final String id, final Object result ) throws SimulationException
   {
     if( !m_outputList.containsKey( id ) )
       throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.2" ) + id, null ); //$NON-NLS-1$
@@ -307,30 +308,18 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     m_results.put( id, ioValue );
   }
 
-  public List<IOValueType> getCurrentResults( ) throws SimulationException
+  public synchronized List<IOValueType> getCurrentResults( ) throws SimulationException
   {
     checkResultDir();
 
     // copy all source files (references) to their destination
-    for( final File sourceFile : m_references.keySet() )
+    for( final Entry<File, FileObject> entry : m_references.entrySet() )
     {
-      final FileObject destination = m_references.get( sourceFile );
+      final File sourceFile = entry.getKey();
+      final FileObject destination = entry.getValue();
       try
       {
-        /* Converting the source file to a file object from VFS. */
-        final FileObject source = m_vfsManager.toFileObject( sourceFile );
-        if( FileType.FOLDER.equals( source.getType() ) )
-        {
-          /* Directory copy. */
-          KalypsoServiceWPSDebug.DEBUG.printf( "Copy directory " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          VFSUtilities.copyDirectoryToDirectory( source, destination );
-        }
-        else if( FileType.FILE.equals( source.getType() ) )
-        {
-          /* File copy. */
-          KalypsoServiceWPSDebug.DEBUG.printf( "Copy file " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          VFSUtilities.copyFileTo( source, destination );
-        }
+        copyResult( sourceFile, destination );
       }
       catch( final IOException e )
       {
@@ -342,6 +331,24 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     return new ArrayList<IOValueType>( values );
   }
 
+  private void copyResult( final File sourceFile, final FileObject destination ) throws IOException
+  {
+    /* Converting the source file to a file object from VFS. */
+    final FileObject source = m_vfsManager.toFileObject( sourceFile );
+    if( FileType.FOLDER.equals( source.getType() ) )
+    {
+      /* Directory copy. */
+      KalypsoServiceWPSDebug.DEBUG.printf( "Copy directory " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      VFSUtilities.copyDirectoryToDirectory( source, destination );
+    }
+    else if( FileType.FILE.equals( source.getType() ) )
+    {
+      /* File copy. */
+      KalypsoServiceWPSDebug.DEBUG.printf( "Copy file " + source.getName() + " to " + destination.getName() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      VFSUtilities.copyFileTo( source, destination );
+    }
+  }
+
   /**
    * This function will create ComplexValueReference with the given file and copies it directly to the result directory.
    * 
@@ -349,7 +356,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
    *          The file to reference in the ComplexValueReference.
    * @return A ComplexValueReference with the given file.
    */
-  private ComplexValueReference addComplexValueReference( final File sourceFile ) throws SimulationException
+  private synchronized ComplexValueReference addComplexValueReference( final File sourceFile ) throws SimulationException
   {
     checkResultDir();
 
@@ -509,7 +516,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   /**
    * Disposes everything.
    */
-  public void dispose( )
+  public synchronized void dispose( )
   {
     m_references.clear();
     try
