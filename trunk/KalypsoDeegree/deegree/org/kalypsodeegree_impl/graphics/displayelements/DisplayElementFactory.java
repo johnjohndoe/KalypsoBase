@@ -92,7 +92,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Factory class for the different kinds of <tt>DisplayElement</tt>s.
  * <p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -194,7 +194,7 @@ public class DisplayElementFactory
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or raster and <tt>Symbolizer</tt>.
    * <p>
-   *
+   * 
    * @param o
    *          contains the geometry or raster information (Feature or raster)
    * @param symbolizer
@@ -212,7 +212,7 @@ public class DisplayElementFactory
     // if the geometry property is null, do not build a DisplayElement
     // Only for RasterSymbolizer a null geoObject is allowed, as it only depends on the feature
     if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) )
-        return null;
+      return null;
 
     final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject );
     if( displayElement == null )
@@ -264,25 +264,28 @@ public class DisplayElementFactory
 
   /**
    * Finds the geometry object for the given symbolizer and feature.
-   *
+   * 
    * @return Either a {@link GM_Object} or a {@link List} of {@link GM_Object}'s.
    */
   @SuppressWarnings("deprecation")
   private static Object findGeometryObject( final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException, IncompatibleGeometryTypeException
   {
-    Object lGeometry = feature.getCachedGeometry();
-    if( lGeometry != null ){
-      return lGeometry;
-    }
-    
+    // Does not work! Features with two geometries, that both get painted, will not be painted correctly.
+// final Object lGeometry = feature.getCachedGeometry();
+// if( lGeometry != null )
+// {
+// return lGeometry;
+// }
+
     final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
     if( geometry == null )
       return feature.getDefaultGeometryProperty();
 
     final PropertyName propertyName = geometry.getPropertyName();
     final Object value = propertyName.evaluate( feature );
-    if( value == null || value instanceof GM_Object || value instanceof List ){
-      feature.setCachedGeometry( value );
+    if( value == null || value instanceof GM_Object || value instanceof List )
+    {
+// feature.setCachedGeometry( value );
       return value;
     }
 
@@ -332,7 +335,7 @@ public class DisplayElementFactory
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or Raster and a default <tt>Symbolizer</tt>.
    * <p>
-   *
+   * 
    * @param o
    *          contains the geometry or raster information (Feature or raster)
    * @throws IncompatibleGeometryTypeException
@@ -383,7 +386,7 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>PointDisplayElement</tt> using the given geometry and style information.
    * <p>
-   *
+   * 
    * @param feature
    *          associated <tt>Feature<tt>
    * @param geom
@@ -434,7 +437,7 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>LineStringDisplayElement</tt> using the given geometry and style information.
    * <p>
-   *
+   * 
    * @param feature
    *          associated <tt>Feature<tt>
    * @param geom
@@ -454,7 +457,7 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>PolygonDisplayElement</tt> using the given geometry and style information.
    * <p>
-   *
+   * 
    * @param feature
    *          associated <tt>Feature<tt>
    * @param gmObject
@@ -474,7 +477,7 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>LabelDisplayElement</tt> using the given geometry and style information.
    * <p>
-   *
+   * 
    * @param feature
    *          <tt>Feature</tt> to be used (necessary for evaluation of the label expression)
    * @param gmObject
@@ -497,7 +500,7 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>RasterDisplayElement</tt> from the submitted image. The submitted <tt>GM_Envelope</tt> holds the
    * bounding box of the imgae/raster data.
-   *
+   * 
    * @param feature
    *          grid coverage as feature
    * @param sym
