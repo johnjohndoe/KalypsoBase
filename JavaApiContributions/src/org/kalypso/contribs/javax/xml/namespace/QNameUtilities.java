@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.javax.xml.namespace;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.WeakHashMap;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -65,7 +63,7 @@ public class QNameUtilities
     // never instantiate
   }
 
-  public static long getFullID( final QName name )
+  public synchronized static long getFullID( final QName name )
   {
     if (name == null)
       return 0;
@@ -75,7 +73,7 @@ public class QNameUtilities
       return m_mFullIDs.get( l_sName );
     }
     m_iNextFullID++;
-    long id = m_iNextFullID;
+    final long id = m_iNextFullID;
     m_mFullIDs.put( l_sName, id );
     return id;
   }
@@ -90,7 +88,7 @@ public class QNameUtilities
       return m_mLocalIDs.get( l_sName );
     }
     m_iNextLocalID++;
-    long id = m_iNextLocalID;
+    final long id = m_iNextLocalID;
     m_mLocalIDs.put( l_sName, id );
     return id;
   }
