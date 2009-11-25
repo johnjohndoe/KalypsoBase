@@ -66,6 +66,8 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_TYPE = "kalypso-status"; //$NON-NLS-1$
 
+  public final static String SRC_AXIS_TYPE = "DATA_SRC"; //$NON-NLS-1$
+
   public final static Class<?> STATUS_AXIS_DATACLASS = Integer.class;
 
   public final static String STATUS_AXIS_UNIT = ""; //$NON-NLS-1$
@@ -135,7 +137,12 @@ public class KalypsoStatusUtils
    */
   public static boolean isStatusAxis( final IAxis axis )
   {
-    return axis.getType().equals( STATUS_AXIS_TYPE );
+    if( axis.getType().equals( STATUS_AXIS_TYPE ) )
+      return true;
+    else if( axis.getType().equals( SRC_AXIS_TYPE ) )
+      return true;
+
+    return false;
   }
 
   /**
