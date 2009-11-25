@@ -96,8 +96,9 @@ public class ExecutionMonitorJob extends Job
     setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
     setProperty( IProgressConstants.KEEP_PROPERTY, Boolean.TRUE );
 
-    if( command != null )
-      setProperty( IProgressConstants.COMMAND_PROPERTY, command );
+    // FIXME: Compile error in Eclipse 3.5.1
+// if( command != null )
+// setProperty( IProgressConstants.COMMAND_PROPERTY, command );
 
     // display the status if clicked
 // setProperty( IProgressConstants.ACTION_PROPERTY, new Action( "Show current status" )
