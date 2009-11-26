@@ -50,7 +50,7 @@ import org.kalypso.project.database.client.extension.database.IProjectDatabaseUi
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class RemoteUiHandler implements IProjectUiHandler
 {

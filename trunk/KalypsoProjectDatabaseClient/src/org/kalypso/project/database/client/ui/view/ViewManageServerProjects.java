@@ -64,7 +64,7 @@ import org.kalypso.project.database.client.ui.management.ManageRemoteProjects;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ViewManageServerProjects extends ViewPart
 {

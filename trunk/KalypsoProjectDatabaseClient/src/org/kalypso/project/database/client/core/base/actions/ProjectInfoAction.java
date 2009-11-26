@@ -57,7 +57,7 @@ import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialo
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectInfoAction implements IProjectAction
 {

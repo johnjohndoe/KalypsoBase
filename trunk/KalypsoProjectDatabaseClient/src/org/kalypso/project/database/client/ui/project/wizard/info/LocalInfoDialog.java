@@ -67,7 +67,7 @@ import org.kalypso.project.database.client.extension.database.handlers.ILocalPro
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class LocalInfoDialog extends TitleAreaDialog
 {

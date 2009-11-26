@@ -49,8 +49,7 @@ import javax.xml.ws.Service;
 import org.kalypso.project.database.server.ProjectDatabase;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class ProjectDatabaseServiceLocator
 {

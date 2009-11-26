@@ -59,7 +59,7 @@ import org.kalypso.project.database.client.extension.database.handlers.ITranscen
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class TranscendenceUiHandler implements IProjectUiHandler
 {

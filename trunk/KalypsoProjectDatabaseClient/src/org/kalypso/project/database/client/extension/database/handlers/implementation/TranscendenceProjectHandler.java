@@ -51,7 +51,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class TranscendenceProjectHandler extends AbstractProjectHandler implements ITranscendenceProject
 {

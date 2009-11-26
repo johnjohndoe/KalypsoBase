@@ -48,7 +48,7 @@ import org.kalypso.project.database.client.extension.database.handlers.IRemotePr
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectUIHandlerFabrication
 {

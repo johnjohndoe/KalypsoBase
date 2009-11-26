@@ -57,7 +57,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectExportAction implements IProjectAction
 {

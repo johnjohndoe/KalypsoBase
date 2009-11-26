@@ -43,7 +43,7 @@ package org.kalypso.project.database.client.core.base.handlers;
 import org.kalypso.project.database.client.core.base.actions.IProjectAction;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IProjectUiHandler
 {
