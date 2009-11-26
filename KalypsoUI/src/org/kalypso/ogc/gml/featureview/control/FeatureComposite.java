@@ -464,8 +464,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
-        // ?? This seems to be breaking FeatureView's 
-        item.setControl( tabControl );
+        // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used 
+        try{
+          item.setControl( tabControl );
+        }
+        catch (Exception e) {
+          item.setControl( tabControl.getParent() );
+        }
       }
 
       return tabFolder;
