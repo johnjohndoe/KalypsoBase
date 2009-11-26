@@ -374,8 +374,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       // clear temp files on shutdown in the case the client forgets it.
       f.deleteOnExit();
 
-      ZmlFactory.writeToFile( obs, f );
-
+      ZmlFactory.writeToFile( obs, f, request );
+      
       final DataBean data = new DataBean( f.toString(), new DataHandler( new FileDataSource( f ) ) );
       m_mapDataId2File.put( data.getId(), f );
 
