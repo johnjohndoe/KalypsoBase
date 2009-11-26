@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -466,7 +465,7 @@ public class VFSUtilities
 
     // TODO: VFS usually accepts file-pathes (without protocoll), but creating an url here will prohibit this.
     // TODO: handle file pathes differently
-    if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
+    if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( absoluteFile ) )
     {
       final String proxyHost = proxy.getProxyHost();
       final int proxyPort = proxy.getProxyPort();
