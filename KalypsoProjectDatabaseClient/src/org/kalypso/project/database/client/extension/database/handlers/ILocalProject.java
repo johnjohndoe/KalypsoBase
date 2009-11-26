@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ILocalProject extends IProjectHandler
 {

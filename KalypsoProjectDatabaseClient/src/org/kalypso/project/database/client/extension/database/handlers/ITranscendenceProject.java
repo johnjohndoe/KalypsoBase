@@ -41,7 +41,7 @@
 package org.kalypso.project.database.client.extension.database.handlers;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ITranscendenceProject extends ILocalProject, IRemoteProject
 {

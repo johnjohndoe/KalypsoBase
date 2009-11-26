@@ -52,7 +52,7 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractKalypsoModulePage implements IKalypsoModulePage
 {

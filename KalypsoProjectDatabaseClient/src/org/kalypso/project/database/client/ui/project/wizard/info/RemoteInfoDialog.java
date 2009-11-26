@@ -81,7 +81,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class RemoteInfoDialog extends TitleAreaDialog
 {

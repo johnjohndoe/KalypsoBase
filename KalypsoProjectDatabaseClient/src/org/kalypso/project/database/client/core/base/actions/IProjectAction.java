@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IProjectAction
 {

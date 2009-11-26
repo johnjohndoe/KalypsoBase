@@ -62,7 +62,7 @@ import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectDeleteAction implements IProjectAction
 {

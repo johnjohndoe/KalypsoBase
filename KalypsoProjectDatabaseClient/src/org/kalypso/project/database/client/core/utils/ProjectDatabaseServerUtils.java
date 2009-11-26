@@ -51,7 +51,7 @@ import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectDatabaseServerUtils
 {

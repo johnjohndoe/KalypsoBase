@@ -43,7 +43,7 @@ package org.kalypso.project.database.client.ui;
 import org.eclipse.swt.graphics.Color;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class MyColors
 {

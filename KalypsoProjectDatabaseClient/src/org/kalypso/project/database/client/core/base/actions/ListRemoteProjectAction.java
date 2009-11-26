@@ -50,7 +50,7 @@ import org.kalypso.project.database.client.extension.database.handlers.IRemotePr
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ListRemoteProjectAction implements IProjectAction
 {
