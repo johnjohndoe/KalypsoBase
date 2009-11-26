@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.net;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -203,6 +204,29 @@ public class ProxyUtilities
     }
 
     return client;
+  }
+
+  /**
+   * This function checks if the host of an url is one of the non proxy hosts.
+   * 
+   * @param url
+   *          The url to check.
+   * @return True, if the host, contained in the url should not use a proxy.
+   */
+  public static boolean isNonProxyHost( final String url )
+  {
+    /* Handle UNC pathes. */
+    if( url.startsWith( "\\\\" ) || url.startsWith( "//" ) )
+      return true;
+
+    try
+    {
+      return isNonProxyHost( new URL( url ) );
+    }
+    catch( MalformedURLException ex )
+    {
+      return true;
+    }
   }
 
   /**
