@@ -169,4 +169,18 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
     return null;
   }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class adapter )
+  {
+    if( m_filterType != null && adapter == IObservation.class )
+    {
+      return true;
+    }
+
+    return false;
+  }
 }
