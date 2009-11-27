@@ -184,6 +184,7 @@ public class WPSUtilities
       // TODO: we should also add the body into a sub-status;
       // so we could show it to the user if he examines it more closely
       // String body = post.getResponseBodyAsString();
+      // TODO2: also dump post-xml and url!
       final String msg = Messages.getString( "org.kalypso.service.wps.utils.WPSUtilities.0", status ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
