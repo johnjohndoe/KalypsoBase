@@ -51,6 +51,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * TODO: die Reihenfolge der models[] sollte von auﬂerhalb der Klasse entschieden werden. Somit kann der "client"
@@ -126,7 +128,9 @@ public class ForecastTuppleModel extends AbstractTuppleModel
       if( model == null )
         continue;
       final IAxis[] modelAxes = model.getAxisList();
+
       final IAxis[] targetAxes = m_model.getAxisList();
+
       final IAxis modelDateAxis = ObservationUtilities.findAxisByClass( modelAxes, Date.class );
       final int[] map = ObservationUtilities.getAxisMapping( targetAxes, modelAxes );
       for( int rowIx = 0; rowIx < model.getCount(); rowIx++ )
@@ -138,10 +142,17 @@ public class ForecastTuppleModel extends AbstractTuppleModel
 
           for( int colIx = 0; colIx < targetAxes.length; colIx++ )
           {
+            // clear status axis, else we might get null values later
+            if( KalypsoStatusUtils.isStatusAxis( targetAxes[colIx] ))
+              targetTupple[colIx] = KalypsoStati.BIT_OK;
+            
             if( targetAxes[colIx].isPersistable() )
             {
               if( map[colIx] > -1 )
-                targetTupple[colIx] = model.getElement( rowIx, modelAxes[map[colIx]] );
+              {
+                Object sourceValue = model.getElement( rowIx, modelAxes[map[colIx]] );
+                targetTupple[colIx] = sourceValue;
+              }
             }
           }
           // tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
