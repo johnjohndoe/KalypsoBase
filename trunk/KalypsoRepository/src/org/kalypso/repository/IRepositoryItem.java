@@ -106,4 +106,7 @@ public interface IRepositoryItem extends IAdaptable
    * @return repository
    */
   public IRepository getRepository();
+
+  public boolean hasAdapter( Class adapter );
+
 }

@@ -170,4 +170,18 @@ public class FileItem implements IRepositoryItem
   {
     return HashCodeBuilder.reflectionHashCode( this );
   }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class adapter )
+  {
+    Object object = getAdapter( adapter );
+    if( object == null )
+      return false;
+
+    return true;
+  }
+
 }

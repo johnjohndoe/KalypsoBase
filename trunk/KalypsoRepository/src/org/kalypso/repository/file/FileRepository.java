@@ -220,4 +220,16 @@ public class FileRepository extends AbstractRepository
     fireRepositoryStructureChanged();
   }
 
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class adapter )
+  {
+    if( getAdapter( adapter ) == null )
+      return false;
+
+    return true;
+  }
+
 }

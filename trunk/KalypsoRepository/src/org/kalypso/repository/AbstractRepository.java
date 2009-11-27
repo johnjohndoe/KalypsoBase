@@ -227,6 +227,15 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
+   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
+   */
+  @Override
+  public boolean hasAdapter( final Class adapter )
+  {
+    return false;
+  }
+
+  /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
   public IRepository getRepository( )
