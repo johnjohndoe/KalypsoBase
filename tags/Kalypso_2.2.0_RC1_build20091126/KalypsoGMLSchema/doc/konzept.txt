@@ -1,0 +1,66 @@
+GML-Application-Schema-Parser
+
+builds java-objects that represent a gml-applikationschema from a xml-schema-document.
+
+design issues are:
+- easy handling
+- easy extendable
+- usable for GML2, but also extendable to GML3 and GML-Profiles
+- support schema versioning
+- usable for schema-editing
+- transparency on type-hierarchy. e.g. the information about history
+ (extenstions and restrictions) of a featuretype must be keept and
+  must be accessible from code.
+- support value-validation
+
+implementation:
+- feature-type objects are fascades of the schema-elements.
+  Some information are generated from the schema-elements by request.
+  Others are cached by the feature-object.
+- use a well known API for basic schema-parsing.
+  (concentrate on GML stuff)
+- bring business of building to IBuilder objects that can register
+  somewhere so that parsing is extendable by just adding builders to the framework.
+
+relations:
+types of relations:
+- aggregation or composition -> "relation"
+- restricted to aggregation -> "linked"
+- restricted to composition -> "inline"
+
+relations can be strong-typed by
+- by XML-Schema-mechanisms: restrict the FeatureAssociation and use of substritutionsgroups
+- by adv strong-typing <adv:referenziertesElement>...
+
+substitution groups:
+- each feature knows which other feature it can substitute
+- the method that asks a feature for the ones that can replace should look like this:
+  FeatureType[] getSubstituts(GMLSchema topSchema, boolean includeAbstract)
+  implementation should visit topSchema and its implementing schemas and query
+
+relations:
+- support #-mechanism for relations inside document
+- support xxx#-mechanism for relations to other documents, valid references are:
+  - href="relativ/path/to/other/file.gml#FeatureID_125"
+  - href="/C://absoulte/path/to/other/file.gml#FeatureID_125"
+  - href="http://foobar.org/wfs?...REQUEST=GetFeature?...#FeatureID_125"
+  - href="http://foobar.org/wfs?...REQUEST=GetFeature?FILTER=..." (to a collection)
+
+- support uri-mechanism for any relations
+
+- support xlink:actuate 
+
+additional appinfo information in schema:
+- read only
+- heavy relationships
+- format-strings
+- root-element-tags
+- topology-themes
+- linked-relation
+- inline-relation
+- virtual-property
+	-Association
+	-ID
+	-key
+	
+
