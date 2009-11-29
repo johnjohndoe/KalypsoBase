@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.view.actions;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -63,20 +62,28 @@ public class CopyLinkHandler extends AbstractHandler
    */
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+    try
+    {
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+      final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
 
-    final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
-    if( obs == null )
-      return Status.OK_STATUS;
+      final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
+      if( obs == null )
+        return null;
 
-    final Clipboard clipboard = new Clipboard( shell.getDisplay() );
-    clipboard.setContents( new Object[] { obs.getIdentifier() }, new Transfer[] { TextTransfer.getInstance() } );
-    clipboard.dispose();
+      final Clipboard clipboard = new Clipboard( shell.getDisplay() );
+      clipboard.setContents( new Object[] { obs.getIdentifier() }, new Transfer[] { TextTransfer.getInstance() } );
+      clipboard.dispose();
 
-    return Status.OK_STATUS;
+      return null;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
 }
