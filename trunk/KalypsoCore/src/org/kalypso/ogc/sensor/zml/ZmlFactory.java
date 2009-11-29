@@ -218,9 +218,10 @@ public class ZmlFactory
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
-    final String protocol = url.getProtocol();
-    if( "zml-proxy".equals( protocol ) ) //$NON-NLS-1$
-      return parseZmlProxyXml( url );
+    // FIXME: totaler hack, um proxy repository abzuhandeln... muss durch extension point ersetzt werden!
+    final IObservation proxyObservation = parseZmlProxyXml( url );
+    if( proxyObservation != null )
+      return proxyObservation;
 
     InputStream inputStream = null;
 
@@ -282,15 +283,20 @@ public class ZmlFactory
 
   private static IObservation parseZmlProxyXml( final URL url ) throws SensorException
   {
+    final String PROXY_PROTOCOL = "zml-proxy:";
+
     try
     {
       final String urlBase = url.toString();
+      if( !urlBase.startsWith( PROXY_PROTOCOL ) )
+        return null;
+
       final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
-      if( splittedUrlBase.length != 2 )
+      if( splittedUrlBase.length > 2 )
         throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
 
       final String itemId = splittedUrlBase[0];
-      final String itemParameters = splittedUrlBase[1];
+      final String itemParameters = splittedUrlBase.length > 1 ? splittedUrlBase[1] : null;
 
       final IObservation proxyObservation = fetchZmlProxyXml( urlBase, itemId );
       return FilterFactory.createFilterFrom( itemParameters, proxyObservation, null );
