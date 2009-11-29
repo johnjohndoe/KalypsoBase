@@ -93,7 +93,7 @@ public final class CsvFeatureReader
       if( line.startsWith( comment ) )
         continue;
 
-      final String[] tokens = line.split( delemiter );
+      final String[] tokens = line.split( delemiter, -1 );
       list.add( createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ) ); //$NON-NLS-1$
     }
     return;
