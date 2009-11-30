@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ods="http://www.openali.de/odysseus/chartconfig/0.2.0/" targetNamespace="http://www.openali.de/odysseus/chartconfig/0.2.0/" version="0.2.0" elementFormDefault="qualified">
+    
+
+    <element name="LineStyle" type="ods:LineStyleType" />
+    <element name="PointStyle" type="ods:PointStyleType"/>
+    <element name="AreaStyle" type="ods:AreaStyleType"/>
+    <element name="TextStyle" type="ods:TextStyleType"/>
+        
+    <complexType name="AbstractStyleType">
+        <sequence>
+            <element name="Title" type="string" />
+            <element ref="ods:Alpha" minOccurs="0" />
+        </sequence>
+        <attribute name="role" type="string" use="required" ></attribute>
+        <attribute name="isVisible" type="boolean" /> 
+    </complexType>
+  
+  <element name="Alpha"> 
+    <simpleType> 
+        <restriction base="hexBinary">
+            <length value="1"></length>
+        </restriction>
+    </simpleType>
+    </element>
+  
+    
+       <complexType name="LineStyleType" >
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <group ref="ods:StrokeGroup"></group>
+                </sequence>
+            </extension>
+        </complexContent>
+     </complexType>
+    
+    
+    <group name="StrokeGroup">
+        <sequence>
+            <element name="Width"  type="int" minOccurs="0"/>  
+            <element name="LineColor" type="ods:ColorType"  minOccurs="0"/>
+            <element name="DashOffset" type="int" minOccurs="0"/>
+            <element name="DashArray" minOccurs="0">
+                <simpleType>
+                    <list itemType="int"></list>
+                </simpleType>
+            </element>
+            <element name="LineCap" type="ods:LineCapType" minOccurs="0"></element>
+            <element name="LineJoin" type="ods:LineJoinType" minOccurs="0"></element>
+            <element name="MiterLimit" type="int" minOccurs="0" />
+        </sequence>
+    </group>
+    
+    <element name="Stroke" type="ods:StrokeType" />
+    
+    <complexType name="StrokeType">
+        <sequence>
+            <element ref="ods:Alpha" minOccurs="0" />
+            <group ref="ods:StrokeGroup"></group>
+        </sequence>
+        <attribute name="isVisible" type="boolean" />
+    </complexType>
+    
+    <simpleType name="LineJoinType">
+        <restriction base="string">
+            <enumeration value="MITER"></enumeration>
+            <enumeration value="ROUND"></enumeration>
+            <enumeration value="BEVEL"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    
+    <simpleType name="LineCapType">
+        <restriction base="string">
+            <enumeration value="BUTT"></enumeration>
+            <enumeration value="ROUND"></enumeration>
+            <enumeration value="SQUARE"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="ColorType">
+        <restriction base="hexBinary">
+            <length value="3"></length>
+        </restriction>
+    </simpleType>
+    
+    
+    
+    <complexType name="PointStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="Width" type="int" minOccurs="0" />
+                    <element name="Height" type="int" minOccurs="0" />
+                    <element ref="ods:Stroke" minOccurs="0" />
+                    <choice minOccurs="0">
+                        <element name="OvalMarker" />
+                        <element name="ImageMarker" type="ods:ImageMarkerType" />
+                        <element name="PolygonMarker" type="ods:PolygonMarkerType"/>
+                    </choice>
+                    <element name="FillColor" type="ods:ColorFillType" minOccurs="0" >
+                    </element>
+                </sequence>
+                
+            </extension>
+        </complexContent>
+    </complexType>
+
+    
+    
+    <complexType name="ImageMarkerType">
+        <sequence>
+                    <element name="ImageFile" type="anyURI"></element>
+                </sequence>        
+          </complexType>
+    
+    <complexType name="PolygonMarkerType">
+        <sequence>
+                    <element name="Point" type="ods:PointType" minOccurs="3" maxOccurs="unbounded">
+                    </element>
+                </sequence>
+    </complexType>
+    
+    <complexType name="PointType">
+        <attribute name="x" type="int" use="required"></attribute>
+        <attribute name="y" type="int" use="required"></attribute>
+    </complexType>
+    
+    <complexType name="AreaStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="Fill" type="ods:FillType" minOccurs="0"></element>
+                    <element ref="ods:Stroke" minOccurs="0" />
+                </sequence>               
+                </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="FillType">
+        <sequence>
+            <choice>
+                <element name="ImageFill" type="ods:ImageFillType" />
+                <element name="ColorFill" type="ods:ColorFillType" />
+                </choice>
+        </sequence>
+    </complexType>
+    
+    <complexType name="ImageFillType">
+            <sequence>
+                <element name="ImageFile" type="anyURI"></element>
+                <element name="Width" type="int" minOccurs="0"></element>
+                <element name="Height" type="int" minOccurs="0"></element>
+            </sequence>
+       </complexType>
+    
+    <complexType name="ColorFillType">
+       <sequence>
+                <element name="Color" type="ods:ColorType" />
+            </sequence>
+            <attribute name="isVisible" type="boolean" use="optional"/>
+       </complexType>
+    
+                   
+    
+    <complexType name="TextStyleType">
+        <complexContent>
+            <extension base="ods:AbstractStyleType">
+                <sequence>
+                    <element name="Size" type="int" minOccurs="0"></element>
+                    <element name="TextColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="FontFamily" type="string" minOccurs="0"></element>
+                    <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
+                    <element name="FontWeight" type="ods:FontWeightType" minOccurs="0"></element>
+                    <element name="FontStyle" type="ods:FontStyleType" minOccurs="0"></element>
+                </sequence>
+                 </extension>
+        </complexContent>
+    </complexType>
+    
+    
+    
+    <simpleType name="FontStyleType">
+        <restriction base="string">
+            <enumeration value="NORMAL"></enumeration>
+            <enumeration value="ITALIC"></enumeration>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="FontWeightType">
+        <restriction base="string">
+            <enumeration value="NORMAL"></enumeration>
+            <enumeration value="BOLD"></enumeration>
+        </restriction>
+    </simpleType>
+    
+</schema> 
