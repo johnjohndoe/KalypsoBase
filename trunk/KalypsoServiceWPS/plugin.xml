@@ -28,43 +28,4 @@
             typeID="org.kalypso.service.wps.complexJob">
       </simulation>
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            categoryId="org.kalypso.service.wps.commands"
-            description="Monitors an asynchronous process execution"
-            id="org.kalypso.service.wps.commands.startExecutionMonitor"
-            name="Start execution monitor">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any">
-         <command
-               commandId="org.kalypso.service.wps.commands.startExecutionMonitor"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.kalypso.service.wps.client.StartExecutionMonitorJob"
-            commandId="org.kalypso.service.wps.commands.startExecutionMonitor">
-         <enabledWhen>
-            <iterate>
-               <adapt
-                     type="org.eclipse.core.resources.IResource">
-                  <test
-                        property="org.eclipse.core.resources.name"
-                        value="*executeResponse.xml">
-                  </test>
-               </adapt></iterate>
-         </enabledWhen>
-      </handler>
-   </extension>
 </plugin>
