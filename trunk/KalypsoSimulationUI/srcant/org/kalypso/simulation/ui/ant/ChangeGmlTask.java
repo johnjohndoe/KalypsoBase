@@ -46,11 +46,14 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -61,6 +64,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Changes the contents of a gml file. Loads (ant-)properties from a gml.
@@ -81,14 +85,17 @@ public class ChangeGmlTask extends Task
   /** Location of the gml which will be changed. */
   private URL m_gmlURL;
 
-  public final URL getGmlURL( )
-  {
-    return m_gmlURL;
-  }
+  /** If set, the gml will not be loaded but created from scratch with this feature as root feature. */
+  private QName m_rootFeatureQName;
 
   public final void setGmlURL( final URL gmlURL )
   {
     m_gmlURL = gmlURL;
+  }
+
+  public void setCreateQName( final String rootFeatureQName )
+  {
+    m_rootFeatureQName = QName.valueOf( rootFeatureQName );
   }
 
   public Property createProperty( )
@@ -105,23 +112,23 @@ public class ChangeGmlTask extends Task
   public void execute( ) throws BuildException
   {
     // validieren
-    final URL gmlURL = getGmlURL();
-    if( gmlURL == null )
+    if( m_gmlURL == null )
       throw new BuildException( "Property 'gmlURL' must be set." );
 
-    final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
+    final IFile gmlFile = ResourceUtilities.findFileFromURL( m_gmlURL );
     if( gmlFile == null )
-      throw new BuildException( "Unable to write to: " + gmlURL.toExternalForm() );
+      throw new BuildException( "Unable to write to: " + m_gmlURL.toExternalForm() );
 
-    getProject().log( "Ändere gml: " + gmlURL, Project.MSG_DEBUG );
+    getProject().log( "Ändere gml: " + m_gmlURL, Project.MSG_DEBUG );
 
     try
     {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
+      final GMLWorkspace workspace = getGMLWorkspaceForChange();
+
       for( final Property property : m_properties )
         changeProperty( workspace, property );
 
-      final SetContentHelper contentHelper = new SetContentHelper( "Writing: " + gmlURL.toExternalForm() )
+      final SetContentHelper contentHelper = new SetContentHelper( "Writing: " + m_gmlURL.toExternalForm() )
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
@@ -136,11 +143,28 @@ public class ChangeGmlTask extends Task
     {
       throw be;
     }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      throw new BuildException( String.format( "Fehler beim Erzeugen von GML: %s", m_gmlURL ), e );
+    }
+  }
+
+  private GMLWorkspace getGMLWorkspaceForChange( )
+  {
+    try
+    {
+      if( m_rootFeatureQName == null )
+        return GmlSerializer.createGMLWorkspace( m_gmlURL, null );
+
+      return FeatureFactory.createGMLWorkspace( m_rootFeatureQName, m_gmlURL, null );
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      throw new BuildException( "Fehler beim Laden von GML: " + gmlURL, e );
+      throw new BuildException( "Fehler beim Laden von GML: " + m_gmlURL, e );
     }
   }
 
