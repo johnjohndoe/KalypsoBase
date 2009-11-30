@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="observationReportTable.template.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ort="observationReportTable.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd"></import>
+
+  <element name="observationReportTable">
+    <complexType>
+      <sequence>
+        <element name="referenceObservation" type="ort:ObservationRowType"/>
+
+        <element name="rows" minOccurs="1" maxOccurs="1">
+          <annotation>
+            <documentation>Contains the elements that represent rows of the table.</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element ref="ort:_row" minOccurs="1" maxOccurs="unbounded" />
+            </sequence>
+            <attribute name="rowOffset" type="int" use="optional" default="0" />
+          </complexType>
+        </element>
+
+        <element name="columns" minOccurs="1" maxOccurs="1">
+          <annotation>
+            <documentation>Contains the elements that represent columns of the table.</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element ref="ort:_column" minOccurs="1" maxOccurs="unbounded" />
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="_row" type="ort:AbstractRowType">
+    <annotation>
+      <documentation>A row represented by an observation.</documentation>
+    </annotation>
+  </element>
+
+  <complexType name="AbstractRowType" />
+
+  <element name="header" substitutionGroup="ort:_row">
+    <annotation>
+      <documentation>A row that is a header.</documentation>
+    </annotation>
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractRowType" />
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="observation" type="ort:ObservationRowType" substitutionGroup="ort:_row">
+    <annotation>
+      <documentation>A row represented by an observation.</documentation>
+    </annotation>
+  </element>
+
+  <complexType name="ObservationRowType">
+    <complexContent>
+      <extension base="ort:AbstractRowType">
+        <attribute ref="xlink:href" use="required"></attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="_column" type="ort:AbstractColumnType">
+    <annotation>
+      <documentation>An element representing one or more columns.</documentation>
+    </annotation>
+  </element>
+
+  <complexType name="AbstractColumnType" />
+
+  <element name="metadata" substitutionGroup="ort:_column">
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractColumnType">
+          <attribute name="name" type="string" use="required" />
+          <attribute name="defaultValue" type="string" />
+          <attribute name="header" type="string" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="timeValueBlock" substitutionGroup="ort:_column">
+    <complexType>
+      <complexContent>
+        <extension base="ort:AbstractColumnType">
+          <sequence>
+            <element name="valueAxis" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="format" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <simpleContent>
+                        <extension base="string">
+                          <attribute name="from" type="string" />
+                          <attribute name="to" type="string" />
+                        </extension>
+                      </simpleContent>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="axisType" type="string" use="required" />
+                <attribute name="noValue" type="string" use="optional" />
+              </complexType>
+            </element>
+          </sequence>
+          <attribute name="start" type="string" use="required"></attribute>
+          <attribute name="number" type="int" use="required"></attribute>
+          <attribute name="field" type="string" use="required"></attribute>
+          <attribute name="offset" type="int" use="required"></attribute>
+          <attribute name="timeAxisType" type="string" use="required"></attribute>
+          <attribute name="timeFormat" type="string" default="%t"></attribute>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
