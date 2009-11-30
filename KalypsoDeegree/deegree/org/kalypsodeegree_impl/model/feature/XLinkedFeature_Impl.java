@@ -100,8 +100,10 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     m_show = show;
     m_actuate = actuate;
 
-    final int indexOf = href.indexOf( '#' );
-    if( indexOf == -1 || indexOf == href.length() - 1 )
+    final String trimmed_href = href.trim();
+    
+    final int indexOf = trimmed_href.indexOf( '#' );
+    if( indexOf == -1 || indexOf == trimmed_href.length() - 1 )
     {
       m_uri = null;
       m_featureId = null;
@@ -109,12 +111,12 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     else if( indexOf == 0 )
     {
       m_uri = null;
-      m_featureId = href.substring( 1 );
+      m_featureId = trimmed_href.substring( 1 );
     }
     else
     {
-      m_uri = href.substring( 0, indexOf );
-      m_featureId = href.substring( indexOf + 1 );
+      m_uri = trimmed_href.substring( 0, indexOf );
+      m_featureId = trimmed_href.substring( indexOf + 1 );
     }
 
     if( m_parentFeature == null )
@@ -136,7 +138,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     if( linkedWorkspace == null )
       throw new IllegalStateException( String.format( "Could not resolve xlinked workspace: %s", m_uri ) );
 
-    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId );
+    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId);
     if( feature == null )
       throw new IllegalStateException( "No feature found at: " + m_uri + "#" + m_featureId );
 
