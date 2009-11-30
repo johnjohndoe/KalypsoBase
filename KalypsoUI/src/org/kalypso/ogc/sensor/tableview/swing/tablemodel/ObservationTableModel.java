@@ -488,6 +488,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       final TableViewColumn col = m_columns.get( column );
       try
       {// FIXME: this will reload the timeserie on every step....!
+        // FIXME: col.getTupleModel()!
         final ITuppleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );
