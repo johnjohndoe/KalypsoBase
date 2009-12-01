@@ -40,7 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.ant;
 
-import java.io.OutputStreamWriter;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.LinkedList;
@@ -55,12 +56,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -128,16 +129,9 @@ public class ChangeGmlTask extends Task
       for( final Property property : m_properties )
         changeProperty( workspace, property );
 
-      final SetContentHelper contentHelper = new SetContentHelper( "Writing: " + m_gmlURL.toExternalForm() )
-      {
-        @Override
-        protected void write( final OutputStreamWriter writer ) throws Throwable
-        {
-          GmlSerializer.serializeWorkspace( writer, workspace );
-        }
-      };
+      final File outFile = gmlFile.getLocation().toFile();
+      GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" );
       gmlFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-      contentHelper.setFileContents( gmlFile, false, true, new NullProgressMonitor() );
     }
     catch( final BuildException be )
     {
@@ -147,6 +141,16 @@ public class ChangeGmlTask extends Task
     {
       e.printStackTrace();
 
+      throw new BuildException( String.format( "Fehler beim Erzeugen von GML: %s", m_gmlURL ), e );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new BuildException( String.format( "Fehler beim Erzeugen von GML: %s", m_gmlURL ), e );
+    }
+    catch( final GmlSerializeException e )
+    {
+      e.printStackTrace();
       throw new BuildException( String.format( "Fehler beim Erzeugen von GML: %s", m_gmlURL ), e );
     }
   }
