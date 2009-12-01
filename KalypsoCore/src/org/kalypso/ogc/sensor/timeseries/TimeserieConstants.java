@@ -121,6 +121,8 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
 
+  public static final String TYPE_PATH = "path"; //$NON-NLS-1$
+
   public static final String[] TYPES_ALL;
 
   /**
@@ -128,8 +130,8 @@ public abstract class TimeserieConstants implements ObservationConstants
    */
   static
   {
-    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC,
-        TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
+    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
+        TYPE_KC, TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
     Arrays.sort( types );
     TYPES_ALL = types;
   }
