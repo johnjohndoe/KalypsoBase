@@ -105,9 +105,6 @@ import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -578,19 +575,7 @@ public class GisTemplateHelper
   public static Filter getFilter( final Layer layer ) throws FilterConstructionException
   {
     final Object filterObject = layer.getFilter();
-    if( !(filterObject instanceof Element) )
-      return null;
-
-    final Element filterElement = (Element) filterObject;
-    final NodeList childNodes = filterElement.getChildNodes();
-    for( int i = 0; i < childNodes.getLength(); i++ )
-    {
-      final Node item = childNodes.item( i );
-      if( item instanceof Element )
-        return AbstractFilter.buildFromDOM( (Element) item );
-    }
-
-    return null;
+    return AbstractFilter.buildFromAnyType( filterObject );
   }
 
   public static void saveGisMapView( final Gismapview mapview, final IFile mapFile, final String encoding ) throws JAXBException, IOException, CoreException
