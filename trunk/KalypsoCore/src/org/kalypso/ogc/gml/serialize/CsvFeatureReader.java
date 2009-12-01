@@ -18,6 +18,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -43,23 +45,33 @@ public final class CsvFeatureReader
 
     public final boolean ignoreFormatExceptions;
 
-    public CSVInfo( final String frmt, final int[] cols, final boolean ignoreFrmtExceptions )
+    public final boolean handleEmptyAsNull;
+
+    public CSVInfo( final String frmt, final int[] cols, final boolean ignoreFrmtExceptions, final boolean handleEmptyAsNill )
     {
       this.format = frmt;
       this.columns = cols;
       this.ignoreFormatExceptions = ignoreFrmtExceptions;
+      this.handleEmptyAsNull = handleEmptyAsNill;
     }
   }
 
   /** featureTypeProperty -> cvsinfo */
   private final Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
 
+  private Filter m_filter;
+
   public final void addInfo( final IPropertyType ftp, final CSVInfo info )
   {
     m_infos.put( ftp, info );
   }
 
-  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  public void setFilter( final Filter filter )
+  {
+    m_filter = filter;
+  }
+
+  public final GMLWorkspace loadCSV( final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException, FilterEvaluationException
   {
     final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -75,7 +87,7 @@ public final class CsvFeatureReader
     return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, null, schemaLocation, null );
   }
 
-  private void loadCSVIntoList( final Feature parent, final IRelationType parentRelation, final IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException
+  private void loadCSVIntoList( final Feature parent, final IRelationType parentRelation, final IFeatureType ft, final List<Feature> list, final Reader reader, final String comment, final String delemiter, final int lineskip ) throws IOException, CsvException, FilterEvaluationException
   {
     final LineNumberReader lnr = new LineNumberReader( reader );
     int skippedlines = 0;
@@ -94,7 +106,9 @@ public final class CsvFeatureReader
         continue;
 
       final String[] tokens = line.split( delemiter, -1 );
-      list.add( createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ) ); //$NON-NLS-1$
+      final Feature newFeature = createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ); //$NON-NLS-1$
+      if( m_filter == null || m_filter.evaluate( newFeature ) )
+        list.add( newFeature );
     }
     return;
   }
@@ -115,38 +129,32 @@ public final class CsvFeatureReader
       for( final int colNumber : info.columns )
       {
         if( colNumber >= tokens.length )
-          throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.3") + index + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.4") + colNumber + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.5") + ftp.getQName() + "'" + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.7") + tokens.length + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.8") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+          throw new CsvException( Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.3" ) + index + Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.4" ) + colNumber + Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.5" ) + ftp.getQName() + "'" + Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.7" ) + tokens.length + Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
       }
 
-      data[i] = parseColumns( vpt, info.format, info.columns, tokens, info.ignoreFormatExceptions );
+      data[i] = parseColumns( vpt, info, tokens );
     }
 
     return FeatureFactory.createFeature( parent, parentRelation, index, featureType, data );
   }
 
-  private static Object parseColumns( final IValuePropertyType vpt, final String format, final int[] columns, final String[] tokens, final boolean ignoreFormatExceptions ) throws CsvException
+  private static Object parseColumns( final IValuePropertyType vpt, final CSVInfo info, final String[] tokens ) throws CsvException
   {
     try
     {
-      final String[] input = new String[columns.length];
+      final String[] input = new String[info.columns.length];
       for( int i = 0; i < input.length; i++ )
-        input[i] = tokens[columns[i]];
+        input[i] = tokens[info.columns[i]];
 
-      final Object data = FeatureHelper.createFeaturePropertyFromStrings( vpt, format, input );
-
-// Quatsch: this can always happen for empty strings (typeHandler returns null in this case)
-//      if( data == null )
-//        throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.9") + vpt.getQName() ); //$NON-NLS-1$
-
-      return data;
+      return FeatureHelper.createFeaturePropertyFromStrings( vpt, info.format, input, info.handleEmptyAsNull );
     }
     catch( final NumberFormatException nfe )
     {
-      if( ignoreFormatExceptions )
+      if( info.ignoreFormatExceptions )
         return null;
 
-      final String colStr = ArrayUtils.toString( columns );
-      throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.10") + colStr, nfe ); //$NON-NLS-1$
+      final String colStr = ArrayUtils.toString( info.columns );
+      throw new CsvException( Messages.getString( "org.kalypso.ogc.gml.serialize.CsvFeatureReader.10" ) + colStr, nfe ); //$NON-NLS-1$
     }
   }
 }

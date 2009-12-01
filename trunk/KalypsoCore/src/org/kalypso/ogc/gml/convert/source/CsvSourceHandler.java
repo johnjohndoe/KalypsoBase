@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.convert.source;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -20,9 +21,14 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
+import org.kalypso.ogc.gml.serialize.CsvException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 
 /**
  * @author belger
@@ -49,44 +55,13 @@ public class CsvSourceHandler implements ISourceHandler
   public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     final String href = m_type.getHref();
-    final CsvFeatureReader reader = new CsvFeatureReader();
-    final List<Featureproperty> propList = m_type.getFeatureproperty();
-    InputStream stream = null;
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+
+    final InputStream stream = null;
     try
     {
-      for( final Featureproperty featureproperty : propList )
-      {
-        final CsvSourceType.Featureproperty element = featureproperty;
-        final List<Integer> columnList = element.getColumn();
-        final int[] columns = new int[columnList.size()];
-        for( int i = 0; i < columnList.size(); i++ )
-        {
-          final Integer col = columnList.get( i );
-          columns[i] = col.intValue();
-        }
-        final QName qname = new QName( "namespace", element.getName() ); //$NON-NLS-1$
-        final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
+      final CsvFeatureReader reader = createReader();
 
-        if( typeHandler == null )
-          throw new GmlConvertException( String.format( "No TypeHandler for '%s'with type '%s'", element.getName(), element.getType() ) );
-
-        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
-        final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
-        reader.addInfo( ftp, info );
-      }
-      final URL url = m_resolver.resolveURL( m_context, href );
-      final URLConnection connection = url.openConnection();
-      stream = connection.getInputStream();
-
-      final String encoding = UrlUtilities.findEncoding( connection );
-
-      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
-      return reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
-    }
-    catch( final GmlConvertException e )
-    {
-      throw e;
+      return loadCSV( reader, href );
     }
     catch( final Exception e )
     {
@@ -97,5 +72,85 @@ public class CsvSourceHandler implements ISourceHandler
     {
       IOUtils.closeQuietly( stream );
     }
+  }
+
+  private GMLWorkspace loadCSV( final CsvFeatureReader reader, final String href ) throws IOException, CsvException, FilterEvaluationException
+  {
+    InputStream stream = null;
+    try
+    {
+
+      final URL url = m_resolver.resolveURL( m_context, href );
+      final URLConnection connection = url.openConnection();
+      stream = connection.getInputStream();
+
+      final String encoding = UrlUtilities.findEncoding( connection );
+
+      final InputStreamReader isr = encoding == null ? new InputStreamReader( stream ) : new InputStreamReader( stream, encoding );
+      final GMLWorkspace workspace = reader.loadCSV( isr, m_type.getComment(), m_type.getDelemiter(), m_type.getLineskip() );
+      stream.close();
+      return workspace;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
+  }
+
+  private CsvFeatureReader createReader( ) throws GmlConvertException
+  {
+    final CsvFeatureReader reader = new CsvFeatureReader();
+    configureFilter( reader );
+
+    final List<Featureproperty> propList = m_type.getFeatureproperty();
+    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    for( final Featureproperty element : propList )
+    {
+      final int[] columns = createColumnList( element );
+      final QName qname = new QName( "namespace", element.getName() ); //$NON-NLS-1$
+      final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
+
+      if( typeHandler == null )
+        throw new GmlConvertException( String.format( "No TypeHandler for '%s'with type '%s'", element.getName(), element.getType() ) );
+
+      final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
+      final boolean ignoreFormatExceptions = element.isIgnoreFormatExceptions();
+      final String format = element.getFormat();
+      final boolean handleEmptyAsNull = element.isHandleEmptyAsNull();
+      final CSVInfo info = new CsvFeatureReader.CSVInfo( format, columns, ignoreFormatExceptions, handleEmptyAsNull );
+      reader.addInfo( ftp, info );
+    }
+
+    return reader;
+  }
+
+  private void configureFilter( final CsvFeatureReader reader ) throws GmlConvertException
+  {
+    try
+    {
+      final Object anyType = m_type.getFilter();
+      if( anyType == null )
+        return;
+      
+      final Filter filter = AbstractFilter.buildFromAnyType( anyType );
+      reader.setFilter( filter );
+    }
+    catch( final FilterConstructionException e )
+    {
+      e.printStackTrace();
+      throw new GmlConvertException( "Failed to construct filter expression", e );
+    }
+  }
+
+  private int[] createColumnList( final Featureproperty element )
+  {
+    final List<Integer> columnList = element.getColumn();
+    final int[] columns = new int[columnList.size()];
+    for( int i = 0; i < columnList.size(); i++ )
+    {
+      final Integer col = columnList.get( i );
+      columns[i] = col.intValue();
+    }
+    return columns;
   }
 }
