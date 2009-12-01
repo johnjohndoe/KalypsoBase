@@ -70,7 +70,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
   {
     private String m_name;
 
-    public void setName( String name )
+    public void setName( final String name )
     {
       m_name = name;
     }
@@ -87,7 +87,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
     private String m_format;
 
-    private List<Metadata> m_metadataEntries = new ArrayList<Metadata>( 2 );
+    private final List<Metadata> m_metadataEntries = new ArrayList<Metadata>( 2 );
 
     /** This FeatureProperty will be created */
     public void setTargetProperty( final String targetProperty )
@@ -112,7 +112,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     }
 
     /** Optional format string, how to parse the values */
-    public void setFormat( String format )
+    public void setFormat( final String format )
     {
       m_format = format;
     }
@@ -169,9 +169,8 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     {
       final URL url = m_resolver.resolveURL( m_context, href );
       final IObservation observation = ZmlFactory.parseXML( url, href );
-      for( int i = 0; i < m_mappings.length; i++ )
+      for( final Mapping mapping : m_mappings )
       {
-        final Mapping mapping = m_mappings[i];
         applyMapping( mapping, observation, f );
       }
     }
@@ -213,7 +212,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
       }
     }
 
-    final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values );
+    final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values, false );
     f.setProperty( ftp, object );
   }
 
