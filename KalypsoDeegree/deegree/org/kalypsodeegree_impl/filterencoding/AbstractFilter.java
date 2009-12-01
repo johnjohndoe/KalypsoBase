@@ -55,7 +55,34 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractFilter implements Filter
 {
+  /**
+   * Builds a filter from the contents of a 'xs:anyType' element. Tries to interpret the given object either as filter
+   * element, or, if not, it's direct nodes as filter. The first filter encountered wins.
+   */
+  public static Filter buildFromAnyType( final Object anyType ) throws FilterConstructionException
+  {
+    if( !(anyType instanceof Element) )
+      return null;
 
+    // Is the element itself the filter?
+    final Element filterElement = (Element) anyType;
+    if( filterElement.getLocalName().equals( "Filter" ) )
+      return buildFromDOM( filterElement );
+
+    // Try the direct children
+    final NodeList childNodes = filterElement.getChildNodes();
+    for( int i = 0; i < childNodes.getLength(); i++ )
+    {
+      final Node item = childNodes.item( i );
+      if( item instanceof Element && item.getLocalName().equals( "Filter" ) )
+        return AbstractFilter.buildFromDOM( (Element) item );
+    }
+
+    return null;
+  }
+
+  
+  
   /**
    * Given a DOM-fragment, a corresponding Filter-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.
@@ -63,7 +90,7 @@ public abstract class AbstractFilter implements Filter
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
-  public static Filter buildFromDOM( Element element ) throws FilterConstructionException
+  public static Filter buildFromDOM( final Element element ) throws FilterConstructionException
   {
     Filter filter = null;
 
@@ -87,13 +114,13 @@ public abstract class AbstractFilter implements Filter
     if( firstElement.getLocalName().equals( "FeatureId" ) )
     {
       // must be a FeatureFilter
-      FeatureFilter fFilter = new FeatureFilter();
+      final FeatureFilter fFilter = new FeatureFilter();
       children = element.getChildNodes();
       for( int i = 0; i < children.getLength(); i++ )
       {
         if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
         {
-          Element fid = (Element) children.item( i );
+          final Element fid = (Element) children.item( i );
           if( !fid.getLocalName().equals( "FeatureId" ) )
             throw new FilterConstructionException( "Unexpected Element encountered: " + fid.getLocalName() );
           fFilter.addFeatureId( FeatureId.buildFromDOM( fid ) );
@@ -110,10 +137,10 @@ public abstract class AbstractFilter implements Filter
       {
         if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
         {
-          Element operator = (Element) children.item( i );
+          final Element operator = (Element) children.item( i );
           if( justOne )
             throw new FilterConstructionException( "Unexpected element encountered: " + operator.getLocalName() );
-          ComplexFilter cFilter = new ComplexFilter( AbstractOperation.buildFromDOM( operator ) );
+          final ComplexFilter cFilter = new ComplexFilter( AbstractOperation.buildFromDOM( operator ) );
           filter = cFilter;
           justOne = true;
         }
@@ -125,20 +152,20 @@ public abstract class AbstractFilter implements Filter
   /** Produces an indented XML representation of this object. */
   public abstract StringBuffer toXML( );
 
-  public Filter clone( Filter filter ) throws FilterConstructionException
+  public Filter clone( final Filter filter ) throws FilterConstructionException
   {
-    StringBuffer buffer = filter.toXML();
-    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
+    final StringBuffer buffer = filter.toXML();
+    final ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
     Document asDOM = null;
     try
     {
       asDOM = XMLHelper.getAsDOM( input, true );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    Element element = asDOM.getDocumentElement();
+    final Element element = asDOM.getDocumentElement();
 
     return AbstractFilter.buildFromDOM( element );
   }
