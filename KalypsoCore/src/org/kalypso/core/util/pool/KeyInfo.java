@@ -183,7 +183,7 @@ public final class KeyInfo extends Job
   {
     if( m_hasNothingBlocked )
     {
-      System.out.println( "Locked due to reloading event state ..." ); //$NON-NLS-1$
+      //System.out.println( "Locked due to reloading event state ..." ); //$NON-NLS-1$
 
       /* The first call on this function after locking the resources will reset the state of the first reloading event. */
       m_hasNothingBlocked = false;
@@ -196,7 +196,7 @@ public final class KeyInfo extends Job
     {
       if( entry.getValue() )
       {
-        System.out.println( "Locked due to resource state ..." ); //$NON-NLS-1$
+        //System.out.println( "Locked due to resource state ..." ); //$NON-NLS-1$
         return true;
       }
     }
@@ -444,17 +444,17 @@ public final class KeyInfo extends Job
     final int flags = delta.getFlags();
     final int kind = delta.getKind();
 
-    System.out.println( String.format( "Resource change (kind): %d", kind ) );
-    System.out.println( String.format( "Resource change (flags): %d", flags ) );
+    //System.out.println( String.format( "Resource change (kind): %d", kind ) );
+    //System.out.println( String.format( "Resource change (flags): %d", flags ) );
 
     // TRICKY: if (exactly) only markers have changed, do nothing
     if( flags == IResourceDelta.MARKERS || flags == IResourceDelta.SYNC || flags == (IResourceDelta.MARKERS & IResourceDelta.SYNC) )
     {
-      System.out.println( "Resource change (action): Ignored" );
+      //System.out.println( "Resource change (action): Ignored" );
       return;
     }
 
-    System.out.println( "Resource change (action): Handled" );
+    //System.out.println( "Resource change (action): Handled" );
     switch( kind )
     {
       case IResourceDelta.REMOVED:
