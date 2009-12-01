@@ -305,7 +305,7 @@ public class FeatureHelper
         {
           newobject = targetTypeHandler.parseType( objectAsString );
         }
-        catch( ParseException e )
+        catch( final ParseException e )
         {
           throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
         }
@@ -1040,10 +1040,8 @@ public class FeatureHelper
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
-  public static final Object createFeaturePropertyFromStrings( final IValuePropertyType type, final String format, final String[] input )
+  public static final Object createFeaturePropertyFromStrings( final IValuePropertyType type, final String format, final String[] input, final boolean handleEmptyAsNull )
   {
-    final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( type );
-
     if( GeometryUtilities.getPointClass() == type.getValueClass() )
     {
       final String rwString = input[0].trim();
@@ -1068,19 +1066,23 @@ public class FeatureHelper
       return GeometryFactory.createGM_Point( rw, hw, crsString );
     }
 
-    if( typeHandler != null )
-    {
-      try
-      {
-        return typeHandler.parseType( input[0] );
-      }
-      catch( final ParseException e )
-      {
-        e.printStackTrace();
-      }
-    }
+    final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( type );
+    if( typeHandler == null )
+      return null;
 
-    return null;
+    try
+    {
+      final String inputString = input[0];
+      if( handleEmptyAsNull && (inputString == null || inputString.trim().length() == 0) )
+        return null;
+
+      return typeHandler.parseType( inputString );
+    }
+    catch( final ParseException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**

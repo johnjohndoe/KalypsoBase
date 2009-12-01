@@ -57,10 +57,9 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
 
   private final String m_sourceID;
 
-  private Map m_index;
+  private final Map m_index;
 
-  public ChangeFeaturesFromFeaturelist( final FeatureList list, final Properties propertyMap, final String sourceID,
-      final String targetID )
+  public ChangeFeaturesFromFeaturelist( final FeatureList list, final Properties propertyMap, final String sourceID, final String targetID )
   {
     m_propertyMap = propertyMap;
     m_sourceID = sourceID;
@@ -76,19 +75,19 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final Object index = f.getProperty( m_sourceID);
-    final Feature targetFeature = (Feature)m_index.get( index );
-    if( targetFeature != null )
+    final Object index = f.getProperty( m_sourceID );
+    final Feature targetFeature = (Feature) m_index.get( index );
+    if( targetFeature == null )
+      return true;
+
+    try
     {
-      try
-      {
-        FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
-      }
-      catch( Exception e )
-      {
-        // TODO error handling
-        e.printStackTrace();
-      }
+      FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
+    }
+    catch( final Exception e )
+    {
+      // TODO error handling
+      e.printStackTrace();
     }
 
     return true;
