@@ -28,6 +28,8 @@ public class RepositoriesExtensions
 
   public final static String ATT_RO = "readOnly"; //$NON-NLS-1$
 
+  public final static String ATT_CACHED = "cached"; //$NON-NLS-1$
+
   /**
    * Uses the platform extension registry to retrieve all extensions for the repositories extension point.
    * <p>
@@ -56,10 +58,11 @@ public class RepositoriesExtensions
       final String name = element.getAttribute( ATT_NAME );
       final String conf = element.getAttribute( ATT_CONF );
       final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
+      final boolean cached = Boolean.valueOf( element.getAttribute( ATT_CACHED ) ).booleanValue();
 
       final IRepositoryFactory factory = (IRepositoryFactory) element.createExecutableExtension( ATT_FACTORY );
 
-      items.add( new RepositoryFactoryConfig( factory, name, conf, ro ) );
+      items.add( new RepositoryFactoryConfig( factory, name, conf, ro, cached ) );
     }
 
     return items.toArray( new RepositoryFactoryConfig[items.size()] );

@@ -86,6 +86,11 @@ public interface IRepository extends IRepositoryItem
   public boolean isReadOnly( );
 
   /**
+   * @return observations (data) of this repository is cached on client side?
+   */
+  public boolean isCached( );
+
+  /**
    * Finds the item that has the given id.
    * 
    * @param id

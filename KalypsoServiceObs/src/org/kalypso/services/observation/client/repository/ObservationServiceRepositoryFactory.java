@@ -111,6 +111,6 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
       configureRepository();
     }
 
-    return new ObservationServiceRepository( getRepositoryName(), getRepositoryLabel(), getClass().getName(), isReadOnly() );
+    return new ObservationServiceRepository( getRepositoryName(), getRepositoryLabel(), getClass().getName(), isReadOnly(), isCached() );
   }
 }

@@ -75,6 +75,6 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
     if( getConfiguration() == null )
       throw new RepositoryException( Messages.getString("org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory.0") ); //$NON-NLS-1$
 
-    return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly() );
+    return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly(), isCached() );
   }
 }

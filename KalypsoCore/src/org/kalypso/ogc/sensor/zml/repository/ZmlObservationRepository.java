@@ -53,9 +53,9 @@ import org.kalypso.repository.file.FileRepository;
  */
 public class ZmlObservationRepository extends FileRepository
 {
-  public ZmlObservationRepository( final String factory, final String conf, final String root_location, final String identifier, final boolean readOnly, final FileFilter filter )
+  public ZmlObservationRepository( final String factory, final String conf, final String root_location, final String identifier, final boolean readOnly, final boolean cached, final FileFilter filter )
   {
-    super( factory, conf, root_location, identifier, readOnly, filter );
+    super( factory, conf, root_location, identifier, readOnly, cached, filter );
   }
 
   /**

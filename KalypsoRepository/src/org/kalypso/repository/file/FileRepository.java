@@ -75,9 +75,9 @@ public class FileRepository extends AbstractRepository
    * @param filter
    *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
-  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final FileFilter filter )
+  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final boolean cached, final FileFilter filter )
   {
-    super( identifier, identifier, factory, conf, readOnly, identifier );
+    super( identifier, identifier, factory, conf, readOnly, cached, identifier );
 
     if( filter == null )
       m_filter = new AcceptAllFileFilter();
@@ -98,9 +98,9 @@ public class FileRepository extends AbstractRepository
    * @param readOnly
    * @see FileRepository#FileRepository(String, String, String, String, boolean, FileFilter)
    */
-  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly )
+  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final boolean cached )
   {
-    this( factory, conf, location, identifier, readOnly, null );
+    this( factory, conf, location, identifier, readOnly, cached, null );
   }
 
   /**
@@ -231,5 +231,6 @@ public class FileRepository extends AbstractRepository
 
     return true;
   }
+
 
 }

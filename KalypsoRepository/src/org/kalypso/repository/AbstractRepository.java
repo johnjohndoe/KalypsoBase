@@ -72,13 +72,16 @@ public abstract class AbstractRepository implements IRepository
 
   private final String m_label;
 
-  public AbstractRepository( final String name, final String label, final String factory, final String conf, final boolean readOnly, final String identifier )
+  private final boolean m_cached;
+
+  public AbstractRepository( final String name, final String label, final String factory, final String conf, final boolean readOnly, final boolean cached, final String identifier )
   {
     m_name = name;
     m_label = label;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
+    m_cached = cached;
     m_identifier = identifier;
 
     m_listeners = new Vector<IRepositoryListener>();
@@ -107,6 +110,15 @@ public abstract class AbstractRepository implements IRepository
   public boolean isReadOnly( )
   {
     return m_readOnly;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepository#isCached()
+   */
+  @Override
+  public boolean isCached( )
+  {
+    return m_cached;
   }
 
   public void setReadOnly( final boolean ro )
