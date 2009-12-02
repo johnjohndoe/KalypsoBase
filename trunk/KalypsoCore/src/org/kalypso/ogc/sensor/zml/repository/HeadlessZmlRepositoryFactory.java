@@ -57,8 +57,8 @@ public class HeadlessZmlRepositoryFactory extends FileRepositoryFactory
    *      java.lang.String, boolean, java.io.FileFilter)
    */
   @Override
-  public FileRepository createRepository( String conf, String location, String id, boolean ro, FileFilter filter )
+  public FileRepository createRepository( final String conf, final String location, final String id, final boolean ro, final boolean cached, final FileFilter filter )
   {
-    return new ZmlObservationRepository( getClass().getName(), conf, location, id, ro, filter );
+    return new ZmlObservationRepository( getClass().getName(), conf, location, id, ro, cached, filter );
   }
 }

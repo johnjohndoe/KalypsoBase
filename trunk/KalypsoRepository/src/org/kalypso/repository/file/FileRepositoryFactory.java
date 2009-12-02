@@ -62,7 +62,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
     else
       filter = new AcceptAllFileFilter();
 
-    return createRepository( getConfiguration(), location, getRepositoryName(), isReadOnly(), filter );
+    return createRepository( getConfiguration(), location, getRepositoryName(), isReadOnly(), isCached(), filter );
   }
 
   /**
@@ -76,8 +76,8 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * @param filter
    * @return instance of FileRepository
    */
-  public FileRepository createRepository( final String conf, final String location, final String id, final boolean ro, final FileFilter filter )
+  public FileRepository createRepository( final String conf, final String location, final String id, final boolean ro, final boolean cached, final FileFilter filter )
   {
-    return new FileRepository( getClass().getName(), conf, location, id, ro, filter );
+    return new FileRepository( getClass().getName(), conf, location, id, ro, cached, filter );
   }
 }

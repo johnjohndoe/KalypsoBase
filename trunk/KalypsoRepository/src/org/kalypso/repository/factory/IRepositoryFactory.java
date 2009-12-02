@@ -76,6 +76,10 @@ public interface IRepositoryFactory
 
   public boolean isReadOnly( );
 
+  public void setCached( final boolean cached );
+
+  public boolean isCached( );
+
   /**
    * Vorbereitet die Konfiguration für das erzeugen des Repository.
    * 

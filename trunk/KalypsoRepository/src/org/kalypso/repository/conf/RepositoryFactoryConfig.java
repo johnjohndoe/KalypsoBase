@@ -69,6 +69,8 @@ public class RepositoryFactoryConfig
 
   private final String m_label;
 
+  private final boolean m_cached;
+
   /**
    * Constructor with:
    * 
@@ -83,13 +85,14 @@ public class RepositoryFactoryConfig
    * @param readOnly
    *          when true repository should be read only
    */
-  protected RepositoryFactoryConfig( final String name, final String label, final String factory, final String conf, final boolean readOnly, final IRepositoryFactory rf )
+  protected RepositoryFactoryConfig( final String name, final String label, final String factory, final String conf, final boolean readOnly, final boolean cached, final IRepositoryFactory rf )
   {
     m_name = name;
     m_label = label;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
+    m_cached = cached;
     m_rf = rf;
   }
 
@@ -98,16 +101,16 @@ public class RepositoryFactoryConfig
    */
   public RepositoryFactoryConfig( final IRepository rep )
   {
-    this( rep.getName(), rep.getLabel(), rep.getFactory(), rep.getConfiguration(), rep.isReadOnly(), null );
+    this( rep.getName(), rep.getLabel(), rep.getFactory(), rep.getConfiguration(), rep.isReadOnly(), rep.isCached(), null );
   }
 
   /**
    * Shortcut constructor with factory. if createFactory() is called, it will return this given factory configured with
    * the given arguments.
    */
-  public RepositoryFactoryConfig( final IRepositoryFactory rf, final String name, final String conf, final boolean ro )
+  public RepositoryFactoryConfig( final IRepositoryFactory rf, final String name, final String conf, final boolean readOnly, final boolean cached )
   {
-    this( name, name, rf.getClass().getName(), conf, ro, rf );
+    this( name, name, rf.getClass().getName(), conf, readOnly, cached, rf );
   }
 
   /**
@@ -123,6 +126,7 @@ public class RepositoryFactoryConfig
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) ); //$NON-NLS-1$
 
     rf.setReadOnly( m_readOnly );
+    rf.setCached( m_cached );
     rf.setConfiguration( m_conf );
     rf.setRepositoryName( m_name );
     rf.setRepositoryLabel( m_label );
@@ -139,7 +143,7 @@ public class RepositoryFactoryConfig
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( m_name ).append( SEPARATOR ).append( m_label ).append( SEPARATOR ).append( m_factory ).append( SEPARATOR ).append( m_conf ).append( SEPARATOR ).append( String.valueOf( m_readOnly ) );
+    bf.append( m_name ).append( SEPARATOR ).append( m_label ).append( SEPARATOR ).append( m_factory ).append( SEPARATOR ).append( m_conf ).append( SEPARATOR ).append( String.valueOf( m_readOnly ) ).append( String.valueOf( m_cached ) );
 
     return bf.toString();
   }
@@ -154,7 +158,7 @@ public class RepositoryFactoryConfig
   {
     final String[] splits = state.split( SEPARATOR );
 
-    if( splits.length != 4 )
+    if( splits.length != 5 )
       return null;
 
     final String repositoryName = splits[0];
@@ -162,8 +166,9 @@ public class RepositoryFactoryConfig
     final String factoryClassName = splits[2];
     final String conf = splits[3];
     final boolean readOnly = Boolean.valueOf( splits[4] ).booleanValue();
+    final boolean cached = Boolean.valueOf( splits[5] ).booleanValue();
 
-    return new RepositoryFactoryConfig( repositoryName, repositoryLabel, factoryClassName, conf, readOnly, null );
+    return new RepositoryFactoryConfig( repositoryName, repositoryLabel, factoryClassName, conf, readOnly, cached, null );
   }
 
   /**

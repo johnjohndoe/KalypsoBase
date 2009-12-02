@@ -58,6 +58,8 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
 
   private String m_label;
 
+  private boolean m_cached;
+
   public String getRepositoryName()
   {
     return m_name;
@@ -107,5 +109,15 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   public boolean isReadOnly()
   {
     return m_readOnly;
+  }
+
+  public void setCached( final boolean cached )
+  {
+    m_cached = cached;
+  }
+
+  public boolean isCached( )
+  {
+    return m_cached;
   }
 }
