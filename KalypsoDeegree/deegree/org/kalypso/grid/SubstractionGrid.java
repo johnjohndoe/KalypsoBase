@@ -49,11 +49,19 @@ public class SubstractionGrid extends AbstractDelegatingGeoGrid implements IGeoG
 
   private final IGeoGrid m_inputGrid2;
 
+  private boolean m_usePositiveValuesOnly;
+
   public SubstractionGrid( final IGeoGrid inputGrid1, final IGeoGrid inputGrid2 ) throws Exception
   {
     super( inputGrid1 );
     m_inputGrid1 = inputGrid1;
     m_inputGrid2 = inputGrid2;
+    m_usePositiveValuesOnly = false;
+  }
+
+  public void usePositiveValuesOnly( final boolean value )
+  {
+    m_usePositiveValuesOnly = value;
   }
 
   @Override
@@ -64,11 +72,19 @@ public class SubstractionGrid extends AbstractDelegatingGeoGrid implements IGeoG
       final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_inputGrid1, x, y, null );
       if( m_inputGrid1.getEnvelope().contains( coordinate ) && m_inputGrid2.getEnvelope().contains( coordinate ) )
       {
-        final double value1 = m_inputGrid1.getValue( coordinate );
-        final double value2 = m_inputGrid2.getValue( coordinate );
+        double value1 = m_inputGrid1.getValue( coordinate );
+        double value2 = m_inputGrid2.getValue( coordinate );
 
         if( Double.isNaN( value1 ) || Double.isNaN( value2 ) )
           return Double.NaN;
+
+        if( m_usePositiveValuesOnly )
+        {
+          if( value1 < 0.0 )
+            value1 = 0.0;
+          if( value2 < 0.0 )
+            value2 = 0.0;
+        }
         return value1 - value2;
       }
       return Double.NaN;
