@@ -138,4 +138,20 @@ public final class DateUtilities
     cal.setTime( date );
     return DatatypeConverter.printDateTime( cal );
   }
+
+  public static long getDifferenceInMinutes( final Calendar c1, final Calendar c2 )
+  {
+    long difference = (c1.getTimeInMillis() - c2.getTimeInMillis());
+    return difference / 1000 / 60;
+  }
+
+  public static double getDifferenceInHours( final Calendar c1, final Calendar c2 )
+  {
+    return getDifferenceInMinutes( c1, c2 ) / 60.0;
+  }
+
+  public static double getDifferenceInDays( final Calendar c1, final Calendar c2 )
+  {
+    return getDifferenceInHours( c1, c2 ) / 24.0;
+  }
 }

@@ -3,7 +3,9 @@ package org.kalypso.services.observation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -28,10 +30,12 @@ public class KalypsoServiceObsActivator extends Plugin
 
   public final static String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
 
+  public static final String DEFAULT_OBSERVATION_SERVICE_ID = "default";
+
   // The shared instance.
   private static KalypsoServiceObsActivator plugin;
 
-  private IObservationService m_observationService = null;
+  private final Map<String, IObservationService> m_services = new HashMap<String, IObservationService>();
 
   /**
    * The constructor.
@@ -84,14 +88,11 @@ public class KalypsoServiceObsActivator extends Plugin
     return plugin;
   }
 
-  /**
-   * Convenience method that returns the observation service proxy.
-   * 
-   * @return WebService proxy for the IObservationService.
-   */
-  public synchronized IObservationService getObservationServiceProxy( )
+  public synchronized IObservationService getDefaultObservationService( )
   {
-    if( m_observationService == null )
+
+    IObservationService service = m_services.get( DEFAULT_OBSERVATION_SERVICE_ID );
+    if( service == null )
     {
       // REMARK: We enforce the plugin-classloader as context classloader here. Else, if the plug-in is loaded too
       // early, or i.e. from an ant-task, the classes referenced from the service endpoint interface will not be found.
@@ -109,18 +110,32 @@ public class KalypsoServiceObsActivator extends Plugin
       if( exception != null )
         exception.printStackTrace();
     }
-
-    return m_observationService;
+    
+    return m_services.get( DEFAULT_OBSERVATION_SERVICE_ID );
   }
 
-  public void setObservationService( final IObservationService observationService )
+
+  /**
+   * Convenience method that returns the observation service proxy.
+   * 
+   * @return WebService proxy for the IObservationService.
+   */
+  public synchronized IObservationService getObservationService( final String repository )
   {
-    m_observationService = observationService;
+    IObservationService service = m_services.get( repository );
+
+    return service;
   }
 
-  public boolean isObservationServiceInitialized( )
+  public void setObservationService( final String repository, final IObservationService observationService )
   {
-    if( m_observationService == null )
+    m_services.put( repository, observationService );
+  }
+
+  public boolean isObservationServiceInitialized( final String repository )
+  {
+    IObservationService service = m_services.get( repository );
+    if( service == null )
       return false;
 
     return true;
@@ -136,7 +151,8 @@ public class KalypsoServiceObsActivator extends Plugin
     final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
     final Service service = Service.create( wsdlLocation, serviceName );
     final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
-    m_observationService = observationService;
+
+    m_services.put( DEFAULT_OBSERVATION_SERVICE_ID, observationService );
   }
 
   public static String getID( )

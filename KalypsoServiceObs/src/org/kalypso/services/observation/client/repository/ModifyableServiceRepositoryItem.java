@@ -66,8 +66,7 @@ public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem imple
   @Override
   public void setData( final Serializable data ) throws RepositoryException
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-    srv.setItemData( getIdentifier(), data );
+    getService().setItemData( getIdentifier(), data );
   }
 
   /**
@@ -76,8 +75,16 @@ public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem imple
   @Override
   public void setName( final String name ) throws RepositoryException
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-    srv.setItemName( getIdentifier(), name );
+    getService().setItemName( getIdentifier(), name );
+  }
+
+  private IObservationService getService( )
+  {
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationService( getRepository().getName() );
+    if( srv != null )
+      return srv;
+
+    return KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
   }
 
 }
