@@ -180,8 +180,9 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       if( !ZmlURL.isServerSide( href ) )
         return u.openConnection();
 
+
       // else fetch the observation from the server
-      final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+      final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
 
       final DataBean data = srv.readData( href );
 
@@ -193,10 +194,10 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       ins = data.getDataHandler().getInputStream();
       FileUtilities.makeFileFromStream( false, file, ins );
       ins.close();
-// final byte[] bytes = data.getDataHandler();
-// stream = new BufferedOutputStream( new FileOutputStream( file ) );
-// stream.write( bytes );
-// stream.close();
+      // final byte[] bytes = data.getDataHandler();
+      // stream = new BufferedOutputStream( new FileOutputStream( file ) );
+      // stream.write( bytes );
+      // stream.close();
 
       srv.clearTempData( data.getId() );
 

@@ -54,6 +54,7 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
 import org.kalypso.services.observation.sei.IObservationService;
+import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -94,7 +95,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   @Override
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
     return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
   }
 

@@ -72,7 +72,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   public boolean configureRepository( )
   {
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
-    if( !plugin.isObservationServiceInitialized() )
+    if( !plugin.isObservationServiceInitialized( getRepositoryName() ) )
     {
       final String wsdlLocationProperty = getConfiguration();
       if( wsdlLocationProperty != null && !wsdlLocationProperty.isEmpty() )
@@ -88,7 +88,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
           final Service service = Service.create( wsdlLocation, serviceName );
           final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
 
-          plugin.setObservationService( observationService );
+          plugin.setObservationService( getRepositoryName(), observationService );
         }
         catch( final MalformedURLException e )
         {
@@ -106,7 +106,8 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
   public IRepository createRepository( ) throws RepositoryException
   {
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
-    if( !plugin.isObservationServiceInitialized() )
+
+    if( !plugin.isObservationServiceInitialized( getRepositoryName() ) )
     {
       configureRepository();
     }

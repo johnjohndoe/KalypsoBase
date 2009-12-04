@@ -71,9 +71,17 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     super( name, label, factory, "", readOnly, cached, "observation-service-repository" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-    if( srv == null )
+    if( getService() == null )
       throw new RepositoryException( "Could not find Repository Service" ); //$NON-NLS-1$
+  }
+
+  private IObservationService getService( )
+  {
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationService( getName() );
+    if( srv != null )
+      return srv;
+
+    return KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
   }
 
   @Override
@@ -89,7 +97,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     try
     {
-      return KalypsoServiceObsActivator.getDefault().getObservationServiceProxy().hasChildren( ROOT_ITEM );
+      return getService().hasChildren( ROOT_ITEM );
     }
     catch( final RepositoryException e )
     {
@@ -104,20 +112,19 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     try
     {
-      final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-
+      IObservationService service = getService();
       final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
 
-      final ItemBean[] beans = srv.getChildren( ROOT_ITEM );
+      final ItemBean[] beans = service.getChildren( ROOT_ITEM );
       for( final ItemBean bean : beans )
       {
         if( bean.getModifyable() )
         {
-          items.add( new ModifyableServiceRepositoryItem( srv, bean, null, this ) );
+          items.add( new ModifyableServiceRepositoryItem( service, bean, null, this ) );
         }
         else
         {
-          items.add( new ServiceRepositoryItem( srv, bean, null, this ) );
+          items.add( new ServiceRepositoryItem( service, bean, null, this ) );
         }
       }
 
@@ -140,7 +147,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     try
     {
-      KalypsoServiceObsActivator.getDefault().getObservationServiceProxy().reload();
+      getService().reload();
     }
     catch( final RepositoryException e )
     {
@@ -207,8 +214,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   @Override
   public void makeItem( final String identifier ) throws RepositoryException
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-    srv.makeItem( identifier );
+    getService().makeItem( identifier );
   }
 
   /**
@@ -217,8 +223,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   @Override
   public void deleteItem( final String identifier ) throws RepositoryException
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
-    srv.deleteItem( identifier );
+    getService().deleteItem( identifier );
   }
 
   /**

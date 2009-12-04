@@ -22,7 +22,7 @@ import com.sun.xml.ws.transport.http.servlet.WSServletContextListener;
  */
 public class WSProxyServlet extends WSServlet
 {
-  private final WSServletContextListener m_servletContextListener = new WSServletContextListener();
+  transient private final WSServletContextListener m_servletContextListener = new WSServletContextListener();
 
 // private WSServletDelegate m_delegate;
 
