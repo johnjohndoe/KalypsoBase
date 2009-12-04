@@ -50,6 +50,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -145,6 +146,15 @@ public class ZmlFactory
   private static Properties m_parserProps = null;
 
   private static Logger LOG = Logger.getLogger( ZmlFactory.class.getName() );
+
+  private static final Comparator<MetadataType> METADATA_COMPERATOR = new Comparator<MetadataType>()
+  {
+    @Override
+    public int compare( final MetadataType o1, final MetadataType o2 )
+    {
+      return o1.getName().compareTo( o2.getName() );
+    }
+  };
 
   private ZmlFactory( )
   {
@@ -529,6 +539,7 @@ public class ZmlFactory
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
+
       String metaName = null;
       for( final Entry<Object, Object> entry : obs.getMetadataList().entrySet() )
       {
@@ -550,6 +561,9 @@ public class ZmlFactory
 
         metadataList.add( mdType );
       }
+
+
+      Collections.sort( metadataList, METADATA_COMPERATOR );
 
       if( timezone == null )
         timezone = KalypsoCorePlugin.getDefault().getTimeZone();
