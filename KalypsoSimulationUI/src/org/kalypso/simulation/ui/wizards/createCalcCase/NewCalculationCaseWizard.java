@@ -138,12 +138,15 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        controlPage.saveChanges( newFolderHandle, monitor );
+        monitor.beginTask( "Neue Rechenvariante erzeugen - ", 1000 );
+        monitor.subTask( "" ); // Hack, else the begin task will not be set here
+
+        controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
 
         if( controlPage.isUpdate() )
         {
           final ModelNature nature = (ModelNature) newFolderHandle.getProject().getNature( ModelNature.ID );
-          final IStatus updateStatus = nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 1000 ) );
+          final IStatus updateStatus = nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 900 ) );
           if( !updateStatus.isOK() )
             throw new CoreException( updateStatus );
         }
