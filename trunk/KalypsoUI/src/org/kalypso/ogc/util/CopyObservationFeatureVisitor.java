@@ -85,11 +85,12 @@ import org.kalypso.zml.request.Request;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class CopyObservationFeatureVisitor implements FeatureVisitor
+public class CopyObservationFeatureVisitor implements FeatureVisitor, IMonitoredFeatureVisitor
 {
   /** Used to search/replace metadata content with properties of the visited feature */
   private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" ); //$NON-NLS-1$
@@ -127,6 +128,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   /** TODO: Only used by KalypsoNA */
   private final File m_targetobservationDir;
 
+  private String m_currentTaskName;
+
   /**
    * @param context
    *          context to resolve relative url
@@ -156,10 +159,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     try
     {
+      final String targetHref = getTargetHref( f );
+      setCurrentTaskName( targetHref );
+
       final IObservation[] sourceObses = getObservations( f );
       final DateRange[] sourceRanges = getSourceRanges();
 
-      final IFile targetfile = createTargetFile( f );
+      final IFile targetfile = createTargetFile( targetHref );
       if( targetfile == null )
         return true;
 
@@ -193,7 +199,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return ranges;
   }
 
-  private IFile createTargetFile( final Feature f ) throws MalformedURLException
+  private IFile createTargetFile( final String targetHref ) throws MalformedURLException
+  {
+    return ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, targetHref ) );
+  }
+
+  private String getTargetHref( final Feature f )
   {
     final TimeseriesLinkType targetlink = getTargetLink( f );
     if( targetlink == null )
@@ -203,7 +214,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     }
     // remove query part if present, href is also used as file name here!
     final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
-    return ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
+    return href;
   }
 
   private void wrtieTargetObservation( final IFile targetfile, final IObservation resultObs, final IRequest request ) throws SensorException
@@ -449,4 +460,17 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return new DateRange( from, to );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentTaskName()
+   */
+  @Override
+  public String getCurrentTaskName( )
+  {
+    return m_currentTaskName;
+  }
+
+  private void setCurrentTaskName( final String currentTaskName )
+  {
+    m_currentTaskName = currentTaskName;
+  }
 }

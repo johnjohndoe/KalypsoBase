@@ -48,7 +48,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -87,11 +86,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.IValueVariable;
 import org.eclipse.core.variables.VariablesPlugin;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsUtil;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.user.IKalypsoUser;
 import org.kalypso.commons.bind.JaxbUtilities;
@@ -151,7 +145,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private IProject m_project;
 
-  public static final String PROGNOSE_FOLDER = ".prognose"; //$NON-NLS-1$
+  public static final String PROGNOSE_FOLDER = "Rechenvarianten"; //$NON-NLS-1$
 
   public static final String CONTROL_TEMPLATE_GML_PATH = MODELLTYP_FOLDER + "/" + CONTROL_TEMPLATE_NAME; //$NON-NLS-1$
 
@@ -342,76 +336,38 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      final Properties userProperties = createVariablesForAntLaunch( folder );
-
-      final ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-
-      final IFile launchFile = getLaunchFile( launchName );
-
       monitor.subTask( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.3", launchName ) ); //$NON-NLS-1$
 
-      final ILaunchConfigurationWorkingCopy lc = launchManager.getLaunchConfiguration( launchFile ).getWorkingCopy();
-
-      // add user-variables to LaunchConfiguration
-      final Map<Object, Object> attribute = lc.getAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", new HashMap<Object, Object>() ); //$NON-NLS-1$
-      attribute.putAll( userProperties );
+      final IFile launchFile = getLaunchFile( launchName );
+      final Properties userProperties = createVariablesForAntLaunch( folder );
       if( antProps != null )
-        attribute.putAll( antProps );
-      lc.setAttribute( "org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES", attribute ); //$NON-NLS-1$
+        userProperties.putAll( antProps );
 
-      // add user-variables to variable-manager (so they can also be used within
-      // the launch-file
+      // add user-variables to variable-manager (so they can also be used within the launch-file
       userVariables = registerValueVariablesFromProperties( svm, userProperties );
+
+      final AntLauncher antLauncher = new AntLauncher( launchFile, userProperties );
+      antLauncher.init();
+
       monitor.worked( 10 );
 
-      // Find the log file, if defined
-      final File logFile = findLogFile( lc );
-      if( logFile != null )
-        logFile.getParentFile().mkdirs();
+      final IStatus status = antLauncher.execute( new SubProgressMonitor( monitor, 990 ) );
 
-      // TODO prüfen ob der launch überhaupt asynchron laufen kann?
-      // Genau dann wenn das true wird:
-// lc.getAttribute( "org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" )
-      // dann blockiert der launch, while kann weg... uind der ProgressMonitor kann sauber umgeetzt werden...
+      final File logFile = antLauncher.getLogFile();
+      if( logFile == null )
+        return status;
 
-      final ILaunch launch = lc.launch( ILaunchManager.RUN_MODE, new SubProgressMonitor( monitor, 900 ) );
-
-      // TODO: timeout konfigurierbar machen?
-      final int minutes = 720;
-      monitor.subTask( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.4" ) ); //$NON-NLS-1$
-      for( int i = 0; i < 60 * minutes; i++ )
-      {
-        if( monitor.isCanceled() )
-        {
-          launch.terminate();
-          return Status.CANCEL_STATUS;
-        }
-
-        if( launch.isTerminated() )
-        {
-          final String[] arguments = ExternalToolsUtil.getArguments( lc );
-          if( arguments == null )
-            return Status.OK_STATUS;
-
-          if( logFile == null )
-            return Status.OK_STATUS;
-
-          final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFile, Charset.defaultCharset().name() );
-          final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
-          return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logFile.getAbsolutePath(), null ); //$NON-NLS-1$
-        }
-        Thread.sleep( 1000 );
-        monitor.worked( 1000 );
-      }
-
-      // TODO better ask for termination, but continue task in background
-      launch.terminate();
-
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.5", minutes ) ); //$NON-NLS-1$ 
+      final IStatus[] logStati = LogAnalyzer.logfileToStatus( logFile, Charset.defaultCharset().name() );
+      final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
+      return new MultiStatus( KalypsoSimulationUIPlugin.getID(), -1, groupedStati, "Log-File was analyzed: " + logFile.getAbsolutePath(), null ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       throw e;
+    }
+    catch( final InterruptedException e )
+    {
+      return Status.CANCEL_STATUS;
     }
     catch( final Throwable e )
     {
@@ -438,25 +394,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
       monitor.done();
     }
-  }
-
-  private File findLogFile( final ILaunchConfigurationWorkingCopy lc ) throws CoreException
-  {
-    final String[] arguments = ExternalToolsUtil.getArguments( lc );
-
-    if( arguments == null )
-      return null;
-    for( int j = 0; j < arguments.length; j++ )
-    {
-      if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        final String logfile = arguments[j + 1];
-        final File logFileFile = new File( logfile );
-        return logFileFile;
-      }
-    }
-
-    return null;
   }
 
   private static final IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm, final Properties properties )
@@ -567,8 +504,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     if( launchFolder == null )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.simulation.ui.calccase.ModelNature.8" ) ) ); //$NON-NLS-1$
 
-    final IFile file = launchFolder.getFile( launchName + ".launch" ); //$NON-NLS-1$
-    return file;
+    return launchFolder.getFile( launchName + ".launch" );
   }
 
   private IFolder getLaunchFolder( )
