@@ -74,7 +74,6 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
@@ -169,8 +168,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       setForecastAndAddMetadata( resultObs, f );
 
       final IRequest request = new ObservationRequest( m_targetRange );
-      // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
-      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( request ), m_logger );
+// // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
+// KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( request ), m_logger );
 
       wrtieTargetObservation( targetfile, resultObs, request );
     }
