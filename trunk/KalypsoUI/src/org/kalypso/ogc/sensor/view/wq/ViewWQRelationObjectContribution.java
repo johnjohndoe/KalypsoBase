@@ -105,7 +105,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
         obsName = obs.getName();
         wqTabelle = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
         wqWechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
-        action.setEnabled( wqTabelle != null );
+        action.setEnabled( wqTabelle != null && !wqTabelle.isEmpty() );
       }
       catch( final Exception ignored )
       {
@@ -115,7 +115,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 
     final Shell shell = m_part.getSite().getShell();
 
-    if( wqTabelle == null )
+    if( wqTabelle == null || wqTabelle.isEmpty() )
     {
       String msg = Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.2"); //$NON-NLS-1$
       if( wqWechmann != null )
