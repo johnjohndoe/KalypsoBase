@@ -538,7 +538,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       return m_fixedWidth;
 
     // Else: Calculate
-    boolean labelEmpty = axis.getLabel().trim().equals( "" );
+    // check nullValue first
+    boolean labelEmpty = axis.getLabel() == null ? true : axis.getLabel().trim().equals( "" );
 
     int width = 0;
     final int gap = getGap();

@@ -57,7 +57,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return m_observation;
   }
 
-  public TupleResultDomainValueData( final IObservation observation, final String domainComponentName, final String targetComponentName )
+  public TupleResultDomainValueData( final IObservation<TupleResult> observation, final String domainComponentName, final String targetComponentName )
   {
     // Die Observation ist schon vorhanden, also kann das Layer gleich als open ausgegeben werden
     m_isOpen = true;
