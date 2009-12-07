@@ -78,6 +78,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.CachedCRSFactory;
 
@@ -135,7 +136,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     Group main = new Group( this, SWT.NONE );
     main.setLayout( new GridLayout( 3, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    main.setText( "Verfügbare Koordinaten-Systeme" );
+    main.setText( Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.0" ) ); //$NON-NLS-1$
 
     /* Create the combo. */
     m_viewer = new ListViewer( main, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
@@ -145,14 +146,14 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new CRSLabelProvider( false ) );
     m_viewer.setSorter( new ViewerSorter() );
-    m_viewer.setInput( new String[] { "Koordinaten-Systeme werden geladen ..." } );
+    m_viewer.setInput( new String[] { Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.1" ) } ); //$NON-NLS-1$
 
     /* Create the info image. */
     final Label imageLabel = new Label( main, SWT.NONE );
     imageLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
 
     /* Set the image. */
-    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
+    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
     Image infoImage = imgDesc.createImage();
     imageLabel.setImage( infoImage );
 
@@ -167,7 +168,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
         String selectedCRS = getSelectedCRS();
         if( selectedCRS == null )
         {
-          imageLabel.setToolTipText( "" );
+          imageLabel.setToolTipText( "" ); //$NON-NLS-1$
           return;
         }
 
@@ -179,7 +180,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     /* Create the button. */
     Button removeButton = new Button( main, SWT.PUSH );
     removeButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    removeButton.setText( "Entfernen" );
+    removeButton.setText( Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.4" ) ); //$NON-NLS-1$
 
     /* Add a listener. */
     removeButton.addSelectionListener( new SelectionAdapter()
@@ -197,7 +198,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     /* Create the button. */
     Button addButton = new Button( main, SWT.PUSH );
     addButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    addButton.setText( "Hinzufügen" );
+    addButton.setText( Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.5" ) ); //$NON-NLS-1$
 
     /* Add a listener. */
     addButton.addSelectionListener( new SelectionAdapter()
@@ -265,13 +266,13 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     setEnabled( false );
 
     /* The names of the coordinate systems as array. */
-    String[] namesArray = preferenceNames.split( ";" );
+    String[] namesArray = preferenceNames.split( ";" ); //$NON-NLS-1$
 
     /* Get all coordinate system names. */
     List<String> names = Arrays.asList( namesArray );
 
     /* Start the job. */
-    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names );
+    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names ); //$NON-NLS-1$
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
@@ -289,7 +290,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   public String getAvailableCoordinateSystems( )
   {
     /* Memory for the keys. */
-    String preferenceNames = "";
+    String preferenceNames = ""; //$NON-NLS-1$
 
     /* Get the iterator for the keys. */
     Iterator<String> iterator = m_coordHash.keySet().iterator();
@@ -305,7 +306,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
       /* Make sure, the names are ; seperated. */
       if( iterator.hasNext() )
-        preferenceNames = preferenceNames + ";";
+        preferenceNames = preferenceNames + ";"; //$NON-NLS-1$
     }
 
     return preferenceNames;
@@ -486,7 +487,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     try
     {
       /* Create the dialog for entering the EPSG code coordinate system. */
-      InputDialog dialog = new InputDialog( display.getActiveShell(), "Koordinaten-System hinzufügen", "Bitte geben Sie den EPSG-Code eines Koordinaten-Systems ein:", "EPSG:", new CRSInputValidator() );
+      InputDialog dialog = new InputDialog( display.getActiveShell(), Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.10" ), Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.11" ), "EPSG:", new CRSInputValidator() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       int open = dialog.open();
       if( open == InputDialog.CANCEL )
         return;
@@ -558,7 +559,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
     Display display = getDisplay();
 
     /* Create a UI job. */
-    UIJob uiJob = new UIJob( display, "AvailableCRSPanelRefreshJob" )
+    UIJob uiJob = new UIJob( display, "AvailableCRSPanelRefreshJob" ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
@@ -573,7 +574,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
             monitor = new NullProgressMonitor();
 
           /* Monitor. */
-          monitor.beginTask( "Aktualisiere verfügbare Koordinaten-Systeme ...", 100 );
+          monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.14" ), 100 ); //$NON-NLS-1$
 
           if( m_viewer == null || m_viewer.getControl().isDisposed() )
           {

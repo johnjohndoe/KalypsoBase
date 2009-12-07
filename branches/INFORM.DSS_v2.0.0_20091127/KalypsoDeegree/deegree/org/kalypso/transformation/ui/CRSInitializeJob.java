@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
@@ -98,15 +99,15 @@ public class CRSInitializeJob extends Job
         monitor = new NullProgressMonitor();
 
       /* Monitor. */
-      monitor.beginTask( "Initialisiere die Koordinaten-Systeme ...", 100 );
-      monitor.subTask( "Initialisiere ..." );
+      monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSInitializeJob.0" ), 100 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.transformation.ui.CRSInitializeJob.1" ) ); //$NON-NLS-1$
 
       /* This function may take a long time, because it is calling internally another long running function. */
       HashMap<String, CoordinateSystem> coordHash = CRSHelper.getCoordHash( m_names );
 
       /* Monitor. */
       monitor.worked( 50 );
-      monitor.subTask( "Initialisierung abgeschlossen ..." );
+      monitor.subTask( Messages.getString( "org.kalypso.transformation.ui.CRSInitializeJob.2" ) ); //$NON-NLS-1$
 
       /* Set the result. */
       m_coordHash = coordHash;

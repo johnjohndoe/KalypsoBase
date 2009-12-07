@@ -41,6 +41,7 @@
 package org.kalypso.transformation.ui;
 
 import org.eclipse.jface.dialogs.IInputValidator;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
@@ -63,7 +64,7 @@ public class CRSInputValidator implements IInputValidator
   public String isValid( String newText )
   {
     if( !CRSHelper.isKnownCRS( newText ) )
-      return "Das Koordinaten-System mit dem EPSG-Code '" + newText + "' existiert nicht.";
+      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
 
     return null;
   }
