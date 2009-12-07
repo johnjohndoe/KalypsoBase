@@ -23,6 +23,20 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#init()
+   */
+  @Override
+  public void init( )
+  {
+    super.init();
+    if( getTargetAxis().getLabel() == null )
+      getTargetAxis().setLabel( getUnitFromComponent( m_data.getTargetComponentName() ) );
+    if( getDomainAxis().getLabel() == null )
+      getDomainAxis().setLabel( getUnitFromComponent( m_data.getDomainComponentName() ) );
+  }
+
   protected TupleResultDomainValueData< ? , ? > m_data;
 
   final public static String TOOLTIP_FORMAT = "%-12s %10.4f [%s]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
@@ -33,11 +47,48 @@ public class TupleResultLineLayer extends AbstractLineLayer
     m_data = data;
   }
 
-  public IObservation<TupleResult> getObservation()
+  public IObservation<TupleResult> getObservation( )
   {
     return m_data.getObservation();
   }
-  
+
+  private String getUnitFromComponent( final String id )
+  {
+    if( m_data == null )
+      return null;
+    m_data.open();
+    final IObservation<TupleResult> obs = m_data.getObservation();
+    final TupleResult tr = obs == null ? null : obs.getResult();
+    if( tr != null )
+    {
+      final int index = tr.indexOfComponent( id );
+      if( index > -1 )
+        return tr.getComponent( index ).getName() + "[" + tr.getComponent( index ).getUnit() + "]";
+    }
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+   
+    if( super.getTitle() == null &&m_data!=null)
+    {
+      m_data.open();
+      final TupleResult tr = getObservation().getResult();
+      if( tr != null )
+      {
+        final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
+        if( targetComponentIndex > -1 )
+          return tr.getComponent( targetComponentIndex ).getName();
+      }
+    }
+    return super.getTitle();
+  }
+
   @Override
   public void drawIcon( final Image img )
   {
@@ -70,8 +121,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
     m_data.open();
 
-    // final TupleResult result = m_data.getTupleResult();
-
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
 
@@ -79,10 +128,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );// domainValues[0].getClass()
-      // );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );// targetValues[0].getClass()
-      // );
+      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
+      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
 
       if( dopDomain == null || dopTarget == null )
         return;
@@ -153,17 +200,17 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final String domainComponentLabel = tr.getComponent( domainComponentIndex ).getName();
     final String targetComponentUnit = tr.getComponent( targetComponentIndex ).getUnit();
     final String domainComponentUnit = tr.getComponent( domainComponentIndex ).getUnit();
-    final Object x =tr.get( index ).getValue( targetComponentIndex );
+    final Object x = tr.get( index ).getValue( targetComponentIndex );
     final Object y = tr.get( index ).getValue( domainComponentIndex );
-    
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit,targetComponentLabel, y, targetComponentUnit } );
+
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit, targetComponentLabel, y, targetComponentUnit } );
   }
 
-  protected Rectangle getHoverRect(final Point screen,final int index)
+  protected Rectangle getHoverRect( final Point screen, final int index )
   {
     return RectangleUtils.buffer( screen );
   }
-  
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
@@ -186,7 +233,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
       if( targetValue == null )
         continue;
       final Point pValue = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
-      final Rectangle hover = getHoverRect( pValue,i );
+      final Rectangle hover = getHoverRect( pValue, i );
       if( hover == null )
         continue;
 
