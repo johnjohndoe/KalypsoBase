@@ -226,7 +226,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   {
     try
     {
-// final String myClassName = ClassUtilities.getOnlyClassName( getClass() );
       final String taskDescription = getDescription();
       monitor.beginTask( taskDescription, m_featurePath.length );
 
@@ -234,10 +233,10 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       if( taskDesk != null )
         getLogger().log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
-      monitor.subTask( "Input wird validiert" );
+      monitor.subTask( " - Input wird validiert" );
       validateInput();
 
-      monitor.subTask( "Lese GML" );
+      monitor.subTask( " - Lese GML" );
       final URL gmlURL = UrlResolverSingleton.getDefault().resolveURL( m_context, m_gml );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
@@ -248,9 +247,11 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           throw new InterruptedException();
 
         try
-        {
-          monitor.subTask( String.format( "Bearbeite %s", featurePath ) );
-          final IStatus result = visitPath( workspace, featurePath, new SubProgressMonitor( monitor, 1 ) );
+        {   if( m_featurePath.length > 1)
+            monitor.subTask( String.format( " - Bearbeite %s", featurePath ) );
+        else
+          monitor.subTask( " - Zeitreihenabruf" );
+          final IStatus result = visitPath( workspace, featurePath, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
           if( !result.isOK() )
             stati.add( result );
         }
