@@ -297,7 +297,7 @@ public class ZmlFactory
 
     try
     {
-      final String urlBase = url.toString();
+      final String urlBase = url.toExternalForm();
       if( !urlBase.startsWith( PROXY_PROTOCOL ) )
         return null;
 
@@ -306,10 +306,11 @@ public class ZmlFactory
         throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
 
       final String itemId = splittedUrlBase[0];
-      final String itemParameters = splittedUrlBase.length > 1 ? splittedUrlBase[1] : null;
+// final String itemParameters = splittedUrlBase.length > 1 ? splittedUrlBase[1] : null;
 
       final IObservation proxyObservation = fetchZmlProxyXml( urlBase, itemId );
-      return FilterFactory.createFilterFrom( itemParameters, proxyObservation, null );
+
+      return decorateObservation( proxyObservation, urlBase, url );
     }
     catch( final SensorException e )
     {
