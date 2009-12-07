@@ -72,6 +72,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
@@ -167,9 +168,9 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     main.setLayout( new GridLayout( 2, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    String title = "Koordinaten-System";
+    String title = Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.0" ); //$NON-NLS-1$
     if( m_extText != null && m_extText.length() > 0 )
-      title = title + " " + m_extText;
+      title = title + " " + m_extText; //$NON-NLS-1$
 
     main.setText( title );
 
@@ -179,15 +180,15 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     m_viewer.setContentProvider( new ArrayContentProvider() );
     m_viewer.setLabelProvider( new CRSLabelProvider( false ) );
     m_viewer.setSorter( new ViewerSorter() );
-    m_viewer.setInput( new String[] { "Koordinaten-Systeme werden geladen ..." } );
-    m_viewer.setSelection( new StructuredSelection( "Koordinaten-Systeme werden geladen ..." ) );
+    m_viewer.setInput( new String[] { Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.2" ) } ); //$NON-NLS-1$
+    m_viewer.setSelection( new StructuredSelection( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.3" ) ) ); //$NON-NLS-1$
 
     /* Create the info image. */
     final Label imageLabel = new Label( main, SWT.NONE );
     imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     /* Set the image. */
-    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
+    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) ); //$NON-NLS-1$
     Image infoImage = imgDesc.createImage();
     m_imageList.add( infoImage );
     imageLabel.setImage( infoImage );
@@ -204,7 +205,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
         String selectedCRS = getSelectedCRS();
         if( selectedCRS == null )
         {
-          imageLabel.setToolTipText( "" );
+          imageLabel.setToolTipText( "" ); //$NON-NLS-1$
           return;
         }
 
@@ -366,7 +367,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     setEnabled( false );
 
     /* Start the job. */
-    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names );
+    CRSInitializeJob initCRSJob = new CRSInitializeJob( "CRSInitializeJob", names ); //$NON-NLS-1$
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
@@ -405,7 +406,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
     Display display = getDisplay();
 
     /* Create a UI job. */
-    UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" )
+    UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
@@ -420,7 +421,7 @@ public class CRSSelectionPanel extends Composite implements IJobChangeListener
             monitor = new NullProgressMonitor();
 
           /* Monitor. */
-          monitor.beginTask( "Aktualisiere Koordinaten-Systeme ...", 100 );
+          monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.8" ), 100 ); //$NON-NLS-1$
 
           if( m_viewer == null || m_viewer.getControl().isDisposed() )
           {

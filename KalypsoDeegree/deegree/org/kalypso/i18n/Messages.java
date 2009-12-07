@@ -38,34 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.transformation.ui;
+package org.kalypso.i18n;
 
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.kalypso.i18n.Messages;
-import org.kalypso.transformation.CRSHelper;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * This validator makes sure an existing coordinate system is selected.
- * 
  * @author Holger Albert
  */
-public class CRSInputValidator implements IInputValidator
+public class Messages
 {
-  /**
-   * The constructor.
-   */
-  public CRSInputValidator( )
+  private static final String BUNDLE_NAME = "org.kalypso.i18n.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
-   */
-  public String isValid( String newText )
+  public static String getString( String key )
   {
-    if( !CRSHelper.isKnownCRS( newText ) )
-      return String.format( Messages.getString( "org.kalypso.transformation.ui.CRSInputValidator.0" ), newText ); //$NON-NLS-1$
-
-    return null;
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }
