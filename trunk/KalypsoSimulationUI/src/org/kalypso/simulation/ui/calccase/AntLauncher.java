@@ -140,7 +140,7 @@ public class AntLauncher
   private boolean isBlocking( ) throws CoreException
   {
     // Check if there is a helper method in debug stuff
-    return m_launchConfiguration.getAttribute( "org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND", true );
+    return m_launchConfiguration.getAttribute( "org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND", false );//$NON-NLS-1$
   }
 
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
