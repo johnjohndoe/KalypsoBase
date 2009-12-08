@@ -426,9 +426,13 @@ public class ChartEditor extends EditorPart implements IChartPart
                 final AxisNumberRangeType range = axisType.getNumberRange();
                 min = range.getMinValue();
                 max = range.getMaxValue();
+                if(Double.isNaN( (Double)min))
+                  min=null;
+                if(Double.isNaN( (Double)max))
+                  max=null;
               }
 
-              if( min == null || max == null )
+              if( min == null || max == null   )
               {
                 autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
               }

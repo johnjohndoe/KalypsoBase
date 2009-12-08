@@ -63,7 +63,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
   {
     style.apply( gc );
-    final Point point = gc.textExtent( value );
+    final Point point = gc.textExtent( value==null?"":value);
     return point;
   }
 

@@ -444,8 +444,8 @@ public class ChartFactory
    */
   private static IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
   {
-    Number min = 0;
-    Number max = 1;
+    Number min = null;
+    Number max = null;
 
     if( at.isSetDateRange() )
     {

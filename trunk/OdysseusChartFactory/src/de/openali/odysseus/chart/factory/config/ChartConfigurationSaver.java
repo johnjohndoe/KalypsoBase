@@ -102,6 +102,8 @@ public class ChartConfigurationSaver
    */
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
+    
+   
     final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
@@ -111,6 +113,7 @@ public class ChartConfigurationSaver
       {
 
         // only set new range
+        //TODO: Die Achsen schreiben ihre range nur in die .kod wenn das Element vorher schon angelegt war
         if( at.isSetDateRange() )
         {
           final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
@@ -199,6 +202,13 @@ public class ChartConfigurationSaver
       {
         // set layer visibility
         lt.setVisible( layer.isVisible() );
+        // set layer label
+        final String title = layer.getTitle();
+        final String description = layer.getDescription();
+        if( description != null )
+          lt.setDescription( description );
+        if( title != null )
+          lt.setTitle( title );
         // everything else stays as it was
         layerTypes.put( layer.getId(), lt );
       }

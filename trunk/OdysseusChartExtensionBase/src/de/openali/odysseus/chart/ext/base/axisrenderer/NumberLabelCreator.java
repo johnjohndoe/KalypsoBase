@@ -48,7 +48,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
  * @author alibu
- * 
  */
 public class NumberLabelCreator implements ILabelCreator
 {
@@ -69,7 +68,7 @@ public class NumberLabelCreator implements ILabelCreator
     if( m_formatString.equals( "%s" ) )
     {
       Format format = getFormat( range );
-      return format.format( value );
+      return format == null ? null : format.format( value );
     }
     else
     {
@@ -80,6 +79,8 @@ public class NumberLabelCreator implements ILabelCreator
   public Format getFormat( final IDataRange<Number> range )
   {
     Number min = range.getMin();
+    if( min == null )
+      return null;
     // FIXME while runs into endlos loop
     if( Double.valueOf( min.doubleValue() ).isInfinite() )
     {
@@ -87,6 +88,8 @@ public class NumberLabelCreator implements ILabelCreator
     }
 
     Number max = range.getMax();
+    if( max == null )
+      return null;
     // FIXME while runs into endlos loop
     if( Double.valueOf( max.doubleValue() ).isInfinite() )
     {
