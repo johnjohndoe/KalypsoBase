@@ -247,10 +247,12 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           throw new InterruptedException();
 
         try
-        {   if( m_featurePath.length > 1)
+        {
+          if( m_featurePath.length > 1 )
             monitor.subTask( String.format( " - Bearbeite %s", featurePath ) );
-        else
-          monitor.subTask( " - Zeitreihenabruf" );
+          else
+            monitor.subTask( " - Zeitreihenabruf" );
+
           final IStatus result = visitPath( workspace, featurePath, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
           if( !result.isOK() )
             stati.add( result );
