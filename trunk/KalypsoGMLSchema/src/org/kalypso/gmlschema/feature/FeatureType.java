@@ -250,7 +250,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   public boolean isAbstract( )
   {
-    return getElement().isSetAbstract();
+    return getElement().getAbstract();
   }
 
   /**
