@@ -332,6 +332,9 @@ public class ZmlFactory
     final IRepository repository = factory.createRepository();
 
     final IRepositoryItem item = repository.findItem( itemId );
+    if( item == null )
+      throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
+
     return (IObservation) item.getAdapter( IObservation.class );
   }
 
@@ -562,7 +565,6 @@ public class ZmlFactory
 
         metadataList.add( mdType );
       }
-
 
       Collections.sort( metadataList, METADATA_COMPERATOR );
 
