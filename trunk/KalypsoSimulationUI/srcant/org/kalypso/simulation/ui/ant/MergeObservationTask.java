@@ -42,7 +42,6 @@ package org.kalypso.simulation.ui.ant;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -86,11 +85,11 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)
+   * @see org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger,
-      final IProgressMonitor monitor )
+  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
   {
     return new MergeObservationFeatureVisitor( resolver, m_sourceContext, context, m_observationProperty, logger );
   }

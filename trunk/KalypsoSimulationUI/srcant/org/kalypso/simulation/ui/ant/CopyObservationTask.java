@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -126,12 +125,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
+  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
   {
     final Date forecastFrom = parseDateTime( m_forecastFrom );
     final Date forecastTo = parseDateTime( m_forecastTo );

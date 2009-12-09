@@ -215,7 +215,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     }
   }
 
-  protected abstract FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+  protected abstract FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger ) throws CoreException, InvocationTargetException, InterruptedException;
 
   protected abstract void validateInput( );
 
@@ -227,16 +227,17 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     try
     {
       final String taskDescription = getDescription();
-      monitor.beginTask( taskDescription, m_featurePath.length );
+      final String monitorDescription = taskDescription == null ? getClass().getSimpleName() : taskDescription;
+      monitor.beginTask( monitorDescription, m_featurePath.length );
 
       final String taskDesk = getDescription();
       if( taskDesk != null )
         getLogger().log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
-      monitor.subTask( " - Input wird validiert" );
+      monitor.subTask( "Input wird validiert" );
       validateInput();
 
-      monitor.subTask( " - Lese GML" );
+      monitor.subTask( "Lese GML" );
       final URL gmlURL = UrlResolverSingleton.getDefault().resolveURL( m_context, m_gml );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
@@ -249,9 +250,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         try
         {
           if( m_featurePath.length > 1 )
-            monitor.subTask( String.format( " - Bearbeite %s", featurePath ) );
-          else
-            monitor.subTask( " - Zeitreihenabruf" );
+            monitor.subTask( String.format( "Bearbeite %s", featurePath ) );
 
           final IStatus result = visitPath( workspace, featurePath, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
           if( !result.isOK() )
@@ -315,18 +314,17 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
   private IStatus visitPath( final GMLWorkspace workspace, final String featurePath, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    // count features
-    final int count = countFeatures( workspace, featurePath );
-
-    monitor.beginTask( featurePath, count );
 
     FeatureVisitor visitor;
     try
     {
       final IUrlResolver resolver = UrlResolverSingleton.getDefault();
       final ILogger logger = getLogger();
-      visitor = createVisitor( m_context, resolver, logger, new SubProgressMonitor( monitor, 1 ) );
-      final MonitorFeatureVisitor wrappedVisitor = new MonitorFeatureVisitor( monitor, visitor );
+      visitor = createVisitor( m_context, resolver, logger );
+
+      // count features
+      final int count = countFeatures( workspace, featurePath );
+      final MonitorFeatureVisitor wrappedVisitor = new MonitorFeatureVisitor( monitor, count, visitor );
       workspace.accept( wrappedVisitor, featurePath, getDepth() );
     }
     catch( final OperationCanceledException e )
