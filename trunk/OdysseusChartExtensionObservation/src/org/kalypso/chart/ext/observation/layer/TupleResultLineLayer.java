@@ -78,7 +78,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     if( super.getTitle() == null &&m_data!=null)
     {
       m_data.open();
-      final TupleResult tr = getObservation().getResult();
+      final IObservation<TupleResult> obs = m_data.getObservation();
+      final TupleResult tr = obs == null ? null : obs.getResult();
       if( tr != null )
       {
         final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );

@@ -110,7 +110,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   protected Object[] getValues( final String compName )
   {
     open();
-    if( !m_isOpen )
+    if( !m_isOpen||m_observation==null )
       return new Object[] {};
     final int iComp = m_observation.getResult().indexOfComponent( compName );
     if( iComp < 0 )
