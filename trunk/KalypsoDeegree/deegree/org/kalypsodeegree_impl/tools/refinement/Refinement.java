@@ -3,8 +3,11 @@ package org.kalypsodeegree_impl.tools.refinement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -19,10 +22,58 @@ public class Refinement
 
   private static final double MAX_DISTANCE = .000001;
 
-  @SuppressWarnings("unchecked")
-  public GM_Object[] doRefine( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public GM_Object[] doRefine( final GM_MultiSurface[] inputSurfaces, final GM_Object inputGeom ) throws GM_Exception
+  {
+    if( inputGeom instanceof GM_Curve )
+    {
+      return doRefineCurve( inputSurfaces, (GM_Curve) inputGeom );
+    }
+    else if( inputGeom instanceof GM_Surface )
+    {
+      return doRefineSurface( inputSurfaces, (GM_Surface<GM_SurfacePatch>) inputGeom );
+    }
+    else
+    {
+      return new GM_Object[0];
+    }
+  }
+
+  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Surface<GM_SurfacePatch> inputSurface ) throws GM_Exception
+  {
+    final GM_Position[] exteriorRing = inputSurface.get( 0 ).getExteriorRing();
+    final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, inputSurface.getCoordinateSystem() );
+    return doRefine( inputSurfaces, curve );
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  private GM_Object[] doRefineCurve( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
   {
     final List<GM_Object> list = new ArrayList<GM_Object>();
+
+    if( inputCurve.getStartPoint().equals( inputCurve.getEndPoint() ) )
+    {
+      final GM_LineString lineString = inputCurve.getAsLineString();
+      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
+      GM_Object remainingSurface = surface;
+      for( GM_MultiSurface multiSurface : inputSurfaces )
+      {
+        for( GM_Surface< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
+        {
+          remainingSurface = remainingSurface.difference( gm_SurfacePatch );
+        }
+      }
+      if( remainingSurface instanceof GM_MultiSurface )
+      {
+        final GM_Surface< ? >[] allSurfaces = ((GM_MultiSurface) remainingSurface).getAllSurfaces();
+        for( GM_Surface< ? > gm_Surface : allSurfaces )
+          list.add( gm_Surface );
+      }
+      else if( remainingSurface instanceof GM_Surface )
+      {
+        list.add( remainingSurface );
+      }
+    }
 
     /* consider each surface */
     for( int i = 0; i < inputSurfaces.length; i++ )
