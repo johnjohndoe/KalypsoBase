@@ -128,7 +128,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor, IMonitored
   /** TODO: Only used by KalypsoNA */
   private final File m_targetobservationDir;
 
-  private String m_currentTaskName;
+  private String m_currentSubTask;
 
   /**
    * @param context
@@ -160,7 +160,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor, IMonitored
     try
     {
       final String targetHref = getTargetHref( f );
-      setCurrentTaskName( targetHref );
+      setCurrentSubTask( targetHref );
 
       final IObservation[] sourceObses = getObservations( f );
       final DateRange[] sourceRanges = getSourceRanges();
@@ -461,16 +461,26 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor, IMonitored
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentTaskName()
+   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getTaskName()
    */
   @Override
-  public String getCurrentTaskName( )
+  public String getTaskName( )
   {
-    return m_currentTaskName;
+    return "";
   }
 
-  private void setCurrentTaskName( final String currentTaskName )
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentSubTask()
+   */
+  @Override
+  public String getCurrentSubTask( )
   {
-    m_currentTaskName = currentTaskName;
+    return m_currentSubTask;
+  }
+
+
+  private void setCurrentSubTask( final String currentSubTask )
+  {
+    m_currentSubTask = currentSubTask;
   }
 }

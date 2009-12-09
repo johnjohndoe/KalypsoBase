@@ -48,7 +48,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -79,8 +78,6 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
   private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
 
-  private final IProgressMonitor m_monitor;
-
   private final String m_sourceTS;
 
   private final String m_targetTS;
@@ -93,13 +90,12 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
   private final String m_sourceFilter;
 
-  public CommitPrognoseFeatureVisitor( final IObservationService srv, final IUrlResolver resolver, final URL context, final String sourceTS, final String targetTS, final String sourceFilter, final IProgressMonitor monitor )
+  public CommitPrognoseFeatureVisitor( final IObservationService srv, final IUrlResolver resolver, final URL context, final String sourceTS, final String targetTS, final String sourceFilter )
   {
     m_srv = srv;
     m_resolver = resolver;
     m_context = context;
     m_sourceFilter = sourceFilter;
-    m_monitor = monitor;
     m_sourceTS = sourceTS;
     m_targetTS = targetTS;
   }
@@ -109,23 +105,13 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    try
-    {
-      m_stati.add( work( f ) );
-    }
-    finally
-    {
-      m_monitor.worked( 1 );
-    }
+    m_stati.add( work( f ) );
 
     return true;
   }
 
   private IStatus work( final Feature f )
   {
-    if( m_monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
-
     final String id = f.getId();
 
     final TimeseriesLinkType sourceLink = (TimeseriesLinkType) f.getProperty( m_sourceTS );

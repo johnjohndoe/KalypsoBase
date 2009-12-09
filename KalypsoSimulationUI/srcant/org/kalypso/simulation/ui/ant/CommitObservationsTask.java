@@ -42,7 +42,6 @@ package org.kalypso.simulation.ui.ant;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,7 +53,6 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
 import org.kalypso.services.observation.sei.IObservationService;
-import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -90,13 +88,14 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
+  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
   {
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
-    return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
+    return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter );
   }
 
   /**

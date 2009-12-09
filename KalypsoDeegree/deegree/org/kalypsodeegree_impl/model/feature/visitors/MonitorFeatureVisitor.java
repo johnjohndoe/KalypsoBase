@@ -55,17 +55,29 @@ public class MonitorFeatureVisitor implements FeatureVisitor
 {
   public static interface IMonitoredFeatureVisitor
   {
-    String getCurrentTaskName( );
+    String getTaskName( );
+
+    String getCurrentSubTask( );
   }
 
   private final IProgressMonitor m_monitor;
 
   private final FeatureVisitor m_visitor;
 
-  public MonitorFeatureVisitor( final IProgressMonitor preinitializedMonitor, final FeatureVisitor delegateVisitor )
+  public MonitorFeatureVisitor( final IProgressMonitor monitor, final int count, final FeatureVisitor delegateVisitor )
   {
-    m_monitor = preinitializedMonitor;
+    m_monitor = monitor;
     m_visitor = delegateVisitor;
+
+    initVisitor( count );
+  }
+
+  private void initVisitor( final int count )
+  {
+    if( m_visitor instanceof IMonitoredFeatureVisitor )
+      m_monitor.beginTask( ((IMonitoredFeatureVisitor) m_visitor).getTaskName(), count );
+    else
+      m_monitor.beginTask( "", count );
   }
 
   /**
@@ -95,7 +107,7 @@ public class MonitorFeatureVisitor implements FeatureVisitor
   {
     if( m_visitor instanceof IMonitoredFeatureVisitor )
     {
-      final String currentTaskName = ((IMonitoredFeatureVisitor) m_visitor).getCurrentTaskName();
+      final String currentTaskName = ((IMonitoredFeatureVisitor) m_visitor).getCurrentSubTask();
       if( currentTaskName != null )
         m_monitor.subTask( currentTaskName );
     }

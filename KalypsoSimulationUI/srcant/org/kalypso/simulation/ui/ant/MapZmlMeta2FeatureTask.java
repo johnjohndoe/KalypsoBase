@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -86,8 +85,7 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver,  final ILogger logger,
-      final IProgressMonitor monitor )
+  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
   {
     return new MapZmlMeta2FeatureVisitor( context, resolver, m_zmlLink, m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
   }
