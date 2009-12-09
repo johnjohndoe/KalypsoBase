@@ -79,22 +79,31 @@ public class IntervallFilter extends AbstractObservationFilter
 
   private final int m_defaultStatus;
 
+  public IntervallFilter( final int mode, final int defaultStatus, final double defaultValue, final int calendarField, final int amount, final String startCalendarField, final int startCalendarValue )
+  {
+    m_mode = mode;
+    m_defaultStatus = defaultStatus;
+    m_defaultValue = defaultValue;
+    m_calendarField = calendarField;
+    m_amount = amount;
+    m_startCalendarField = startCalendarField;
+    m_startCalendarValue = startCalendarValue;
+  }
+
   public IntervallFilter( final IntervallFilterType filter )
+  {
+    this( getMode( filter ), filter.getDefaultStatus(), filter.getDefaultValue(), CalendarUtilities.getCalendarField( filter.getCalendarField() ), filter.getAmount(), filter.getStartCalendarfield(), filter.getStartCalendarvalue() );
+  }
+
+  private static int getMode( final IntervallFilterType filter )
   {
     final String mode = filter.getMode();
     if( "intensity".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
-      m_mode = MODE_INTENSITY;
+      return MODE_INTENSITY;
     else if( "sum".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
-      m_mode = MODE_SUM;
-    else
-      m_mode = MODE_INTENSITY; // default is intensity
-    m_defaultStatus = filter.getDefaultStatus();
-    m_defaultValue = filter.getDefaultValue();
-    m_calendarField = CalendarUtilities.getCalendarField( filter.getCalendarField() );
+      return MODE_SUM;
 
-    m_amount = filter.getAmount();
-    m_startCalendarField = filter.getStartCalendarfield();
-    m_startCalendarValue = filter.getStartCalendarvalue();
+    return MODE_INTENSITY; // default is intensity
   }
 
   @Override

@@ -51,7 +51,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.zml.filters.IntervallFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
@@ -64,7 +63,7 @@ public class IntervallFilterTest extends TestCase
     Writer writer = null;
     try
     {
-      final URL resource = getClass().getResource( Messages.getString("org.kalypso.ogc.sensor.filter.test.IntervallFilterTest.1") ); //$NON-NLS-1$
+      final URL resource = getClass().getResource( "Niederschlag.zml" ); //$NON-NLS-1$
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
       final SimpleLinkType xlink = linkFac.createSimpleLinkType();
@@ -82,7 +81,7 @@ public class IntervallFilterTest extends TestCase
 
       final IntervallFilterType intervallFilter = FilterFactory.OF_FILTER.createIntervallFilterType();
       intervallFilter.setAmount( 10 );
-      intervallFilter.setCalendarField( Messages.getString("org.kalypso.ogc.sensor.filter.test.IntervallFilterTest.3") ); //$NON-NLS-1$
+      intervallFilter.setCalendarField( "MINUTE" ); //$NON-NLS-1$
       intervallFilter.setMode( "sum" ); //$NON-NLS-1$
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
