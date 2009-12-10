@@ -545,7 +545,8 @@ public class ZmlFactory
       final List<MetadataType> metadataList = metadataListType.getMetadata();
 
       String metaName = null;
-      for( final Entry<Object, Object> entry : obs.getMetadataList().entrySet() )
+      MetadataList obsMetadataList = obs.getMetadataList();
+      for( final Entry<Object, Object> entry : obsMetadataList.entrySet() )
       {
         final String mdKey = (String) entry.getKey();
         final String mdValue = (String) entry.getValue();
