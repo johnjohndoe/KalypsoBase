@@ -169,9 +169,9 @@ public class ProfileFeatureFactory implements IWspmConstants
       }
 
       /* Always to set the building, even if null */
-      final IProfil bindingProfile = binding.getProfil();
-      final IProfileObject[] bindingObjects = bindingProfile.getProfileObjects();
-      if( buildingList.size() > 0 || buildingList.size() != bindingObjects.length )
+      //At the moment, we do not look into the building. Always cange the property if we have any building
+      final List<?> oldBuildingList = (List< ? >) binding.getProperty( buildingRT );
+      if( !oldBuildingList.isEmpty() || !buildingList.isEmpty() )
         changes.add( new FeatureChange( binding, buildingRT, buildingList ) );
     }
     catch( final Exception e )
