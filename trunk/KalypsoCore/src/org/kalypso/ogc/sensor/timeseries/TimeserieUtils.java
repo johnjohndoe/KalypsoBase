@@ -274,6 +274,30 @@ public class TimeserieUtils extends TimeserieConstants
     }
   }
 
+  public final static void setDateRange( final IObservation obs, final DateRange range )
+  {
+    if( range == null )
+      return;
+
+    setDateRange( obs, range.getFrom(), range.getTo() );
+  }
+
+  public final static void setDateRange( final IObservation obs, final Date from, final Date to )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    if( from != null )
+    {
+      final String fromStr = DateUtilities.printDateTime( from, timeZone );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
+    }
+
+    if( to != null )
+    {
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
+    }
+  }
+
   /**
    * Returns a new instance of DateRangeArgument containing the beginning and the end of the forecast, given the
    * observation is a forecast.
