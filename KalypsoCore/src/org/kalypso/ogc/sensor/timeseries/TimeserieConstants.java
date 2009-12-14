@@ -137,8 +137,6 @@ public abstract class TimeserieConstants implements ObservationConstants
   }
 
   // METADATEN
-
-  // FIXME: internationalisierung zurücknehmen!
   public final static String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
 
   public final static String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
