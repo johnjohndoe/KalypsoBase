@@ -146,7 +146,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     CopyObservationTimeSeriesDelegate timeSeriesDelegate = new CopyObservationTimeSeriesDelegate( context, m_targetobservation, m_targetObservationDir );
     CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, m_tokens );
 
-    return new CopyObservationFeatureVisitor( context, resolver, timeSeriesDelegate, sourceDelegate,m_metadata, targetRange, forecastRange, logger );
+    return new CopyObservationFeatureVisitor( context, resolver, timeSeriesDelegate, sourceDelegate, m_metadata, targetRange, forecastRange, logger );
   }
 
   private Date parseDateTime( final String lexicalDate )
@@ -205,7 +205,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   }
 
   public final static class Source
-  {
+  { 
     private String property;
 
     private String from;
