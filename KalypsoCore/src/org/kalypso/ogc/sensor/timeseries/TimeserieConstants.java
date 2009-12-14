@@ -192,4 +192,10 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** the alarm-level feature used to show the alarm-levels in some views */
   public static final String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
 
+  /** CopyObservationFeatureVisitor source reference */
+  public static final String MD_COPY_OBS_SRCS_REF = "Quelle_Copy_Obs_Referenz";
+
+  /** Filter reference of CopyObservationFeatureVisitor source reference */
+  public static final String MD_COPY_OBS_SRCS_FILTER = "Quelle_Copy_Obs_Filter";
+
 }
