@@ -328,7 +328,7 @@ public class ZmlFactory
       return RequestFactory.createDefaultObservation( urlBase );
 
     /** resolve IObservation from proxy repository */
-    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
+    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
     final IRepository repository = factory.createRepository();
 
     final IRepositoryItem item = repository.findItem( itemId );
