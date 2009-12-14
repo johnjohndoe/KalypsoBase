@@ -57,6 +57,8 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
+import org.kalypso.ogc.util.CopyObservationSourceDelegate;
+import org.kalypso.ogc.util.CopyObservationTimeSeriesDelegate;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -140,7 +142,11 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final DateRange targetRange = CopyObservationFeatureVisitor.createDateRangeOrNull( targetFrom, targetTo );
 
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
-    return new CopyObservationFeatureVisitor( context, resolver, m_targetobservation, m_targetObservationDir, srcs, m_metadata, targetRange, forecastRange, logger, m_tokens );
+
+    CopyObservationTimeSeriesDelegate timeSeriesDelegate = new CopyObservationTimeSeriesDelegate( context, m_targetobservation, m_targetObservationDir );
+    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, m_tokens );
+
+    return new CopyObservationFeatureVisitor( context, resolver, timeSeriesDelegate, sourceDelegate,m_metadata, targetRange, forecastRange, logger );
   }
 
   private Date parseDateTime( final String lexicalDate )
