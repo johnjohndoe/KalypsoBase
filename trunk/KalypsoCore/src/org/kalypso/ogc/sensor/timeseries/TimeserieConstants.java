@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.timeseries;
 
 import java.util.Arrays;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.ObservationConstants;
 
 /**
@@ -126,14 +125,13 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public static final String[] TYPES_ALL;
 
-
   /**
    * to enable seaching in types the array must be sorted
    */
   static
   {
-    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL, TYPE_KC,
-        TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
+    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
+        TYPE_KC, TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
     Arrays.sort( types );
     TYPES_ALL = types;
   }
@@ -141,38 +139,38 @@ public abstract class TimeserieConstants implements ObservationConstants
   // METADATEN
 
   // FIXME: internationalisierung zurücknehmen!
-  public final static String MD_TIMEZONE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.17" ); //$NON-NLS-1$
+  public final static String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
 
-  public final static String MD_WQWECHMANN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.18" ); //$NON-NLS-1$
+  public final static String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 
-  public final static String MD_WQTABLE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.19" ); //$NON-NLS-1$
+  public final static String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
-  public final static String MD_GKR = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.20" ); //$NON-NLS-1$
+  public final static String MD_GKR = "Rechtswert"; //$NON-NLS-1$
 
-  public final static String MD_GKH = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.21" ); //$NON-NLS-1$
+  public final static String MD_GKH = "Hochwert"; //$NON-NLS-1$
 
-  public final static String MD_COORDSYS = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.22" ); //$NON-NLS-1$
+  public final static String MD_COORDSYS = "Koordinatensystem"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_1 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.23" ); //$NON-NLS-1$
+  public final static String MD_ALARM_1 = "Alarmstufe 1"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_2 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.24" ); //$NON-NLS-1$
+  public final static String MD_ALARM_2 = "Alarmstufe 2"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_3 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.25" ); //$NON-NLS-1$
+  public final static String MD_ALARM_3 = "Alarmstufe 3"; //$NON-NLS-1$
 
-  public final static String MD_ALARM_4 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.26" ); //$NON-NLS-1$
+  public final static String MD_ALARM_4 = "Alarmstufe 4"; //$NON-NLS-1$
 
-  public final static String MD_PEGELNULLPUNKT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.27" ); //$NON-NLS-1$
+  public final static String MD_PEGELNULLPUNKT = "Pegelnullpunkt"; //$NON-NLS-1$
 
-  public final static String MD_HOEHENANGABEART = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.28" ); //$NON-NLS-1$
+  public final static String MD_HOEHENANGABEART = "Höhenangabeart"; //$NON-NLS-1$
 
-  public final static String MD_MESSTISCHBLATT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.29" ); //$NON-NLS-1$
+  public final static String MD_MESSTISCHBLATT = "Messtischblattnummer"; //$NON-NLS-1$
 
-  public final static String MD_FLUSSGEBIET = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.30" ); //$NON-NLS-1$
+  public final static String MD_FLUSSGEBIET = "Flussgebiet"; //$NON-NLS-1$
 
-  public final static String MD_GEWAESSER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.31" ); //$NON-NLS-1$
+  public final static String MD_GEWAESSER = "Gewässer"; //$NON-NLS-1$
 
   /** Stationskennziffer */
-  public final static String MD_KENNZIFFER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.32" ); //$NON-NLS-1$
+  public final static String MD_KENNZIFFER = "Kennziffer"; //$NON-NLS-1$
 
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
@@ -180,20 +178,20 @@ public abstract class TimeserieConstants implements ObservationConstants
    * @deprecated Es sollte nur noch {@link #MD_VORHERSAGE_START} und {@link #MD_VORHERSAGE_ENDE} benutzt werden.
    */
   @Deprecated
-  public final static String MD_VORHERSAGE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.33" ); //$NON-NLS-1$
+  public final static String MD_VORHERSAGE = "Vorhersage"; //$NON-NLS-1$
 
   public final static String MD_VORHERSAGE_START = "Vorhersage Start"; //$NON-NLS-1$
 
   public final static String MD_VORHERSAGE_ENDE = "Vorhersage Ende"; //$NON-NLS-1$
 
-  public final static String MD_DATE_BEGIN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.34" ); //$NON-NLS-1$
+  public final static String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
 
-  public final static String MD_DATE_END = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.35" ); //$NON-NLS-1$
+  public final static String MD_DATE_END = "Datum-Bis"; //$NON-NLS-1$
 
   /** the forecast feature is used in some of the views to mark the forecast date-range */
-  public static final String FEATURE_FORECAST = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.36" ); //$NON-NLS-1$
+  public static final String FEATURE_FORECAST = "Vorhersage";
 
   /** the alarm-level feature used to show the alarm-levels in some views */
-  public static final String FEATURE_ALARMLEVEL = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.37" ); //$NON-NLS-1$
+  public static final String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
 
 }
