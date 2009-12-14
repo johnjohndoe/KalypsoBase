@@ -95,6 +95,8 @@ public interface IWspmConstants
 
   public static final String LENGTH_SECTION_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:components#";//$NON-NLS-1$
 
+  public static final String LENGTH_SECTION_PROPERTY_RUNOFF = LENGTH_SECTION_PROPERTY + "LengthSectionRunOff";//$NON-NLS-1$
+
   public static final String LENGTH_SECTION_PROPERTY_STATION = LENGTH_SECTION_PROPERTY + "LengthSectionStation";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_TYPE = LENGTH_SECTION_PROPERTY + "LengthSectionProfileType";//$NON-NLS-1$
@@ -105,12 +107,12 @@ public interface IWspmConstants
 
   public static final String LENGTH_SECTION_PROPERT_BOE_RE = LENGTH_SECTION_PROPERTY + "LengthSection_Boe_re";//$NON-NLS-1$
 
-  public static final String LENGTH_SECTION_PROPERTY_WEIR_OK = LENGTH_SECTION_PROPERTY + "LengthSection_WeirOK";//$NON-NLS-1$
+  public static final String LENGTH_SECTION_PROPERTY_WEIR_OK = LENGTH_SECTION_PROPERTY + "LengthSection_Weir_OK";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_OK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeOK";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_UK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeUK";//$NON-NLS-1$
-  
+
   public static final String LENGTH_SECTION_PROPERTY_TEXT = LENGTH_SECTION_PROPERTY + "LengthSectionText";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeWidth";//$NON-NLS-1$
@@ -120,6 +122,8 @@ public interface IWspmConstants
   public static final String LENGTH_SECTION_PROPERTY_WATERLEVEL = LENGTH_SECTION_PROPERTY + "LengthSectionWaterlevel";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_H_BV = LENGTH_SECTION_PROPERTY + "LengthSection_h_BV";//$NON-NLS-1$
+
+  public static final String LENGTH_SECTION_PROPERTY_V_M = LENGTH_SECTION_PROPERTY + "LengthSection_v_m";//$NON-NLS-1$
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM"; //$NON-NLS-1$
