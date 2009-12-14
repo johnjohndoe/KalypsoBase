@@ -201,8 +201,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final String domainComponentLabel = tr.getComponent( domainComponentIndex ).getName();
     final String targetComponentUnit = tr.getComponent( targetComponentIndex ).getUnit();
     final String domainComponentUnit = tr.getComponent( domainComponentIndex ).getUnit();
-    final Object x = tr.get( index ).getValue( targetComponentIndex );
-    final Object y = tr.get( index ).getValue( domainComponentIndex );
+    final Object y = tr.get( index ).getValue( targetComponentIndex );
+    final Object x = tr.get( index ).getValue( domainComponentIndex );
 
     return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, domainComponentUnit, targetComponentLabel, y, targetComponentUnit } );
   }
