@@ -108,7 +108,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   private URLConnection openProxyConnection( final URL u ) throws Exception
   {
     /** resolve IObservation from proxy repository */
-    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.core.repository.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
+    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
     final IRepository repository = factory.createRepository();
 
     final String urlBase = u.toString();
