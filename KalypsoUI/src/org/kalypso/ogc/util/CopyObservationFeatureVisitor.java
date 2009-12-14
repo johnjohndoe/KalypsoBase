@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -70,10 +71,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.util.CopyObservationSourceDelegate.ObservationSource;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
@@ -100,9 +101,9 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
   private final Properties m_metadata;
 
-  private final CopyObservationTimeSeriesDelegate m_timeSeriesDelegate;
+  private final ICopyObservationTimeSeriesDelegate m_timeSeriesDelegate;
 
-  private final CopyObservationSourceDelegate m_sourceDelegate;
+  private final ICopyObservationSourceDelegate m_sourceDelegate;
 
   /**
    * @param context
@@ -112,7 +113,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
    * @param metadata
    *          All entries will be added to the target observation
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final CopyObservationTimeSeriesDelegate timeSeriesDelegate, final CopyObservationSourceDelegate sourceDelegate, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final ICopyObservationTimeSeriesDelegate timeSeriesDelegate, final ICopyObservationSourceDelegate sourceDelegate, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -141,7 +142,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
         return true;
 
       final IObservation resultObs = combineResultObservation( sources );
-      updateMetaData( resultObs, feature );
+      updateMetaData( resultObs, feature, sources );
 
       final IRequest request = new ObservationRequest( m_targetRange );
 // // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
@@ -172,7 +173,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     ZmlFactory.writeToFile( resultObs, file, request );
   }
 
-  private void updateMetaData( final IObservation resultObs, final Feature feature )
+  private void updateMetaData( final IObservation resultObs, final Feature feature, final ObservationSource[] sources )
   {
     TimeserieUtils.setDateRange( resultObs, m_targetRange );
 
@@ -180,13 +181,27 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     TimeserieUtils.setForecast( resultObs, m_forecastRange );
 
     // put additional metadata that we got from outside
-    final MetadataList resultMetadata = resultObs.getMetadataList();
-    for( final Entry<Object, Object> element : m_metadata.entrySet() )
+    final MetadataList mdl = resultObs.getMetadataList();
+
+    if( feature != null )
     {
-      final Entry<Object, Object> entry = element;
-      final String metaValue = replaceMetadata( feature, (String) entry.getValue() );
-      final String metaKey = (String) entry.getKey();
-      resultMetadata.put( metaKey, metaValue );
+      for( final Entry<Object, Object> element : m_metadata.entrySet() )
+      {
+        final Entry<Object, Object> entry = element;
+        final String metaValue = replaceMetadata( feature, (String) entry.getValue() );
+        final String metaKey = (String) entry.getKey();
+        mdl.put( metaKey, metaValue );
+      }
+    }
+
+    int count = 0;
+    for( ObservationSource source : sources )
+    {
+      String reference = source.OBSERVATION.getIdentifier();
+      String filter = XMLUtilities.encapsulateInCDATA( source.FILTER );
+
+      mdl.put( TimeserieConstants.MD_COPY_OBS_SRCS_REF + "_" + Integer.valueOf( count ).toString(), reference );
+      mdl.put( TimeserieConstants.MD_COPY_OBS_SRCS_FILTER + "_" + Integer.valueOf( count ).toString(), filter );
     }
   }
 

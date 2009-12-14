@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesDelegate
+public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSeriesDelegate
 {
   private static final ObjectFactory OF = new ObjectFactory();
 

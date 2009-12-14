@@ -66,24 +66,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
-public class CopyObservationSourceDelegate
+public class CopyObservationSourceDelegate implements ICopyObservationSourceDelegate
 {
-
-  public class ObservationSource
-  {
-    public final IObservation OBSERVATION;
-
-    public final DateRange DATE_RANGE;
-
-    public ObservationSource( final IObservation observation, final DateRange dateRange )
-    {
-      OBSERVATION = observation;
-      DATE_RANGE = dateRange;
-    }
-  }
 
   private final Source[] m_sources;
 
@@ -113,9 +99,7 @@ public class CopyObservationSourceDelegate
     for( Source source : m_sources )
     {
       IObservation observation = getObservation( feature, source.getProperty(), source.getRange(), source.getFilter() );
-      DateRange dateRange = source.getRange();
-
-      sources.add( new ObservationSource( observation, dateRange ) );
+      sources.add( new ObservationSource( observation, source.getRange(), source.getFilter() ) );
     }
 
     return sources.toArray( new ObservationSource[] {} );
