@@ -45,6 +45,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
+import org.kalypso.ogc.util.CopyObservationSourceDelegate;
+import org.kalypso.ogc.util.CopyObservationTimeSeriesDelegate;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -149,7 +151,10 @@ public class CopyObservationMappingHelper
     // exactly the same plugins. Setting it here succeeded however.
 
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP.getLocalPart(), null, sources, new Properties(), completeRange, forecastRange, logger, null );
+    CopyObservationTimeSeriesDelegate timeSeriesDelegate = new CopyObservationTimeSeriesDelegate( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null );
+    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( srcContext, sources, null );
+
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, timeSeriesDelegate, sourceDelegate, new Properties(), completeRange, forecastRange, logger );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }
