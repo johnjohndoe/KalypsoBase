@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Panel;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -65,7 +66,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.swing.jtable.PopupMenu;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
@@ -86,6 +89,8 @@ import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoUIExtensions;
 
 /**
  * A JTable that can display observations.
@@ -151,6 +156,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     header.addMouseListener( columnHeaderListener );
     header.setReorderingAllowed( false );
     header.setEnabled( true );
+    addPopupMenu( header );
 
     final TableCellRenderer nbRenderer = new MaskedNumberTableCellRenderer( m_model );
     m_table.setDefaultRenderer( Date.class, m_dateRenderer );
@@ -194,6 +200,34 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
+  }
+
+  private void addPopupMenu( final JTableHeader header )
+  {
+    try
+    {
+      final java.awt.PopupMenu menu = KalypsoUIExtensions.getObservationTableHeaderPopupMenu();
+      if( menu != null )
+        header.add( menu );
+
+      header.addMouseListener( new MouseAdapter()
+      {
+        /**
+         * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+         */
+        @Override
+        public void mouseReleased( final MouseEvent e )
+        {
+
+          menu.show( header, e.getX(), e.getY() );
+        }
+      } );
+    }
+    catch( CoreException e )
+    {
+      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
   }
 
   public void dispose( )
@@ -388,7 +422,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     doLayout();
   }
 
-  private static class MainColumnModel extends DefaultTableColumnModel
+  public static class MainColumnModel extends DefaultTableColumnModel
   {
     private final ObservationTableModel m_obsModel;
 
@@ -420,6 +454,12 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
       super.addColumn( aColumn );
     }
+
+    public ObservationTableModel getObservationModel( )
+    {
+      return m_obsModel;
+    }
+
   }
 
   protected static class RowHeaderColumnModel extends DefaultTableColumnModel
