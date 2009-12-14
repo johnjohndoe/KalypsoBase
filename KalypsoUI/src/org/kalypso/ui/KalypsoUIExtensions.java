@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import java.awt.PopupMenu;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -86,7 +89,11 @@ public class KalypsoUIExtensions
   /* extension-point 'featureViewExtensionControl' */
   private final static String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl"; //$NON-NLS-1$
 
+  private final static String OBSERVATION_TABLE_HEADER_POPUP_MENU_EXTENSION_POINT = "org.kalypso.ui.observationTableHeaderPopupMenu"; //$NON-NLS-1$
+
   private static Map<String, IConfigurationElement> THE_FEATUREVIEW_CONTROL_MAP = null;
+
+  private static Map<String, IConfigurationElement> OBSERVATION_TABLE_HEADER_POPUP_MENUS = null;
 
   public static IFeatureviewControlFactory getFeatureviewControlFactory( final String id ) throws CoreException
   {
@@ -115,11 +122,47 @@ public class KalypsoUIExtensions
         final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         THE_FEATUREVIEW_CONTROL_MAP.put( id, element );
       }
-
     }
 
     return THE_FEATUREVIEW_CONTROL_MAP;
   }
+
+  public static PopupMenu getObservationTableHeaderPopupMenu( ) throws CoreException
+  {
+    final Map<String, IConfigurationElement> map = getObservationTableHeaderPopupMenus();
+    if( map == null )
+      return null;
+
+    Collection<IConfigurationElement> collection = map.values();
+    if( collection.size() == 0 )
+      return null;
+    else if( collection.size() > 1 )
+      throw new NotImplementedException(); // at the moment we only support one popup menu
+
+    IConfigurationElement element = collection.iterator().next();
+
+    return (PopupMenu) element.createExecutableExtension( "menu" ); //$NON-NLS-1$
+  }
+
+  private static synchronized Map<String, IConfigurationElement> getObservationTableHeaderPopupMenus( )
+  {
+    if( OBSERVATION_TABLE_HEADER_POPUP_MENUS == null )
+    {
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( OBSERVATION_TABLE_HEADER_POPUP_MENU_EXTENSION_POINT );
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+      OBSERVATION_TABLE_HEADER_POPUP_MENUS = new HashMap<String, IConfigurationElement>( configurationElements.length );
+
+      for( final IConfigurationElement element : configurationElements )
+      {
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
+        OBSERVATION_TABLE_HEADER_POPUP_MENUS.put( id, element );
+      }
+    }
+
+    return OBSERVATION_TABLE_HEADER_POPUP_MENUS;
+  }
+
 
   public static IComponentUiHandlerProvider createComponentUiHandlerProvider( final String componentUiHandlerProviderId )
   {
