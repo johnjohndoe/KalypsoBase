@@ -31,6 +31,7 @@ package org.kalypso.repository;
 
 
 
+
 /**
  * RepositoryUtils provides some utility methods in a static way
  * 
@@ -183,5 +184,6 @@ public class RepositoryUtils
 
     return base;
   }
+
 
 }
