@@ -50,6 +50,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -89,8 +90,22 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * 
  * @author schlienger
  */
-public class TimeserieUtils extends TimeserieConstants
+public class TimeserieUtils implements TimeserieConstants
 {
+
+  public static final String[] TYPES_ALL;
+
+  /**
+   * to enable seaching in types the array must be sorted
+   */
+  static
+  {
+    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
+        TYPE_KC, TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
+    Arrays.sort( types );
+    TYPES_ALL = types;
+  }
+
   /** default date format used within some of the timeseries dependent properties */
 // TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
 // locale
@@ -271,30 +286,6 @@ public class TimeserieUtils extends TimeserieConstants
     {
       final String toStr = DateUtilities.printDateTime( to, timeZone );
       obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE_ENDE, toStr ); //$NON-NLS-1$
-    }
-  }
-
-  public final static void setDateRange( final IObservation obs, final DateRange range )
-  {
-    if( range == null )
-      return;
-
-    setDateRange( obs, range.getFrom(), range.getTo() );
-  }
-
-  public final static void setDateRange( final IObservation obs, final Date from, final Date to )
-  {
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    if( from != null )
-    {
-      final String fromStr = DateUtilities.printDateTime( from, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
-    }
-
-    if( to != null )
-    {
-      final String toStr = DateUtilities.printDateTime( to, timeZone );
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
   }
 

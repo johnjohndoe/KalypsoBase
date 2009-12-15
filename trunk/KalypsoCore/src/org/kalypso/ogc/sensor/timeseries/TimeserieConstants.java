@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
-import java.util.Arrays;
-
 import org.kalypso.ogc.sensor.ObservationConstants;
 
 /**
@@ -49,7 +47,7 @@ import org.kalypso.ogc.sensor.ObservationConstants;
  * 
  * @author schlienger
  */
-public abstract class TimeserieConstants implements ObservationConstants
+public  interface TimeserieConstants extends ObservationConstants
 {
   /** Niederschlag */
   public final static String TYPE_RAINFALL = "N"; //$NON-NLS-1$
@@ -123,18 +121,6 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** virtual time series data source */
   public static final String TYPE_DATA_SRC = "DATA_SRC"; //$NON-NLS-1$
 
-  public static final String[] TYPES_ALL;
-
-  /**
-   * to enable seaching in types the array must be sorted
-   */
-  static
-  {
-    final String[] types = new String[] { TYPE_DATE, TYPE_EVAPORATION, TYPE_RAINFALL, TYPE_RUNOFF, TYPE_TEMPERATURE, TYPE_VOLUME, TYPE_WATERLEVEL, TYPE_NORM, TYPE_AREA, TYPE_HOURS, TYPE_NORMNULL,
-        TYPE_KC, TYPE_WT, TYPE_LAI, TYPE_HUMIDITY, TYPE_VELOCITY };
-    Arrays.sort( types );
-    TYPES_ALL = types;
-  }
 
   // METADATEN
   public final static String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
@@ -191,11 +177,5 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   /** the alarm-level feature used to show the alarm-levels in some views */
   public static final String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
-
-  /** CopyObservationFeatureVisitor source reference */
-  public static final String MD_COPY_OBS_SRCS_REF = "Quelle_Copy_Obs_Referenz";
-
-  /** Filter reference of CopyObservationFeatureVisitor source reference */
-  public static final String MD_COPY_OBS_SRCS_FILTER = "Quelle_Copy_Obs_Filter";
 
 }
