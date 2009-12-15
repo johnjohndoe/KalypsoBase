@@ -50,11 +50,11 @@ public interface ICopyObservationTimeSeriesConstants extends TimeserieConstants
 
   String MD_TIME_SERIES_FILTER = "CopyObsVisitor_Src_Filter";
 
-  String MD_TIME_SERIES_TARGET_RANGE_FROM = "CopyObsVisitor_Src_TargetRange_From";
+  String MD_TIME_SERIES_SRC_DATE_RANGE_FROM = "CopyObsVisitor_Src_DateRange_From";
 
-  String MD_TIME_SERIES_TARGET_RANGE_TO = "CopyObsVisitor_Src_TargetRange_To";
+  String MD_TIME_SERIES_SRC_DATE_RANGE_TO = "CopyObsVisitor_Src_DateRange_To";
 
-  String MD_TIME_SERIES_FORECAST_RANGE_FROM = "CopyObsVisitor_Src_ForecastRange_From";
+  String MD_TIME_SERIES_FORECAST_DATE_RANGE_FROM = "CopyObsVisitor_Src_ForecastDateRange_From";
 
-  String MD_TIME_SERIES_FORECAST_RANGE_TO = "CopyObsVisitor_Src_ForecastRange_To";
+  String MD_TIME_SERIES_FORECAST_DATE_RANGE_TO = "CopyObsVisitor_Src_ForecastDateRange_To";
 }

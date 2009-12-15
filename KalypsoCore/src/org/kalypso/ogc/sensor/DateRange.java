@@ -95,6 +95,14 @@ public class DateRange implements Comparable<DateRange>
       m_to = to;
   }
 
+  public static DateRange createDateRangeOrNull( final Date from, final Date to )
+  {
+    if( from == null || to == null )
+      return null;
+
+    return new DateRange( from, to );
+  }
+
   public Date getFrom( )
   {
     return m_from;
@@ -190,7 +198,7 @@ public class DateRange implements Comparable<DateRange>
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return compareTo( (DateRange) obj ) == 0;
   }
