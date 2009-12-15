@@ -44,9 +44,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.ogc.util.CopyObservationSourceDelegate;
-import org.kalypso.ogc.util.timeserieslink.CopyObservationTimeSeriesLinkFactory;
-import org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink;
+import org.kalypso.ogc.util.CopyObservationSource;
+import org.kalypso.ogc.util.DefaultCopyObservationSouce;
+import org.kalypso.ogc.util.ICopyObservationSource;
+import org.kalypso.ogc.util.timeserieslink.CopyObservationTargetFactory;
+import org.kalypso.ogc.util.timeserieslink.ICopyObservationTarget;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -131,20 +133,20 @@ public class CopyObservationMappingHelper
    */
   public static void runMapping( final GMLWorkspace workspace, final URL srcContext, final ILogger logger, final boolean keepForecast, final DateRange measuredRange, final DateRange doNotOverwriteRange, final DateRange forecastRange )
   {
-    final CopyObservationFeatureVisitor.Source[] sources;
+    final CopyObservationSource[] sources;
     if( keepForecast )
     {
       /*
        * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
        * it is the first element that will be backed by the forecast-filter forecast and measured
        */
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
+      sources = new CopyObservationSource[] { new CopyObservationSource( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
+          new CopyObservationSource( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
     {
       // measured
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+      sources = new CopyObservationSource[] { new CopyObservationSource( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
     }
 
     /*
@@ -154,10 +156,10 @@ public class CopyObservationMappingHelper
      */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
-    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( srcContext, sources, forecastRange, null );
+    ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
+    ICopyObservationSource source = new DefaultCopyObservationSouce( srcContext, sources, forecastRange, null );
 
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, new Properties(), logger );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new Properties(), logger );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }
