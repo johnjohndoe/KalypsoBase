@@ -324,6 +324,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     m_isApplyTemplate = true;
 
+    setSorter( null );
     setFilters( new ViewerFilter[0] );
 
     if( tableView != null )
