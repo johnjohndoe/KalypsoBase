@@ -71,13 +71,12 @@ public class CopyObservationTimeSeriesLink extends AbstractObservationTimeSeries
     {
       throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
     }
-    
+
     // remove query part if present, href is also used as file name here!
     final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
     return href;
   }
 
-  @SuppressWarnings("deprecation")
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
     return (TimeseriesLinkType) f.getProperty( m_targetobservation );

@@ -85,10 +85,13 @@ public class CopyObservationSourceDelegate implements ICopyObservationSourceDele
 
   private final URL m_context;
 
-  public CopyObservationSourceDelegate( final URL context, final Source[] sources, final String tokens )
+  private final DateRange m_foreCastDateRange;
+
+  public CopyObservationSourceDelegate( final URL context, final Source[] sources, final DateRange foreCastDateRange, final String tokens )
   {
     m_context = context;
     m_sources = sources;
+    m_foreCastDateRange = foreCastDateRange;
     m_tokens = tokens;
   }
 
@@ -99,7 +102,7 @@ public class CopyObservationSourceDelegate implements ICopyObservationSourceDele
     for( Source source : m_sources )
     {
       IObservation observation = getObservation( feature, source.getProperty(), source.getRange(), source.getFilter() );
-      sources.add( new ObservationSource( observation, source.getRange(), source.getFilter() ) );
+      sources.add( new ObservationSource( observation, source.getRange(), m_foreCastDateRange, source.getFilter() ) );
     }
 
     return sources.toArray( new ObservationSource[] {} );
