@@ -38,15 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.timeserieslink;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationTimeSeriesDelegate
+public class CopyObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
 {
-  String getTargetHref( Feature feature ) throws CoreException;
+  private final String m_targetobservation;
+
+  public CopyObservationTimeSeriesLink( final String targetobservation )
+  {
+    m_targetobservation = targetobservation;
+  }
+
+  public String getTargetHref( final Feature f ) throws CoreException
+  {
+    final TimeseriesLinkType targetlink = getTargetLink( f );
+    if( targetlink == null )
+    {
+      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
+    }
+    
+    // remove query part if present, href is also used as file name here!
+    final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
+    return href;
+  }
+
+  private TimeseriesLinkType getTargetLink( final Feature f )
+  {
+    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
+  }
+
+  public boolean isSourceEqualTargetObservation( final String source )
+  {
+    return m_targetobservation.equals( source );
+  }
+
 }

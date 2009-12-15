@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.timeserieslink;
 
 import java.io.File;
 import java.net.URL;
@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSeriesDelegate
+public class CopyObservationTimeSeriesNALink implements ICopyObservationTimeSeriesLink
 {
   private static final ObjectFactory OF = new ObjectFactory();
 
@@ -66,13 +66,11 @@ public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSe
   /** TODO: Only used by KalypsoNA */
   private final File m_targetobservationDir;
 
-  private final String m_targetobservation;
 
-  public CopyObservationTimeSeriesDelegate( final URL context, final String targetobservation, final File targetobservationDir )
+  public CopyObservationTimeSeriesNALink( final URL context, final File targetobservationDir )
   {
     m_context = context;
     m_targetobservationDir = targetobservationDir;
-    m_targetobservation = targetobservation;
   }
 
   public String getTargetHref( final Feature f ) throws CoreException
@@ -90,8 +88,6 @@ public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSe
 
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
-    if( m_targetobservationDir != null )
-    {
       // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
       String name = (String) f.getProperty( "name" ); //$NON-NLS-1$
       if( name == null || name.length() < 1 )
@@ -105,9 +101,6 @@ public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSe
       final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
       link.setHref( relativePathTo );
       return link;
-    }
-
-    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
   }
 
   private File getValidFile( final String name, int index )
@@ -124,10 +117,4 @@ public class CopyObservationTimeSeriesDelegate implements ICopyObservationTimeSe
     }
     return file;
   }
-
-  public boolean isSourceEqualTargetObservation( final String source )
-  {
-    return m_targetobservation.equals( source );
-  }
-
 }
