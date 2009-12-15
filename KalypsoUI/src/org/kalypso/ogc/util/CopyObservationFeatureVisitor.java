@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
@@ -101,7 +102,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
   private final Properties m_metadata;
 
-  private final ICopyObservationTimeSeriesDelegate m_timeSeriesDelegate;
+  private final ICopyObservationTimeSeriesLink m_timeSeriesDelegate;
 
   private final ICopyObservationSourceDelegate m_sourceDelegate;
 
@@ -113,7 +114,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
    * @param metadata
    *          All entries will be added to the target observation
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final ICopyObservationTimeSeriesDelegate timeSeriesDelegate, final ICopyObservationSourceDelegate sourceDelegate, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final ICopyObservationTimeSeriesLink timeSeriesDelegate, final ICopyObservationSourceDelegate sourceDelegate, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger )
   {
     m_context = context;
     m_urlResolver = urlResolver;
