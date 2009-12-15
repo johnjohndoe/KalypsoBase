@@ -8,7 +8,8 @@ Export-Package: org.kalypso.repository,
  org.kalypso.repository.conf,
  org.kalypso.repository.container,
  org.kalypso.repository.factory,
- org.kalypso.repository.file
+ org.kalypso.repository.file,
+ org.kalypso.repository.utils
 Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
  org.kalypso.commons;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
