@@ -140,7 +140,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
  
     ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
-    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, m_tokens );
+    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, forecastRange, m_tokens );
 
     return new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, m_metadata, logger );
   }

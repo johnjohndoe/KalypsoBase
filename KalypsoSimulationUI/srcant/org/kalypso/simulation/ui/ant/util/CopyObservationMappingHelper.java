@@ -55,10 +55,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
- * Helper class to generate a gml that can be used for converting timeseries. The generated gml includes a list map
+ * Helper class to generate a gml that can be used for converting time series. The generated gml includes a list map
  * features. Each map feature has a input-TimeseriesLink and output-TimeseriesLink. The resulting gml can be used as
  * input for the CopyObservationTask. TODO also add a geometry property to the map feature, so that this gml can be also
- * used with a mapview (e.g. in a wizard), where the user can select the timeseries from the map.
+ * used with a mapview (e.g. in a wizard), where the user can select the time series from the map.
  * 
  * @author doemming
  */
@@ -134,26 +134,28 @@ public class CopyObservationMappingHelper
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
     {
-      // Note: the order is important for the ForecastFilter!
-      // so we put the target-obs in the first place since it is
-      // the first element that will be backed by the forecast-filter
-      // forecast and measured
+      /*
+       * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
+       * it is the first element that will be backed by the forecast-filter forecast and measured
+       */
       sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
           new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
+    {
       // measured
       sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+    }
 
-    // REMARK: forecastFrom and forecastTo where formerly not set which resultet in
-    // strange behaviour: run from the runtime workspace, the forecast range
-    // was set, from the deployed application it was not, however both used
-    // exactly the same plugins. Setting it here succeeded however.
-
+    /*
+     * REMARK: forecastFrom and forecastTo where formerly not set which resulted in strange behavior: run from the
+     * runtime workspace, the forecast range was set, from the deployed application it was not, however both used
+     * exactly the same plug-ins. Setting it here succeeded however.
+     */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
     ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
-    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( srcContext, sources, null );
+    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( srcContext, sources, forecastRange, null );
 
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, new Properties(), logger );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
