@@ -29,6 +29,8 @@
  */
 package org.kalypso.repository;
 
+import org.kalypso.repository.utils.RepositoryUtils;
+
 import junit.framework.TestCase;
 
 /**
