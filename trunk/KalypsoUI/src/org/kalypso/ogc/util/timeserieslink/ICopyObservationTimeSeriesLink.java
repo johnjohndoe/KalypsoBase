@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.util.timeserieslink;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -49,4 +52,10 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface ICopyObservationTimeSeriesLink
 {
   String getTargetHref( Feature feature ) throws CoreException;
+
+  DateRange getTargetDateRange( );
+
+  DateRange getForecastDateRange( );
+
+  URL getContext( );
 }

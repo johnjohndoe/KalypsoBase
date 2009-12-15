@@ -92,7 +92,7 @@ public class CopyObservationSourceDelegate implements ICopyObservationSourceDele
     m_tokens = tokens;
   }
 
-  public ObservationSource[] getObservationSources( final Feature feature ) throws MalformedURLException, SensorException
+  public final ObservationSource[] getObservationSources( final Feature feature ) throws MalformedURLException, SensorException
   {
     List<ObservationSource> sources = new ArrayList<ObservationSource>();
 

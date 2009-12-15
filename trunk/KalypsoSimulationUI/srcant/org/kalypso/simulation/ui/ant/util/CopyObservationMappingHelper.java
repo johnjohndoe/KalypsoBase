@@ -34,7 +34,6 @@ import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -130,7 +129,7 @@ public class CopyObservationMappingHelper
    * this mapping updates only the measured time period, the forecast period will be taken from the target before
    * overwriting it. So only measured period will update.
    */
-  public static void runMapping( final GMLWorkspace workspace, final IUrlResolver resolver, final URL srcContext, final ILogger logger, final boolean keepForecast, final DateRange measuredRange, final DateRange doNotOverwriteRange, final DateRange forecastRange )
+  public static void runMapping( final GMLWorkspace workspace, final URL srcContext, final ILogger logger, final boolean keepForecast, final DateRange measuredRange, final DateRange doNotOverwriteRange, final DateRange forecastRange )
   {
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
@@ -153,10 +152,10 @@ public class CopyObservationMappingHelper
 
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null );
+    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
     CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( srcContext, sources, null );
 
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, timeSeriesLink, sourceDelegate, new Properties(), completeRange, forecastRange, logger );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, new Properties(), logger );
     workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }

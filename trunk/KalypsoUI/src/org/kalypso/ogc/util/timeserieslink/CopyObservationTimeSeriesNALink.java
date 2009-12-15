@@ -49,31 +49,32 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * FIXME: this class is only used by KalypsoNA. move this class to the NA plugin!
+ * 
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesNALink implements ICopyObservationTimeSeriesLink
+public class CopyObservationTimeSeriesNALink extends AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
 {
   private static final ObjectFactory OF = new ObjectFactory();
 
-  private final URL m_context;
-
-  /** TODO: Only used by KalypsoNA */
   private final File m_targetobservationDir;
 
 
-  public CopyObservationTimeSeriesNALink( final URL context, final File targetobservationDir )
+  public CopyObservationTimeSeriesNALink( final URL context, final File targetobservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
-    m_context = context;
+    super( context, targetRange, forecastRange );
+    
     m_targetobservationDir = targetobservationDir;
   }
 
-  public String getTargetHref( final Feature f ) throws CoreException
+  public final String getTargetHref( final Feature f ) throws CoreException
   {
     final TimeseriesLinkType targetlink = getTargetLink( f );
     if( targetlink == null )
@@ -86,6 +87,7 @@ public class CopyObservationTimeSeriesNALink implements ICopyObservationTimeSeri
     return href;
   }
 
+  @SuppressWarnings("deprecation")
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
       // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
@@ -96,14 +98,14 @@ public class CopyObservationTimeSeriesNALink implements ICopyObservationTimeSeri
         name = "generated"; //$NON-NLS-1$
       final File file = getValidFile( name, 0 );
       final TimeseriesLinkType link = OF.createTimeseriesLinkType();
-      final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
+    final IFile contextIFile = ResourceUtilities.findFileFromURL( getContext() );
       final File contextFile = contextIFile.getLocation().toFile();
       final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
       link.setHref( relativePathTo );
       return link;
   }
 
-  private File getValidFile( final String name, int index )
+  private File getValidFile( final String name, final int index )
   {
     String newName = name;
     if( index > 0 )
@@ -112,9 +114,9 @@ public class CopyObservationTimeSeriesNALink implements ICopyObservationTimeSeri
     final File file = new File( m_targetobservationDir, newName2 + ".zml" ); //$NON-NLS-1$
     if( file.exists() )
     {
-      index++;
-      return getValidFile( name, index );
+      return getValidFile( name, index + 1 );
     }
+
     return file;
   }
 }
