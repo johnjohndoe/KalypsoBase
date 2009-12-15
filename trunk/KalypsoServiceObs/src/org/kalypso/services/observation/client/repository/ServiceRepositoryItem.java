@@ -76,7 +76,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName( )
+  public final String getName( )
   {
     return m_bean.getName();
   }
@@ -84,7 +84,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent( )
+  public final IRepositoryItem getParent( )
   {
     return m_parent;
   }
@@ -92,7 +92,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public final boolean hasChildren( ) throws RepositoryException
   {
     try
     {
@@ -107,7 +107,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
@@ -161,7 +161,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   }
 
   @Override
-  public String toString( )
+  public final String toString( )
   {
     return getName();
   }
@@ -169,7 +169,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier( )
+  public final String getIdentifier( )
   {
     return m_bean.getId();
   }
@@ -177,7 +177,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository( )
+  public final IRepository getRepository( )
   {
     return m_rep;
   }
@@ -186,7 +186,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class adapter )
+  public final boolean hasAdapter( final Class adapter )
   {
     Object object = getAdapter( adapter );
     if( object == null )

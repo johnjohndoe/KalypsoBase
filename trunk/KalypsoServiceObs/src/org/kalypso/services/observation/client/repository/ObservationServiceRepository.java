@@ -48,7 +48,8 @@ import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.RepositoryUtils;
+import org.kalypso.repository.utils.RepositoryItemUtlis;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -61,7 +62,7 @@ import org.kalypso.services.observation.sei.ItemBean;
 public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository
 {
   /** root item is identified by the null bean */
-  private final static ItemBean ROOT_ITEM = null;
+  private static final ItemBean ROOT_ITEM = null;
 
   /**
    * @throws ServiceException
@@ -85,7 +86,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   }
 
   @Override
-  public String getDescription( )
+  public final String getDescription( )
   {
     return ""; //$NON-NLS-1$
   }
@@ -93,7 +94,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren( ) throws RepositoryException
+  public final boolean hasChildren( ) throws RepositoryException
   {
     try
     {
@@ -108,7 +109,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren( ) throws RepositoryException
+  public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
@@ -143,7 +144,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload( ) throws RepositoryException
+  public final void reload( ) throws RepositoryException
   {
     try
     {
@@ -158,7 +159,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   /**
    * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
    */
-  public IRepositoryItem findItem( final String id ) throws RepositoryException
+  public final IRepositoryItem findItem( final String id ) throws RepositoryException
   {
     if( this.getIdentifier() == id )
       return this;
@@ -182,7 +183,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   private IRepositoryItem findItemRecursive( final String id, final IRepositoryItem item ) throws RepositoryException
   {
     // either this is the item, or find recursive
-    final String identifier = RepositoryUtils.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
+    final String identifier = RepositoryItemUtlis.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
     if( identifier.equals( id ) )
     {
       return item;
@@ -195,7 +196,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
       final IRepositoryItem[] items = item.getChildren();
       for( final IRepositoryItem child : items )
       {
-        final String childIdentifier = RepositoryUtils.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
+        final String childIdentifier = RepositoryItemUtlis.replaceIdentifier( item.getIdentifier(), this.getIdentifier() );
         if( !RepositoryUtils.continueSearch( childIdentifier, id ) )
           continue;
 
@@ -212,7 +213,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
    */
   @Override
-  public void makeItem( final String identifier ) throws RepositoryException
+  public final void makeItem( final String identifier ) throws RepositoryException
   {
     getService().makeItem( identifier );
   }
@@ -221,7 +222,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
    */
   @Override
-  public void deleteItem( final String identifier ) throws RepositoryException
+  public final void deleteItem( final String identifier ) throws RepositoryException
   {
     getService().deleteItem( identifier );
   }
@@ -230,7 +231,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IModifyableRepositoryItem#setData(java.lang.Object)
    */
   @Override
-  public void setData( final Serializable observation )
+  public final void setData( final Serializable observation )
   {
     throw new IllegalStateException( "This should never happen" );
   }
@@ -239,7 +240,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    * @see org.kalypso.repository.IModifyableRepositoryItem#setName(java.lang.String)
    */
   @Override
-  public void setName( final String itemName ) throws RepositoryException
+  public final void setName( final String itemName )
   {
     throw new IllegalStateException( "This should never happen" );
   }

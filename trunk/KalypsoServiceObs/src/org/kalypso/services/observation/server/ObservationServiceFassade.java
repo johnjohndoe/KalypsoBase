@@ -75,10 +75,10 @@ import org.kalypso.repository.IModifyableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.repository.utils.RepositoryItemUtlis;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
@@ -135,7 +135,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * This function disposes everything.
    */
-  public void dispose( )
+  public final void dispose( )
   {
     m_repository.dispose();
 
@@ -149,7 +149,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * 
    * @throws RemoteException
    */
-  private final synchronized void init( ) throws RepositoryException
+  private synchronized void init( ) throws RepositoryException
   {
     try
     {
@@ -172,7 +172,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
   }
 
-  public DataBean readData( final String href ) throws SensorException
+  public final DataBean readData( final String href ) throws SensorException
   {
     final String hereHref = ZmlURL.removeServerSideId( href );
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
@@ -261,7 +261,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
   }
 
-  public void clearTempData( final String dataId )
+  public final void clearTempData( final String dataId )
   {
     final File file = m_mapDataId2File.get( dataId );
     if( file != null )
@@ -275,7 +275,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
-  public void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
+  public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
   {
     try
     {
@@ -308,7 +308,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @throws NoSuchElementException
    *           if item and/or repository not found
    */
-  private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException, NoSuchElementException
+  private IRepositoryItem itemFromBean( final ItemBean obean ) throws RepositoryException
   {
     final String id = ZmlURL.removeServerSideId( obean.getId() );
 
@@ -322,7 +322,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * @see org.kalypso.repository.service.IRepositoryService#hasChildren(org.kalypso.repository.service.ItemBean)
    */
-  public boolean hasChildren( final ItemBean parent ) throws RepositoryException
+  public final boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
     final String id = parent.getId();
     final IRepositoryItem item = m_repository.findItem( id );
@@ -333,7 +333,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * @see org.kalypso.repository.service.IRepositoryService#getChildren(org.kalypso.repository.service.ItemBean)
    */
-  public ItemBean[] getChildren( final ItemBean pbean ) throws RepositoryException
+  public final ItemBean[] getChildren( final ItemBean pbean ) throws RepositoryException
   {
     // dealing with ROOT?
     if( pbean == null )
@@ -380,7 +380,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * @see org.kalypso.services.sensor.IObservationService#adaptItem(org.kalypso.repository.service.ItemBean)
    */
-  public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
+  public final ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
     try
     {
@@ -415,7 +415,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
    */
-  public int getServiceVersion( )
+  public final int getServiceVersion( )
   {
     return 0;
   }
@@ -430,7 +430,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   /**
    * @see org.kalypso.repository.service.IRepositoryService#findItem(java.lang.String)
    */
-  public ItemBean findItem( final String id ) throws RepositoryException
+  public final ItemBean findItem( final String id ) throws RepositoryException
   {
     final IRepositoryItem item = m_repository.findItem( id );
     if( item != null )
@@ -447,12 +447,12 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
-  public void makeItem( final String itemIdentifier ) throws RepositoryException
+  public final void makeItem( final String itemIdentifier ) throws RepositoryException
   {
     if( m_repository instanceof IModifyableRepository )
     {
       final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
-      modifyable.makeItem( RepositoryUtils.replaceIdentifier( itemIdentifier, modifyable.getIdentifier() ) );
+      modifyable.makeItem( RepositoryItemUtlis.replaceIdentifier( itemIdentifier, modifyable.getIdentifier() ) );
     }
   }
 
@@ -460,12 +460,12 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
-  public void deleteItem( final String identifier ) throws RepositoryException
+  public final void deleteItem( final String identifier ) throws RepositoryException
   {
     if( m_repository instanceof IModifyableRepository )
     {
       final IModifyableRepository modifyable = (IModifyableRepository) m_repository;
-      modifyable.deleteItem( RepositoryUtils.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
+      modifyable.deleteItem( RepositoryItemUtlis.replaceIdentifier( identifier, modifyable.getIdentifier() ) );
     }
   }
 
@@ -473,7 +473,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @see org.kalypso.services.observation.sei.IRepositoryService#setItemData(java.lang.String, java.lang.Object)
    */
   @Override
-  public void setItemData( final String identifier, final Object serializable ) throws RepositoryException
+  public final void setItemData( final String identifier, final Object serializable ) throws RepositoryException
   {
     if( m_repository instanceof IModifyableRepository )
     {
@@ -498,7 +498,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
    * @see org.kalypso.services.observation.sei.IRepositoryService#setItemName(java.lang.String, java.lang.String)
    */
   @Override
-  public void setItemName( final String identifier, final String name ) throws RepositoryException
+  public final void setItemName( final String identifier, final String name ) throws RepositoryException
   {
     if( m_repository instanceof IModifyableRepository )
     {

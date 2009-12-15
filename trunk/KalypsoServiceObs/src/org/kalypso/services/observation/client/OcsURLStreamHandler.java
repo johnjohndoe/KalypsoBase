@@ -43,7 +43,6 @@ package org.kalypso.services.observation.client;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
@@ -82,7 +81,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
   @Override
-  public URLConnection openConnection( final URL u ) throws IOException
+  public final URLConnection openConnection( final URL u ) throws IOException
   {
     /**
      * bad @hack to implement proxy handling of time series - called from ant launch
@@ -94,9 +93,8 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       {
         return openProxyConnection( u );
       }
-      {
-        return openOcsConnection( u );
-      }
+
+      return openOcsConnection( u );
     }
     catch( final Exception ex )
     {
@@ -238,7 +236,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
    * @param file
    *          temp file where to store the observation locally. Can be null, in that case a temp file is created
    */
-  private URLConnection tryWithRequest( final String href, File file ) throws SensorException, MalformedURLException, IOException
+  private URLConnection tryWithRequest( final String href, File file ) throws SensorException, IOException
   {
     // create a local temp file for storing the zml if not provided
     if( file == null )
