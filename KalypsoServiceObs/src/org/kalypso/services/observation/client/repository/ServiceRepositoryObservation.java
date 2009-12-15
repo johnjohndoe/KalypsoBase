@@ -146,17 +146,17 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  public String getIdentifier( )
+  public final String getIdentifier( )
   {
     return ZmlURL.addServerSideId( m_ob.getId() );
   }
 
-  public String getName( )
+  public final String getName( )
   {
     return m_ob.getName();
   }
 
-  public boolean isEditable( )
+  public final boolean isEditable( )
   {
     try
     {
@@ -172,7 +172,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
    */
-  public MetadataList getMetadataList( )
+  public final MetadataList getMetadataList( )
   {
     if( m_obs != null )
       return m_obs.getMetadataList();
@@ -189,7 +189,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
-  public IAxis[] getAxisList( )
+  public final IAxis[] getAxisList( )
   {
     try
     {
@@ -205,7 +205,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    */
-  public synchronized ITuppleModel getValues( final IRequest args ) throws SensorException
+  public final synchronized ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     ITuppleModel values = ObservationCache.getInstance().getValues( this );
 
@@ -222,7 +222,7 @@ public class ServiceRepositoryObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public final void setValues( final ITuppleModel values ) throws SensorException
   {
     // sets values
     final IObservation obs = getRemote( new ObservationRequest( new DateRange() ) );
@@ -302,27 +302,27 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  public void addListener( final IObservationListener listener )
+  public final void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
 
-  public void removeListener( final IObservationListener listener )
+  public final void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
 
-  public void clearListeners( )
+  public final void clearListeners( )
   {
     m_evtPrv.clearListeners();
   }
 
-  public void fireChangedEvent( final Object source )
+  public final void fireChangedEvent( final Object source )
   {
     m_evtPrv.fireChangedEvent( source );
   }
 
-  public String getHref( )
+  public final String getHref( )
   {
     return getIdentifier();
   }

@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 {
-  private final static Logger LOG = Logger.getLogger( CommitPrognoseFeatureVisitor.class.getName() );
+  private static final Logger LOG = Logger.getLogger( CommitPrognoseFeatureVisitor.class.getName() );
 
   private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
 
@@ -103,7 +103,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f )
+  public final boolean visit( final Feature f )
   {
     m_stati.add( work( f ) );
 
@@ -191,7 +191,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     return Status.OK_STATUS;
   }
 
-  public IStatus[] getStati( )
+  public final IStatus[] getStati( )
   {
     return m_stati.toArray( new IStatus[m_stati.size()] );
   }
