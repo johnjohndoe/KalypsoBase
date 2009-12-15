@@ -261,19 +261,19 @@ public class TimeserieUtils implements TimeserieConstants
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setForecast( final IObservation obs, final DateRange range )
+  public final static void setTargetForecast( final IObservation obs, final DateRange range )
   {
     if( range == null )
       return;
 
-    setForecast( obs, range.getFrom(), range.getTo() );
+    setTargetForecast( obs, range.getFrom(), range.getTo() );
   }
 
   /**
    * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
    * nothing.
    */
-  public final static void setForecast( final IObservation obs, final Date from, final Date to )
+  public final static void setTargetForecast( final IObservation obs, final Date from, final Date to )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     if( from != null )
@@ -290,6 +290,38 @@ public class TimeserieUtils implements TimeserieConstants
   }
 
   /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public final static void setTargetDateRange( final IObservation obs, final DateRange range )
+  {
+    if( range == null )
+      return;
+
+    setTargetDateRange( obs, range.getFrom(), range.getTo() );
+  }
+
+  /**
+   * Sets the 'forecast' metadata of the given observation using the given date range. If from or to are null, does
+   * nothing.
+   */
+  public final static void setTargetDateRange( final IObservation obs, final Date from, final Date to )
+  {
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    if( from != null )
+    {
+      final String fromStr = DateUtilities.printDateTime( from, timeZone );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_BEGIN, fromStr ); //$NON-NLS-1$
+    }
+
+    if( to != null )
+    {
+      final String toStr = DateUtilities.printDateTime( to, timeZone );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
+    }
+  }
+
+  /**
    * Returns a new instance of DateRangeArgument containing the beginning and the end of the forecast, given the
    * observation is a forecast.
    * <p>
@@ -298,7 +330,7 @@ public class TimeserieUtils implements TimeserieConstants
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
-  public final static DateRange isForecast( final IObservation obs )
+  public final static DateRange isTargetForecast( final IObservation obs )
   {
     if( obs == null )
       return null;
