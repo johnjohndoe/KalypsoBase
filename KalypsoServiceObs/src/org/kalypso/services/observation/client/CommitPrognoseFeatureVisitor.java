@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -84,16 +85,14 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
   private final URL m_context;
 
-  private final IUrlResolver m_resolver;
 
   private final IObservationService m_srv;
 
   private final String m_sourceFilter;
 
-  public CommitPrognoseFeatureVisitor( final IObservationService srv, final IUrlResolver resolver, final URL context, final String sourceTS, final String targetTS, final String sourceFilter )
+  public CommitPrognoseFeatureVisitor( final IObservationService srv, final URL context, final String sourceTS, final String targetTS, final String sourceFilter )
   {
     m_srv = srv;
-    m_resolver = resolver;
     m_context = context;
     m_sourceFilter = sourceFilter;
     m_sourceTS = sourceTS;
@@ -148,12 +147,14 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     else
       filteredSourceHref = sourceHref;
 
-    final URL urlRS = m_resolver.resolveURL( m_context, filteredSourceHref );
+    IUrlResolver resolver = UrlResolverSingleton.getDefault();
+
+    final URL urlRS = resolver.resolveURL( m_context, filteredSourceHref );
     final IObservation source = ZmlFactory.parseXML( urlRS, filteredSourceHref );
 // final String destRef = targetHref;
 
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
-    final URL urlPG = m_resolver.resolveURL( m_context, destRef );
+    final URL urlPG = resolver.resolveURL( m_context, destRef );
     final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
 
     ITuppleModel values = null;
