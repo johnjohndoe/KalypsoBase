@@ -48,16 +48,40 @@ import org.kalypso.ogc.sensor.IObservation;
  */
 public class ObservationSource
 {
-  public final IObservation OBSERVATION;
+  private final IObservation m_observation;
 
-  public final DateRange DATE_RANGE;
+  private final String m_filter;
 
-  public final String FILTER;
+  private final DateRange m_targetDateRange;
 
-  public ObservationSource( final IObservation observation, final DateRange dateRange, final String filter )
+  private final DateRange m_forecastDateRange;
+
+  public ObservationSource( final IObservation observation, final DateRange targetDateRange, final DateRange foreCastDateRange, final String filter )
   {
-    OBSERVATION = observation;
-    DATE_RANGE = dateRange;
-    FILTER = filter;
+    m_observation = observation;
+    m_targetDateRange = targetDateRange;
+    m_forecastDateRange = foreCastDateRange;
+    m_filter = filter;
   }
+
+  public final IObservation getObservation( )
+  {
+    return m_observation;
+  }
+
+  public final String getFilter( )
+  {
+    return m_filter;
+  }
+
+  public final DateRange getTargetDateRange( )
+  {
+    return m_targetDateRange;
+  }
+
+  public final DateRange getForecastDateRange( )
+  {
+    return m_forecastDateRange;
+  }
+
 }

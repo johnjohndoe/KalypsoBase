@@ -87,7 +87,6 @@ public class CopyObservationTimeSeriesNALink extends AbstractObservationTimeSeri
     return href;
   }
 
-  @SuppressWarnings("deprecation")
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
       // FIXME: this dirty shit was made only for KalypsoNA: must be removed!!!
