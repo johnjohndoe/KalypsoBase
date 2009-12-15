@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
@@ -67,17 +66,17 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   private String m_remoteObs;
   private String m_sourceFilter;
 
-  public void setLocalObs( final String localObs )
+  public final void setLocalObs( final String localObs )
   {
     m_localObs = localObs;
   }
 
-  public void setRemoteObs( final String remoteObs )
+  public final void setRemoteObs( final String remoteObs )
   {
     m_remoteObs = remoteObs;
   }
 
-  public void setSourceFilter( final String sourceFilter )
+  public final void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
@@ -92,17 +91,17 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
+  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
     final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
-    return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter );
+    return new CommitPrognoseFeatureVisitor( srv, context, m_localObs, m_remoteObs, m_sourceFilter );
   }
 
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#statusFromVisitor(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   @Override
-  protected IStatus statusFromVisitor( final FeatureVisitor visitor )
+  protected final IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
     final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor) visitor;
     if( v.getStati().length > 0 )
@@ -122,7 +121,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
-  public void handleError( final Shell shell, final IStatus status )
+  public final void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
         "Fehler beim Zurückschreiben der Zeitreihen", status );

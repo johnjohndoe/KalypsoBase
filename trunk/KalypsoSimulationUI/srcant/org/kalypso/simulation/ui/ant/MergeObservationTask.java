@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.MergeObservationFeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -89,9 +88,9 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
+  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
-    return new MergeObservationFeatureVisitor( resolver, m_sourceContext, context, m_observationProperty, logger );
+    return new MergeObservationFeatureVisitor( m_sourceContext, context, m_observationProperty, logger );
   }
 
   public final void setSourceContext( final URL context )
@@ -116,8 +115,8 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
-   */
-  public void handleError( final Shell shell, final IStatus status )
+   */ 
+  public final void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen",
         status );

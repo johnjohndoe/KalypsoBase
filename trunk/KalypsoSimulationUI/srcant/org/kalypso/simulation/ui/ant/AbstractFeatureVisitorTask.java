@@ -71,7 +71,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
@@ -144,12 +143,12 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     m_doSaveGml = doSaveGml;
   }
 
-  public void setIgnoreIllegalFeaturePath( final boolean ignoreIllegalFeaturePath )
+  public final void setIgnoreIllegalFeaturePath( final boolean ignoreIllegalFeaturePath )
   {
     m_ignoreIllegalFeaturePath = ignoreIllegalFeaturePath;
   }
 
-  public void setRunAsync( final boolean runAsync )
+  public final void setRunAsync( final boolean runAsync )
   {
     m_runAsync = runAsync;
   }
@@ -169,7 +168,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     m_gml = gml;
   }
 
-  public void setDepth( final String depth )
+  public final void setDepth( final String depth )
   {
     m_depth = depth;
   }
@@ -215,14 +214,14 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     }
   }
 
-  protected abstract FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger ) throws CoreException, InvocationTargetException, InterruptedException;
+  protected abstract FeatureVisitor createVisitor( final URL context, final ILogger logger ) throws CoreException, InvocationTargetException, InterruptedException;
 
   protected abstract void validateInput( );
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+  public final IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
     try
     {
@@ -318,9 +317,8 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     FeatureVisitor visitor;
     try
     {
-      final IUrlResolver resolver = UrlResolverSingleton.getDefault();
       final ILogger logger = getLogger();
-      visitor = createVisitor( m_context, resolver, logger );
+      visitor = createVisitor( m_context, logger );
 
       // count features
       final int count = countFeatures( workspace, featurePath );

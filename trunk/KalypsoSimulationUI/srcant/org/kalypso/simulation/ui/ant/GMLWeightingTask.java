@@ -58,7 +58,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.ui.ant.util.CopyObservationMappingHelper;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.InterpolationFilterType;
@@ -318,9 +317,9 @@ public class GMLWeightingTask extends Task
       final Date forecastFrom = DateUtilities.parseDateTime( m_forecastFrom );
       final Date forecastTo = m_forecastTo == null ? DateUtilities.parseDateTime( m_to ) : DateUtilities.parseDateTime( m_forecastTo );
 
-      final DateRange measuredRange = CopyObservationFeatureVisitor.createDateRangeOrNull( sourceFrom, sourceTo );
-      final DateRange keForecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( targetFrom, targetTo );
-      final DateRange forecastMetadataRange = CopyObservationFeatureVisitor.createDateRangeOrNull( forecastFrom, forecastTo );
+      final DateRange measuredRange = DateRange.createDateRangeOrNull( sourceFrom, sourceTo );
+      final DateRange keForecastRange = DateRange.createDateRangeOrNull( targetFrom, targetTo );
+      final DateRange forecastMetadataRange = DateRange.createDateRangeOrNull( forecastFrom, forecastTo );
 
       CopyObservationMappingHelper.runMapping( resultWorkspace, m_modelURL, logger, true, measuredRange, keForecastRange, forecastMetadataRange );
 

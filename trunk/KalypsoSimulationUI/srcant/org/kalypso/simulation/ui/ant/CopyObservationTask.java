@@ -42,8 +42,8 @@ package org.kalypso.simulation.ui.ant;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -52,14 +52,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.ogc.util.CopyObservationSourceDelegate;
-import org.kalypso.ogc.util.timeserieslink.CopyObservationTimeSeriesLinkFactory;
-import org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink;
+import org.kalypso.ogc.util.CopyObservationSource;
+import org.kalypso.ogc.util.DefaultCopyObservationSouce;
+import org.kalypso.ogc.util.ICopyObservationSource;
+import org.kalypso.ogc.util.timeserieslink.CopyObservationTargetFactory;
+import org.kalypso.ogc.util.timeserieslink.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -115,7 +116,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
-  private final List<CopyObservationFeatureVisitor.Source> m_sources = new LinkedList<CopyObservationFeatureVisitor.Source>();
+  private final List<CopyObservationSource> m_sources = new ArrayList<CopyObservationSource>();
 
   /**
    * List of metadata-properties and values to set to the target observation
@@ -132,17 +133,17 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
+  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
-    final DateRange forecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
-    final DateRange targetRange = CopyObservationFeatureVisitor.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
+    final DateRange forecastRange = DateRange.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
+    final DateRange targetRange = DateRange.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
 
-    final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
+    final CopyObservationSource[] srcs = m_sources.toArray( new CopyObservationSource[m_sources.size()] );
  
-    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
-    CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, forecastRange, m_tokens );
+    ICopyObservationTarget target = CopyObservationTargetFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
+    ICopyObservationSource souce = new DefaultCopyObservationSouce( context, srcs, forecastRange, m_tokens );
 
-    return new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, m_metadata, logger );
+    return new CopyObservationFeatureVisitor( souce, target, m_metadata, logger );
   }
 
   private Date parseDateTime( final String lexicalDate )
@@ -173,14 +174,14 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     final Date fromDate = DateUtilities.parseDateTime( from );
     final Date toDate = DateUtilities.parseDateTime( to );
 
-    final DateRange range = CopyObservationFeatureVisitor.createDateRangeOrNull( fromDate, toDate );
+    final DateRange range = DateRange.createDateRangeOrNull( fromDate, toDate );
 
     final String filter = source.getFilter();
     final Project project2 = getProject();
     if( project2 != null )
       project2.log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
 
-    m_sources.add( new CopyObservationFeatureVisitor.Source( property, range, filter ) );
+    m_sources.add( new CopyObservationSource( property, range, filter ) );
   }
 
   public final void addConfiguredMetadata( final Metadata metadata )
