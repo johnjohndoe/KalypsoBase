@@ -42,20 +42,50 @@ package org.kalypso.ogc.util.timeserieslink;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationTimeSeriesLink
+public abstract class AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
 {
-  String getTargetHref( Feature feature ) throws CoreException;
+  private final DateRange m_targetRange;
 
-  DateRange getTargetDateRange( );
+  private final DateRange m_forecastRange;
 
-  DateRange getForecastDateRange( );
+  private final URL m_context;
 
-  URL getContext( );
+  public AbstractObservationTimeSeriesLink( final URL context, final DateRange targetRange, final DateRange forecastRange )
+  {
+    m_context = context;
+    m_targetRange = targetRange;
+    m_forecastRange = forecastRange;
+  }
+
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getTargetDateRange()
+   */
+  @Override
+  public final DateRange getTargetDateRange( )
+  {
+    return m_targetRange;
+  }
+
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getForecastDateRange()
+   */
+  @Override
+  public final DateRange getForecastDateRange( )
+  {
+    return m_forecastRange;
+  }
+
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getContext()
+   */
+  @Override
+  public final URL getContext( )
+  {
+    return m_context;
+  }
 }

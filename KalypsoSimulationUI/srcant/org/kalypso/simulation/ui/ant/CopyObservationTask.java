@@ -134,20 +134,15 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   @Override
   protected final FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger )
   {
-    final Date forecastFrom = parseDateTime( m_forecastFrom );
-    final Date forecastTo = parseDateTime( m_forecastTo );
-    final Date targetFrom = parseDateTime( m_targetFrom );
-    final Date targetTo = parseDateTime( m_targetTo );
-
-    final DateRange forecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( forecastFrom, forecastTo );
-    final DateRange targetRange = CopyObservationFeatureVisitor.createDateRangeOrNull( targetFrom, targetTo );
+    final DateRange forecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
+    final DateRange targetRange = CopyObservationFeatureVisitor.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
 
     final CopyObservationFeatureVisitor.Source[] srcs = m_sources.toArray( new CopyObservationFeatureVisitor.Source[m_sources.size()] );
  
-    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( context, m_targetobservation, m_targetObservationDir );
+    ICopyObservationTimeSeriesLink timeSeriesLink = CopyObservationTimeSeriesLinkFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
     CopyObservationSourceDelegate sourceDelegate = new CopyObservationSourceDelegate( context, srcs, m_tokens );
 
-    return new CopyObservationFeatureVisitor( context, resolver, timeSeriesLink, sourceDelegate, m_metadata, targetRange, forecastRange, logger );
+    return new CopyObservationFeatureVisitor( timeSeriesLink, sourceDelegate, m_metadata, logger );
   }
 
   private Date parseDateTime( final String lexicalDate )
@@ -168,7 +163,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_targetobservation = targetobservation;
   }
 
-  public void addConfiguredSource( final Source source )
+  public final void addConfiguredSource( final Source source )
   {
     // validate source
     final String property = source.getProperty();
@@ -188,7 +183,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_sources.add( new CopyObservationFeatureVisitor.Source( property, range, filter ) );
   }
 
-  public void addConfiguredMetadata( final Metadata metadata )
+  public final void addConfiguredMetadata( final Metadata metadata )
   {
     if( metadata.getName() == null )
     {
@@ -205,54 +200,54 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_metadata.setProperty( metadata.getName(), metadata.getValue() );
   }
 
-  public final static class Source
+  public static final class Source
   { 
-    private String property;
+    private String m_property;
 
-    private String from;
+    private String m_from;
 
-    private String to;
+    private String m_to;
 
-    private String filter;
+    private String m_filter;
 
-    public final String getProperty( )
+    public String getProperty( )
     {
-      return property;
+      return m_property;
     }
 
-    public final void setProperty( final String prop )
+    public void setProperty( final String prop )
     {
-      this.property = prop;
+      this.m_property = prop;
     }
 
-    public final String getFrom( )
+    public String getFrom( )
     {
-      return from;
+      return m_from;
     }
 
-    public final void setFrom( final String lfrom )
+    public void setFrom( final String lfrom )
     {
-      this.from = lfrom;
+      this.m_from = lfrom;
     }
 
-    public final String getTo( )
+    public String getTo( )
     {
-      return to;
+      return m_to;
     }
 
-    public final void setTo( final String lto )
+    public void setTo( final String lto )
     {
-      this.to = lto;
+      this.m_to = lto;
     }
 
-    public final String getFilter( )
+    public String getFilter( )
     {
-      return filter;
+      return m_filter;
     }
 
-    public final void setFilter( final String filt )
+    public void setFilter( final String filt )
     {
-      this.filter = filt;
+      this.m_filter = filt;
     }
   }
 
@@ -286,17 +281,17 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_targetTo = targetTo;
   }
 
-  public String getTokens( )
+  public final String getTokens( )
   {
     return m_tokens;
   }
 
-  public void setTokens( final String tokens )
+  public final void setTokens( final String tokens )
   {
     m_tokens = tokens;
   }
 
-  public final static class Metadata
+  public static final class Metadata
   {
     private String m_name;
 
@@ -336,18 +331,19 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
-  public void handleError( final Shell shell, final IStatus status )
+  public final void handleError( final Shell shell, final IStatus status )
   {
     ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Kopieren der Zeitreihen", status );
   }
 
-  public File getTargetObservationDir( )
+  public final File getTargetObservationDir( )
   {
     return m_targetObservationDir;
   }
 
-  public void setTargetObservationDir( final File targetObservationDir )
+  public final void setTargetObservationDir( final File targetObservationDir )
   {
     m_targetObservationDir = targetObservationDir;
   }
 }
+

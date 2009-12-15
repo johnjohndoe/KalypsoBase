@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.util.timeserieslink;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -50,16 +53,18 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
+public class CopyObservationTimeSeriesLink extends AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
 {
   private final String m_targetobservation;
 
-  public CopyObservationTimeSeriesLink( final String targetobservation )
+  public CopyObservationTimeSeriesLink( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
   {
+    super( context, targetRange, forecastRange );
+
     m_targetobservation = targetobservation;
   }
 
-  public String getTargetHref( final Feature f ) throws CoreException
+  public final String getTargetHref( final Feature f ) throws CoreException
   {
     final TimeseriesLinkType targetlink = getTargetLink( f );
     if( targetlink == null )
@@ -72,12 +77,13 @@ public class CopyObservationTimeSeriesLink implements ICopyObservationTimeSeries
     return href;
   }
 
+  @SuppressWarnings("deprecation")
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
     return (TimeseriesLinkType) f.getProperty( m_targetobservation );
   }
 
-  public boolean isSourceEqualTargetObservation( final String source )
+  public final boolean isSourceEqualTargetObservation( final String source )
   {
     return m_targetobservation.equals( source );
   }

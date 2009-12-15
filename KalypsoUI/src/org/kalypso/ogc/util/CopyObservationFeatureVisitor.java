@@ -42,7 +42,6 @@ package org.kalypso.ogc.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +56,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
@@ -86,19 +85,11 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMon
 public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor, IMonitoredFeatureVisitor
 {
   /** Used to search/replace metadata content with properties of the visited feature */
-  private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" ); //$NON-NLS-1$
+  private static final Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" ); //$NON-NLS-1$
 
   private static final QName FID_QNAME = new QName( "FID" ); //$NON-NLS-1$
 
-  private final URL m_context;
-
-  private final IUrlResolver m_urlResolver;
-
   private final ILogger m_logger;
-
-  private final DateRange m_forecastRange;
-
-  private final DateRange m_targetRange;
 
   private final Properties m_metadata;
 
@@ -114,22 +105,18 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
    * @param metadata
    *          All entries will be added to the target observation
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final ICopyObservationTimeSeriesLink timeSeriesDelegate, final ICopyObservationSourceDelegate sourceDelegate, final Properties metadata, final DateRange targetRange, final DateRange forecastRange, final ILogger logger )
+  public CopyObservationFeatureVisitor( final ICopyObservationTimeSeriesLink timeSeriesDelegate, final ICopyObservationSourceDelegate sourceDelegate, final Properties metadata, final ILogger logger )
   {
-    m_context = context;
-    m_urlResolver = urlResolver;
     m_timeSeriesDelegate = timeSeriesDelegate;
     m_sourceDelegate = sourceDelegate;
     m_metadata = metadata;
-    m_forecastRange = forecastRange;
-    m_targetRange = targetRange;
     m_logger = logger;
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean visit( final Feature feature )
+  public final boolean visit( final Feature feature )
   {
     try
     {
@@ -145,7 +132,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final IObservation resultObs = combineResultObservation( sources );
       updateMetaData( resultObs, feature, sources );
 
-      final IRequest request = new ObservationRequest( m_targetRange );
+      final IRequest request = new ObservationRequest( m_timeSeriesDelegate.getTargetDateRange() );
 // // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
 // KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( request ), m_logger );
 
@@ -163,7 +150,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
   private IFile createTargetFile( final String targetHref ) throws MalformedURLException
   {
-    return ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, targetHref ) );
+    return ResourceUtilities.findFileFromURL( UrlResolverSingleton.getDefault().resolveURL( m_timeSeriesDelegate.getContext(), targetHref ) );
   }
 
   private void wrtieTargetObservation( final IFile targetfile, final IObservation resultObs, final IRequest request ) throws SensorException
@@ -176,10 +163,10 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
   private void updateMetaData( final IObservation resultObs, final Feature feature, final ObservationSource[] sources )
   {
-    TimeserieUtils.setDateRange( resultObs, m_targetRange );
+    TimeserieUtils.setDateRange( resultObs, m_timeSeriesDelegate.getTargetDateRange() );
 
     /* set forecast metadata, might be used in diagram for instance to mark the forecast range */
-    TimeserieUtils.setForecast( resultObs, m_forecastRange );
+    TimeserieUtils.setForecast( resultObs, m_timeSeriesDelegate.getForecastDateRange() );
 
     // put additional metadata that we got from outside
     final MetadataList mdl = resultObs.getMetadataList();
@@ -288,34 +275,34 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     return QName.valueOf( fragmentedFullQName );
   }
 
-  public final static class Source
+  public static final class Source
   {
-    private final String property;
+    private final String m_property;
 
-    private final DateRange range;
+    private final DateRange m_range;
 
-    private final String filter;
+    private final String m_filter;
 
     public Source( final String prop, final DateRange dateRange, final String filt )
     {
-      this.property = prop;
-      this.range = dateRange;
-      this.filter = filt;
+      this.m_property = prop;
+      this.m_range = dateRange;
+      this.m_filter = filt;
     }
 
-    public final DateRange getRange( )
+    public DateRange getRange( )
     {
-      return range;
+      return m_range;
     }
 
-    public final String getProperty( )
+    public String getProperty( )
     {
-      return property;
+      return m_property;
     }
 
     public String getFilter( )
     {
-      return filter;
+      return m_filter;
     }
   }
 
@@ -331,7 +318,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
    * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getTaskName()
    */
   @Override
-  public String getTaskName( )
+  public final String getTaskName( )
   {
     return "";
   }

@@ -44,14 +44,19 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesLinkFactory
+public final class CopyObservationTimeSeriesLinkFactory
 {
+  private CopyObservationTimeSeriesLinkFactory( )
+  {
 
-  public static ICopyObservationTimeSeriesLink getLink( final URL context, final String hrefTargetObservation, final File targetObservationDir )
+  }
+
+  public static ICopyObservationTimeSeriesLink getLink( final URL context, final String hrefTargetObservation, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
     if( hrefTargetObservation != null && !hrefTargetObservation.isEmpty() )
     {
@@ -59,7 +64,7 @@ public class CopyObservationTimeSeriesLinkFactory
       if( targetObservationDir != null )
         throw new IllegalStateException();
 
-      return getLink( hrefTargetObservation );
+      return getLink( context, hrefTargetObservation, targetRange, forecastRange );
     }
     else if( context != null && targetObservationDir != null )
     {
@@ -67,20 +72,20 @@ public class CopyObservationTimeSeriesLinkFactory
       if( hrefTargetObservation != null )
         throw new IllegalStateException();
 
-      return getLink( context, targetObservationDir );
+      return getLink( context, targetObservationDir, targetRange, forecastRange );
     }
 
     throw new NotImplementedException();
   }
 
-  public static ICopyObservationTimeSeriesLink getLink( final URL context, final File targetObservationDir )
+  public static ICopyObservationTimeSeriesLink getLink( final URL context, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
-    return new CopyObservationTimeSeriesNALink( context, targetObservationDir );
+    return new CopyObservationTimeSeriesNALink( context, targetObservationDir, targetRange, forecastRange );
   }
 
-  public static ICopyObservationTimeSeriesLink getLink( final String hrefTargetObservation )
+  public static ICopyObservationTimeSeriesLink getLink( final URL context, final String hrefTargetObservation, final DateRange targetRange, final DateRange forecastRange )
   {
-    return new CopyObservationTimeSeriesLink( hrefTargetObservation );
+    return new CopyObservationTimeSeriesLink( context, hrefTargetObservation, targetRange, forecastRange );
   }
 
 }

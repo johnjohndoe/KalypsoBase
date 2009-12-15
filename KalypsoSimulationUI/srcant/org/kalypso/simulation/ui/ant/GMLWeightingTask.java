@@ -322,7 +322,7 @@ public class GMLWeightingTask extends Task
       final DateRange keForecastRange = CopyObservationFeatureVisitor.createDateRangeOrNull( targetFrom, targetTo );
       final DateRange forecastMetadataRange = CopyObservationFeatureVisitor.createDateRangeOrNull( forecastFrom, forecastTo );
 
-      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, measuredRange, keForecastRange, forecastMetadataRange );
+      CopyObservationMappingHelper.runMapping( resultWorkspace, m_modelURL, logger, true, measuredRange, keForecastRange, forecastMetadataRange );
 
       // 15. serialize result workspace to file
       if( m_targetMapping != null )
@@ -473,7 +473,7 @@ public class GMLWeightingTask extends Task
    * @param propOffset
    *          property name of the offset property, feature property type must be double
    */
-  public void setPropOffset( final String propOffset )
+  public final void setPropOffset( final String propOffset )
   {
     m_propOffset = propOffset;
   }
@@ -492,7 +492,7 @@ public class GMLWeightingTask extends Task
    *          property name of the zml sourceUsed property, feature property type must be Boolean. If set, the property
    *          is used to determined if this particular source is used or not.
    */
-  public void setPropSourceUsed( final String propSourceUsed )
+  public final void setPropSourceUsed( final String propSourceUsed )
   {
     m_propSourceUsed = propSourceUsed;
   }
@@ -501,7 +501,7 @@ public class GMLWeightingTask extends Task
    * @param sourceFilter
    *          If non- <code>null</code>, this filter will be applied to every source-zml
    */
-  public void setSourceFilter( final String sourceFilter )
+  public final void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
