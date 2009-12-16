@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
@@ -127,16 +127,13 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
   private final URL m_context;
 
-  private final IUrlResolver m_resolver;
-
   private final String m_zmlLink;
 
   private final Mapping[] m_mappings;
 
-  public MapZmlMeta2FeatureVisitor( final URL context, final IUrlResolver resolver, final String zmlLink, final Mapping[] mappings )
+  public MapZmlMeta2FeatureVisitor( final URL context, final String zmlLink, final Mapping[] mappings )
   {
     m_context = context;
-    m_resolver = resolver;
     m_zmlLink = zmlLink;
     m_mappings = mappings;
   }
@@ -144,12 +141,12 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f )
+  public final boolean visit( final Feature f )
   {
     // load observation
     if( f.getFeatureType().getProperty( m_zmlLink ) == null )
     {
-      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.0") + m_zmlLink ); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.0" ) + m_zmlLink ); //$NON-NLS-1$
       return true;
     }
 
@@ -159,7 +156,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
     if( !(property instanceof TimeseriesLinkType) )
     {
-      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.1") + TimeseriesLinkType.class.getName() ); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.1" ) + TimeseriesLinkType.class.getName() ); //$NON-NLS-1$
       return true;
     }
 
@@ -167,7 +164,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     final String href = link.getHref();
     try
     {
-      final URL url = m_resolver.resolveURL( m_context, href );
+      final URL url = UrlResolverSingleton.getDefault().resolveURL( m_context, href );
       final IObservation observation = ZmlFactory.parseXML( url, href );
       for( final Mapping mapping : m_mappings )
       {
@@ -178,12 +175,12 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.2") + href, e ); //$NON-NLS-1$
+      m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.2" ) + href, e ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.3") + href, e ); //$NON-NLS-1$
+      m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.3" ) + href, e ); //$NON-NLS-1$
     }
 
     return true;
@@ -194,7 +191,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     final IPropertyType ftp = f.getFeatureType().getProperty( mapping.getTargetProperty() );
     if( ftp == null )
     {
-      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.4") + m_zmlLink ); //$NON-NLS-1$
+      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.4" ) + m_zmlLink ); //$NON-NLS-1$
       return;
     }
 
@@ -207,7 +204,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
       values[i] = metadataList.getProperty( names[i].getName() );
       if( values[i] == null )
       {
-        m_logger.log( Level.WARNING, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.5") + f.getId() + Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.6") + names[i] ); //$NON-NLS-1$ //$NON-NLS-2$
+        m_logger.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.5" ) + f.getId() + Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.6" ) + names[i] ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
     }

@@ -40,48 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IObservation;
+import java.net.MalformedURLException;
+
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class ObservationSource
+public interface ICopyObservationSource
 {
-  private final IObservation m_observation;
-
-  private final String m_filter;
-
-  private final DateRange m_sourceDateRange;
-
-  private final DateRange m_forecastDateRange;
-
-  public ObservationSource( final IObservation observation, final DateRange sourceRange, final DateRange foreCastDateRange, final String filter )
-  {
-    m_observation = observation;
-    m_sourceDateRange = sourceRange;
-    m_forecastDateRange = foreCastDateRange;
-    m_filter = filter;
-  }
-
-  public final IObservation getObservation( )
-  {
-    return m_observation;
-  }
-
-  public final String getFilter( )
-  {
-    return m_filter;
-  }
-
-  public final DateRange getSourceDateRange( )
-  {
-    return m_sourceDateRange;
-  }
-
-  public final DateRange getForecastDateRange( )
-  {
-    return m_forecastDateRange;
-  }
-
+  ObservationSource[] getObservationSources( Feature feature ) throws MalformedURLException, SensorException;
 }

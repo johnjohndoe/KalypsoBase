@@ -53,11 +53,11 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesLink extends AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
+public class CopyObservationTarget extends AbstractObservationTarget implements ICopyObservationTarget
 {
   private final String m_targetobservation;
 
-  public CopyObservationTimeSeriesLink( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
+  public CopyObservationTarget( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
   {
     super( context, targetRange, forecastRange );
 

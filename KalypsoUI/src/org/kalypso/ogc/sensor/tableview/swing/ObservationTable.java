@@ -351,7 +351,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     if( obs != null )
     {
       // check if observation is a vorhersage
-      final DateRange dr = TimeserieUtils.isForecast( obs );
+      final DateRange dr = TimeserieUtils.isTargetForecast( obs );
       if( dr != null )
       {
         if( adding )

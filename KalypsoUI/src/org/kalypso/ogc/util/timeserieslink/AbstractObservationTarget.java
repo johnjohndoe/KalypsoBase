@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.DateRange;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
+public abstract class AbstractObservationTarget implements ICopyObservationTarget
 {
   private final DateRange m_targetRange;
 
@@ -55,7 +55,7 @@ public abstract class AbstractObservationTimeSeriesLink implements ICopyObservat
 
   private final URL m_context;
 
-  public AbstractObservationTimeSeriesLink( final URL context, final DateRange targetRange, final DateRange forecastRange )
+  public AbstractObservationTarget( final URL context, final DateRange targetRange, final DateRange forecastRange )
   {
     m_context = context;
     m_targetRange = targetRange;
@@ -75,7 +75,7 @@ public abstract class AbstractObservationTimeSeriesLink implements ICopyObservat
    * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getForecastDateRange()
    */
   @Override
-  public final DateRange getForecastDateRange( )
+  public final DateRange getTargetForecastDateRange( )
   {
     return m_forecastRange;
   }

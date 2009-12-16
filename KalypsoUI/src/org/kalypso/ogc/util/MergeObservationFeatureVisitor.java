@@ -51,6 +51,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.i18n.Messages;
@@ -72,8 +73,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class MergeObservationFeatureVisitor implements FeatureVisitor
 {
-  private final IUrlResolver m_urlResolver;
-
   private final URL m_targetContext;
 
   private final URL m_sourceContext;
@@ -83,8 +82,6 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
   private final ILogger m_logger;
 
   /**
-   * @param urlResolver
-   *          resolver for urls
    * @param sourceContext
    *          context to resolve observation links of source observations
    * @param targetContext
@@ -92,9 +89,8 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
    * @param observationProperty
    *          name of the property of the observation link
    */
-  public MergeObservationFeatureVisitor( final IUrlResolver urlResolver, final URL sourceContext, final URL targetContext, final String observationProperty, final ILogger logger )
+  public MergeObservationFeatureVisitor( final URL sourceContext, final URL targetContext, final String observationProperty, final ILogger logger )
   {
-    m_urlResolver = urlResolver;
     m_sourceContext = sourceContext;
     m_targetContext = targetContext;
     m_observationProperty = observationProperty;
@@ -104,9 +100,11 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
   /**
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean visit( final Feature f )
+  public final boolean visit( final Feature f )
   {
     final String featureId = f.getId();
+    IUrlResolver resolver = UrlResolverSingleton.getDefault();
+
     try
     {
       final TimeseriesLinkType obsLink = (TimeseriesLinkType) f.getProperty( m_observationProperty );
@@ -124,7 +122,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       }
 
       // load source obs
-      final URL sourceURL = m_urlResolver.resolveURL( m_sourceContext, href );
+      final URL sourceURL = resolver.resolveURL( m_sourceContext, href );
       final IObservation sourceObs = ZmlFactory.parseXML( sourceURL, featureId );
       if( sourceObs == null )
       {
@@ -133,7 +131,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       }
 
       // load target obs
-      final URL targetURL = m_urlResolver.resolveURL( m_targetContext, href );
+      final URL targetURL = resolver.resolveURL( m_targetContext, href );
       final IObservation targetObs = ZmlFactory.parseXML( targetURL, featureId );
       if( targetObs == null )
       {
@@ -147,7 +145,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       // Write target observation. A bit ugly, in order to find the file where to write it
       // remove query part if present, href is also used as file name here!
       final String targetHref = ZmlURL.getIdentifierPart( obsLink.getHref() );
-      final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_targetContext, targetHref ) );
+      final IFile targetfile = ResourceUtilities.findFileFromURL( resolver.resolveURL( m_targetContext, targetHref ) );
       final IPath location = targetfile.getLocation();
       final File file = location.toFile();
       ZmlFactory.writeToFile( targetObs, file );
