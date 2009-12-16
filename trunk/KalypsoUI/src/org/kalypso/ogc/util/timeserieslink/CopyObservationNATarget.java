@@ -60,14 +60,14 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Dirk Kuch
  */
-public class CopyObservationTimeSeriesNALink extends AbstractObservationTimeSeriesLink implements ICopyObservationTimeSeriesLink
+public class CopyObservationNATarget extends AbstractObservationTarget implements ICopyObservationTarget
 {
   private static final ObjectFactory OF = new ObjectFactory();
 
   private final File m_targetobservationDir;
 
 
-  public CopyObservationTimeSeriesNALink( final URL context, final File targetobservationDir, final DateRange targetRange, final DateRange forecastRange )
+  public CopyObservationNATarget( final URL context, final File targetobservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
     super( context, targetRange, forecastRange );
     

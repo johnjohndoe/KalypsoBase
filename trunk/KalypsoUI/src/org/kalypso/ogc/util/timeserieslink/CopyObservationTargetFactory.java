@@ -49,14 +49,14 @@ import org.kalypso.ogc.sensor.DateRange;
 /**
  * @author Dirk Kuch
  */
-public final class CopyObservationTimeSeriesLinkFactory
+public final class CopyObservationTargetFactory
 {
-  private CopyObservationTimeSeriesLinkFactory( )
+  private CopyObservationTargetFactory( )
   {
 
   }
 
-  public static ICopyObservationTimeSeriesLink getLink( final URL context, final String hrefTargetObservation, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
+  public static ICopyObservationTarget getLink( final URL context, final String hrefTargetObservation, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
     if( hrefTargetObservation != null && !hrefTargetObservation.isEmpty() )
     {
@@ -78,14 +78,14 @@ public final class CopyObservationTimeSeriesLinkFactory
     throw new NotImplementedException();
   }
 
-  public static ICopyObservationTimeSeriesLink getLink( final URL context, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
+  public static ICopyObservationTarget getLink( final URL context, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
-    return new CopyObservationTimeSeriesNALink( context, targetObservationDir, targetRange, forecastRange );
+    return new CopyObservationNATarget( context, targetObservationDir, targetRange, forecastRange );
   }
 
-  public static ICopyObservationTimeSeriesLink getLink( final URL context, final String hrefTargetObservation, final DateRange targetRange, final DateRange forecastRange )
+  public static ICopyObservationTarget getLink( final URL context, final String hrefTargetObservation, final DateRange targetRange, final DateRange forecastRange )
   {
-    return new CopyObservationTimeSeriesLink( context, hrefTargetObservation, targetRange, forecastRange );
+    return new CopyObservationTarget( context, hrefTargetObservation, targetRange, forecastRange );
   }
 
 }

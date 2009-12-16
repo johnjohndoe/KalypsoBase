@@ -52,14 +52,14 @@ public class ObservationSource
 
   private final String m_filter;
 
-  private final DateRange m_targetDateRange;
+  private final DateRange m_sourceDateRange;
 
   private final DateRange m_forecastDateRange;
 
-  public ObservationSource( final IObservation observation, final DateRange targetDateRange, final DateRange foreCastDateRange, final String filter )
+  public ObservationSource( final IObservation observation, final DateRange sourceRange, final DateRange foreCastDateRange, final String filter )
   {
     m_observation = observation;
-    m_targetDateRange = targetDateRange;
+    m_sourceDateRange = sourceRange;
     m_forecastDateRange = foreCastDateRange;
     m_filter = filter;
   }
@@ -74,9 +74,9 @@ public class ObservationSource
     return m_filter;
   }
 
-  public final DateRange getTargetDateRange( )
+  public final DateRange getSourceDateRange( )
   {
-    return m_targetDateRange;
+    return m_sourceDateRange;
   }
 
   public final DateRange getForecastDateRange( )

@@ -49,13 +49,13 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationTimeSeriesLink
+public interface ICopyObservationTarget
 {
   String getTargetHref( Feature feature ) throws CoreException;
 
   DateRange getTargetDateRange( );
 
-  DateRange getForecastDateRange( );
+  DateRange getTargetForecastDateRange( );
 
   URL getContext( );
 }

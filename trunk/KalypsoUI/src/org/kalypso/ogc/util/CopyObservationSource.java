@@ -40,15 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
-import java.net.MalformedURLException;
-
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationSourceDelegate
+public class CopyObservationSource
 {
-  ObservationSource[] getObservationSources( Feature feature ) throws MalformedURLException, SensorException;
+  private final String m_property;
+
+  private final DateRange m_range;
+
+  private final String m_filter;
+
+  public CopyObservationSource( final String prop, final DateRange dateRange, final String filt )
+  {
+    this.m_property = prop;
+    this.m_range = dateRange;
+    this.m_filter = filt;
+  }
+
+  public final DateRange getRange( )
+  {
+    return m_range;
+  }
+
+  public final String getProperty( )
+  {
+    return m_property;
+  }
+
+  public final String getFilter( )
+  {
+    return m_filter;
+  }
 }

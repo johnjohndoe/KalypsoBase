@@ -506,7 +506,7 @@ public class GrafikLauncher
 
       // is this obs a forecast?
       // TODO: check if odt wants forecast to be shown
-      final DateRange fr = TimeserieUtils.isForecast( obs );
+      final DateRange fr = TimeserieUtils.isTargetForecast( obs );
       if( fr != null )
       {
         final String strDate = GRAFIK_DF.format( fr.getFrom() );

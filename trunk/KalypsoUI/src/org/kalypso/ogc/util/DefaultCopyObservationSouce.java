@@ -58,7 +58,6 @@ import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.ogc.util.CopyObservationFeatureVisitor.Source;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.request.Request;
@@ -68,10 +67,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationSourceDelegate implements ICopyObservationSourceDelegate
+public class DefaultCopyObservationSouce implements ICopyObservationSource
 {
-
-  private final Source[] m_sources;
+  private final CopyObservationSource[] m_sources;
 
   /**
    * Die Liste der Tokens und deren Ersetzung in der Form:
@@ -87,7 +85,7 @@ public class CopyObservationSourceDelegate implements ICopyObservationSourceDele
 
   private final DateRange m_foreCastDateRange;
 
-  public CopyObservationSourceDelegate( final URL context, final Source[] sources, final DateRange foreCastDateRange, final String tokens )
+  public DefaultCopyObservationSouce( final URL context, final CopyObservationSource[] sources, final DateRange foreCastDateRange, final String tokens )
   {
     m_context = context;
     m_sources = sources;
@@ -99,7 +97,7 @@ public class CopyObservationSourceDelegate implements ICopyObservationSourceDele
   {
     List<ObservationSource> sources = new ArrayList<ObservationSource>();
 
-    for( Source source : m_sources )
+    for( CopyObservationSource source : m_sources )
     {
       IObservation observation = getObservation( feature, source.getProperty(), source.getRange(), source.getFilter() );
       sources.add( new ObservationSource( observation, source.getRange(), m_foreCastDateRange, source.getFilter() ) );

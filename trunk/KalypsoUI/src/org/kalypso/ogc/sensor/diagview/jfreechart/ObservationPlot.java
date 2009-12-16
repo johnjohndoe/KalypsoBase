@@ -384,7 +384,7 @@ public class ObservationPlot extends XYPlot
     if( curve.getView().isFeatureEnabled( TimeserieConstants.FEATURE_FORECAST ) )
     {
       // add a marker if the obs is a forecast
-      final DateRange fr = TimeserieUtils.isForecast( obs );
+      final DateRange fr = TimeserieUtils.isTargetForecast( obs );
       if( fr != null )
       {
         final Long begin = new Long( fr.getFrom().getTime() );
