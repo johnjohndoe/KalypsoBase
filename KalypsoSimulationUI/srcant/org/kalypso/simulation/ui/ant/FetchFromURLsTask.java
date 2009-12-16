@@ -69,7 +69,7 @@ public class FetchFromURLsTask extends Task
   private URL m_context;
 
   private String m_src;
-
+ 
   /**
    * @param context
    *          used to resolve relative urls
