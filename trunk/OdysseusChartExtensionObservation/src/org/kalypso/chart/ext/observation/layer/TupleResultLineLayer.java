@@ -17,12 +17,26 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    // supress PointStyle LegendEntry if LineStyle is visible
+    final ILegendEntry[] le = super.getLegendEntries();
+    if( le.length < 2 )
+      return le;
+    return new ILegendEntry[] { le[0] };
+  }
 
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#init()
@@ -74,8 +88,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public String getTitle( )
   {
-   
-    if( super.getTitle() == null &&m_data!=null)
+
+    if( super.getTitle() == null && m_data != null )
     {
       m_data.open();
       final IObservation<TupleResult> obs = m_data.getObservation();
