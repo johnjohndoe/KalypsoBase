@@ -423,7 +423,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public void setFeature( final CommandableWorkspace workspace, final Feature feature )
   {
-    m_featurePath = workspace.getFeaturepathForFeature( feature ).toString();
+    m_featurePath = null;
+    if( feature != null )
+      m_featurePath = workspace.getFeaturepathForFeature( feature ).toString();
+
     setWorkspace( workspace );
   }
 
