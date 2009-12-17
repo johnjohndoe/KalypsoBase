@@ -74,9 +74,9 @@ public final class ExcelClipboardAdapter
 
   private final KeyStroke m_ksPaste;
 
-  private CopyAction m_copyAction;
+  private final CopyAction m_copyAction;
 
-  private PasteAction m_pasteAction;
+  private final PasteAction m_pasteAction;
 
   /**
    * The Excel Adapter is constructed with a JTable on which it enables Copy-Paste and acts as a Clipboard listener.
@@ -183,9 +183,18 @@ public final class ExcelClipboardAdapter
           final StringTokenizer st2 = new StringTokenizer( rowstring, "\t" );
           for( int j = 0; st2.hasMoreTokens(); j++ )
           {
-            final Object value = m_nf.parseObject( st2.nextToken() );
-            if( startRow + i < m_table.getRowCount() && startCol + j < m_table.getColumnCount() )
-              m_table.setValueAt( value, startRow + i, startCol + j );
+            final String nextToken = st2.nextToken();
+
+            final int rowIndex = startRow + i;
+            if( rowIndex < m_table.getRowCount() && startCol + j < m_table.getColumnCount() )
+            {
+              final int columnIndex = startCol + j;
+              if( m_table.isCellEditable( rowIndex, columnIndex ) )
+              {
+                final Object value = m_nf.parseObject( nextToken );
+                m_table.setValueAt( value, rowIndex, columnIndex );
+              }
+            }
           }
         }
       }

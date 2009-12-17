@@ -394,6 +394,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( columnIndex == 0 )
         return;
 
+      if( !isEditable( columnIndex - 1 ) )
+        throw new IllegalStateException( "Trying to edit uneditable column" );
+
       final TableViewColumn col = m_columns.get( columnIndex - 1 );
 
       try
