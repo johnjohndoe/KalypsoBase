@@ -70,6 +70,7 @@ import org.kalypso.core.util.pool.KeyComparator;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -305,68 +306,65 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return m_creator.getScrolledComposite();
   }
 
+  /**
+   * This function updates the controls.
+   */
   protected void updateControls( )
   {
-    final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
-    final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
-
-    final String errorMessage = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
-
     try
     {
+      /* Need a panel to do something. */
       if( m_panel == null || m_panel.isDisposed() )
         return;
 
+      /* Reset the label. */
       if( m_label != null && !m_label.isDisposed() )
         m_label.dispose();
 
+      /* Reset the feature composite. */
       m_featureComposite.setFeature( null );
       m_featureComposite.disposeControl();
 
-      m_featureComposite.setFeature( null );
-      m_featureComposite.updateControl();
-
+      /* If a workspace is missing, it is propably still loading. */
       if( m_workspace == null )
       {
+        /* Create a label, to inform the user about the status. */
         m_label = new Label( m_panel, SWT.CENTER );
         m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }
 
-      if( feature != null )
+      /* Try to obtain the feature to display. */
+      /* The result may be null, if the feature path is null, too. */
+      /* A empty feature path will lead to the root feature. */
+      final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
+      final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
+
+      /* Set the new feature. May be null. */
+      m_featureComposite.setFeature( feature );
+
+      /* Process rendering properties. */
+      int style = SWT.NONE;
+      if( m_template != null )
       {
-        m_featureComposite.setFeature( feature );
+        if( m_template.isToolkit() )
+          m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
 
-        /* process rendering properties */
-        int style = SWT.NONE;
-
-        if( m_template != null )
-        {
-          if( m_template.isToolkit() )
-          {
-            m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
-          }
-
-          final String swtflag = m_template.getSwtflags();
-          style = SWTUtilities.createStyleFromString( swtflag );
-        }
-
-        final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
-        control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        m_featureComposite.setFeature( feature );
-        m_featureComposite.updateControl();
-
-        m_panel.layout();
-
-        m_commandtarget.resetDirty();
+        style = SWTUtilities.createStyleFromString( m_template.getSwtflags() );
       }
-      else
-      {
-        m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( errorMessage );
-        m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      }
+
+      /* Create the control. */
+      final IFeatureType featureType = feature != null ? feature.getFeatureType() : null;
+      final Control control = m_featureComposite.createControl( m_panel, style, featureType );
+      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+      /* Update the control of the feature composite. */
+      m_featureComposite.updateControl();
+
+      /* Layout the panel here. */
+      m_panel.layout();
+      m_commandtarget.resetDirty();
     }
     catch( final Exception e )
     {
@@ -453,6 +451,5 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    */
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
-    // TODO Auto-generated method stub
   }
 }

@@ -51,6 +51,7 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
+import org.kalypso.template.featureview.LabelType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -103,6 +104,14 @@ public class FeatureviewHelper implements IFeatureviewFactory
    */
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
+    if( featureType != null && feature != null )
+      return getWithContent( featureType, feature );
+
+    return getWithoutContent();
+  }
+
+  private FeatureviewType getWithContent( final IFeatureType featureType, final Feature feature )
+  {
     final FeatureviewType featureview = TemplateUtilitites.OF_FEATUREVIEW.createFeatureviewType();
     featureview.setTypename( featureType.getQName() );
     featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
@@ -117,23 +126,62 @@ public class FeatureviewHelper implements IFeatureviewFactory
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
 
-    // REMARK: it is important that the maker is re-created each time. as the makers sometimes
-    // do store state information
+    /* REMARK: It is important that the maker is re-created each time. */
+    /* As the makers sometimes do store state information. */
     final IControlMaker controlMaker = createControlMaker();
-    // PARANOIA: createControlMaker may have been overwritten and so may return null.
+
+    /* PARANOIA: createControlMaker may have been overwritten and so may return null. */
     if( controlMaker == null )
       return featureview;
 
     final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
     for( final IPropertyType ftp : featureType.getProperties() )
+    {
       try
       {
         controlMaker.addControls( controlList, gridLayout, featureType, ftp, feature );
       }
       catch( final AbortCreationException e )
       {
-        // just eat the exception, nothing shall be added for this property
+        /* Just eat the exception, nothing shall be added for this property. */
       }
+    }
+
+    return featureview;
+  }
+
+  private FeatureviewType getWithoutContent( )
+  {
+    final FeatureviewType featureview = TemplateUtilitites.OF_FEATUREVIEW.createFeatureviewType();
+    featureview.setTypename( null );
+    featureview.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+
+    final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    gridLayout.setNumColumns( 1 );
+    featureview.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
+    final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    griddata.setGrabExcessHorizontalSpace( Boolean.TRUE );
+    griddata.setGrabExcessVerticalSpace( Boolean.TRUE );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
+
+    /* Get the list of controls. */
+    final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
+
+    /* Create a label. */
+    final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
+    label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+    label.setText( "Kein Feature gefunden..." );
+    label.setVisible( true );
+
+    final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    labelGridData.setGrabExcessHorizontalSpace( true );
+    labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
+    label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
+
+    /* Add the label. */
+    controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
 
     return featureview;
   }

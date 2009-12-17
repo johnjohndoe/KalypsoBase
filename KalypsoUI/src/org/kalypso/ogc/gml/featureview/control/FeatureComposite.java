@@ -267,7 +267,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final Feature feature = getFeature();
 
-    final IFeatureType featureType = feature.getFeatureType();
+    final IFeatureType featureType = feature == null ? null : feature.getFeatureType();
     final IPropertyType propertyType = getProperty( featureType, controlType );
 
     final IAnnotation annotation = propertyType == null ? null : propertyType.getAnnotation();
@@ -464,11 +464,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
-        // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used 
-        try{
+        // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used
+        try
+        {
           item.setControl( tabControl );
         }
-        catch (Exception e) {
+        catch( Exception e )
+        {
           item.setControl( tabControl.getParent() );
         }
       }
@@ -925,6 +927,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private IPropertyType getProperty( final IFeatureType featureType, final ControlType controlType )
   {
+    if( featureType == null )
+      return null;
+
     if( controlType instanceof PropertyControlType )
       return getPropertyTypeForQName( featureType, ((PropertyControlType) controlType).getProperty() );
 
