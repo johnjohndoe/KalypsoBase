@@ -38,15 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.dialog;
+package org.kalypso.ogc.gml.featureview.dialog.feature;
 
 import java.net.URL;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -70,7 +73,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * 
  * @author Holger Albert
  */
-public class FeatureDialog extends Dialog
+public class FeatureDialog extends TitleAreaDialog
 {
   /**
    * Feature change listener.
@@ -86,6 +89,9 @@ public class FeatureDialog extends Dialog
       {
         /* Execute the commands. */
         m_workspace.postCommand( changeCommand );
+
+        /* Check, if the dialog is allowed to be completed. */
+        checkDialogComplete();
       }
       catch( Exception ex )
       {
@@ -160,6 +166,11 @@ public class FeatureDialog extends Dialog
   private URL m_gftUrl;
 
   /**
+   * The validator for validating the entered values of the feature. May be null.
+   */
+  private IFeatureDialogValidator m_validator;
+
+  /**
    * The constructor.
    * 
    * @param parentShell
@@ -180,29 +191,7 @@ public class FeatureDialog extends Dialog
     m_feature = feature;
     m_featureComposite = null;
     m_gftUrl = gftUrl;
-  }
-
-  /**
-   * The constructor.
-   * 
-   * @param parentShell
-   *          The object that returns the current parent shell.
-   * @param title
-   *          The title of the dialog.
-   * @param feature
-   *          The feature, which should be edited.
-   * @param gftUrl
-   *          The URL to a gft, if one should be used. May be null.
-   */
-  public FeatureDialog( IShellProvider parentShell, String title, Feature feature, URL gftUrl )
-  {
-    super( parentShell );
-
-    m_title = title;
-    m_workspace = new CommandableWorkspace( feature.getWorkspace() );
-    m_feature = feature;
-    m_featureComposite = null;
-    m_gftUrl = gftUrl;
+    m_validator = new PropertyFeatureDialogValidator();
   }
 
   /**
@@ -213,6 +202,7 @@ public class FeatureDialog extends Dialog
   {
     /* Set the title. */
     getShell().setText( m_title );
+    setTitle( m_title );
 
     /* Create the main composite. */
     Composite main = (Composite) super.createDialogArea( parent );
@@ -237,6 +227,18 @@ public class FeatureDialog extends Dialog
     main.layout( true, true );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected void createButtonsForButtonBar( Composite parent )
+  {
+    super.createButtonsForButtonBar( parent );
+
+    /* Check, if the dialog is allowed to be completed. */
+    checkDialogComplete();
   }
 
   /**
@@ -286,15 +288,71 @@ public class FeatureDialog extends Dialog
   }
 
   /**
-   * This function returns the feature composite, in which the edited feature is edited.<br>
-   * If the controls of this dialog are not created yet or an error has occured creating them, this function returns
-   * null.
-   * 
-   * @return The feature composite or null.
+   * This function checks, if the dialog is allowed to be completed.
    */
-  protected FeatureComposite getFeatureComposite( )
+  protected void checkDialogComplete( )
   {
-    return m_featureComposite;
+    /* Get the OK button. */
+    Button okButton = getButton( IDialogConstants.OK_ID );
+
+    /* First of all, it should be allowed to complete. */
+    setErrorMessage( null );
+    okButton.setEnabled( true );
+
+    /* Without a validator, no validation is needed. */
+    if( m_validator == null )
+      return;
+
+    /* Check the entered values. */
+    IStatus status = m_validator.validate( m_feature );
+    if( status.isOK() == true )
+      return;
+
+    /* Display the message. */
+    setErrorMessage( buildErrorMessage( status, null ) );
+
+    /* Deactivate the OK Button. */
+    okButton.setEnabled( false );
+  }
+
+  /**
+   * This function builds the error message.
+   * 
+   * @param status
+   *          The status.
+   * @param errorMessage
+   *          The error message, so far.
+   * @return The error message.
+   */
+  private String buildErrorMessage( IStatus status, String errorMessage )
+  {
+    /* Get the line separator. */
+    String separator = System.getProperty( "line.separator", "\r\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    /* If it is no multi status, we end the recursion here. */
+    if( status.isMultiStatus() == false )
+    {
+      /* If the error message is null or empty, it is enough to return the message of the status. */
+      if( errorMessage == null || errorMessage.isEmpty() )
+        return status.getMessage();
+
+      /* If the error message is not null and not empty, we add a new line and then the message of the status. */
+      return errorMessage + separator + status.getMessage();
+    }
+
+    /* Cast. */
+    MultiStatus multiStatus = (MultiStatus) status;
+
+    /* Get all children. */
+    IStatus[] children = multiStatus.getChildren();
+    for( int i = 0; i < children.length; i++ )
+    {
+      IStatus child = children[i];
+      if( child.isOK() == false )
+        errorMessage = buildErrorMessage( child, errorMessage );
+    }
+
+    return errorMessage;
   }
 
   /**
@@ -320,5 +378,30 @@ public class FeatureDialog extends Dialog
     m_workspace = null;
     m_feature = null;
     m_featureComposite = null;
+    m_gftUrl = null;
+    m_validator = null;
+  }
+
+  /**
+   * This function returns the feature composite, in which the edited feature is edited.<br>
+   * If the controls of this dialog are not created yet or an error has occured creating them, this function returns
+   * null.
+   * 
+   * @return The feature composite or null.
+   */
+  protected FeatureComposite getFeatureComposite( )
+  {
+    return m_featureComposite;
+  }
+
+  /**
+   * This function sets the validator for validating the entered values of the feature.
+   * 
+   * @param validator
+   *          The validator for validating the entered values of the feature. May be null.
+   */
+  public void setValidator( IFeatureDialogValidator validator )
+  {
+    m_validator = validator;
   }
 }
