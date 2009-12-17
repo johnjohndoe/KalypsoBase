@@ -100,7 +100,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
   public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
     /* Is there a special view already registered for this type? */
-    final QName qname = featureType.getQName();
+    final QName qname = featureType != null ? featureType.getQName() : null;
     final FeatureviewType view = m_viewMap.get( qname );
     if( view != null )
       return view;
@@ -109,10 +109,13 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     // the local part was given in the featureViewType (type xs:string). Now it is of type xs:qname.
     // So old entries are interpretated against the namespace of the featureview, which allows us
     // to try against this namespace uri.
-    final QName compabilityName = new QName( FEATUREVIEW_NAMESPACE, qname.getLocalPart(), qname.getPrefix() );
-    final FeatureviewType compabilityView = m_viewMap.get( compabilityName );
-    if( compabilityView != null )
-      return compabilityView;
+    if( qname != null )
+    {
+      final QName compabilityName = new QName( FEATUREVIEW_NAMESPACE, qname.getLocalPart(), qname.getPrefix() );
+      final FeatureviewType compabilityView = m_viewMap.get( compabilityName );
+      if( compabilityView != null )
+        return compabilityView;
+    }
     // REMARK end
 
     /* else ask cache */
@@ -123,7 +126,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     for( final Map.Entry<QName, FeatureviewType> viewEntry : m_viewMap.entrySet() )
     {
       final QName key = viewEntry.getKey();
-      if( GMLSchemaUtilities.substitutes( featureType, key ) )
+      if( featureType != null && GMLSchemaUtilities.substitutes( featureType, key ) )
         return viewEntry.getValue();
     }
 
@@ -132,7 +135,8 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     /* Maybe the catalog has a view for this type. */
     try
     {
-      newView = FeatureTypeFeatureviewCatalog.getFeatureview( null, qname );
+      if( qname != null )
+        newView = FeatureTypeFeatureviewCatalog.getFeatureview( null, qname );
     }
     catch( final JAXBException e )
     {

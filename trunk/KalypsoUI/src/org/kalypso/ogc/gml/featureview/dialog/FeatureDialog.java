@@ -277,6 +277,15 @@ public class FeatureDialog extends Dialog
   }
 
   /**
+   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
+   */
+  @Override
+  protected boolean isResizable( )
+  {
+    return true;
+  }
+
+  /**
    * This function returns the feature composite, in which the edited feature is edited.<br>
    * If the controls of this dialog are not created yet or an error has occured creating them, this function returns
    * null.
