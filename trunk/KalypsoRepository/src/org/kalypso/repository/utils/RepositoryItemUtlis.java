@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -51,7 +55,7 @@ public final class RepositoryItemUtlis
 {
   private RepositoryItemUtlis( )
   {
-    
+
   }
 
   public static boolean isModel( final IRepositoryItem item )
@@ -89,39 +93,88 @@ public final class RepositoryItemUtlis
   /**
    * replace repository identifier in {@value itemIdentifier} with {@value repositoryIdentifier}
    */
-  public static String replaceIdentifier( final String itemIdentifier, String repositoryIdentifier )
+  public static String replaceIdentifier( final String itemIdentifier, final String repositoryIdentifier )
   {
+    String base = repositoryIdentifier;
+
     final String repository = RepositoryUtils.getRepositoryId( itemIdentifier );
-    if( !repositoryIdentifier.endsWith( "://" ) ) //$NON-NLS-1$
-      repositoryIdentifier = String.format( "%s://", repositoryIdentifier ); //$NON-NLS-1$
+    if( !base.endsWith( "://" ) ) //$NON-NLS-1$
+      base = String.format( "%s://", base ); //$NON-NLS-1$
 
-    return String.format( "%s%s", repositoryIdentifier, itemIdentifier.substring( repository.length() ) ); //$NON-NLS-1$
+    return String.format( "%s%s", base, itemIdentifier.substring( repository.length() ) ); //$NON-NLS-1$
   }
 
-  public static String getParentItemId( final String identifier )
+  /**
+   * @param qualified
+   *          means:
+   * 
+   *          <pre>
+   * some zml-proxy://[1].[2].[3].[4] will be qualified / interpreted as followed
+   * 
+   *             ------- 1 ------ --- 2 ----- - 3 -- - 4 -   
+   * zml-proxy://HVZ_Modelle_Elbe.Elbe_Prio_1.560051.W
+   * will be classified as
+   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051].[W]
+   * and the parent is 
+   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051]
+   * 
+   *             ------- 1 ------ --- 2 ----- - 3 -- --- 4 ---
+   * zml-proxy://HVZ_Modelle_Elbe.Elbe_Prio_1.560051.W.Prognose
+   * will be classified as
+   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051].[W.Prognose]
+   * and the parent is
+   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051]
+   * </pre>
+   */
+  public static String getParentItemId( final String identifier, final int qualified )
   {
-    final int index = identifier.lastIndexOf( "." ); //$NON-NLS-1$
-    if( index == -1 )
-    {
+    String[] parts = getQualifiedItemParts( identifier, qualified );
+    if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
+
+    String parent = "";
+    for( int i = 0; i < parts.length - 1; i++ )
+    {
+      parent += parts[i] + ".";
     }
 
-    return identifier.substring( 0, index );
+    return StringUtilities.chomp( parent );
   }
 
-  public static String resolveItemIdPart( final String identifier ) throws RepositoryException
+  public static String resolveItemIdPart( final String identifier, final int qualified ) throws RepositoryException
   {
-    int index = identifier.lastIndexOf( "." ); //$NON-NLS-1$
-    if( index == -1 )
+    String[] parts = getQualifiedItemParts( identifier, qualified );
+    String part = parts[parts.length - 1];
+
+    return getPlainId( part );
+  }
+
+  /**
+   * see {@link RepositoryItemUtlis.resolveItemIdPart}
+   */
+  private static String[] getQualifiedItemParts( final String identifier, final int qualified )
+  {
+    List<String> partsQualified = new ArrayList<String>();
+
+    String concat = "";
+
+    String[] parts = identifier.split( "\\." );
+    for( int i = 0; i < parts.length; i++ )
     {
-      index = identifier.indexOf( "://" ); //$NON-NLS-1$
-      if( index == -1 )
-        throw new RepositoryException( String.format( "Couldn't resolve item name from identifier: %s", identifier ) ); //$NON-NLS-1$
-
-      return identifier.substring( index + 3 );
+      if( i < qualified - 1 )
+      {
+        partsQualified.add( parts[i] );
+      }
+      else
+      {
+        concat += parts[i] + ".";
+      }
     }
+    if( !concat.isEmpty() )
+      partsQualified.add( StringUtilities.chomp( concat ) );
 
-    return identifier.substring( index + 1 );
+    return partsQualified.toArray( new String[] {} );
+
   }
 
   public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
