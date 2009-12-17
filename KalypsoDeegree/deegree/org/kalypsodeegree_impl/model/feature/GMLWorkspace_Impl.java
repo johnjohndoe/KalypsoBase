@@ -501,6 +501,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     try
     {
+      if( featurePath == null )
+        return null;
+
       final FeaturePath fPath = new FeaturePath( featurePath );
       return fPath.getFeature( this );
     }
