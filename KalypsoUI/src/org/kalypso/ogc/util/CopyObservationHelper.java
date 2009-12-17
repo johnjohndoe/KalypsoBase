@@ -57,25 +57,23 @@ public final class CopyObservationHelper implements ICopyObservationTimeSeriesCo
 {
   private CopyObservationHelper( )
   {
-
   }
 
   public static Map<String, String> getSourceMetadataSettings( final ObservationSource source, final int count )
   {
-    Map<String, String> map = new HashMap<String, String>();
+    final Map<String, String> map = new HashMap<String, String>();
 
-    String reference = source.getObservation().getIdentifier();
-    String filter = XMLUtilities.encapsulateInCDATA( source.getFilter() );
+    final String reference = source.getObservation().getIdentifier();
+    final String filter = XMLUtilities.encapsulateInCDATA( source.getFilter() );
 
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    final DateRange sourceDateRange = source.getSourceDateRange();
 
-    DateRange sourceDateRange = source.getSourceDateRange();
-    String sourceFrom = sourceDateRange.getFrom() == null ? "" : DateUtilities.printDateTime( sourceDateRange.getFrom(), timeZone );
-    String sourceTo = sourceDateRange.getTo() == null ? "" : DateUtilities.printDateTime( sourceDateRange.getTo(), timeZone );
+    final String sourceFrom = getFrom( sourceDateRange );
+    final String sourceTo = getTo( sourceDateRange );
 
-    DateRange forecastDateRange = source.getForecastDateRange();
-    String foreCastFrom = forecastDateRange.getFrom() == null ? "" : DateUtilities.printDateTime( forecastDateRange.getFrom(), timeZone );
-    String foreCastTo = forecastDateRange.getTo() == null ? "" : DateUtilities.printDateTime( forecastDateRange.getTo(), timeZone );
+    final DateRange forecastDateRange = source.getForecastDateRange();
+    final String foreCastFrom = getFrom( forecastDateRange );
+    final String foreCastTo = getTo( forecastDateRange );
 
     map.put( getMetaDataKey( MD_TIME_SERIES_SOURCE, count ), reference );
     map.put( getMetaDataKey( MD_TIME_SERIES_FILTER, count ), filter );
@@ -85,6 +83,32 @@ public final class CopyObservationHelper implements ICopyObservationTimeSeriesCo
     map.put( getMetaDataKey( MD_TIME_SERIES_FORECAST_DATE_RANGE_TO, count ), foreCastTo );
 
     return map;
+  }
+
+  private static String getTo( final DateRange dateRange )
+  {
+    if( dateRange == null )
+      return "";
+
+    if( dateRange.getFrom() == null )
+      return "";
+
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+    return DateUtilities.printDateTime( dateRange.getTo(), timeZone );
+  }
+
+  private static String getFrom( final DateRange dateRange )
+  {
+    if( dateRange == null )
+      return "";
+
+    if( dateRange.getFrom() == null )
+      return "";
+
+    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+    return DateUtilities.printDateTime( dateRange.getFrom(), timeZone );
   }
 
   private static String getMetaDataKey( final String base, final Integer count )

@@ -128,7 +128,7 @@ public final class RepositoryItemUtlis
    */
   public static String getParentItemId( final String identifier, final int qualified )
   {
-    String[] parts = getQualifiedItemParts( identifier, qualified );
+    final String[] parts = getQualifiedItemParts( identifier, qualified );
     if( parts.length == 1 )
       return RepositoryUtils.getRepositoryId( identifier );
 
@@ -141,10 +141,10 @@ public final class RepositoryItemUtlis
     return StringUtilities.chomp( parent );
   }
 
-  public static String resolveItemIdPart( final String identifier, final int qualified ) throws RepositoryException
+  public static String resolveItemIdPart( final String identifier, final int qualified )
   {
-    String[] parts = getQualifiedItemParts( identifier, qualified );
-    String part = parts[parts.length - 1];
+    final String[] parts = getQualifiedItemParts( identifier, qualified );
+    final String part = parts[parts.length - 1];
 
     return getPlainId( part );
   }
@@ -152,13 +152,13 @@ public final class RepositoryItemUtlis
   /**
    * see {@link RepositoryItemUtlis.resolveItemIdPart}
    */
-  private static String[] getQualifiedItemParts( final String identifier, final int qualified )
+  public static String[] getQualifiedItemParts( final String identifier, final int qualified )
   {
-    List<String> partsQualified = new ArrayList<String>();
+    final List<String> partsQualified = new ArrayList<String>();
 
     String concat = "";
 
-    String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." );
     for( int i = 0; i < parts.length; i++ )
     {
       if( i < qualified - 1 )
@@ -174,7 +174,6 @@ public final class RepositoryItemUtlis
       partsQualified.add( StringUtilities.chomp( concat ) );
 
     return partsQualified.toArray( new String[] {} );
-
   }
 
   public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
@@ -184,7 +183,7 @@ public final class RepositoryItemUtlis
 
     String base = "";
 
-    IRepositoryItem parent = item.getParent();
+    final IRepositoryItem parent = item.getParent();
     if( parent != null )
       base += resolveItemName( parent );
 
@@ -201,7 +200,7 @@ public final class RepositoryItemUtlis
    */
   public static String getPlainId( final String identifier )
   {
-    String[] parts = identifier.split( "://" );
+    final String[] parts = identifier.split( "://" );
 
     return parts[parts.length - 1];
   }

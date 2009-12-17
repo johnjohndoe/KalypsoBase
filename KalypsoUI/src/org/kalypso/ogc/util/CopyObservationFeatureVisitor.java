@@ -115,7 +115,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final String targetHref = m_target.getTargetHref( feature );
       setCurrentSubTask( targetHref );
 
-      ObservationSource[] sources = m_sources.getObservationSources( feature );
+      final ObservationSource[] sources = m_sources.getObservationSources( feature );
 
       final IFile targetfile = createTargetFile( targetHref );
       if( targetfile == null )
@@ -135,7 +135,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     {
       e.printStackTrace();
 
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + feature.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + feature == null ? "" : feature.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
     }
 
     return true;
@@ -181,19 +181,20 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     final MetadataList mdl = resultObs.getMetadataList();
 
     int count = 0;
-    for( ObservationSource source : sources )
+    for( final ObservationSource source : sources )
     {
       mdl.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
+      count++;
     }
   }
 
   private IObservation combineResultObservation( final ObservationSource[] sources ) throws SensorException
   {
-    List<ITuppleModel> models = new ArrayList<ITuppleModel>();
-    for( ObservationSource source : sources )
+    final List<ITuppleModel> models = new ArrayList<ITuppleModel>();
+    for( final ObservationSource source : sources )
     {
-      IObservation observation = source.getObservation();
-      ObservationRequest request = new ObservationRequest( source.getSourceDateRange() );
+      final IObservation observation = source.getObservation();
+      final ObservationRequest request = new ObservationRequest( source.getSourceDateRange() );
 
       models.add( observation.getValues( request ) );
     }
@@ -203,7 +204,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
     final ForecastTuppleModel tuppleModel = new ForecastTuppleModel( models.toArray( new ITuppleModel[] {} ) );
 
-    IObservation baseObservation = sources[0].getObservation();
+    final IObservation baseObservation = sources[0].getObservation();
     final MetadataList metadataList = (MetadataList) baseObservation.getMetadataList().clone();
     final IAxis[] axes = baseObservation.getAxisList();
 
