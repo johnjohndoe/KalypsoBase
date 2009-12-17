@@ -152,7 +152,7 @@
 		</xsl:variable>
 		<xsl:variable name="position">
 			<xsl:call-template name="generate.latex.float.position">
-				<xsl:with-param name="default" select="'hbt'"/>
+				<xsl:with-param name="default" select="'H'"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:call-template name="map.begin">
