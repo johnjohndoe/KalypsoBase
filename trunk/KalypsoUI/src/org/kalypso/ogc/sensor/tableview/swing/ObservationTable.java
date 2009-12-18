@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Panel;
 import java.awt.event.MouseAdapter;
@@ -218,12 +219,24 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         @Override
         public void mouseReleased( final MouseEvent e )
         {
+          if( MouseEvent.BUTTON3 == e.getButton() )
+          {
+            final Cursor cursor = header.getCursor();
+            try
+            {
+              header.setCursor( java.awt.Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+              menu.show( header, e.getX(), e.getY() );
+            }
+            finally
+            {
+              header.setCursor( cursor );
+            }
+          }
 
-          menu.show( header, e.getX(), e.getY() );
         }
       } );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
