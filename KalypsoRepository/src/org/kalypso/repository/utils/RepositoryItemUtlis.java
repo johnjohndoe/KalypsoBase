@@ -204,4 +204,9 @@ public final class RepositoryItemUtlis
 
     return parts[parts.length - 1];
   }
+
+  public static boolean isRepositoryItem( final String identifier )
+  {
+    return identifier.contains( "://" );
+  }
 }
