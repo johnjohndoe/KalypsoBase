@@ -38,18 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation;
+package org.kalypso.ogc.util.copyobservation.source;
 
-import java.net.MalformedURLException;
-
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationSource
+public final class ObservationSource extends Source
 {
-  ObservationSource[] getObservationSources( Feature feature ) throws MalformedURLException, SensorException;
+  private final IObservation m_observation;
+
+  public ObservationSource( final Source source, final IObservation observation )
+  {
+    super( source.getProperty(), source.getDateRange(), source.getFilter() );
+    m_observation = observation;
+  }
+
+  public IObservation getObservation( )
+  {
+    return m_observation;
+  }
 }

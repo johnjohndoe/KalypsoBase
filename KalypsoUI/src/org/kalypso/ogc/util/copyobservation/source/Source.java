@@ -4,9 +4,8 @@ import java.util.Date;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IObservation;
 
-public final class Source
+public class Source
 {
   private String m_property;
 
@@ -16,7 +15,6 @@ public final class Source
 
   private String m_filter;
 
-  private IObservation m_observation;
 
   public Source( )
   {
@@ -33,58 +31,49 @@ public final class Source
     m_filter = filter;
   }
 
-  public String getProperty( )
+  public final String getProperty( )
   {
     return m_property;
   }
 
-  public void setProperty( final String prop )
+  public final void setProperty( final String prop )
   {
     this.m_property = prop;
   }
 
-  public Date getFrom( )
+  public final Date getFrom( )
   {
     return m_from;
   }
 
-  public void setFrom( final String lfrom )
+  public final void setFrom( final String lfrom )
   {
     m_from = DateUtilities.parseDateTime( lfrom );
   }
 
-  public Date getTo( )
+  public final Date getTo( )
   {
     return m_to;
   }
 
-  public void setTo( final String lto )
+  public final void setTo( final String lto )
   {
     m_to = DateUtilities.parseDateTime( lto );
   }
 
-  public String getFilter( )
+  public final String getFilter( )
   {
     return m_filter;
   }
 
-  public void setFilter( final String filt )
+  public final void setFilter( final String filt )
   {
     this.m_filter = filt;
   }
 
-  public DateRange getDateRange()
+  public final DateRange getDateRange( )
   {
     return DateRange.createDateRangeOrNull( m_from, m_to );
   }
 
-  public void setObservation( final IObservation observation )
-  {
-    m_observation = observation;
-  }
-
-  public IObservation getObservation( )
-  {
-    return m_observation;
-  }
 }

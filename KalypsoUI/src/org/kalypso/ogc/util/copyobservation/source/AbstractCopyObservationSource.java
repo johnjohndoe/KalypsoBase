@@ -42,6 +42,8 @@ package org.kalypso.ogc.util.copyobservation.source;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -84,15 +86,16 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
     m_sources = sources;
   }
 
-  public final Source[] initObservations( final Feature feature ) throws MalformedURLException, SensorException
+  public final ObservationSource[] getObservationSources( final Feature feature ) throws MalformedURLException, SensorException
   {
+    final List<ObservationSource> sources = new ArrayList<ObservationSource>();
     for( final Source source : m_sources )
     {
       final IObservation observation = getObservation( feature, source );
-      source.setObservation( observation );
+      sources.add( new ObservationSource( source, observation ) );
     }
 
-    return m_sources;
+    return sources.toArray( new ObservationSource[] {} );
   }
 
   protected abstract String getSourceLinkHref( Feature feature, final Source source );

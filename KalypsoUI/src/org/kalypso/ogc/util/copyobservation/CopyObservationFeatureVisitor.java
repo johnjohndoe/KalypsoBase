@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.util.AbstractMonitoredFeatureVisitor;
-import org.kalypso.ogc.util.copyobservation.source.Source;
+import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
 import org.kalypso.ogc.util.copyobservation.target.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -117,7 +117,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final String targetHref = m_target.getTargetHref( feature );
       setCurrentSubTask( targetHref );
 
-      final Source[] sources = m_sources.initObservations( feature );
+      final ObservationSource[] sources = m_sources.getObservationSources( feature );
 
       final IFile targetfile = createTargetFile( targetHref );
       if( targetfile == null )
@@ -174,7 +174,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     }
   }
 
-  private void updateMetaData( final IObservation resultObs, final Source[] sources )
+  private void updateMetaData( final IObservation resultObs, final ObservationSource[] sources )
   {
     /* set forecast metadata, might be used in diagram for instance to mark the forecast range */
     TimeserieUtils.setTargetForecast( resultObs, m_target.getTargetForecastDateRange() );
@@ -184,17 +184,17 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     final MetadataList mdl = resultObs.getMetadataList();
 
     int count = 0;
-    for( final Source source : sources )
+    for( final ObservationSource source : sources )
     {
       mdl.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
       count++;
     }
   }
 
-  private IObservation combineResultObservation( final Source[] sources ) throws SensorException
+  private IObservation combineResultObservation( final ObservationSource[] sources ) throws SensorException
   {
     final List<ITuppleModel> models = new ArrayList<ITuppleModel>();
-    for( final Source source : sources )
+    for( final ObservationSource source : sources )
     {
       final IObservation observation = source.getObservation();
       final ObservationRequest request = new ObservationRequest( source.getDateRange() );

@@ -49,7 +49,7 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.ICopyObservationTimeSeriesConstants;
-import org.kalypso.ogc.util.copyobservation.source.Source;
+import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +60,7 @@ public final class CopyObservationHelper implements ICopyObservationTimeSeriesCo
   {
   }
 
-  public static Map<String, String> getSourceMetadataSettings( final Source source, final int count )
+  public static Map<String, String> getSourceMetadataSettings( final ObservationSource source, final int count )
   {
     final Map<String, String> map = new HashMap<String, String>();
 
