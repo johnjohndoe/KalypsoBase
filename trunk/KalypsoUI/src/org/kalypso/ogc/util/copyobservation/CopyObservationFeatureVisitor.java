@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.copyobservation;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -70,7 +70,9 @@ import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.util.timeserieslink.ICopyObservationTarget;
+import org.kalypso.ogc.util.AbstractMonitoredFeatureVisitor;
+import org.kalypso.ogc.util.copyobservation.source.Source;
+import org.kalypso.ogc.util.copyobservation.target.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
@@ -115,7 +117,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final String targetHref = m_target.getTargetHref( feature );
       setCurrentSubTask( targetHref );
 
-      final ObservationSource[] sources = m_sources.getObservationSources( feature );
+      final Source[] sources = m_sources.initObservations( feature );
 
       final IFile targetfile = createTargetFile( targetHref );
       if( targetfile == null )
@@ -124,6 +126,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final IObservation resultObs = combineResultObservation( sources );
       updateMetaData( resultObs, sources );
       udpateMetaData( resultObs, feature );
+
 
       final IRequest request = new ObservationRequest( m_target.getTargetDateRange() );
 // // FIXME: this causes two calls to the repository and eventually two calls to the underlying database
@@ -171,7 +174,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     }
   }
 
-  private void updateMetaData( final IObservation resultObs, final ObservationSource[] sources )
+  private void updateMetaData( final IObservation resultObs, final Source[] sources )
   {
     /* set forecast metadata, might be used in diagram for instance to mark the forecast range */
     TimeserieUtils.setTargetForecast( resultObs, m_target.getTargetForecastDateRange() );
@@ -181,20 +184,20 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     final MetadataList mdl = resultObs.getMetadataList();
 
     int count = 0;
-    for( final ObservationSource source : sources )
+    for( final Source source : sources )
     {
       mdl.putAll( CopyObservationHelper.getSourceMetadataSettings( source, count ) );
       count++;
     }
   }
 
-  private IObservation combineResultObservation( final ObservationSource[] sources ) throws SensorException
+  private IObservation combineResultObservation( final Source[] sources ) throws SensorException
   {
     final List<ITuppleModel> models = new ArrayList<ITuppleModel>();
-    for( final ObservationSource source : sources )
+    for( final Source source : sources )
     {
       final IObservation observation = source.getObservation();
-      final ObservationRequest request = new ObservationRequest( source.getSourceDateRange() );
+      final ObservationRequest request = new ObservationRequest( source.getDateRange() );
 
       models.add( observation.getValues( request ) );
     }

@@ -38,50 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.copyobservation.target;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public class ObservationSource
+public interface ICopyObservationTarget
 {
-  private final IObservation m_observation;
+  String getTargetHref( Feature feature ) throws CoreException;
 
-  private final String m_filter;
+  DateRange getTargetDateRange( );
 
-  private final DateRange m_sourceDateRange;
+  DateRange getTargetForecastDateRange( );
 
-  private final DateRange m_forecastDateRange;
-
-  public ObservationSource( final IObservation observation, final DateRange sourceRange, final DateRange foreCastDateRange, final String filter )
-  {
-    m_observation = observation;
-    m_sourceDateRange = sourceRange;
-    m_forecastDateRange = foreCastDateRange;
-    m_filter = filter;
-  }
-
-  public final IObservation getObservation( )
-  {
-    return m_observation;
-  }
-
-  public final String getFilter( )
-  {
-    return m_filter;
-  }
-
-  public final DateRange getSourceDateRange( )
-  {
-    return m_sourceDateRange;
-  }
-
-  public final DateRange getForecastDateRange( )
-  {
-    return m_forecastDateRange;
-  }
-
+  URL getContext( );
 }

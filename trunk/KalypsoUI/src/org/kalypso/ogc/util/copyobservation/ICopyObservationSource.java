@@ -38,24 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.timeserieslink;
+package org.kalypso.ogc.util.copyobservation;
 
-import java.net.URL;
+import java.net.MalformedURLException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.util.copyobservation.source.Source;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface ICopyObservationTarget
+public interface ICopyObservationSource
 {
-  String getTargetHref( Feature feature ) throws CoreException;
-
-  DateRange getTargetDateRange( );
-
-  DateRange getTargetForecastDateRange( );
-
-  URL getContext( );
+  Source[] initObservations( Feature feature ) throws MalformedURLException, SensorException;
 }
