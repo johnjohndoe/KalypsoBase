@@ -116,8 +116,23 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
     if( featureList.isEmpty() )
       return null;
 
+    /* Find the first selected element of the active theme. */
+    Object currentElement = null;
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    final Object currentElement = selectionManager.getFirstElement();
+    EasyFeatureWrapper[] wrappers = selectionManager.getAllFeatures();
+    for( int i = 0; i < wrappers.length; i++ )
+    {
+      /* Get the wrapper. */
+      EasyFeatureWrapper wrapper = wrappers[i];
+      
+      /* Get the feature. */
+      Feature feature = wrapper.getFeature();
+      if (featureList.contains( feature )) {
+        currentElement = feature;
+        break;
+      }
+    }
+    
     final Feature featureToSelect = findFeatureToSelect( featureTheme, featureList, currentElement );
     if( featureToSelect == null )
       return null;
@@ -125,7 +140,13 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
     // do change the selection
     final CommandableWorkspace workspace = featureTheme.getWorkspace();
     final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getOwner(), featureToSelect.getParentRelation() );
-    final Feature[] toRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+
+    // HINT: This will remove all selected features...
+    // final Feature[] toRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+    // HINT: This will remove only the selected features of the active theme...
+    final Feature[] toRemove = FeatureSelectionHelper.getFeaturesFromTheme( selectionManager, featureTheme );
+
+    /* Change the selection. */
     selectionManager.changeSelection( toRemove, new EasyFeatureWrapper[] { wrapperToSelect } );
 
     return null;
