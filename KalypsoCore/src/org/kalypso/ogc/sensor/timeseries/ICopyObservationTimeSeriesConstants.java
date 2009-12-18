@@ -53,8 +53,4 @@ public interface ICopyObservationTimeSeriesConstants extends TimeserieConstants
   String MD_TIME_SERIES_SRC_DATE_RANGE_FROM = "CopyObsVisitor_Src_DateRange_From";
 
   String MD_TIME_SERIES_SRC_DATE_RANGE_TO = "CopyObsVisitor_Src_DateRange_To";
-
-  String MD_TIME_SERIES_FORECAST_DATE_RANGE_FROM = "CopyObsVisitor_Src_ForecastDateRange_From";
-
-  String MD_TIME_SERIES_FORECAST_DATE_RANGE_TO = "CopyObsVisitor_Src_ForecastDateRange_To";
 }
