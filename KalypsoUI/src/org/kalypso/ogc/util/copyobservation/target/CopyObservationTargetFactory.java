@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.timeserieslink;
+package org.kalypso.ogc.util.copyobservation.target;
 
 import java.io.File;
 import java.net.URL;

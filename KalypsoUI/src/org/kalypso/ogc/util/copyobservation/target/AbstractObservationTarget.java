@@ -38,40 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.copyobservation.target;
+
+import java.net.URL;
 
 import org.kalypso.ogc.sensor.DateRange;
 
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationSource
+public abstract class AbstractObservationTarget implements ICopyObservationTarget
 {
-  private final String m_property;
+  private final DateRange m_targetRange;
 
-  private final DateRange m_range;
+  private final DateRange m_forecastRange;
 
-  private final String m_filter;
+  private final URL m_context;
 
-  public CopyObservationSource( final String prop, final DateRange dateRange, final String filt )
+  public AbstractObservationTarget( final URL context, final DateRange targetRange, final DateRange forecastRange )
   {
-    this.m_property = prop;
-    this.m_range = dateRange;
-    this.m_filter = filt;
+    m_context = context;
+    m_targetRange = targetRange;
+    m_forecastRange = forecastRange;
   }
 
-  public final DateRange getRange( )
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getTargetDateRange()
+   */
+  @Override
+  public final DateRange getTargetDateRange( )
   {
-    return m_range;
+    return m_targetRange;
   }
 
-  public final String getProperty( )
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getForecastDateRange()
+   */
+  @Override
+  public final DateRange getTargetForecastDateRange( )
   {
-    return m_property;
+    return m_forecastRange;
   }
 
-  public final String getFilter( )
+  /**
+   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getContext()
+   */
+  @Override
+  public final URL getContext( )
   {
-    return m_filter;
+    return m_context;
   }
 }

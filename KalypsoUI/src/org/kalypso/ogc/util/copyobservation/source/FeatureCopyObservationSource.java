@@ -38,53 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.timeserieslink;
+package org.kalypso.ogc.util.copyobservation.source;
 
 import java.net.URL;
+import java.util.Properties;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Dirk Kuch
  */
-public class CopyObservationTarget extends AbstractObservationTarget implements ICopyObservationTarget
+public class FeatureCopyObservationSource extends AbstractCopyObservationSource
 {
-  private final String m_targetobservation;
+  private final String m_tokens;
 
-  public CopyObservationTarget( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
+  public FeatureCopyObservationSource( final URL context, final Source[] sources, final String tokens )
   {
-    super( context, targetRange, forecastRange );
-
-    m_targetobservation = targetobservation;
+    super( context, sources );
+    m_tokens = tokens;
   }
 
-  public final String getTargetHref( final Feature f ) throws CoreException
+  /**
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getReplaceTokens(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  protected final Properties getReplaceTokens( final Feature feature )
   {
-    final TimeseriesLinkType targetlink = getTargetLink( f );
-    if( targetlink == null )
-    {
-      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
-    }
+    if( m_tokens != null )
+      return FeatureHelper.createReplaceTokens( feature, m_tokens );
 
-    // remove query part if present, href is also used as file name here!
-    final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
-    return href;
+    return null;
   }
 
-  private TimeseriesLinkType getTargetLink( final Feature f )
+  /**
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getSourceLinkHref()
+   */
+  @Override
+  protected final String getSourceLinkHref( final Feature feature, final Source source )
   {
-    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
-  }
+    if( source.getProperty() == null )
+      return null;
 
-  public final boolean isSourceEqualTargetObservation( final String source )
-  {
-    return m_targetobservation.equals( source );
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( source.getProperty() );
+    if( sourcelink == null )
+      return null;
+
+    return sourcelink.getHref();
+
   }
 
 }

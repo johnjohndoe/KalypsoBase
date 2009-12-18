@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.copyobservation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +49,7 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.ICopyObservationTimeSeriesConstants;
+import org.kalypso.ogc.util.copyobservation.source.Source;
 
 /**
  * @author Dirk Kuch
@@ -59,28 +60,22 @@ public final class CopyObservationHelper implements ICopyObservationTimeSeriesCo
   {
   }
 
-  public static Map<String, String> getSourceMetadataSettings( final ObservationSource source, final int count )
+  public static Map<String, String> getSourceMetadataSettings( final Source source, final int count )
   {
     final Map<String, String> map = new HashMap<String, String>();
 
     final String reference = source.getObservation().getIdentifier();
     final String filter = XMLUtilities.encapsulateInCDATA( source.getFilter() );
 
-    final DateRange sourceDateRange = source.getSourceDateRange();
+    final DateRange sourceDateRange = source.getDateRange();
 
     final String sourceFrom = getFrom( sourceDateRange );
     final String sourceTo = getTo( sourceDateRange );
-
-    final DateRange forecastDateRange = source.getForecastDateRange();
-    final String foreCastFrom = getFrom( forecastDateRange );
-    final String foreCastTo = getTo( forecastDateRange );
 
     map.put( getMetaDataKey( MD_TIME_SERIES_SOURCE, count ), reference );
     map.put( getMetaDataKey( MD_TIME_SERIES_FILTER, count ), filter );
     map.put( getMetaDataKey( MD_TIME_SERIES_SRC_DATE_RANGE_FROM, count ), sourceFrom );
     map.put( getMetaDataKey( MD_TIME_SERIES_SRC_DATE_RANGE_TO, count ), sourceTo );
-    map.put( getMetaDataKey( MD_TIME_SERIES_FORECAST_DATE_RANGE_FROM, count ), foreCastFrom );
-    map.put( getMetaDataKey( MD_TIME_SERIES_FORECAST_DATE_RANGE_TO, count ), foreCastTo );
 
     return map;
   }

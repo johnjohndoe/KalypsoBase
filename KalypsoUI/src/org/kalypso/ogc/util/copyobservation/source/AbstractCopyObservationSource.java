@@ -38,18 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.ogc.util.copyobservation.source;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
@@ -58,18 +55,17 @@ import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.ogc.util.copyobservation.ICopyObservationSource;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.request.Request;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Dirk Kuch
  */
-public class DefaultCopyObservationSouce implements ICopyObservationSource
+public abstract class AbstractCopyObservationSource implements ICopyObservationSource
 {
-  private final CopyObservationSource[] m_sources;
+  private final Source[] m_sources;
 
   /**
    * Die Liste der Tokens und deren Ersetzung in der Form:
@@ -79,53 +75,42 @@ public class DefaultCopyObservationSouce implements ICopyObservationSource
    * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als
    * Request-Name zu setzen)
    */
-  private final String m_tokens;
-
   private final URL m_context;
 
-  private final DateRange m_foreCastDateRange;
 
-  public DefaultCopyObservationSouce( final URL context, final CopyObservationSource[] sources, final DateRange foreCastDateRange, final String tokens )
+  public AbstractCopyObservationSource( final URL context, final Source[] sources )
   {
     m_context = context;
     m_sources = sources;
-    m_foreCastDateRange = foreCastDateRange;
-    m_tokens = tokens;
   }
 
-  public final ObservationSource[] getObservationSources( final Feature feature ) throws MalformedURLException, SensorException
+  public final Source[] initObservations( final Feature feature ) throws MalformedURLException, SensorException
   {
-    List<ObservationSource> sources = new ArrayList<ObservationSource>();
-
-    for( CopyObservationSource source : m_sources )
+    for( final Source source : m_sources )
     {
-      IObservation observation = getObservation( feature, source.getProperty(), source.getRange(), source.getFilter() );
-      sources.add( new ObservationSource( observation, source.getRange(), m_foreCastDateRange, source.getFilter() ) );
+      final IObservation observation = getObservation( feature, source );
+      source.setObservation( observation );
     }
 
-    return sources.toArray( new ObservationSource[] {} );
+    return m_sources;
   }
 
-  private IObservation getObservation( final Feature feature, final String sourceProperty, final DateRange range, final String filter ) throws MalformedURLException, SensorException
+  protected abstract String getSourceLinkHref( Feature feature, final Source source );
+
+  protected abstract Properties getReplaceTokens( final Feature feature );
+
+  private IObservation getObservation( final Feature feature, final Source source ) throws MalformedURLException, SensorException
   {
-    if( sourceProperty == null )
-      return null;
-
-    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( sourceProperty );
-    if( sourcelink == null )
-      return null;
-
-    final String sourceHref = sourcelink.getHref();
-    final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, filter );
+    final String sourceHref = getSourceLinkHref( feature, source );
+    final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, source.getFilter() );
 
     // filter variable might also contain request spec
-    String hrefWithFilterAndRange = ZmlURL.insertRequest( hrefWithFilter, new ObservationRequest( range ) );
+    String hrefWithFilterAndRange = ZmlURL.insertRequest( hrefWithFilter, new ObservationRequest( source.getDateRange() ) );
 
     // token replacement
-    if( m_tokens != null && m_tokens.length() > 0 )
+    final Properties properties = getReplaceTokens( feature );
+    if( properties != null )
     {
-      final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
-
       hrefWithFilterAndRange = ObsViewUtils.replaceTokens( hrefWithFilterAndRange, properties );
     }
 
@@ -133,7 +118,7 @@ public class DefaultCopyObservationSouce implements ICopyObservationSource
 
     try
     {
-      return ZmlFactory.parseXML( sourceURL, feature.getId() );
+      return ZmlFactory.parseXML( sourceURL, feature == null ? null : feature.getId() );
     }
     catch( final SensorException e )
     {
@@ -145,7 +130,7 @@ public class DefaultCopyObservationSouce implements ICopyObservationSource
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge syntetische Zeitreihe.", sourceHref );
       KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
       final IObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
-      return FilterFactory.createFilterFrom( filter, synteticObservation, null );
+      return FilterFactory.createFilterFrom( source.getFilter(), synteticObservation, null );
     }
   }
 }
