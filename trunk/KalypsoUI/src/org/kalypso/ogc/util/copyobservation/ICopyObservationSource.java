@@ -43,7 +43,7 @@ package org.kalypso.ogc.util.copyobservation;
 import java.net.MalformedURLException;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.util.copyobservation.source.Source;
+import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -51,5 +51,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ICopyObservationSource
 {
-  Source[] initObservations( Feature feature ) throws MalformedURLException, SensorException;
+  ObservationSource[] getObservationSources( Feature feature ) throws MalformedURLException, SensorException;
 }
