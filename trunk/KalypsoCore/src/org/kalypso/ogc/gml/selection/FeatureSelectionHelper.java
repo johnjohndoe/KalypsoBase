@@ -48,13 +48,15 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Helper methods for Feature-selection.
- *
+ * 
  * @author belger
  */
 public class FeatureSelectionHelper
@@ -72,7 +74,7 @@ public class FeatureSelectionHelper
    * GMLEditorContentProvider2 is defined in the KalypsoUI plugin and this helper lives in KalypsoCore. adding the
    * linked Element Support would add a new dependency. do we still need the LinkedFeatureElement2 object or can we
    * model it differnetly since the GMLWorkspace api changed considerably?
-   *
+   * 
    * @param filterWorkspace
    *          if null, all features are returned
    */
@@ -90,6 +92,40 @@ public class FeatureSelectionHelper
     }
 
     return features.toArray( new Feature[features.size()] );
+  }
+
+  /**
+   * This function returns all features contained in the selection which are part of the given theme.
+   * 
+   * @param selection
+   *          The selection.
+   * @param filterTheme
+   *          Only selected features of this theme will be returned. If null, all features will be returned.
+   * @return The selected features of the theme.
+   */
+  public static Feature[] getFeaturesFromTheme( final IFeatureSelection selection, final IKalypsoFeatureTheme filterTheme )
+  {
+    /* If no filter theme is given, return all features of the selection. */
+    if( filterTheme == null )
+      return getFeatures( selection );
+
+    /* Get the selection manager. */
+    final IFeatureSelectionManager selectionManager = selection.getSelectionManager();
+
+    /* Memory for the results. */
+    final ArrayList<Feature> results = new ArrayList<Feature>();
+
+    /* Get all features of the filter theme. */
+    final FeatureList features = filterTheme.getFeatureList();
+    for( int i = 0; i < features.size(); i++ )
+    {
+      /* Get the feature. */
+      Feature feature = (Feature) features.get( i );
+      if( selectionManager.isSelected( feature ) )
+        results.add( feature );
+    }
+
+    return results.toArray( new Feature[] {} );
   }
 
   /** Return the amount of features contained in the given selection. */
