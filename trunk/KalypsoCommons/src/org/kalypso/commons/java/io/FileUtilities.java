@@ -301,7 +301,7 @@ public class FileUtilities
     while( true )
     {
       final File newDir = new File( parentDir, prefix + System.currentTimeMillis() );
-      if( newDir.mkdir() )
+      if( newDir.mkdirs() )
         return newDir;
     }
   }
