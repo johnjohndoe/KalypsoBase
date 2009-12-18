@@ -107,7 +107,7 @@ public interface IWspmConstants
 
   public static final String LENGTH_SECTION_PROPERT_BOE_RE = LENGTH_SECTION_PROPERTY + "LengthSection_Boe_re";//$NON-NLS-1$
 
-  public static final String LENGTH_SECTION_PROPERTY_WEIR_OK = LENGTH_SECTION_PROPERTY + "LengthSection_Weir_OK";//$NON-NLS-1$
+  public static final String LENGTH_SECTION_PROPERTY_WEIR_OK = LENGTH_SECTION_PROPERTY + "LengthSection_WeirOK";//$NON-NLS-1$
 
   public static final String LENGTH_SECTION_PROPERTY_BRIDGE_OK = LENGTH_SECTION_PROPERTY + "LengthSection_BridgeOK";//$NON-NLS-1$
 
