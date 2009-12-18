@@ -194,6 +194,7 @@
          </action>
          <action
                class="org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate"
+               icon="icons/obj16/validation_inputok.gif"
                id="org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
                label="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
                tooltip="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description">
@@ -288,6 +289,7 @@
               objectClass="org.kalypsodeegree.model.feature.Feature">
            <action
                  class="org.kalypso.model.wspm.ui.action.PlotterExportAction"
+                 icon="icons/obj16/WspWinPlotter.gif"
                  id="org.kalypso.model.wspm.ui.action.PlotterExportAction"
                  label="PlotterExport">
            </action>
@@ -529,7 +531,7 @@
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-               icon="icons/eview16/profil_editor.gif">
+               icon="icons/obj16/wspmPerspective.gif">
          </image>
       </extension>
      
