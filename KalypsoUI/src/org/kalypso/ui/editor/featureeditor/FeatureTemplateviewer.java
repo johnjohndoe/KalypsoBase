@@ -364,7 +364,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       /* Layout the panel here. */
       m_panel.layout();
-      m_commandtarget.resetDirty();
     }
     catch( final Exception e )
     {
