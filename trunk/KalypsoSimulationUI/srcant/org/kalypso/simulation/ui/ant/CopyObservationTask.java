@@ -55,12 +55,12 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
-import org.kalypso.ogc.util.CopyObservationSource;
-import org.kalypso.ogc.util.DefaultCopyObservationSouce;
-import org.kalypso.ogc.util.ICopyObservationSource;
-import org.kalypso.ogc.util.timeserieslink.CopyObservationTargetFactory;
-import org.kalypso.ogc.util.timeserieslink.ICopyObservationTarget;
+import org.kalypso.ogc.util.copyobservation.CopyObservationFeatureVisitor;
+import org.kalypso.ogc.util.copyobservation.ICopyObservationSource;
+import org.kalypso.ogc.util.copyobservation.source.FeatureCopyObservationSource;
+import org.kalypso.ogc.util.copyobservation.source.Source;
+import org.kalypso.ogc.util.copyobservation.target.CopyObservationTargetFactory;
+import org.kalypso.ogc.util.copyobservation.target.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -116,7 +116,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
-  private final List<CopyObservationSource> m_sources = new ArrayList<CopyObservationSource>();
+  private final List<Source> m_sources = new ArrayList<Source>();
 
   /**
    * List of metadata-properties and values to set to the target observation
@@ -134,16 +134,16 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    */
   @Override
   protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
-  {
+  { 
     final DateRange forecastRange = DateRange.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
     final DateRange targetRange = DateRange.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
 
-    final CopyObservationSource[] srcs = m_sources.toArray( new CopyObservationSource[m_sources.size()] );
- 
-    ICopyObservationTarget target = CopyObservationTargetFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
-    ICopyObservationSource souce = new DefaultCopyObservationSouce( context, srcs, forecastRange, m_tokens );
+    final Source[] srcs = m_sources.toArray( new Source[m_sources.size()] );
 
-    return new CopyObservationFeatureVisitor( souce, target, m_metadata, logger );
+    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
+    final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, srcs, m_tokens );
+
+    return new CopyObservationFeatureVisitor( obsSource, obsTarget, m_metadata, logger );
   }
 
   private Date parseDateTime( final String lexicalDate )
@@ -166,22 +166,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
   public final void addConfiguredSource( final Source source )
   {
-    // validate source
-    final String property = source.getProperty();
-    final String from = source.getFrom();
-    final String to = source.getTo();
-
-    final Date fromDate = DateUtilities.parseDateTime( from );
-    final Date toDate = DateUtilities.parseDateTime( to );
-
-    final DateRange range = DateRange.createDateRangeOrNull( fromDate, toDate );
-
-    final String filter = source.getFilter();
-    final Project project2 = getProject();
-    if( project2 != null )
-      project2.log( "Adding source: property=" + property + ", from=" + fromDate.toString() + ", to=" + toDate.toString(), Project.MSG_DEBUG );
-
-    m_sources.add( new CopyObservationSource( property, range, filter ) );
+    m_sources.add( source );
   }
 
   public final void addConfiguredMetadata( final Metadata metadata )
@@ -201,56 +186,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     m_metadata.setProperty( metadata.getName(), metadata.getValue() );
   }
 
-  public static final class Source
-  { 
-    private String m_property;
-
-    private String m_from;
-
-    private String m_to;
-
-    private String m_filter;
-
-    public String getProperty( )
-    {
-      return m_property;
-    }
-
-    public void setProperty( final String prop )
-    {
-      this.m_property = prop;
-    }
-
-    public String getFrom( )
-    {
-      return m_from;
-    }
-
-    public void setFrom( final String lfrom )
-    {
-      this.m_from = lfrom;
-    }
-
-    public String getTo( )
-    {
-      return m_to;
-    }
-
-    public void setTo( final String lto )
-    {
-      this.m_to = lto;
-    }
-
-    public String getFilter( )
-    {
-      return m_filter;
-    }
-
-    public void setFilter( final String filt )
-    {
-      this.m_filter = filt;
-    }
-  }
 
   public final String getForecastFrom( )
   {
