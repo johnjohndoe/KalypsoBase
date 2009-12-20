@@ -56,6 +56,7 @@ import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -1060,8 +1061,8 @@ public class FeatureHelper
       if( (rwString == null) || (rwString.length() == 0) || (hwString == null) || (hwString.length() == 0) )
         return GeometryFactory.createGM_Point( 0, 0, crsString );
 
-      final double rw = Double.parseDouble( rwString );
-      final double hw = Double.parseDouble( hwString );
+      final double rw = NumberUtils.parseDouble( rwString );
+      final double hw = NumberUtils.parseDouble( hwString );
 
       return GeometryFactory.createGM_Point( rw, hw, crsString );
     }
