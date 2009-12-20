@@ -79,7 +79,6 @@ public class CsvSourceHandler implements ISourceHandler
     InputStream stream = null;
     try
     {
-
       final URL url = m_resolver.resolveURL( m_context, href );
       final URLConnection connection = url.openConnection();
       stream = connection.getInputStream();

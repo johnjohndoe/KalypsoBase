@@ -1058,8 +1058,8 @@ public class FeatureHelper
         crsString = format;
       }
 
-      if( (rwString == null) || (rwString.length() == 0) || (hwString == null) || (hwString.length() == 0) )
-        return GeometryFactory.createGM_Point( 0, 0, crsString );
+      if( rwString == null || rwString.isEmpty() || hwString == null || hwString.isEmpty() )
+        return null; // GeometryFactory.createGM_Point( 0, 0, crsString );
 
       final double rw = NumberUtils.parseDouble( rwString );
       final double hw = NumberUtils.parseDouble( hwString );
