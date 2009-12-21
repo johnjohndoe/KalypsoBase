@@ -99,23 +99,23 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 public class ObservationPlot extends XYPlot
 {
   /** maps the diagram axis (from the template) to the chart axis */
-  private transient final Map<DiagramAxis, ValueAxis> m_diag2chartAxis = new HashMap<DiagramAxis, ValueAxis>();
+  private final transient Map<DiagramAxis, ValueAxis> m_diag2chartAxis = new HashMap<DiagramAxis, ValueAxis>();
 
   /** maps the chart axis to its position in the plot */
-  private transient final Map<ValueAxis, Integer> m_chartAxes2Pos = new HashMap<ValueAxis, Integer>();
+  private final transient Map<ValueAxis, Integer> m_chartAxes2Pos = new HashMap<ValueAxis, Integer>();
 
   /** maps the diagram axes (from the template) to a dataset */
-  private transient final Map<DiagramAxis, CurveDataset> m_diagAxis2ds = new HashMap<DiagramAxis, CurveDataset>();
+  private final transient Map<DiagramAxis, CurveDataset> m_diagAxis2ds = new HashMap<DiagramAxis, CurveDataset>();
 
   /** maps the diagram curve to the data serie */
-  private transient final Map<DiagViewCurve, XYCurveSerie> m_curve2serie = new HashMap<DiagViewCurve, XYCurveSerie>();
+  private final transient Map<DiagViewCurve, XYCurveSerie> m_curve2serie = new HashMap<DiagViewCurve, XYCurveSerie>();
 
   /** maps the series to their datasets */
-  private transient final Map<XYCurveSerie, CurveDataset> m_serie2dataset = new HashMap<XYCurveSerie, CurveDataset>();
+  private final transient Map<XYCurveSerie, CurveDataset> m_serie2dataset = new HashMap<XYCurveSerie, CurveDataset>();
 
-  private transient final Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<Double, AlarmLevelPlotElement>();
+  private final transient Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<Double, AlarmLevelPlotElement>();
 
-  private transient final Map<Long, Marker> m_markers = new HashMap<Long, Marker>();
+  private final transient Map<Long, Marker> m_markers = new HashMap<Long, Marker>();
 
   private TimeZone m_timezone;
 
@@ -146,7 +146,7 @@ public class ObservationPlot extends XYPlot
     setNoDataMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
   }
 
-  public void dispose( )
+  public final void dispose( )
   {
     clearCurves();
   }
@@ -157,7 +157,7 @@ public class ObservationPlot extends XYPlot
    * @param axis
    *          can be null, if present it is used to define a best suited formater for the chart axis
    */
-  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
+  private synchronized void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
     if( diagAxis == null )
       throw new IllegalArgumentException( "DiagramAxis is null" ); //$NON-NLS-1$
@@ -273,7 +273,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Removes all curves from plot.
    */
-  public synchronized void clearCurves( )
+  public final synchronized void clearCurves( )
   {
     for( int i = 0; i < getDatasetCount(); i++ )
       setDataset( i, null );
@@ -301,7 +301,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Adds a curve to the plot
    */
-  public synchronized final void addCurve( final DiagViewCurve curve ) throws SensorException
+  public final synchronized void addCurve( final DiagViewCurve curve ) throws SensorException
   {
     if( curve == null || !curve.isShown() || m_curve2serie.containsKey( curve ) )
       return;
@@ -429,7 +429,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Refreshes the plot in order to take the enabled features of the view into account
    */
-  public void refreshMetaInformation( )
+  public final void refreshMetaInformation( )
   {
     // clear all markers and extra informations
     clearDomainMarkers();
@@ -526,7 +526,7 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
-   * overriden to return a default axis when no real axes defined yet
+   * overwritten to return a default axis when no real axes defined yet
    * 
    * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
    */
@@ -583,26 +583,26 @@ public class ObservationPlot extends XYPlot
     {
       final AlarmLevelPlotElement vac = m_yConsts.get( element );
 
-      final ValueAxis axis = m_diag2chartAxis.get( vac.axis );
+      final ValueAxis axis = m_diag2chartAxis.get( vac.getAxis() );
       if( axis == null )
         continue;
 
-      if( axis.getRange().contains( vac.alarm.value ) )
+      if( axis.getRange().contains( vac.getAlarm().value ) )
       {
-        final double yy = axis.valueToJava2D( vac.alarm.value, dataArea, RectangleEdge.LEFT );
+        final double yy = axis.valueToJava2D( vac.getAlarm().value, dataArea, RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea.getMaxX(), yy );
         // always set stroke, else we got the stroke from the last drawn line
         g2.setStroke( AlarmLevelPlotElement.STROKE_ALARM );
-        g2.setPaint( vac.alarm.color );
+        g2.setPaint( vac.getAlarm().color );
         g2.draw( line );
 
         // and draw the text annotation: if annotation is outside (on top); label it below the line
         if( yy < dataArea.getMinY() + 20 )
-          vac.annotation.setAngle( Math.toRadians( 20 ) );
+          vac.getAnnotation().setAngle( Math.toRadians( 20 ) );
         else
-          vac.annotation.setAngle( Math.toRadians( 340 ) );
+          vac.getAnnotation().setAngle( Math.toRadians( 340 ) );
 
-        vac.annotation.draw( g2, this, dataArea, getDomainAxis(), axis );
+        vac.getAnnotation().draw( g2, this, dataArea, getDomainAxis(), axis );
       }
     }
   }
@@ -610,7 +610,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Helper that creates a marker
    */
-  private final static Marker createMarker( final double start, final double end, final String label, final Color color )
+  private static Marker createMarker( final double start, final double end, final String label, final Color color )
   {
     final IntervalMarker marker = new IntervalMarker( start, end );
     marker.setPaint( color );
@@ -624,7 +624,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Returns the adequate renderer for the given axis type.
    */
-  private final XYItemRenderer getRenderer( final String axisType )
+  private XYItemRenderer getRenderer( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
@@ -639,7 +639,7 @@ public class ObservationPlot extends XYPlot
    * @param diagAxis
    * @return location according to axis
    */
-  private final static AxisLocation getLocation( final DiagramAxis diagAxis )
+  private static AxisLocation getLocation( final DiagramAxis diagAxis )
   {
     if( diagAxis.getPosition().equals( DiagramAxis.POSITION_BOTTOM ) )
     {
@@ -766,39 +766,54 @@ public class ObservationPlot extends XYPlot
    * 
    * @author schlienger
    */
-  private final static class AlarmLevelPlotElement
+  private static final class AlarmLevelPlotElement
   {
     /** Stroke, with wich the alarm-levels get drawn */
     public static final Stroke STROKE_ALARM = new BasicStroke( 1.0f );
 
-    final AlarmLevel alarm;
+    private final AlarmLevel m_alarm;
 
-    final String label;
+    private final String m_label;
 
-    final DiagramAxis axis;
+    private final DiagramAxis m_axis;
 
-    final XYPointerAnnotation annotation;
+    private final XYPointerAnnotation m_annotation;
 
     public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
-      alarm = al;
-      label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-      axis = diagAxis;
-      annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
-      annotation.setArrowLength( 10.0 );
-      annotation.setLabelOffset( 30 );
-      annotation.setArrowPaint( al.color );
-      annotation.setPaint( al.color );
+      m_alarm = al;
+      m_label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      m_axis = diagAxis;
+      m_annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
+      getAnnotation().setArrowLength( 10.0 );
+      getAnnotation().setLabelOffset( 30 );
+      getAnnotation().setArrowPaint( al.color );
+      getAnnotation().setPaint( al.color );
     }
 
     @Override
     public String toString( )
     {
-      return getClass().getName() + ": " + label + " " + alarm + " " + axis.getLabel(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return getClass().getName() + ": " + m_label + " " + getAlarm() + " " + getAxis().getLabel(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    protected XYPointerAnnotation getAnnotation( )
+    {
+      return m_annotation;
+    }
+
+    protected AlarmLevel getAlarm( )
+    {
+      return m_alarm;
+    }
+
+    protected DiagramAxis getAxis( )
+    {
+      return m_axis;
     }
   }
 
-  public void setTimezone( final TimeZone timezone )
+  public final void setTimezone( final TimeZone timezone )
   {
     m_timezone = timezone;
 

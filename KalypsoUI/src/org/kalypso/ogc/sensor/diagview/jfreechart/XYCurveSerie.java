@@ -61,15 +61,15 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  */
 class XYCurveSerie extends Series
 {
-  private transient final IAxis m_xAxis;
+  private final transient IAxis m_xAxis;
 
-  private transient final DiagramAxis m_xDiagAxis;
+  private final transient DiagramAxis m_xDiagAxis;
 
-  private transient final IAxis m_yAxis;
+  private final transient IAxis m_yAxis;
 
-  private transient final DiagramAxis m_yDiagAxis;
+  private final transient DiagramAxis m_yDiagAxis;
 
-  private transient final DiagViewCurve m_curve;
+  private final transient DiagViewCurve m_curve;
 
   private transient ITuppleModel m_values = null;
 
@@ -115,7 +115,7 @@ class XYCurveSerie extends Series
         {
           m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( m_values.getAxisList(), m_yAxis );
         }
-        catch( NoSuchElementException ignored )
+        catch( final NoSuchElementException ignored )
         {
           // empty
         }
@@ -140,7 +140,7 @@ class XYCurveSerie extends Series
     return m_values == null ? 0 : m_values.getCount();
   }
 
-  public Number getXValue( int item ) throws SensorException
+  public Number getXValue( final int item ) throws SensorException
   {
     final Object obj = m_values.getElement( item, m_xAxis );
 
@@ -152,7 +152,7 @@ class XYCurveSerie extends Series
     return null;
   }
 
-  public Number getYValue( int item ) throws SensorException
+  public Number getYValue( final int item ) throws SensorException
   {
     final Object obj = m_values.getElement( item, m_yAxis );
 
@@ -171,7 +171,7 @@ class XYCurveSerie extends Series
   /**
    * @return the kalypso-status of the given item, or null if no status
    */
-  public Number getStatus( int item ) throws SensorException
+  public Number getStatus( final int item ) throws SensorException
   {
     if( m_statusAxis == null )
       return null;
