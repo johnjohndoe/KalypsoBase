@@ -141,6 +141,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
       lineStringPropertyType.setLineString( lineStringType );
       lineStringMember.add( lineStringPropertyType );
     }
+    multiLineStringType.setSrsName( csName );
     return multiLineStringType;
   }
 
