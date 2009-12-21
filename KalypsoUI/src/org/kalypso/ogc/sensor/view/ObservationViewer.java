@@ -125,7 +125,7 @@ public class ObservationViewer extends Composite
     createControl( header, metaDataTable, chart, buttonControls );
   }
 
-  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, final ButtonControl[] buttonControls )
+  private void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, final ButtonControl[] buttonControls )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
