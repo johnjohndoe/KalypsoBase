@@ -44,12 +44,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementation of the GM_MultiCurve interface from package jago.model.
  * ------------------------------------------------------------
- *
+ * 
  * @version 12.6.2001
  * @author Andreas Poth
  */
@@ -60,7 +59,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param crs
    */
   public GM_MultiCurve_Impl( final String crs )
@@ -70,7 +69,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param gmc
    */
   public GM_MultiCurve_Impl( final GM_Curve[] gmc )
@@ -80,7 +79,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param gmc
    * @param crs
    */
@@ -100,11 +99,11 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * inserts a GM_Curve in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * 
    * @param gmc
-   *            GM_Curve to insert.
+   *          GM_Curve to insert.
    * @param index
-   *            position where to insert the new GM_Curve
+   *          position where to insert the new GM_Curve
    */
   public void insertCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
@@ -112,13 +111,13 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be
-   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be removed.
+   * if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
+   * 
    * @param gmc
-   *            GM_Curve to set.
+   *          GM_Curve to set.
    * @param index
-   *            position where to set the new GM_Curve
+   *          position where to set the new GM_Curve
    */
   public void setCurveAt( final GM_Curve gmc, final int index ) throws GM_Exception
   {
@@ -127,7 +126,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * removes the submitted GM_Curve from the aggregation
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurve( final GM_Curve gmc )
@@ -138,7 +137,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * removes the GM_Curve at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurveAt( final int index ) throws GM_Exception
@@ -280,14 +279,11 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
-    Debug.debugMethodBegin( this, "transformMultiCurve" );
-
     final GM_Curve[] curves = new GM_Curve[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
       curves[i] = (GM_Curve) getCurveAt( i ).transform( trans, targetOGCCS );
 
-    Debug.debugMethodEnd();
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 }

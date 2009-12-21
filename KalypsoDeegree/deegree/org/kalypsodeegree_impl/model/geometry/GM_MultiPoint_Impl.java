@@ -42,7 +42,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementierung of the GM_MultiPoint interface of package jago.model.
@@ -245,17 +244,11 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
-    Debug.debugMethodBegin( this, "transformMultiPoint" );
-
     final GM_Point[] points = new GM_Point[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-    {
       points[i] = (GM_Point) getPointAt( i ).transform( trans, targetOGCCS );
-    }
 
-    Debug.debugMethodEnd();
     return GeometryFactory.createGM_MultiPoint( points );
-
   }
 }
