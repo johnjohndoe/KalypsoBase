@@ -82,21 +82,21 @@ public class ObservationViewerDialog extends Dialog
   private final int m_buttonControls;
 
   // button types are bitmask !
-  public final static int NO_BUTTON = 0;
+  public static final int NO_BUTTON = 0;
 
-  public final static int BUTTON_NEW = 1;
+  public static final int BUTTON_NEW = 1;
 
-  public final static int BUTTON_REMOVE = 2;
+  public static final int BUTTON_REMOVE = 2;
 
-  public final static int BUTTON_NEW_IDEAL_LANDUSE = 32;
+  public static final int BUTTON_NEW_IDEAL_LANDUSE = 32;
 
   public static final int BUTTON_EXEL_IMPORT = 4;
 
   public static final int BUTTON_EXEL_EXPORT = 8;
 
-  final String[] m_axisTypes;
+  private final String[] m_axisTypes;
 
-  Object m_input = null;
+  protected Object m_input = null;
 
   public ObservationViewerDialog( final Shell parent, final boolean withHeaderForm, final boolean withMetaDataAndTable, final boolean withChart, final int buttonControls, final String[] axisTypes )
   {
@@ -124,7 +124,7 @@ public class ObservationViewerDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( final Composite parent )
+  protected final Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite) super.createDialogArea( parent );
     // composite.setLayout( new FillLayout() );
@@ -137,13 +137,13 @@ public class ObservationViewerDialog extends Dialog
     return composite;
   }
 
-  public void setContext( final URL context )
+  public final void setContext( final URL context )
   {
     m_context = context;
     updateViewer();
   }
 
-  public void setInput( final Object newInput )
+  public final void setInput( final Object newInput )
   {
     m_input = newInput;
     updateViewer();
@@ -164,7 +164,7 @@ public class ObservationViewerDialog extends Dialog
   private ButtonControl[] createButtonControls( )
   {
     final List<ButtonControl> result = new ArrayList<ButtonControl>();
-    final IAxis[] axis = TimeserieUtils.createDefaultAxes( m_axisTypes, true );
+    final IAxis[] axis = TimeserieUtils.createDefaultAxes( getAxisTypes(), true );
 
     if( (m_buttonControls & BUTTON_REMOVE) == BUTTON_REMOVE )
     {
@@ -180,7 +180,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( removeListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.1"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.2"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( removeListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.1" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.2" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_NEW) == BUTTON_NEW )
     {
@@ -188,7 +188,7 @@ public class ObservationViewerDialog extends Dialog
       {
         public void widgetSelected( final SelectionEvent e )
         {
-          final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), m_axisTypes[0] );
+          final AxisRangeDialog dialog = new AxisRangeDialog( getShell(), getAxisTypes()[0] );
           if( dialog.open() == Window.OK )
           {
             if( !dialog.isValid() )
@@ -216,9 +216,9 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.3"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.4"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( newListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.3" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.4" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
+
     // FIXME: this specialized stuff has to be refaktored out of this general dialog!
     if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
     {
@@ -226,7 +226,7 @@ public class ObservationViewerDialog extends Dialog
       {
         public void widgetSelected( final SelectionEvent e )
         {
-          final String name = Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
+          final String name = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.5" ); //$NON-NLS-1$
           final Calendar startDate = Calendar.getInstance();
           startDate.set( 2000, 11, 15 );
           final Calendar idealMonth = Calendar.getInstance();
@@ -252,7 +252,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.6"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.7"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( newListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.6" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.7" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_IMPORT) == BUTTON_EXEL_IMPORT )
     {
@@ -278,7 +278,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.8"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.9"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( exelImportListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.8" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.9" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_EXPORT) == BUTTON_EXEL_EXPORT )
     {
@@ -308,7 +308,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.10"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.11"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      result.add( new ButtonControl( exelExportListener, Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.10" ), Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.11" ), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return result.toArray( new ButtonControl[result.size()] );
   }
@@ -316,11 +316,16 @@ public class ObservationViewerDialog extends Dialog
   /**
    * @return input
    */
-  public Object getInput( )
+  public final Object getInput( )
   {
     if( m_viewer != null )
       return m_viewer.getInput();
     return m_input;
+  }
+
+  protected final String[] getAxisTypes( )
+  {
+    return m_axisTypes;
   }
 
 }

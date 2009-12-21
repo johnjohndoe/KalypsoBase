@@ -49,14 +49,14 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
-  public final static IRepositoryItem[] EMPTY_ARRAY = new IRepositoryItem[0];
+  IRepositoryItem[] EMPTY_ARRAY = new IRepositoryItem[0];
 
   /**
    * Returns the item's name. The name is used to display the item in the repository for instance.
    * 
    * @return name
    */
-  public String getName();
+  String getName( );
 
   /**
    * Returns a unique identifier for this item. The identifier should be build using the following rule (URL oriented):
@@ -74,7 +74,7 @@ public interface IRepositoryItem extends IAdaptable
    * 
    * @return identifier
    */
-  public String getIdentifier();
+  String getIdentifier( );
 
   /**
    * returns the parent item to which this one belongs
@@ -82,7 +82,7 @@ public interface IRepositoryItem extends IAdaptable
    * @return parent item or null if no parent
    * @throws RepositoryException
    */
-  public IRepositoryItem getParent() throws RepositoryException;
+  IRepositoryItem getParent( ) throws RepositoryException;
 
   /**
    * returns true when this item has children
@@ -90,7 +90,7 @@ public interface IRepositoryItem extends IAdaptable
    * @return hasChildren flag
    * @throws RepositoryException
    */
-  public boolean hasChildren() throws RepositoryException;
+  boolean hasChildren( ) throws RepositoryException;
 
   /**
    * returns the children of this item
@@ -98,15 +98,15 @@ public interface IRepositoryItem extends IAdaptable
    * @return array of items
    * @throws RepositoryException
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException;
+  IRepositoryItem[] getChildren( ) throws RepositoryException;
 
   /**
    * returns the repository into which this item exists
    * 
    * @return repository
    */
-  public IRepository getRepository();
+  IRepository getRepository( );
 
-  public boolean hasAdapter( Class< ? > adapter );
+   boolean hasAdapter( Class< ? > adapter );
 
 }
