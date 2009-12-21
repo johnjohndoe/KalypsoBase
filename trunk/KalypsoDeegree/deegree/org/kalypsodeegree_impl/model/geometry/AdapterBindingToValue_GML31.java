@@ -91,7 +91,7 @@ import org.w3c.dom.Node;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
- *
+ * 
  * @author doemming
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
@@ -211,7 +211,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       curves[i] = createGM_LineString( lineString, co );
       i++;
     }
-    return GeometryFactory.createGM_MultiCurve( curves );
+    return GeometryFactory.createGM_MultiCurve( curves, co );
   }
 
   private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType type, final String cs ) throws GM_Exception
@@ -230,13 +230,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     }
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
-  
+
   private Object createGM_MultiSurface( final MultiSurfaceType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
-    
+
     final List<GM_Surface<GM_SurfacePatch>> mySurfaces = new ArrayList<GM_Surface<GM_SurfacePatch>>();
-    
+
     final SurfaceArrayPropertyType surfaceArrayPropertType = type.getSurfaceMembers();
     final List<JAXBElement< ? extends AbstractSurfaceType>> surfaces = surfaceArrayPropertType.getSurface();
 
@@ -245,11 +245,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final GM_Surface<GM_SurfacePatch> patch = createGM_Surface( (SurfaceType) surface.getValue(), co );
       mySurfaces.add( patch );
     }
-    
+
     return GeometryFactory.createGM_MultiSurface( mySurfaces.toArray( new GM_Surface[] {} ), co );
   }
-
-  
 
   private GM_Surface<GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
   {
@@ -541,7 +539,6 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     throw new UnsupportedOperationException( bindingGeometry.getClass().getName() + " is not supported" );
   }
 
-  
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromElement(org.w3c.dom.Element)
    */
