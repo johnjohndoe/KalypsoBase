@@ -68,7 +68,10 @@ public class FileUtilities
 
   /**
    * Sets the contents of the dest file using the source file.
+   * 
+   * @deprecated Readers with charset used...
    */
+  @Deprecated
   public static void copyFile( final String sourceCharset, final File source, final IFile dest, final IProgressMonitor monitor ) throws CoreException
   {
     final SetContentHelper helper = new SetContentHelper()
@@ -115,7 +118,6 @@ public class FileUtilities
       IOUtils.closeQuietly( is );
     }
   }
-
 
   /**
    * Returns the content of the given file as string object. The charset of the file object is used.
