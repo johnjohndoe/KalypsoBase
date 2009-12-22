@@ -66,7 +66,7 @@ public class FeatureCopyObservationSource extends AbstractCopyObservationSource
   @Override
   protected final Properties getReplaceTokens( final Feature feature )
   {
-    if( m_tokens != null )
+    if( m_tokens != null && !m_tokens.isEmpty() )
       return FeatureHelper.createReplaceTokens( feature, m_tokens );
 
     return null;
