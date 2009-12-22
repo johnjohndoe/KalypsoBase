@@ -531,7 +531,7 @@ public class ObservationPlot extends XYPlot
    * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
    */
   @Override
-  public synchronized ValueAxis getDomainAxis( )
+  public final synchronized ValueAxis getDomainAxis( )
   {
     if( m_diag2chartAxis.size() == 0 )
       return new NumberAxis();
@@ -545,7 +545,7 @@ public class ObservationPlot extends XYPlot
    * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
    */
   @Override
-  public synchronized ValueAxis getRangeAxis( )
+  public final synchronized ValueAxis getRangeAxis( )
   {
     if( m_diag2chartAxis.size() == 0 )
       return new NumberAxis();
@@ -567,7 +567,7 @@ public class ObservationPlot extends XYPlot
    *      org.jfree.chart.plot.PlotRenderingInfo)
    */
   @Override
-  public synchronized void drawAnnotations( final Graphics2D g2d, final Rectangle2D rec, final PlotRenderingInfo arg2 )
+  public final synchronized void drawAnnotations( final Graphics2D g2d, final Rectangle2D rec, final PlotRenderingInfo arg2 )
   {
     super.drawAnnotations( g2d, rec, arg2 );
 
