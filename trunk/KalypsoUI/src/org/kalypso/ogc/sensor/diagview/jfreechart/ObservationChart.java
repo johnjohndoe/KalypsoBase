@@ -146,7 +146,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   }
 
   /**
-   * Set the ChartPanel, this is usefull if print should be called in the near future
+   * Set the ChartPanel, this is useful if print should be called in the near future
    */
   protected void setPanel( final ChartPanel chartPanel )
   {
@@ -229,7 +229,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   /**
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
-  public void onPrintObsView( final ObsViewEvent evt )
+  public final void onPrintObsView( final ObsViewEvent evt )
   {
     // use the ChartPanel to print
     final ChartPanel chartPanel = m_chartPanel;
