@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Implementation of ogc feature
@@ -65,7 +64,13 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 public class Feature_Impl extends PlatformObject implements Feature
 {
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
-  
+
+  /**
+   * FIXME - bad idea to cache a geometry in the generic feature implementation. A feature can constists of more than
+   * one geometries. Who decides a cached geometry is valid / dirty? instead use feature binding and the
+   * AbstractCachedFeature Implementation to cache properties of a feature!
+   */
+  @Deprecated
   private Object m_Geometry = null;
   
 
@@ -575,8 +580,9 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
    */
+  @Deprecated
   @Override
-  public void setCachedGeometry( Object value )
+  public void setCachedGeometry( final Object value )
   {
     m_Geometry = value;
   }
@@ -584,6 +590,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
    */
+  @Deprecated
   @Override
   public Object getCachedGeometry( )
   {
