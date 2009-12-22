@@ -276,6 +276,13 @@ public class FileUtilities
     file.delete();
   }
 
+  public static File mkTempFile( )
+  {
+    final long millis = Calendar.getInstance().getTimeInMillis();
+
+    return new File( TMP_DIR, Long.valueOf( millis ).toString() );
+  }
+
   /**
    * Creates a temp directory in java.io.tmpdir.
    *
@@ -771,4 +778,5 @@ public class FileUtilities
 
     return fileName.trim();
   }
+
 }
