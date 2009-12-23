@@ -48,13 +48,13 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.timeseries.ICopyObservationTimeSeriesConstants;
+import org.kalypso.ogc.sensor.timeseries.ICopyObservationMetaDataConstants;
 import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
 
 /**
  * @author Dirk Kuch
  */
-public final class CopyObservationHelper implements ICopyObservationTimeSeriesConstants
+public final class CopyObservationHelper implements ICopyObservationMetaDataConstants
 {
   private CopyObservationHelper( )
   {
