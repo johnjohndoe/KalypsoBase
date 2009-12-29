@@ -10,11 +10,11 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class GmlSourceHandler implements ISourceHandler
 {
-  private String m_href;
+  private final String m_href;
 
   private final URL m_context;
 

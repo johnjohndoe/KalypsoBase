@@ -1043,7 +1043,7 @@ public class FeatureHelper
    */
   public static final Object createFeaturePropertyFromStrings( final IValuePropertyType type, final String format, final String[] input, final boolean handleEmptyAsNull )
   {
-    if( GeometryUtilities.getPointClass() == type.getValueClass() )
+    if( GeometryUtilities.getPointClass() == type.getValueClass() || GM_Object.class == type.getValueClass() )
     {
       final String rwString = input[0].trim();
       final String hwString = input[1].trim();

@@ -1,5 +1,4 @@
-<xs:schema xmlns="util.gml.kalypso.org" xmlns:layer="types.template.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xlinkext="http://www.w3.org/1999/xlinkext"
-  targetNamespace="util.gml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns="util.gml.kalypso.org" xmlns:layer="types.template.kalypso.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xlinkext="http://www.w3.org/1999/xlinkext" targetNamespace="util.gml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xs:import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd" />
   <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd" />
   <xs:import namespace="types.template.kalypso.org" schemaLocation="../template/layerTypes.xsd" />
@@ -109,6 +108,20 @@
     </xs:annotation>
   </xs:element>
   <xs:complexType name="SourceType" />
+
+  <xs:element name="refsource" substitutionGroup="source">
+    <xs:annotation>
+      <xs:documentation>Liest die Quelle aus einer Referenzierten Datei.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="SourceType">
+          <xs:attributeGroup ref="xlink:locatorLink" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="gmlsource" type="GmlSourceType" substitutionGroup="source">
     <xs:annotation>
       <xs:documentation>Liest die Daten aus einer GMl Datei.</xs:documentation>
@@ -121,6 +134,8 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+
+
   <xs:element name="gmlnew" substitutionGroup="source">
     <xs:annotation>
       <xs:documentation>Erzeugt ein neues GML aus dem nichts.</xs:documentation>
@@ -306,6 +321,17 @@
   </xs:element>
   <xs:complexType name="MappingType">
     <xs:sequence>
+      <xs:element name="filter" type="xs:anyType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Filter expression in order to filter the list of mapped features.</p>
+            <p>Only features that pass through all filter expression will be applied.</p>
+            <p>The content of this element is of type anyUri in order to not let it be bound automatically. The content will instead be parsed by deegree.</p>
+            <p> At the moment, only ogc:filter expressions are supported.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
       <xs:element name="map" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:attribute name="from" type="xs:string" use="required">
