@@ -24,6 +24,7 @@ import org.kalypso.gml.util.GmlTargetType;
 import org.kalypso.gml.util.Gmlconvert;
 import org.kalypso.gml.util.Gmlnew;
 import org.kalypso.gml.util.ObjectFactory;
+import org.kalypso.gml.util.Refsource;
 import org.kalypso.gml.util.RegisterSourceType;
 import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.gml.util.SourceType;
@@ -34,6 +35,7 @@ import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
 import org.kalypso.ogc.gml.convert.source.GmlNewHandler;
 import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
 import org.kalypso.ogc.gml.convert.source.ISourceHandler;
+import org.kalypso.ogc.gml.convert.source.RefSourceHandler;
 import org.kalypso.ogc.gml.convert.source.RegisterSourceHandler;
 import org.kalypso.ogc.gml.convert.source.ShpSourceHandler;
 import org.kalypso.ogc.gml.convert.target.GmlTargetHandler;
@@ -133,6 +135,9 @@ public class GmlConvertFactory
 
     if( source instanceof ShpSourceType )
       return new ShpSourceHandler( resolver, context, (ShpSourceType) source );
+
+    if( source instanceof Refsource )
+      return new RefSourceHandler( resolver, context, (Refsource) source, externData );
 
     if( source instanceof GmlSourceType )
       return new GmlSourceHandler( resolver, context, (GmlSourceType) source );

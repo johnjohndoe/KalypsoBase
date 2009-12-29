@@ -1,13 +1,13 @@
 package org.kalypso.ogc.gml.convert.source;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.AddFeaturesMappingType;
@@ -18,9 +18,13 @@ import org.kalypso.gml.util.SourceType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.model.feature.visitors.AddFeaturesToFeaturelist;
 import org.kalypsodeegree_impl.model.feature.visitors.ChangeFeaturesFromFeaturelist;
 
@@ -53,38 +57,78 @@ public class FeaturemappingSourceHandler implements ISourceHandler
   public GMLWorkspace getWorkspace() throws GmlConvertException
   {
     final List<JAXBElement<? extends SourceType>> sourceList = m_source.getSource();
-    final Iterator<JAXBElement<? extends SourceType>> sourceIt = sourceList.iterator();
 
     // XSD schreibt vor, dass es genau 2 sources gibt
-    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceIt.next().getValue(),
+    Assert.isTrue( sourceList.size() == 2 );
+    final GMLWorkspace firstGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 0 ).getValue(),
         m_externData );
-    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceIt.next().getValue(),
+    final GMLWorkspace secondGML = GmlConvertFactory.loadSource( m_resolver, m_context, sourceList.get( 1 ).getValue(),
         m_externData );
 
     final List<JAXBElement<? extends MappingType>> mappingList = m_source.getMapping();
     for( final JAXBElement< ? extends MappingType> name : mappingList )
     {
       final MappingType mapping = name.getValue();
-      final String fromPath = mapping.getFromPath();
-      final String toPath = mapping.getToPath();
-
-      final FeatureList fromFeatures = getFeatureList( firstGML, fromPath );
-      final String fromID = mapping.getFromID();
-      final FeatureList toFeatures = getFeatureList( secondGML, toPath );
-      final String toID = mapping.getToID();
-      final IFeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
-
-      final Properties properties = new Properties();
-
-      final List<MappingType.Map> mapList = mapping.getMap();
-      for( final org.kalypso.gml.util.MappingType.Map map : mapList )
-        properties.setProperty( map.getFrom(), map.getTo() );
-
-      final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, properties );
-      fromFeatures.accept( visitor );
+      applyMapping( firstGML, secondGML, mapping );
     }
 
     return secondGML;
+  }
+
+  private void applyMapping( final GMLWorkspace firstGML, final GMLWorkspace secondGML, final MappingType mapping ) throws GmlConvertException
+  {
+    final String fromPath = mapping.getFromPath();
+    final String toPath = mapping.getToPath();
+
+    final FeatureList fromFeatures = getFeatureList( firstGML, fromPath );
+    final String fromID = mapping.getFromID();
+    final FeatureList toFeatures = getFeatureList( secondGML, toPath );
+    final String toID = mapping.getToID();
+    final IFeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
+
+    final Properties properties = readProperties( mapping );
+
+    final FeatureVisitor visitor = createVisitorAndFilter( mapping, toFeatures, toFeatureType, fromID, toID, properties );
+    fromFeatures.accept( visitor );
+  }
+
+  private Filter readFilter( final MappingType mapping ) throws GmlConvertException
+  {
+    try
+    {
+      final Object anyType = mapping.getFilter();
+      if( anyType == null )
+        return null;
+      
+      return AbstractFilter.buildFromAnyType( anyType );
+    }
+    catch( final FilterConstructionException e )
+    {
+      throw new GmlConvertException( "Failed to parse filter expression", e );
+    }
+  }
+
+  private Properties readProperties( final MappingType mapping )
+  {
+    final Properties properties = new Properties();
+    final List<MappingType.Map> mapList = mapping.getMap();
+    for( final org.kalypso.gml.util.MappingType.Map map : mapList )
+      properties.setProperty( map.getFrom(), map.getTo() );
+    return properties;
+  }
+
+  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures,
+      final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties )
+  throws GmlConvertException
+  {
+    final Filter filter = readFilter( mapping );
+    
+    final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, properties );
+    
+    if( filter == null )
+        return visitor;
+    
+    return new FilteredFeatureVisitor( visitor, filter );
   }
 
   private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures,

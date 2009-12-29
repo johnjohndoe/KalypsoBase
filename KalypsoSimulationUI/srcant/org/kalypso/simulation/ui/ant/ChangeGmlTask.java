@@ -162,7 +162,7 @@ public class ChangeGmlTask extends Task
       if( m_rootFeatureQName == null )
         return GmlSerializer.createGMLWorkspace( m_gmlURL, null );
 
-      return FeatureFactory.createGMLWorkspace( m_rootFeatureQName, m_gmlURL, null );
+      return FeatureFactory.createGMLWorkspace( m_rootFeatureQName, m_gmlURL, null, -1 );
     }
     catch( final Exception e )
     {
