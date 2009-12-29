@@ -42,6 +42,7 @@ package org.kalypso.util.swt;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -91,6 +92,8 @@ public class StatusComposite extends Composite
   private IStatus m_status;
 
   protected Button m_detailsButton;
+
+  private ILabelProvider m_labelProvider;
 
   public StatusComposite( final Composite parent, final int style )
   {
@@ -194,43 +197,82 @@ public class StatusComposite extends Composite
     if( isDisposed() )
       return;
 
-    if( status == null )
+    updateForStatus();
+  }
+
+  private void updateForStatus( )
+  {
+    final Image image = getStatusImage();
+    final String text = getStatusText();
+    final String tooltipText = getStatusTooltipText();
+    final boolean enabled = getStatusIsEnabled();
+
+    m_statusImgLabel.setImage( image );
+    m_statusImgLabel.setToolTipText( tooltipText );
+
+    if( m_statusMessageLabel != null )
     {
-      m_statusImgLabel.setImage( null );
-      m_statusImgLabel.setToolTipText( null );
-
-      if( m_statusMessageLabel != null )
-      {
-        m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
-        m_statusMessageLabel.setToolTipText( null );
-      }
-
-      if( m_detailsButton != null )
-        m_detailsButton.setEnabled( false );
+      m_statusMessageLabel.setText( text ); //$NON-NLS-1$
+      // Set same text as tooltip, if label is too short to hold the complete text
+      m_statusMessageLabel.setToolTipText( tooltipText );
     }
-    else
-    {
-      m_statusImgLabel.setImage( getStatusImage( status ) );
-      m_statusImgLabel.setToolTipText( status.getMessage() );
 
-      if( m_statusMessageLabel != null )
-      {
-        m_statusMessageLabel.setText( status.getMessage() );
-        // Set same text as tooltip, if label is too short to hold the complete text
-        m_statusMessageLabel.setToolTipText( status.getMessage() );
-      }
-
-      if( m_detailsButton != null )
-      {
-        final boolean enabled = status.isMultiStatus() || status.getException() != null;
-        m_detailsButton.setEnabled( enabled );
-      }
-    }
+    if( m_detailsButton != null )
+      m_detailsButton.setEnabled( enabled );
 
     layout();
   }
 
-  // TODO: move both methods into contribution plug-ins
+  private boolean getStatusIsEnabled( )
+  {
+    if( m_status == null )
+      return false;
+
+    if( m_status.getException() != null )
+      return true;
+
+    return m_status.isMultiStatus();
+  }
+
+  private String getStatusText( )
+  {
+    if( m_status == null )
+      return "";
+
+    if( m_labelProvider != null )
+    {
+      final String providerText = m_labelProvider.getText( m_status );
+      if( providerText != null )
+        return providerText;
+    }
+
+    return m_status.getMessage();
+  }
+
+  private String getStatusTooltipText( )
+  {
+    // Status is same as text, but null instead of empty so totally suppress the tooltip
+    final String statusText = getStatusText();
+    if( statusText == null || statusText.isEmpty() )
+      return null;
+
+    return statusText;
+  }
+
+  private Image getStatusImage( )
+  {
+    if( m_status == null )
+      return null;
+
+    if( m_labelProvider != null )
+    {
+      final Image providerImage = m_labelProvider.getImage( m_status );
+      if( providerImage != null )
+        return providerImage;
+    }
+
+    return getStatusImage( m_status );
+  }
 
   /**
    * Get the IDE image at path.
@@ -273,6 +315,17 @@ public class StatusComposite extends Composite
   {
     if( m_detailsButton != null )
       m_detailsButton.setEnabled( b );
+  }
+
+  /**
+   * Registers a {@link ILabelProvider} with this {@link StatusComposite}.<br>
+   * If a label provider is set, it is used to show text and image of the status.<br>
+   * If the label provider returns <code>null</code> text or image for a certain status, the composite will fall back to
+   * its default behaviour.
+   */
+  public void setLabelProvider( final ILabelProvider provider )
+  {
+    m_labelProvider = provider;
   }
 
 }
