@@ -227,7 +227,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" ); //$NON-NLS-1$
 
       // this call also closes the stream
-      final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
+      final RepositoryFactoryConfig[] facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
       // load the service properties
       final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" ); //$NON-NLS-1$
