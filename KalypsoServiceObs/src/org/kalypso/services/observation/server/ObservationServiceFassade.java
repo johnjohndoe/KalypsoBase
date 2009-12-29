@@ -157,7 +157,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repositories_server.xml" ); //$NON-NLS-1$
 
       // this call also closes the stream
-      final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
+      final RepositoryFactoryConfig[] facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
       final RepositoryFactoryConfig config = RepositoryConfigUtils.resolveConfiguration( facConfs, System.getProperty( DESTINATION_REPOSITORY, null ) );
       final IRepositoryFactory factory = config.getFactory();

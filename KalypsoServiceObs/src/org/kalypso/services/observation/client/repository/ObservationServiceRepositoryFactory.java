@@ -45,8 +45,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceException;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
@@ -69,34 +69,39 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
    * 
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
-  public final boolean configureRepository( )
+  public final boolean configureRepository( ) throws RepositoryException
   {
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
-    if( !plugin.isObservationServiceInitialized( getRepositoryName() ) )
+    if( plugin.isObservationServiceInitialized( getRepositoryName() ) )
+      return true;
+
+    final String wsdlLocationProperty = getConfiguration();
+    if( wsdlLocationProperty != null && !wsdlLocationProperty.isEmpty() )
     {
-      final String wsdlLocationProperty = getConfiguration();
-      if( wsdlLocationProperty != null && !wsdlLocationProperty.isEmpty() )
+      try
       {
+        final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
+        final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
 
-        try
-        {
-          final String namespaceURI = "http://server.observation.services.kalypso.org/"; //$NON-NLS-1$
-          final String serviceImplName = ObservationServiceImpl.class.getSimpleName();
+        final URL wsdlLocation = new URL( wsdlLocationProperty );
+        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
+        final Service service = Service.create( wsdlLocation, serviceName );
+        final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
 
-          final URL wsdlLocation = new URL( wsdlLocationProperty );
-          final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
-          final Service service = Service.create( wsdlLocation, serviceName );
-          final IObservationService observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class ); //$NON-NLS-1$
-
-          plugin.setObservationService( getRepositoryName(), observationService );
-        }
-        catch( final MalformedURLException e )
-        {
-          plugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+        plugin.setObservationService( getRepositoryName(), observationService );
+      }
+      catch( final MalformedURLException e )
+      {
+        final String msg = String.format( "Ungültige Observation-Service URL: %s", wsdlLocationProperty );
+        throw new RepositoryException( msg, e );
+      }
+      catch( final WebServiceException e )
+      {
+        final String msg = String.format( "Fehler beim Zugriff auf Observation-Service: %s", wsdlLocationProperty );
+        throw new RepositoryException( msg, e );
       }
     }
-    
+
     return true;
   }
 

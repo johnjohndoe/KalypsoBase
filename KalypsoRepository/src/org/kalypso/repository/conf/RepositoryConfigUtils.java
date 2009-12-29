@@ -71,7 +71,7 @@ public class RepositoryConfigUtils
    * @param ins
    * @throws RepositoryException
    */
-  public static List<RepositoryFactoryConfig> loadConfig( final URL location ) throws RepositoryException
+  public static RepositoryFactoryConfig[] loadConfig( final URL location ) throws RepositoryException
   {
     try
     {
@@ -89,7 +89,7 @@ public class RepositoryConfigUtils
         fConfs.add( item );
       }
 
-      return fConfs;
+      return fConfs.toArray( new RepositoryFactoryConfig[fConfs.size()] );
     }
     catch( final Exception e )
     {
@@ -101,7 +101,7 @@ public class RepositoryConfigUtils
    * @param name
    *          name of the RepositoryFactoryConfig
    */
-  public static RepositoryFactoryConfig resolveConfiguration( final List<RepositoryFactoryConfig> configurations, final String name )
+  public static RepositoryFactoryConfig resolveConfiguration( final RepositoryFactoryConfig[] configurations, final String name )
   {
     for( final RepositoryFactoryConfig config : configurations )
     {
