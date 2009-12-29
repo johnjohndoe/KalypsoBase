@@ -158,62 +158,68 @@ public class FeatureFactory
 
   private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final int depth )
   {
-    final int minOccurs = ftp.getMinOccurs();
-    // maybe also look at 'nillable'?
-    final boolean isOptional = minOccurs == 0;
-
     if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      return createDefaultValueProperty( (IValuePropertyType) ftp );
 
-      // get default value from schema if possible
-      final String defaultValue;
-      if( vpt.hasDefault() )
-        defaultValue = vpt.getDefault();
-      else if( vpt.isFixed() )
-        defaultValue = vpt.getFixed();
-      else
-        defaultValue = null;
-
-      // Only fill non optional values with default value set
-      if( isOptional || defaultValue == null )
-        return null;
-
-      final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
-      if( typeHandler != null && defaultValue != null )
-      {
-        try
-        {
-          return typeHandler.parseType( defaultValue );
-        }
-        catch( final ParseException e )
-        {
-          e.printStackTrace();
-          return null;
-        }
-      }
-
-      return Mapper.defaultValueforJavaType( vpt );
-    }
-    else if( ftp instanceof IRelationType )
-    {
-      final IRelationType rt = (IRelationType) ftp;
-      if( ftp.isList() )
-        return FeatureFactory.createFeatureList( feature, rt );
-
-      if( depth == 0 || minOccurs == 0 || !rt.isInlineAble() || rt.isLinkAble() )
-        return null;
-
-      // we have a single, non-optional, inlinable, not-linkable feature here: create inner feature
-      final GMLWorkspace workspace = feature.getWorkspace();
-      if( workspace == null )
-        return null;
-
-      final int subDepth = depth == -1 ? -1 : depth - 1;
-      return workspace.createFeature( feature, rt, rt.getTargetFeatureType(), subDepth );
-    }
+    if( ftp instanceof IRelationType )
+      return createDefaultRelationProperty( feature, (IRelationType) ftp, depth );
 
     return null;
+  }
+
+  private static Object createDefaultValueProperty( final IValuePropertyType vpt )
+  {
+    final boolean isOptional = vpt.getMinOccurs() == 0;
+
+    // get default value from schema if possible
+    final String defaultValue;
+    if( vpt.hasDefault() )
+      defaultValue = vpt.getDefault();
+    else if( vpt.isFixed() )
+      defaultValue = vpt.getFixed();
+    else
+      defaultValue = null;
+
+    // Only fill non optional values with default value set
+    if( isOptional || defaultValue == null )
+      return null;
+
+    final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
+    if( typeHandler != null && defaultValue != null )
+    {
+      try
+      {
+        return typeHandler.parseType( defaultValue );
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
+    return Mapper.defaultValueforJavaType( vpt );
+  }
+
+  private static Object createDefaultRelationProperty( final Feature feature, final IRelationType rt, final int depth )
+  {
+    if( rt.isList() )
+      return FeatureFactory.createFeatureList( feature, rt );
+
+    final int minOccurs = rt.getMinOccurs();
+    if( depth == 0 || minOccurs == 0 || !rt.isInlineAble() || rt.isLinkAble() )
+      return null;
+
+    final int subDepth = depth == -1 ? -1 : depth - 1;
+
+    final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+
+    // we have a single, non-optional, inlinable, not-linkable feature here: create inner feature
+    final GMLWorkspace workspace = feature.getWorkspace();
+    if( workspace == null )
+      return FeatureFactory.createFeature( feature, rt, null, targetFeatureType, true, depth );
+
+    return workspace.createFeature( feature, rt, targetFeatureType, subDepth );
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List< ? > list )
@@ -255,6 +261,14 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final URL context, final IFeatureProviderFactory factory, final int depth ) throws InvocationTargetException
+  {
+    return createGMLWorkspace( rootFeatureQName, null, context, factory, depth );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
   public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
@@ -266,11 +280,33 @@ public class FeatureFactory
   /**
    * create a new GMLWorkspace with a root feature for the given feature type
    */
+  public static GMLWorkspace createGMLWorkspace( final QName rootFeatureQName, final String gmlVersion, final URL context, final IFeatureProviderFactory factory, final int depth ) throws InvocationTargetException
+  {
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final IGMLSchema schema = schemaCatalog.getSchema( rootFeatureQName.getNamespaceURI(), gmlVersion );
+    final IFeatureType rootFeatureType = schema.getFeatureType( rootFeatureQName );
+    return createGMLWorkspace( rootFeatureType, context, factory, depth );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
   public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType, final URL context, final IFeatureProviderFactory factory )
   {
     final IGMLSchema schema = rootFeatureType.getGMLSchema();
     final String schemaLocation = null;
     final Feature rootFeature = FeatureFactory.createFeature( null, null, "root", rootFeatureType, true );
+    return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory, null );
+  }
+
+  /**
+   * create a new GMLWorkspace with a root feature for the given feature type
+   */
+  public static GMLWorkspace createGMLWorkspace( final IFeatureType rootFeatureType, final URL context, final IFeatureProviderFactory factory, final int depth )
+  {
+    final IGMLSchema schema = rootFeatureType.getGMLSchema();
+    final String schemaLocation = null;
+    final Feature rootFeature = FeatureFactory.createFeature( null, null, "root", rootFeatureType, true, depth );
     return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory, null );
   }
 }
