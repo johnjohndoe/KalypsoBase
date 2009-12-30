@@ -48,6 +48,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -85,13 +86,13 @@ public class StatusComposite extends Composite
    */
   public static final int HIDE_TEXT = SWT.SIMPLE;
 
-  protected Label m_statusImgLabel;
+  private Label m_imageLabel;
 
-  protected Label m_statusMessageLabel;
+  private Label m_messageLabel;
 
   private IStatus m_status;
 
-  protected Button m_detailsButton;
+  private Button m_detailsButton;
 
   private ILabelProvider m_labelProvider;
 
@@ -105,9 +106,33 @@ public class StatusComposite extends Composite
   protected void init( final int style )
   {
     int colCount = 1;
-    m_statusImgLabel = new Label( this, SWT.NONE );
-    m_statusImgLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    m_statusImgLabel.addMouseListener( new MouseAdapter()
+    createImageLabel();
+
+    if( (style & HIDE_TEXT) == 0 )
+    {
+      colCount++;
+      createMessageLabel();
+    }
+
+    if( (style & DETAILS) != 0 )
+    {
+      colCount++;
+      createDetailsButton();
+    }
+
+    setStatus( m_status );
+
+    final GridLayout gridLayout = new GridLayout( colCount, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    super.setLayout( gridLayout );
+  }
+
+  private void createImageLabel( )
+  {
+    m_imageLabel = new Label( this, SWT.NONE );
+    m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    m_imageLabel.addMouseListener( new MouseAdapter()
     {
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
@@ -118,49 +143,58 @@ public class StatusComposite extends Composite
         detailsButtonPressed();
       }
     } );
+  }
 
-    if( (style & HIDE_TEXT) == 0 )
+  private void createMessageLabel( )
+  {
+    m_messageLabel = new Label( this, SWT.NONE );
+    m_messageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_messageLabel.addMouseListener( new MouseAdapter()
     {
-      colCount++;
-      m_statusMessageLabel = new Label( this, SWT.NONE );
-      m_statusMessageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_statusMessageLabel.addMouseListener( new MouseAdapter()
+      /**
+       * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
+       */
+      @Override
+      public void mouseDoubleClick( final MouseEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-         */
-        @Override
-        public void mouseDoubleClick( final MouseEvent e )
-        {
-          detailsButtonPressed();
-        }
-      } );
-    }
+        detailsButtonPressed();
+      }
+    } );
+  }
 
-    if( (style & DETAILS) != 0 )
+  private void createDetailsButton( )
+  {
+    m_detailsButton = new Button( this, SWT.PUSH );
+    m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
+    m_detailsButton.addSelectionListener( new SelectionAdapter()
     {
-      colCount++;
-      m_detailsButton = new Button( this, SWT.PUSH );
-      m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
-      m_detailsButton.addSelectionListener( new SelectionAdapter()
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          detailsButtonPressed();
-        }
-      } );
-    }
+        detailsButtonPressed();
+      }
+    } );
+  }
 
-    setStatus( m_status );
+  /**
+   * @see org.eclipse.swt.widgets.Control#setBackground(org.eclipse.swt.graphics.Color)
+   */
+  @Override
+  public void setBackground( final Color color )
+  {
+    super.setBackground( color );
 
-    final GridLayout gridLayout = new GridLayout( colCount, false );
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    super.setLayout( gridLayout );
+    if( m_detailsButton != null )
+      m_detailsButton.setBackground( color );
+
+    if( m_imageLabel != null )
+      m_imageLabel.setBackground( color );
+
+    if( m_messageLabel != null )
+      m_messageLabel.setBackground( color );
   }
 
   protected void detailsButtonPressed( )
@@ -207,14 +241,14 @@ public class StatusComposite extends Composite
     final String tooltipText = getStatusTooltipText();
     final boolean enabled = getStatusIsEnabled();
 
-    m_statusImgLabel.setImage( image );
-    m_statusImgLabel.setToolTipText( tooltipText );
+    m_imageLabel.setImage( image );
+    m_imageLabel.setToolTipText( tooltipText );
 
-    if( m_statusMessageLabel != null )
+    if( m_messageLabel != null )
     {
-      m_statusMessageLabel.setText( text ); //$NON-NLS-1$
+      m_messageLabel.setText( text ); //$NON-NLS-1$
       // Set same text as tooltip, if label is too short to hold the complete text
-      m_statusMessageLabel.setToolTipText( tooltipText );
+      m_messageLabel.setToolTipText( tooltipText );
     }
 
     if( m_detailsButton != null )
