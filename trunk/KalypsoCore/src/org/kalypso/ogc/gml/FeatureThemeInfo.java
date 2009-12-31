@@ -59,11 +59,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * {@link IKalypsoThemeInfo} implementation for {@link IKalypsoFeatureTheme}s.<br>
  * This implementation is based on a formatstring tha may contain the <code>${property:XXX}</code> notations.<br>
  * <br>
- * This class is intended to be overwritten by specialized implementations.
- *
+ * This class is intended to be overwritten by specialised implementations.
+ * 
  * @author Gernot Belger
  */
-public class FeatureThemeInfo implements IKalypsoThemeInfo
+public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureThemeInfo
 {
   private IKalypsoFeatureTheme m_theme = null;
 
@@ -86,7 +86,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
 
   /**
    * Final, because called from a constructor.
-   *
+   * 
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public final void init( final IKalypsoTheme theme, final Properties props )
@@ -128,45 +128,45 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
       return;
     }
 
-    final List foundFeatures = featureList.query( pos, null );
-    if( foundFeatures.size() == 0 )
-    {
-      formatter.format( "-" ); //$NON-NLS-1$
-      return;
-    }
+    final List< ? > foundFeatures = featureList.query( pos, null );
+    final Feature feature = findFeature( foundFeatures, pos );
+    formatInfo( formatter, feature );
+  }
 
+  private Feature findFeature( final List< ? > foundFeatures, final GM_Position pos )
+  {
     /**
      * explanation: it is possible (with ATKIS data) that one shape covers the part of another's shape area, without
      * intersecting (one shape "inside" another) If several such features contains the same position, the topmost is
      * actually drawn - and that feature is the last in the query list. That is the reason why we are here searching for
      * the last one.
      */
-    Feature feature = null;
+    // TODO: dubious: probably the above mentioned shape was not correctly read (solution would be to show
+    // all found features)
     for( int i = foundFeatures.size() - 1; i >= 0; i-- )
     {
-      feature = (Feature) foundFeatures.get( i );
-      if( m_geom != null )
-      {
-        final Object property = feature.getProperty( m_geom );
-        if( property instanceof GM_Object && ((GM_Object) property).contains( pos ) )
-          break;
-      }
-      else
-      {
-        if( feature.getDefaultGeometryProperty().contains( pos ) )
-          break;
-      }
-      feature = null;
+      final Feature feature = (Feature) foundFeatures.get( i );
+      final Object geom = getGeom( feature );
+      if( geom instanceof GM_Object && ((GM_Object) geom).contains( pos ) )
+        return feature;
     }
 
-    formatInfo( formatter, feature );
+    return null;
+  }
+
+  private Object getGeom( final Feature feature )
+  {
+    if( m_geom == null )
+      return feature.getDefaultGeometryPropertyValue();
+
+    return feature.getProperty( m_geom );
   }
 
   /**
    * Writes the info into the formatter for the given feature<br>
-   * Intended to be overwritten by specialized implementations.
+   * Intended to be overwritten by specialised implementations.
    */
-  protected void formatInfo( final Formatter formatter, final Feature feature )
+  public void formatInfo( final Formatter formatter, final Feature feature )
   {
     final String label = getInfo( feature );
     formatter.format( "%s", label ); //$NON-NLS-1$
