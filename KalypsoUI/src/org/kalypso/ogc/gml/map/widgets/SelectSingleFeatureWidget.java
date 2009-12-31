@@ -42,8 +42,10 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -51,9 +53,12 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -65,6 +70,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -77,6 +83,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class SelectSingleFeatureWidget extends AbstractWidget
 {
+  private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo";
+
   private final IMapModellListener m_mapModellListener = new MapModellAdapter()
   {
     /**
@@ -100,6 +108,8 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     }
   };
 
+  private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
+
   private IGeometryBuilder m_geometryBuilder;
 
   private IKalypsoFeatureTheme[] m_themes;
@@ -117,7 +127,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   private Point m_currentPoint;
 
   private boolean m_toggle = false;
-
 
   public SelectSingleFeatureWidget( )
   {
@@ -189,16 +198,16 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   {
     m_currentPoint = p;
     final IMapPanel mapPanel = getMapPanel();
-    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
+    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
+    final GM_Position currentPos = currentPoint.getPosition();
 
-    m_hoverFeature = null;
-    m_hoverTheme = null;
+    setHoverFeature( null, null, currentPos );
 
     if( m_themes == null || m_currentPoint == null )
       return;
 
-    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( currentPos, grabDistance );
+    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPoint, SelectFeatureWidget.GRAB_RADIUS * 2 );
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( currentPoint, grabDistance );
 
     for( final IKalypsoFeatureTheme theme : m_themes )
     {
@@ -209,25 +218,68 @@ public class SelectSingleFeatureWidget extends AbstractWidget
       if( featureList == null )
         continue;
 
-      if( m_geometryBuilder instanceof PointGeometryBuilder )
+      final Feature feature = findCurrentFeature( theme, currentPoint, grabDistance, reqEnvelope );
+      /* grab to the first feature that you can get */
+      if( feature != null )
       {
-        /* Grab next feature */
-        final QName[] geomQNames = SelectFeatureWidget.findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
-
-        final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
-
-        m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
-
-        /* grab to the first feature that you can get */
-        if( m_hoverFeature != null )
-        {
-          m_hoverTheme = theme;
-          break;
-        }
+        setHoverFeature( feature, theme, currentPos );
+        break;
       }
     }
 
     repaintMap();
+  }
+
+  private Feature findCurrentFeature( final IKalypsoFeatureTheme theme, final GM_Point currentPoint, final double grabDistance, final GM_Envelope requestEnvelope )
+  {
+    if( theme == null )
+      return null;
+
+    final FeatureList featureList = theme.getFeatureList();
+    if( featureList == null )
+      return null;
+
+    if( !(m_geometryBuilder instanceof PointGeometryBuilder) )
+      return null;
+
+    /* Grab next feature */
+    final QName[] geomQNames = SelectFeatureWidget.findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+
+    final FeatureList visibleFeatures = theme.getFeatureListVisible( requestEnvelope );
+
+    return GeometryUtilities.findNearestFeature( currentPoint, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
+  }
+
+  private void setHoverFeature( final Feature feature, final IKalypsoFeatureTheme theme, final GM_Position position )
+  {
+    m_hoverFeature = feature;
+    m_hoverTheme = theme;
+
+    m_tooltipRenderer.setTooltip( null );
+    if( m_hoverTheme != null )
+    {
+      final boolean showInfo = Boolean.parseBoolean( m_hoverTheme.getProperty( THEME_PROPERTY_SHOW_INFO, "false" ) );
+      if( showInfo )
+      {
+        final String info = getInfo( m_hoverTheme, m_hoverFeature, position );
+        m_tooltipRenderer.setTooltip( info );
+      }
+    }
+  }
+
+  private String getInfo( final IKalypsoFeatureTheme theme, final Feature feature, final GM_Position position )
+  {
+    final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
+    if( themeInfo == null )
+      return "No theme info konfigured";
+
+    final Formatter formatter = new Formatter();
+    if( themeInfo instanceof IKalypsoFeatureThemeInfo )
+      ((IKalypsoFeatureThemeInfo) themeInfo).formatInfo( formatter, feature );
+    else
+      themeInfo.appendQuickInfo( formatter, position );
+    formatter.flush();
+    return formatter.toString();
   }
 
   /**
@@ -305,7 +357,16 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    SelectFeatureWidget.paintHoverFeature( g, getMapPanel(), m_geometryBuilder, m_currentPoint, m_hoverFeature, m_hoverTheme, m_geomQName );
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    SelectFeatureWidget.paintHoverFeature( g, mapPanel, m_geometryBuilder, m_currentPoint, m_hoverFeature, m_hoverTheme, m_geomQName );
+
+    final Rectangle screenBounds = mapPanel.getScreenBounds();
+
+    if( m_currentPoint != null )
+      m_tooltipRenderer.paintToolTip( m_currentPoint, g, screenBounds );
   }
 
   /**
