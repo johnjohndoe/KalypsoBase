@@ -76,7 +76,7 @@ public interface BaseFeature extends IAdaptable
    * Returns the default geometry of the <tt>Feature</tt>.
    * 
    * @return default geometry or null, if the <tt>Feature</tt> has none
-   * @deprecated use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
+   * @deprecated use {@link Deegree2Feature#getDefaultGeometryPropertyValue()} instead
    */
   @Deprecated
   GM_Object getDefaultGeometryProperty( );
