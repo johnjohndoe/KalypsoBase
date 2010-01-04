@@ -35,10 +35,17 @@
  */
 package org.kalypsodeegree_impl.model.feature.visitors;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -63,15 +70,17 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   private final String m_fromID;
 
-  private final Map m_idHash;
+  private final Map<Object, Feature> m_idHash;
 
   private final String m_fid;
 
-  private Map m_fidHash;
+  private final Map<Object, Feature> m_fidHash;
 
   private static final String REPLACE_COUNT = "${count}";
 
   private final String m_handleExisting;
+
+  private final String m_targetFeatureType;
 
   /**
    * @param fid
@@ -84,7 +93,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    *          <li>count</li>
    *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid )
+  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid, final String targetFeatureType )
   {
     m_list = list;
     m_featureType = featureType;
@@ -92,6 +101,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     m_fromID = fromID;
     m_handleExisting = handleExisting;
     m_fid = fid;
+    m_targetFeatureType = targetFeatureType;
 
     // create index for toID
     final IndexFeaturesVisitor visitor = new IndexFeaturesVisitor( toID );
@@ -108,38 +118,62 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final Object fromID = f.getProperty( m_fromID );
-
-    final Feature existingFeature = (Feature) m_idHash.get( fromID );
-    final String fid = createID( existingFeature, fromID );
-
-    final Feature newFeature;
-    if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
-      newFeature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), fid, m_featureType, true );
-    else if( "change".equals( m_handleExisting ) )
-      newFeature = existingFeature;
-    else if( "nothing".equals( m_handleExisting ) )
-      return true;
-    else
-      throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
-
     try
     {
-      FeatureHelper.copyProperties( f, newFeature, m_propertyMap );
+      final Feature targetFeature = getTargetFeature( f );
+      if( targetFeature == null )
+        return true;
 
-      if( newFeature != existingFeature )
-        m_list.add( newFeature );
+      FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
 
       // den fid-hash aktuell halten
-      m_fidHash.put( newFeature.getId(), newFeature );
+      m_fidHash.put( targetFeature.getId(), targetFeature );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      // TODO: error handling
     }
 
     return true;
+  }
+
+  private Feature getTargetFeature( final Feature sourceFeature ) throws InvocationTargetException
+  {
+    final Object fromID = sourceFeature.getProperty( m_fromID );
+
+    final Feature existingFeature = m_idHash.get( fromID );
+    final String fid = createID( existingFeature, fromID );
+
+    if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
+    {
+      final Feature parentFeature = m_list.getParentFeature();
+      final IRelationType parentRelation = m_list.getParentFeatureTypeProperty();
+
+      final IFeatureType targetFeatureType = findTargetFeatureType( sourceFeature );
+
+      final Feature newFeature = FeatureFactory.createFeature( parentFeature, parentRelation, fid, targetFeatureType, true );
+      m_list.add( newFeature );
+      return newFeature;
+    }
+
+    if( "change".equals( m_handleExisting ) )
+      return existingFeature;
+
+    if( "nothing".equals( m_handleExisting ) )
+      return null;
+
+    throw new IllegalArgumentException( "Argument 'handleExisting' must be one of 'change', 'overwrite' or 'existing', but is: " + m_handleExisting );
+  }
+
+  private IFeatureType findTargetFeatureType( final Feature sourceFeature ) throws InvocationTargetException
+  {
+    if( m_targetFeatureType == null )
+      return m_featureType;
+
+    final QName targetName = (QName) sourceFeature.getProperty( m_targetFeatureType );
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final GMLSchema schema = schemaCatalog.getSchema( targetName.getNamespaceURI(), (String) null );
+    return schema.getFeatureType( targetName );
   }
 
   private String createID( final Feature feature, final Object fromID )

@@ -398,6 +398,11 @@
               '${fromID}_${count}'</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="targetFeatureType" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Der Name einer Quell-Property vom Typ QName. Falls gesetzt, werden neu erzeugte Features anahdn des Wertes der Quell-Property erzeugt.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

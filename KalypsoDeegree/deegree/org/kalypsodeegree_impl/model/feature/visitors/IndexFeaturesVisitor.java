@@ -78,7 +78,7 @@ public class IndexFeaturesVisitor implements FeatureVisitor
     return true;
   }
 
-  public Map getIndex( )
+  public Map<Object, Feature> getIndex( )
   {
     return m_index;
   }

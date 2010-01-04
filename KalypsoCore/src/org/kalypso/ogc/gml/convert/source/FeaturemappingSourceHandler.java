@@ -140,7 +140,8 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       final AddFeaturesMappingType addType = (AddFeaturesMappingType)mapping;
       final String handleExisting = addType.getHandleExisting().value();
       final String fID = addType.getFid();
-      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID );
+      final String targetFeatureType = addType.getTargetFeatureType();
+      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID, targetFeatureType );
     }
     else if( mapping instanceof ChangeFeaturesMappingType )
       return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID, toID );
