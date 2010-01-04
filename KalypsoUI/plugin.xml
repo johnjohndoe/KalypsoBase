@@ -290,6 +290,7 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.GMLExport" name="%command.name.15" description="%command.tooltip.3"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.LegendExport" name="%command.name.16" description="%command.tooltip.4"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.SldExport" name="SLD..." description="Export styling of selected layer as SLD-File"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.HMOExport" name="%command.name.11" description="%command.tooltip.5" />
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -492,6 +493,7 @@
 				<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
 				<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
 				<command commandId="org.kalypso.ui.views.outline.SldExport" style="push"/>
+				<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
 			</menu>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
@@ -526,6 +528,7 @@
 			<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
+			<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
 
@@ -584,6 +587,7 @@
 		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml2Shp.gif" />
 		<image commandId="org.kalypso.ui.views.outline.LegendExport" icon="icons/full/obj16/exportGml2Shp.gif" />
 		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportGml2Shp.gif" />
+		<image commandId="org.kalypso.ui.views.outline.HMOExport" icon="icons/full/obj16/exportGml2Shp.gif" />
 	</extension>
 	
 	<extension id="org.kalypso.ui.repositoryContainerCommands" name="Repository Container Commands" point="org.eclipse.ui.commands">
@@ -1172,6 +1176,12 @@
 		<handler commandId="org.kalypso.ui.views.outline.SldExport" class="org.kalypso.ogc.gml.outline.handler.SldExportHandler" >
 			<enabledWhen>
 				<reference definitionId="org.kalypso.ui.definition.someFeatureThemesSelected"/>
+			</enabledWhen>
+		</handler>
+		
+		<handler commandId="org.kalypso.ui.views.outline.HMOExport" class="org.kalypso.ogc.gml.outline.handler.ExportHMOHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
 			</enabledWhen>
 		</handler>
 	</extension>
