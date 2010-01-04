@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -78,6 +79,7 @@ import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -338,7 +340,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell ) //$NON-NLS-1$
+        {
+          @Override
+          public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
+          {
+            super.objectLoaded( key, newValue, status );
+            doRefreshAll();
+          }
+        };
+
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -350,6 +361,22 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     refreshAll();
     m_isApplyTemplate = false;
+  }
+
+  protected void doRefreshAll( )
+  {
+    if( !isDisposed() )
+    {
+      final Control control = getControl();
+      control.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !control.isDisposed() )
+            refreshAll();
+        }
+      } );
+    }
   }
 
   public void applyTableTemplate( final Gistableview tableView, final URL context )
@@ -371,7 +398,17 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell ) //$NON-NLS-1$
+      {
+        @Override
+        public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
+        {
+          super.objectLoaded( key, newValue, status );
+
+          doRefreshAll();
+        }
+      };
+
       setInput( theme );
 
       final Sort sort = layer.getSort();
