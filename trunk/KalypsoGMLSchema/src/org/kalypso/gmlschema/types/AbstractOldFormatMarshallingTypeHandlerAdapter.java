@@ -46,6 +46,7 @@ import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -68,6 +69,22 @@ import org.xml.sax.XMLReader;
  */
 public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements IMarshallingTypeHandler
 {
+  private final DocumentBuilderFactory m_factory = DocumentBuilderFactory.newInstance();
+  private DocumentBuilder m_builder;
+
+  public AbstractOldFormatMarshallingTypeHandlerAdapter( )
+  {
+    try
+    {
+      m_builder = m_factory.newDocumentBuilder();
+      m_factory.setNamespaceAware( true );
+    }
+    catch( final ParserConfigurationException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
@@ -76,9 +93,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
   {
     try
     {
-      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      final DocumentBuilder builder = factory.newDocumentBuilder();
-      final Document document = builder.newDocument();
+      final Document document = m_builder.newDocument();
       final Node node = marshall( value, document, context );
       // value is encoded in xml in document object
       final StringWriter writer = new StringWriter();
@@ -142,10 +157,7 @@ public abstract class AbstractOldFormatMarshallingTypeHandlerAdapter implements 
         }
       };
 
-      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setNamespaceAware( true );
-      final DocumentBuilder builder = factory.newDocumentBuilder();
-      final Document document = builder.newDocument();
+      final Document document = m_builder.newDocument();
       final DOMConstructor domBuilderContentHandler = new DOMConstructor( document, eater );
       // simulate property-tag for dombuilder
       xmlReader.setContentHandler( domBuilderContentHandler );
