@@ -270,62 +270,105 @@ public class FeatureHelper
     final GMLWorkspace workspace = sourceFeature.getWorkspace();
     final IGMLSchema gmlSchema = workspace == null ? null : workspace.getGMLSchema();
     final String gmlVersion = gmlSchema == null ? null : gmlSchema.getGMLVersion();
-    for( final Object element : propertyMap.entrySet() )
+    for( final Entry< ? , ? > entry : propertyMap.entrySet() )
     {
-      final Map.Entry entry = (Entry) element;
       final String sourceProp = (String) entry.getKey();
       final String targetProp = (String) entry.getValue();
+      copyProperty( sourceFeature, targetFeature, gmlVersion, sourceProp, targetProp );
+    }
+  }
 
-      final IValuePropertyType sourceFTP = (IValuePropertyType) FeatureHelper.getPT( sourceFeature, sourceProp );
-      final IValuePropertyType targetFTP = (IValuePropertyType) FeatureHelper.getPT( targetFeature, targetProp );
+  private static void copyProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final String sourceProp, final String targetProp ) throws Exception
+  {
+    final IPropertyType sourcePT = FeatureHelper.getPT( sourceFeature, sourceProp );
+    if( sourcePT == null )
+      throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
 
-      if( sourceFTP == null )
-        throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
-      if( targetFTP == null )
-        throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
+    final IPropertyType targetPT = FeatureHelper.getPT( targetFeature, targetProp );
+    if( targetPT == null )
+    {
+      // Just this one: can happen, because we are now able to create features of different types at the same time.
+      return;
+    }
 
-      final Object object = sourceFeature.getProperty( sourceFTP );
-      final Object newobject;
-
-      if( object == null )
-        newobject = null;
-      else if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-        newobject = FeatureHelper.cloneData( sourceFeature, targetFeature, sourceFTP, object, gmlVersion );
-      else
-      {
-        final IMarshallingTypeHandler sourceTypeHandler = sourceFTP.getTypeHandler();
-        final IMarshallingTypeHandler targetTypeHandler = targetFTP.getTypeHandler();
-
-        String objectAsString;
-        if( sourceTypeHandler instanceof ISimpleMarshallingTypeHandler )
-          objectAsString = ((ISimpleMarshallingTypeHandler) sourceTypeHandler).convertToXMLString( object );
-        else
-          objectAsString = object.toString();
-
-        try
-        {
-          newobject = targetTypeHandler.parseType( objectAsString );
-        }
-        catch( final ParseException e )
-        {
-          throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
-        }
-      }
+    try
+    {
+      final Object convertedValue = convertProperty( sourceFeature, targetFeature, gmlVersion, sourcePT, targetPT );
 
       // Hack: Types are same, but ordinality (i.e. list or not) can be different.
-      if( !sourceFTP.isList() && targetFTP.isList() )
-        targetFeature.setProperty( targetFTP, Arrays.asList( newobject ) );
-      else if( sourceFTP.isList() && !targetFTP.isList() )
+      if( !sourcePT.isList() && targetPT.isList() )
+        targetFeature.setProperty( targetPT, Arrays.asList( convertedValue ) );
+      else if( sourcePT.isList() && !targetPT.isList() )
       {
-        final List< ? > newlist = (List< ? >) newobject;
+        final List< ? > newlist = (List< ? >) convertedValue;
         if( newlist.isEmpty() )
-          targetFeature.setProperty( targetFTP, null );
+          targetFeature.setProperty( targetPT, null );
         else
-          targetFeature.setProperty( targetFTP, newlist.get( 0 ) );
+          targetFeature.setProperty( targetPT, newlist.get( 0 ) );
       }
       else
-        targetFeature.setProperty( targetFTP, newobject );
+        targetFeature.setProperty( targetPT, convertedValue );
     }
+    catch( final Exception e )
+    {
+      throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
+    }
+  }
+
+  private static Object convertProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final IPropertyType sourcePT, final IPropertyType targetPT ) throws Exception
+  {
+    final Object sourceValue = sourceFeature.getProperty( sourcePT );
+
+    if( sourcePT instanceof IValuePropertyType && targetPT instanceof IValuePropertyType )
+    {
+      /* Shortcut: clone data if the property types are equal */
+      final IValuePropertyType sourceFTP = (IValuePropertyType) sourcePT;
+      final IValuePropertyType targetFTP = (IValuePropertyType) targetPT;
+      if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
+        return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue, gmlVersion );
+    }
+
+    final String objectAsString = convertPropertyToString( sourceValue, sourcePT );
+    if( objectAsString == null )
+      return null;
+
+    if( targetPT instanceof IValuePropertyType )
+    {
+      final IMarshallingTypeHandler targetTypeHandler = ((IValuePropertyType) targetPT).getTypeHandler();
+      return targetTypeHandler.parseType( objectAsString );
+    }
+    else if( targetPT instanceof IRelationType )
+    {
+      // We assume, its internal link only. What to do, if the target references an external link?
+      return objectAsString;
+    }
+
+    throw new UnsupportedOperationException( String.format( "Unable to handle targetProperty '%s'", targetPT.getQName() ) );
+  }
+
+  private static String convertPropertyToString( final Object sourceValue, final IPropertyType sourcePT )
+  {
+    if( sourceValue == null )
+      return null;
+
+    if( sourcePT instanceof IValuePropertyType )
+    {
+      final IValuePropertyType sourceVPT = (IValuePropertyType) sourcePT;
+      final IMarshallingTypeHandler sourceTypeHandler = sourceVPT.getTypeHandler();
+      if( sourceTypeHandler instanceof ISimpleMarshallingTypeHandler )
+        return ((ISimpleMarshallingTypeHandler) sourceTypeHandler).convertToXMLString( sourceValue );
+    }
+    else if( sourcePT instanceof IRelationType )
+    {
+      if( sourceValue instanceof String )
+        return (String) sourceValue;
+      else if( sourceValue instanceof XLinkedFeature_Impl )
+        return ((XLinkedFeature_Impl) sourceValue).getHref();
+      else if( sourceValue instanceof Feature )
+        return ((Feature) sourceValue).getId();
+    }
+
+    return sourceValue.toString();
   }
 
   /**
@@ -479,35 +522,6 @@ public class FeatureHelper
     }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
-
-  // /**
-  // * Clones a property of a feature. The clone is deep, i.e. inline feature are also cloned, referenced feature are
-  // kept
-  // * as reference.
-  // */
-  // private static Object cloneProperty( final Feature feature, final IPropertyType pt ) throws
-  // CloneNotSupportedException
-  // {
-  // final String version = feature.getWorkspace().getGMLSchema().getGMLVersion();
-  //
-  // final Object property = feature.getProperty( pt );
-  // if( pt.isList() )
-  // {
-  // final List list = (List) property;
-  // final List<Object> otherList;
-  //
-  // if( pt instanceof IRelationType )
-  // otherList = FeatureFactory.createFeatureList( feature.getParent(), (IRelationType) pt );
-  // else
-  // otherList = new ArrayList<Object>( list.size() );
-  // for( final Object listElement : list )
-  // otherList.add( cloneData( listElement, pt, version ) );
-  //
-  // return otherList;
-  // }
-  //
-  // return cloneData( property, pt, version );
-  // }
 
   public static boolean isCompositionLink( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
   {
@@ -729,24 +743,6 @@ public class FeatureHelper
       final Object cloneValue = FeatureHelper.cloneData( srcFE, targetFE, pt, valueOriginal, gmlVersion );
       targetFE.setProperty( pt, cloneValue );
     }
-  }
-
-  public static void copyNoRelationPropterty( final Feature srcFE, final Feature targetFE ) throws CloneNotSupportedException
-  {
-    final IFeatureType sourceFT = srcFE.getFeatureType();
-    final IFeatureType targetFT = targetFE.getFeatureType();
-    final String gmlVersion = srcFE.getWorkspace().getGMLSchema().getGMLVersion();
-    if( !sourceFT.equals( targetFT ) )
-      throw new CloneNotSupportedException( "source FeatureType=" + sourceFT.getQName() + " is not the same as target featureType=" + targetFT.getQName() );
-    final IPropertyType[] properties = sourceFT.getProperties();
-    for( final IPropertyType pt : properties )
-      if( pt instanceof IValuePropertyType )
-      {
-        final IValuePropertyType vpt = (IValuePropertyType) pt;
-        final IMarshallingTypeHandler sourceTH = vpt.getTypeHandler();
-        final Object clonedProptery = sourceTH.cloneObject( srcFE.getProperty( vpt ), gmlVersion );
-        targetFE.setProperty( pt, clonedProptery );
-      }
   }
 
   /**
