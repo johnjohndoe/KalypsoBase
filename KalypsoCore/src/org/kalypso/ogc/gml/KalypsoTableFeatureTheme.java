@@ -55,7 +55,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -75,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  *
  * @author Gernot Belger
  */
-public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
+public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
   private CommandableWorkspace m_workspace;
 
@@ -167,22 +166,17 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     throw new UnsupportedOperationException();
   }
 
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate )
+  public void addStyle( final IKalypsoStyle style )
   {
     throw new UnsupportedOperationException();
   }
 
-  public void addStyle( final IKalypsoUserStyle style )
+  public void removeStyle( final IKalypsoStyle style )
   {
     throw new UnsupportedOperationException();
   }
 
-  public void removeStyle( final IKalypsoUserStyle style )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  public UserStyle[] getStyles( )
+  public IKalypsoStyle[] getStyles( )
   {
     throw new UnsupportedOperationException();
   }
@@ -315,24 +309,15 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
    */
   @Override
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
+   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
    */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IIKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.IKalypsoUserStyle)
-   */
-  public void styleChanged( final IKalypsoUserStyle source )
+  public void styleChanged( )
   {
     throw new UnsupportedOperationException();
   }

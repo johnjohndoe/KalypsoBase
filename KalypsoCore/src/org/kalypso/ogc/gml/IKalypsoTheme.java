@@ -41,14 +41,12 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -60,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
-public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStateProvider
+public interface IKalypsoTheme extends IAdaptable
 {
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
@@ -83,6 +81,10 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
   public void removeKalypsoThemeListener( final IKalypsoThemeListener listener );
 
   public void dispose( );
+
+  URL getContext( );
+
+  public ImageDescriptor getDefaultIcon( );
 
   /**
    * Paints the theme to the given graphics context<br/>
@@ -107,6 +109,12 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
   public String getType( );
 
   public void setName( final I10nString name );
+
+  String getLegendIcon( );
+
+  public boolean shouldShowLegendChildren( );
+
+  void setLegendIcon( String legendIcon, URL context );
 
   /**
    * Returns the full extent bounding box for the theme.
@@ -153,14 +161,4 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    */
   public void setProperty( final String name, final String value );
-
-  /**
-   * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
-   * null.
-   *
-   * @param font
-   *            This font will be used for the self created text of the legend.
-   * @return An legend graphic or null.
-   */
-  public Image getLegendGraphic( Font font ) throws CoreException;
 }

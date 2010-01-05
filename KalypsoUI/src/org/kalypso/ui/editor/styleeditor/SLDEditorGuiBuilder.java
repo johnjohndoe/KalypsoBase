@@ -47,38 +47,48 @@ package org.kalypso.ui.editor.styleeditor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
+import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * @author F.Lindemann
  */
 public class SLDEditorGuiBuilder
 {
-  private final Action m_saveAction = new Action( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE ) //$NON-NLS-1$
+  private final Action m_saveAction = new Action( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE )
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -86,7 +96,8 @@ public class SLDEditorGuiBuilder
     @Override
     public void runWithEvent( final Event event )
     {
-      // TODO
+      final Shell shell = event.display.getActiveShell();
+      handleSave( shell );
     }
   };
 
@@ -108,11 +119,20 @@ public class SLDEditorGuiBuilder
 
   private final ScrolledForm m_form;
 
-  private IKalypsoUserStyle m_userStyle;
+  private IKalypsoStyle m_style;
 
   private IKalypsoFeatureTheme m_theme;
 
   private final FormToolkit m_toolkit;
+
+  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
+  {
+    @Override
+    public void styleChanged( )
+    {
+      handleStyleChanged();
+    }
+  };
 
   public SLDEditorGuiBuilder( final FormToolkit toolkit, final Composite parent )
   {
@@ -120,7 +140,7 @@ public class SLDEditorGuiBuilder
     m_parent = parent;
 
     m_form = toolkit.createScrolledForm( m_parent );
-    m_form.setText( Messages.getString("org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder.1") ); //$NON-NLS-1$
+    m_form.setText( Messages.getString( "org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder.1" ) ); //$NON-NLS-1$
     m_form.getBody().setLayout( new GridLayout() );
 
     final IToolBarManager toolBarManager = m_form.getForm().getToolBarManager();
@@ -142,17 +162,23 @@ public class SLDEditorGuiBuilder
     return m_form;
   }
 
-  public void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme )
+  public void setStyle( final IKalypsoStyle style, final IKalypsoFeatureTheme theme )
   {
-    setStyle( userStyle, theme, -1 );
+    setStyle( style, theme, -1 );
   }
 
-  public void setStyle( final IKalypsoUserStyle userStyle, final IKalypsoFeatureTheme theme, final int index )
+  public void setStyle( final IKalypsoStyle style, final IKalypsoFeatureTheme theme, final int index )
   {
-    // TODO: missing level: FeatureTypeStyle between UserStyle and Rule! Must also be added to outline
+    // TODO: missing level: FeatureTypeStyle between UserStyle and Rule!
+
+    if( m_style != null )
+      m_style.removeStyleListener( m_styleListener );
 
     m_theme = theme;
-    m_userStyle = userStyle;
+    m_style = style;
+
+    if( m_style != null )
+      m_style.addStyleListener( m_styleListener );
 
     if( index != -1 )
       m_focusedRuleItem = index;
@@ -168,23 +194,28 @@ public class SLDEditorGuiBuilder
       control.dispose();
 
     /* Configure actions */
-    m_saveAction.setEnabled( m_userStyle != null );
+    m_saveAction.setEnabled( m_style != null && m_style.isDirty() );
 
     /* User-Style */
-    final String formTitle = userStyle == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : userStyle.getTitle();
+    final String formTitle = style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : style.getTitle();
     m_form.setText( formTitle );
 
-    updateRuleTabs( userStyle, mainComposite );
+    updateRuleTabs( mainComposite );
 
     m_form.reflow( true );
   }
 
-  private void updateRuleTabs( final IKalypsoUserStyle userStyle, final Composite mainComposite )
+  private void updateRuleTabs( final Composite mainComposite )
   {
-    if( userStyle == null )
+    if( m_style == null )
       return;
 
-    final Rule[] rules = getRules( userStyle );
+    final FeatureTypeStyle fts = findFeatureTypeStyle();
+    if( fts == null )
+      return;
+
+    final Rule[] rules = fts.getRules();
+
     m_rulePatternCollection = new RuleFilterCollection();
     // filter patterns from rules and draw them afterwards
     for( final Rule element : rules )
@@ -193,19 +224,22 @@ public class SLDEditorGuiBuilder
     // check whether there are featureTypes that have numeric properties to be
     // used by a pattern-filter
     final List<IPropertyType> numericFeatureTypePropertylist = new ArrayList<IPropertyType>();
-    final IPropertyType[] ftp = getFeatureType().getProperties();
-    for( final IPropertyType propertyType : ftp )
+    if( m_featureType != null )
     {
-      if( propertyType instanceof IValuePropertyType )
+      final IPropertyType[] ftp = m_featureType.getProperties();
+      for( final IPropertyType propertyType : ftp )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
-        final Class< ? > valueClass = vpt.getValueClass();
-        if( Number.class.isAssignableFrom( valueClass ) )
-          numericFeatureTypePropertylist.add( propertyType );
+        if( propertyType instanceof IValuePropertyType )
+        {
+          final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+          final Class< ? > valueClass = vpt.getValueClass();
+          if( Number.class.isAssignableFrom( valueClass ) )
+            numericFeatureTypePropertylist.add( propertyType );
+        }
       }
     }
 
-    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( m_toolkit, mainComposite, m_rulePatternCollection, userStyle, m_featureType, numericFeatureTypePropertylist );
+    final RuleTabItemBuilder ruleTabItemBuilder = new RuleTabItemBuilder( m_toolkit, mainComposite, m_rulePatternCollection, m_style, fts, m_featureType, numericFeatureTypePropertylist );
     ruleTabItemBuilder.addPanelListener( m_panelListener );
     ruleTabItemBuilder.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -214,43 +248,19 @@ public class SLDEditorGuiBuilder
       ruleTabItemBuilder.setSelectedRule( m_focusedRuleItem );
   }
 
-  private Rule[] getRules( final UserStyle style )
+  private FeatureTypeStyle findFeatureTypeStyle( )
   {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    return fts[0].getRules();
-  }
+    if( m_style instanceof IKalypsoFeatureTypeStyle )
+      return (FeatureTypeStyle) m_style;
 
-  void setRules( final List< ? > ruleObjects, final UserStyle style )
-  {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    final ArrayList<Rule> ruleInstances = new ArrayList<Rule>();
-    for( int i = 0; i < ruleObjects.size(); i++ )
+    if( m_style instanceof IKalypsoUserStyle )
     {
-      final Object object = ruleObjects.get( i );
-      if( object instanceof Rule )
-        ruleInstances.add( (Rule) object );
-      else if( object instanceof RuleCollection )
-      {
-        final RuleCollection ruleCollection = (RuleCollection) object;
-        for( int j = 0; j < ruleCollection.size(); j++ )
-          ruleInstances.add( ruleCollection.get( j ) );
-      }
+      final FeatureTypeStyle[] featureTypeStyles = ((IKalypsoUserStyle) m_style).getFeatureTypeStyles();
+      if( featureTypeStyles.length > 0 )
+        return featureTypeStyles[0];
     }
-    final Rule[] ruleArray = new Rule[ruleInstances.size()];
-    for( int c = 0; c < ruleInstances.size(); c++ )
-      ruleArray[c] = ruleInstances.get( c );
-    fts[0].setRules( ruleArray );
-  }
 
-  void addRule( final Rule rule, final UserStyle style )
-  {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    fts[0].addRule( rule );
-  }
-
-  public IFeatureType getFeatureType( )
-  {
-    return m_featureType;
+    return null;
   }
 
   public void setFocus( )
@@ -279,9 +289,39 @@ public class SLDEditorGuiBuilder
     }
 
     if( param instanceof Integer )
-      this.m_focusedRuleItem = ((Integer) param);
-    m_userStyle.fireStyleChanged();
-    setStyle( m_userStyle, m_theme );
+      m_focusedRuleItem = ((Integer) param);
+
+    m_style.fireStyleChanged();
+    setStyle( m_style, m_theme );
+  }
+
+  protected void handleSave( final Shell shell )
+  {
+    final String label = m_style.getLabel();
+    final String titel = String.format( "Save - UserStyle '%s'", label );
+    final String msg = String.format( "Save UserStyle '%s'?", label );
+    MessageDialog.openQuestion( shell, titel, msg );
+
+    final IKalypsoStyle style = m_style;
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        style.save( monitor );
+        return Status.OK_STATUS;
+      }
+    };
+
+    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
+    final String errorMsg = String.format( "Failed to save style." );
+    ErrorDialog.openError( shell, titel, errorMsg, result );
+  }
+
+  protected void handleStyleChanged( )
+  {
+    m_saveAction.setEnabled( m_style != null && m_style.isDirty() );
   }
 
 }

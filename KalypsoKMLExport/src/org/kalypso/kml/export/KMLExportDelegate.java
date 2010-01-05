@@ -19,16 +19,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
-import org.kalypso.ogc.gml.IPaintDelegate;
+import org.kalypso.ogc.gml.painter.IStylePaintable;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Dirk Kuch
  */
-public class KMLExportDelegate implements IPaintDelegate
+public class KMLExportDelegate implements IStylePaintable
 {
   private final FolderType m_folderType;
 
@@ -36,11 +37,17 @@ public class KMLExportDelegate implements IPaintDelegate
 
   private final IKMLAdapter[] m_provider;
 
-  public KMLExportDelegate( final IKMLAdapter[] provider, final ObjectFactory factory, final FolderType folderType )
+  private final double m_scale;
+
+  private final GM_Envelope m_bbox;
+
+  public KMLExportDelegate( final IKMLAdapter[] provider, final ObjectFactory factory, final FolderType folderType, final double scale, final GM_Envelope bbox )
   {
     m_provider = provider;
     m_factory = factory;
     m_folderType = folderType;
+    m_scale = scale;
+    m_bbox = bbox;
   }
 
   /*
@@ -50,7 +57,6 @@ public class KMLExportDelegate implements IPaintDelegate
    */
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
   {
-
     final StyleType styleType;
 
     if( displayElement instanceof GeometryDisplayElement )
@@ -93,5 +99,32 @@ public class KMLExportDelegate implements IPaintDelegate
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IPaintDelegate#getScale()
+   */
+  @Override
+  public Double getScale( )
+  {
+    return m_scale;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IPaintDelegate#getBoundingBox()
+   */
+  @Override
+  public GM_Envelope getBoundingBox( )
+  {
+    return m_bbox;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.painter.IStylePaintable#shouldPaintFeature(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public boolean shouldPaintFeature( final Feature feature )
+  {
+    return true;
   }
 }

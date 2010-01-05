@@ -461,7 +461,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( mapModell == null )
       return Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
 
-    final String label = mapModell.getLabel( mapModell );
+    final String label = mapModell.getLabel();
     if( label == null )
       return getEditorInput().getName();
 

@@ -81,6 +81,7 @@ import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -406,7 +407,7 @@ public class GisTemplateHelper
 
       final Object property = feature.getProperty( rt );
       String typeName = ""; //$NON-NLS-1$
-      if( strictType && (property instanceof List) )
+      if( strictType && (property instanceof List< ? >) )
       {
         final List< ? > list = (List< ? >) property;
         if( !list.isEmpty() )

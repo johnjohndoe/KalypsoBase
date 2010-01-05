@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.LineSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.PointSymbolizerLayout;
@@ -74,7 +74,7 @@ public class SymbolizerTabItemBuilder
 {
   private final FormToolkit m_toolkit;
 
-  public SymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle, final IFeatureType featureType )
+  public SymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoStyle style, final IFeatureType featureType )
   {
     m_toolkit = toolkit;
     final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
@@ -96,27 +96,27 @@ public class SymbolizerTabItemBuilder
     else if( symbolizer instanceof PolygonSymbolizer )
     {
       tabItem.setText( "Polygon" ); //$NON-NLS-1$
-      symbolizerLayout = new PolygonSymbolizerLayout( composite, symbolizer, userStyle );
+      symbolizerLayout = new PolygonSymbolizerLayout( composite, symbolizer, style );
     }
     else if( symbolizer instanceof PointSymbolizer )
     {
       tabItem.setText( "Point" ); //$NON-NLS-1$
-      symbolizerLayout = new PointSymbolizerLayout( composite, symbolizer, userStyle );
+      symbolizerLayout = new PointSymbolizerLayout( composite, symbolizer, style );
     }
     else if( symbolizer instanceof LineSymbolizer )
     {
       tabItem.setText( "Line" ); //$NON-NLS-1$
-      symbolizerLayout = new LineSymbolizerLayout( composite, symbolizer, userStyle );
+      symbolizerLayout = new LineSymbolizerLayout( composite, symbolizer, style );
     }
     else if( symbolizer instanceof RasterSymbolizer )
     {
       tabItem.setText( "Raster" ); //$NON-NLS-1$
-      symbolizerLayout = new RasterSymbolizerLayout( composite, symbolizer, userStyle );
+      symbolizerLayout = new RasterSymbolizerLayout( composite, symbolizer, style );
     }
     else if( symbolizer instanceof TextSymbolizer )
     {
       tabItem.setText( "Text" ); //$NON-NLS-1$
-      symbolizerLayout = new TextSymbolizerLayout( m_toolkit, composite, symbolizer, userStyle, featureType );
+      symbolizerLayout = new TextSymbolizerLayout( m_toolkit, composite, symbolizer, style, featureType );
     }
 
     if( symbolizerLayout != null )

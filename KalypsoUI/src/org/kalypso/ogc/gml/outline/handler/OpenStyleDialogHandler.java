@@ -45,14 +45,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
-import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
 /**
@@ -70,37 +68,10 @@ public class OpenStyleDialogHandler extends AbstractHandler
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
-    final Object o = selection.getFirstElement();
-
     try
     {
       final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
-
-      if( o instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
-        final Object[] children = theme.getChildren( theme );
-        if( children instanceof UserStyleTreeObject[] && children.length != 0 )
-        {
-          final IKalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) children[0]).getStyle();
-          part.setStyle( kalypsoStyle, theme );
-          return null;
-        }
-      }
-
-      if( o instanceof UserStyleTreeObject )
-      {
-        final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
-        if( part != null && theme instanceof IKalypsoFeatureTheme )
-        {
-          final IKalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
-          part.setStyle( kalypsoStyle, (IKalypsoFeatureTheme) theme );
-          return null;
-        }
-      }
-
-
-      part.setStyle( null, null );
+      part.selectionChanged( new SelectionChangedEvent( new SelectionProviderAdapter(), selection ) );
     }
     catch( final PartInitException e )
     {

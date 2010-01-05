@@ -53,10 +53,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -88,9 +89,11 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final Shell shell = part.getSite().getShell();
     final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
 
-    final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final ISelection sel = HandlerUtil.getCurrentSelectionChecked( event );
+    final IKalypsoFeatureTheme theme = MapHandlerUtils.getFirstElement( sel, IKalypsoFeatureTheme.class );
+    if( theme == null )
+      throw new ExecutionException( "No Feature-Theme in selection." );
 
-    final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) sel.getFirstElement();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null || featureList.size() == 0 )
     {

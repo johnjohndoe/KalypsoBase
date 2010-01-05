@@ -201,6 +201,19 @@
 			<adapter type="org.kalypso.ogc.gml.map.IMapPanel">
 			</adapter>
 		</factory>
+		<factory adaptableType="org.kalypso.ogc.gml.outline.nodes.IThemeNode" class="org.kalypso.ogc.gml.outline.nodes.ThemeNodeAdapterFactory">
+			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter2"/>
+			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+			<adapter type="org.kalypsodeegree.xml.Marshallable"/>
+			<adapter type="org.kalypso.ogc.gml.IKalypsoTheme"/>
+			<adapter type="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
+			<adapter type="org.kalypso.ogc.gml.IKalypsoUserStyle"/>
+			<adapter type="org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle"/>
+			<adapter type="org.kalypsodeegree.graphics.sld.UserStyle"/>
+			<adapter type="org.kalypsodeegree.graphics.sld.FeatureTypeStyle"/>
+			<adapter type="org.kalypsodeegree.graphics.sld.Rule"/>
+			<adapter type="org.kalypsodeegree.graphics.sld.Symbolizer"/>
+		</factory>
 	</extension>
 	<extension point="org.kalypso.contribs.eclipsercp.actionFilters">
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
@@ -284,7 +297,10 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.MoveThemeUp" name="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.label"  description="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.tooltip"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveTheme" name="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label"  description="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenStyleDialog" name="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.label"  description="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.tooltip"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.ThemeProperties" name="%action.label.25" description="%action.tooltip.6"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.NodeProperties" name="%action.label.25" description="%action.tooltip.6"/>
+
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddNode" name="Add" description="Adds a new element."/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveNode" name="Remove" description="Removes the selected element."/>
 
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.ShapeExport" name="%command.name.12" description="%command.tooltip.2" />
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.GMLExport" name="%command.name.15" description="%command.tooltip.3"/>
@@ -312,7 +328,7 @@
         id="org.kalypso.ui.views.properties.ThemePropertyPage"
         name="%org.kalypso.ui.views.properties.ThemePropertyPage.name">
 			<enabledWhen>
-				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+                <instanceof value="org.kalypso.ogc.gml.outline.nodes.KalypsoThemeNode"/>
 			</enabledWhen>
 		</page>
 		<page
@@ -320,7 +336,7 @@
         id="org.kalypso.ui.views.properties.LegendPropertyPage"
         name="%org.kalypso.ui.views.properties.LegendPropertyPage.name">
 			<enabledWhen>
-				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+                <instanceof value="org.kalypso.ogc.gml.outline.nodes.IThemeNode"/>
 			</enabledWhen>
 		</page>
   <page
@@ -328,11 +344,9 @@
         class="org.kalypso.ui.views.properties.WMSThemePropertyPage"
         id="org.kalypso.ui.views.properties.WMSThemePropertyPage"
         name="%org.kalypso.ui.views.properties.WMSThemePropertyPage.name">
-     <enabledWhen>
-        <instanceof
-              value="org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme">
-        </instanceof>
-     </enabledWhen>
+        <enabledWhen>
+            <instanceof value="org.kalypso.ogc.gml.outline.nodes.WMSThemeNode"/>
+        </enabledWhen>
   </page>
   <page
         category="org.kalypso.ui.views.properties.ThemePropertyPage"
@@ -340,9 +354,7 @@
         id="org.kalypso.ui.views.properties.FeatureThemePropertyPage"
         name="%org.kalypso.ui.views.properties.FeatureThemePropertyPage.name">
      <enabledWhen>
-        <instanceof
-              value="org.kalypso.ogc.gml.GisTemplateFeatureTheme">
-        </instanceof>
+        <instanceof value="org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode"/>
      </enabledWhen>
   </page>
 	</extension>
@@ -487,7 +499,13 @@
 		</menuContribution>
 
 		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor">
-			<command commandId="org.kalypso.ui.map.outline.command.ThemeProperties" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
+			<!--
+		    <command commandId="org.kalypso.ui.map.outline.command.RemoveNode" style="push"/>
+			<menu label="New" mnemonic="s" id="org.kalypso.map.outline.GisMapEditor.new">
+			    <command commandId="org.kalypso.ui.map.outline.command.AddNode" style="push"/>
+			</menu>
+			-->
 			<menu label="Export" mnemonic="e" id="org.kalypso.map.outline.GisMapEditor.export">
 				<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
 				<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
@@ -523,7 +541,7 @@
 
 		<menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline">
 			<!-- Properties not allowed until they recognize how to handle non-editable themes
-			<command commandId="org.kalypso.ui.map.outline.command.ThemeProperties" style="push"/>
+			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
 			-->
 			<command commandId="org.kalypso.ui.views.outline.ShapeExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
@@ -581,7 +599,10 @@
 		<image commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" icon="icons/full/elcl16/prev_nav.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.RemoveTheme" icon="icons/full/elcl16/remove.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" icon="icons/util/update.gif" />
-		<image commandId="org.kalypso.ui.map.outline.command.ThemeProperties" icon="icons/full/elcl16/showThemeProps.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.NodeProperties" icon="icons/full/elcl16/nodeProperties.gif" />
+
+		<image commandId="org.kalypso.ui.map.outline.command.AddNode" icon="icons/full/elcl16/nodeAdd.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.RemoveNode" icon="icons/full/elcl16/nodeRemove.gif" />
 
 		<image commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportGml2Shp.gif" />
 		<image commandId="org.kalypso.ui.views.outline.GMLExport" icon="icons/full/obj16/exportGml2Shp.gif" />
@@ -1149,9 +1170,21 @@
 			</enabledWhen>
 		</handler>
 
-		<handler commandId="org.kalypso.ui.map.outline.command.ThemeProperties" class="org.kalypso.ogc.gml.outline.handler.ThemePropertiesHandler" >
+		<handler commandId="org.kalypso.ui.map.outline.command.NodeProperties" class="org.kalypso.ogc.gml.outline.handler.NodePropertiesHandler" >
 			<enabledWhen>
-				<reference definitionId="org.kalypso.ui.definition.oneThemeSelected"/>
+				<reference definitionId="org.kalypso.ui.definition.oneThemeNodeSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.map.outline.command.AddNode" class="org.kalypso.ogc.gml.outline.handler.AddNodeHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneThemeNodeSelected"/>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.kalypso.ui.map.outline.command.RemoveNode" class="org.kalypso.ogc.gml.outline.handler.RemoveNodeHandler" >
+			<enabledWhen>
+				<reference definitionId="org.kalypso.ui.definition.oneThemeNodeSelected"/>
 			</enabledWhen>
 		</handler>
 
@@ -1169,13 +1202,24 @@
 
 		<handler commandId="org.kalypso.ui.views.outline.LegendExport" class="org.kalypso.ogc.gml.outline.handler.LegendExportHandler" >
 			<enabledWhen>
-				<reference definitionId="org.kalypso.ui.definition.someThemesSelected"/>
+                <with variable="selection">
+                    <iterate ifEmpty="false" operator="and">
+                        <instanceof value="org.kalypso.ogc.gml.outline.nodes.ILegendProvider"/>
+                    </iterate>
+                </with>
 			</enabledWhen>
 		</handler>
 
 		<handler commandId="org.kalypso.ui.views.outline.SldExport" class="org.kalypso.ogc.gml.outline.handler.SldExportHandler" >
 			<enabledWhen>
-				<reference definitionId="org.kalypso.ui.definition.someFeatureThemesSelected"/>
+                <with variable="selection">
+                    <and>
+                        <count value="1"/>
+                        <iterate ifEmpty="false" operator="and">
+                            <adapt type="org.kalypsodeegree.xml.Marshallable"/>
+                        </iterate>
+                    </and>
+                </with>
 			</enabledWhen>
 		</handler>
 		
@@ -1189,8 +1233,7 @@
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ogc.gml.map.GISEditorIsActive">
 			<with variable="activeEditorId">
-				<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-				</equals>
+				<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor"/>
 			</with>
 		</definition>
 		<definition id="org.kalypso.ogc.gml.map.GisEditorOrMapIsActive">
@@ -1221,7 +1264,7 @@
 		<definition id="org.kalypso.ui.definition.someThemesSelected">
 			<with variable="selection">
 				<iterate ifEmpty="false" operator="and">
-					<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+					<adapt type="org.kalypso.ogc.gml.IKalypsoTheme"/>
 				</iterate>
 			</with>
 		</definition>
@@ -1230,16 +1273,9 @@
 		      <and>
 				<count value="1"/>
 				<iterate ifEmpty="false" operator="and">
-					<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
+					<adapt type="org.kalypso.ogc.gml.IKalypsoTheme"/>
 				</iterate>
 		      </and>
-			</with>
-		</definition>
-		<definition id="org.kalypso.ui.definition.someFeatureThemesSelected">
-			<with variable="selection">
-				<iterate ifEmpty="false" operator="and">
-					<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
-				</iterate>
 			</with>
 		</definition>
 		<definition id="org.kalypso.ui.definition.oneFeatureThemeSelected">
@@ -1247,9 +1283,26 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
+                        <adapt type="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
 					</iterate>
 				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.definition.oneThemeNodeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<instanceof value="org.kalypso.ogc.gml.outline.nodes.IThemeNode"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.definition.someThemeNodesSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.kalypso.ogc.gml.outline.nodes.IThemeNode"/>
+				</iterate>
 			</with>
 		</definition>
 	</extension>
@@ -1261,6 +1314,7 @@
 	<extension point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.map.IMapPanel" />
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 	</extension>
    <extension

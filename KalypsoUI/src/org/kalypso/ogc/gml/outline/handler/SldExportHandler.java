@@ -45,33 +45,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypsodeegree.graphics.sld.Layer;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
-import org.kalypsodeegree.graphics.sld.Style;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.graphics.sld.UserLayer;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Gernot Belger
@@ -88,34 +75,36 @@ public class SldExportHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-
-    String fileName = null;
-
-    /* Create Styled-Layer-Descriptor */
-    final List<Layer> layerList = new ArrayList<Layer>();
-    for( final Iterator< ? > iterator = selection.iterator(); iterator.hasNext(); )
+    final Object firstElement = selection.getFirstElement();
+    final Marshallable elementToExport = getMarshallable( firstElement );
+    if( elementToExport == null )
     {
-      final Object element = iterator.next();
-      final Layer layer = createLayer( element );
-      if( layer != null )
-        layerList.add( layer );
-
-      if( fileName == null )
-      {
-        if( element instanceof IWorkbenchAdapter )
-          fileName = ((IWorkbenchAdapter) element).getLabel( element );
-        else if( element instanceof IKalypsoTheme )
-          fileName = ((IKalypsoTheme) element).getLabel();
-      }
+      final String msg = String.format( "Selection must adapt to '%s'", Marshallable.class.getName() );
+      throw new ExecutionException( msg );
     }
-    final Layer[] layers = layerList.toArray( new Layer[layerList.size()] );
 
-    final DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
-    dateTimeInstance.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-    final String dateString = dateTimeInstance.format( new Date() );
-    final String abstract_ = String.format( "Exported by Kalypso %s", dateString ); //$NON-NLS-1$
-    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( fileName, fileName, abstract_, layers );
+    final String fileName = guessFileName( firstElement );
+    final File file = askForFile( shell, fileName );
+    if( file == null )
+      return null;
 
+    writeFile( file, elementToExport, "UTF-8" ); //$NON-NLS-1$
+    return null;
+  }
+
+  private Marshallable getMarshallable( final Object element )
+  {
+    if( element instanceof Marshallable )
+      return (Marshallable) element;
+
+    if( element instanceof IAdaptable )
+      return (Marshallable) ((IAdaptable) element).getAdapter( Marshallable.class );
+
+    return null;
+  }
+
+  private File askForFile( final Shell shell, final String fileName )
+  {
     /* Open file dialog and save the file */
     final String[] filterExtensions = new String[] { "*.sld" }; //$NON-NLS-1$
     final String[] filterNames = new String[] { "Styled Layer Descriptors (*.sld)" }; //$NON-NLS-1$
@@ -123,11 +112,18 @@ public class SldExportHandler extends AbstractHandler
     if( file == null )
       return null;
 
-    writeFile( file, sld, "UTF-8" ); //$NON-NLS-1$
+    return file;
+  }
+
+  private String guessFileName( final Object element )
+  {
+    if( element instanceof IThemeNode )
+      return ((IThemeNode) element).getLabel();
+
     return null;
   }
 
-  private void writeFile( final File file, final StyledLayerDescriptor sld, final String encoding ) throws ExecutionException
+  private void writeFile( final File file, final Marshallable element, final String encoding ) throws ExecutionException
   {
     OutputStream out = null;
     try
@@ -136,7 +132,7 @@ public class SldExportHandler extends AbstractHandler
 
       final String xmlHeader = XMLUtilities.createXMLHeader( encoding );
       IOUtils.write( xmlHeader, out, encoding );
-      final String sldAsXML = sld.exportAsXML();
+      final String sldAsXML = element.exportAsXML();
       IOUtils.write( sldAsXML, out, encoding );
 
       out.close();
@@ -149,29 +145,5 @@ public class SldExportHandler extends AbstractHandler
     {
       IOUtils.closeQuietly( out );
     }
-  }
-
-  private Layer createLayer( final Object element )
-  {
-    if( element instanceof NamedLayer )
-      return (Layer) element;
-
-    if( element instanceof UserLayer )
-      return (Layer) element;
-
-    if( element instanceof IKalypsoFeatureTheme )
-    {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) element;
-      final UserStyle[] userStyles = theme.getStyles();
-      return SLDFactory.createNamedLayer( theme.getName().getValue(), null, userStyles );
-    }
-
-    if( element instanceof UserStyle )
-    {
-      final UserStyle style = (UserStyle) element;
-      return SLDFactory.createNamedLayer( style.getName() + "_style", null, new Style[] { style } ); //$NON-NLS-1$
-    }
-
-    return null;
   }
 }

@@ -40,62 +40,38 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.model.IWorkbenchAdapter2;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCoreExtensions;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * <p>
- * Abstract implementation of IKalypsoTheme
- * </p>
- * <p>
+ * Abstract implementation of IKalypsoTheme<br>
  * Implements common features to all KalypsoTheme's
- * </p>
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme, IWorkbenchAdapter2
+public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
   private static interface IListenerRunnable
   {
@@ -104,7 +80,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};
 
-  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ogc.gml.AbstractKalypsoTheme.0"), null ); //$NON-NLS-1$
+  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.AbstractKalypsoTheme.0" ), null ); //$NON-NLS-1$
 
   private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
 
@@ -115,18 +91,18 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    */
-  private String m_legendIcon = null;
+  private final String m_externIconUrn = null;
 
   /**
    * The context, if the theme is part of a template loaded from a file. May be null. Used to resolve dependend
    * resources like the legend-icon.
    */
-  private URL m_context = null;
+  private final URL m_context = null;
 
   /**
    * Stores an icon from an external URL or URN and which can be used for the layer in a legend. May be null.
    */
-  private org.eclipse.swt.graphics.Image m_externIcon = null;
+  private final org.eclipse.swt.graphics.Image m_externIcon = null;
 
   private I10nString m_name;
 
@@ -295,14 +271,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
-  public Object[] getChildren( final Object o )
-  {
-    return AbstractKalypsoTheme.EMPTY_CHILDREN;
-  }
-
-  /**
    * Returns the type of the theme by default. Override if needed.
    * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
@@ -310,178 +278,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String getTypeContext( )
   {
     return getType();
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-    final IStatus status = getStatus();
-    if( !status.isOK() )
-    {
-      final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-
-      switch( status.getSeverity() )
-      {
-        case IStatus.ERROR:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" ); //$NON-NLS-1$
-        case IStatus.WARNING:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" ); //$NON-NLS-1$
-        case IStatus.INFO:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" ); //$NON-NLS-1$
-      }
-    }
-
-    return getOutlineImageFromLayer();
-  }
-
-  /**
-   * This function returns the icon set in the style (StyledLayerType), if any.<br>
-   * This may be icons with a relative path or icons, which are defined via some URNs.<br>
-   * 
-   * @return If an user icon or URN is defined, this icon will be returned.<br>
-   *         If not, it checks the number of styles and rules.<br>
-   *         If only one style and rule exists, there is a generated icon returned, representing the first rule.<br>
-   *         If there are more rules or styles, there is the standard icon returned, defined by each theme itself.
-   */
-  private ImageDescriptor getOutlineImageFromLayer( )
-  {
-    /* Make a default icon for the legend. */
-    if( m_legendIcon == null )
-    {
-      final Object[] styles = getChildren( this );
-      if( styles instanceof UserStyleTreeObject[] && styles.length == 1 )
-      {
-        /* Cast ... . */
-        final UserStyleTreeObject[] themeStyles = (UserStyleTreeObject[]) styles;
-
-        /* One must exist here! */
-        final UserStyleTreeObject style = themeStyles[0];
-
-        final Object[] ftStyles = style.getChildren( style );
-        if( ftStyles.length == 1 )
-        {
-          final FeatureTypeStyleTreeObject ftStyle = (FeatureTypeStyleTreeObject) ftStyles[0];
-          /* Get the rules. */
-          final Object[] rules = ftStyle.getChildren( ftStyle );
-          if( rules.length == 1 )
-          {
-            final RuleTreeObject rule = (RuleTreeObject) rules[0];
-            return rule.getImageDescriptor( rule );
-          }
-        }
-
-        /* Otherwise there are more styles or rules, so give them the default image. */
-        return getDefaultIcon();
-      }
-
-      return getDefaultIcon();
-    }
-
-    /* If the image is disposed; this theme was disposed */
-    if( m_externIcon != null && m_externIcon.isDisposed() )
-      return null;
-
-    /* If the m_legendIcon string was already evaluated and an image does exist, return this image. */
-    if( m_externIcon != null && !m_externIcon.isDisposed() )
-      return ImageDescriptor.createFromImage( m_externIcon );
-
-    /* Check, if it is a special URN. */
-    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE ); //$NON-NLS-1$
-    final Matcher m = p.matcher( m_legendIcon.trim() );
-
-    /* A special URN was defined. Evaluate it. */
-    if( m.matches() && m.groupCount() == 2 )
-    {
-      final String styleName = m.group( 1 );
-      final String ftsName = ""; //$NON-NLS-1$
-      final String ruleName = m.group( 2 );
-
-      final Object[] themeChildren = getChildren( this );
-      final UserStyleTreeObject styleTreeObject = UserStyleTreeObject.findObject( themeChildren, styleName );
-      if( styleTreeObject == null )
-        return getDefaultIcon();
-
-      final Object[] styleTreeChildren = styleTreeObject.getChildren( styleTreeObject );
-      final FeatureTypeStyleTreeObject ftsObject = FeatureTypeStyleTreeObject.findObject( styleTreeChildren, ftsName );
-      if( ftsObject == null )
-        return getDefaultIcon();
-
-      final Object[] ftsChildren = ftsObject.getChildren( ftsObject );
-      final RuleTreeObject rto = RuleTreeObject.findObject( ftsChildren, ruleName );
-
-      if( rto == null )
-        return getDefaultIcon();
-
-      /* Found the right one, need this image icon. */
-      final ImageDescriptor descriptor = rto.getImageDescriptor( rto );
-
-      /* Create the Image. */
-      m_externIcon = descriptor.createImage();
-
-      /* Need a new one with the created image, because the image is cached and should be disposed. */
-      /* Using the descriptor above will result in undisposed images. */
-      return ImageDescriptor.createFromImage( m_externIcon );
-    }
-
-    /* Resolve the URL. */
-    final URL absoluteUrl = getLegendIconURL();
-
-    /* On error, return the default icon. */
-    if( absoluteUrl == null )
-      return getDefaultIcon();
-
-    /* Create the descriptor. */
-    final ImageDescriptor descriptor = ImageDescriptor.createFromURL( absoluteUrl );
-
-    /* Create the Image. */
-    m_externIcon = descriptor.createImage();
-
-    /* Need a new one with the created image, because the image is cached and should be disposed. */
-    /* Using the descriptor above will result in undisposed images. */
-    return ImageDescriptor.createFromImage( m_externIcon );
-  }
-
-  /**
-   * This function returns the resolved URL for the legend icon or null, if none could be created.
-   * 
-   * @return The resolved URL for the legend icon or null, if none could be created.
-   */
-  private URL getLegendIconURL( )
-  {
-    try
-    {
-      /* A URL or URN was given. */
-      if( m_legendIcon.startsWith( "urn" ) ) //$NON-NLS-1$
-      {
-        // search for url
-        final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
-        final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-        if( baseCatalog == null )
-          return null;
-
-        final String uri = baseCatalog.resolve( m_legendIcon, m_legendIcon );
-        if( uri == null || uri.equals( m_legendIcon ) )
-          return null;
-
-        /* Resolve the URL. */
-        final URL absoluteUrl = new URL( uri );
-
-        return absoluteUrl;
-      }
-
-      /* Resolve the URL. */
-      final URL absoluteUrl = UrlResolverSingleton.resolveUrl( m_context, m_legendIcon );
-
-      return absoluteUrl;
-    }
-    catch( final MalformedURLException e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-      return null;
-    }
   }
 
   /**
@@ -493,7 +289,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return The default image descriptor.
    */
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     if( m_standardThemeIcon == null )
       m_standardThemeIcon = new Image( Display.getCurrent(), AbstractKalypsoTheme.class.getResourceAsStream( "resources/standardTheme.gif" ) ); //$NON-NLS-1$
@@ -507,85 +303,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String getLabel( )
   {
     return getName().getValue();
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
-  public String getLabel( final Object o )
-  {
-    final StringBuffer sb = new StringBuffer();
-
-    final I10nString themeName = getName();
-
-    sb.append( themeName.getValue() );
-
-    final IStatus status = getStatus();
-    if( !status.isOK() )
-    {
-      sb.append( " - " ); //$NON-NLS-1$
-      sb.append( status.getMessage() );
-    }
-
-    return sb.toString();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
-   */
-  @SuppressWarnings("unused")
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final org.eclipse.swt.graphics.Font font ) throws CoreException
-  {
-    final int BORDER = 0;
-    final int ICON_SIZE = 16;
-    final int GAP = 4;
-
-    final String label = getLabel( this );
-
-    final Device device = font.getDevice();
-    final Point textExtent = calcTextSize( label, font );
-
-    final int width = BORDER + ICON_SIZE + GAP + textExtent.x;
-    final int height = Math.max( 16, textExtent.y );
-
-    /* Create the image. */
-    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( device, width, height );
-
-    /* Need a graphical context. */
-    final GC gc = new GC( image );
-
-    /* Set the font. */
-    gc.setFont( font );
-
-    /* Change the color. */
-    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
-
-    /* Get the icon. */
-    final ImageDescriptor descriptor = getImageDescriptor( this );
-
-    /* Draw the icon. */
-    final org.eclipse.swt.graphics.Image icon = descriptor.createImage();
-    gc.drawImage( icon, BORDER, 0 );
-    icon.dispose();
-
-    /* Draw the text. */
-    gc.drawString( label, BORDER + ICON_SIZE + GAP, 0, true );
-
-    gc.dispose();
-
-    return image;
-  }
-
-  // TODO: move into helper class
-  public static Point calcTextSize( final String label, final Font font )
-  {
-    final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
-    final GC tmpGC = new GC( tmpImage );
-    tmpGC.setFont( font );
-    final Point textExtent = tmpGC.textExtent( label );
-    tmpGC.dispose();
-    tmpImage.dispose();
-    return textExtent;
   }
 
   /**
@@ -722,7 +439,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   @Override
   public String toString( )
   {
-    return getLabel( this );
+    return getLabel();
   }
 
   /**
@@ -751,23 +468,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   public String getLegendIcon( )
   {
-    return m_legendIcon;
+    return m_externIconUrn;
   }
 
   public void setLegendIcon( final String legendIcon, final URL context )
   {
-    if( ObjectUtils.equals( m_legendIcon, legendIcon ) && ObjectUtils.equals( m_context, context ) )
+    if( ObjectUtils.equals( m_externIconUrn, legendIcon ) && ObjectUtils.equals( m_context, context ) )
       return;
-
-    m_legendIcon = legendIcon;
-    m_context = context;
-
-    /* If the image is disposed; this theme was disposed */
-    if( m_externIcon != null && m_externIcon.isDisposed() )
-    {
-      m_externIcon.dispose();
-      m_externIcon = null;
-    }
 
     fireStatusChanged( this );
   }
@@ -777,7 +484,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
-  protected URL getContext( )
+  public URL getContext( )
   {
     return m_context;
   }
@@ -802,64 +509,4 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     fireStatusChanged( this );
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.ICheckStateProvider#isChecked()
-   */
-  @Override
-  public boolean isChecked( )
-  {
-    return m_isVisible;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.ICheckStateProvider#isGrayed()
-   */
-  @Override
-  public boolean isGrayed( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getBackground(java.lang.Object)
-   */
-  @Override
-  public RGB getBackground( final Object element )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getForeground(java.lang.Object)
-   */
-  @Override
-  public RGB getForeground( final Object element )
-  {
-    return null;
-  }
-
-  /**
-   * Not loaded themes are shown with italic font.
-   * 
-   * @see org.eclipse.ui.model.WorkbenchAdapter#getFont(java.lang.Object)
-   */
-  @Override
-  public FontData getFont( final Object element )
-  {
-    final FontData standardFont = JFaceResources.getDialogFont().getFontData()[0];
-
-    FontDescriptor fontDesc = FontDescriptor.createFrom( standardFont );
-
-    if( !isLoaded() )
-      fontDesc = fontDesc.setStyle( SWT.ITALIC );
-
-    // falls aktiviert
-    final IMapModell mapModell = getMapModell();
-    if( mapModell != null && mapModell.getActiveTheme() == this )
-      fontDesc = fontDesc.setStyle( SWT.BOLD );
-
-    return fontDesc.getFontData()[0];
-  }
-
 }

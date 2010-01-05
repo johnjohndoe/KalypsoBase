@@ -59,10 +59,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 
 /**
  * This handler exports the legend of the selected layers in the map outline.
@@ -97,14 +96,15 @@ public class LegendExportHandler extends AbstractHandler
     }
 
     /* Collect all themes */
-    final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( sel );
+    final IThemeNode[] nodes = MapHandlerUtils.getSelectedNodes( sel );
 
     /* Ask user for file */
     final String fileName;
-    if( themes.length == 1 )
-      fileName = themes[0].getLabel();
+    if( nodes.length == 1 )
+      fileName = nodes[0].getLabel();
     else
-      fileName = ((IMapModell) themes[0].getParent( themes[0] )).getName().getValue();
+      fileName = nodes[0].getParent().getLabel();
+
     final String[] filterExtensions = new String[] { "*.png", "*.jpg", "*.gif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final String[] filterNames = new String[] {
         Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -134,7 +134,8 @@ public class LegendExportHandler extends AbstractHandler
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        return MapUtilities.exportLegends( themes, legendFile, format, getDisplay(), null, -1, -1, monitor );
+        final LegendExporter legendExporter = new LegendExporter();
+        return legendExporter.exportLegends( nodes, legendFile, format, getDisplay(), null, -1, -1, monitor );
       }
     };
     job.setUser( true );

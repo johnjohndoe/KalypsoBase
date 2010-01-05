@@ -167,7 +167,8 @@ public class ResourcePool
 
         final IPoolableObjectType key = entry.getKey();
         final KeyInfo info = entry.getValue();
-        if( info.removeListener( l ) && info.isEmpty() )
+        final boolean wasRemoved = info.removeListener( l );
+        if( wasRemoved && info.isEmpty() )
         {
           if( ResourcePool.DO_LOG )
             ResourcePool.LOGGER.info( Messages.getString( "org.kalypso.util.pool.ResourcePool.3" ) + key ); //$NON-NLS-1$

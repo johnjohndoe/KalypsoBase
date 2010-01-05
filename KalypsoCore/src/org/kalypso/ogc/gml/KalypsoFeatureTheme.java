@@ -44,19 +44,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -64,18 +60,21 @@ import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.painter.FeatureThemePaintable;
+import org.kalypso.ogc.gml.painter.IStylePaintable;
+import org.kalypso.ogc.gml.painter.IStylePainter;
+import org.kalypso.ogc.gml.painter.StylePainterFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -91,10 +90,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 /**
  * @author Andreas von Dömming
  */
-public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
+public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
-  /* Preserve order of styles. */
-  private final Map<IKalypsoUserStyle, UserStylePainter> m_styleMap = new LinkedHashMap<IKalypsoUserStyle, UserStylePainter>();
+  private final List<IKalypsoStyle> m_styles = new ArrayList<IKalypsoStyle>();
 
   private CommandableWorkspace m_workspace;
 
@@ -146,7 +144,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // Should'nt we throw an exception here?
       m_featureList = null;
       m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.ogc.gml.KalypsoFeatureTheme.0") + featurePath, null ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.0" ) + featurePath, null ) ); //$NON-NLS-1$
     }
 
     m_workspace.addModellListener( this );
@@ -155,9 +153,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void dispose( )
   {
-    final Set<IKalypsoUserStyle> set = m_styleMap.keySet();
-    final IKalypsoUserStyle[] styles = set.toArray( new IKalypsoUserStyle[set.size()] );
-    for( final IKalypsoUserStyle element : styles )
+    final IKalypsoStyle[] styles = m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
+    for( final IKalypsoStyle element : styles )
       removeStyle( element );
 
     if( m_workspace != null )
@@ -208,33 +205,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     final Graphics graphics = wrapGrahicForSelection( g, selected );
 
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
-    {
-      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
-      {
-        displayElement.paint( graphics, p, paintMonitor );
-
-        // DEBUG output to show feature envelope: TODO: put into tracing option
-        // final GM_Envelope envelope = displayElement.getFeature().getEnvelope();
-        // if( envelope != null )
-        // {
-        // GM_Position destPointMin = projection.getDestPoint( envelope.getMin() );
-        // GM_Position destPointMax = projection.getDestPoint( envelope.getMax() );
-        //
-        // GM_Envelope_Impl env = new GM_Envelope_Impl( destPointMin, destPointMax, null );
-        //
-        // graphics.drawRect( (int) env.getMin().getX(), (int) env.getMin().getY(), (int) env.getWidth(), (int)
-        // env.getHeight()
-        // );
-        // }
-      }
-    };
-
     try
     {
-      final double scale = p.getScale();
-      final GM_Envelope bbox = p.getSourceRect();
-      paint( scale, bbox, selected, monitor, paintDelegate );
+      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, graphics, m_selectionManager, selected );
+      final IStylePainter painter = StylePainterFactory.create( this, selected );
+      painter.paint( paintDelegate, monitor );
 
       if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
         m_featureList.paint( g, p );
@@ -250,90 +225,51 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * Determines, if a {@link HighlightGraphics} will be used to draw the selection or not.
    */
-  // TODO (future): replace highlightGraphics concept by highlight-style
   private Graphics wrapGrahicForSelection( final Graphics g, final Boolean selected )
   {
     /* If we draw normally, never use highlight graphics */
     if( selected == null || selected == false )
       return g;
 
-    boolean hasSelectionStyle = false;
-    for( final IKalypsoUserStyle style : m_styleMap.keySet() )
-    {
-      if( style.isUsedForSelection() )
-      {
-        hasSelectionStyle = true;
-      }
-    }
-
-    if( hasSelectionStyle )
+    if( hasSelectionStyle() )
       return g;
 
     /* Use normal style with highlight graphics to paint */
     return new HighlightGraphics( (Graphics2D) g );
   }
 
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  private boolean hasSelectionStyle( )
   {
-    final UserStylePainter[] styleArray = getStylesForPaint( selected );
-
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.1" ), styleArray.length ); //$NON-NLS-1$
-
-    if( m_featureList == null )
-      return;
-
-    final GMLWorkspace workspace = getWorkspace();
-
-    for( final UserStylePainter painter : styleArray )
+    for( final IKalypsoStyle style : m_styles )
     {
-      final SubMonitor childProgress = progress.newChild( 1 );
-      painter.paintSelected( workspace, scale, bbox, m_featureList, selected, childProgress, delegate );
-      ProgressUtilities.done( childProgress );
-    }
-  }
-
-  private UserStylePainter[] getStylesForPaint( final Boolean selected )
-  {
-    final List<UserStylePainter> normalStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
-    final List<UserStylePainter> selectionStyles = new ArrayList<UserStylePainter>( m_styleMap.size() );
-    for( final Entry<IKalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
-    {
-      if( entry.getKey().isUsedForSelection() )
-      {
-        selectionStyles.add( entry.getValue() );
-      }
-      else
-      {
-        normalStyles.add( entry.getValue() );
-      }
+      if( style.isUsedForSelection() )
+        return true;
     }
 
-    /* If no selection style is present, we will paint with old HighlightGraphics stuff, so return normal styles. */
-    if( selected == null || selected == false || selectionStyles.size() == 0 )
-      return normalStyles.toArray( new UserStylePainter[normalStyles.size()] );
-
-    return selectionStyles.toArray( new UserStylePainter[selectionStyles.size()] );
+    return false;
   }
 
-  public void addStyle( final IKalypsoUserStyle style )
+  public void addStyle( final IKalypsoStyle style )
   {
-    final UserStylePainter styleDisplayMap = new UserStylePainter( style, m_selectionManager );
-    m_styleMap.put( style, styleDisplayMap );
+    m_styles.add( style );
     style.addStyleListener( this );
 
-    fireStatusChanged( this );
+    // HACKY: in order to refresh (not update) the outline, fire a visibility event
+    fireVisibilityChanged( isVisible() );
   }
 
-  public void removeStyle( final IKalypsoUserStyle style )
+  public void removeStyle( final IKalypsoStyle style )
   {
     style.removeStyleListener( this );
-    m_styleMap.remove( style );
+    m_styles.remove( style );
+
+    // HACKY: in order to refresh (not update) the outline, fire a visibility event
+    fireVisibilityChanged( isVisible() );
   }
 
-  public UserStyle[] getStyles( )
+  public IKalypsoStyle[] getStyles( )
   {
-    final Set<IKalypsoUserStyle> set = m_styleMap.keySet();
-    return set.toArray( new UserStyle[set.size()] );
+    return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
   }
 
   /**
@@ -356,11 +292,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
-        // HACK: for sinlge-feature lists (see flag), we must invalidate the list ourselfs.
+        // HACK: for sinlge-feature lists (see flag), we must invalidate the list ourselves.
         if( m_isSingleFeature )
         {
-          // TODO: we do not know which one of the changed features is the right one... (se FIXME below)
-          // So we just invalidate all features i nthis list
+          // TODO: we do not know which one of the changed features is the right one... (ses FIXME below)
+          // So we just invalidate all features in this list
           for( final Feature feature : features )
             m_featureList.invalidate( feature );
         }
@@ -419,7 +355,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else
     {
       // unknown event, set dirty
-      // TODO : if the event-hierarchy is implemented correctly the else-part can be removed
       setDirty();
     }
   }
@@ -445,14 +380,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( m_featureList == null )
       return null;
 
+    // TODO: we should also get the scale here (else we might return currently invisible features)
+
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
 
-    final GMLWorkspace workspace = getWorkspace();
-
     // Put features in set in order to avoid duplicates
     final Set<Feature> features = new HashSet<Feature>();
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
+    final IStylePaintable paintDelegate = new IStylePaintable()
     {
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
       {
@@ -463,33 +398,41 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           features.add( feature );
         }
       }
+
+      @Override
+      public Double getScale( )
+      {
+        return null;
+      }
+
+      @Override
+      public GM_Envelope getBoundingBox( )
+      {
+        return env;
+      }
+
+      @Override
+      public boolean shouldPaintFeature( final Feature feature )
+      {
+        return true;
+      }
     };
 
     final IProgressMonitor monitor = new NullProgressMonitor();
 
-    for( final Entry<IKalypsoUserStyle, UserStylePainter> entry : m_styleMap.entrySet() )
+    try
     {
-      final IKalypsoUserStyle style = entry.getKey();
-      if( style.isUsedForSelection() )
-      {
-        continue;
-      }
-
-      final UserStylePainter stylePainter = entry.getValue();
-
-      final Boolean selected = null; // selection is not considered here
-      final Double scale = null; // TODO: scale is not considered here, but it should
-      try
-      {
-        stylePainter.paintFeatureTypeStyles( workspace, scale, env, m_featureList, selected, monitor, paintDelegate );
-      }
-      catch( final CoreException e )
-      {
-        KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-      }
+      final IStylePainter painter = StylePainterFactory.create( this, null );
+      painter.paint( paintDelegate, monitor );
+    }
+    catch( final CoreException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
     }
 
-    final FeatureList resultList = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
+    final Feature parentFeature = m_featureList.getParentFeature();
+    final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
+    final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
     resultList.addAll( features );
     return resultList;
   }
@@ -506,7 +449,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     catch( final Exception e )
     {
-      // TODO: error handling
       e.printStackTrace();
     }
     if( runnable != null )
@@ -535,46 +477,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
    */
   @Override
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     if( m_featureThemeIcon == null )
-    {
       m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) ); //$NON-NLS-1$
-    }
 
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
+   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
    */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    if( o != this )
-      throw new IllegalStateException();
-
-    final UserStyle[] styles = getStyles();
-    if( styles == null )
-      return super.getChildren( o );
-
-    final List<UserStyleTreeObject> treeObjects = new ArrayList<UserStyleTreeObject>( styles.length );
-    for( final UserStyle style : styles )
-    {
-      final IKalypsoUserStyle kus = (IKalypsoUserStyle) style;
-      // We do not show selection-styles
-      // TODO: optionally...
-      if( !kus.isUsedForSelection() )
-        treeObjects.add( new UserStyleTreeObject( this, kus ) );
-    }
-
-    return treeObjects.toArray( new UserStyleTreeObject[treeObjects.size()] );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.IKalypsoUserStyle)
-   */
-  public void styleChanged( final IKalypsoUserStyle source )
+  public void styleChanged( )
   {
     setDirty();
     fireStatusChanged( this );
@@ -614,4 +528,5 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     return new FeatureThemeInfo( this, new Properties() );
   }
+
 }

@@ -40,14 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -81,17 +78,15 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public String getFeaturePath();
 
-  public void addStyle( final IKalypsoUserStyle style );
+  public void addStyle( final IKalypsoStyle style );
 
-  public void removeStyle( final IKalypsoUserStyle style );
+  public void removeStyle( final IKalypsoStyle style );
 
-  public UserStyle[] getStyles( );
+  public IKalypsoStyle[] getStyles( );
 
   public FeatureList getFeatureList( );
 
   public FeatureList getFeatureListVisible( final GM_Envelope env );
 
   public IFeatureSelectionManager getSelectionManager( );
-
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException;
 }

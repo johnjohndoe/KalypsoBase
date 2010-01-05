@@ -44,6 +44,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 
 /**
@@ -149,4 +152,16 @@ public class SWTUtilities
       return SWT.NONE;
     }
   }
+
+  public static Point calcTextSize( final String label, final Font font )
+  {
+    final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
+    final GC tmpGC = new GC( tmpImage );
+    tmpGC.setFont( font );
+    final Point textExtent = tmpGC.textExtent( label );
+    tmpGC.dispose();
+    tmpImage.dispose();
+    return textExtent;
+  }
+
 }

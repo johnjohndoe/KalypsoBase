@@ -67,7 +67,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -101,8 +101,6 @@ public class RuleTabItemBuilder
 
   private final Composite m_globalComposite;
 
-  private final IKalypsoUserStyle m_userStyle;
-
   private final IFeatureType m_featureType;
 
   private final int m_focusedRuleItem = -1;
@@ -115,15 +113,17 @@ public class RuleTabItemBuilder
 
   private TabFolder m_ruleTabFolder = null;
 
+  private final IKalypsoStyle m_style;
+
   private final FeatureTypeStyle m_fts;
 
   private final FormToolkit m_toolkit;
 
-  public RuleTabItemBuilder( final FormToolkit toolkit, final Composite parent, final RuleFilterCollection rulePatternCollection, final IKalypsoUserStyle userStyle, final IFeatureType featureType, final List<IPropertyType> numericFeatureTypePropertylist )
+  public RuleTabItemBuilder( final FormToolkit toolkit, final Composite parent, final RuleFilterCollection rulePatternCollection, final IKalypsoStyle style, final FeatureTypeStyle fts, final IFeatureType featureType, final List<IPropertyType> numericFeatureTypePropertylist )
   {
     m_toolkit = toolkit;
-    m_userStyle = userStyle;
-    m_fts = m_userStyle.getFeatureTypeStyles()[0];
+    m_style = style;
+    m_fts = fts;
     m_featureType = featureType;
     m_rulePatternCollection = rulePatternCollection;
     m_numericFeatureTypePropertylist = numericFeatureTypePropertylist;
@@ -235,9 +235,12 @@ public class RuleTabItemBuilder
     {
       final Object ruleObject = filteredRules.get( j );
       if( ruleObject instanceof Rule )
-        new RuleTabItem( m_toolkit, m_ruleTabFolder, m_userStyle, m_featureType ).drawRule( (Rule) ruleObject, j );
+      {
+        final RuleTabItem ruleTabItem = new RuleTabItem( (Rule) ruleObject, m_toolkit, m_style, m_featureType );
+        ruleTabItem.createTabItem( m_ruleTabFolder );
+      }
       else if( ruleObject instanceof RuleCollection )
-        new RulePatternTabItem( m_toolkit, m_ruleTabFolder, m_userStyle, m_featureType, m_rulePatternCollection, m_numericFeatureTypePropertylist ).drawPatternRule( (RuleCollection) ruleObject, j );
+        new RulePatternTabItem( m_toolkit, m_ruleTabFolder, m_style, m_fts, m_featureType, m_rulePatternCollection, m_numericFeatureTypePropertylist ).drawPatternRule( (RuleCollection) ruleObject, j );
     }
 
     if( m_focusedRuleItem != -1 )

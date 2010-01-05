@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -68,7 +68,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 public class LineSymbolizerLayout extends AbstractSymbolizerLayout
 {
-  public LineSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
+  public LineSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle userStyle )
   {
     super( composite, symbolizer, userStyle );
   }
@@ -99,7 +99,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         stroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -111,7 +111,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
         stroke.setWidth( width );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -123,7 +123,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         stroke.setOpacity( opacity );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -136,7 +136,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         stroke.setLineJoin( lineJoin );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -149,7 +149,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         stroke.setLineCap( lineCap );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -161,7 +161,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         stroke.setDashOffset( dashOffset );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -173,7 +173,7 @@ public class LineSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         stroke.setDashArray( dashArray );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
   }

@@ -45,22 +45,17 @@ import java.awt.Image;
 import java.awt.Point;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -108,7 +103,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param themeName
    *          The name of the theme.
    * @param imageProvider
-   *          The image provider, which should be used. If it has also the type {@link IKalypsoLegendProvider} also a
+   *          The image provider, which should be used. If it has also the type {@link ILegendProvider} also a
    *          legend can be shown.
    * @param mapModel
    *          The map modell.
@@ -186,35 +181,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
-   */
-  @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
-  {
-    if( m_provider == null )
-      return super.getLegendGraphic( font );
-
-    if( !(m_provider instanceof IKalypsoLegendProvider) )
-      return super.getLegendGraphic( font );
-
-    if( m_legend == null )
-    {
-      final IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
-      m_legend = legendProvider.getLegendGraphic( font );
-    }
-
-    if( m_legend != null )
-    {
-      // Clone this image, the returned image will be disposed outside!
-      return new org.eclipse.swt.graphics.Image( font.getDevice(), m_legend, SWT.IMAGE_COPY );
-    }
-
-    return super.getLegendGraphic( font );
-  }
-
-  /**
    * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
    */
+  @Override
   public String getTooltip( final Object element )
   {
     Assert.isTrue( element == this, "'Element' must be this" ); //$NON-NLS-1$
@@ -313,7 +282,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
    */
   @Override
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_WMS );
   }

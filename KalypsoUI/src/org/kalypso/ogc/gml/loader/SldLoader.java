@@ -66,14 +66,9 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.Layer;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
-import org.kalypsodeegree.graphics.sld.Style;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author schlienger
@@ -81,6 +76,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 public class SldLoader extends AbstractLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
+
   private ResourceBundle m_resourceBundle;
 
   /**
@@ -167,7 +163,7 @@ public class SldLoader extends AbstractLoader
     }
   }
 
-  private StyledLayerDescriptor loadFromCatalog( final URL context, final String source ) throws LoaderException
+  private Object loadFromCatalog( final URL context, final String source ) throws LoaderException
   {
     final CatalogSLD catalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
 
@@ -201,13 +197,10 @@ public class SldLoader extends AbstractLoader
       e.printStackTrace();
     }
 
-    /* HACK: Use the name of the feature type style in the GMT for referencing this style. */
-    final UserStyle userStyle = StyleFactory.createUserStyle( fts.getName(), fts.getTitle(), fts.getAbstract(), true, new FeatureTypeStyle[] { fts } );
-    final NamedLayer namedLayer = SLDFactory.createNamedLayer( "", null, new Style[] { userStyle } ); //$NON-NLS-1$
-    return SLDFactory.createStyledLayerDescriptor( "", "", "", new Layer[] { namedLayer } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return fts;
   }
 
-  private StyledLayerDescriptor loadFromUrl( final URL context, final String source ) throws IOException, XMLParsingException
+  private Object loadFromUrl( final URL context, final String source ) throws IOException, XMLParsingException
   {
     InputStream is = null;
     try
@@ -222,13 +215,13 @@ public class SldLoader extends AbstractLoader
         }
       };
 
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
+      final Object element = SLDFactory.readSLD( resolver, is );
 
       is.close();
 
       loadResourceBundle( url );
 
-      return styledLayerDescriptor;
+      return element;
     }
     finally
     {
@@ -242,29 +235,25 @@ public class SldLoader extends AbstractLoader
     final String source = key.getLocation();
     final URL context = key.getContext();
 
-    if( data instanceof StyledLayerDescriptor )
+    if( data instanceof Marshallable )
     {
       IFile sldFile = null;
       try
       {
-        final StyledLayerDescriptor userStyle = (StyledLayerDescriptor) data;
+        final Marshallable marshallable = (Marshallable) data;
         final URL styleURL = m_urlResolver.resolveURL( context, source );
 
         sldFile = ResourceUtilities.findFileFromURL( styleURL );
 
         final String charset = sldFile.getCharset();
 
-        final String sldXML = userStyle.exportAsXML();
+        final String sldXML = marshallable.exportAsXML();
         final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
 
-        if( sldFile != null )
-          sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
-//        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
-// {
-// sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
-// }
-        else
+        if( sldFile == null )
           throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
+
+          sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
       }
       catch( final MalformedURLException e )
       {

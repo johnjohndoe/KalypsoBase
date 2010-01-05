@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
@@ -65,7 +65,6 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
   private int selectionIndex = 0;
 
   private RuleCollection ruleCollection = null;
@@ -74,9 +73,9 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
 
   ColorPalettePanel colorPalettePanel = null;
 
-  public FilterPatternPolygonSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final IKalypsoUserStyle m_userStyle, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
+  public FilterPatternPolygonSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle style, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
+    super( composite, symbolizer, style );
     this.ruleCollection = m_ruleCollection;
     this.symbolizerIndex = m_symbolizerIndex;
   }
@@ -135,7 +134,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerLayo
               ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
     }

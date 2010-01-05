@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -94,7 +94,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
 
   private int selectionIndex = 0;
 
-  public PointSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
+  public PointSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle userStyle )
   {
     super( composite, symbolizer, userStyle );
   }
@@ -155,7 +155,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double size = ((SliderPanel) event.getSource()).getSelection();
         graphic.setSize( size );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -180,7 +180,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double rotation = ((SliderPanel) event.getSource()).getSelection();
         graphic.setRotation( rotation );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -198,7 +198,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
-            m_userStyle.fireStyleChanged();
+            m_style.fireStyleChanged();
           }
           catch( final FilterEvaluationException e )
           {
@@ -215,7 +215,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
             setSelectionIndex( index - 1 );
             if( getSelectionIndex() < 0 )
               setSelectionIndex( 0 );
-            m_userStyle.fireStyleChanged();
+            m_style.fireStyleChanged();
             try
             {
               draw();
@@ -244,7 +244,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index + 1 );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
           try
           {
             draw();
@@ -272,7 +272,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           }
           graphic.setMarksAndExtGraphics( newOrderedObjects );
           setSelectionIndex( index - 1 );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
           try
           {
             draw();
@@ -325,7 +325,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final int index = ((ComboPanel) event.getSource()).getSelection();
           mark.setWellKnownName( WellKnownNameComboPanel.getWellKnownNameByIndex( index ) );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
 
@@ -341,7 +341,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markFill.setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
 
@@ -352,7 +352,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markFill.setOpacity( opacity );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
 
@@ -368,7 +368,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final Color color = ((ColorChooserPanel) event.getSource()).getColor();
           markStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
 
@@ -393,7 +393,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           final double opacity = ((SliderPanel) event.getSource()).getSelection();
           markStroke.setOpacity( opacity );
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
     }
@@ -412,7 +412,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
           {
             final URL url = ((UrlInputPanel) event.getSource()).getURL();
             externalGraphic.setOnlineResource( url.toString() );
-            m_userStyle.fireStyleChanged();
+            m_style.fireStyleChanged();
           }
         } );
       }

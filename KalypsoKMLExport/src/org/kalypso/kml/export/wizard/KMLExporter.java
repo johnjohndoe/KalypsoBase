@@ -47,6 +47,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ogc.gml.painter.IStylePainter;
+import org.kalypso.ogc.gml.painter.StylePainterFactory;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -227,8 +229,10 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
         final double scale = m_mapPanel.getCurrentScale();
         final GM_Envelope bbox = m_mapPanel.getBoundingBox();
-        final KMLExportDelegate delegate = new KMLExportDelegate( m_provider, factory, folderType );
-        ft.paint( scale, bbox, null, new NullProgressMonitor(), delegate );
+        final KMLExportDelegate delegate = new KMLExportDelegate( m_provider, factory, folderType, scale, bbox );
+
+        final IStylePainter painter = StylePainterFactory.create( ft, null );
+        painter.paint( delegate, new NullProgressMonitor() );
 
         myList.add( factory.createFolder( folderType ) );
     }

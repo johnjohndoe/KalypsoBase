@@ -52,11 +52,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
@@ -74,11 +75,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class RuleTabItem
 {
-  private final TabFolder m_ruleTabFolder;
-
-  private final IKalypsoUserStyle m_userStyle;
-
-  private int m_focusedRuleItem = -1;
+  private final IKalypsoStyle m_style;
 
   private int m_focusedSymbolizerItem = -1;
 
@@ -86,40 +83,40 @@ public class RuleTabItem
 
   private final FormToolkit m_toolkit;
 
-  public RuleTabItem( final FormToolkit toolkit, final TabFolder ruleTabFolder, final IKalypsoUserStyle userStyle, final IFeatureType featureType )
+  private final Rule m_rule;
+
+  public RuleTabItem( final Rule rule, final FormToolkit toolkit, final IKalypsoStyle style, final IFeatureType featureType )
   {
     m_toolkit = toolkit;
-    m_ruleTabFolder = ruleTabFolder;
-    m_userStyle = userStyle;
+
+    m_rule = rule;
+    m_style = style;
     m_featureType = featureType;
   }
 
-  public void drawRule( final Rule rule, final int someIndex )
+  public TabItem createTabItem( final TabFolder tabFolder )
   {
-    final TabItem tabItem = new TabItem( m_ruleTabFolder, SWT.NULL );
-    final Composite composite = m_toolkit.createComposite( m_ruleTabFolder );
+    final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
+
+    final String ruleLabel = getRuleLabel();
+    tabItem.setText( ruleLabel );
+
+    final Control content = createControl( tabFolder, tabItem );
+    tabItem.setControl( content );
+
+    return tabItem;
+  }
+
+  private Control createControl( final Composite parent, final TabItem tabItem )
+  {
+    final Composite composite = m_toolkit.createComposite( parent );
     final GridLayout compositeLayout = new GridLayout( 3, false );
     composite.setLayout( compositeLayout );
-    compositeLayout.marginWidth = 5;
-    compositeLayout.marginHeight = 5;
-    tabItem.setControl( composite );
-
-    final String ruleName;
-    if( rule.getTitle() != null )
-      ruleName = rule.getTitle();
-    else if( rule.getName() != null )
-      ruleName = rule.getName();
-    else
-      ruleName = MessageBundle.STYLE_EDITOR_RULE + someIndex;
-
-    // Do not allow empty rule
-    rule.setTitle( ruleName );
-    tabItem.setText( ruleName );
 
     final TextInputPanel rowBuilder = new TextInputPanel( m_toolkit, composite );
 
     /* Text Panel for Rule-Titel */
-    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle(), new ModifyListener()
+    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, m_rule.getTitle(), new ModifyListener()
     {
       @Override
       public String textModified( final String newValue )
@@ -128,10 +125,10 @@ public class RuleTabItem
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
-          return rule.getTitle();
+          return m_rule.getTitle();
         }
 
-        rule.setTitle( newValue );
+        m_rule.setTitle( newValue );
         tabItem.setText( newValue );
         getUserStyle().fireStyleChanged();
 
@@ -140,7 +137,7 @@ public class RuleTabItem
     } );
 
     /* Text Panel for Rule-Abstract */
-    rowBuilder.createTextRow( "Beschreibung", rule.getAbstract(), new ModifyListener() //$NON-NLS-1$
+    rowBuilder.createTextRow( "Beschreibung", m_rule.getAbstract(), new ModifyListener() //$NON-NLS-1$
     {
       /**
        * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
@@ -148,29 +145,29 @@ public class RuleTabItem
       @Override
       public String textModified( final String newValue )
       {
-        rule.setAbstract( newValue );
+        m_rule.setAbstract( newValue );
         getUserStyle().fireStyleChanged();
         return null;
       }
     } );
 
-    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator(), new ModifyListener()
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, m_rule.getMinScaleDenominator(), new ModifyListener()
     {
       @Override
       public String textModified( final String newValue )
       {
         final double min = new Double( newValue );
-        final double max = rule.getMaxScaleDenominator();
+        final double max = m_rule.getMaxScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
-          return "" + rule.getMinScaleDenominator(); //$NON-NLS-1$
+          return "" + m_rule.getMinScaleDenominator(); //$NON-NLS-1$
         }
 
-        rule.setMinScaleDenominator( min );
-        final Symbolizer symbolizers[] = rule.getSymbolizers();
+        m_rule.setMinScaleDenominator( min );
+        final Symbolizer symbolizers[] = m_rule.getSymbolizers();
         for( final Symbolizer element : symbolizers )
           element.setMinScaleDenominator( min );
         getUserStyle().fireStyleChanged();
@@ -182,27 +179,27 @@ public class RuleTabItem
     // denominator needs to be smaller than 0.0 -> does not make sense
     // hence, if no max denomiator specified, get the denominator of the
     // individiual symbolizer
-    if( rule.getMaxScaleDenominator() == 0.0 )
+    if( m_rule.getMaxScaleDenominator() == 0.0 )
     {
-      if( rule.getSymbolizers().length > 0 )
-        rule.setMaxScaleDenominator( rule.getSymbolizers()[0].getMaxScaleDenominator() );
+      if( m_rule.getSymbolizers().length > 0 )
+        m_rule.setMaxScaleDenominator( m_rule.getSymbolizers()[0].getMaxScaleDenominator() );
       else
-        rule.setMaxScaleDenominator( Double.MAX_VALUE );
+        m_rule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
 
-    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator(), new ModifyListener()
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, m_rule.getMaxScaleDenominator(), new ModifyListener()
     {
       @Override
       public String textModified( final String newValue )
       {
         double max = new Double( newValue );
-        final double min = rule.getMinScaleDenominator();
+        final double min = m_rule.getMinScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
-          return "" + rule.getMaxScaleDenominator(); //$NON-NLS-1$
+          return "" + m_rule.getMaxScaleDenominator(); //$NON-NLS-1$
         }
 
         // add a minimum to max in order to be a little bit larger than the
@@ -210,8 +207,8 @@ public class RuleTabItem
         // to keep the current view -> otherwise the rule would automatically
         // Exclude this configuration
         max += 0.01;
-        rule.setMaxScaleDenominator( max );
-        final Symbolizer symbolizers[] = rule.getSymbolizers();
+        m_rule.setMaxScaleDenominator( max );
+        final Symbolizer symbolizers[] = m_rule.getSymbolizers();
         for( final Symbolizer element : symbolizers )
           element.setMaxScaleDenominator( max );
         getUserStyle().fireStyleChanged();
@@ -222,7 +219,7 @@ public class RuleTabItem
 // new LegendLabel( composite, m_userStyle, someIndex );
 
     final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
-    final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule.getSymbolizers().length );
+    final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, m_rule.getSymbolizers().length );
 
     final TabFolder symbolizerTabFolder = new TabFolder( composite, SWT.NULL );
     final GridData tabData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -240,40 +237,38 @@ public class RuleTabItem
           final int index = symbolizerTabFolder.getSelectionIndex();
           if( index >= 0 )
           {
-            final Symbolizer s[] = rule.getSymbolizers();
-            rule.removeSymbolizer( s[index] );
+            final Symbolizer s[] = m_rule.getSymbolizers();
+            m_rule.removeSymbolizer( s[index] );
             symbolizerTabFolder.getItem( index ).dispose();
             setFocusedSymbolizerItem( index );
-            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             getUserStyle().fireStyleChanged();
           }
-          drawSymbolizerTabItems( rule, symbolizerTabFolder );
+          drawSymbolizerTabItems( m_rule, symbolizerTabFolder );
           symbolizerTabFolder.setSelection( index - 1 );
         }
         else if( action == EditSymbolizerPanel.FOR_SYMB )
         {
           final int index = symbolizerTabFolder.getSelectionIndex();
-          if( index == (rule.getSymbolizers().length - 1) || index < 0 )
+          if( index == (m_rule.getSymbolizers().length - 1) || index < 0 )
           {
             // nothing
           }
           else
           {
-            final Symbolizer newOrderedObjects[] = new Symbolizer[rule.getSymbolizers().length];
-            for( int counter4 = 0; counter4 < rule.getSymbolizers().length; counter4++ )
+            final Symbolizer newOrderedObjects[] = new Symbolizer[m_rule.getSymbolizers().length];
+            for( int counter4 = 0; counter4 < m_rule.getSymbolizers().length; counter4++ )
             {
               if( counter4 == index )
-                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 + 1];
+                newOrderedObjects[counter4] = m_rule.getSymbolizers()[counter4 + 1];
               else if( counter4 == (index + 1) )
-                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4 - 1];
+                newOrderedObjects[counter4] = m_rule.getSymbolizers()[counter4 - 1];
               else
-                newOrderedObjects[counter4] = rule.getSymbolizers()[counter4];
+                newOrderedObjects[counter4] = m_rule.getSymbolizers()[counter4];
             }
-            rule.setSymbolizers( newOrderedObjects );
+            m_rule.setSymbolizers( newOrderedObjects );
             setFocusedSymbolizerItem( index + 1 );
-            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             getUserStyle().fireStyleChanged();
-            drawSymbolizerTabItems( rule, symbolizerTabFolder );
+            drawSymbolizerTabItems( m_rule, symbolizerTabFolder );
             symbolizerTabFolder.setSelection( index + 1 );
           }
         }
@@ -283,25 +278,24 @@ public class RuleTabItem
           final int index = symbolizerTabFolder.getSelectionIndex();
           if( index > 0 )
           {
-            final Symbolizer newOrderedObjects[] = new Symbolizer[rule.getSymbolizers().length];
-            for( int counter5 = 0; counter5 < rule.getSymbolizers().length; counter5++ )
+            final Symbolizer newOrderedObjects[] = new Symbolizer[m_rule.getSymbolizers().length];
+            for( int counter5 = 0; counter5 < m_rule.getSymbolizers().length; counter5++ )
             {
               if( counter5 == index )
-                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 - 1];
+                newOrderedObjects[counter5] = m_rule.getSymbolizers()[counter5 - 1];
               else if( counter5 == (index - 1) )
-                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5 + 1];
+                newOrderedObjects[counter5] = m_rule.getSymbolizers()[counter5 + 1];
               else
-                newOrderedObjects[counter5] = rule.getSymbolizers()[counter5];
+                newOrderedObjects[counter5] = m_rule.getSymbolizers()[counter5];
             }
-            rule.setSymbolizers( newOrderedObjects );
+            m_rule.setSymbolizers( newOrderedObjects );
             setFocusedSymbolizerItem( index - 1 );
-            setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             getUserStyle().fireStyleChanged();
-            drawSymbolizerTabItems( rule, symbolizerTabFolder );
+            drawSymbolizerTabItems( m_rule, symbolizerTabFolder );
             symbolizerTabFolder.setSelection( index - 1 );
           }
         }
-        editSymbolizerPanel.update( rule.getSymbolizers().length );
+        editSymbolizerPanel.update( m_rule.getSymbolizers().length );
       }
     } );
 
@@ -312,13 +306,12 @@ public class RuleTabItem
         final Symbolizer symbolizer = ((AddSymbolizerPanel) event.getSource()).getSelection();
         if( symbolizer != null )
         {
-          rule.addSymbolizer( symbolizer );
+          m_rule.addSymbolizer( symbolizer );
           getUserStyle().fireStyleChanged();
-          setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-          setFocusedSymbolizerItem( rule.getSymbolizers().length - 1 );
-          editSymbolizerPanel.update( rule.getSymbolizers().length );
-          drawSymbolizerTabItems( rule, symbolizerTabFolder );
-          symbolizerTabFolder.setSelection( rule.getSymbolizers().length - 1 );
+          setFocusedSymbolizerItem( m_rule.getSymbolizers().length - 1 );
+          editSymbolizerPanel.update( m_rule.getSymbolizers().length );
+          drawSymbolizerTabItems( m_rule, symbolizerTabFolder );
+          symbolizerTabFolder.setSelection( m_rule.getSymbolizers().length - 1 );
         }
       }
     } );
@@ -332,7 +325,7 @@ public class RuleTabItem
     {
       public void widgetSelected( final SelectionEvent e )
       {
-        final Filter oldFilter = rule.getFilter();
+        final Filter oldFilter = m_rule.getFilter();
         Filter clone = null;
         if( oldFilter != null )
           try
@@ -343,17 +336,17 @@ public class RuleTabItem
           {
             ex.printStackTrace();
           }
-        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), rule.getFilter(), null, null, false );
+        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), m_rule.getFilter(), null, null, false );
         final int open = dialog.open();
         if( open == Window.OK )
         {
           final Filter filter = dialog.getFilter();
-          rule.setFilter( filter );
+          m_rule.setFilter( filter );
           getUserStyle().fireStyleChanged();
         }
         if( open == Window.CANCEL )
         {
-          rule.setFilter( clone );
+          m_rule.setFilter( clone );
           getUserStyle().fireStyleChanged();
         }
       }
@@ -365,14 +358,28 @@ public class RuleTabItem
     } );
 
     // ******* DISPLAY ALL symbolizers
-    drawSymbolizerTabItems( rule, symbolizerTabFolder );
+    drawSymbolizerTabItems( m_rule, symbolizerTabFolder );
 
-    if( rule.getSymbolizers().length == 0 )
+    if( m_rule.getSymbolizers().length == 0 )
       symbolizerTabFolder.setVisible( false );
-    if( m_focusedRuleItem == someIndex && m_focusedSymbolizerItem != -1 )
-      symbolizerTabFolder.setSelection( m_focusedSymbolizerItem );
+    symbolizerTabFolder.setSelection( m_focusedSymbolizerItem );
 
     composite.pack( true );
+
+    return composite;
+  }
+
+  private String getRuleLabel( )
+  {
+    final String title = m_rule.getTitle();
+    if( title != null )
+      return title;
+
+    final String name = m_rule.getName();
+    if( name != null )
+      return name;
+
+    return "<No Name>";
   }
 
   void drawSymbolizerTabItems( final Rule rule, final TabFolder symbolizerTabFolder )
@@ -388,13 +395,13 @@ public class RuleTabItem
     if( rule.getSymbolizers().length == 0 )
     {
       // add dummy invisilbe placeholder
-      new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, null, m_userStyle, m_featureType );
+      new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, null, m_style, m_featureType );
       symbolizerTabFolder.setVisible( false );
     }
     else
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
-        new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle, m_featureType );
+        new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, rule.getSymbolizers()[j], m_style, m_featureType );
 
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 287 );
@@ -402,19 +409,9 @@ public class RuleTabItem
     }
   }
 
-  public IKalypsoUserStyle getUserStyle( )
+  protected IKalypsoStyle getUserStyle( )
   {
-    return m_userStyle;
-  }
-
-  public TabFolder getRuleTabFolder( )
-  {
-    return m_ruleTabFolder;
-  }
-
-  public void setFocusedRuleItem( final int focusedRuleItem )
-  {
-    m_focusedRuleItem = focusedRuleItem;
+    return m_style;
   }
 
   public void setFocusedSymbolizerItem( final int focusedSymbolizerItem1 )

@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ui.KalypsoUIDebug;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -85,16 +86,26 @@ public class ThemeTester extends PropertyTester
    */
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( !(receiver instanceof IKalypsoTheme) )
+    final IKalypsoTheme theme = findTheme( receiver );
+    if( theme == null )
       return false;
-
-    final IKalypsoTheme theme = (IKalypsoTheme) receiver;
 
     final boolean result = test( theme, property, args, expectedValue );
 
     KalypsoUIDebug.PROPERTY_TESTER.printf( "Testing property '%s' for expectedValue '%s' on theme '%s': %s%n", property, expectedValue, theme, result ); //$NON-NLS-1$
 
     return result;
+  }
+
+  private IKalypsoTheme findTheme( final Object receiver )
+  {
+    if( receiver instanceof IKalypsoThemeProvider )
+      return ((IKalypsoThemeProvider) receiver).getTheme();
+
+    if( receiver instanceof IKalypsoTheme )
+      return (IKalypsoTheme) receiver;
+
+    return null;
   }
 
   private boolean test( final IKalypsoTheme theme, final String property, final Object[] args, final Object expectedValue )

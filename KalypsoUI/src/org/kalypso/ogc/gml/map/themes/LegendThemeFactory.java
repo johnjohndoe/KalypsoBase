@@ -48,7 +48,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFactory;
-import org.kalypso.ogc.gml.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.StyledLayerType;

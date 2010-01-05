@@ -59,8 +59,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
-import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
@@ -143,7 +143,6 @@ public class TextInputPanel
     configureListeners( listener, textControl );
   }
 
-// MessageBundle.STYLE_EDITOR_LEGEND
   void createLegendRow( final String label, final IKalypsoUserStyle userStyle )
   {
     final Label labelControl = m_toolkit.createLabel( m_parent, label, SWT.NULL );
@@ -154,12 +153,11 @@ public class TextInputPanel
 
     final LegendLabel legendControl = new LegendLabel( legendLabel, userStyle, 0 );
 
-    final IKalypsoUserStyleListener styleListener = new IKalypsoUserStyleListener()
+    final IKalypsoStyleListener styleListener = new IKalypsoStyleListener()
     {
       @Override
-      public void styleChanged( final IKalypsoUserStyle source )
+      public void styleChanged( )
       {
-        // TODO Auto-generated method stub
         legendControl.updateLegendImage();
       }
     };
