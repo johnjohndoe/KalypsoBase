@@ -59,7 +59,7 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
 /**
  * This page will show a legend for a theme, if one is available.
@@ -75,7 +75,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   protected Control createContents( final Composite parent )
   {
     /* Get the theme. */
-    final IKalypsoTheme theme = getTheme();
+    final IThemeNode node = getNode();
 
     /* Create a composite. */
     final Display display = parent.getDisplay();
@@ -83,7 +83,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     composite.setLayout( new GridLayout( 1, false ) );
 
     /* If there is no theme, no legend could be shown. */
-    if( theme == null )
+    if( node == null )
       return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
 
     /* Get the legend graphic. */
@@ -92,7 +92,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     {
       /* Get the legend graphic. */
       final Font font = new Font( display, "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
-      final Image legendGraphic = theme.getLegendGraphic( font );
+
+
+      final Image legendGraphic = node.getLegendGraphic( font );
+
       /* No legend available. */
       if( legendGraphic == null )
         return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
@@ -131,7 +134,6 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
           font.dispose();
         }
       } );
-
     }
     catch( final CoreException e )
     {
@@ -168,11 +170,9 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    *
    * @return The theme.
    */
-  private IKalypsoTheme getTheme( )
+  private IThemeNode getNode( )
   {
     final IAdaptable element = getElement();
-    final IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
-
-    return theme;
+    return (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
   }
 }

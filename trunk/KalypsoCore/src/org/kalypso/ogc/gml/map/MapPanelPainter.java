@@ -93,7 +93,7 @@ public class MapPanelPainter implements IPaintable
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_modell.getLabel( m_modell ) ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.0", m_modell.getLabel() ); //$NON-NLS-1$
   }
 
   /**

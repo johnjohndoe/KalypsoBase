@@ -140,6 +140,8 @@ public class SLDFactory
 {
   public static final String SLDNS_EXT = "http://www.opengis.net/sldExt";
 
+  public static final String sldNS = "http://www.opengis.net/sld";
+
   private static String ogcNS = "http://www.opengis.net/ogc";
 
   private static String xlnNS = "http://www.w3.org/1999/xlink";
@@ -268,6 +270,55 @@ public class SLDFactory
     finally
     {
       IOUtils.closeQuietly( is );
+    }
+  }
+
+  /**
+   * Reads an sld file from an {@link InputStream}.<br>
+   * The type of the returned element may be any of the top-level types defined in the sld-schema.
+   * 
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the XML document is encountered
+   * @return The read top-Level element
+   */
+  public static Object readSLD( final IUrlResolver2 urlResolver, final InputStream is ) throws XMLParsingException
+  {
+    try
+    {
+      final Document doc = XMLTools.parse( is );
+
+      final Element element = doc.getDocumentElement();
+
+      final String namespaceURI = element.getNamespaceURI();
+      if( !sldNS.equals( namespaceURI ))
+        throw new XMLParsingException( String.format( "Root-Element must be of namespace '%s'", sldNS ) );
+      
+      final String localName = element.getLocalName();
+      
+      if( "StyledLayerDescriptor".equals( localName ) )
+        return SLDFactory.createStyledLayerDescriptor( urlResolver, element );
+
+      if( "NamedLayer".equals( localName ) )
+        return SLDFactory.createNamedLayer( urlResolver, element );
+
+      if( "UserLayer".equals( localName ) )
+       return SLDFactory.createUserLayer( urlResolver, element );
+
+      if( "UserStyle".equals( localName ) )
+        return SLDFactory.createUserStyle( urlResolver, element );
+
+      if( "FeatureTypeStyle".equals( localName ) )
+        return SLDFactory.createFeatureTypeStyle( urlResolver, element );
+
+      throw new XMLParsingException( String.format( "Unable to parse Root-Element: '%s'", localName ) );
+    }
+    catch( final IOException e )
+    {
+      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage() );
+    }
+    catch( final SAXException e )
+    {
+      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage() );
     }
   }
 
@@ -534,7 +585,6 @@ public class SLDFactory
    */
   private static LinePlacement createLinePlacement( final Element element ) throws XMLParsingException
   {
-
     // optional: <PerpendicularOffset>
     ParameterValueType pOffset = null;
     final Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", CommonNamespaces.SLDNS.toString(), element );
@@ -578,7 +628,6 @@ public class SLDFactory
    */
   private static Font createFont( final Element element ) throws XMLParsingException
   {
-
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
     final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
@@ -667,6 +716,7 @@ public class SLDFactory
     final List<Layer> layerList = new ArrayList<Layer>( 100 );
 
     for( int i = 0; i < nodelist.getLength(); i++ )
+    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
@@ -688,6 +738,7 @@ public class SLDFactory
           layerList.add( SLDFactory.createUserLayer( urlResolver, child ) );
         }
       }
+    }
 
     final Layer[] layers = layerList.toArray( new Layer[layerList.size()] );
 
@@ -835,9 +886,9 @@ public class SLDFactory
   /**
    *
    */
-  public static NamedLayer createNamedLayer( final String name, final LayerFeatureConstraints layerFeatureConstraints, final Style[] styles )
+  public static NamedLayer createNamedLayer( final String name, final LayerFeatureConstraints layerFeatureConstraints, final Style[] userStyles )
   {
-    return new NamedLayer_Impl( name, layerFeatureConstraints, styles );
+    return new NamedLayer_Impl( name, layerFeatureConstraints, userStyles );
   }
 
   /**

@@ -67,9 +67,9 @@ import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
-import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -78,7 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Holger Albert
  */
-public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider, IKalypsoLegendProvider
+public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider, ILegendProvider
 {
   /**
    * This variable stores the name of the theme.

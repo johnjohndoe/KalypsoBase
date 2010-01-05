@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
 import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
@@ -61,8 +61,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
-  public RasterSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
+  public RasterSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle userStyle )
   {
     super( composite, symbolizer, userStyle );
   }
@@ -92,12 +91,12 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
     {
       public void valueChanged( final PanelEvent event )
       {
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
     // ***** Table
     final Composite tableComposite = new Composite( colorMapGroup, SWT.NULL );
-    new ColorMapEntryTable( tableComposite, m_userStyle, rasterSymbolizer );
+    new ColorMapEntryTable( tableComposite, m_style, rasterSymbolizer );
   }
 }

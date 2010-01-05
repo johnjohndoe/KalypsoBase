@@ -112,7 +112,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
    */
   @Override
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_SCALE );
   }

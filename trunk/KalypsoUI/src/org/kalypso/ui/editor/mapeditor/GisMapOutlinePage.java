@@ -70,7 +70,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -82,14 +81,14 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * OutlinePage für das MapView-Template
- *
+ * 
  * @author Gernot Belger
  */
 public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPageBookViewPage, ICommandTarget
 {
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  private final GisMapOutlineViewer m_outlineViewer;
+  private GisMapOutlineViewer m_outlineViewer;
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -172,7 +171,6 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     final Menu menu = m_popupMgr.createContextMenu( m_outlineViewer.getControl() );
     m_outlineViewer.getControl().setMenu( menu );
 
-
     // Refresh updateable element later, else they won't find this page
     final UIJob job = new UIJob( "Update outline action bars" ) //$NON-NLS-1$
     {
@@ -246,12 +244,17 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void dispose( )
   {
-    super.dispose();
-
     releaseActionBars();
 
     if( m_outlineViewer != null )
+    {
       m_outlineViewer.dispose();
+      m_outlineViewer = null;
+    }
+
+    setMapPanel( null );
+
+    super.dispose();
   }
 
   /**
@@ -260,6 +263,9 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public Control getControl( )
   {
+    if( m_outlineViewer == null )
+      return null;
+
     return m_outlineViewer.getControl();
   }
 

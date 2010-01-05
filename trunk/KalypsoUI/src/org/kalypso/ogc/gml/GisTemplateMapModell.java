@@ -57,12 +57,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -472,35 +472,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   }
 
   /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getLabel()
    */
-  public Object[] getChildren( final Object o )
+  @Override
+  public String getLabel( )
   {
-    return m_modell.getChildren( o );
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-    return m_modell.getImageDescriptor( object );
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
-  public String getLabel( final Object o )
-  {
-    return m_modell.getLabel( o );
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
-   */
-  public Object getParent( final Object o )
-  {
-    return m_modell.getParent( o );
+    return m_modell.getLabel();
   }
 
   /**

@@ -62,9 +62,12 @@ import org.eclipse.ui.internal.util.Util;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
+import org.kalypso.ogc.gml.outline.nodes.ThemeNodeCheckStateProvider;
+import org.kalypso.ogc.gml.outline.nodes.ThemeNodeContentProvider;
+import org.kalypso.ogc.gml.outline.nodes.ThemeNodeLabelProvider;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -73,13 +76,13 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 @SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 {
-  private final GisMapOutlineContentProvider m_contentProvider;
-
-  private final GisMapOutlineLabelProvider m_labelProvider;
+  private final ThemeNodeContentProvider m_contentProvider;
 
   private CheckboxTreeViewer m_viewer;
 
-  protected IMapModell m_mapModel;
+  private IMapModell m_mapModell;
+
+  protected IThemeNode m_input;
 
   private ICommandTarget m_commandTarget;
 
@@ -90,15 +93,18 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
    */
   public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
   {
-    m_labelProvider = new GisMapOutlineLabelProvider();
-    m_contentProvider = new GisMapOutlineContentProvider( m_labelProvider );
+    m_contentProvider = new ThemeNodeContentProvider();
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
   }
 
   public void dispose( )
   {
-    m_contentProvider.dispose();
+    if( m_input != null )
+    {
+      m_input.dispose();
+      m_input = null;
+    }
   }
 
   public void createControl( final Composite parent )
@@ -106,28 +112,17 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
     final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer = viewer;
     viewer.setContentProvider( m_contentProvider );
-    viewer.setLabelProvider( m_labelProvider );
+    viewer.setLabelProvider( new ThemeNodeLabelProvider() );
+    viewer.setCheckStateProvider( new ThemeNodeCheckStateProvider() );
 
-    final GisMapOutlineLabelProvider labelProvider = m_labelProvider;
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final Object data = event.getElement();
-
-        // Prevent de-selection of gray-checked elements; they are here interpreted as disabled
-        if( labelProvider.isGrayed( data ) && !event.getChecked() )
-        {
-          viewer.setChecked( data, true );
-          return;
-        }
-
-        if( data instanceof IKalypsoTheme )
-        {
-          final IKalypsoTheme theme = (IKalypsoTheme) data;
-          final ICommand command = new EnableThemeCommand( theme, event.getChecked() );
+        final IThemeNode node = (IThemeNode) event.getElement();
+        final ICommand command = node.setVisible( event.getChecked() );
+        if( command != null )
           postCommand( command, null );
-        }
       }
     } );
 
@@ -180,7 +175,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
       }
     } );
 
-    m_viewer.setInput( m_mapModel );
+    setMapModel( m_mapModell );
   }
 
   /**
@@ -197,7 +192,12 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
    */
   public void setMapModel( final IMapModell model )
   {
-    m_mapModel = model;
+    m_mapModell = model;
+
+    if( m_input != null )
+      m_input.dispose();
+
+    m_input = model == null ? null : NodeFactory.createRootNode( model, m_viewer );
 
     final CheckboxTreeViewer viewer = m_viewer;
     if( viewer != null && !viewer.getControl().isDisposed() )
@@ -207,12 +207,11 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
         public void run( )
         {
           if( !viewer.getControl().isDisposed() )
-            viewer.setInput( model );
+            viewer.setInput( m_input );
         }
       } );
     }
   }
-
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)

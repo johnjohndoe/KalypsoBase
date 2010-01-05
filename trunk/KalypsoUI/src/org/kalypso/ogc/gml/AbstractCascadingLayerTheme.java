@@ -45,20 +45,16 @@ import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.wms.provider.legends.cascading.CascadingThemeLegendProvider;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -68,7 +64,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IMapModell, IKalypsoLayerModell
+public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
 {
   private GisTemplateMapModell m_innerMapModel;
 
@@ -248,15 +244,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getChildren(java.lang.Object)
-   */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    return m_innerMapModel.getChildren( o );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getCoordinatesSystem()
    */
   public String getCoordinatesSystem( )
@@ -285,21 +272,10 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getImageDescriptor(java.lang.Object)
-   */
-  @Override
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-    Assert.isLegal( object == this );
-
-    return super.getImageDescriptor( object );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
    */
   @Override
-  protected ImageDescriptor getDefaultIcon( )
+  public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
   }
@@ -357,7 +333,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     fireContextChanged();
   }
 
-  protected void handleThemeStatusChanged( IKalypsoTheme theme )
+  protected void handleThemeStatusChanged( final IKalypsoTheme theme )
   {
     fireStatusChanged( theme );
   }
@@ -485,22 +461,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
-   */
-  @Override
-  public Image getLegendGraphic( final Font font ) throws CoreException
-  {
-    final CascadingThemeLegendProvider provider = new CascadingThemeLegendProvider( this );
-
-    return provider.getLegendGraphic( font );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
    */
   @Override
   public String getLabel( )
   {
-    return m_innerMapModel.getLabel( m_innerMapModel );
+    return m_innerMapModel.getLabel();
   }
 }

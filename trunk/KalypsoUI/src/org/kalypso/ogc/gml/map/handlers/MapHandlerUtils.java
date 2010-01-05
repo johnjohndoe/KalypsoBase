@@ -44,11 +44,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -67,12 +69,15 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.MapOutline;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -221,11 +226,34 @@ public class MapHandlerUtils
       {
         if( element instanceof IKalypsoTheme )
           themes.add( (IKalypsoTheme) element );
+        else if( element instanceof IKalypsoThemeProvider )
+          themes.add( ((IKalypsoThemeProvider) element).getTheme() );
       }
 
     }
 
     return themes.toArray( new IKalypsoTheme[themes.size()] );
+  }
+
+  /**
+   * Extracts all styles from the given selection.
+   */
+  public static IThemeNode[] getSelectedNodes( final ISelection selection )
+  {
+    final List<IThemeNode> nodes = new ArrayList<IThemeNode>();
+
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection s = (IStructuredSelection) selection;
+      final Object[] elements = s.toArray();
+      for( final Object element : elements )
+      {
+        if( element instanceof IThemeNode )
+          nodes.add( (IThemeNode) element );
+      }
+    }
+
+    return nodes.toArray( new IThemeNode[nodes.size()] );
   }
 
   public static GisMapOutlinePage getMapOutline( final IEvaluationContext context )
@@ -235,11 +263,7 @@ public class MapHandlerUtils
     if( tryOne != null )
       return tryOne;
 
-    final IContentOutlinePage outline = (IContentOutlinePage) part.getAdapter( IContentOutlinePage.class );
-    if( outline instanceof GisMapOutlinePage )
-      return (GisMapOutlinePage) outline;
-
-    // HACK: also check for specific views, propably doe not always work as expected...
+    // HACK: also check for specific views, propably does not always work as expected...
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
     final ContentOutline outlineView = (ContentOutline) activePage.findView( IPageLayout.ID_OUTLINE );
@@ -257,6 +281,13 @@ public class MapHandlerUtils
       if( currentPage instanceof GisMapOutlinePage )
         return (GisMapOutlinePage) currentPage;
     }
+
+    // Last try: adapt current view to the outline
+    // PROBLEMATIC: this created outline must be disposed (but in the other cases not...).
+    // We should reduce the dependency to the outline page and remove this whole mtehod...
+    final IContentOutlinePage outline = (IContentOutlinePage) part.getAdapter( IContentOutlinePage.class );
+    if( outline instanceof GisMapOutlinePage )
+      return (GisMapOutlinePage) outline;
 
     return null;
   }
@@ -277,6 +308,30 @@ public class MapHandlerUtils
     allThemesList.retainAll( selectedThemesList );
 
     return allThemesList.toArray( new IKalypsoTheme[allThemesList.size()] );
+  }
+
+  public static <T> T getFirstElement( final ISelection selection, final Class<T> classToFind )
+  {
+    if( !(selection instanceof IStructuredSelection) || selection.isEmpty() )
+      return null;
+
+    final IStructuredSelection structSel = (IStructuredSelection) selection;
+    final Iterator< ? > iterator = structSel.iterator();
+    for( final Iterator< ? > selIt = iterator; selIt.hasNext(); )
+    {
+      final Object object = selIt.next();
+      if( object instanceof IKalypsoFeatureTheme )
+        return (T) object;
+
+      if( object instanceof IAdaptable )
+      {
+        final Object adapter = ((IAdaptable) object).getAdapter( classToFind );
+        if( adapter != null )
+          return (T) adapter;
+      }
+    }
+
+    return null;
   }
 
   /** Returns the models (=parents) of the given themes. Filters all duplicates. */

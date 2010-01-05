@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorPalettePanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -67,19 +67,19 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
 {
-  private int selectionIndex = 0;
+  private final int m_selectionIndex = 0;
 
-  private RuleCollection ruleCollection = null;
+  private final RuleCollection m_ruleCollection;
 
-  private int symbolizerIndex = -1;
+  private final int m_symbolizerIndex;
 
-  ColorPalettePanel colorPalettePanel = null;
+  ColorPalettePanel m_colorPalettePanel = null;
 
-  public FilterPatternLineSymbolizerLayout( final Composite m_composite, final Symbolizer m_symbolizer, final IKalypsoUserStyle m_userStyle, final RuleCollection m_ruleCollection, final int m_symbolizerIndex )
+  public FilterPatternLineSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle style, final RuleCollection ruleCollection, final int symbolizerIndex )
   {
-    super( m_composite, m_symbolizer, m_userStyle );
-    this.ruleCollection = m_ruleCollection;
-    this.symbolizerIndex = m_symbolizerIndex;
+    super( composite, symbolizer, style );
+    m_ruleCollection = ruleCollection;
+    m_symbolizerIndex = symbolizerIndex;
   }
 
   @Override
@@ -121,7 +121,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
             ((LineSymbolizer) symb).getStroke().setWidth( width );
           }
         }
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -137,10 +137,10 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
       }
     }
 
-    if( colorPalettePanel == null )
+    if( m_colorPalettePanel == null )
     {
-      colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection() );
-      colorPalettePanel.setType( ColorPalettePanel.CUSTOM_TRANSITION );
+      m_colorPalettePanel = new ColorPalettePanel( group, colors, getRuleCollection() );
+      m_colorPalettePanel.setType( ColorPalettePanel.CUSTOM_TRANSITION );
       // init colors of LineSymbolizer
       for( int i = 0; i < getRuleCollection().size(); i++ )
       {
@@ -151,11 +151,11 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
         }
       }
 
-      colorPalettePanel.addColorPalettePanelListener( new PanelListener()
+      m_colorPalettePanel.addColorPalettePanelListener( new PanelListener()
       {
         public void valueChanged( final PanelEvent event )
         {
-          final Color[] colorArray = colorPalettePanel.getColorPalette();
+          final Color[] colorArray = m_colorPalettePanel.getColorPalette();
 
           for( int i = 0; i < getRuleCollection().size(); i++ )
           {
@@ -165,41 +165,26 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerLayout
               ((LineSymbolizer) symb).getStroke().setStroke( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
             }
           }
-          m_userStyle.fireStyleChanged();
+          m_style.fireStyleChanged();
         }
       } );
     }
     else
-      colorPalettePanel.draw( m_composite );
+      m_colorPalettePanel.draw( m_composite );
   }
 
   public int getSelectionIndex( )
   {
-    return selectionIndex;
-  }
-
-  public void setSelectionIndex( final int m_selectionIndex )
-  {
-    this.selectionIndex = m_selectionIndex;
+    return m_selectionIndex;
   }
 
   public int getSymbolizerIndex( )
   {
-    return symbolizerIndex;
-  }
-
-  public void setSymbolizerIndex( final int m_symbolizerIndex )
-  {
-    this.symbolizerIndex = m_symbolizerIndex;
+    return m_symbolizerIndex;
   }
 
   public RuleCollection getRuleCollection( )
   {
-    return ruleCollection;
-  }
-
-  public void setRuleCollection( final RuleCollection m_ruleCollection )
-  {
-    this.ruleCollection = m_ruleCollection;
+    return m_ruleCollection;
   }
 }

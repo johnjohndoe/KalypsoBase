@@ -196,7 +196,7 @@ public class FeatureActionUtilities
     /* If maxoccurs < 0 we have a list, and we may test if the list is already full. */
     else if( maxOccurs > 1 )
     {
-      final List list = (List) parentFeature.getProperty( fatp );
+      final List< ? > list = (List< ? >) parentFeature.getProperty( fatp );
       if( list != null && list.size() >= maxOccurs )
       {
         // Add an action which indicates, that the list is full

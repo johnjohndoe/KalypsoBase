@@ -41,7 +41,7 @@
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
@@ -51,22 +51,24 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public abstract class AbstractSymbolizerLayout
 {
-  protected Composite m_composite = null;
+  protected final Composite m_composite;
 
-  protected Symbolizer m_symbolizer = null;
+  protected final Symbolizer m_symbolizer;
 
-  protected IKalypsoUserStyle m_userStyle = null;
+  protected final IKalypsoStyle m_style;
 
-  protected AbstractSymbolizerLayout( final Composite parent, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
+  protected AbstractSymbolizerLayout( final Composite parent, final Symbolizer symbolizer, final IKalypsoStyle style )
   {
     m_composite = parent;
     m_symbolizer = symbolizer;
-    m_userStyle = userStyle;
+    m_style = style;
   }
 
   protected AbstractSymbolizerLayout( final Composite parent )
   {
-    this.m_composite = parent;
+    m_composite = parent;
+    m_symbolizer = null;
+    m_style = null;
   }
 
   public abstract void draw() throws FilterEvaluationException;

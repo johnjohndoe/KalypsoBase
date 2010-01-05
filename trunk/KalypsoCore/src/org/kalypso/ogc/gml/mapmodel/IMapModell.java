@@ -45,21 +45,18 @@ import java.awt.Graphics;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * TODO: getScale etc, hier rausschmeissen! die Umrechnung zwischen Bildschirm und Geokoordinaten ist Aufgabe des
- * MapPanel, die paint Mehtode hier sollte bereits mit Geokoordinaten arbeiten d.h. der Grafik-Kontext wird schon mit
- * umgerechneten Koordinaten übergeben
- *
  * @author Gernot Belger
  */
-public interface IMapModell extends IWorkbenchAdapter
+public interface IMapModell
 {
+  String getLabel( );
+
   /**
    * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */

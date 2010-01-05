@@ -116,9 +116,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -143,7 +145,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -161,7 +162,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove raster data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- *
+ * 
  * @author Thomas Jung
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -281,12 +282,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   public CoverageManagementWidget( )
   {
-    this( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.0"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.0" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -299,7 +300,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -441,7 +442,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
     themeSelectionPanel.setLayout( new GridLayout( 2, false ) );
     themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    toolkit.createLabel( themeSelectionPanel, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.2"), SWT.NONE ); //$NON-NLS-1$
+    toolkit.createLabel( themeSelectionPanel, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.2" ), SWT.NONE ); //$NON-NLS-1$
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
     final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     m_themeCombo.getControl().setLayoutData( comboGridData );
@@ -474,7 +475,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     coverageInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( coverageInfoGroup );
-    coverageInfoGroup.setText( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.3") ); //$NON-NLS-1$
+    coverageInfoGroup.setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.3" ) ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( m_featureTemplateGft ) );
@@ -707,7 +708,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * returns the first {@link RasterSymbolizer} from the given user styles
-   *
+   * 
    * @param styles
    *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
@@ -717,14 +718,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_theme == null )
       return null;
 
-    final UserStyle[] styles = m_theme.getStyles();
+    final IKalypsoStyle[] styles = m_theme.getStyles();
 
-    for( final UserStyle userStyle : styles )
+    for( final IKalypsoStyle style : styles )
     {
-      final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
-      for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
+      final FeatureTypeStyle[] featureTypeStyles = findFeatureTypeStyles( style );
+      for( final FeatureTypeStyle fts : featureTypeStyles )
       {
-        final Rule[] rules = featureTypeStyle.getRules();
+        final Rule[] rules = fts.getRules();
         for( final Rule rule : rules )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
@@ -740,6 +741,17 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return null;
   }
 
+  private FeatureTypeStyle[] findFeatureTypeStyles( final IKalypsoStyle style )
+  {
+    if( style instanceof IKalypsoUserStyle )
+      return ((IKalypsoUserStyle) style).getFeatureTypeStyles();
+
+    if( style instanceof IKalypsoFeatureTypeStyle )
+      return new FeatureTypeStyle[] { (FeatureTypeStyle) style };
+
+    return new FeatureTypeStyle[] {};
+  }
+
   /**
    * initializes the button action for the style panel.
    */
@@ -748,7 +760,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    createButton( manager, new CoverageManagementAction( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.4"), "", generateID ) //$NON-NLS-1$ //$NON-NLS-2$
+    createButton( manager, new CoverageManagementAction( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.4" ), "", generateID ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -777,7 +789,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final RasterSymbolizer symb = findRasterSymbolizer();
     if( symb == null )
     {
-      MessageDialog.openWarning( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.4"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.6") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( event.display.getActiveShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.4" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -805,7 +817,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_theme == null )
       return;
 
-    final UserStyle[] styles = m_theme.getStyles();
+    final IKalypsoStyle[] styles = m_theme.getStyles();
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
@@ -813,16 +825,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         monitor.beginTask( "Saving Styles", styles.length );
 
-        for( final UserStyle userStyle : styles )
+        for( final IKalypsoStyle style : styles )
         {
-          if( userStyle instanceof GisTemplateUserStyle )
-          {
-            final GisTemplateUserStyle style = (GisTemplateUserStyle) userStyle;
-
-            // HACK: also fire style change in order to update the map
-            style.fireStyleChanged();
-            style.save( new SubProgressMonitor( monitor, 1 ) );
-          }
+          // HACK: also fire style change in order to update the map
+          style.fireStyleChanged();
+          style.save( new SubProgressMonitor( monitor, 1 ) );
         }
 
         return Status.OK_STATUS;
@@ -831,7 +838,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     final Shell shell = m_colorMapTableViewer.getControl().getShell();
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.7"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.8"), result ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.7" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.8" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -857,7 +864,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( m_colorMapTableViewer.getControl().getShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.9"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( m_colorMapTableViewer.getControl().getShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.9" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     symb.setColorMap( new_colorMap );
@@ -891,7 +898,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
       final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
 
-      final Action addAction = new CoverageManagementAction( "Add Coverage", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.11"), addID ) //$NON-NLS-1$ //$NON-NLS-2$
+      final Action addAction = new CoverageManagementAction( "Add Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ), addID ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -913,7 +920,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         }
       };
 
-      final Action removeAction = new CoverageManagementAction( "Remove Coverage", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.12"), removeID ) //$NON-NLS-1$ //$NON-NLS-2$
+      final Action removeAction = new CoverageManagementAction( "Remove Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), removeID ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -939,7 +946,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       createButton( manager, removeAction );
     }
 
-    final Action exportAction = new CoverageManagementAction( "Export Coverage", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.13"), exportID ) //$NON-NLS-1$ //$NON-NLS-2$
+    final Action exportAction = new CoverageManagementAction( "Export Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.13" ), exportID ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -969,7 +976,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
       final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
-      final Action moveUpAction = new CoverageManagementAction( "Move Coverage Up", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.14"), upID ) //$NON-NLS-1$ //$NON-NLS-2$
+      final Action moveUpAction = new CoverageManagementAction( "Move Coverage Up", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.14" ), upID ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         /**
          * @see org.eclipse.jface.action.Action#run()
@@ -991,7 +998,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         }
       };
 
-      final Action moveDownAction = new CoverageManagementAction( "Move Coverage Down", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.15"), downID ) //$NON-NLS-1$ //$NON-NLS-2$
+      final Action moveDownAction = new CoverageManagementAction( "Move Coverage Down", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.15" ), downID ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         /**
          * @see org.eclipse.jface.action.Action#run()
@@ -1018,7 +1025,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       createButton( manager, moveDownAction );
     }
 
-    final IAction jumpToAction = new CoverageManagementAction( "Jump To Coverage", Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.16"), jumptoID ) //$NON-NLS-1$ //$NON-NLS-2$
+    final IAction jumpToAction = new CoverageManagementAction( "Jump To Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.16" ), jumptoID ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -1132,7 +1139,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         try
         {
           /* save the model */
-          monitor.beginTask( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.17"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.17" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           // we cannot allow the model not to be saved, as the underlying files will then not be deleted
           theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
           final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
@@ -1153,7 +1160,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     handleCoveragesAdded( newCoverages );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.11"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.19"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.19" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void handleCoveragesAdded( final ICoverage[] newCoverages )
@@ -1225,7 +1232,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
            * Delete underlying grid file: we do it in a job, later, in order to let the map give-up the handle to the
            * file
            */
-          final Job job = new Job( Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.20") ) //$NON-NLS-1$
+          final Job job = new Job( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.20" ) ) //$NON-NLS-1$
           {
             @Override
             protected IStatus run( final IProgressMonitor progress )
@@ -1249,7 +1256,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.12"), Messages.getString("org.kalypso.gml.ui.map.CoverageManagementWidget.22"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( event.display.getActiveShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.22" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )
@@ -1369,7 +1376,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   *
+   * 
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )

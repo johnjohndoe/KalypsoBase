@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ColorChooserPanel;
 import org.kalypso.ui.editor.styleeditor.panels.ComboPanel;
@@ -74,10 +74,9 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
   private Fill polygonFill = null;
 
-  public PolygonSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle )
+  public PolygonSymbolizerLayout( final Composite composite, final Symbolizer symbolizer, final IKalypsoStyle userStyle )
   {
     super( composite, symbolizer, userStyle );
   }
@@ -112,7 +111,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         getPolygonFill().setFill( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -123,7 +122,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         getPolygonFill().setOpacity( opacity );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -148,7 +147,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final Color color = ((ColorChooserPanel) event.getSource()).getColor();
         polygonStroke.setStroke( new java.awt.Color( color.getRed(), color.getGreen(), color.getBlue() ) );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -159,7 +158,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double width = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setWidth( width );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -170,7 +169,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final double opacity = ((SliderPanel) event.getSource()).getSelection();
         polygonStroke.setOpacity( opacity );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -183,7 +182,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineJoin = ((StrokeLinejoinComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineJoin( lineJoin );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -196,7 +195,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final int lineCap = ((StrokeLinecapComboPanel) event.getSource()).getSelection();
         polygonStroke.setLineCap( lineCap );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -208,7 +207,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashOffset = ((StrokeDashoffsetPanel) event.getSource()).getValue();
         polygonStroke.setDashOffset( dashOffset );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
 
@@ -220,7 +219,7 @@ public class PolygonSymbolizerLayout extends AbstractSymbolizerLayout
       {
         final float dashArray[] = ((StrokeDasharrayPanel) event.getSource()).getValue();
         polygonStroke.setDashArray( dashArray );
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
       }
     } );
   }

@@ -45,19 +45,6 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 /**
  * @author Gernot Belger
  */
-public interface IKalypsoUserStyle extends UserStyle
+public interface IKalypsoUserStyle extends UserStyle, IKalypsoStyle
 {
-  boolean isUsedForSelection( );
-
-  public String getLabel( );
-
-  void addStyleListener( IKalypsoUserStyleListener listener );
-
-  void removeStyleListener( IKalypsoUserStyleListener listener );
-
-  String resolveI18nString( String label );
-
-  void fireStyleChanged( );
-
-  void dispose( );
 }

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -83,7 +83,7 @@ public class ColorMapEntryTable
 
   public ColorMapEntryList m_colorMapEntryList = null;
 
-  IKalypsoUserStyle m_userStyle = null;
+  IKalypsoStyle m_style = null;
 
   RasterSymbolizer m_rasterSymbolizer = null;
 
@@ -123,9 +123,9 @@ public class ColorMapEntryTable
     this.addChildControls( parent );
   }
 
-  public ColorMapEntryTable( final Composite parent, final IKalypsoUserStyle userStyle, final RasterSymbolizer rasterSymbolizer )
+  public ColorMapEntryTable( final Composite parent, final IKalypsoStyle style, final RasterSymbolizer rasterSymbolizer )
   {
-    m_userStyle = userStyle;
+    m_style = style;
     m_rasterSymbolizer = rasterSymbolizer;
     m_colorMapEntryList = new ColorMapEntryList();
     final SortedMap<Double, ColorMapEntry> colorMap = m_rasterSymbolizer.getColorMap();
@@ -418,7 +418,7 @@ public class ColorMapEntryTable
   public void updateRasterSymbolizer( )
   {
     final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
-    final Vector colorMapEntries = m_colorMapEntryList.getColorMapEntries();
+    final Vector< ? > colorMapEntries = m_colorMapEntryList.getColorMapEntries();
     try
     {
       for( int i = 0; i < colorMapEntries.size(); i++ )
@@ -432,7 +432,7 @@ public class ColorMapEntryTable
         }
       }
       m_rasterSymbolizer.setColorMap( new_colorMap );
-      m_userStyle.fireStyleChanged();
+      m_style.fireStyleChanged();
     }
     catch( final Exception e )
     {

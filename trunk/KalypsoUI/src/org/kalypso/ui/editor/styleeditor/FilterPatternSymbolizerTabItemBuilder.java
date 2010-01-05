@@ -49,7 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.AbstractSymbolizerLayout;
 import org.kalypso.ui.editor.styleeditor.symbolizerLayouts.FilterPatternLineSymbolizerLayout;
@@ -68,8 +68,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class FilterPatternSymbolizerTabItemBuilder
 {
-
-  public FilterPatternSymbolizerTabItemBuilder( final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoUserStyle userStyle,
+  public FilterPatternSymbolizerTabItemBuilder( final TabFolder tabFolder, final Symbolizer symbolizer, final IKalypsoStyle style,
       final RuleCollection ruleCollection, final int symbolizerIndex )
   {
     final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
@@ -91,19 +90,19 @@ public class FilterPatternSymbolizerTabItemBuilder
     else if( symbolizer instanceof PolygonSymbolizer )
     {
       tabItem.setText( "Polygon" ); //$NON-NLS-1$
-      symbolizerLayout = new FilterPatternPolygonSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+      symbolizerLayout = new FilterPatternPolygonSymbolizerLayout( composite, symbolizer, style, ruleCollection,
           symbolizerIndex );
     }
     else if( symbolizer instanceof PointSymbolizer )
     {
       tabItem.setText( "Point" ); //$NON-NLS-1$
-      symbolizerLayout = new FilterPatternPointSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+      symbolizerLayout = new FilterPatternPointSymbolizerLayout( composite, symbolizer, style, ruleCollection,
           symbolizerIndex );
     }
     else if( symbolizer instanceof LineSymbolizer )
     {
       tabItem.setText( "Line" ); //$NON-NLS-1$
-      symbolizerLayout = new FilterPatternLineSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
+      symbolizerLayout = new FilterPatternLineSymbolizerLayout( composite, symbolizer, style, ruleCollection,
           symbolizerIndex );
     }
 

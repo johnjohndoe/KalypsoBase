@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
@@ -75,7 +75,6 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -88,37 +87,42 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  */
 public class RulePatternTabItem
 {
-  private TabFolder ruleTabFolder = null;
+  private final TabFolder m_ruleTabFolder;
 
-  private IKalypsoUserStyle userStyle = null;
+  private final IKalypsoStyle m_style;
 
-  private IFeatureType featureType = null;
+  private final FeatureTypeStyle m_fts;
 
-  private int focusedRuleItem = -1;
+  private final IFeatureType m_featureType;
 
-  private int focusedSymbolizerItem = -1;
+  private int m_focusedRuleItem = -1;
 
-  private RuleFilterCollection rulePatternCollection = null;
+  private int m_focusedSymbolizerItem = -1;
 
-  private String[] numericFeatureTypePropertylist = null;
+  private final RuleFilterCollection m_rulePatternCollection;
+
+  private String[] m_numericFeatureTypePropertylist;
 
   private final FormToolkit m_toolkit;
-
-  public RulePatternTabItem( final FormToolkit toolkit, final TabFolder m_ruleTabFolder, final IKalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final List<IPropertyType> m_numericFeatureTypePropertylist )
-  {
-    m_toolkit = toolkit;
-    this.ruleTabFolder = m_ruleTabFolder;
-    setUserStyle( m_userStyle );
-    setFeatureType( m_featureType );
-    setRulePatternCollection( m_rulePatternCollection );
-    setNumericFeatureTypePropertylist( m_numericFeatureTypePropertylist );
-  }
 
   double minValue = -1;
 
   double maxValue = -1;
 
   double step = -1;
+
+  public RulePatternTabItem( final FormToolkit toolkit, final TabFolder ruleTabFolder, final IKalypsoStyle style, final FeatureTypeStyle fts, final IFeatureType featureType, final RuleFilterCollection rulePatternCollection, final List<IPropertyType> numericFeatureTypePropertylist )
+  {
+    m_toolkit = toolkit;
+    m_ruleTabFolder = ruleTabFolder;
+    m_style = style;
+    m_fts = fts;
+    m_featureType = featureType;
+    m_rulePatternCollection = rulePatternCollection;
+
+    setNumericFeatureTypePropertylist( numericFeatureTypePropertylist );
+  }
+
 
   public void drawPatternRule( final RuleCollection ruleCollection, final int index )
   {
@@ -144,8 +148,8 @@ public class RulePatternTabItem
     final double rulePatternMaxDenom = tmpRule.getMaxScaleDenominator();
 
     // 2. Begin to draw the first lines
-    final TabItem tabItem = new TabItem( ruleTabFolder, SWT.NULL );
-    final Composite composite = new Composite( ruleTabFolder, SWT.NULL );
+    final TabItem tabItem = new TabItem( m_ruleTabFolder, SWT.NULL );
+    final Composite composite = new Composite( m_ruleTabFolder, SWT.NULL );
     final GridLayout compositeLayout = new GridLayout();
     composite.setSize( 270, 230 );
     composite.setLayout( compositeLayout );
@@ -179,7 +183,7 @@ public class RulePatternTabItem
           {
             ruleCollection.get( counter6 ).setTitle( newValue );
           }
-          getUserStyle().fireStyleChanged();
+          fireStyleChanged();
         }
         tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + newValue ); //$NON-NLS-1$
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
@@ -212,7 +216,7 @@ public class RulePatternTabItem
             element.setMinScaleDenominator( min );
           }
         }
-        getUserStyle().fireStyleChanged();
+        fireStyleChanged();
         return null;
       }
     } );
@@ -258,7 +262,7 @@ public class RulePatternTabItem
             element.setMaxScaleDenominator( max );
           }
         }
-        getUserStyle().fireStyleChanged();
+        fireStyleChanged();
         return null;
       }
     } );
@@ -280,11 +284,11 @@ public class RulePatternTabItem
           final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( new PropertyName( filterPropertyName ), oldOperation.getLowerBoundary(), oldOperation.getUpperBoundary() );
           ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
         }
-        getUserStyle().fireStyleChanged();
+        fireStyleChanged();
       }
     } );
 
-    final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, featureType, false );
+    final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType, false );
 
     // 3. getFilterType -> at the moment we assume only a pattern of
     // PropertyIsBetween
@@ -348,7 +352,7 @@ public class RulePatternTabItem
             final Symbolizer[] symb = { symbolizer };
             ruleCollection.get( i ).addSymbolizer( cloneSymbolizer( symb )[0] );
           }
-          getUserStyle().fireStyleChanged();
+          fireStyleChanged();
           setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
           editSymbolizerPanel.update( ruleCollection.get( 0 ).getSymbolizers().length );
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
@@ -430,7 +434,7 @@ public class RulePatternTabItem
           final int collSize = ruleCollection.size() - 1;
           for( int i = collSize; i >= 0; i-- )
           {
-            removeRule( ruleCollection.get( i ), getUserStyle() );
+            removeRule( ruleCollection.get( i ) );
             getRulePatternCollection().removeRule( ruleCollection.get( i ) );
           }
 
@@ -438,11 +442,11 @@ public class RulePatternTabItem
           for( int j = 0; j < ruleList.size(); j++ )
           {
             getRulePatternCollection().addRule( ruleList.get( j ) );
-            getUserStyle().getFeatureTypeStyles()[0].addRule( ruleList.get( j ) );
+            m_fts.addRule( ruleList.get( j ) );
           }
           // update
           drawSymbolizerTabItems( tmpRule, symbolizerTabFolder, ruleCollection );
-          getUserStyle().fireStyleChanged();
+          fireStyleChanged();
         }
       } );
     }
@@ -465,7 +469,7 @@ public class RulePatternTabItem
             symbolizerTabFolder.getItem( index1 ).dispose();
             setFocusedSymbolizerItem( index1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireStyleChanged();
+            fireStyleChanged();
           }
           drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
           symbolizerTabFolder.setSelection( index1 - 1 );
@@ -495,7 +499,7 @@ public class RulePatternTabItem
             }
             setFocusedSymbolizerItem( index1 + 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireStyleChanged();
+            fireStyleChanged();
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
             symbolizerTabFolder.setSelection( index1 + 1 );
           }
@@ -521,7 +525,7 @@ public class RulePatternTabItem
             }
             setFocusedSymbolizerItem( index1 - 1 );
             setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
-            getUserStyle().fireStyleChanged();
+            fireStyleChanged();
             drawSymbolizerTabItems( ruleCollection.get( 0 ), symbolizerTabFolder, ruleCollection );
             symbolizerTabFolder.setSelection( index1 - 1 );
           }
@@ -532,7 +536,7 @@ public class RulePatternTabItem
     // ******* DISPLAY ALL symbolizers
     drawSymbolizerTabItems( tmpRule, symbolizerTabFolder, ruleCollection );
 
-    focusedRuleItem = index;
+    m_focusedRuleItem = index;
     composite.pack( true );
   }
 
@@ -549,14 +553,14 @@ public class RulePatternTabItem
     if( rule.getSymbolizers().length == 0 )
     {
       // add dummy invisilbe placeholder
-      new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, null, userStyle, ruleCollection, -1 );
+      new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, null, m_style, ruleCollection, -1 );
       symbolizerTabFolder.setVisible( false );
     }
     else
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], userStyle, ruleCollection, j );
+        new FilterPatternSymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], m_style, ruleCollection, j );
       }
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 259 );
@@ -592,82 +596,61 @@ public class RulePatternTabItem
     return returnArray;
   }
 
-  void removeRule( final Rule rule, final UserStyle style )
+  void removeRule( final Rule rule )
   {
-    final FeatureTypeStyle fts[] = style.getFeatureTypeStyles();
-    fts[0].removeRule( rule );
+    m_fts.removeRule( rule );
   }
 
   public int getFocusedRuleItem( )
   {
-    return focusedRuleItem;
+    return m_focusedRuleItem;
   }
 
-  public void setFocusedRuleItem( final int m_focusedRuleItem )
+  public void setFocusedRuleItem( final int focusedRuleItem )
   {
-    this.focusedRuleItem = m_focusedRuleItem;
+    m_focusedRuleItem = focusedRuleItem;
   }
 
   public TabFolder getRuleTabFolder( )
   {
-    return ruleTabFolder;
-  }
-
-  public void setRuleTabFolder( final TabFolder m_ruleTabFolder )
-  {
-    this.ruleTabFolder = m_ruleTabFolder;
+    return m_ruleTabFolder;
   }
 
   public int getFocusedSymbolizerItem( )
   {
-    return focusedSymbolizerItem;
+    return m_focusedSymbolizerItem;
   }
 
-  public void setFocusedSymbolizerItem( final int m_focusedSymbolizerItem )
+  public void setFocusedSymbolizerItem( final int focusedSymbolizerItem )
   {
-    this.focusedSymbolizerItem = m_focusedSymbolizerItem;
+    m_focusedSymbolizerItem = focusedSymbolizerItem;
   }
 
   public RuleFilterCollection getRulePatternCollection( )
   {
-    return rulePatternCollection;
-  }
-
-  public void setRulePatternCollection( final RuleFilterCollection m_rulePatternCollection )
-  {
-    this.rulePatternCollection = m_rulePatternCollection;
+    return m_rulePatternCollection;
   }
 
   public IFeatureType getFeatureType( )
   {
-    return featureType;
-  }
-
-  public void setFeatureType( final IFeatureType m_featureType )
-  {
-    this.featureType = m_featureType;
+    return m_featureType;
   }
 
   public String[] getNumericFeatureTypePropertylist( )
   {
-    return numericFeatureTypePropertylist;
+    return m_numericFeatureTypePropertylist;
   }
 
-  public void setNumericFeatureTypePropertylist( final List<IPropertyType> m_numericFeatureTypePropertylist )
+  public void setNumericFeatureTypePropertylist( final List<IPropertyType> numericFeatureTypePropertylist )
   {
-    final String[] tmpList = new String[m_numericFeatureTypePropertylist.size()];
-    for( int i = 0; i < m_numericFeatureTypePropertylist.size(); i++ )
-      tmpList[i] = (m_numericFeatureTypePropertylist.get( i )).getName();
-    this.numericFeatureTypePropertylist = tmpList;
+    final String[] tmpList = new String[numericFeatureTypePropertylist.size()];
+    for( int i = 0; i < numericFeatureTypePropertylist.size(); i++ )
+      tmpList[i] = (numericFeatureTypePropertylist.get( i )).getName();
+    m_numericFeatureTypePropertylist = tmpList;
   }
 
-  public IKalypsoUserStyle getUserStyle( )
+  protected void fireStyleChanged( )
   {
-    return userStyle;
-  }
-
-  public void setUserStyle( final IKalypsoUserStyle m_userStyle )
-  {
-    this.userStyle = m_userStyle;
+    m_style.fireStyleChanged();
   }
 }

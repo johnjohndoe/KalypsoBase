@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
@@ -269,7 +268,7 @@ public class MapModell implements IMapModell
       progress.subTask( theme.getLabel() );
       if( theme.isVisible() )
       {
-        IStatus status = theme.paint( g, p, null, progress.newChild( 1 ) );
+        final IStatus status = theme.paint( g, p, null, progress.newChild( 1 ) );
         children[i - 1] = status;
       }
       else
@@ -444,39 +443,9 @@ public class MapModell implements IMapModell
     m_name = name;
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
-  public Object[] getChildren( final Object o )
-  {
-    return getAllThemes();
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
-  public String getLabel( final Object o )
+  public String getLabel( )
   {
     return getName().getValue();
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
-   */
-  public Object getParent( final Object o )
-  {
-    if( o instanceof IKalypsoTheme )
-      return getThemeParent( (IKalypsoTheme) o );
-
-    return null;
   }
 
   /**

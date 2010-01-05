@@ -83,7 +83,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -138,7 +138,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private Composite m_top;
 
-  final private IKalypsoUserStyle m_userStyle;
+  final private IKalypsoStyle m_style;
 
   private final boolean RESTOREABLE;
 
@@ -148,10 +148,10 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
    * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
    * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
    */
-  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final IKalypsoUserStyle style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
+  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final IKalypsoStyle style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
   {
     super( parent );
-    m_userStyle = style;
+    m_style = style;
     m_ft = ftToSelectFrom;
     m_supportedOperations = supportedOperations;
     m_spatialOperator = spatialOperator;
@@ -171,7 +171,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   {
     final Control control = super.createContents( parent );
     createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
-    if( m_userStyle == null )
+    if( m_style == null )
       getButton( ID_BUTTON_APPLY ).setEnabled( false );
     return control;
   }
@@ -187,7 +187,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-        m_userStyle.fireStyleChanged();
+        m_style.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
 
