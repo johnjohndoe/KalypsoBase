@@ -78,16 +78,83 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   /**
+   * @see org.kalypso.ogc.gml.outline.IThemeNode#hasChildren()
+   */
+  @Override
+  public boolean hasChildren( )
+  {
+    final IKalypsoFeatureTheme theme = getElement();
+    if( theme.shouldShowLegendChildren() == false )
+      return false;
+
+    return super.hasChildren();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.IThemeNode#hasChildren()
+   */
+  @Override
+  public boolean hasChildrenCompact( )
+  {
+    final IKalypsoFeatureTheme theme = getElement();
+    if( theme.shouldShowLegendChildren() == false )
+      return false;
+
+    return super.hasChildrenCompact();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getChildren()
+   */
+  @Override
+  public IThemeNode[] getChildren( )
+  {
+    final IThemeNode[] children = super.getChildren();
+
+    final IKalypsoFeatureTheme theme = getElement();
+    if( theme.shouldShowLegendChildren() == false )
+      return new IThemeNode[] {};
+
+    return children;
+  }
+
+  private IThemeNode findImageChild( final IThemeNode[] children )
+  {
+    final String externIconUrn = getElement().getLegendIcon();
+    if( externIconUrn == null )
+    {
+      if( children.length == 0 )
+        return null;
+
+      return children[0];
+    }
+
+    /* Check, if it is a special URN. */
+    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE ); //$NON-NLS-1$
+    final Matcher m = p.matcher( externIconUrn.trim() );
+
+    if( !m.matches() || m.groupCount() != 2 )
+      return null;
+
+    /* A special URN was defined. Evaluate it. */
+    final String styleName = m.group( 1 );
+    final String ruleName = m.group( 2 );
+
+    final IThemeNode themeNode = findObject( children, styleName );
+    if( themeNode == null )
+      return null;
+
+    final Object[] ftsChildren = themeNode.getChildren();
+    return RuleNode.findObject( ftsChildren, ruleName );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.outline.KalypsoThemeNode#getElementChildren()
    */
   @Override
   protected Object[] getElementChildren( )
   {
-    final IKalypsoFeatureTheme theme = getElement();
-    if( theme.shouldShowLegendChildren() == false )
-      return new Object[] {};
-
-    final IKalypsoStyle[] styles = theme.getStyles();
+    final IKalypsoStyle[] styles = getElement().getStyles();
 
     final Predicate noSelectionStyles = new Predicate()
     {
@@ -105,42 +172,14 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   @Override
-  protected ImageDescriptor getInternalIcon( )
-  {
-    final IThemeNode[] children = getChildren();
-    if( children.length > 0 )
-      return children[children.length - 1].getImageDescriptor();
-
-    return null;
-  }
-
-  @Override
   protected Image createExternalIcon( final String externIconUrn )
   {
-    /* Check, if it is a special URN. */
-    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE ); //$NON-NLS-1$
-    final Matcher m = p.matcher( externIconUrn.trim() );
-
-    if( !m.matches() || m.groupCount() != 2 )
+    final IThemeNode imageChild = findImageChild( super.getChildren() );
+    if( imageChild == null )
       return super.createExternalIcon( externIconUrn );
 
-    /* A special URN was defined. Evaluate it. */
-    final String styleName = m.group( 1 );
-    final String ruleName = m.group( 2 );
-
-    final Object[] themeChildren = getChildren();
-    final IThemeNode themeNode = findObject( themeChildren, styleName );
-    if( themeNode == null )
-      return null;
-
-    final Object[] ftsChildren = themeNode.getChildren();
-    final RuleNode rto = RuleNode.findObject( ftsChildren, ruleName );
-
-    if( rto == null )
-      return null;
-
     /* Found the right one, need this image icon. */
-    final ImageDescriptor descriptor = rto.getImageDescriptor();
+    final ImageDescriptor descriptor = imageChild.getImageDescriptor();
 
     /* Create the Image. */
     return descriptor.createImage();

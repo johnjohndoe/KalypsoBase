@@ -54,6 +54,8 @@ public interface IThemeNode extends ITooltipProvider, ICheckStateProvider, IFont
 {
   void dispose( );
 
+  void clear( );
+  
   Object getElement( );
 
   // TREE STUFF

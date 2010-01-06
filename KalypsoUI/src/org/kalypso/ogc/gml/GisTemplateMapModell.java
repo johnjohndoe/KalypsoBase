@@ -105,7 +105,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
    * @throws CoreException
    *           if a theme in the {@link Gismapview} cannot be loaded.
    */
-  public void createFromTemplate( final Gismapview gisview ) throws Exception
+  public void createFromTemplate( final Gismapview gisview ) throws CoreException
   {
     m_isLoaded = false;
 

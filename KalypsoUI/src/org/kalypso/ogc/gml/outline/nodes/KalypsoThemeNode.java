@@ -58,7 +58,6 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.IKalypsoThemeProvider;
@@ -130,7 +129,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
   }
 
   @Override
-  public ImageDescriptor getImageDescriptor( )
+  public final ImageDescriptor getImageDescriptor( )
   {
     final IKalypsoTheme theme = getElement();
 
@@ -138,24 +137,18 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     if( !status.isOK() )
       return getIconFromStatus( status );
 
-    if( !(theme instanceof AbstractKalypsoTheme) )
-      return null;
-
     return getIcon();
   }
 
-  private ImageDescriptor getIcon( )
+  private final ImageDescriptor getIcon( )
   {
     final IKalypsoTheme theme = getElement();
     final String legendIcon = theme.getLegendIcon();
     setExternIconUrn( legendIcon );
 
-    if( m_externIconUrn != null )
-      return getExternalIcon();
-
-    final ImageDescriptor internalImage = getInternalIcon();
-    if( internalImage != null )
-      return internalImage;
+    final ImageDescriptor externalIcon = getExternalIcon();
+    if( externalIcon != null )
+      return externalIcon;
 
     return theme.getDefaultIcon();
   }
@@ -210,6 +203,9 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 
   protected Image createExternalIcon( final String externIconUrn )
   {
+    if( externIconUrn == null )
+      return null;
+
     /* Resolve the URL. */
     final URL absoluteUrl = getLegendIconURL( externIconUrn );
 
@@ -229,12 +225,12 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
    * 
    * @return The resolved URL for the legend icon or null, if none could be created.
    */
-  private URL getLegendIconURL( final String externIconUrn1 )
+  private URL getLegendIconURL( final String externIconUrn )
   {
     try
     {
       /* A URL or URN was given. */
-      if( externIconUrn1.startsWith( "urn" ) ) //$NON-NLS-1$
+      if( externIconUrn.startsWith( "urn" ) ) //$NON-NLS-1$
       {
         // search for url
         final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
@@ -242,18 +238,15 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
         if( baseCatalog == null )
           return null;
 
-        final String uri = baseCatalog.resolve( externIconUrn1, externIconUrn1 );
-        if( uri == null || uri.equals( externIconUrn1 ) )
+        final String uri = baseCatalog.resolve( externIconUrn, externIconUrn );
+        if( uri == null || uri.equals( externIconUrn ) )
           return null;
 
-        /* Resolve the URL. */
-        final URL absoluteUrl = new URL( uri );
-
-        return absoluteUrl;
+        return new URL( uri );
       }
 
       final URL context = getElement().getContext();
-      return UrlResolverSingleton.resolveUrl( context, externIconUrn1 );
+      return UrlResolverSingleton.resolveUrl( context, externIconUrn );
     }
     catch( final MalformedURLException e )
     {
@@ -261,11 +254,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 
       return null;
     }
-  }
-
-  protected ImageDescriptor getInternalIcon( )
-  {
-    return null;
   }
 
   @Override
