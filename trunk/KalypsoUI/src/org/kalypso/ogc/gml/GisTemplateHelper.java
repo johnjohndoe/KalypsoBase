@@ -49,14 +49,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -75,7 +72,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -205,14 +201,6 @@ public class GisTemplateHelper
     return (Featuretemplate) unmarshaller.unmarshal( is );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps ) throws CoreException, IOException, JAXBException, SAXException, ParserConfigurationException
-  {
-    // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return GisTemplateHelper.loadGisMapView( new InputSource( new StringReader( contents ) ) );
-  }
-
   public static final Gismapview loadGisMapView( final IStorage storage ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
   {
     InputStream inputStream = null;
@@ -261,25 +249,6 @@ public class GisTemplateHelper
     xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
     xr.parse( is );
     return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
-  }
-
-  /**
-   * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
-   * value ersetzt. Funktioniert nur zeilenweise, d.h.
-   * 
-   * @param file
-   * @param replaceProps
-   * @return Gistableview
-   * @throws CoreException
-   * @throws CoreException
-   * @throws IOException
-   * @throws JAXBException
-   */
-  public static Gistableview loadGisTableview( final IFile file, final Properties replaceProps ) throws CoreException, IOException, JAXBException
-  {
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return GisTemplateHelper.loadGisTableview( new InputSource( new StringReader( contents ) ) );
   }
 
   public static Gistableview loadGisTableview( final IFile file ) throws CoreException, JAXBException

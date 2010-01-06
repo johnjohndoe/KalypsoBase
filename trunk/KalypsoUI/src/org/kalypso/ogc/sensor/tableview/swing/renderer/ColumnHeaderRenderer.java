@@ -73,8 +73,8 @@ public class ColumnHeaderRenderer implements TableCellRenderer
   /** The current pressed column (-1 for no column). */
   private int m_pressedColumn = -1;
 
-  /** The three buttons that are used to render the table header cells. */
-  private final JButton m_normalButton;
+  /** The button that is used to render the table header cells. */
+  private final JButton m_button;
 
   /**
    * Creates a new button renderer.
@@ -85,12 +85,12 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
     final Border border = UIManager.getBorder( "TableHeader.cellBorder" ); //$NON-NLS-1$
 
-    m_normalButton = new JButton();
-    m_normalButton.setMargin( new Insets( 0, 0, 0, 0 ) );
-    m_normalButton.setHorizontalAlignment( SwingConstants.CENTER );
-    m_normalButton.setHorizontalTextPosition( SwingConstants.RIGHT );
+    m_button = new JButton();
+    m_button.setMargin( new Insets( 0, 0, 0, 0 ) );
+    m_button.setHorizontalAlignment( SwingConstants.CENTER );
+    m_button.setHorizontalTextPosition( SwingConstants.RIGHT );
 
-    m_normalButton.setBorder( border );
+    m_button.setBorder( border );
   }
 
   /**
@@ -113,22 +113,23 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
     if( header != null )
     {
-      m_normalButton.setForeground( header.getForeground() );
-      m_normalButton.setBackground( header.getBackground() );
-      m_normalButton.setFont( header.getFont() );
+      m_button.setForeground( header.getForeground() );
+      m_button.setBackground( header.getBackground() );
+      m_button.setFont( header.getFont() );
     }
 
-    m_normalButton.getModel().setPressed( isPressed );
-    m_normalButton.getModel().setArmed( isPressed );
+    m_button.getModel().setPressed( isPressed );
+    m_button.getModel().setArmed( isPressed );
 
+    
     final String text = getText( value );
     final Icon icon = getIcon( value );
 
-    m_normalButton.setText( text == null ? "" : text.toString() ); //$NON-NLS-1$
-    m_normalButton.setIcon( icon );
-    m_normalButton.setPressedIcon( icon );
+    m_button.setText( text == null ? "" : text.toString() ); //$NON-NLS-1$
+    m_button.setIcon( icon );
+    m_button.setPressedIcon( icon );
 
-    return m_normalButton;
+    return m_button;
   }
 
   private String getText( final Object tvc )

@@ -74,7 +74,7 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
-      refreshViewer( null );
+      refreshViewer( MapModellNode.this );
     }
 
     /**
@@ -83,7 +83,7 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
-      refreshViewer( null );
+      refreshViewer( MapModellNode.this );
     }
 
     /**
@@ -93,8 +93,7 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
-      final TreeViewer viewer = getViewer();
-      ViewerUtilities.refresh( viewer, true );
+      refreshViewer( MapModellNode.this );
     }
   };
 

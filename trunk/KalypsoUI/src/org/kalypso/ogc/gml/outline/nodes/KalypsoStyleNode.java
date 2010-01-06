@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.nodes;
 
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoStyleListener;
 
@@ -54,7 +53,7 @@ abstract class KalypsoStyleNode<T> extends AbstractThemeNode<T>
     @Override
     public void styleChanged( )
     {
-      ViewerUtilities.refresh( getViewer(), KalypsoStyleNode.this, true );
+      refreshViewer( KalypsoStyleNode.this );
     }
   };
 

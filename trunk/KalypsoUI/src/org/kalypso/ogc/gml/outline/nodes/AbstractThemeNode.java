@@ -104,6 +104,11 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     disposeChildren();
   }
 
+  public void clear( )
+  {
+    disposeChildren();
+  }
+
   private void disposeChildren( )
   {
     if( m_childNodes == null )
@@ -209,10 +214,11 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   }
 
   @Override
-  public final IThemeNode[] getChildren( )
+  public IThemeNode[] getChildren( )
   {
     /* Dispose all old children */
-    disposeChildren();
+    if( m_childNodes != null )
+      return m_childNodes;
 
     final Object[] children = getElementChildren();
     m_childNodes = NodeFactory.createNodes( this, children );
@@ -288,6 +294,8 @@ abstract class AbstractThemeNode<T> implements IThemeNode
 
   protected void refreshViewer( final IThemeNode elementToRefresh )
   {
+    elementToRefresh.clear();
+
     ViewerUtilities.refresh( getViewer(), elementToRefresh, true );
   }
 
