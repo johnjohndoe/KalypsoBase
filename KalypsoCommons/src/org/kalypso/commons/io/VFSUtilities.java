@@ -272,9 +272,7 @@ public class VFSUtilities
         /* If the destination is only a directory, use the sources filename for the destination file. */
         FileObject destinationFile = destination;
         if( FileType.FOLDER.equals( destination.getType() ) )
-        {
           destinationFile = destination.resolveFile( source.getName().getBaseName() );
-        }
 
         if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize() )
         {
