@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kalypso.commons.performance.TimeLogger;
@@ -74,12 +79,12 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
   {
     // load a surface from a file
 
-    /*final URL tinLocation = getClass().getResource( "triangulatedSurface.xml.gz" );
+    final URL tinLocation = getClass().getResource( "triangulatedSurface.xml.gz" );
     assertNotNull( tinLocation );
 
     final InputStream is = new GZIPInputStream( tinLocation.openStream() );
     final byte[] buf = IOUtils.toByteArray( is );
-    is.close();*/
+    is.close();
 
     final TimeLogger allLogger = new TimeLogger();
 
@@ -87,8 +92,8 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
     {
       final TimeLogger oneSurfaceLogger = new TimeLogger();
 
-      //final ByteArrayInputStream bais = new ByteArrayInputStream( buf );
-      final GM_TriangulatedSurface surface = readTriangles( new InputSource( MessungTriangulatedSurfaceContentHandlerTest.class.getResourceAsStream( "triangulatedSurface.xml" ) ) );
+      final ByteArrayInputStream bais = new ByteArrayInputStream( buf );
+      final GM_TriangulatedSurface surface = readTriangles( new InputSource( bais ) );
       final String msg = String.format( "Read %d triangles in ", surface.size() );
 
       assertSurface( surface );
@@ -103,7 +108,7 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
 
   private void assertSurface( final GM_TriangulatedSurface surface )
   {
-    assertEquals( 245, surface.size() );
+    assertEquals( 244, surface.size() );
 
     final GM_Triangle triangle = surface.get( 0 );
     final String srs = triangle.getCoordinateSystem();
