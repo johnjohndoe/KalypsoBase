@@ -424,7 +424,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
-
         public void run( )
         {
           final SafeRunnable safeRunnable = new SafeRunnable()
@@ -478,6 +477,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( projection == null )
       return Double.NaN;
 
+    // TODO: hot-spot: always recalculates the scale, should be cached
     return projection.getScale();
   }
 

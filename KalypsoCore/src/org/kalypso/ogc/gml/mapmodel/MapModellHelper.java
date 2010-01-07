@@ -48,13 +48,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
@@ -110,44 +107,7 @@ public class MapModellHelper
    */
   public static ICoreRunnableWithProgress createWaitForMapOperation( final Object panelOrModell )
   {
-    final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
-    {
-      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
-      {
-        monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModellHelper.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-
-        Thread.sleep( 250 );
-
-        while( true )
-        {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-
-          try
-          {
-            IMapModell modell;
-            if( panelOrModell instanceof IMapPanel )
-              modell = ((IMapPanel) panelOrModell).getMapModell();
-            else if( panelOrModell instanceof IMapModell )
-              modell = (IMapModell) panelOrModell;
-            else
-              throw new IllegalArgumentException();
-
-            if( isMapLoaded( modell ) )
-              return Status.OK_STATUS;
-
-            Thread.sleep( 250 );
-
-            monitor.worked( 10 );
-          }
-          catch( final InterruptedException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
-        }
-      }
-    };
-    return waitForMapOperation;
+    return new WaitForMapOperation( panelOrModell );
   }
 
   /**
