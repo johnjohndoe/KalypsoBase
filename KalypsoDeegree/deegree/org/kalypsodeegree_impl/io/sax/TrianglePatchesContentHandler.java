@@ -35,16 +35,12 @@
  */
 package org.kalypsodeegree_impl.io.sax;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -53,66 +49,52 @@ import org.xml.sax.XMLReader;
  * 
  * @author Gernot Belger
  */
-public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler implements ITriangleHandler
+public class TrianglePatchesContentHandler extends GMLElementContentHandler implements ITriangleHandler
 {
-  public final static String ELEMENT_TRIANGULATED_SURFACE = "TriangulatedSurface";
+  public static final String ELEMENT_TRIANGLE_PATCH = "trianglePatches";
 
-  private String m_crs;
+  private final ITriangleHandler m_triangleHandler;  
 
-  private final UnmarshallResultEater m_resultEater;
+  public TrianglePatchesContentHandler( final ITriangleHandler triangleHandler, final String defaultSrs, final XMLReader xmlReader )
+  { 
+    super( NS.GML3, ELEMENT_TRIANGLE_PATCH, xmlReader, defaultSrs, ( ContentHandler ) triangleHandler );    
+    m_triangleHandler = triangleHandler;    
+  }
 
-  private List<GM_Triangle> m_triangles = new ArrayList<GM_Triangle>();
+  @Override
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
+  {
+    setDelegate( new TriangleContentHandler( this, m_defaultSrs, m_xmlReader ) );
+  }
 
-  private GM_TriangulatedSurface_Impl m_triangulatedSurface;
+  /**
+   * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void doEndElement( final String uri, final String localName, final String name )
+  {
+    
+  }
   
-  public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, XMLReader xmlReader )
-  {
-    super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader );
-
-    m_resultEater = resultEater;
-  }
-
-  @Override
-  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
-  {
-    m_crs = ContentHandlerUtils.parseSrsFromAttributes( attributes, null );
-    setDelegate( new TrianglePatchesContentHandler( this, m_crs, m_xmlReader ) );
-  }
-
-  @Override
-  public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  {
-    try
-    { 
-      m_triangulatedSurface = new GM_TriangulatedSurface_Impl( m_triangles, m_crs );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-
-      throw new SAXException( "Unable to create GM_TriangulatedSurface", e );
-    }
-    finally
-    {
-      m_triangles = null;
-    }
-
-    m_resultEater.unmarshallSuccesful( m_triangulatedSurface );
-  }
-
   /**
    * @see org.kalypsodeegree_impl.io.sax.ITriangleHandler#handleTriangle(org.kalypsodeegree.model.geometry.GM_Triangle)
    */
   @Override
   public void handleElement( final GM_Triangle triangle )
   {
-    if( m_crs == null )
-      m_crs = triangle.getCoordinateSystem();
-
-    if( m_triangles == null )
-      m_triangles = new ArrayList<GM_Triangle>();
-
-      m_triangles.add( triangle );
-      // TODO: project triangles to my srs?
+    m_triangleHandler.handleElement( triangle );
+  }
+  
+  @Override
+  public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
+  {
+    if( localName.equals( TriangleContentHandler.ELEMENT_TRIANGLE ) )
+    {
+      ContentHandler triangleContentHandler = new TriangleContentHandler( this, m_defaultSrs, m_xmlReader );
+      delegate( triangleContentHandler );    
+      triangleContentHandler.startElement( uri, localName, name, atts );        
+    }
+    else
+      throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator );
   }
 }

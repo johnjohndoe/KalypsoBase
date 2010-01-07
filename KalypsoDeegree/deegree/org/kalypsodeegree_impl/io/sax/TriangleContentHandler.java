@@ -35,84 +35,77 @@
  */
 package org.kalypsodeegree_impl.io.sax;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A content handler which parses a gml:TriangulatedSurface element.<br>
- * Parsing must hence starts with the gml:TriangulatedSurface element.<br>
+ * A content handler which parses a gml:LinearRing element.<br>
  * 
  * @author Gernot Belger
  */
-public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler implements ITriangleHandler
+public class TriangleContentHandler extends GMLElementContentHandler implements IRingHandler
 {
-  public final static String ELEMENT_TRIANGULATED_SURFACE = "TriangulatedSurface";
+  public static final String ELEMENT_TRIANGLE = "Triangle";
 
-  private String m_crs;
+  private final ITriangleHandler m_triangleHandler;
 
-  private final UnmarshallResultEater m_resultEater;
+  private GM_Ring m_ring;
 
-  private List<GM_Triangle> m_triangles = new ArrayList<GM_Triangle>();
-
-  private GM_TriangulatedSurface_Impl m_triangulatedSurface;
-  
-  public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, XMLReader xmlReader )
+  public TriangleContentHandler( final ITriangleHandler triangleHandler, final String defaultSrs, final XMLReader xmlReader )
   {
-    super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader );
+    super( NS.GML3, ELEMENT_TRIANGLE, xmlReader, defaultSrs, triangleHandler  );
 
-    m_resultEater = resultEater;
+    m_triangleHandler = triangleHandler;
   }
-
+  
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    m_crs = ContentHandlerUtils.parseSrsFromAttributes( attributes, null );
-    setDelegate( new TrianglePatchesContentHandler( this, m_crs, m_xmlReader ) );
+    setDelegate( new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader ) );
   }
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  {
+  { 
+    if( m_ring == null )
+      throw new SAXParseException( "Triangle contains no valid exterior.", m_locator );
+
+    final GM_Position[] ring = m_ring.getPositions();
+    
+    if( ring.length != 4 )
+      throw new SAXParseException( "Triangle must contain exactly 4 coordinates: " + ring.length, m_locator );
+    
+    final String srs = m_ring.getCoordinateSystem();
+    m_ring = null;
+
     try
-    { 
-      m_triangulatedSurface = new GM_TriangulatedSurface_Impl( m_triangles, m_crs );
+    {
+      final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( ring[0], ring[1], ring[2], srs );
+      m_triangleHandler.handleElement( gmTriangle );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
 
-      throw new SAXException( "Unable to create GM_TriangulatedSurface", e );
+      throw new SAXParseException( "Failed to create triangle", m_locator, e );
     }
-    finally
-    {
-      m_triangles = null;
-    }
-
-    m_resultEater.unmarshallSuccesful( m_triangulatedSurface );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.ITriangleHandler#handleTriangle(org.kalypsodeegree.model.geometry.GM_Triangle)
+   * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
    */
   @Override
-  public void handleElement( final GM_Triangle triangle )
+  public void handleElement( final GM_Ring ring )
   {
-    if( m_crs == null )
-      m_crs = triangle.getCoordinateSystem();
-
-    if( m_triangles == null )
-      m_triangles = new ArrayList<GM_Triangle>();
-
-      m_triangles.add( triangle );
-      // TODO: project triangles to my srs?
+    m_ring = ring;
   }
 }
