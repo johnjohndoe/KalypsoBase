@@ -132,6 +132,6 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    */
   public ContentHandler createContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final String uri, final String localName, final String name, final Attributes atts )
   {
-    return new TriangulatedSurfaceContentHandler( resultEater );
+    return new TriangulatedSurfaceContentHandler( resultEater, xmlReader );
   }
 }
