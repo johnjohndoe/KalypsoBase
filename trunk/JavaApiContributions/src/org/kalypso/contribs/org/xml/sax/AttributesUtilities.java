@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -68,5 +68,24 @@ public class AttributesUtilities
 
     return defaultValue;
   }
-
+  
+   /**
+   * Returns the attribute value as an Integer for given qnmae (naemsapce:localPart).
+   * 
+   * @param defaultValue
+   *            If attribute is not found, returns this value.
+   */
+  public static Integer getAttributeIntegerValue( final Attributes atts, final String namespace, final String localPart, final String defaultValue )
+  {
+    final String value = getAttributeValue( atts, namespace, localPart, defaultValue );
+    
+    if( value != null )
+    {
+      return Integer.valueOf( value );
+    }
+    
+    return null;
+  }
+  
+  
 }
