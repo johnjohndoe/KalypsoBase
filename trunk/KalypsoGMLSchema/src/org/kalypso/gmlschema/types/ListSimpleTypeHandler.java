@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
@@ -78,13 +79,14 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
 
     final List<Object> list = new ArrayList<Object>();
 
-    final String[] strings = xmlString.split( " +" ); //$NON-NLS-1$
-    for( final String string : strings )
+    StringTokenizer st = new StringTokenizer( xmlString );    
+    while ( st.hasMoreTokens() )
     {
-      final Object object = m_baseTypeHandler.convertToJavaValue( string );
-      list.add( object );
+      String token = st.nextToken();
+      final Object object = m_baseTypeHandler.convertToJavaValue( token );
+      list.add( object );  
     }
-
+    
     return list;
   }
 
