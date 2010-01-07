@@ -52,8 +52,13 @@ import org.eclipse.swt.layout.GridData;
 /**
  * @author doemming
  */
-public class SWTUtilities
+public final class SWTUtilities
 {
+  private SWTUtilities( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   private static final Map<String, Integer> SWT_MAP = new HashMap<String, Integer>();
   static
   {

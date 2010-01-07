@@ -57,6 +57,7 @@ public final class ChartFactory
    */
   static Plot createObservationPlot( final DiagView template ) throws SensorException
   {
+    // nonsense
     synchronized( template )
     {
       final ObservationPlot plot = new ObservationPlot( template );
