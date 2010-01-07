@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -386,7 +386,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
 
     // Put features in set in order to avoid duplicates
-    final Set<Feature> features = new HashSet<Feature>();
+    final Set<Feature> features = new LinkedHashSet<Feature>();
     final IStylePaintable paintDelegate = new IStylePaintable()
     {
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
