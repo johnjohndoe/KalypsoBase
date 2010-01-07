@@ -150,9 +150,7 @@ public final class TableViewUtils
    */
   public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-    final Obstableview baseTemplate = (Obstableview) OTT_JC.createUnmarshaller().unmarshal( ins );
-
-    return baseTemplate;
+    return (Obstableview) OTT_JC.createUnmarshaller().unmarshal( ins );
   }
 
   /**
