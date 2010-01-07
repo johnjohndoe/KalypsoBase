@@ -111,7 +111,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Belger
  */
-public class GisTemplateHelper
+public final class GisTemplateHelper
 {
   public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
 
@@ -126,7 +126,7 @@ public class GisTemplateHelper
     // never instantiate this class
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final IStorage file ) throws CoreException, IOException, JAXBException
+  public static Featuretemplate loadGisFeatureTemplate( final IStorage file ) throws CoreException, IOException, JAXBException
   {
     InputStream is = null;
 
