@@ -91,18 +91,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    */
-  private final String m_externIconUrn = null;
+  private String m_externIconUrn = null;
 
   /**
    * The context, if the theme is part of a template loaded from a file. May be null. Used to resolve dependend
    * resources like the legend-icon.
    */
-  private final URL m_context = null;
-
-  /**
-   * Stores an icon from an external URL or URN and which can be used for the layer in a legend. May be null.
-   */
-  private final org.eclipse.swt.graphics.Image m_externIcon = null;
+  private URL m_context = null;
 
   private I10nString m_name;
 
@@ -188,9 +183,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     if( m_standardThemeIcon != null )
       m_standardThemeIcon.dispose();
-
-    if( m_externIcon != null )
-      m_externIcon.dispose();
   }
 
   /**
@@ -475,6 +467,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     if( ObjectUtils.equals( m_externIconUrn, legendIcon ) && ObjectUtils.equals( m_context, context ) )
       return;
+
+    m_externIconUrn = legendIcon;
+    m_context = context;
 
     fireStatusChanged( this );
   }
