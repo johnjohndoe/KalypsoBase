@@ -733,23 +733,25 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
     try
     {
-      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
-
-      final String typeID = modelspec.getTypeID();
-
       // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
+      final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+      String defaultUseWps = Boolean.toString( serviceEndpoint != null );
+
+      // REMARK: Instead of the WPS-Endpoint a different system property is checked...
       // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
       // and find out, which ones are available for calculation this typeID.
       // If more than one is available, the user should be able to choose.
-      if( serviceEndpoint == null )
+      final boolean remoteCalculation = Boolean.parseBoolean( System.getProperty( "org.kalypso.hwv.use.wps", defaultUseWps ) ); //$NON-NLS-1$
+      if( !remoteCalculation )
       {
         // TODO: the extension-point for ISimulationService is not used anymore. Remove it.
-// final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+        // final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
         final ISimulationService calcService = new LocalSimulationService();
         final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
         return cjHandler.runJob( calcCaseFolder, progress.newChild( 1000 ) );
       }
 
+      final String typeID = modelspec.getTypeID();
       final WPSRequest simulationJob = new WPSRequest( typeID, serviceEndpoint, 1000 * 60 * 60 );
       final SimulationDelegate delegate = new SimulationDelegate( typeID, calcCaseFolder, modelspec );
       delegate.init();
