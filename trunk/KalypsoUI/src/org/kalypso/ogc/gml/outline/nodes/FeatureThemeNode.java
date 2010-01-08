@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -180,6 +180,8 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
 
     /* Found the right one, need this image icon. */
     final ImageDescriptor descriptor = imageChild.getImageDescriptor();
+    if( descriptor == null )
+      return null;
 
     /* Create the Image. */
     return descriptor.createImage();
