@@ -40,27 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.jaxb;
 
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
-
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.commons.bind.SchemaCache;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.template.gismapview.ObjectFactory;
-import org.xml.sax.SAXException;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
@@ -71,9 +62,7 @@ public class TemplateUtilitites
 {
   private static final String SCHEMA_PATH = "etc/schemas/template/"; //$NON-NLS-1$
 
-  private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
-
-  private final static Map<String, Schema> SCHEMA_MAP = new HashMap<String, Schema>();
+  private static final SchemaCache SCHEMA_CACHE = new SchemaCache( KalypsoCorePlugin.getID(), SCHEMA_PATH );
 
   /* GisMapView */
   public static final JAXBContext JC_GISMAPVIEW = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -103,40 +92,17 @@ public class TemplateUtilitites
 
   public static Schema getFeatureviewSchema( )
   {
-    return getTemplateSchema( "featureview.xsd" ); //$NON-NLS-1$
+    return SCHEMA_CACHE.getSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
 
   public static Schema getObstablereportSchema( )
   {
-    return getTemplateSchema( "observationReportTable.xsd" ); //$NON-NLS-1$
+    return SCHEMA_CACHE.getSchema( "observationReportTable.xsd" ); //$NON-NLS-1$
   }
 
   public static synchronized Schema getGismapviewSchema( )
   {
-    return getTemplateSchema( "gismapview.xsd" ); //$NON-NLS-1$
-  }
-
-  private static synchronized Schema getTemplateSchema( final String schemaFilename )
-  {
-    if( !SCHEMA_MAP.containsKey( schemaFilename ) )
-    {
-      final URL schemaUrl = PluginUtilities.findResource( KalypsoCorePlugin.getID(), SCHEMA_PATH + schemaFilename );
-
-      try
-      {
-        if( schemaUrl != null )
-        {
-          final Schema schema = SCHEMA_FACTORY.newSchema( schemaUrl );
-          SCHEMA_MAP.put( schemaFilename, schema );
-        }
-      }
-      catch( final SAXException e )
-      {
-        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return SCHEMA_MAP.get( schemaFilename );
+    return SCHEMA_CACHE.getSchema( "gismapview.xsd" ); //$NON-NLS-1$
   }
 
   public static Marshaller createGismapviewMarshaller( final String encoding ) throws JAXBException, PropertyException
