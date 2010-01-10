@@ -465,7 +465,7 @@ public class FeatureHelper
    * @throws UnsupportedOperationException
    *           If type of object is not supported for clone
    */
-  private static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
+  public static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
   {
     if( object == null )
       return null;
