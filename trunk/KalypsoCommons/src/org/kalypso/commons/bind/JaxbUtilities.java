@@ -89,6 +89,7 @@ public final class JaxbUtilities
     final ClassLoader contextClassLoader = currentThread.getContextClassLoader();
     try
     {
+
       // REMARK/HACK: this is a crude hack to enforce the right class loader if invoked from an Ant-Task.
       // If we do not do this, the default JAXBContext (com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl.class)
       // will be used instead of JAXB-RI (currently 2.1.7 in the KalypsoCommons plug-in).
