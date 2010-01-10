@@ -907,10 +907,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   private String showUrl( final IWizardPage page )
   {
     final String html = getHtmlForPage( page );
-
+// TODO implement some search/replace, so we only need one html template for all pages
     m_ignoreNextCangeLocation = true;
     if( html.length() > 0 )
       m_browser.setUrl( html );
+
     return html;
   }
 
