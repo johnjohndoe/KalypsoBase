@@ -74,7 +74,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     m_listeners.add( listener );
   }
 
-  public final void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public final void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_listeners.remove( listener );
   }
@@ -129,9 +129,8 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
 
   private void fireSelectionChanged( final SelectionChangedEvent e, final ISelectionChangedListener[] listenersArray )
   {
-    for( int i = 0; i < listenersArray.length; i++ )
+    for( final ISelectionChangedListener l : listenersArray )
     {
-      final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
         public void run()
