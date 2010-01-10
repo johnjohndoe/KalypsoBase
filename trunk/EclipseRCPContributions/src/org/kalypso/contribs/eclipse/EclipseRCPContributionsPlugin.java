@@ -3,8 +3,13 @@ package org.kalypso.contribs.eclipse;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.jobs.CronJobMutexCache;
 import org.kalypso.contribs.eclipse.jobs.CronJobUtilities;
 import org.osgi.framework.BundleContext;
@@ -67,15 +72,15 @@ public class EclipseRCPContributionsPlugin extends Plugin
    * 
    * @return The string from the plugin's resource bundle, or 'key' if not found.
    */
-  public static String getResourceString( String key )
+  public static String getResourceString( final String key )
   {
-    ResourceBundle bundle = EclipseRCPContributionsPlugin.getDefault().getResourceBundle();
+    final ResourceBundle bundle = EclipseRCPContributionsPlugin.getDefault().getResourceBundle();
 
     try
     {
       return (bundle != null) ? bundle.getString( key ) : key;
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return key;
     }
@@ -85,7 +90,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
    * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -95,7 +100,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
     {
       m_resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.EclipseRCPContributionsPluginResources" );
     }
-    catch( MissingResourceException x )
+    catch( final MissingResourceException x )
     {
       m_resourceBundle = null;
     }
@@ -104,14 +109,32 @@ public class EclipseRCPContributionsPlugin extends Plugin
     m_cronJobMutexCache = new CronJobMutexCache();
 
     /* Start all cron jobs. */
-    CronJobUtilities.startAllCronJobs();
+    final Job cronStarter = new Job( "Starting Cron-Jobs" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          CronJobUtilities.startAllCronJobs();
+          return Status.OK_STATUS;
+        }
+        catch( final CoreException e )
+        {
+          return e.getStatus();
+        }
+      }
+    };
+    cronStarter.setSystem( true );
+    // Delay it by 5sec, else we may get a BundleStatusException (is 5sec always good?)
+    cronStarter.schedule( 5000 );
   }
 
   /**
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     /* Cancel all remaining cron jobs. */
     CronJobUtilities.cancelAllCronJobs();
@@ -143,7 +166,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
    *          The mutex string.
    * @return The mutex for the given mutex string.
    */
-  public ISchedulingRule getCronJobMutex( String mutexString )
+  public ISchedulingRule getCronJobMutex( final String mutexString )
   {
     return m_cronJobMutexCache.getMutex( mutexString );
   }
