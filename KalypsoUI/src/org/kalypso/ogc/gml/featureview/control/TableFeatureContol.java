@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -92,6 +93,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final boolean showToolbar, final boolean showContextMenu )
   {
     super( ftp );
+
+    Assert.isNotNull( ftp );
 
     m_factory = factory;
     m_selectionManager = selectionManager;
