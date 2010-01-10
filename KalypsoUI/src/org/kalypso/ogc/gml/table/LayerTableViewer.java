@@ -359,6 +359,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       applyFilter( layer );
     }
 
+    setSorter( m_sorter );
     refreshAll();
     m_isApplyTemplate = false;
   }
