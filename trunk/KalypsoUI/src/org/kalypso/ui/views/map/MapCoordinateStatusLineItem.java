@@ -43,6 +43,7 @@ package org.kalypso.ui.views.map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -51,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -80,7 +82,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
 {
-
   private final class UpdateLabelJob extends UIJob
   {
     private GM_Point m_gmPoint;
@@ -99,7 +100,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       /* Check twice, perhaps m_label was disposed */
-      if( m_gmPoint != null && !m_label.isDisposed() ) 
+      if( m_gmPoint != null && !m_label.isDisposed() )
       {
         final double x = m_gmPoint.getX();
         final double y = m_gmPoint.getY();
@@ -169,7 +170,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     imageLabel.setImage( infoImage );
 
     /* Set the CRS info. */
-    imageLabel.setToolTipText( CRSHelper.getTooltipText( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
+    startCrsInfoJob( imageLabel );
 
     /* Add some listeners. */
     m_composite.addDisposeListener( new DisposeListener()
@@ -188,6 +189,49 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     m_updateLabelJob.setSystem( true );
 
     return m_composite;
+  }
+
+  private void startCrsInfoJob( final Label infoLabel )
+  {
+    final Display display = infoLabel.getDisplay();
+
+    /* Fetch CRS in separate, non-ui job, because it is a long running operation */
+    final Job fetchCrsJob = new Job( "Fetching Kalypso CoordinateSystem" ) //$NON-NLS-1$
+    {
+      /**
+       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        /*
+         * Check early for dispose, because item is created on workbench startup but soon disposed again, so fetching
+         * srs is not necessary.
+         */
+        if( infoLabel.isDisposed() )
+          return Status.OK_STATUS;
+
+        final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        final UIJob uiJob = new UIJob( display, "Setting crs info" ) //$NON-NLS-1$
+        {
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor progress )
+          {
+            if( !infoLabel.isDisposed() )
+              infoLabel.setToolTipText( CRSHelper.getTooltipText( coordinateSystem ) );
+            return Status.OK_STATUS;
+          }
+        };
+        uiJob.setSystem( true );
+        uiJob.schedule();
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    fetchCrsJob.setPriority( Job.LONG );
+    fetchCrsJob.setSystem( true );
+    fetchCrsJob.schedule();
   }
 
   /**
