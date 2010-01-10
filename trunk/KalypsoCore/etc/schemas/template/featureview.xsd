@@ -404,7 +404,7 @@
 					<xs:attribute name="verticalSpacing" type="xs:int" use="optional" default="5" />
 					<xs:attribute name="marginWidth" type="xs:int" use="optional" default="5" />
 					<xs:attribute name="marginHeight" type="xs:int" use="optional" default="5" />
-					<xs:attribute name="numColumns" type="xs:int" use="optional" default="2" />
+					<xs:attribute name="numColumns" type="xs:int" use="optional" default="1" />
 					<xs:attribute name="makeColumnsEqualWidth" type="xs:boolean" use="optional" default="false" />
 				</xs:extension>
 			</xs:complexContent>
