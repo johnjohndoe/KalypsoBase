@@ -87,12 +87,23 @@ class FeatureTypeStylePainter implements IStylePainter
 
     final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
 
+    /* Wrap paintable in order to filter by type name */
+    final IStylePaintable delegatePaintable = createDelegatePaintable( paintable );
+
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
       final IStylePainter rulePainter = StylePainterFactory.create( rule, qname, m_features );
-      rulePainter.paint( paintable, childProgress );
+      rulePainter.paint( delegatePaintable, childProgress );
     }
   }
 
+  private IStylePaintable createDelegatePaintable( final IStylePaintable paintable )
+  {
+    final QName featureTypeName = m_style.getFeatureTypeName();
+    if( featureTypeName == null )
+      return paintable;
+
+    return new FilterByTypeStylePaintable( paintable, featureTypeName );
+  }
 }

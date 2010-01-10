@@ -50,9 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -118,23 +116,15 @@ class RulePainter implements IStylePainter
       final Filter filter = m_rule.getFilter();
       if( filterFeature( paintable, feature, filter ) )
       {
-        // use hashes for faster GMLSchemaUtilities.substitutes call
-        final long m_fullID = QNameUtilities.getFullID( m_qname );
-        final long m_localID = QNameUtilities.getLocalID( m_qname );
-
-        /* Only paint features which applies to the given qname */
-        if( m_qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), m_qname, m_fullID, m_localID ) )
+        final Symbolizer[] symbolizers = m_rule.getSymbolizers();
+        for( final Symbolizer symbolizer : symbolizers )
         {
-          final Symbolizer[] symbolizers = m_rule.getSymbolizers();
-          for( final Symbolizer symbolizer : symbolizers )
+          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+          // TODO: should'nt there be at least some debug output if this happens?
+          if( displayElement != null )
           {
-            final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-            // TODO: should'nt there be at least some debug output if this happens?
-            if( displayElement != null )
-            {
-              if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
-                paintable.paint( displayElement, progress.newChild( 100 ) );
-            }
+            if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
+              paintable.paint( displayElement, progress.newChild( 100 ) );
           }
         }
       }
