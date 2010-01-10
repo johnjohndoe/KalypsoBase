@@ -230,14 +230,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return true;
   }
 
-  public Control createControl( final Composite parent, final int style, final IFeatureType ft )
+  public Control createControl( final Composite parent, final int defaultStyle, final IFeatureType ft )
   {
     final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
 
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
-    m_control = createControl( parent, style, view );
+    m_control = createControl( parent, defaultStyle, view );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -246,11 +246,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_control;
   }
 
-  public Control createControl( final Composite parent, final int style )
+  public final Control createControl( final Composite parent, final int defaultStyle )
   {
     try
     {
-      return createControl( parent, style, getFeature().getFeatureType() );
+      return createControl( parent, defaultStyle, getFeature().getFeatureType() );
     }
     catch( final Throwable t )
     {
@@ -263,7 +263,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
   }
 
-  private Control createControl( final Composite parent, final int style, final ControlType controlType )
+  private Control createControl( final Composite parent, final int defaultStyle, final ControlType controlType )
   {
     final Feature feature = getFeature();
 
@@ -272,7 +272,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     final IAnnotation annotation = propertyType == null ? null : propertyType.getAnnotation();
 
-    final Control control = createControlFromControlType( parent, style, controlType, propertyType, annotation );
+    final String controlStyle = controlType.getStyle();
+    final int styleToUse = controlStyle == null ? defaultStyle : SWTUtilities.createStyleFromString( controlStyle );
+
+    final Control control = createControlFromControlType( parent, styleToUse, controlType, propertyType, annotation );
 
     // Set tooltip: an explicitly set tooltip always wins
     final String tooltipControlText = controlType.getTooltip();
@@ -366,7 +369,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
 
     // REMARK: Special case for direct children of Tab-Folders. Setting the visibility here
-    // breaks the tab folder behavior. We assume, that the visibility of a
+    // breaks the tab folder behaviour. We assume, that the visibility of a
     // tab folder item is never changed depending on a value of a feature.
     if( !(control.getParent() instanceof org.eclipse.swt.widgets.TabFolder) )
     {
@@ -438,7 +441,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         composite.setLayout( createLayout( layoutType ) );
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
-        createControl( composite, SWT.NONE, element.getValue() );
+      {
+        final ControlType value = element.getValue();
+        final int elementStyle = SWTUtilities.createStyleFromString( value.getStyle() );
+        createControl( composite, elementStyle, value );
+      }
 
       return composite;
     }
@@ -447,9 +454,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final TabFolder tabFolderType = (TabFolder) controlType;
 
-      final int tabStyle = SWTUtilities.createStyleFromString( tabFolderType.getStyle() );
-
-      final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
+      final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, style );
 
       final List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
       for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
@@ -469,7 +474,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         {
           item.setControl( tabControl );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           item.setControl( tabControl.getParent() );
         }
@@ -481,7 +486,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( controlType instanceof LabelType )
     {
       final LabelType labelType = (LabelType) controlType;
-      final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
+      final Label label = new Label( parent, style );
 
       final String labelControlText = labelType.getText();
 
@@ -491,14 +496,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else if( controlType instanceof ValidatorLabelType )
     {
-      final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
         System.out.println( "ValidatorLabelType without property" ); //$NON-NLS-1$
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
-        final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
+        final Control control = vfc.createControl( parent, style );
         addFeatureControl( vfc );
 
         return control;
@@ -506,20 +510,17 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else if( controlType instanceof GeometryLabelType )
     {
-      final GeometryLabelType geometryLabelType = (GeometryLabelType) controlType;
       final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
-      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( geometryLabelType.getStyle() ) );
+      final Control control = vfc.createControl( parent, style );
       addFeatureControl( vfc );
 
       return control;
     }
     else if( controlType instanceof ColorLabelType )
     {
-      final ColorLabelType colorLabelType = (ColorLabelType) controlType;
-
       final ColorFeatureControl vfc = new ColorFeatureControl( feature, ftp );
 
-      final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( colorLabelType.getStyle() ) );
+      final Control control = vfc.createControl( parent, style );
 
       addFeatureControl( vfc );
 
@@ -540,7 +541,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format );
 
-      final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
+      final Control control = tfc.createControl( parent, style );
       tfc.setEditable( editorType.isEditable() );
 
       addFeatureControl( tfc );
@@ -557,7 +558,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
 
-      final Control control = cfc.createControl( parent, SWTUtilities.createStyleFromString( checkboxType.getStyle() ) );
+      final Control control = cfc.createControl( parent, style );
       cfc.setEnabled( checkboxType.isEditable() );
 
       addFeatureControl( cfc );
@@ -566,11 +567,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else if( controlType instanceof Button )
     {
-      final Button buttonType = (Button) controlType;
-
       final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
 
-      final Control control = bfc.createControl( parent, SWTUtilities.createStyleFromString( buttonType.getStyle() ) );
+      final Control control = bfc.createControl( parent, style );
 
       addFeatureControl( bfc );
 
@@ -582,7 +581,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final TupleResultFeatureControl tfc = TupleResultFeatureControl.create( editorType, feature, ftp );
 
-      final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
+      final Control control = tfc.createControl( parent, style );
 
       addFeatureControl( tfc );
 
@@ -643,7 +642,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       }
 
       /* Should a filter be added? */
-      Filter filter = comboType.getFilter();
+      final Filter filter = comboType.getFilter();
 
       /* The filter. */
       ViewerFilter viewerFilter = null;
@@ -657,11 +656,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           id = "org.kalypso.ui.featureview.filters.defaultFilter"; //$NON-NLS-1$
 
         /* Get the filter with this id. */
-        IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
-        for( IConfigurationElement element : elements )
+        final IExtensionRegistry registry = Platform.getExtensionRegistry();
+        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
+        for( final IConfigurationElement element : elements )
         {
-          String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
+          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           if( id.equals( elementId ) )
           {
             try
@@ -706,11 +705,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         }
       }
 
-      final int comboStyle = SWTUtilities.createStyleFromString( comboType.getStyle() );
-
       final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries, comparator, viewerFilter );
 
-      final Control control = cfc.createControl( parent, comboStyle );
+      final Control control = cfc.createControl( parent, style );
 
       addFeatureControl( cfc );
 
@@ -725,8 +722,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final RadioFeatureControl rfc = new RadioFeatureControl( feature, ftp, valueToSet, text );
 
-      final int radioStyle = SWTUtilities.createStyleFromString( radioType.getStyle() );
-      final Control control = rfc.createControl( parent, radioStyle );
+      final Control control = rfc.createControl( parent, style );
 
       addFeatureControl( rfc );
 
@@ -737,8 +733,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Spinner spinnerType = (Spinner) controlType;
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final SpinnerFeatureControl sfc = new SpinnerFeatureControl( feature, vpt );
-      final int spinnerStyle = SWTUtilities.createStyleFromString( spinnerType.getStyle() );
-      final org.eclipse.swt.widgets.Spinner control = sfc.createControl( parent, spinnerStyle );
+      final org.eclipse.swt.widgets.Spinner control = sfc.createControl( parent, style );
 
       control.setIncrement( (int) spinnerType.getIncrement() );
       control.setPageIncrement( (int) spinnerType.getPageIncrement() );
@@ -749,12 +744,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     else if( controlType instanceof Image )
     {
-      final Image imageType = (Image) controlType;
-
       final ImageFeatureControl ifc = new ImageFeatureControl( feature, ftp );
 
-      final int imgStyle = SWTUtilities.createStyleFromString( imageType.getStyle() );
-      final Control control = ifc.createControl( parent, imgStyle );
+      final Control control = ifc.createControl( parent, style );
 
       addFeatureControl( ifc );
 
@@ -764,7 +756,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Extensioncontrol extControl = (Extensioncontrol) controlType;
       final String extensionId = extControl.getExtensionId();
-      final int controlStyle = SWTUtilities.createStyleFromString( extControl.getStyle() );
       final List<Param> param = extControl.getParam();
       final Properties parameters = new Properties();
       for( final Param controlParam : param )
@@ -774,7 +765,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       {
         final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
         final IFeatureControl fc = controlFactory.createFeatureControl( feature, ftp, parameters );
-        final Control control = fc.createControl( parent, controlStyle );
+        final Control control = fc.createControl( parent, style );
         addFeatureControl( fc );
         return control;
       }
@@ -793,7 +784,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       fc.setFeature( feature );
 
-      final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
+      final Control control = fc.createControl( parent, style );
 
       addFeatureControl( fc );
 
@@ -814,7 +805,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       addFeatureControl( fc );
 
-      final Control control = fc.createControl( parent, SWT.NONE );
+      final Control control = fc.createControl( parent, style );
+      // FIXME: Arrg, who did this? Must be defined in .gft file!
       control.setLayoutData( new GridData() );
 
       return control;
@@ -828,10 +820,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType, final IAnnotation annotation )
   {
-    final int compStyle = style | SWTUtilities.createStyleFromString( compositeType.getStyle() );
     if( compositeType instanceof org.kalypso.template.featureview.Group )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, compStyle );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, style );
 
       final String groupControlText = ((org.kalypso.template.featureview.Group) compositeType).getText();
 
@@ -841,7 +832,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return group;
     }
 
-    return new Composite( parent, compStyle );
+    return new Composite( parent, style );
   }
 
   private Layout createLayout( final LayoutType layoutType )

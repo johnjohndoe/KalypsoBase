@@ -108,14 +108,16 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   public Control createControl( final Composite parent, final int style )
   {
     /* Create a new Composite for the toolbar. */
-    final Composite client = new Composite( parent, style );
+    final Composite client = new Composite( parent, SWT.NONE );
+    final GridLayout gridLayout = new GridLayout( 1, false );
+    gridLayout.marginWidth = 0;
+    gridLayout.marginHeight = 0;
     if( m_showToolbar )
-      client.setLayout( new GridLayout( 2, false ) );
-    else
-      client.setLayout( new GridLayout( 1, false ) );
+      gridLayout.numColumns++;
+    client.setLayout( gridLayout );
 
     /* Create the layer table viewer. */
-    m_viewer = new LayerTableViewer( client, SWT.NONE, m_target, m_factory, m_selectionManager, m_fcl );
+    m_viewer = new LayerTableViewer( client, style, m_target, m_factory, m_selectionManager, m_fcl );
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */

@@ -52,8 +52,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
@@ -102,9 +100,9 @@ public class FeatureEditor extends EditorPart
     }
   };
 
-  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
-  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget, 5, 5 );
+  private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget );
 
   /**
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
@@ -208,16 +206,12 @@ public class FeatureEditor extends EditorPart
   @Override
   public void createPartControl( final Composite parent )
   {
-    parent.setLayout( new GridLayout() );
-    parent.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final Composite composite = m_viewer.createControls( parent, SWT.V_SCROLL );
-    composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_viewer.createControls( parent, SWT.V_SCROLL );
 
     final IActionBars actionBars = getEditorSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
     actionBars.updateActionBars();
-
   }
 
   protected final void load( final IStorageEditorInput input )

@@ -70,6 +70,7 @@ public class ChangeSortingCommand implements ICommand
     final String propertyName = (String)tableColumn.getData( LayerTableViewer.COLUMN_PROP_NAME );
 
     m_sorter = (LayerTableSorter)m_viewer.getSorter();
+    // TODO: check if sortig is supported at all
 
     m_oldPropertyName = m_sorter.getPropertyName();
     m_oldInverse = m_sorter.isInverse();

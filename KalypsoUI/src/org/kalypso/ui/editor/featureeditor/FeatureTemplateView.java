@@ -63,13 +63,9 @@ public class FeatureTemplateView extends ViewPart
 {
   public static final String ID = "org.kalypso.ui.views.featuretemplateview"; //$NON-NLS-1$
 
-// private static final String MEMENTO_FILE = "file";
+  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-// private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
-
-  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
-
-  private final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget, 0, 0 );
+  private final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget );
 
   private String m_partName;
 
@@ -80,7 +76,7 @@ public class FeatureTemplateView extends ViewPart
     this( SWT.V_SCROLL );
   }
 
-  public FeatureTemplateView( int style )
+  public FeatureTemplateView( final int style )
   {
     m_style = style;
   }
@@ -153,15 +149,12 @@ public class FeatureTemplateView extends ViewPart
 
     final String title = template.getViewtitle();
     if( title.length() > 0 )
-    {
       setPartName( title );
-    }
 
     final String partName = template.getName();
 
     if( partName != null )
       setCustomName( partName );
-
   }
 
   public void setCustomName( final String name )
