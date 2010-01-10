@@ -317,8 +317,10 @@ public class XMLTools
       final String localName = value.substring( pos + 1 );
       return new QName( namespaceURI, localName );
     }
-    if( value == null || value.equals( "" ) )
+
+    if( "".equals( value ) )
       return null;
+
     final int split = value.lastIndexOf( ":" );
     if( split < 1 )
     {
@@ -326,7 +328,7 @@ public class XMLTools
       final String localName = value;
       return new QName( namespaceURI, localName );
     }
-    final String prefix = value.substring( 0, split - 1 );
+    final String prefix = value.substring( 0, split );
     final String localPart = value.substring( split + 1 );
     final String namespaceURI = XMLUtilities.getNameSpaceForPrefix( element, prefix );
     if( namespaceURI != null && namespaceURI.length() > 0 )

@@ -40,70 +40,62 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.painter;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+
 
 /**
  * @author Gernot Belger
  */
-class FeatureTypeStylePainter implements IStylePainter
+public class FilterByTypeStylePaintable implements IStylePaintable
 {
-  private final FeatureTypeStyle m_style;
+  private final IStylePaintable m_paintable;
 
-  private final List<Feature> m_features;
+  private final QName m_featureTypeName;
 
-  FeatureTypeStylePainter( final FeatureTypeStyle style, final List<Feature> features )
+  private final long m_fullID;
+
+  private final long m_localID;
+
+  public FilterByTypeStylePaintable( final IStylePaintable paintable, final QName featureTypeName )
   {
-    m_style = style;
-    m_features = features;
+    // use hashes for faster GMLSchemaUtilities.substitutes call
+    m_fullID = QNameUtilities.getFullID( featureTypeName );
+    m_localID = QNameUtilities.getLocalID( featureTypeName );
+
+    m_paintable = paintable;
+    m_featureTypeName = featureTypeName;
   }
 
-  public void paint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
+  public GM_Envelope getBoundingBox( )
   {
-    try
-    {
-      doPaint( paintable, monitor );
-    }
-    finally
-    {
-      ProgressUtilities.done( monitor );
-    }
+    return m_paintable.getBoundingBox();
   }
 
-  private void doPaint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
+  public Double getScale( )
   {
-    final QName qname = m_style.getFeatureTypeName();
-
-    final Rule[] rules = m_style.getRules();
-
-    final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
-
-    /* Wrap paintable in order to filter by type name */
-    final IStylePaintable delegatePaintable = createDelegatePaintable( paintable );
-
-    for( final Rule rule : rules )
-    {
-      final SubMonitor childProgress = progress.newChild( 1 );
-      final IStylePainter rulePainter = StylePainterFactory.create( rule, qname, m_features );
-      rulePainter.paint( delegatePaintable, childProgress );
-    }
+    return m_paintable.getScale();
   }
 
-  private IStylePaintable createDelegatePaintable( final IStylePaintable paintable )
+  public void paint( final DisplayElement displayElement, final IProgressMonitor monitor ) throws CoreException
   {
-    final QName featureTypeName = m_style.getFeatureTypeName();
-    if( featureTypeName == null )
-      return paintable;
-
-    return new FilterByTypeStylePaintable( paintable, featureTypeName );
+    m_paintable.paint( displayElement, monitor );
   }
+
+  public boolean shouldPaintFeature( final Feature feature )
+  {
+    /* Only paint features which applies to the given qname */
+    if( !GMLSchemaUtilities.substitutes( feature.getFeatureType(), m_featureTypeName, m_fullID, m_localID ) )
+      return false;
+
+    return m_paintable.shouldPaintFeature( feature );
+  }
+
 }
