@@ -2,8 +2,8 @@ package org.kalypso.commons.arguments;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,7 +94,7 @@ public class Arguments extends LinkedHashMap<String, Object>
 
   public String[] getAllKeys( )
   {
-    final HashSet<String> allKeys = new HashSet<String>();
+    final Set<String> allKeys = new LinkedHashSet<String>();
 
     allKeys.addAll( keySet() );
     allKeys.addAll( Arrays.asList( getParentKeys() ) );
