@@ -139,7 +139,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
    *          the map. If all feature should be selected, use new QName[]{ Feature.QNAME }
    * @param geomQName
    */
-  public SelectSingleFeatureWidget( final String name, final String toolTip, final QName qnamesToSelect[], final QName geomQName )
+  public SelectSingleFeatureWidget( final String name, final String toolTip, final QName[] qnamesToSelect, final QName geomQName )
   {
     super( name, toolTip );
     m_qnamesToSelect = qnamesToSelect;

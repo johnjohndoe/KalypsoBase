@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -59,10 +58,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
@@ -128,7 +129,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
   };
 
-  protected Composite m_panel;
+  private Composite m_contentPanel;
 
   private IPoolableObjectType m_key;
 
@@ -140,21 +141,15 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final JobExclusiveCommandTarget m_commandtarget;
 
-  private ScrolledCompositeCreator m_creator;
-
-  private final int m_marginWidth;
-
-  private final int m_marginHeight;
-
   private boolean m_disposed = false;
 
   private Featuretemplate m_template;
 
-  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight, final int marginWidth )
+  private Composite m_topLevelComposite;
+
+  public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
-    m_marginHeight = marginHeight;
-    m_marginWidth = marginWidth;
     m_featureComposite.addChangeListener( m_changeListener );
   }
 
@@ -240,10 +235,10 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     // TODO!
     m_commandtarget.setCommandManager( workspace );
 
-    if( m_panel == null || m_panel.isDisposed() )
+    if( m_contentPanel == null || m_contentPanel.isDisposed() )
       return;
 
-    m_panel.getDisplay().asyncExec( new Runnable()
+    m_contentPanel.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
       {
@@ -272,27 +267,19 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       setWorkspace( null );
   }
 
-  public Composite createControls( final Composite parent, final int style )
+  /**
+   * @defaultStyle SWT-style for the top-level component. Will only be used, if the template defines no style.
+   */
+  public Composite createControls( final Composite parent, final int defaultStyle )
   {
+    final int formStyle = getTemplateStyle( defaultStyle );
+
+    m_contentPanel = createTopLevelComposite( parent, formStyle );
+
     final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = m_marginHeight;
-    gridLayout.marginWidth = m_marginWidth;
-
-    m_creator = new ScrolledCompositeCreator( null )
-    {
-      @Override
-      protected Control createContents( final Composite scrollParent, final int contentStyle )
-      {
-        final Composite panel = new Composite( scrollParent, contentStyle );
-        panel.setLayout( gridLayout );
-        panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-        return panel;
-      }
-    };
-
-    m_creator.createControl( parent, style, SWT.NONE );
-
-    m_panel = (Composite) m_creator.getContentControl();
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    m_contentPanel.setLayout( gridLayout );
 
     try
     {
@@ -303,18 +290,48 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       e.printStackTrace();
     }
 
-    return m_creator.getScrolledComposite();
+    return m_topLevelComposite;
+  }
+
+  private Composite createTopLevelComposite( final Composite parent, final int formStyle )
+  {
+    final boolean useScrolledForm = ((formStyle & SWT.V_SCROLL) != 0) || ((formStyle & SWT.H_SCROLL) != 0);
+
+    if( useScrolledForm )
+    {
+      final ScrolledForm scrolledForm = new ScrolledForm( parent, formStyle );
+      scrolledForm.setExpandHorizontal( true );
+      scrolledForm.setExpandVertical( true );
+      m_topLevelComposite = scrolledForm;
+      return scrolledForm.getBody();
+    }
+
+    final Form form = new Form( parent, formStyle );
+    m_topLevelComposite = form;
+    return form.getBody();
+  }
+
+  private int getTemplateStyle( final int style )
+  {
+    if( m_template == null )
+      return style;
+
+    final String swtflags = m_template.getSwtflags();
+    if( swtflags == null )
+      return style;
+
+    return SWTUtilities.createStyleFromString( swtflags );
   }
 
   /**
    * This function updates the controls.
    */
-  protected void updateControls( )
+  protected final void updateControls( )
   {
     try
     {
       /* Need a panel to do something. */
-      if( m_panel == null || m_panel.isDisposed() )
+      if( m_contentPanel == null || m_contentPanel.isDisposed() )
         return;
 
       /* Reset the label. */
@@ -325,11 +342,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       m_featureComposite.setFeature( null );
       m_featureComposite.disposeControl();
 
-      /* If a workspace is missing, it is propably still loading. */
+      /* If a workspace is missing, it is probably still loading. */
       if( m_workspace == null )
       {
         /* Create a label, to inform the user about the status. */
-        m_label = new Label( m_panel, SWT.CENTER );
+        m_label = new Label( m_contentPanel, SWT.CENTER );
         m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
@@ -345,25 +362,22 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       m_featureComposite.setFeature( feature );
 
       /* Process rendering properties. */
-      int style = SWT.NONE;
       if( m_template != null )
       {
         if( m_template.isToolkit() )
-          m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
-
-        style = SWTUtilities.createStyleFromString( m_template.getSwtflags() );
+        {
+          // FIXME: toolkit never gets disposed. Should not be
+          m_featureComposite.setFormToolkit( new FormToolkit( m_contentPanel.getDisplay() ) );
+        }
       }
 
       /* Create the control. */
       final IFeatureType featureType = feature != null ? feature.getFeatureType() : null;
-      final Control control = m_featureComposite.createControl( m_panel, style, featureType );
+      final Control control = m_featureComposite.createControl( m_contentPanel, SWT.NONE, featureType );
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
       /* Update the control of the feature composite. */
       m_featureComposite.updateControl();
-
-      /* Layout the panel here. */
-      m_panel.layout();
     }
     catch( final Exception e )
     {
@@ -371,18 +385,12 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
     finally
     {
-      final ScrolledCompositeCreator creator = m_creator;
-      final ScrolledComposite scrolledComposite = m_creator.getScrolledComposite();
-      if( scrolledComposite != null && !scrolledComposite.isDisposed() )
+      if( !m_topLevelComposite.isDisposed() )
       {
-        scrolledComposite.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            if( !scrolledComposite.isDisposed() )
-              creator.updateControlSize( true );
-          }
-        } );
+        if( m_topLevelComposite instanceof ScrolledForm )
+          ((SharedScrolledComposite) m_topLevelComposite).reflow( true );
+        else
+          m_topLevelComposite.layout( true );
       }
     }
   }
@@ -398,9 +406,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public void onModellChange( final ModellEvent modellEvent )
   {
     final FeatureComposite featureComposite = m_featureComposite;
-    if( m_panel != null && !m_panel.isDisposed() )
+    if( m_contentPanel != null && !m_contentPanel.isDisposed() )
     {
-      m_panel.getDisplay().asyncExec( new Runnable()
+      m_contentPanel.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {
@@ -417,7 +425,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public Control getControl( )
   {
-    return m_panel;
+    return m_contentPanel;
   }
 
   public void setFeature( final CommandableWorkspace workspace, final Feature feature )

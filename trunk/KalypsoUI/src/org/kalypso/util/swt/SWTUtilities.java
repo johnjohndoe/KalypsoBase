@@ -132,7 +132,7 @@ public final class SWTUtilities
   {
     try
     {
-      if( style == null )
+      if( style == null || style.isEmpty() )
         return SWT.NONE;
 
       int result = SWT.NONE;
@@ -147,7 +147,7 @@ public final class SWTUtilities
         if( value != null )
           result |= value.intValue();
         else
-          System.out.println( "// TODO: implement " + key ); //$NON-NLS-1$
+          System.out.println( String.format( "SWT-Key not implemented: %s", key ) ); //$NON-NLS-1$
       }
       return result;
     }
