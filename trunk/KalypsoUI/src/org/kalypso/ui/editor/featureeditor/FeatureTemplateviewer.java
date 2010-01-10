@@ -428,6 +428,11 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return m_contentPanel;
   }
 
+  public FeatureComposite getFeatureComposite( )
+  {
+    return m_featureComposite;
+  }
+
   public void setFeature( final CommandableWorkspace workspace, final Feature feature )
   {
     m_featurePath = null;
