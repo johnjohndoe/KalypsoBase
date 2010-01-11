@@ -35,6 +35,9 @@
  */
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.util.Date;
+
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -43,7 +46,7 @@ import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Literal>element as defined in the FeatureId DTD.
- *
+ * 
  * @author Markus Schneider
  * @version 07.08.2002
  */
@@ -53,6 +56,8 @@ public class Literal extends Expression_Impl
   private String m_value;
 
   private Double m_number;
+
+  private Date m_date;
 
   /** Constructs a new Literal. */
   public Literal( final String value )
@@ -64,7 +69,7 @@ public class Literal extends Expression_Impl
   /**
    * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
    * () - methods to validate the structure of the DOM-fragment.
-   *
+   * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
@@ -93,13 +98,26 @@ public class Literal extends Expression_Impl
   public void setValue( final String value )
   {
     m_value = value;
+    m_number = null;
+    m_date = null;
+
     try
     {
       m_number = new Double( m_value );
+      return;
     }
     catch( final NumberFormatException e )
     {
       m_number = null;
+    }
+
+    try
+    {
+      m_date = DateUtilities.parseDateTime( m_value );
+    }
+    catch( Exception e )
+    {
+      m_date = null;
     }
   }
 
@@ -116,7 +134,7 @@ public class Literal extends Expression_Impl
    * Returns the <tt>Literal</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>). If the
    * value appears to be numerical, a <tt>Double</tt> is returned, else a <tt>String</tt>. TODO: Improve datatype
    * handling.
-   *
+   * 
    * @param feature
    *          that determines the values of <tt>PropertyNames</tt> in the expression (no use here)
    * @return the resulting value
@@ -125,6 +143,9 @@ public class Literal extends Expression_Impl
   {
     if( m_number != null )
       return m_number;
+
+    if( m_date != null )
+      return m_date;
 
     return m_value;
   }
