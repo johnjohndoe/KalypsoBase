@@ -37,9 +37,11 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.List;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -97,7 +99,7 @@ public class PropertyName extends Expression_Impl
    * Given a DOM-fragment, a corresponding Expression-object is built.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -142,15 +144,15 @@ public class PropertyName extends Expression_Impl
   }
 
   /**
-   * Returns the <tt>PropertyName</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>).
-   * If the value is a geometry, an instance of <tt>GM_Object</tt> is returned, if it appears to be numerical, a
+   * Returns the <tt>PropertyName</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>). If the
+   * value is a geometry, an instance of <tt>GM_Object</tt> is returned, if it appears to be numerical, a
    * <tt>Double</tt>, else a <tt>String</tt>.
    * <p>
    * TODO: Improve datatype handling.
    * <p>
    * 
    * @param feature
-   *            that determines the value of this <tt>PropertyName</tt>
+   *          that determines the value of this <tt>PropertyName</tt>
    * @return the resulting value
    */
   public Object evaluate( final Feature feature ) throws FilterEvaluationException
@@ -160,7 +162,7 @@ public class PropertyName extends Expression_Impl
       final Object object = GMLXPathUtilities.query( m_path, feature );
       if( object == null )
         return null;
-        // inserted string case at top position as the most often appearing one
+      // inserted string case at top position as the most often appearing one
       else if( object instanceof String )
         return object;
       else if( object instanceof Number )
@@ -171,6 +173,8 @@ public class PropertyName extends Expression_Impl
         return object.toString();
       else if( object instanceof List )
         return object;
+      else if( object instanceof XMLGregorianCalendar )
+        return DateUtilities.toDate( (XMLGregorianCalendar) object );
       else if( object instanceof IFeatureWrapper2 )
         return object;
       else if( object instanceof XLinkedFeature_Impl )

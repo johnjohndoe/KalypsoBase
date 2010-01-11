@@ -110,20 +110,20 @@ public class CronJobUtilities
 
     /* Get all cron jobs. */
     final List<CronJob> cronJobs = getCronJobs();
-    if( cronJobs.size() > 0 )
+    if( cronJobs.size() == 0 )
+      return;
+
+    for( int i = 0; i < cronJobs.size(); i++ )
     {
-      for( int i = 0; i < cronJobs.size(); i++ )
-      {
-        /* Get the cron job. */
-        final CronJob cronJob = cronJobs.get( i );
+      /* Get the cron job. */
+      final CronJob cronJob = cronJobs.get( i );
 
-        /* Start the cron job. */
-        final IStatus status = CronJobUtilities.startCronJob( cronJob );
+      /* Start the cron job. */
+      final IStatus status = CronJobUtilities.startCronJob( cronJob );
 
-        /* Log the result. */
-        if( Debug.CRON_JOB.isEnabled() )
-          EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
-      }
+      /* Log the result. */
+      if( Debug.CRON_JOB.isEnabled() )
+        EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
     }
   }
 
@@ -136,7 +136,7 @@ public class CronJobUtilities
   private static List<CronJob> getCronJobs( ) throws CoreException
   {
     /* The memory for the results. */
-    final List<CronJob> jobs = new ArrayList<CronJob>();
+    final List<CronJob> cronJobs = new ArrayList<CronJob>();
 
     /* Get the extension registry. */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -157,17 +157,17 @@ public class CronJobUtilities
       final String mutexString = element.getAttribute( MUTEX );
 
       /* Create the cron job. */
-      final CronJob job = (CronJob) element.createExecutableExtension( JOB );
-      job.setIdentifier( identifier );
-      job.setName( name );
-      job.setMutexString( mutexString );
+      final CronJob cronJob = (CronJob) element.createExecutableExtension( JOB );
+      cronJob.setIdentifier( identifier );
+      cronJob.setName( name );
+      cronJob.setMutexString( mutexString );
 
-      /* Only use the job, if it has a valid schedule delay. */
-      if( job.getScheduleDelay() >= 0 )
-        jobs.add( job );
+      /* Only use the cron job, if it has a valid schedule delay. */
+      if( cronJob.getScheduleDelay() >= 0 )
+        cronJobs.add( cronJob );
     }
 
-    return jobs;
+    return cronJobs;
   }
 
   /**
@@ -192,22 +192,17 @@ public class CronJobUtilities
     final String mutexString = cronJob.getMutexString();
     final long scheduleDelay = cronJob.getScheduleDelay();
 
-    /* This job should not be started. */
+    /* This cron job should not be started. */
     if( scheduleDelay < 0 )
       return StatusUtilities.createWarningStatus( "The cron job ('" + name + "') should not be activated, due to a negative schedule delay ..." );
 
     /* Get the job manager. */
     final IJobManager jobManager = CronJob.getJobManager();
 
-    /* Search all running cron jobs. */
-    final Job[] runningCronJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
-
-    /* If the given cron job is already running, ignore it. */
-    for( final Job runningCronJob2 : runningCronJobs )
+    /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
+    final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
+    for( final Job runningJob : runningJobs )
     {
-      /* Get the running cron job. */
-      final Job runningJob = runningCronJob2;
-
       /* Don't handle other jobs, which should happen to have the same family, but are no cron jobs. */
       if( !(runningJob instanceof CronJob) )
         continue;
@@ -223,7 +218,7 @@ public class CronJobUtilities
     /* Okay, he can be started. */
 
     /* Add the job change listener. */
-    /* The listener will remove itself, if the job should not be executed anymore. */
+    /* The listener will remove itself, if the cron job should not be executed anymore. */
     cronJob.addJobChangeListener( CRON_JOB_CHANGE_LISTENER );
 
     /* Finally start it. */
@@ -233,19 +228,25 @@ public class CronJobUtilities
   }
 
   /**
-   * This function cancels all running or scheduled cron jobs.
+   * This function cancels all waiting, executing and sleeping cron jobs.
    */
   public static void cancelAllCronJobs( )
   {
     /* Get the job manager. */
     final IJobManager jobManager = CronJob.getJobManager();
 
-    /* Search all running cron jobs. */
-    final Job[] runningCronJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
-
-    /* If the given cron job is already running, ignore it. */
-    for( final Job runningCronJob : runningCronJobs )
+    /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
+    final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
+    for( final Job runningJob : runningJobs )
     {
+      /* Don't handle other jobs, which should happen to have the same family, but are no cron jobs. */
+      if( !(runningJob instanceof CronJob) )
+        continue;
+
+      /* Cast. */
+      final CronJob runningCronJob = (CronJob) runningJob;
+
+      /* Cancel the cron job. */
       runningCronJob.cancel();
     }
   }

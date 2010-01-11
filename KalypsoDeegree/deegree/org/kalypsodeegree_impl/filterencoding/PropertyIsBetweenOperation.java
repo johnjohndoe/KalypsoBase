@@ -35,6 +35,8 @@
  */
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.util.Date;
+
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -69,11 +71,11 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -98,7 +100,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   private static Expression buildLowerBoundaryFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -123,7 +125,7 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * recursively calls other buildFromDOM () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   private static Expression buildUpperBoundaryFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -202,25 +204,33 @@ public class PropertyIsBetweenOperation extends ComparisonOperation
    * given <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
-   *            that determines the property values
+   *          that determines the property values
    * @return true, if the <tt>Operation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
+    final Number lowerValue = getAsNumber( m_lowerBoundary, feature );
+    final Number upperValue = getAsNumber( m_upperBoundary, feature );
+    final Number thisValue = getAsNumber( m_propertyName, feature );
 
-    final Object lowerValue = m_lowerBoundary.evaluate( feature );
-    final Object upperValue = m_upperBoundary.evaluate( feature );
-    final Object thisValue = m_propertyName.evaluate( feature );
-
-    if( !(lowerValue instanceof Number && upperValue instanceof Number && thisValue instanceof Number) )
-      throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical " + "expressions!" );
-
-    final double d1 = ((Number) lowerValue).doubleValue();
-    final double d2 = ((Number) upperValue).doubleValue();
-    final double d3 = ((Number) thisValue).doubleValue();
+    final double d1 = lowerValue.doubleValue();
+    final double d2 = upperValue.doubleValue();
+    final double d3 = thisValue.doubleValue();
     return d1 <= d3 && d3 <= d2;
+  }
+
+  private Number getAsNumber( final Expression expression, final Feature feature ) throws FilterEvaluationException
+  {
+    final Object evaluate = expression.evaluate( feature );
+    if( evaluate instanceof Number )
+      return (Number) evaluate;
+
+    if( evaluate instanceof Date )
+      return new Long( ((Date) evaluate).getTime() );
+
+    throw new FilterEvaluationException( "PropertyIsBetweenOperation can only be applied to numerical expressions!" );
   }
 
   /**
