@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.util.TimeZone;
 import java.util.logging.Logger;
@@ -48,6 +49,8 @@ import java.util.logging.Logger;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardLegend;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.ui.HorizontalAlignment;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.SensorException;
@@ -56,6 +59,9 @@ import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.SwingEclipseUtilities;
+import org.kalypso.template.obsdiagview.Alignment;
+import org.kalypso.template.obsdiagview.FontWeight;
+import org.kalypso.template.obsdiagview.Obsdiagview.TitleFormat;
 
 /**
  * @author schlienger
@@ -88,7 +94,9 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
    */
   public ObservationChart( final DiagView template, final boolean waitForSwing ) throws SensorException
   {
-    super( template.getTitle(), JFreeChart.DEFAULT_TITLE_FONT, ChartFactory.createObservationPlot( template ), false );
+    super( null, null, ChartFactory.createObservationPlot( template ), false );
+
+    setTitle( getTitle( template ) );
 
     m_view = template;
     m_waitForSwing = waitForSwing;
@@ -100,6 +108,32 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
     // good for the eyes
     setBackgroundPaint( new GradientPaint( 0, 0, Color.white, 0, 1000, new Color( 168, 168, 255 ) ) );
+  }
+
+  private TextTitle getTitle( final DiagView template )
+  {
+    final TitleFormat format = template.getTitleFormat();
+
+    final int size = format.getFontSize();
+    final FontWeight weight = format.getFontWeight();
+
+    Font font = null;
+    if( FontWeight.BOLD.equals( weight ) )
+      font = new Font( "SansSerif", Font.BOLD, size );
+    else if( FontWeight.NORMAL.equals( weight ) )
+      font = new Font( "SansSerif", Font.PLAIN, size );
+    else if( FontWeight.ITALIC.equals( weight ) )
+      font = new Font( "SansSerif", Font.ITALIC, size );
+
+    final Alignment alignment = format.getAlignment();
+    if( Alignment.CENTER.equals( alignment ) )
+      return new TextTitle( template.getTitle(), font, HorizontalAlignment.CENTER );
+    else if( Alignment.LEFT.equals( alignment ) )
+      return new TextTitle( template.getTitle(), font, HorizontalAlignment.LEFT );
+    else if( Alignment.RIGHT.equals( alignment ) )
+      return new TextTitle( template.getTitle(), font, HorizontalAlignment.RIGHT );
+
+    return new TextTitle( template.getTitle(), font, HorizontalAlignment.CENTER );
   }
 
   protected void setLegendProperties( final String legendName, final boolean showLegend )

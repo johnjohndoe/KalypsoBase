@@ -46,7 +46,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -201,6 +200,7 @@ public class DiagViewUtils
 
     xmlTemplate.setLegend( xmlLegend );
     xmlTemplate.setTitle( view.getTitle() );
+    xmlTemplate.setTitleFormat( view.getTitleFormat() );
 
     // only set timezone if defined
     final TimeZone timezone = view.getTimezone();
@@ -370,7 +370,7 @@ public class DiagViewUtils
   {
     view.removeAllItems();
 
-    view.setTitle( xml.getTitle() );
+    view.setTitle( xml.getTitle(), xml.getTitleFormat() );
     view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() ); //$NON-NLS-1$
     view.setShowLegend( xml.getLegend() == null ? false : xml.getLegend().isVisible() );
 
