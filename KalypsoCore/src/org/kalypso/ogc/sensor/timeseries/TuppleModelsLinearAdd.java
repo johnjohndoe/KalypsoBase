@@ -78,6 +78,16 @@ public class TuppleModelsLinearAdd
     m_targetStatusAxis = targetStatusAxis;
   }
 
+  /**
+   * This function adds weights to the tupple models.
+   * 
+   * @param tuppleModels
+   *          The tupple models.
+   * @param weights
+   *          The weights.
+   * @return A new combined tupple model. ATTENTION: Make sure your axes of the observation are in the same order as the
+   *         axes of this tupple model. DATE, VALUE and STATUS.
+   */
   public ITuppleModel addWeighted( final ITuppleModel[] tuppleModels, final double[] weights ) throws SensorException
   {
     Assert.isLegal( tuppleModels.length > 0 );
