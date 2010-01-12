@@ -119,11 +119,11 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
     Font font = null;
     if( FontWeight.BOLD.equals( weight ) )
-      font = new Font( "SansSerif", Font.BOLD, size );
+      font = new Font( format.getFontFamily(), Font.BOLD, size );
     else if( FontWeight.NORMAL.equals( weight ) )
-      font = new Font( "SansSerif", Font.PLAIN, size );
+      font = new Font( format.getFontFamily(), Font.PLAIN, size );
     else if( FontWeight.ITALIC.equals( weight ) )
-      font = new Font( "SansSerif", Font.ITALIC, size );
+      font = new Font( format.getFontFamily(), Font.ITALIC, size );
 
     final Alignment alignment = format.getAlignment();
     if( Alignment.CENTER.equals( alignment ) )

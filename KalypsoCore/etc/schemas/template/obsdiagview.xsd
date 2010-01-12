@@ -98,6 +98,7 @@
 				<xs:element name="title" type="xs:string" default="" minOccurs="0"/>
 				<xs:element name="titleFormat" minOccurs="0">
 					<xs:complexType>
+						<xs:attribute name="fontFamily" type="xs:string" use="optional" default="SansSerif"/>
 						<xs:attribute name="fontSize" type="xs:int" use="optional" default="18"/>
 						<xs:attribute name="fontWeight" type="myns:FontWeight" use="optional" default="bold" />
 						<xs:attribute name="alignment" type="myns:Alignment" use="optional" default="center" />
