@@ -80,10 +80,6 @@ public class TemplateUtilitites
 
   public static final org.kalypso.template.featureview.ObjectFactory OF_FEATUREVIEW = new org.kalypso.template.featureview.ObjectFactory();
 
-  /* Observation table report */
-  public static final JAXBContext JC_OBSREPORTTABLE = JaxbUtilities.createQuiet( org.kalypso.template.observationreporttable.ObjectFactory.class );
-
-  public static final org.kalypso.template.observationreporttable.ObjectFactory OF_OBSREPORTTABLE = new org.kalypso.template.observationreporttable.ObjectFactory();
 
   private TemplateUtilitites( )
   {
@@ -95,10 +91,7 @@ public class TemplateUtilitites
     return SCHEMA_CACHE.getSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
 
-  public static Schema getObstablereportSchema( )
-  {
-    return SCHEMA_CACHE.getSchema( "observationReportTable.xsd" ); //$NON-NLS-1$
-  }
+
 
   public static synchronized Schema getGismapviewSchema( )
   {
@@ -137,16 +130,6 @@ public class TemplateUtilitites
 
     if( KalypsoCoreDebug.FEATUREVIEW_VALIDATE.isEnabled() )
       unmarshaller.setSchema( TemplateUtilitites.getFeatureviewSchema() );
-
-    return unmarshaller;
-  }
-
-  public static Unmarshaller createObservationReportTableUnmarshaller( ) throws JAXBException
-  {
-    final Unmarshaller unmarshaller = JC_OBSREPORTTABLE.createUnmarshaller();
-
-// if( KalypsoCoreDebug.OBSTABLEREPORT_VALIDATE.isEnabled() )
-      unmarshaller.setSchema( TemplateUtilitites.getObstablereportSchema() );
 
     return unmarshaller;
   }
