@@ -57,6 +57,8 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.template.obsdiagview.Obsdiagview;
+import org.kalypso.template.obsdiagview.Obsdiagview.TitleFormat;
 
 /**
  * @author schlienger
@@ -71,6 +73,8 @@ public class DiagView extends ObsView
 
   /** axisID -> axis */
   private final Map<String, DiagramAxis> m_axesMap = new Hashtable<String, DiagramAxis>();
+
+  private TitleFormat m_titleFormat;
 
   public DiagView( )
   {
@@ -136,11 +140,17 @@ public class DiagView extends ObsView
     return m_showLegend;
   }
 
-  public void setTitle( final String title )
+  public void setTitle( final String title, final Obsdiagview.TitleFormat titleFormat )
   {
     m_title = title;
+    m_titleFormat = titleFormat;
 
     refreshView( null );
+  }
+
+  public void setTitle( final String title )
+  {
+    setTitle( title, new Obsdiagview.TitleFormat() );
   }
 
   public void setLegendName( final String name )
@@ -261,5 +271,13 @@ public class DiagView extends ObsView
         found++;
     }
     return found;
+  }
+
+  public TitleFormat getTitleFormat( )
+  {
+    if( m_titleFormat == null )
+      m_titleFormat = new TitleFormat();
+
+    return m_titleFormat;
   }
 }

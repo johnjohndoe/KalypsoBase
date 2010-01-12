@@ -45,6 +45,7 @@ import java.util.TimeZone;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.template.obsdiagview.Obsdiagview.TitleFormat;
 
 /**
  * @author schlienger
@@ -69,9 +70,12 @@ public class ChangeDiagPropsCommand implements ICommand
 
   private final String m_orgTimezoneName;
 
+  private final TitleFormat m_orgDiagramTitleFormat;
+
   public ChangeDiagPropsCommand( final DiagView diag, final String diagramTitle, final boolean showLegend, final String legendTitle, final String timezoneName )
   {
     m_orgDiagramTitle = diag.getTitle();
+    m_orgDiagramTitleFormat = diag.getTitleFormat();
     m_orgShowLegend = diag.isShowLegend();
     m_orgLegendTitle = diag.getLegendName();
     final TimeZone timezone = diag.getTimezone();
@@ -98,7 +102,7 @@ public class ChangeDiagPropsCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    m_diag.setTitle( m_diagramTitle );
+    m_diag.setTitle( m_diagramTitle, m_orgDiagramTitleFormat );
     m_diag.setShowLegend( m_showLegend );
     m_diag.setLegendName( m_legendTitle );
 
@@ -119,7 +123,7 @@ public class ChangeDiagPropsCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    m_diag.setTitle( m_orgDiagramTitle );
+    m_diag.setTitle( m_orgDiagramTitle, m_orgDiagramTitleFormat );
     m_diag.setShowLegend( m_orgShowLegend );
     m_diag.setLegendName( m_orgLegendTitle );
 

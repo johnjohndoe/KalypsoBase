@@ -96,6 +96,14 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="title" type="xs:string" default="" minOccurs="0"/>
+				<xs:element name="titleFormat" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="fontSize" type="xs:int" use="optional" default="18"/>
+						<xs:attribute name="fontWeight" type="myns:FontWeight" use="optional" default="bold" />
+						<xs:attribute name="alignment" type="myns:Alignment" use="optional" default="center" />
+					</xs:complexType>
+				</xs:element>
+				
 				<xs:element name="legend" minOccurs="0">
 					<xs:complexType>
 						<xs:attribute name="title" type="xs:string" use="optional" default=""/>
@@ -121,4 +129,21 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:simpleType name="FontWeight">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="bold"/>
+			<xs:enumeration value="normal"/>
+			<xs:enumeration value="italic"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="Alignment">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="left"/>
+			<xs:enumeration value="center"/>
+			<xs:enumeration value="right"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 </xs:schema>
