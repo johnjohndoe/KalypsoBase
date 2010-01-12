@@ -89,6 +89,7 @@ public final class SWTUtilities
     SWT_MAP.put( "SWT.TOP", SWT.TOP ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.BOTTOM", SWT.BOTTOM ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.RESIZE", SWT.RESIZE ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.SMOOTH", SWT.SMOOTH ); //$NON-NLS-1$
     // Add other keys to complete the map
   }
 

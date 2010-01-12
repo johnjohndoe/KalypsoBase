@@ -184,6 +184,9 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       return null;
 
     /* Create the Image. */
+    if( descriptor == null )
+      return null;
+
     return descriptor.createImage();
   }
 
