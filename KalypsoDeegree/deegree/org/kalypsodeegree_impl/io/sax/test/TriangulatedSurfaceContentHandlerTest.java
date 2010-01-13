@@ -53,12 +53,11 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.TriangulatedSurfaceContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -79,31 +78,19 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
   {
     // load a surface from a file
 
-    final URL tinLocation = getClass().getResource( "triangulatedSurface.xml.gz" );
+    final URL tinLocation = getClass().getResource( "resources/triangulatedSurface.xml.gz" );
     assertNotNull( tinLocation );
 
     final InputStream is = new GZIPInputStream( tinLocation.openStream() );
     final byte[] buf = IOUtils.toByteArray( is );
     is.close();
-
-    final TimeLogger allLogger = new TimeLogger();
-
+    
     for( int i = 0; i < 100; i++ )
     {
-      final TimeLogger oneSurfaceLogger = new TimeLogger();
-
       final ByteArrayInputStream bais = new ByteArrayInputStream( buf );
       final GM_TriangulatedSurface surface = readTriangles( new InputSource( bais ) );
-      final String msg = String.format( "Read %d triangles in ", surface.size() );
-
       assertSurface( surface );
-
-      oneSurfaceLogger.takeInterimTime();
-      oneSurfaceLogger.printCurrentTotal( msg );
     }
-
-    allLogger.takeInterimTime();
-    allLogger.printCurrentTotal( "All read in " );
   }
 
   private void assertSurface( final GM_TriangulatedSurface surface )
