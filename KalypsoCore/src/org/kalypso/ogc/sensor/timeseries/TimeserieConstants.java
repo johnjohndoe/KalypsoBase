@@ -171,7 +171,7 @@ public  interface TimeserieConstants extends ObservationConstants
   public final static String MD_DATE_BEGIN = "Datum-Von"; //$NON-NLS-1$
 
   public final static String MD_DATE_END = "Datum-Bis"; //$NON-NLS-1$
-
+ 
   /** the forecast feature is used in some of the views to mark the forecast date-range */
   public static final String FEATURE_FORECAST = "Vorhersage";
 
