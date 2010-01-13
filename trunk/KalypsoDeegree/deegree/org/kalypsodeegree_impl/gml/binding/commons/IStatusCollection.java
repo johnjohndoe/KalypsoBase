@@ -35,10 +35,14 @@
  */
 package org.kalypsodeegree_impl.gml.binding.commons;
 
+import java.util.Date;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Binds the common:StatusCollection type.
@@ -50,4 +54,57 @@ public interface IStatusCollection extends IFeatureWrapperCollection<IGeoStatus>
   public static final QName QNAME = new QName( NS.COMMON, "StatusCollection" );
 
   public static final QName QNAME_PROP_STATUS_MEMBER = new QName( NS.COMMON, "statusMember" );
+
+  /**
+   * This function creates a new geo status and adds it to the collection.
+   * 
+   * @param status
+   *          The values will be copied from this status.
+   * @return The new geo status.
+   */
+  public IGeoStatus createGeoStatus( IStatus status );
+
+  /**
+   * This function creates a new geo status and adds it to the collection.
+   * 
+   * @param status
+   *          The values will be copied from this status.
+   * @param location
+   *          The location, or <code>null</code> if not applicable.
+   * @param time
+   *          The time, or <code>null</code> if not applicable.
+   * @return The new geo status.
+   */
+  public IGeoStatus createGeoStatus( IStatus status, GM_Object location, Date time );
+
+  /**
+   * This function creates a new geo status and adds it to the collection.
+   * 
+   * @param geoStatus
+   *          The values will be copied from this geo status.
+   * @return The new geo status.
+   */
+  public IGeoStatus createGeoStatus( IGeoStatus geoStatus );
+
+  /**
+   * This function creates a new geo status and adds it to the collection.
+   * 
+   * @param severity
+   *          The severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
+   *          <code>CANCEL</code>.
+   * @param pluginId
+   *          The unique identifier of the relevant plug-in.
+   * @param code
+   *          The plug-in-specific status code, or <code>OK</code>.
+   * @param message
+   *          A human-readable message, localized to the current locale.
+   * @param exception
+   *          A low-level exception, or <code>null</code> if not applicable.
+   * @param location
+   *          The location, or <code>null</code> if not applicable.
+   * @param time
+   *          The time, or <code>null</code> if not applicable.
+   * @return The new geo status.
+   */
+  public IGeoStatus createGeoStatus( int severity, String pluginId, int code, String message, Throwable exception, GM_Object location, Date time );
 }
