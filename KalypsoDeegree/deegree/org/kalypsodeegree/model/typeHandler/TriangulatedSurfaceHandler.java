@@ -43,8 +43,8 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceContentHandler;
-import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceMarshaller;
+import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
+import org.kalypsodeegree_impl.io.sax.parser.TriangulatedSurfaceContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -81,7 +81,7 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
   {
     final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) value;
 
-    new TriangulatedSurfaceMarshaller( reader, surface ).marshal();
+    new TriangulatedSurfaceMarshaller( reader, surface ).marshall();
   }
 
   /**
