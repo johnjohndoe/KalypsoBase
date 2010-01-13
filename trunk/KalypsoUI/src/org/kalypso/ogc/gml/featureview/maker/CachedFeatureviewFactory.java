@@ -126,7 +126,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     for( final Map.Entry<QName, FeatureviewType> viewEntry : m_viewMap.entrySet() )
     {
       final QName key = viewEntry.getKey();
-      if( featureType != null && GMLSchemaUtilities.substitutes( featureType, key ) )
+      if( featureType != null && key != null && GMLSchemaUtilities.substitutes( featureType, key ) )
         return viewEntry.getValue();
     }
 
