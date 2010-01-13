@@ -94,7 +94,8 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     if( theme == null )
       throw new ExecutionException( "No Feature-Theme in selection." );
 
-    final FeatureList featureList = theme == null ? null : theme.getFeatureList();
+    // TODO: let the user choose what to export: visible features, all features, current extent, ...
+    final FeatureList featureList = theme == null ? null : theme.getFeatureListVisible( null );
     if( featureList == null || featureList.size() == 0 )
     {
       MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
