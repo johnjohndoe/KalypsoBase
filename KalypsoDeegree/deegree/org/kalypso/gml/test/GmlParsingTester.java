@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,90 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.test;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.io.IOUtils;
 import org.kalypso.gml.GMLException;
-import org.kalypso.gml.GMLorExceptionContentHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 /**
  * @author Gernot Belger
  */
-public class GmlParsingTester extends TestCase
+public class GmlParsingTester extends GmlParsingTesting
 {
   public final static String NS_GMLTEST = "org.kalypso.deegree.gmlparsertest";
 
-  private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    super.setUp();
-
-    m_saxFactory.setNamespaceAware( true );
-  }
-
-  private GMLWorkspace readGml( final String location ) throws IOException, ParserConfigurationException, SAXException, GMLException
-  {
-    final URL resource = getClass().getResource( location );
-    InputStream is = null;
-    try
-    {
-      is = new BufferedInputStream( resource.openStream() );
-
-      final GMLWorkspace workspace = parseGml( is, resource );
-
-      is.close();
-
-      return workspace;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  private GMLWorkspace parseGml( final InputStream is, final URL context ) throws ParserConfigurationException, SAXException, IOException, GMLException
-  {
-    final SAXParser saxParser = m_saxFactory.newSAXParser();
-    // make namespace-prefxes visible to content handler
-    // used to allow necessary schemas from gml document
-//    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
-    final XMLReader xmlReader = saxParser.getXMLReader();
-    
-    // TODO: also set an error handler here
-    // TODO: use progress-monitors to show progress and let the user cancel parsing
-
-    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, null, context, null );
-    xmlReader.setContentHandler( exceptionHandler );
-
-    final InputSource inputSource = new InputSource( is );
-    xmlReader.parse( inputSource );
-
-    return exceptionHandler.getWorkspace();
-  }
+  //private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
 
   public void testEmptyGml( ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {
@@ -165,7 +103,5 @@ public class GmlParsingTester extends TestCase
     assertNotNull( triangle );
     assertEquals( 4, triangle.length );
     assertEquals( triangle[0], triangle[3] );
-
   }
-
 }
