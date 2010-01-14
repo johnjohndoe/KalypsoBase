@@ -72,7 +72,7 @@ public class StandardShapeDataProvider implements IShapeDataProvider
   private void getStandardParameter( final Feature[] features )
   {
     // take the default geometry of the first feature to get the shape type.
-    final GM_Object object = features[0].getDefaultGeometryProperty();
+    final GM_Object object = features[0].getDefaultGeometryPropertyValue();
     if( object instanceof GM_Point )
     {
       m_shptype = ShapeConst.SHAPE_TYPE_POINT;
