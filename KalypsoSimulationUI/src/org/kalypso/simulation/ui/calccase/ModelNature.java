@@ -735,7 +735,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     {
       // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
       final String serviceEndpoint = System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
-      String defaultUseWps = Boolean.toString( serviceEndpoint != null );
+      final String defaultUseWps = Boolean.toString( serviceEndpoint != null );
 
       // REMARK: Instead of the WPS-Endpoint a different system property is checked...
       // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
