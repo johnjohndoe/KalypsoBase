@@ -61,7 +61,7 @@ public class GeoStatusLog implements ILog
   /**
    * The log file.
    */
-  private final File m_logFile;
+  private File m_logFile;
 
   /**
    * The workspace.
