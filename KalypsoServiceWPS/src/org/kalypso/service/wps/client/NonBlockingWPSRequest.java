@@ -279,7 +279,8 @@ public class NonBlockingWPSRequest
    */
   public IStatus run( IProgressMonitor monitor )
   {
-    // TODO: clear old results
+    // TODO: clear old results: No not here! We have to introduce additional operation to the service
+    // So the client can tell the server to release any resources.
 
     /* Monitor. */
     monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.2" ), 200 ); //$NON-NLS-1$
