@@ -55,10 +55,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
-
 /**
  * The feature based implementation of {@link IGeoStatus}.
- *
+ * 
  * @author Thomas Jung
  */
 public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements IGeoStatus
@@ -113,6 +112,8 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
     try
     {
       final String encodedString = (String) getFeature().getProperty( QNAME_PROP_STATUS_EXCEPTION );
+      if( encodedString == null || encodedString.isEmpty() )
+        return null;
 
       final byte[] encodedBytes = encodedString.getBytes( "UTF-8" );
 
