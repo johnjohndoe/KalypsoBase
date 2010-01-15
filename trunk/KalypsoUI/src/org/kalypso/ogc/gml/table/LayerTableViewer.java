@@ -72,12 +72,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -110,7 +108,6 @@ import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
-import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -131,7 +128,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
  * @author Belger
  */
-public class LayerTableViewer extends TableViewer implements ModellEventListener, ModellEventProvider, ICommandTarget, ICellModifier
+public class LayerTableViewer extends TableViewer implements ModellEventListener, ModellEventProvider, ICellModifier
 {
   protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
@@ -158,8 +155,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
 
   private final IFeatureModifierFactory m_featureModiferFactory;
-
-  private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private final ModellEventProviderAdapter m_modellEventProvider = new ModellEventProviderAdapter();
 
@@ -283,6 +278,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private ExcelTableCursor m_tableCursor = null;
 
+  private ICommandTarget m_featureCommandTarget;
+
   /**
    * @param parent
    * @param templateTarget
@@ -312,6 +309,15 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     table.setCapture( false );
 
     m_tableCursor = new ExcelTableCursor( this, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.DOWN, true );
+  }
+
+  /**
+   * By default, all commands regarding manipulation of the underlying features are sent to the theme.<br>
+   * This behaviour can be overwritten by setting another command target.
+   */
+  public void setFeatureCommandTarget( final ICommandTarget featureCommandTarget )
+  {
+    m_featureCommandTarget = featureCommandTarget;
   }
 
   public void dispose( )
@@ -796,15 +802,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return getTable().isDisposed();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
-   */
-  public void postCommand( final ICommand command, final Runnable runnable )
-  {
-    m_commandTarget.postCommand( command, runnable );
-  }
-
   public String getPropertyName( final int columnIndex )
   {
     final TableColumn column = getTable().getColumn( columnIndex );
@@ -1038,7 +1035,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       // dialogs may return FeatureChange objects (doemming)
       final FeatureChange fc;
-      final IKalypsoFeatureTheme theme = getTheme();
       if( object instanceof FeatureChange )
         fc = (FeatureChange) object;
       else
@@ -1046,15 +1042,28 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         final IPropertyType pt = FeatureHelper.getPT( feature, property );
         fc = new FeatureChange( feature, pt, object );
       }
+
+      final IKalypsoFeatureTheme theme = getTheme();
       final ICommand command = new ChangeFeaturesCommand( theme.getWorkspace(), new FeatureChange[] { fc } );
-      theme.postCommand( command, new Runnable()
-      {
-        public void run( )
-        {
-          ViewerUtilities.refresh( LayerTableViewer.this, true );
-        }
-      } );
+
+      final ICommandTarget commandTarget = getFeatureCommandTarget();
+      commandTarget.postCommand( command, null );
+// theme.postCommand( command, new Runnable()
+// {
+// public void run( )
+// {// TODO: wirklich immer alles? warum nicht ein update auf dem geänderten element?
+// ViewerUtilities.refresh( LayerTableViewer.this, true );
+// }
+// } );
     }
+  }
+
+  private ICommandTarget getFeatureCommandTarget( )
+  {
+    if( m_featureCommandTarget == null )
+      return getTheme();
+
+    return m_featureCommandTarget;
   }
 
   public IFeatureModifier getModifier( final String name )

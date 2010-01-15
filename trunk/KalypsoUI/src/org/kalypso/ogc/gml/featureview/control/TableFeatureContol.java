@@ -32,6 +32,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
@@ -74,7 +76,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   protected KalypsoTableFeatureTheme m_kft;
 
-  private final JobExclusiveCommandTarget m_target;
+  private final ICommandTarget m_templateTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   protected Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
 
@@ -99,7 +101,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     m_factory = factory;
     m_selectionManager = selectionManager;
     m_fcl = fcl;
-    m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+
     m_showToolbar = showToolbar;
     m_showContextMenu = showContextMenu;
     m_toolbarManager = null;
@@ -120,7 +122,15 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     client.setLayout( gridLayout );
 
     /* Create the layer table viewer. */
-    m_viewer = new LayerTableViewer( client, style, m_target, m_factory, m_selectionManager, m_fcl );
+    m_viewer = new LayerTableViewer( client, style, m_templateTarget, m_factory, m_selectionManager, m_fcl );
+    m_viewer.setFeatureCommandTarget( new ICommandTarget()
+    {
+      @Override
+      public void postCommand( final ICommand command, final Runnable runnable )
+      {
+        fireFeatureChange( command );
+      }
+    } );
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */
@@ -309,7 +319,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_kft = null;
     }
 
-    m_target.dispose();
+    if( m_templateTarget instanceof JobExclusiveCommandTarget )
+      ((JobExclusiveCommandTarget) m_templateTarget).dispose();
 
     super.dispose();
   }

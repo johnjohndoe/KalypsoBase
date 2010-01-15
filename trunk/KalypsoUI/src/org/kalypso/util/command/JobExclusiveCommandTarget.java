@@ -46,7 +46,6 @@ import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.i18n.Messages;
 
 /**
  * <p>
@@ -114,7 +113,6 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
    */
   public void postCommand( final ICommand command, final Runnable runnable )
   {
-    // runnable is unused!
     if( m_commandManager == null )
     {
       // TODO: error handling
