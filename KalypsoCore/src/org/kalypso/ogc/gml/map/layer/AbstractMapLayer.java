@@ -47,6 +47,7 @@ import org.kalypso.ogc.gml.map.IMapLayer;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -78,7 +79,10 @@ public abstract class AbstractMapLayer implements IMapLayer
     {
       final GeoTransform world2screen = getMapPanel().getProjection();
       if( world2screen != null )
+      {
         handleExtentChanged( world2screen );
+        getMapPanel().invalidateMap();
+      }
     }
   };
 
@@ -147,19 +151,39 @@ public abstract class AbstractMapLayer implements IMapLayer
   protected final void handeRepaintRequested( final GM_Envelope extent )
   {
     // TODO: This is a main entry point for a potentially great number of events. 
-
-    invalidate( extent );
+    if( isVisible() )
+      invalidate( extent );
+    else
+      stopPainting();
   }
+
+  protected boolean isVisible( )
+  {
+    return isVisible( m_theme );
+  }
+
+  private boolean isVisible( final IKalypsoTheme theme )
+  {
+    if( !theme.isVisible() )
+      return false;
+
+    final IMapModell mapModell = theme.getMapModell();
+    final Object parent = mapModell.getThemeParent( theme );
+    if( parent instanceof IKalypsoTheme )
+      return isVisible( (IKalypsoTheme) parent );
+
+    return true;
+  }
+
 
   /**
    * Called, when the extent of the map has changed.<br>
-   * Does nothing by default, inteneded to be overwritten by clients.
+   * Does nothing by default, intended to be overwritten by clients.
    */
-  protected void handleExtentChanged( @SuppressWarnings("unused") final GeoTransform world2screen )
-  {
-    // nothing by default
-  }
+  protected abstract void handleExtentChanged( final GeoTransform world2screen );
 
   /** Called, when the theme request a repaint for the given extent. */
   protected abstract void invalidate( final GM_Envelope invalidExtent );
+
+  protected abstract void stopPainting( );
 }

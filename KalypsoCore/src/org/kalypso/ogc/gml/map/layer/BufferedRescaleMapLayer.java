@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
@@ -84,8 +84,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final ImageCache imageCache )
   {
     this( panel, theme, rule, paintRunningTile, imageCache, Long.MAX_VALUE );
-
-
   }
 
   /**
@@ -104,7 +102,8 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     m_repaintMillis = repaintMillis;
     m_rule = rule;
 
-    rescheduleJob( panel.getProjection() );
+    if( isVisible() )
+      rescheduleJob( panel.getProjection() );
   }
 
   /**
@@ -127,9 +126,8 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor )
+  public synchronized void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor )
   {
-    // Fetch current state here (avoid synchronised blocks)
     final BufferedTile tile = m_tile;
     final BufferedTile runningTile = m_runningTile;
 
@@ -142,6 +140,8 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     // only we have no good tile, paint the running tile
     else if( runningTile != null && runningTile.intersects( world2screen ) )
       runningTile.paint( g, world2screen );
+    else
+      rescheduleJob( world2screen );
   }
 
   /** Check if the tile fits to the given world2screen (extent and screen-size) */
@@ -170,7 +170,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.0") + getLabel(); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.0" ) + getLabel(); //$NON-NLS-1$
   }
 
   /**
@@ -181,15 +181,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   {
     // Force repaint: reschedule, will eventually replace the current tile
     if( m_tile != null && m_tile.intersects( extent ) )
-    {
       rescheduleJob( m_tile.getWorld2Screen() );
-      // If invisble, no reschedule has happened, so we have to dismiss the current tile
-      if( !getTheme().isVisible() )
-      {
-        m_tile.dispose();
-        m_tile = null;
-      }
-    }
   }
 
   /**
@@ -198,34 +190,39 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   @Override
   protected synchronized void handleExtentChanged( final GeoTransform world2screen )
   {
-    // Fetch current state here (avoid synchronised blocks)
-    final BufferedTile tile = m_tile;
-    final BufferedTile runningTile = m_runningTile;
+    if( isVisible() )
+    {
+      if( isSameExtent( m_tile, world2screen ) )
+        return;
 
-    if( isSameExtent( tile, world2screen ) )
-      return;
+      if( isSameExtent( m_runningTile, world2screen ) && m_runningTile.getResult() == null )
+        return;
 
-    if( isSameExtent( runningTile, world2screen ) && runningTile.getResult() == null )
-      return;
+      rescheduleJob( world2screen );
+    }
+    else
+    {
+      stopPainting();
 
-    rescheduleJob( world2screen );
+      if( isSameExtent( m_tile, world2screen ) )
+        return;
+
+      if( m_tile != null )
+      {
+        m_tile.dispose();
+        m_tile = null;
+      }
+    }
   }
 
   private synchronized void rescheduleJob( final GeoTransform world2screen )
   {
-    if( m_runningTile != null )
-    {
-      m_runningTile.dispose();
-      m_runningTile = null;
-    }
-
-    if( !getTheme().isVisible() )
-      return;
+    stopPainting();
 
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, world2screen, m_imageCache );
 
-    final JobObserverJob repaintJob = new JobObserverJob( Messages.getString("org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.1"), runningTile, m_repaintMillis ) //$NON-NLS-1$
+    final JobObserverJob repaintJob = new JobObserverJob( Messages.getString( "org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer.1" ), runningTile, m_repaintMillis ) //$NON-NLS-1$
     {
       @Override
       protected void jobRunning( )
@@ -240,6 +237,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       protected void jobDone( final IStatus result )
       {
         applyTile( runningTile, result );
+        getMapPanel().invalidateMap();
       }
     };
     repaintJob.setSystem( true );
@@ -252,32 +250,40 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     m_runningTile = runningTile;
   }
 
-  public void applyTile( final BufferedTile tile, final IStatus result )
+  public synchronized void applyTile( final BufferedTile tile, final IStatus result )
   {
-    synchronized( this )
+    // Ignore cancel, can happen any time, i.e. the extent changes
+    if( result.matches( IStatus.CANCEL ) )
+      return;
+
+    if( m_tile != null )
+      m_tile.dispose();
+
+    m_tile = tile;
+    m_runningTile = null;
+    if( !result.isOK() )
     {
-      // Ignore cancel, can happen any time, i.e. the extent changes
-      if( result.matches( IStatus.CANCEL ) )
-        return;
-
-      if( m_tile != null )
-        m_tile.dispose();
-
-      m_tile = tile;
       m_runningTile = null;
-      if( !result.isOK() )
-      {
-        m_runningTile = null;
 
-        // TODO: do something with the status, so it gets seen in the outline!
-        // Other idea: paint status into image, when this tile gets painted
-        final Throwable exception = result.getException();
-        if( exception != null )
-          exception.printStackTrace();
-      }
+      // TODO: do something with the status, so it gets seen in the outline!
+      // Other idea: paint status into image, when this tile gets painted
+      final Throwable exception = result.getException();
+      if( exception != null )
+        exception.printStackTrace();
     }
+  }
 
-    getMapPanel().invalidateMap();
+  /**
+   * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#stopPainting()
+   */
+  @Override
+  protected synchronized void stopPainting( )
+  {
+    if( m_runningTile != null )
+    {
+      m_runningTile.dispose();
+      m_runningTile = null;
+    }
   }
 
 }
