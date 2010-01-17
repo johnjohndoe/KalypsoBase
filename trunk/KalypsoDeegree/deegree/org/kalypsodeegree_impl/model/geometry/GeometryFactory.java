@@ -1086,7 +1086,7 @@ final public class GeometryFactory
     return myList.toArray( new GM_Position[myList.size()] );
   }
 
-  public static GM_Triangle_Impl createGM_Triangle( final GM_Position[] pos, final String crs ) throws GM_Exception
+  public static GM_Triangle createGM_Triangle( final GM_Position[] pos, final String crs ) throws GM_Exception
   {
     if( pos.length != 3 )
       return null;
@@ -1094,7 +1094,7 @@ final public class GeometryFactory
     return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
   }
 
-  public static GM_Triangle_Impl createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
+  public static GM_Triangle createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
     return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
   }

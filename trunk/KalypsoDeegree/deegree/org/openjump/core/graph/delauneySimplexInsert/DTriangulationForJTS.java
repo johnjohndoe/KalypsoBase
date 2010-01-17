@@ -20,7 +20,6 @@ import java.util.Set;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -243,7 +242,7 @@ public class DTriangulationForJTS
         posList.add( JTSAdapter.wrap( coord ) );
 
       final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
-      final GM_Triangle_Impl gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( poses, crs );
+      final GM_Triangle gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( poses, crs );
       triangles.add( gmTriangle );
     }
 
@@ -476,7 +475,7 @@ public class DTriangulationForJTS
       for( int i = 0; i < positions.length; i++ )
       {
         GM_Position position = positions[i];
-        for( int j = 0; j < ring.length; j++ )
+        for( final GM_Position element : ring )
         {
           final GM_Position ringPos = ring[i];
           if( position.getDistance( ringPos ) < 0.01 )
