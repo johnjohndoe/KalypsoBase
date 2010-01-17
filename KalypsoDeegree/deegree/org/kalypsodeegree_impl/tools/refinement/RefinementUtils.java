@@ -52,8 +52,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
-import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -228,17 +228,17 @@ public class RefinementUtils
   {
     final GM_Curve pointSegment = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( poses, crs );
 
-    for( int i = 0; i < segments.length; i++ )
+    for( final GM_Curve segment : segments )
     {
-      if( segments[i].equals( pointSegment ) )
+      if( segment.equals( pointSegment ) )
         return true;
     }
 
     // check also for a flipped point segment
     final GM_Curve flippedSegment = flipCurve( pointSegment );
-    for( int i = 0; i < segments.length; i++ )
+    for( final GM_Curve segment : segments )
     {
-      if( segments[i].equals( flippedSegment ) )
+      if( segment.equals( flippedSegment ) )
         return true;
     }
 
@@ -314,8 +314,8 @@ public class RefinementUtils
     final String crs = surfacePatch.getCoordinateSystem();
     final GM_Surface[] surfaces = RefinementUtils.splitPolygonbyLine( patchPoses, linePoses, crs );
 
-    for( int i = 0; i < surfaces.length; i++ )
-      surfaceList.add( surfaces[i] );
+    for( final GM_Surface surface : surfaces )
+      surfaceList.add( surface );
 
     return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
   }
@@ -328,7 +328,7 @@ public class RefinementUtils
     final GM_Position[][] triangles = GeometryUtilities.triangulateRing( orientedRing );
     for( final GM_Position[] poses : triangles )
     {
-      final GM_Triangle_Impl gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( poses, crs );
+      final GM_Triangle gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( poses, crs );
       surfaceList.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( gmTriangle ) );
     }
     return surfaceList.toArray( new GM_Surface[surfaceList.size()] );

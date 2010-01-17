@@ -406,7 +406,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   protected GM_Point calculateCentroid( )
   {
-    // TODO: implement, what is the centroid this?
+    // TODO: implement, what is the centroid of this?
     return EMPTY_CENTROID;
   }
 
