@@ -43,7 +43,9 @@ package org.kalypso.ogc.gml.map.layer;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -72,7 +74,7 @@ public class ThemePaintable implements IPaintable
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.layer.ThemePaintable.0") + m_theme.getLabel(); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.layer.ThemePaintable.0", m_theme.getLabel() ); //$NON-NLS-1$
   }
 
   /**
@@ -89,10 +91,12 @@ public class ThemePaintable implements IPaintable
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics2D g, final IProgressMonitor monitor )
+  public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
   {
     g.setClip( 0, 0, (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
-    m_theme.paint( g, m_world2screen, null, monitor );
+    final IStatus result = m_theme.paint( g, m_world2screen, null, monitor );
+    if( !result.isOK() )
+      throw new CoreException( result );
   }
 
 }

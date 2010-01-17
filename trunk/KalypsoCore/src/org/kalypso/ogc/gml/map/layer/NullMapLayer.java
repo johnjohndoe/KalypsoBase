@@ -78,4 +78,20 @@ public class NullMapLayer extends AbstractMapLayer
   {
     // nothing to do: we have no state to invalidate
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#handleExtentChanged(org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
+  @Override
+  protected void handleExtentChanged( final GeoTransform world2screen )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.layer.AbstractMapLayer#stopPainting()
+   */
+  @Override
+  protected void stopPainting( )
+  {
+  }
 }
