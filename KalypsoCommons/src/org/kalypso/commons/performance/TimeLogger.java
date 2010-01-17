@@ -83,7 +83,8 @@ public class TimeLogger
    */
   public TimeLogger( final String message )
   {
-    System.out.println( message );
+    if( message != null )
+      System.out.println( message );
 
     m_constructionTime = System.currentTimeMillis();
     try
