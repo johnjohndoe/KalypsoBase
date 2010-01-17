@@ -76,8 +76,21 @@ public final class SldAwtUtilities
     for( final GM_Position element : ring )
     {
       final GM_Position position = world2screen.getDestPoint( element );
-      final int xx = (int) (position.getX() + 0.5);
-      final int yy = (int) (position.getY() + 0.5);
+
+      double screenX = position.getX();
+      double screenY = position.getY();
+
+      if( screenX > Short.MAX_VALUE )
+        screenX = Short.MAX_VALUE;
+      if( screenX < Short.MIN_VALUE )
+        screenX = Short.MIN_VALUE;
+      if( screenY > Short.MAX_VALUE )
+        screenY = Short.MAX_VALUE;
+      if( screenY < Short.MIN_VALUE )
+        screenY = Short.MIN_VALUE;
+
+      final int xx = (int) (screenX + 0.5);
+      final int yy = (int) (screenY + 0.5);
 
       if( k > 0 && k < ring.length - 1 )
       {
