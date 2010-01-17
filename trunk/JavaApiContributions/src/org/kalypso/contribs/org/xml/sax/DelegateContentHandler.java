@@ -79,6 +79,11 @@ public class DelegateContentHandler implements ContentHandler
     return m_delegate;
   }
 
+  protected boolean isDelegating( )
+  {
+    return m_delegate != null;
+  }
+
   public Locator getLocator( )
   {
     return m_locator;
