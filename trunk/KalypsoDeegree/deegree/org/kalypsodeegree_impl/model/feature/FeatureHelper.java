@@ -86,8 +86,13 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author doemming
  */
-public class FeatureHelper
+public final class FeatureHelper
 {
+  private FeatureHelper( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
   {
     public String replaceToken( final Object value, final String argument )

@@ -47,7 +47,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.ogc.util.MergeObservationFeatureVisitor;
+import org.kalypso.simulation.core.ant.MergeObservationFeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**

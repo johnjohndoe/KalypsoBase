@@ -8,6 +8,10 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.core;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.simulation.core,
+ org.kalypso.simulation.core.ant,
+ org.kalypso.simulation.core.ant.copyobservation,
+ org.kalypso.simulation.core.ant.copyobservation.source,
+ org.kalypso.simulation.core.ant.copyobservation.target,
  org.kalypso.simulation.core.calccase,
  org.kalypso.simulation.core.internal,
  org.kalypso.simulation.core.internal.local,

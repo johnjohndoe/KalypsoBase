@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetVi
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
@@ -67,7 +68,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
@@ -454,8 +454,8 @@ public class ObservationViewer extends Composite
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 
       final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null );
-      m_diagView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
-      m_tableView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
+      m_diagView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
+      m_tableView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
     }
     else if( obs != null )
     {

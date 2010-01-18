@@ -56,6 +56,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -63,7 +64,6 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -77,7 +77,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 {
   public static final String ID = "org.kalypso.ogc.sensor.view.DiagramViewPart"; //$NON-NLS-1$
 
-  protected final DiagView m_diagView = new DiagView( true );
+  private final DiagView m_diagView = new DiagView( true );
 
   private ObservationChart m_chart;
 
@@ -161,7 +161,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     {
       final DateRange dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
       // sub title of diagram contains date-range info
       m_subTitle.setText( "" ); //$NON-NLS-1$

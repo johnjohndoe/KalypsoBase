@@ -38,28 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.simulation.core.ant.copyobservation.source;
 
-import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
+import java.net.URL;
+import java.util.Properties;
+
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractMonitoredFeatureVisitor implements IMonitoredFeatureVisitor
+public class FeatureCopyObservationSource extends AbstractCopyObservationSource
 {
-  private String m_currentSubTask;
+  private final String m_tokens;
+
+  public FeatureCopyObservationSource( final URL context, final Source[] sources, final String tokens )
+  {
+    super( context, sources );
+    m_tokens = tokens;
+  }
 
   /**
-   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentSubTask()
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getReplaceTokens(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public String getCurrentSubTask( )
+  protected final Properties getReplaceTokens( final Feature feature )
   {
-    return m_currentSubTask;
+    if( m_tokens != null && !m_tokens.isEmpty() )
+      return FeatureHelper.createReplaceTokens( feature, m_tokens );
+
+    return null;
   }
 
-  protected void setCurrentSubTask( final String currentSubTask )
+  /**
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getSourceLinkHref()
+   */
+  @Override
+  protected final String getSourceLinkHref( final Feature feature, final Source source )
   {
-    m_currentSubTask = currentSubTask;
+    if( source.getProperty() == null )
+      return null;
+
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( source.getProperty() );
+    if( sourcelink == null )
+      return null;
+
+    return sourcelink.getHref();
+
   }
+
 }

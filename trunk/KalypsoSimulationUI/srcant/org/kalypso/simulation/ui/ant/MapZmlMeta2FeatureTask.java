@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor;
+import org.kalypso.simulation.core.ant.MapZmlMeta2FeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 /**
  * Reads data from a zml (linked into the visited features) and puts it as property into the same feature.

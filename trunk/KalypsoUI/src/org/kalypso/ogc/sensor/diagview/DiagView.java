@@ -50,12 +50,12 @@ import java.util.Map;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.Obsdiagview.TitleFormat;
@@ -238,7 +238,7 @@ public class DiagView extends ObsView
           final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
           final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
 
-          final String name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
+          final String name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
           final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
 
@@ -264,9 +264,9 @@ public class DiagView extends ObsView
   {
     int found = 0;
     final ObsViewItem[] items = getItems();
-    for( int j = 0; j < items.length; j++ )
+    for( final ObsViewItem item : items )
     {
-      final AxisMapping[] mps = ((DiagViewCurve) items[j]).getMappings();
+      final AxisMapping[] mps = ((DiagViewCurve) item).getMappings();
       if( mps[1].getObservationAxis().getType().equals( valueAxisType ) )
         found++;
     }

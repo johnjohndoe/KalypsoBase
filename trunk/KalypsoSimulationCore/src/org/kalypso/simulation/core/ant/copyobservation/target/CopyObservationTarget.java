@@ -38,54 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation.target;
+package org.kalypso.simulation.core.ant.copyobservation.target;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.simulation.core.i18n.Messages;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractObservationTarget implements ICopyObservationTarget
+public class CopyObservationTarget extends AbstractObservationTarget implements ICopyObservationTarget
 {
-  private final DateRange m_targetRange;
+  private final String m_targetobservation;
 
-  private final DateRange m_forecastRange;
-
-  private final URL m_context;
-
-  public AbstractObservationTarget( final URL context, final DateRange targetRange, final DateRange forecastRange )
+  public CopyObservationTarget( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
   {
-    m_context = context;
-    m_targetRange = targetRange;
-    m_forecastRange = forecastRange;
+    super( context, targetRange, forecastRange );
+
+    m_targetobservation = targetobservation;
   }
 
-  /**
-   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getTargetDateRange()
-   */
-  @Override
-  public final DateRange getTargetDateRange( )
+  public final String getTargetHref( final Feature f ) throws CoreException
   {
-    return m_targetRange;
+    final TimeseriesLinkType targetlink = getTargetLink( f );
+    if( targetlink == null )
+    {
+      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
+    }
+
+    // remove query part if present, href is also used as file name here!
+    final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
+    return href;
   }
 
-  /**
-   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getForecastDateRange()
-   */
-  @Override
-  public final DateRange getTargetForecastDateRange( )
+  private TimeseriesLinkType getTargetLink( final Feature f )
   {
-    return m_forecastRange;
+    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
   }
 
-  /**
-   * @see org.kalypso.ogc.util.timeserieslink.ICopyObservationTimeSeriesLink#getContext()
-   */
-  @Override
-  public final URL getContext( )
+  public final boolean isSourceEqualTargetObservation( final String source )
   {
-    return m_context;
+    return m_targetobservation.equals( source );
   }
+
 }
