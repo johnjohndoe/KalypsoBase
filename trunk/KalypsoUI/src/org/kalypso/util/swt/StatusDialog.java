@@ -139,10 +139,8 @@ public class StatusDialog extends AbstractStatusDialog
           }
         }
       } );
-
     }
 
     return composite;
   }
-
 }

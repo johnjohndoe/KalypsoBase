@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
@@ -88,7 +89,7 @@ public class StatusComposite extends Composite
 
   private Label m_imageLabel;
 
-  private Label m_messageLabel;
+  private Text m_messageText;
 
   private IStatus m_status;
 
@@ -111,7 +112,7 @@ public class StatusComposite extends Composite
     if( (style & HIDE_TEXT) == 0 )
     {
       colCount++;
-      createMessageLabel();
+      createMessageText();
     }
 
     if( (style & DETAILS) != 0 )
@@ -145,11 +146,12 @@ public class StatusComposite extends Composite
     } );
   }
 
-  private void createMessageLabel( )
+  private void createMessageText( )
   {
-    m_messageLabel = new Label( this, SWT.NONE );
-    m_messageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_messageLabel.addMouseListener( new MouseAdapter()
+    m_messageText = new Text( this, SWT.NONE );
+    m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_messageText.setEditable( false );
+    m_messageText.addMouseListener( new MouseAdapter()
     {
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
@@ -193,8 +195,8 @@ public class StatusComposite extends Composite
     if( m_imageLabel != null )
       m_imageLabel.setBackground( color );
 
-    if( m_messageLabel != null )
-      m_messageLabel.setBackground( color );
+    if( m_messageText != null )
+      m_messageText.setBackground( color );
   }
 
   protected void detailsButtonPressed( )
@@ -244,11 +246,11 @@ public class StatusComposite extends Composite
     m_imageLabel.setImage( image );
     m_imageLabel.setToolTipText( tooltipText );
 
-    if( m_messageLabel != null )
+    if( m_messageText != null )
     {
-      m_messageLabel.setText( text ); //$NON-NLS-1$
+      m_messageText.setText( text ); //$NON-NLS-1$
       // Set same text as tooltip, if label is too short to hold the complete text
-      m_messageLabel.setToolTipText( tooltipText );
+      m_messageText.setToolTipText( tooltipText );
     }
 
     if( m_detailsButton != null )
@@ -280,7 +282,13 @@ public class StatusComposite extends Composite
         return providerText;
     }
 
-    return m_status.getMessage();
+    String message = m_status.getMessage();
+    String message1 = message.replace( "\r\n", " " );
+    String message2 = message1.replace( "\r", " " );
+    String message3 = message2.replace( "\n", " " );
+    String message4 = message3.replace( "\t", " " );
+
+    return message4;
   }
 
   private String getStatusTooltipText( )
