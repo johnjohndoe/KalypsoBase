@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.rules.ITableViewRules;
@@ -52,7 +53,6 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
@@ -90,7 +90,7 @@ public class TableView extends ObsView
   * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
   * order.
   */
-  public void setAlphaSort( boolean alphaSort )
+  public void setAlphaSort( final boolean alphaSort )
   {
     m_alphaSort = alphaSort;
 
@@ -141,7 +141,7 @@ public class TableView extends ObsView
             // FIXME: the next line was probably introduced for Sachsen, but makes no sense...
             // Check where we need that for Sachsen and fix it there
 //            if( name == null || name.length() == 0 )
-              name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis );
+            name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis );
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
 
             addItem( col );

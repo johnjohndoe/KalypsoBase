@@ -42,8 +42,8 @@ package org.kalypso.commons.java.util;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.i18n.Messages;
@@ -191,7 +191,7 @@ public final class StringUtilities
   {
     String newString = sourceValue;
 
-    for( final Map.Entry<Object, Object> entry : replaceProperties.entrySet() )
+    for( final Entry<Object, Object> entry : replaceProperties.entrySet() )
     {
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();

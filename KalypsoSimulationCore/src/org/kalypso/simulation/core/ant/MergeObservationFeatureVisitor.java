@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.util;
+package org.kalypso.simulation.core.ant;
 
 import java.io.File;
 import java.net.URL;
@@ -54,7 +54,6 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -64,6 +63,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -103,7 +103,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
   public final boolean visit( final Feature f )
   {
     final String featureId = f.getId();
-    IUrlResolver resolver = UrlResolverSingleton.getDefault();
+    final IUrlResolver resolver = UrlResolverSingleton.getDefault();
 
     try
     {

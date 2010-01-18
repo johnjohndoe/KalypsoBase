@@ -50,6 +50,7 @@
 		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.CommitObservationsTask" library="lib/anttasks.jar" name="kalypso.commitPrognoses" />
 		<antTask class="org.kalypso.simulation.ui.ant.MultiEqualsTask" library="lib/anttasks.jar" name="kalypso.multiequals" />
 		<antTask class="org.kalypso.simulation.ui.ant.MapZmlMeta2FeatureTask" library="lib/anttasks.jar" name="kalypso.mapZmlMeta2Feature" />
+		<antTask class="org.kalypso.simulation.ui.ant.MapFeature2ZmlMetaTask" library="lib/anttasks.jar" name="kalypso.mapFeature2ZmlMeta" />
 		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.FetchFromURLsTask" library="lib/anttasks.jar" name="Kalypso.fetchFromURL" />
 		<antTask class="org.kalypso.simulation.ui.ant.PropertyReplaceTask" headless="true" library="lib/anttasks.jar" name="kalypso.propertyReplace" />
 		<antTask eclipseRuntime="false" class="org.kalypso.simulation.ui.ant.GetFileTask" headless="false" library="lib/anttasks.jar" name="kalypso.getFileTask" />

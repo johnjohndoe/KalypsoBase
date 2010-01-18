@@ -55,12 +55,12 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.util.copyobservation.CopyObservationFeatureVisitor;
-import org.kalypso.ogc.util.copyobservation.ICopyObservationSource;
-import org.kalypso.ogc.util.copyobservation.source.FeatureCopyObservationSource;
-import org.kalypso.ogc.util.copyobservation.source.Source;
-import org.kalypso.ogc.util.copyobservation.target.CopyObservationTargetFactory;
-import org.kalypso.ogc.util.copyobservation.target.ICopyObservationTarget;
+import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
+import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
+import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObservationSource;
+import org.kalypso.simulation.core.ant.copyobservation.source.Source;
+import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
+import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**

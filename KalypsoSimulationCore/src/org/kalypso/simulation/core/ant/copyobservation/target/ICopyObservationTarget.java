@@ -38,55 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation.source;
+package org.kalypso.simulation.core.ant.copyobservation.target;
 
 import java.net.URL;
-import java.util.Properties;
 
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Dirk Kuch
  */
-public class FeatureCopyObservationSource extends AbstractCopyObservationSource
+public interface ICopyObservationTarget
 {
-  private final String m_tokens;
+  String getTargetHref( Feature feature ) throws CoreException;
 
-  public FeatureCopyObservationSource( final URL context, final Source[] sources, final String tokens )
-  {
-    super( context, sources );
-    m_tokens = tokens;
-  }
+  DateRange getTargetDateRange( );
 
-  /**
-   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getReplaceTokens(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  protected final Properties getReplaceTokens( final Feature feature )
-  {
-    if( m_tokens != null && !m_tokens.isEmpty() )
-      return FeatureHelper.createReplaceTokens( feature, m_tokens );
+  DateRange getTargetForecastDateRange( );
 
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getSourceLinkHref()
-   */
-  @Override
-  protected final String getSourceLinkHref( final Feature feature, final Source source )
-  {
-    if( source.getProperty() == null )
-      return null;
-
-    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( source.getProperty() );
-    if( sourcelink == null )
-      return null;
-
-    return sourcelink.getHref();
-
-  }
-
+  URL getContext( );
 }

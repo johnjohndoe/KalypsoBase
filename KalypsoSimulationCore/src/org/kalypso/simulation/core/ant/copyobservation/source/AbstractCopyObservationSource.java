@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation.source;
+package org.kalypso.simulation.core.ant.copyobservation.source;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,19 +46,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.ogc.util.copyobservation.ICopyObservationSource;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
+import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.zml.request.Request;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -78,7 +78,6 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
    * Request-Name zu setzen)
    */
   private final URL m_context;
-
 
   public AbstractCopyObservationSource( final URL context, final Source[] sources )
   {
@@ -113,9 +112,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
     // token replacement
     final Properties properties = getReplaceTokens( feature );
     if( properties != null )
-    {
-      hrefWithFilterAndRange = ObsViewUtils.replaceTokens( hrefWithFilterAndRange, properties );
-    }
+      hrefWithFilterAndRange = StringUtilities.replaceAll( hrefWithFilterAndRange, properties );
 
     final URL sourceURL = new UrlResolver().resolveURL( m_context, hrefWithFilterAndRange );
 
@@ -131,7 +128,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
 
       // obs could not be created, use the request now
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge syntetische Zeitreihe.", sourceHref );
-      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
+      KalypsoSimulationCorePlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
       final IObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
       return FilterFactory.createFilterFrom( source.getFilter(), synteticObservation, null );
     }

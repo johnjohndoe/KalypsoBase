@@ -38,24 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation.target;
+package org.kalypso.simulation.core.ant;
 
-import java.net.URL;
-
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author Dirk Kuch
+ * 'Bean' class for ant implementation.
+ * 
+ * @author Gernot Belger
  */
-public interface ICopyObservationTarget
+public class Feature2ZmlMapping
 {
-  String getTargetHref( Feature feature ) throws CoreException;
+  private String m_sourceValue;
 
-  DateRange getTargetDateRange( );
+  private String m_targetMetadata;
 
-  DateRange getTargetForecastDateRange( );
+  public Feature2ZmlMapping( )
+  {
+    // Do not remove, needed for ant
+  }
 
-  URL getContext( );
+  public void setSourceValue( final String sourceValue )
+  {
+    m_sourceValue = sourceValue;
+  }
+
+  public String getSourceValue( )
+  {
+    return m_sourceValue;
+  }
+
+  public void setTargetMetadata( final String targetMetadata )
+  {
+    m_targetMetadata = targetMetadata;
+  }
+
+  public String getTargetMetadata( )
+  {
+    return m_targetMetadata;
+  }
+
+  public String resolve( final Feature f )
+  {
+    return FeatureHelper.tokenReplace( f, m_sourceValue );
+  }
+
+  public void apply( final IObservation observation, final String value )
+  {
+    final MetadataList metadataList = observation.getMetadataList();
+    metadataList.setProperty( m_targetMetadata, value );
+  }
+
 }

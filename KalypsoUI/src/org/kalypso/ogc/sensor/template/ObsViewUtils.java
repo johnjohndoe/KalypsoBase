@@ -42,10 +42,8 @@ package org.kalypso.ogc.sensor.template;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;
@@ -53,7 +51,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
@@ -63,133 +60,12 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
  * @author belger
  * @author schlienger
  */
-public class ObsViewUtils
+public final class ObsViewUtils
 {
-  public static final String TOKEN_AXISUNIT = "%axisunit%"; //$NON-NLS-1$
-
-  public static final String TOKEN_AXISTYPE = "%axistype%"; //$NON-NLS-1$
-
-  public static final String TOKEN_AXISNAME = "%axisname%"; //$NON-NLS-1$
-
-  public static final String TOKEN_OBSNAME = "%obsname%"; //$NON-NLS-1$
-
-  public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%"; //$NON-NLS-1$
-
   private ObsViewUtils( )
   {
-    // utility class
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
-
-  /**
-   * Replace tokens in Format-String
-   * <dl>
-   * <dt>%obsname%</dt>
-   * <dd>Name der Observation: obs.getName()</dd>
-   * <dt>%axisname%</dt>
-   * <dd>Name der Wert-Achse: axis.getName()</dd>
-   * <dt>%axistype%</dt>
-   * <dd>Typ der Wert-Achse: axis.getType()</dd>
-   * <dt>%axisunit%</dt>
-   * <dd>Einheit der Wert-Achse: axis.getUnit()</dd>
-   * </dl>
-   */
-  public static String replaceTokens( final String formatString, final IObservation obs, final IAxis axis )
-  {
-    String result = formatString;
-
-    // observation
-    if( obs != null )
-      result = result.replaceAll( TOKEN_OBSNAME, obs.getName() );
-
-    // axis
-    if( axis != null )
-    {
-      result = result.replaceAll( TOKEN_AXISNAME, axis.getName() );
-      result = result.replaceAll( TOKEN_AXISTYPE, axis.getType() );
-      result = result.replaceAll( TOKEN_AXISUNIT, axis.getUnit() );
-    }
-
-    // Metadata
-    if( obs != null )
-    {
-      int index = 0;
-      while( index < result.length() - 1 )
-      {
-        final int start = result.indexOf( "%metadata-", index ); //$NON-NLS-1$
-        if( start == -1 )
-          break;
-
-        final int stop = result.indexOf( '%', start + 1 );
-        if( stop != -1 )
-        {
-          final String metaname = result.substring( start + "%metadata-".length(), stop ); //$NON-NLS-1$
-          final StringBuffer sb = new StringBuffer( result );
-
-          final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" ); //$NON-NLS-1$ //$NON-NLS-2$
-          sb.replace( start, stop + 1, metaval );
-
-          result = sb.toString();
-        }
-
-        index = stop + 1;
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * Replace the tokens found in formatString with the corresponding values from the mapping in the properties
-   * <p>
-   * TODO gibt es nicht schon sowas?
-   */
-  public static String replaceTokens( final String formatString, final Properties properties )
-  {
-    String result = formatString;
-
-    for( final Entry<Object, Object> entry : properties.entrySet() )
-      result = result.replaceAll( (String) entry.getKey(), (String) entry.getValue() );
-
-    return result;
-  }
-
-  /**
-   * Replace the tokens found in formatString with the corresponding values from the mapping in the properties
-   * <p>
-   * TODO gibt es nicht schon sowas?
-   * <p>
-   * Die Liste der Tokens und deren Ersetzung in der Form:
-   * <p>
-   * tokenName-featurePropertyName;tokenName-featurePropertyName;...
-   */
-  public static String replaceTokens( final String formatString, final String tokens )
-  {
-    final Properties properties = new Properties();
-    final String[] strings = tokens.split( ";" ); //$NON-NLS-1$
-    for( final String string : strings )
-    {
-      final String[] splits = string.split( "-" ); //$NON-NLS-1$
-      properties.setProperty( splits[0], splits[1] );
-    }
-
-    return replaceTokens( formatString, properties );
-  }
-
-  // /**
-  // * Remove the tokens so that name is clean.
-  // *
-  // * @param name
-  // */
-  // public static String removeTokens( final String name )
-  // {
-  // String res = name.replaceAll( TOKEN_AXISNAME, "" );
-  // res = res.replaceAll( TOKEN_AXISTYPE, "" );
-  // res = res.replaceAll( TOKEN_AXISUNIT, "" );
-  // res = res.replaceAll( TOKEN_OBSNAME, "" );
-  //
-  // return res;
-  // }
-  //
 
   /**
    * Retrieve all axis-types of the observations associated to the ObsViewItems. Return a set so that there are no

@@ -52,12 +52,12 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -71,7 +71,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 {
   public static final String ID = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
 
-  protected TableView m_tableView;
+  private final TableView m_tableView;
 
   private ObservationTable m_table;
 
@@ -142,14 +142,14 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
     {
-      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
     }
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partActivated( IWorkbenchPart part )
+  public void partActivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
@@ -158,7 +158,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partBroughtToTop( IWorkbenchPart part )
+  public void partBroughtToTop( final IWorkbenchPart part )
   {
     // nada
   }
@@ -166,7 +166,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partClosed( IWorkbenchPart part )
+  public void partClosed( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
@@ -175,7 +175,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partDeactivated( IWorkbenchPart part )
+  public void partDeactivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
@@ -184,7 +184,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   /**
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partOpened( IWorkbenchPart part )
+  public void partOpened( final IWorkbenchPart part )
   {
     // Siehe partActivated...
   }

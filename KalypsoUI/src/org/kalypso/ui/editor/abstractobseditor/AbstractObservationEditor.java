@@ -52,6 +52,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -59,7 +60,6 @@ import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.template.IObsViewEventListener;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
@@ -113,7 +113,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
    */
   @SuppressWarnings("unchecked")
   @Override
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IContentOutlinePage.class )
     {
@@ -206,7 +206,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null ) );
+      m_view.loadObservation( context, href, false, ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null ) );
   }
 
   /**

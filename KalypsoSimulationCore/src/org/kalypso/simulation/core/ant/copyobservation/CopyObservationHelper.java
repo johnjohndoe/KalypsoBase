@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.util.copyobservation;
+package org.kalypso.simulation.core.ant.copyobservation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.ICopyObservationMetaDataConstants;
-import org.kalypso.ogc.util.copyobservation.source.ObservationSource;
+import org.kalypso.simulation.core.ant.copyobservation.source.ObservationSource;
 
 /**
  * @author Dirk Kuch

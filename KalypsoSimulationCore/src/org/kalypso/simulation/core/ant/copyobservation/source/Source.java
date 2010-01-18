@@ -1,4 +1,4 @@
-package org.kalypso.ogc.util.copyobservation.source;
+package org.kalypso.simulation.core.ant.copyobservation.source;
 
 import java.util.Date;
 
