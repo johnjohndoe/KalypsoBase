@@ -44,22 +44,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.activation.DataHandler;
+
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.utils.RepositoryItemUtlis;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
+import org.kalypso.services.observation.sei.ObservationBean;
+
+import com.sun.xml.ws.util.ByteArrayDataSource;
 
 /**
  * Repository of the Observation Service.
  * 
  * @author Schlienger
  */
-public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository
+public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository, IWriteableRepository
 {
   /** root item is identified by the null bean */
   private static final ItemBean ROOT_ITEM = null;
@@ -113,7 +120,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
   {
     try
     {
-      IObservationService service = getService();
+      final IObservationService service = getService();
       final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
 
       final ItemBean[] beans = service.getChildren( ROOT_ITEM );
@@ -245,5 +252,36 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     throw new IllegalStateException( "This should never happen" );
   }
 
+  /**
+   * @see org.kalypso.repository.IWriteableRepository#setData(java.lang.String, java.io.Serializable)
+   */
+  @Override
+  public void setData( final String id, final Serializable data ) throws RepositoryException
+  {
+    final ObservationBean bean = new ObservationBean();
+    // FIXME: check id
+    bean.setId( id );
+
+    final IObservationService service = getService();
+// final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( service, bean );
+
+    // deserialize observation
+    // get tupples
+    // setValues
+// srvObs.setValues( values );
+
+    final byte[] bytes = (byte[]) data;
+
+    try
+    {
+      // let server read file and save on its own
+      final ByteArrayDataSource dataSource = new ByteArrayDataSource( bytes, null );
+      service.writeData( bean, new DataHandler( dataSource ) );
+    }
+    catch( final SensorException e )
+    {
+      throw new RepositoryException( e );
+    }
+  }
 
 }

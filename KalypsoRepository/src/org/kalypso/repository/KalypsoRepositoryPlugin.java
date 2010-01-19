@@ -43,8 +43,9 @@ public class KalypsoRepositoryPlugin extends Plugin
   /**
    * The shared instance.
    */
-  private static KalypsoRepositoryPlugin m_plugin;
+  private static KalypsoRepositoryPlugin PLUGIN;
 
+  private RepositoryRegistry m_registry;
 
   /**
    * The constructor.
@@ -53,7 +54,7 @@ public class KalypsoRepositoryPlugin extends Plugin
   {
     super();
 
-    m_plugin = this;
+    PLUGIN = this;
   }
 
   /**
@@ -71,7 +72,7 @@ public class KalypsoRepositoryPlugin extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    m_plugin = null;
+    PLUGIN = null;
 
     super.stop( context );
   }
@@ -81,9 +82,15 @@ public class KalypsoRepositoryPlugin extends Plugin
    */
   public static KalypsoRepositoryPlugin getDefault( )
   {
-    return m_plugin;
+    return PLUGIN;
   }
 
+  public synchronized IRepositoryRegistry getRepositoryRegistry( )
+  {
+    if( m_registry == null )
+      m_registry = new RepositoryRegistry();
 
+    return m_registry;
+  }
 
 }

@@ -159,10 +159,4 @@ public interface IRepository extends IRepositoryItem
 
   public void fireRepositoryStructureChanged( );
 
-  /**
-   * Sets identifier string of the repository. Needed by proxy repository implementation to overwrite origin repository
-   * string.
-   */
-  public void setIdentifier( String identifier );
-
 }

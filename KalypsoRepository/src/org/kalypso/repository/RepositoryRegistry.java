@@ -40,18 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
+ * @author Gernot Belger
  * @author Dirk Kuch
  */
-public interface IModifyableRepository extends IRepository, IWriteableRepositoryItem
+public class RepositoryRegistry implements IRepositoryRegistry
 {
-  /**
-   * creates a new item in the repository
-   * 
-   * @param identifier
-   *          item identifier
-   */
-  void makeItem( String identifier ) throws RepositoryException;
+  private final Map<String, IRepository> m_repositories = new HashMap<String, IRepository>();
 
-  void deleteItem( String identifier ) throws RepositoryException;
+  /**
+   * @see org.kalypso.repository.IRepositoryRegistry#getRepository(java.lang.String)
+   */
+  @Override
+  public IRepository getRepository( final String protocol )
+  {
+    // TODO: evtl. default zurückgeben für bestimmte protokolle wie file, platform, http etc. Ggfs. an strategy
+    // delegieren
+
+    final String cleanProtocol = getProtocol( protocol );
+    return m_repositories.get( cleanProtocol );
+  }
+
+  private String getProtocol( final String protocol )
+  {
+    if( protocol.endsWith( "://" ) )
+      return protocol;
+
+    return protocol + "://";
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryRegistry#registerProtocol(org.kalypso.repository.IRepository)
+   */
+  @Override
+  public void registerProtocol( final IRepository repository )
+  {
+    final String identifier = repository.getIdentifier();
+    final String cleanIdentifier = getProtocol( identifier );
+    m_repositories.put( cleanIdentifier, repository );
+  }
+
 }

@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
-import org.kalypso.repository.IModifyableRepositoryItem;
+import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -351,7 +351,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       final List<ItemBean> beans = new ArrayList<ItemBean>();
       for( final IRepositoryItem child : children )
       {
-        final Boolean modifyable = child instanceof IModifyableRepositoryItem;
+        final Boolean modifyable = child instanceof IWriteableRepositoryItem;
 
         beans.add( new ItemBean( child.getIdentifier(), child.getName(), modifyable ) );
       }
@@ -393,7 +393,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         return null;
 
       final MetadataList md = updateObservation( obs, ib.getId() );
-      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
+      final Boolean modifyable = item instanceof IWriteableRepositoryItem;
 
       return new ObservationBean( ib.getId(), obs.getName(), modifyable, md );
     }
@@ -435,7 +435,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     final IRepositoryItem item = m_repository.findItem( id );
     if( item != null )
     {
-      final Boolean modifyable = item instanceof IModifyableRepositoryItem;
+      final Boolean modifyable = item instanceof IWriteableRepositoryItem;
 
       return new ItemBean( item.getIdentifier(), item.getName(), modifyable );
     }
@@ -478,11 +478,11 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( m_repository instanceof IModifyableRepository )
     {
       final IRepositoryItem item = m_repository.findItem( identifier );
-      if( item instanceof IModifyableRepositoryItem )
+      if( item instanceof IWriteableRepositoryItem )
       {
         if( serializable instanceof Serializable )
         {
-          final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+          final IWriteableRepositoryItem modifyable = (IWriteableRepositoryItem) item;
           modifyable.setData( (Serializable) serializable );
         }
         else
@@ -503,9 +503,9 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( m_repository instanceof IModifyableRepository )
     {
       final IRepositoryItem item = m_repository.findItem( identifier );
-      if( item instanceof IModifyableRepositoryItem )
+      if( item instanceof IWriteableRepositoryItem )
       {
-        final IModifyableRepositoryItem modifyable = (IModifyableRepositoryItem) item;
+        final IWriteableRepositoryItem modifyable = (IWriteableRepositoryItem) item;
         modifyable.setName( name );
       }
     }

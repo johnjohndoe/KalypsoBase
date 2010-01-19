@@ -42,7 +42,7 @@ package org.kalypso.services.observation.client.repository;
 
 import java.io.Serializable;
 
-import org.kalypso.repository.IModifyableRepositoryItem;
+import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
@@ -52,7 +52,7 @@ import org.kalypso.services.observation.sei.ItemBean;
 /**
  * @author Dirk Kuch
  */
-public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem implements IModifyableRepositoryItem
+public class ModifyableServiceRepositoryItem extends ServiceRepositoryItem implements IWriteableRepositoryItem
 {
 
   public ModifyableServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent, final IRepository rep )
