@@ -58,11 +58,8 @@ import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
@@ -73,7 +70,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  */
 public class ObservationUtilities
 {
-  private static final String MSG_ERROR_NOAXISTYPE = Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.0" ); //$NON-NLS-1$
+  private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ:"; //$NON-NLS-1$
 
   private static final Comparator<IAxis> AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
@@ -137,7 +134,7 @@ public class ObservationUtilities
     {
       return findAxisByName( axes, axisName );
     }
-    catch( NoSuchElementException e )
+    catch( final NoSuchElementException e )
     {
       return null;
     }
@@ -326,7 +323,7 @@ public class ObservationUtilities
       for( int j = 0; j < axes.length; j++ )
         parsers[j] = ZmlFactory.createParser( axes[j] );
     }
-    catch( FactoryException e )
+    catch( final FactoryException e )
     {
       e.printStackTrace();
       throw new SensorException( e );
@@ -357,11 +354,11 @@ public class ObservationUtilities
           {
             writer.write( parsers[j].toString( model.getElement( i, axis ) ) );
           }
-          catch( ParserException e )
+          catch( final ParserException e )
           {
             e.printStackTrace();
 
-            writer.write( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.1" ) ); //$NON-NLS-1$
+            writer.write( "Fehler" ); //$NON-NLS-1$
           }
 
           if( j < axes.length - 1 )
@@ -400,7 +397,7 @@ public class ObservationUtilities
       for( int j = 0; j < axes.length; j++ )
         parsers[j] = ZmlFactory.createParser( axes[j] );
     }
-    catch( FactoryException e )
+    catch( final FactoryException e )
     {
       e.printStackTrace();
       throw new SensorException( e );
@@ -414,11 +411,11 @@ public class ObservationUtilities
       {
         sb.append( parsers[i].toString( model.getElement( index, axes[i] ) ) );
       }
-      catch( ParserException e )
+      catch( final ParserException e )
       {
         e.printStackTrace();
 
-        sb.append( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.2" ) ); //$NON-NLS-1$
+        sb.append( "Fehler" ); //$NON-NLS-1$
       }
 
       if( i < axes.length - 1 )
@@ -428,79 +425,6 @@ public class ObservationUtilities
     return sb.toString();
   }
 
-  /**
-   * Copy the values from source into dest. Only copies the values of the axes that are found in the dest AND in source
-   * observation.
-   * 
-   * @param source
-   *          source observation from which values are read
-   * @param dest
-   *          destination observation into which values are copied
-   * @param args
-   *          [optional, can be null] variable arguments
-   * @param fullCompatibilityExpected
-   *          when true an InvalidStateException is thrown to indicate that the full compatibility cannot be guaranteed.
-   *          The full compatibility is expressed in terms of the axes: the source observation must have the same axes
-   *          as the dest observation. If false, just the axes from dest that where found in source are used, thus
-   *          leading to potential null values in the tupple model
-   * @return model if some values have been copied, null otherwise
-   * @throws SensorException
-   * @throws IllegalStateException
-   *           when compatibility is wished but could not be guaranteed
-   */
-  public static ITuppleModel optimisticValuesCopy( final IObservation source, final IObservation dest, final IRequest args, boolean fullCompatibilityExpected ) throws SensorException, IllegalStateException
-  {
-    final IAxis[] srcAxes = source.getAxisList();
-    final IAxis[] destAxes = dest.getAxisList();
-
-    final ITuppleModel values = source.getValues( args );
-    if( values == null )
-      return null;
-
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>();
-    for( int i = 0; i < destAxes.length; i++ )
-    {
-      try
-      {
-        final IAxis A = ObservationUtilities.findAxisByType( srcAxes, destAxes[i].getType() );
-
-        map.put( destAxes[i], A );
-      }
-      catch( NoSuchElementException e )
-      {
-        if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.3" ) + destAxes[i] + Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.4" ) + dest + Messages.getString( "org.kalypso.ogc.sensor.ObservationUtilities.5" ) + source ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        // else ignored, try with next one
-      }
-    }
-
-    if( map.size() == 0 || values.getCount() == 0 )
-      return null;
-
-    final SimpleTuppleModel model = new SimpleTuppleModel( destAxes );
-
-    for( int i = 0; i < values.getCount(); i++ )
-    {
-      final Object[] tupple = new Object[destAxes.length];
-
-      for( int j = 0; j < destAxes.length; j++ )
-      {
-        final IAxis srcAxis = map.get( destAxes[j] );
-
-        if( srcAxis != null )
-          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i, srcAxis );
-        else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
-          tupple[model.getPositionFor( destAxes[j] )] = new Integer( KalypsoStati.BIT_OK );
-      }
-
-      model.addTupple( tupple );
-    }
-
-    dest.setValues( model );
-
-    return model;
-  }
 
   /**
    * Returns the given row. Creates a new array containing the references to the values in the tuppleModel for that row
@@ -583,7 +507,7 @@ public class ObservationUtilities
    * @param testAxes
    * @return position of best fit, else <code>-1</code> if not fit
    */
-  private static int findBestFitPos( final IAxis compareAxis, IAxis[] testAxes )
+  private static int findBestFitPos( final IAxis compareAxis, final IAxis[] testAxes )
   {
     int resultPos = -1;
     int maxHits = -1;
@@ -643,7 +567,7 @@ public class ObservationUtilities
       return result;
     }
     // do recursion
-    int midIndex = (minIndex + maxIndex) / 2;
+    final int midIndex = (minIndex + maxIndex) / 2;
     final Date date1 = (Date) tuppleModel.getElement( midIndex - 1, dateAxis );
     final Date date2 = (Date) tuppleModel.getElement( midIndex, dateAxis );
     if( Math.abs( date1.getTime() - targetDate ) < Math.abs( date2.getTime() - targetDate ) )
@@ -661,10 +585,10 @@ public class ObservationUtilities
    * @return index before date
    * @throws SensorException
    */
-  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, int minIndex, int maxIndex ) throws SensorException
+  public static int findIndexBeforeDate( final ITuppleModel tuppleModel, final IAxis dateAxis, final Date date, final int minIndex, final int maxIndex ) throws SensorException
   {
-    int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
-    Date rowDate = (Date) tuppleModel.getElement( index, dateAxis );
+    final int index = findNextIndexForDate( tuppleModel, dateAxis, date, minIndex, maxIndex );
+    final Date rowDate = (Date) tuppleModel.getElement( index, dateAxis );
     if( rowDate.before( rowDate ) )
       return index;
     return index - 1;
