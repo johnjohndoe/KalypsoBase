@@ -48,11 +48,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -60,10 +65,12 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IWriteableRepository;
+import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
-import org.kalypso.services.observation.client.repository.ServiceRepositoryObservation;
 import org.kalypso.services.observation.i18n.Messages;
-import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -85,14 +92,10 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
 
   private final URL m_context;
 
-
-  private final IObservationService m_srv;
-
   private final String m_sourceFilter;
 
-  public CommitPrognoseFeatureVisitor( final IObservationService srv, final URL context, final String sourceTS, final String targetTS, final String sourceFilter )
+  public CommitPrognoseFeatureVisitor( final URL context, final String sourceTS, final String targetTS, final String sourceFilter )
   {
-    m_srv = srv;
     m_context = context;
     m_sourceFilter = sourceFilter;
     m_sourceTS = sourceTS;
@@ -137,9 +140,24 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
     }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
+    }
+    catch( final FactoryException e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
+    }
+    catch( final RepositoryException e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
+    }
   }
 
-  private IStatus doIt( final String sourceHref, final String targetHref ) throws MalformedURLException, SensorException
+  private IStatus doIt( final String sourceHref, final String targetHref ) throws MalformedURLException, SensorException, JAXBException, FactoryException, RepositoryException
   {
     final String filteredSourceHref;
     if( m_sourceFilter != null && m_sourceFilter.length() > 0 && sourceHref.indexOf( '?' ) == -1 )
@@ -147,47 +165,40 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     else
       filteredSourceHref = sourceHref;
 
-    IUrlResolver resolver = UrlResolverSingleton.getDefault();
+    final IUrlResolver resolver = UrlResolverSingleton.getDefault();
 
     final URL urlRS = resolver.resolveURL( m_context, filteredSourceHref );
     final IObservation source = ZmlFactory.parseXML( urlRS, filteredSourceHref );
-// final String destRef = targetHref;
 
+    // leeres Request-Intervall, wir wollen eigentlich nur die Metadaten+Achsen
     final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
     final URL urlPG = resolver.resolveURL( m_context, destRef );
-    final IObservation dest = ZmlFactory.parseXML( urlPG, destRef );
+    final IObservation templateObservation = ZmlFactory.parseXML( urlPG, destRef );
 
     ITuppleModel values = null;
+    // FIXME: erzeugen!
+    final IObservation targetObservation = null;
     try
     {
       // copy values from source into dest, expecting full compatibility
-      values = ObservationUtilities.optimisticValuesCopy( source, dest, null, true );
+      // TODO: targetObservation erzeugen aufgrund von daten und templateObservation
+      values = ObservationUtilities.optimisticValuesCopy( source, templateObservation, null, true );
     }
     catch( final IllegalArgumentException e )
     {
-      // // not all axes could be associated between source and dest
-      // LOG.warning( "Observations are not compatible: " + e + "\n" + "Check if all axes of " + dest
-      // + " are defined in " + source );
-
-      final Status status = new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.3", source ), e ); //$NON-NLS-1$
-
-      return status;
+      return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.3", source ), e );
     }
 
-    // // todo: maybe inform when nothing happened during copy
-    // if( values == null )
-    // LOG.info( "Nothing to copy for " + source.getName() );
-    // else
-    // {
-    // save observation if it is a server side one
-    if( ZmlURL.isServerSide( targetHref ) )
+    final IRepository repository = RepositoryUtils.findRegisteredRepository( targetHref );
+    if( repository instanceof IWriteableRepository )
     {
-      ServiceRepositoryObservation.setValuesFor( values, targetHref, m_srv );
+      final byte[] data = ObservationHelper.flushToByteArray( targetObservation );
+      ((IWriteableRepository) repository).setData( targetHref, data );
       LOG.info( "Observation saved on server: " + targetHref ); //$NON-NLS-1$
+
     }
     else
-      LOG.warning( "! Observation not server side: " + targetHref ); //$NON-NLS-1$
-    // }
+      throw new NotImplementedException();
 
     return Status.OK_STATUS;
   }

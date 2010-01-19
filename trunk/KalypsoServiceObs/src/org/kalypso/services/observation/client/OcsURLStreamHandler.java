@@ -47,21 +47,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoriesExtensions;
-import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
@@ -88,11 +82,11 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
      */
     try
     {
-      final String protocol = u.getProtocol();
-      if( "proxy".equals( protocol ) ) //$NON-NLS-1$
-      {
-        return openProxyConnection( u );
-      }
+// final String protocol = u.getProtocol();
+//      if( "proxy".equals( protocol ) ) //$NON-NLS-1$
+// {
+// return openProxyConnection( u );
+// }
 
       return openOcsConnection( u );
     }
@@ -103,47 +97,47 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
   }
 
-  private URLConnection openProxyConnection( final URL u ) throws Exception
-  {
-    /** resolve IObservation from proxy repository */
-    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
-    final IRepository repository = factory.createRepository();
-
-    final String urlBase = u.toString();
-    final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
-    if( splittedUrlBase.length != 2 )
-      throw new IllegalStateException( String.format( "Unknown URL format. Format = proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
-
-    final String itemId = splittedUrlBase[0];
-    final String itemParameters = splittedUrlBase[1];
-
-    final IRepositoryItem item = repository.findItem( itemId );
-    IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-
-    // apply filter on observation
-    observation = FilterFactory.createFilterFrom( itemParameters, observation, null );
-
-    /** store observation to an local temp file an return connection handle of this temp file */
-    // FIXME delete tmp file
-    final File tmpFile = resolveTempFile( observation, itemId );
-
-// ZmlFactory.writeToFile( filteredObs, file )
-
-    return null;
-  }
-
-  private File resolveTempFile( final IObservation observation, final String itemId ) throws IOException
-  {
-    final String pathTmpDir = System.getProperty( "java.io.tmpdir" ); //$NON-NLS-1$
-    final File tmpDir = new File( pathTmpDir );
-    final File observationDir = new File( tmpDir, "kalypso/observations" ); //$NON-NLS-1$
-    if( !observationDir.exists() )
-      FileUtils.forceMkdir( observationDir );
-
-    final String[] parts = itemId.split( ":" ); //$NON-NLS-1$
-
-    return null;
-  }
+// private URLConnection openProxyConnection( final URL u ) throws Exception
+// {
+// /** resolve IObservation from proxy repository */
+//    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
+// final IRepository repository = factory.createRepository();
+//
+// final String urlBase = u.toString();
+//    final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
+// if( splittedUrlBase.length != 2 )
+//      throw new IllegalStateException( String.format( "Unknown URL format. Format = proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
+//
+// final String itemId = splittedUrlBase[0];
+// final String itemParameters = splittedUrlBase[1];
+//
+// final IRepositoryItem item = repository.findItem( itemId );
+// IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+//
+// // apply filter on observation
+// observation = FilterFactory.createFilterFrom( itemParameters, observation, null );
+//
+// /** store observation to an local temp file an return connection handle of this temp file */
+// // FIXME delete tmp file
+// // final File tmpFile = resolveTempFile( observation, itemId );
+//
+// // ZmlFactory.writeToFile( filteredObs, file )
+//
+// return null;
+// }
+//
+// private File resolveTempFile( final IObservation observation, final String itemId ) throws IOException
+// {
+//    final String pathTmpDir = System.getProperty( "java.io.tmpdir" ); //$NON-NLS-1$
+// final File tmpDir = new File( pathTmpDir );
+//    final File observationDir = new File( tmpDir, "kalypso/observations" ); //$NON-NLS-1$
+// if( !observationDir.exists() )
+// FileUtils.forceMkdir( observationDir );
+//
+//    final String[] parts = itemId.split( ":" ); //$NON-NLS-1$
+//
+// return null;
+// }
 
   private URLConnection openOcsConnection( final URL u ) throws IOException
   {
@@ -169,7 +163,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
 
     InputStream ins = null;
-// OutputStream stream = null;
     File file = null;
 
     try
@@ -192,10 +185,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       ins = data.getDataHandler().getInputStream();
       FileUtilities.makeFileFromStream( false, file, ins );
       ins.close();
-      // final byte[] bytes = data.getDataHandler();
-      // stream = new BufferedOutputStream( new FileOutputStream( file ) );
-      // stream.write( bytes );
-      // stream.close();
 
       srv.clearTempData( data.getId() );
 
@@ -205,8 +194,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.services.observation.client.OcsURLStreamHandler.4") + href ); //$NON-NLS-1$
       KalypsoServiceObsActivator.getDefault().getLog().log( status );
-// String exceptionMessage = e.getLocalizedMessage();
-// m_logger.info( "Link konnte nicht aufgelöst werden: " + href + "\nFehler: " + exceptionMessage );
 
       try
       {
@@ -226,7 +213,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     finally
     {
       IOUtils.closeQuietly( ins );
-// IOUtils.closeQuietly( stream );
     }
   }
 

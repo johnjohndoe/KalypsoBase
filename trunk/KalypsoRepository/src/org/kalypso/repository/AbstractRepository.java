@@ -68,7 +68,7 @@ public abstract class AbstractRepository implements IRepository
 
   private final String m_conf;
 
-  private String m_identifier;
+  private final String m_identifier;
 
   private final String m_label;
 
@@ -344,11 +344,6 @@ public abstract class AbstractRepository implements IRepository
   public void setProperty( final String name, final String value )
   {
     m_properties.setProperty( name, value );
-  }
-
-  public void setIdentifier( final String identifier )
-  {
-    m_identifier = identifier;
   }
 
   public String getIdentifier( )

@@ -74,7 +74,7 @@ public class ObservationServiceRepositoryFactory extends AbstractRepositoryFacto
     final KalypsoServiceObsActivator plugin = KalypsoServiceObsActivator.getDefault();
     if( plugin.isObservationServiceInitialized( getRepositoryName() ) )
       return true;
-
+    // FIXME: if no default is given, read the system property here and set it as config
     final String wsdlLocationProperty = getConfiguration();
     if( wsdlLocationProperty != null && !wsdlLocationProperty.isEmpty() )
     {

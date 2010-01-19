@@ -41,22 +41,12 @@
 package org.kalypso.services.observation.client.repository;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.xml.bind.Marshaller;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
-import org.kalypso.ogc.sensor.DateRange;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -66,13 +56,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ObservationBean;
-import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
 /**
@@ -221,85 +209,12 @@ public class ServiceRepositoryObservation implements IObservation
 
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
+   * @deprecated
    */
-  public final void setValues( final ITuppleModel values ) throws SensorException
+  @Deprecated
+  public final void setValues( final ITuppleModel values )
   {
-    // sets values
-    final IObservation obs = getRemote( new ObservationRequest( new DateRange() ) );
-    obs.setValues( values );
-
-    OutputStream stream = null;
-    File tmpFile = null;
-    try
-    {
-      // save zml
-      final Observation obst = ZmlFactory.createXML( obs, null );
-
-      tmpFile = File.createTempFile( "towards-server", "zml" ); //$NON-NLS-1$ //$NON-NLS-2$
-      tmpFile.deleteOnExit();
-
-      stream = new BufferedOutputStream( new FileOutputStream( tmpFile ) );
-      final Marshaller marshaller = ZmlFactory.getMarshaller();
-      marshaller.marshal( obst, stream );
-      stream.close();
-
-      // let server read file and save on its own
-      m_srv.writeData( m_ob, new DataHandler( new FileDataSource( tmpFile ) ) );
-
-      m_evtPrv.fireChangedEvent( null );
-    }
-    catch( final Exception e ) // generic for simplicity
-    {
-      throw new SensorException( e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( stream );
-      if( tmpFile != null )
-        tmpFile.delete();
-    }
-  }
-
-  /**
-   * Sets the given values to the server side observation defined by the given href.
-   */
-  public static void setValuesFor( final ITuppleModel values, final String href, final IObservationService srv ) throws SensorException
-  {
-    final ObservationBean bean = new ObservationBean();
-    bean.setId( href );
-
-    final ServiceRepositoryObservation srvObs = new ServiceRepositoryObservation( srv, bean );
-
-    srvObs.setValues( values );
-  }
-
-  /**
-   * Reads the file as a ZML-File and sets the values of the parsed observation to the server one defined by the given
-   * href.
-   */
-  public static void setValuesFor( final IFile file, final String href, final IObservationService srv ) throws SensorException
-  {
-    InputStreamReader in = null;
-    try
-    {
-      in = new InputStreamReader( file.getContents(), file.getCharset() );
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( in ), "", null ); //$NON-NLS-1$
-      in.close();
-
-      setValuesFor( obs.getValues( null ), href, srv );
-    }
-    catch( final Exception e )
-    {
-      if( e instanceof SensorException )
-        throw (SensorException) e;
-
-      e.printStackTrace();
-      throw new SensorException( e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( in );
-    }
+    throw new NotImplementedException( "Not used anymore. Use repository#setData instead" );
   }
 
   public final void addListener( final IObservationListener listener )

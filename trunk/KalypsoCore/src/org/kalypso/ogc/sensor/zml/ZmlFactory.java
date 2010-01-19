@@ -69,7 +69,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
@@ -105,9 +104,8 @@ import org.kalypso.ogc.sensor.zml.values.ZmlLinkValues;
 import org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.MetadataListType;
 import org.kalypso.zml.MetadataType;
@@ -228,8 +226,7 @@ public class ZmlFactory
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
-    // FIXME: totaler hack, um proxy repository abzuhandeln... muss durch extension point ersetzt werden!
-    final IObservation proxyObservation = parseZmlProxyXml( url );
+    final IObservation proxyObservation = fetchObservationFromRegisteredRepository( url );
     if( proxyObservation != null )
       return proxyObservation;
 
@@ -291,14 +288,16 @@ public class ZmlFactory
     }
   }
 
-  private static IObservation parseZmlProxyXml( final URL url ) throws SensorException
+  private static IObservation fetchObservationFromRegisteredRepository( final URL url ) throws SensorException
   {
-    final String PROXY_PROTOCOL = "zml-proxy:";
-
     try
     {
       final String urlBase = url.toExternalForm();
-      if( !urlBase.startsWith( PROXY_PROTOCOL ) )
+      if( ZmlURL.isEmpty( urlBase ) )
+        return RequestFactory.createDefaultObservation( urlBase );
+
+      final IRepository registeredRepository = RepositoryUtils.findRegisteredRepository( url.toExternalForm() );
+      if( registeredRepository == null )
         return null;
 
       final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
@@ -306,9 +305,8 @@ public class ZmlFactory
         throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
 
       final String itemId = splittedUrlBase[0];
-// final String itemParameters = splittedUrlBase.length > 1 ? splittedUrlBase[1] : null;
 
-      final IObservation proxyObservation = fetchZmlProxyXml( urlBase, itemId );
+      final IObservation proxyObservation = fetchZmlFromRepository( registeredRepository, itemId );
 
       return decorateObservation( proxyObservation, urlBase, url );
     }
@@ -322,15 +320,8 @@ public class ZmlFactory
     }
   }
 
-  private static IObservation fetchZmlProxyXml( final String urlBase, final String itemId ) throws SensorException, CoreException, RepositoryException
+  private static IObservation fetchZmlFromRepository( final IRepository repository, final String itemId ) throws RepositoryException
   {
-    if( ZmlURL.isEmpty( urlBase ) )
-      return RequestFactory.createDefaultObservation( urlBase );
-
-    /** resolve IObservation from proxy repository */
-    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
-    final IRepository repository = factory.createRepository();
-
     final IRepositoryItem item = repository.findItem( itemId );
     if( item == null )
       throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
@@ -545,7 +536,7 @@ public class ZmlFactory
       final List<MetadataType> metadataList = metadataListType.getMetadata();
 
       String metaName = null;
-      MetadataList obsMetadataList = obs.getMetadataList();
+      final MetadataList obsMetadataList = obs.getMetadataList();
       for( final Entry<Object, Object> entry : obsMetadataList.entrySet() )
       {
         final String mdKey = (String) entry.getKey();

@@ -209,4 +209,13 @@ public final class RepositoryItemUtlis
   {
     return identifier.contains( "://" );
   }
+
+  /**
+   * @return "protocol" of the given item id (like 'zml-proxy', 'datastore')
+   */
+  public static String getProtocol( final String identifier )
+  {
+    final String[] parts = identifier.split( "://" );
+    return parts[0];
+  }
 }

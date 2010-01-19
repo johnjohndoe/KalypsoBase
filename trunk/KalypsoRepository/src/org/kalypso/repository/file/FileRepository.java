@@ -91,19 +91,6 @@ public class FileRepository extends AbstractRepository
   }
 
   /**
-   * @param factory
-   * @param conf
-   * @param location
-   * @param identifier
-   * @param readOnly
-   * @see FileRepository#FileRepository(String, String, String, String, boolean, FileFilter)
-   */
-  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final boolean cached )
-  {
-    this( factory, conf, location, identifier, readOnly, cached, null );
-  }
-
-  /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
   @Override

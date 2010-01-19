@@ -44,10 +44,9 @@ import java.io.Serializable;
 
 /**
  * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IModifyableRepositoryItem extends IRepositoryItem
+public interface IWriteableRepository extends IRepository
 {
-  void setData( Serializable serializeable ) throws RepositoryException;
-
-  void setName( String itemName ) throws RepositoryException;
+  void setData( final String id, Serializable data ) throws RepositoryException;
 }

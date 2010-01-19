@@ -49,9 +49,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
-import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -93,8 +91,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   @Override
   protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
-    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getDefaultObservationService();
-    return new CommitPrognoseFeatureVisitor( srv, context, m_localObs, m_remoteObs, m_sourceFilter );
+    return new CommitPrognoseFeatureVisitor( context, m_localObs, m_remoteObs, m_sourceFilter );
   }
 
   /**

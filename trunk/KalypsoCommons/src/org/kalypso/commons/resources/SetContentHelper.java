@@ -46,6 +46,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -68,6 +69,8 @@ public abstract class SetContentHelper
 {
   private String m_newCharset;
   private final String m_title;
+
+  private String m_oldCharset;
 
   public SetContentHelper()
   {
@@ -92,15 +95,8 @@ public abstract class SetContentHelper
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
       final IProgressMonitor monitor, final String charset ) throws CoreException
   {
-    if( charset == null )
-    {
-      if( file.exists() )
-        m_newCharset = file.getCharset();
-      else
-        m_newCharset = file.getParent().getDefaultCharset();
-    }
-    else
-      m_newCharset = charset;
+    m_oldCharset = findCurrentCharset( file );
+    m_newCharset = findNewCharset( file, charset, m_oldCharset );
 
     PipedInputStream m_pis = null;
     boolean wasCreated = false;
@@ -191,10 +187,30 @@ public abstract class SetContentHelper
       IOUtils.closeQuietly( m_pis );
     }
 
-    file.setCharset( m_newCharset, new SubProgressMonitor( monitor, 1000 ) );
+    if( m_newCharset != null && !ObjectUtils.equals( m_oldCharset, m_newCharset ) )
+      file.setCharset( m_newCharset, new SubProgressMonitor( monitor, 1000 ) );
 
     // enclose in finally?
     monitor.done();
+  }
+
+  private String findNewCharset( final IFile file, final String charset, final String currentCharset ) throws CoreException
+  {
+    if( charset != null )
+      return charset;
+
+    if( currentCharset != null )
+      return currentCharset;
+
+    return file.getParent().getDefaultCharset();
+  }
+
+  private String findCurrentCharset( final IFile file ) throws CoreException
+  {
+    if( file.exists() )
+      return file.getCharset();
+
+    return null;
   }
 
   /**
