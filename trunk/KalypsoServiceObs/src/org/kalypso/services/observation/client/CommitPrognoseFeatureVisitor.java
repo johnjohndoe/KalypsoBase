@@ -45,7 +45,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -58,13 +60,17 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.observation.util.ObservationHelper;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
@@ -170,35 +176,32 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     final URL urlRS = resolver.resolveURL( m_context, filteredSourceHref );
     final IObservation source = ZmlFactory.parseXML( urlRS, filteredSourceHref );
 
-    // leeres Request-Intervall, wir wollen eigentlich nur die Metadaten+Achsen
-    final String destRef = ZmlURL.insertRequest( targetHref, new ObservationRequest( new Date(), new Date() ) );
-    final URL urlPG = resolver.resolveURL( m_context, destRef );
-    final IObservation templateObservation = ZmlFactory.parseXML( urlPG, destRef );
-
-    ITuppleModel values = null;
-    // FIXME: erzeugen!
-    final IObservation targetObservation = null;
     try
     {
       // copy values from source into dest, expecting full compatibility
-      // TODO: targetObservation erzeugen aufgrund von daten und templateObservation
-      values = ObservationUtilities.optimisticValuesCopy( source, templateObservation, null, true );
+
+      final IObservation target = optimisticValuesCopy( source );
+      if( target == null )
+        return StatusUtilities.createErrorStatus( "Fehler beim Ablegen der Ergebniszeitreihen. Konnte Werte nicht in die Zielzeitreihe kopieren" );
+
+      final IRepository repository = RepositoryUtils.findRegisteredRepository( targetHref );
+      if( repository instanceof IWriteableRepository )
+      {
+        final IWriteableRepository writeable = (IWriteableRepository) repository;
+
+        final byte[] data = ObservationHelper.flushToByteArray( target );
+        writeable.setData( targetHref, data );
+
+        LOG.info( "Observation saved on server: " + targetHref ); //$NON-NLS-1$
+      }
+      else
+        throw new NotImplementedException();
+
     }
     catch( final IllegalArgumentException e )
     {
       return new Status( IStatus.WARNING, KalypsoServiceObsActivator.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.3", source ), e );
     }
-
-    final IRepository repository = RepositoryUtils.findRegisteredRepository( targetHref );
-    if( repository instanceof IWriteableRepository )
-    {
-      final byte[] data = ObservationHelper.flushToByteArray( targetObservation );
-      ((IWriteableRepository) repository).setData( targetHref, data );
-      LOG.info( "Observation saved on server: " + targetHref ); //$NON-NLS-1$
-
-    }
-    else
-      throw new NotImplementedException();
 
     return Status.OK_STATUS;
   }
@@ -206,5 +209,89 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
   public final IStatus[] getStati( )
   {
     return m_stati.toArray( new IStatus[m_stati.size()] );
+  }
+
+  /**
+   * Copy the values from source into dest. Only copies the values of the axes that are found in the dest AND in source
+   * observation.
+   * 
+   * @param source
+   *          source observation from which values are read
+   * @param dest
+   *          destination observation into which values are copied
+   * @param args
+   *          [optional, can be null] variable arguments
+   * @param fullCompatibilityExpected
+   *          when true an InvalidStateException is thrown to indicate that the full compatibility cannot be guaranteed.
+   *          The full compatibility is expressed in terms of the axes: the source observation must have the same axes
+   *          as the dest observation. If false, just the axes from dest that where found in source are used, thus
+   *          leading to potential null values in the tupple model
+   * @return model if some values have been copied, null otherwise
+   * @throws SensorException
+   * @throws IllegalStateException
+   *           when compatibility is wished but could not be guaranteed
+   */
+  private static IObservation optimisticValuesCopy( final IObservation source ) throws SensorException, IllegalStateException
+  {
+
+    // leeres Request-Intervall, wir wollen final eigentlich nur die Metadaten+Achsen
+    final IAxis[] axes = source.getAxisList();
+    final String href = source.getHref();
+    final String identifier = source.getIdentifier();
+    final String name = source.getName();
+    final MetadataList metadataList = source.getMetadataList();
+
+    final SimpleObservation target = new SimpleObservation( href, identifier, name, true, metadataList, axes );
+
+    final IAxis[] srcAxes = source.getAxisList();
+    final IAxis[] destAxes = target.getAxisList();
+
+    final ITuppleModel values = source.getValues( null );
+    if( values == null )
+      return null;
+
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>();
+    for( int i = 0; i < destAxes.length; i++ )
+    {
+      try
+      {
+        final IAxis A = ObservationUtilities.findAxisByType( srcAxes, destAxes[i].getType() );
+
+        map.put( destAxes[i], A );
+      }
+      catch( final NoSuchElementException e )
+      {
+        if( !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
+          throw new IllegalStateException( "Required axis" + destAxes[i] + " from" + target + " could not be found in" + source );
+
+        // else ignored, try with next one
+      }
+    }
+
+    if( map.size() == 0 || values.getCount() == 0 )
+      return null;
+
+    final SimpleTuppleModel model = new SimpleTuppleModel( destAxes );
+
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final Object[] tupple = new Object[destAxes.length];
+
+      for( int j = 0; j < destAxes.length; j++ )
+      {
+        final IAxis srcAxis = map.get( destAxes[j] );
+
+        if( srcAxis != null )
+          tupple[model.getPositionFor( destAxes[j] )] = values.getElement( i, srcAxis );
+        else if( KalypsoStatusUtils.isStatusAxis( destAxes[j] ) )
+          tupple[model.getPositionFor( destAxes[j] )] = new Integer( KalypsoStati.BIT_OK );
+      }
+
+      model.addTupple( tupple );
+    }
+
+    target.setValues( model );
+
+    return target;
   }
 }
