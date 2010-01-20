@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * Gui type handler for gml:envelopes's.
@@ -175,8 +175,8 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    */
   public QName getTypeName( )
   {
-    /* This corresponds to the qname, it in defined in GeometryUtilities. */
-    return GeometryUtilities.QN_POINT;
+    /* This corresponds to the qname, it in defined in GMLConstants. */
+    return GMLConstants.QN_POINT;
   }
 
   /**
@@ -223,7 +223,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     double[] dbl_values = null;
 
-    /* Sind mind. zwei Einträge vorhanden (CS und ein double-Wert)? */
+    /* Sind mind. zwei Eintrï¿½ge vorhanden (CS und ein double-Wert)? */
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( str_values.length > 1 )
     {
