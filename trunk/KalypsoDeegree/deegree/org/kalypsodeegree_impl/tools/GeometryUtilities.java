@@ -77,31 +77,6 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
  */
 public class GeometryUtilities
 {
-  // TODO: move these properties to a general GML-constants interface
-  public static final QName QN_GEOMETRY = new QName( NS.GML3, "_Geometry" );
-
-  public static final QName QN_SURFACE = new QName( NS.GML3, "_Surface" );
-
-  public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
-
-  public static final QName QN_POINT = new QName( NS.GML3, "Point" );
-
-  public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
-
-  public static final QName QN_CURVE = new QName( NS.GML3, "_Curve" );
-
-  public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
-
-  public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
-
-  public static final QName QN_MULTI_CURVE = new QName( NS.GML3, "MultiCurve" );
-
-  public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
-
-  public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
-
-  public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
-
   private GeometryUtilities( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class" );
