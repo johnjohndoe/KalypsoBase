@@ -172,7 +172,8 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
     final QName targetName = (QName) sourceFeature.getProperty( m_targetFeatureType );
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( targetName.getNamespaceURI(), (String) null );
+    final String namespaceURI = targetName.getNamespaceURI();
+    final GMLSchema schema = schemaCatalog.getSchema( namespaceURI, (String) null );
     return schema.getFeatureType( targetName );
   }
 
