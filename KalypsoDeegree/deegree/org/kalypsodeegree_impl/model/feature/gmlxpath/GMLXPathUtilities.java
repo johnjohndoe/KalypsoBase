@@ -39,15 +39,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
 
 /**
  * @author doemming
  */
-public class GMLXPathUtilities
+public final class GMLXPathUtilities
 {
+  private GMLXPathUtilities( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
+
   /**
    * query xPath for GMLWorkspace
    */
@@ -62,6 +66,24 @@ public class GMLXPathUtilities
   public static Object query( final GMLXPath xPath, final Feature feature ) throws GMLXPathException
   {
     return getResultForSegment( xPath, feature, 0, false );
+  }
+
+  /**
+   * Same as {@link #query(GMLXPath, Feature)}, but ignores any exception (stack trace is printet though).
+   * 
+   * @return <code>null</code>, if the path returns <code>null</code> or an exception occurred.
+   */
+  public static Object queryQuiet( final GMLXPath xPath, final Feature feature )
+  {
+    try
+    {
+      return query( xPath, feature );
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private static Object getResultForSegment( final GMLXPath xPath, final Object context, final int segmentIndex, final boolean isFeatureTypeLevel ) throws GMLXPathException
@@ -80,17 +102,19 @@ public class GMLXPathUtilities
     if( newContext instanceof Feature )
       return getResultForSegment( xPath, newContext, segmentIndex + 1, false );
 
-    if( newContext instanceof List )
+    if( newContext instanceof List< ? > )
     {
-      final List contextList = (FeatureList) newContext;
+      final List< ? > contextList = (List< ? >) newContext;
       final List<Object> resultList = new ArrayList<Object>();
       for( final Object object : contextList )
+      {
         if( object instanceof Feature )
         {
           final Object result = getResultForSegment( xPath, object, segmentIndex + 1, !isFeatureTypeLevel );
           if( result != null )
             resultList.add( result );
         }
+      }
 
       if( resultList.size() == 1 )
         return resultList.get( 0 );
@@ -128,5 +152,4 @@ public class GMLXPathUtilities
 
     throw new GMLXPathException();
   }
-
 }
