@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
@@ -51,10 +50,8 @@ public class RepositoriesExtensions
 
     final Vector<RepositoryFactoryConfig> items = new Vector<RepositoryFactoryConfig>();
 
-    for( int j = 0; j < configurationElements.length; j++ )
+    for( final IConfigurationElement element : configurationElements )
     {
-      final IConfigurationElement element = configurationElements[j];
-
       final String name = element.getAttribute( ATT_NAME );
       final String conf = element.getAttribute( ATT_CONF );
       final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
@@ -86,20 +83,13 @@ public class RepositoriesExtensions
     if( extensionPoint == null )
       return null;
 
-    final IExtension[] extensions = extensionPoint.getExtensions();
+    final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
 
-    for( int i = 0; i < extensions.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      final IExtension extension = extensions[i];
-      final IConfigurationElement[] elements = extension.getConfigurationElements();
-
-      for( int j = 0; j < elements.length; j++ )
-      {
-        final IConfigurationElement element = elements[j];
-
-        if( factoryClassName.equals( element.getAttribute( ATT_FACTORY ) ) )
-          return (IRepositoryFactory) element.createExecutableExtension( ATT_FACTORY );
-      }
+      final String factoryClass = element.getAttribute( ATT_FACTORY );
+      if( factoryClassName.equals( factoryClass ) )
+        return (IRepositoryFactory) element.createExecutableExtension( ATT_FACTORY );
     }
 
     return null;
