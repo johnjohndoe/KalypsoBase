@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
+import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
