@@ -82,7 +82,7 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerStringArray;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomainTypeHandlerGml3;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author doemming
@@ -248,17 +248,17 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // Geometries
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_GEOMETRY, GeometryUtilities.QN_GEOMETRY, GM_Object.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_SURFACE, GeometryUtilities.QN_SURFACE, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POLYGON, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_CURVE, GeometryUtilities.QN_CURVE, GM_Curve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_CURVE, GeometryUtilities.QN_MULTI_CURVE, GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_POINT, GMLConstants.QN_POINT, GM_Point.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LINE_STRING, GMLConstants.QN_LINE_STRING, GM_Curve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_CURVE, GMLConstants.QN_CURVE, GM_Curve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POINT, GMLConstants.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_CURVE, GMLConstants.QN_MULTI_CURVE, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
     registry.registerTypeHandler( new PolyhedralSurfaceHandler() );
 
