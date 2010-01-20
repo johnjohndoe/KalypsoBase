@@ -130,8 +130,8 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final String uri, final String localName, final String name, final Attributes atts )
+  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater, final String uri, final String localName, final String name, final Attributes atts )
   {
-    return new TriangulatedSurfaceContentHandler( resultEater, xmlReader );
+    return new TriangulatedSurfaceContentHandler(resultEater,  parentContentHandler, xmlReader );
   }
 }
