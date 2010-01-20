@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -47,14 +47,14 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author Thomas Jung
  */
 public class LineThemePredicater implements IKalypsoThemePredicate
 {
-  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING, GeometryUtilities.QN_LINE_STRING };
+  private final QName[] m_QNames = new QName[] { GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_LINE_STRING };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)

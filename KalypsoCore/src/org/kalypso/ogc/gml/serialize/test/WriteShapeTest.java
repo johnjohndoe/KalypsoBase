@@ -24,7 +24,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 public class WriteShapeTest extends TestCase
 {
@@ -36,7 +36,7 @@ public class WriteShapeTest extends TestCase
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE ); //$NON-NLS-1$
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
-    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT );
+    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POINT );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
