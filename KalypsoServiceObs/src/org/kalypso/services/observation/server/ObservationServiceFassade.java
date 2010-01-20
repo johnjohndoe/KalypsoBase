@@ -509,6 +509,5 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         modifyable.setName( name );
       }
     }
-
   }
 }
