@@ -71,14 +71,15 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.repository.IModifyableRepository;
-import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IWriteableRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtlis;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
@@ -477,7 +478,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   {
     if( m_repository instanceof IModifyableRepository )
     {
-      final IRepositoryItem item = m_repository.findItem( identifier );
+      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
       if( item instanceof IWriteableRepositoryItem )
       {
         if( serializable instanceof Serializable )
@@ -489,7 +490,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         {
           throw new NotImplementedException();
         }
-
       }
     }
   }
