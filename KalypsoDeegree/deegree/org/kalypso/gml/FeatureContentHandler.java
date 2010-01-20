@@ -115,10 +115,8 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
     { 
       endDelegation();
       m_parentContentHandler.endElement( uri, localName, qName );
-      return;
     }
-    
-    if( QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), uri, localName ) )
+    else if( QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), uri, localName ) )
     {
       m_featureHandler.handle( m_scopeFeature );
       endDelegation();
@@ -126,7 +124,7 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
     }
     else
     {
-      //throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() ), m_locator );
+      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() ), m_locator );
     }
   }
 
