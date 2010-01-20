@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -78,6 +78,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -114,8 +115,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
         if( pt instanceof IValuePropertyType )
         {
           final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          return valueQName.equals( GeometryUtilities.QN_LINE_STRING ) || valueQName.equals( GeometryUtilities.QN_POLYGON ) || valueQName.equals( GeometryUtilities.QN_MULTI_LINE_STRING )
-              || valueQName.equals( GeometryUtilities.QN_MULTI_POLYGON );
+          return valueQName.equals( GMLConstants.QN_LINE_STRING ) || valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_LINE_STRING )
+              || valueQName.equals( GMLConstants.QN_MULTI_POLYGON );
         }
         return false;
       }
