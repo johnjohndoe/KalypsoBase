@@ -102,7 +102,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -224,7 +224,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING );
+    final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
@@ -260,7 +260,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POLYGON );
+    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
@@ -293,7 +293,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POLYGON );
+    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
