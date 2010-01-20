@@ -98,6 +98,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.xml.sax.Attributes;
 
 /**
  * Utilities around GMLSchema-processing
@@ -138,7 +139,8 @@ public class GMLSchemaUtilities
 
   private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
   private static final Map< Long , Map< Long, Boolean>> m_substitutesIDCache = new HashMap< Long, Map< Long, Boolean>>();
-
+  
+  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
   /**
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
@@ -1106,5 +1108,19 @@ public class GMLSchemaUtilities
     }
     return visitor.getSubstitutes( includeAbstract, inclusiveThis );
   }
-
+  
+  public static String getSchemaLocation( final Attributes atts )
+  {
+    for( int i = 0; i < atts.getLength(); i++ )
+    {
+      final QName attQName = new QName( atts.getURI( i ), atts.getLocalName( i ) );
+      if( XSD_SCHEMALOCATION.equals( attQName ) )
+      {
+        final String value = atts.getValue( i );
+        return value == null ? null : value.trim();
+      }
+    }
+    // no schemalocation found in attributes
+    return null;
+  }
 }
