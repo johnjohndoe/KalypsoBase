@@ -65,6 +65,6 @@ public class TrianglePatchesMarshaller extends PatchesMarshaller<GM_Triangle>
   @Override
   public void createPatchMarshaller( )
   {
-    m_patchMarshaller = new TriangleMarshaller( m_xmlReader );    
+    m_surfacePatchMarshaller = new TriangleMarshaller( m_xmlReader );    
   }
 }

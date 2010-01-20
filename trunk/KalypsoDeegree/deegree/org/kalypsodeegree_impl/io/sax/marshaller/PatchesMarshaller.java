@@ -55,7 +55,7 @@ import org.xml.sax.XMLReader;
  */
 public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller< GM_Surface<T>>
 {
-  protected SurfacePatchMarshaller<T> m_patchMarshaller;
+  protected SurfacePatchMarshaller<T> m_surfacePatchMarshaller;
   
   public PatchesMarshaller( final XMLReader xmlReader, final GM_Surface<T> surface, final String tag )
   {
@@ -70,11 +70,11 @@ public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends Abstr
   public void doMarshall( ) throws SAXException
   {
     createPatchMarshaller(); 
-    m_patchMarshaller.setSurfaceCrs( m_marshalledObject.getCoordinateSystem() );
+    m_surfacePatchMarshaller.setSurfaceCrs( m_marshalledObject.getCoordinateSystem() );
     for( final T patch : m_marshalledObject )
     { 
-      m_patchMarshaller.setPatch( patch );
-      m_patchMarshaller.marshall( );
+      m_surfacePatchMarshaller.setPatch( patch );
+      m_surfacePatchMarshaller.marshall( );
     }   
   }
   
@@ -82,6 +82,6 @@ public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends Abstr
   
   public SurfacePatchMarshaller<T> getPatchMarshaller()
   {
-    return m_patchMarshaller;
+    return m_surfacePatchMarshaller;
   }  
 }

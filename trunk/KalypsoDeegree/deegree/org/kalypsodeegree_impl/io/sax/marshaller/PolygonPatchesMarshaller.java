@@ -66,6 +66,6 @@ public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
   @Override
   public void createPatchMarshaller( )
   {
-    m_patchMarshaller = new PolygonPatchMarshaller( m_xmlReader, m_marshalledObject.getCoordinateSystem() );    
+    m_surfacePatchMarshaller = new PolygonPatchMarshaller( m_xmlReader, m_marshalledObject.getCoordinateSystem() );    
   }
 }
