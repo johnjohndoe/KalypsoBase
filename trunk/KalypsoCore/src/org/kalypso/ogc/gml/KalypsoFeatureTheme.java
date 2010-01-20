@@ -364,7 +364,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public GM_Envelope getFullExtent( )
   {
-    return m_featureList == null ? null : m_featureList.getBoundingBox();
+    final FeatureList visibleFeatures = getFeatureListVisible( null );
+    if( visibleFeatures == null )
+      return null;
+
+    return visibleFeatures.getBoundingBox();
   }
 
   public FeatureList getFeatureList( )
@@ -383,7 +387,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     // TODO: we should also get the scale here (else we might return currently invisible features)
 
     /* Use complete bounding box if search envelope is not set. */
-    final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
+    final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
 
     // Put features in set in order to avoid duplicates
     final Set<Feature> features = new LinkedHashSet<Feature>();
