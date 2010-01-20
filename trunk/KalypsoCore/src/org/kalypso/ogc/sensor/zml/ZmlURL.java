@@ -305,7 +305,7 @@ public final class ZmlURL
   /**
    * Return true if the href represents the "empty-id" (which is either "kalypso-ocs://LEER" or "kalypso-ocs://DUMMY")
    * 
-   * @return true if the given href contains "LEER" or "DUMMY"
+   * @return true if the given href contains "LEER"
    */
   public static boolean isEmpty( final String href )
   {

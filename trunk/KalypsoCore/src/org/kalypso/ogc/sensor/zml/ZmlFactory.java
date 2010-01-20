@@ -226,9 +226,9 @@ public class ZmlFactory
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
-    final IObservation proxyObservation = fetchObservationFromRegisteredRepository( url );
-    if( proxyObservation != null )
-      return proxyObservation;
+    final IObservation observation = fetchObservationFromRegisteredRepository( url );
+    if( observation != null )
+      return decorateObservation( observation, url.toExternalForm(), url );
 
     InputStream inputStream = null;
 
@@ -306,9 +306,7 @@ public class ZmlFactory
 
       final String itemId = splittedUrlBase[0];
 
-      final IObservation proxyObservation = fetchZmlFromRepository( registeredRepository, itemId );
-
-      return decorateObservation( proxyObservation, urlBase, url );
+      return fetchZmlFromRepository( registeredRepository, itemId );
     }
     catch( final SensorException e )
     {
