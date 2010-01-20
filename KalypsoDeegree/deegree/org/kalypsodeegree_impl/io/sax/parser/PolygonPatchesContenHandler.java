@@ -70,7 +70,7 @@ public class PolygonPatchesContenHandler extends GMLElementContentHandler implem
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  protected void doEndElement( String uri, String localName, String name ) throws SAXException
+  protected void doEndElement( String uri, String localName, String name )
   { 
     
   }
@@ -79,7 +79,7 @@ public class PolygonPatchesContenHandler extends GMLElementContentHandler implem
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXException
+  protected void doStartElement( String uri, String localName, String name, Attributes atts )
   { 
     setDelegate( new PolygonPatchContenHandler( this, m_defaultSrs, m_xmlReader ) );
   }
@@ -88,9 +88,9 @@ public class PolygonPatchesContenHandler extends GMLElementContentHandler implem
    * @see org.kalypsodeegree_impl.io.sax.IPolygonHandler#handlePolygon(org.kalypsodeegree.model.geometry.GM_Polygon)
    */
   @Override
-  public void handleElement( GM_Polygon polygon )
+  public void handle( GM_Polygon polygon ) throws SAXException
   {
-    m_polygonHandler.handleElement( polygon );
+    m_polygonHandler.handle( polygon );
   }
   
   @Override

@@ -136,14 +136,17 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
   
   protected abstract void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException;
   
-  /**
+  /*
    * This is the default behavior for this method. Subclasses shall override this method to especific behavior.
    */  
   public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
     throw new SAXParseException( String.format( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName ), m_locator );
   }
-   
+  
+  /*
+   * This is the default behavior for this method. Subclasses shall override this method to especific behavior.
+   */ 
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, name, m_uri, m_localName ), m_locator );  

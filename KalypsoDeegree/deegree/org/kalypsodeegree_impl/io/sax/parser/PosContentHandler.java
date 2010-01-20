@@ -62,10 +62,10 @@ public class PosContentHandler extends GMLElementContentHandler
   
   private IPositionHandler m_positionHandler;
   
-  public PosContentHandler( final IPositionHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PosContentHandler( final ContentHandler parentContentHandler, final IPositionHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
   {
-    super( NS.GML3, ELEMENT_POS, xmlReader, defaultSrs, positionHandler );
-    m_positionHandler = positionHandler;    
+    super( NS.GML3, ELEMENT_POS, xmlReader, defaultSrs, parentContentHandler );
+    m_positionHandler =  positionHandler;    
   }
 
   @Override
@@ -78,7 +78,7 @@ public class PosContentHandler extends GMLElementContentHandler
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   { 
     final GM_Position pos = endPos();
-    m_positionHandler.handleElement( new GM_Position[]{pos}, m_srs );
+    m_positionHandler.handle( new GM_Position[]{pos}, m_srs );
   }
 
   private GM_Position endPos() throws SAXParseException

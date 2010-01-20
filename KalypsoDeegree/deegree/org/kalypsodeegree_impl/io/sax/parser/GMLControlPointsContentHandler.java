@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.kalypsodeegree.model.geometry.GM_Position;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -49,24 +53,21 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler that parses control points. Actually, it delegates the parsing to a child content handler that
- * parses an especific sub-element. Control Points must be gml:pos, gml:posList or gml:pointProperty elements
+ * parses an especific sub-element. The control points to which this content handler can delegate are provided in a Map.   
  * 
  * @author Felipe Maximino
  */
-public class GMLControlPointsContentHandler extends DelegatingContentHandler implements IPositionHandler
+public class GMLControlPointsContentHandler extends DelegatingContentHandler
 {
-  private final IPositionHandler m_positionHandler;
-
-  private final String m_defaultSrs;
+  private Map<QName, ContentHandler> m_registeredCtrlPoints;
   
-  public GMLControlPointsContentHandler( IPositionHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
+  public GMLControlPointsContentHandler( IControlPointHandler ctrlPointHandler, final XMLReader xmlReader )
   {
-    super( xmlReader, positionHandler );
-
-    m_positionHandler = positionHandler;
-    m_defaultSrs = defaultSrs;
+    super( xmlReader, ctrlPointHandler );
+    
+    m_registeredCtrlPoints = new HashMap<QName, ContentHandler>();
   }
-
+  
   @Override
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   { 
@@ -80,50 +81,27 @@ public class GMLControlPointsContentHandler extends DelegatingContentHandler imp
 
   @Override
   public void startElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
-  {
-    ContentHandler delegate = findDelegate( uri, localName, name );
+  { 
+    ContentHandler delegate = findDelegate( new QName( uri, localName ) );
 
-    delegate.startElement( uri, localName, name, atts );
-    delegate( delegate );
+    if( delegate != null )
+    {
+      delegate( delegate );
+      delegate.startElement( uri, localName, name, atts );      
+    }
+    else
+    {
+      throw new SAXParseException( String.format( "Unexpected start element: %s - %s -  %s", uri, localName, name ), getLocator() );
+    }
   }
 
-  private ContentHandler findDelegate( final String uri, final String localName, final String name ) throws SAXParseException
+  private ContentHandler findDelegate( final QName qName )
   {
-    if( localName.equals( PosContentHandler.ELEMENT_POS ) )
-    {
-      return new PosContentHandler( this, m_defaultSrs, m_xmlReader );
-    }
-
-    if( localName.equals( PosListContentHandler.ELEMENT_POSLIST ) )
-    {
-      return new PosListContentHandler( this,  m_defaultSrs, m_xmlReader );
-    }
-
-    throw new SAXParseException( String.format( "Unexpected start element: %s - %s -  %s", uri, localName, name ), getLocator() );
+    return m_registeredCtrlPoints.get( qName );
   }
   
-  @Override
-  public void handleElement(GM_Position[] pos )
-  { 
-    m_positionHandler.handleElement( pos );
-  }  
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.IPositionHandler#handleElement(org.kalypsodeegree.model.geometry.GM_Position[], java.lang.String)
-   */
-  @Override
-  public void handleElement( GM_Position[] pos, String text )
+  public void registerControlPoint( final QName qName, final ContentHandler contentHandler )
   {
-    m_positionHandler.handleElement( pos, text );    
+    m_registeredCtrlPoints.put( qName, contentHandler );
   }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.IPositionHandler#parseType(java.lang.String)
-   */
-  @Override
-  public Object parseType( String text )
-  {
-    return m_positionHandler.parseType( text );
-  }
-
 }

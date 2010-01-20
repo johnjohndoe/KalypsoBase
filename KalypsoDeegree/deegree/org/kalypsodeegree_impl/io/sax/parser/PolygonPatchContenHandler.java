@@ -95,7 +95,7 @@ public class PolygonPatchContenHandler extends GMLElementContentHandler implemen
     {
       final GM_Polygon polygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_ring, null, crs );
       m_ring = null;
-      m_polygonHandler.handleElement( polygon );
+      m_polygonHandler.handle( polygon );
     }
     catch( GM_Exception e )
     {
@@ -109,7 +109,7 @@ public class PolygonPatchContenHandler extends GMLElementContentHandler implemen
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXException
+  protected void doStartElement( String uri, String localName, String name, Attributes atts )
   {
     ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( this, m_defaultSrs, m_xmlReader );
     exteriorContentHandler.setElementMinOccurs( 0 );
@@ -120,7 +120,7 @@ public class PolygonPatchContenHandler extends GMLElementContentHandler implemen
    * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
    */
   @Override
-  public void handleElement( GM_Ring ring )
+  public void handle( GM_Ring ring )
   {
     m_ring = ring;
   }

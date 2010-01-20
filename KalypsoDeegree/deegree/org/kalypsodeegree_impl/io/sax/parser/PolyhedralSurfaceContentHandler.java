@@ -44,6 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -66,14 +67,21 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   private GM_PolyhedralSurface_Impl<GM_Polygon> m_polyhedralSurface;
   
   private final UnmarshallResultEater m_resultEater;
-
+    
+  
   public PolyhedralSurfaceContentHandler( final UnmarshallResultEater resultEater, XMLReader xmlReader )
   {
-    super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader );
+    this( resultEater, null, xmlReader );
+  }
+  
+  public PolyhedralSurfaceContentHandler( UnmarshallResultEater resultEater, ContentHandler parentContentHandler, XMLReader xmlReader )
+  {
+    super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader, parentContentHandler );
 
     m_resultEater = resultEater;
   }
-  
+
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
@@ -102,7 +110,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXException
+  protected void doStartElement( String uri, String localName, String name, Attributes atts )
   {
     m_crs = ContentHandlerUtils.parseSrsFromAttributes( atts, null );
     setDelegate(  new PolygonPatchesContenHandler( this, m_crs, m_xmlReader )  );
@@ -112,7 +120,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.IPolygonHandler#handlePolygon()
    */
   @Override
-  public void handleElement( final GM_Polygon polygon )
+  public void handle( final GM_Polygon polygon )
   {
     if( m_crs ==  null)
     {

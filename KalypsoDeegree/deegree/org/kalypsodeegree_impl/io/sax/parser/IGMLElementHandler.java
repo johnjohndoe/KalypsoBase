@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * @author Gernot Belger
+ * 
+ * @author Felipe Maximino
  */
-public interface IRingHandler extends IGMLElementHandler<GM_Ring>
+public interface IGMLElementHandler<T> extends ContentHandler
 {
-  
+  public void handle( T element ) throws SAXException;
 }
