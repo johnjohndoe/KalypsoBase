@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree;
 
+import org.deegree.crs.transformations.TransformationFactory;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -48,7 +49,7 @@ public class KalypsoDeegreePlugin extends Plugin
   /**
    * The shared instance.
    */
-  private static KalypsoDeegreePlugin m_plugin;
+  private static KalypsoDeegreePlugin PLUGIN;
 
   /**
    * Storage for preferences.
@@ -67,7 +68,7 @@ public class KalypsoDeegreePlugin extends Plugin
   {
     super();
 
-    m_plugin = this;
+    PLUGIN = this;
     m_preferenceStore = null;
     m_coordinateSystem = null;
   }
@@ -79,6 +80,11 @@ public class KalypsoDeegreePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    // IMPORTANT: If this deegree code is static-initialised inside an ant-task, the internal
+    // Logger will not be correctly set-up and transformation will not work any more.
+    // So we force initialisation here.
+    TransformationFactory.getInstance();
   }
 
   /**
@@ -89,7 +95,7 @@ public class KalypsoDeegreePlugin extends Plugin
   {
     savePluginPreferences();
 
-    m_plugin = null;
+    PLUGIN = null;
     m_preferenceStore = null;
     m_coordinateSystem = null;
 
@@ -101,7 +107,7 @@ public class KalypsoDeegreePlugin extends Plugin
    */
   public static KalypsoDeegreePlugin getDefault( )
   {
-    return m_plugin;
+    return PLUGIN;
   }
 
   /**
