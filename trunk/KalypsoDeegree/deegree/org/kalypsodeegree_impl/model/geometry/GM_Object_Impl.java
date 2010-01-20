@@ -493,8 +493,8 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
    */
-  public @Override
-  boolean equals( final Object that )
+  @Override
+  public boolean equals( final Object that )
   {
     if( that == this )
       return true;

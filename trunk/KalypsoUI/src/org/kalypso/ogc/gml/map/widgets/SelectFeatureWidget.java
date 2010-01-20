@@ -425,14 +425,7 @@ public class SelectFeatureWidget extends AbstractWidget
     {
       final QName[] geomQNames = findGeomQName( hoverTheme, geomQName, IKalypsoFeatureTheme.PROPERTY_HOVER_GEOMETRIES, hoverFeature );
       for( final QName qName : geomQNames )
-      {
-        IPropertyType property = hoverFeature.getFeatureType().getProperty( geomQName );
-// comment in if info is needed
-//        if( property == null )
-//          System.out.println( "Unknown hover property: " + geomQName );
-//        else
           MapUtils.paintGrabbedFeature( g, mapPanel, hoverFeature, qName );
-      }
     }
   }
 
