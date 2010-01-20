@@ -102,23 +102,39 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
   @Override
   public void endElement( String uri, String localName, String qName ) throws SAXException
   {
-    if( m_scopeProperty == null )
-    {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, qName );
-    }
-    else if( QNameUtilities.equals( m_scopeProperty.getQName(), uri, localName ) )
+    if( m_scopeProperty != null && QNameUtilities.equals( m_scopeProperty.getQName(), uri, localName ) )
     {
       m_propertyHandler.setPropertyAsScope( null );
       endDelegation();
     }
-    else
+    else if( propertyHasAlreadyEnded() )
     {
-      /* TODO: if we set a ValuePropertyContentHandler as delegate, it's hard to know if this
-       * property was correctly ended during JAXB binding.
-       */
-      //throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() ), m_locator );  
+      endDelegation();
+      m_parentContentHandler.endElement( uri, localName, qName );
+    }    
+    else
+    { 
+      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() ), m_locator );
     }
+  }
+
+  private boolean propertyHasAlreadyEnded( )
+  {
+    if( m_scopeProperty == null ) // property was empty
+      return true;    
+    
+    /* HACK: if we set a ValuePropertyContentHandler(JAXB binding) as delegate, the end tag of this property maybe was
+     * already consumed during binding. We should be able to verify if the end tag was correctly ended during binding. 
+     */
+    if( m_scopeProperty instanceof IValuePropertyType )
+    {
+      IValuePropertyType vpt = (IValuePropertyType) m_scopeProperty;
+      
+      if( vpt.getTypeHandler() instanceof IMarshallingTypeHandler )
+        return true;
+    }
+    
+    return false;
   }
 
   /**
@@ -132,7 +148,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
       startProperty(uri, localName, qName, atts);
     }
     // HACK: this should not be needed (properties inside properties). But there are old gml Tin_Result files
-    // that are wrong written, i.e, with gml properties inside another gml property.
+    // that were wrong written, i.e, with gml properties inside another gml property.
     else
     { 
       delegate( new PropertyContentHandler( m_xmlReader, this, m_schemaLoader, m_context, m_scopeFeature ) );

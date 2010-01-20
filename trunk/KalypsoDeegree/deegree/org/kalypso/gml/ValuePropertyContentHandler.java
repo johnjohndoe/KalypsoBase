@@ -136,9 +136,7 @@ public class ValuePropertyContentHandler extends DelegatingContentHandler implem
     try
     {
       (( UnmarshallResultEater ) m_featureHandler).unmarshallSuccesful( value );
-      
-      //HACK: we should be able to verify if the scopeProperty tag was correctly ended during binding.
-      endElement( m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart(), null );
+      endDelegation();
     }
     catch ( SAXException e ) {
       throw new SAXParseException( String.format( "Unexpected end element: %s", m_scopeProperty.getQName() ), m_locator );
