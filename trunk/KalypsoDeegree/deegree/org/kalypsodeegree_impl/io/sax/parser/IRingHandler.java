@@ -45,7 +45,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 /**
  * @author Gernot Belger
  */
-public interface IRingHandler extends IGM_ElementHandler<GM_Ring>
+public interface IRingHandler extends IGMLElementHandler<GM_Ring>
 {
   
 }

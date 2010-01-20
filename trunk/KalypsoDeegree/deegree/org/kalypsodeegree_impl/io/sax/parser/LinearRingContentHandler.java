@@ -44,6 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -57,7 +58,7 @@ import org.xml.sax.XMLReader;
 public class LinearRingContentHandler extends GMLElementContentHandler implements IPositionHandler
 {
   public static final String ELEMENT_LINEAR_RING = "LinearRing";
-
+  
   private final List<GM_Position> m_poses = new ArrayList<GM_Position>( 4 );
 
   private final IRingHandler m_lineaRingHandler;
@@ -76,7 +77,15 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   { 
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
     
-    setDelegate( new GMLControlPointsContentHandler( this, m_defaultSrs, m_xmlReader ) );
+    GMLControlPointsContentHandler ctrlPointsContentHandler = new GMLControlPointsContentHandler( this, m_xmlReader );
+    
+    // the current supported control points for LinearRings.
+    // TODO: gml:pointProperty may also be supported
+    // gml:coordinates, gml:coord and gml:pointRep are deprecated
+    ctrlPointsContentHandler.registerControlPoint( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
+    ctrlPointsContentHandler.registerControlPoint( GMLConstants.QN_POS_LIST, new PosListContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
+    
+    setDelegate( ctrlPointsContentHandler );
   }
 
   @Override
@@ -97,7 +106,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     try
     { 
       final GM_Ring_Impl ring = GeometryFactory.createGM_Ring( poses, m_srs );
-      m_lineaRingHandler.handleElement( ring );
+      m_lineaRingHandler.handle( ring );
     }
     catch( final GM_Exception e )
     {
@@ -108,7 +117,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   }
   
   @Override
-  public void handleElement( final GM_Position[] positions )
+  public void handle( final GM_Position[] positions )
   {
     for(GM_Position pos : positions)
     {
@@ -121,14 +130,13 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
    *      java.lang.String)
    */
   @Override
-  public void handleElement( final GM_Position[] positions, final String srs )
+  public void handle( final GM_Position[] positions, final String srs )
   {
     // TODO: should transform the pos if it is not in the same crs as myself
-
     if( m_srs == null )
       m_srs = srs;
     
-    handleElement( positions );
+    handle( positions );
   }
 
   /**

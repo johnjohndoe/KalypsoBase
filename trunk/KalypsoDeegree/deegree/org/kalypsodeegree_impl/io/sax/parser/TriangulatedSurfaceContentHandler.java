@@ -44,6 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -67,7 +68,12 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
   
   public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, XMLReader xmlReader )
   {
-    super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader );
+    this( resultEater, null, xmlReader );
+  }
+  
+  public TriangulatedSurfaceContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, XMLReader xmlReader )
+  {
+    super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader, parentContentHandler );
 
     m_resultEater = resultEater;
   }
@@ -104,7 +110,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
    * @see org.kalypsodeegree_impl.io.sax.ITriangleHandler#handleTriangle(org.kalypsodeegree.model.geometry.GM_Triangle)
    */
   @Override
-  public void handleElement( final GM_Triangle triangle )
+  public void handle( final GM_Triangle triangle )
   {
     if( m_crs == null )
       m_crs = triangle.getCoordinateSystem();

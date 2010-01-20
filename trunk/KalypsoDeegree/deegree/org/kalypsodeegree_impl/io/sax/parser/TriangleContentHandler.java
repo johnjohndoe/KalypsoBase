@@ -89,7 +89,7 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
     try
     {
       final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( ring[0], ring[1], ring[2], srs );
-      m_triangleHandler.handleElement( gmTriangle );
+      m_triangleHandler.handle( gmTriangle );
     }
     catch( final GM_Exception e )
     {
@@ -103,7 +103,7 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
    * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
    */
   @Override
-  public void handleElement( final GM_Ring ring )
+  public void handle( final GM_Ring ring )
   {
     m_ring = ring;
   }

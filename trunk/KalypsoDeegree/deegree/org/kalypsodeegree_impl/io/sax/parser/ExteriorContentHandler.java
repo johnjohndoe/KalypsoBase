@@ -80,9 +80,9 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
    * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void doEndElement( final String uri, final String localName, final String name )
+  public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   { 
-    m_exteriorHandler.handleElement( m_ring );
+    m_exteriorHandler.handle( m_ring );
     m_ring = null;
   }
   
@@ -106,7 +106,7 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
    * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
    */
   @Override
-  public void handleElement( final GM_Ring ring )
+  public void handle( final GM_Ring ring )
   {
     m_ring = ring;    
   }

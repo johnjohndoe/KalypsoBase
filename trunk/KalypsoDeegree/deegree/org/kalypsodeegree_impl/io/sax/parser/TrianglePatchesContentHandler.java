@@ -57,7 +57,7 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
 
   public TrianglePatchesContentHandler( final ITriangleHandler triangleHandler, final String defaultSrs, final XMLReader xmlReader )
   { 
-    super( NS.GML3, ELEMENT_TRIANGLE_PATCH, xmlReader, defaultSrs, ( ContentHandler ) triangleHandler );    
+    super( NS.GML3, ELEMENT_TRIANGLE_PATCH, xmlReader, defaultSrs, triangleHandler );    
     m_triangleHandler = triangleHandler;    
   }
 
@@ -80,9 +80,9 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
    * @see org.kalypsodeegree_impl.io.sax.ITriangleHandler#handleTriangle(org.kalypsodeegree.model.geometry.GM_Triangle)
    */
   @Override
-  public void handleElement( final GM_Triangle triangle )
+  public void handle( final GM_Triangle triangle ) throws SAXException
   {
-    m_triangleHandler.handleElement( triangle );
+    m_triangleHandler.handle( triangle );
   }
   
   @Override

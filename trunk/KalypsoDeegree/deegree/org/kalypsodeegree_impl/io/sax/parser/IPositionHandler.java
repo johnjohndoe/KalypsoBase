@@ -45,9 +45,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 /**
  * @author Gernot Belger
  */
-public interface IPositionHandler extends IGM_ElementHandler<GM_Position[]>
+public interface IPositionHandler extends IControlPointHandler<GM_Position[]>
 { 
-  public void handleElement( GM_Position[] pos, String text );
-  
-  public Object parseType( final String text );
+ 
 }

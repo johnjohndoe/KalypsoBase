@@ -75,10 +75,10 @@ public class PosListContentHandler extends GMLElementContentHandler
   
   private IPositionHandler m_positionHandler;
   
-  public PosListContentHandler( final IPositionHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PosListContentHandler( final ContentHandler parentContentHandler, final IControlPointHandler<GM_Position[]> positionHandler, final String defaultSrs, final XMLReader xmlReader )
   {
-    super( NS.GML3, ELEMENT_POSLIST, xmlReader, defaultSrs, positionHandler );
-    m_positionHandler = positionHandler;
+    super( NS.GML3, ELEMENT_POSLIST, xmlReader, defaultSrs, parentContentHandler );
+    m_positionHandler = ( IPositionHandler ) positionHandler;
   }
 
   @Override
@@ -95,7 +95,7 @@ public class PosListContentHandler extends GMLElementContentHandler
   { 
     final GM_Position[] posList = endPosList();
 
-    m_positionHandler.handleElement( posList, m_srs );
+    m_positionHandler.handle( posList, m_srs );
   }
 
   /**

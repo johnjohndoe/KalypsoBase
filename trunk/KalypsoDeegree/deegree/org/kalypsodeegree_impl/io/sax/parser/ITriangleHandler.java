@@ -45,7 +45,7 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 /**
  * @author Gernot Belger
  */
-public interface ITriangleHandler extends IGM_ElementHandler<GM_Triangle>
+public interface ITriangleHandler extends IGMLElementHandler<GM_Triangle>
 {
   
 }
