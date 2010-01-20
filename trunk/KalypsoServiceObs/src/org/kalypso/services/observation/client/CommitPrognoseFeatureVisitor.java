@@ -50,12 +50,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -146,16 +143,6 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
     }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
-    }
-    catch( final FactoryException e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
-    }
     catch( final RepositoryException e )
     {
       e.printStackTrace();
@@ -163,7 +150,7 @@ public class CommitPrognoseFeatureVisitor implements FeatureVisitor
     }
   }
 
-  private IStatus doIt( final String sourceHref, final String targetHref ) throws MalformedURLException, SensorException, JAXBException, FactoryException, RepositoryException
+  private IStatus doIt( final String sourceHref, final String targetHref ) throws MalformedURLException, SensorException, RepositoryException
   {
     final String filteredSourceHref;
     if( m_sourceFilter != null && m_sourceFilter.length() > 0 && sourceHref.indexOf( '?' ) == -1 )
