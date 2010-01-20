@@ -126,7 +126,7 @@ public class FeatureContentHandler extends DelegatingContentHandler implements U
     }
     else
     {
-      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() ), m_locator );
+      //throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() ), m_locator );
     }
   }
 

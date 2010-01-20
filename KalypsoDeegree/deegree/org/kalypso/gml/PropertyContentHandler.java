@@ -117,7 +117,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
       /* TODO: if we set a ValuePropertyContentHandler as delegate, it's hard to know if this
        * property was correctly ended during JAXB binding.
        */
-      throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() ), m_locator );  
+      //throw new SAXParseException( String.format( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeProperty.getQName().getNamespaceURI(), m_scopeProperty.getQName().getLocalPart() ), m_locator );  
     }
   }
 
