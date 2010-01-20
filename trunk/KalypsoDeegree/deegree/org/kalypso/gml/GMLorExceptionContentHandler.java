@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -45,11 +45,10 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.org.xml.sax.AppendingContentHandler;
-import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -63,18 +62,30 @@ import org.xml.sax.XMLReader;
  * </p>
  * 
  * @author Gernot Belger
- * @author Andreas von Dömming
+ * @author Andreas von Dï¿½mming
+ * @author Felipe Maximino - Refaktoring
  */
-public class GMLorExceptionContentHandler extends DelegateContentHandler
+public class GMLorExceptionContentHandler extends DelegatingContentHandler
 {
   // TODO: where to put this constant?
   final QName QNAME_OWS_EXCEPTION_REPORT = new QName( "http://www.opengis.net/ows", "ExceptionReport" );
-
-  private int m_depth = 0;
-
+  
+  private final XMLReader m_xmlReader;
+  
+  private final URL m_schemaLocationHint;
+  
+  private final URL m_context;
+  
+  private final IFeatureProviderFactory m_providerFactory;
+  
   public GMLorExceptionContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
   {
-    super( new GMLDocumentContentHandler( xmlReader, schemaLocationHint, context, providerFactory ) );
+    super( xmlReader, null );
+
+    m_xmlReader = xmlReader;
+    m_schemaLocationHint = schemaLocationHint;
+    m_context = context;
+    m_providerFactory = providerFactory;
   }
 
   /**
@@ -85,47 +96,45 @@ public class GMLorExceptionContentHandler extends DelegateContentHandler
    */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
-  {
-    if( m_depth == 0 )
+  { 
+    // handle OGC Exceptions
+    // Handle degree1 + deegree2 exepctions.
+    // deegree1-service: ...Exception
+    // deegree2-service: ServiceExceptionReport
+    // TODO: we should test for the namespace, what happens if we ever have a gml with root element 'exception'?
+    final QName eltQName = new QName( uri, localName );
+    if( localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" ) )
     {
-      // handle OGC Exceptions
-      // Handle degree1 + deegree2 exepctions.
-      // deegree1-service: ...Exception
-      // deegree2-service: ServiceExceptionReport
-      // TODO: we should test for the namespace, what happens if we ever have a gml with root element 'exception'?
-      final QName eltQName = new QName( uri, localName );
-      if( localName.endsWith( "Exception" ) || localName.equals( "ServiceExceptionReport" ) )
-        setDelegate( new AppendingContentHandler( new StringBuffer() ) );
-      else if( eltQName.equals( QNAME_OWS_EXCEPTION_REPORT ) )
-        setDelegate( new AppendingContentHandler( new StringBuffer() ) );
+      delegate( new AppendingContentHandler( new StringBuffer() ) );
     }
-
-    m_depth++;
-
-    super.startElement( uri, localName, qName, atts );
+    else if( eltQName.equals( QNAME_OWS_EXCEPTION_REPORT ) )
+    {
+      delegate( new AppendingContentHandler( new StringBuffer() ) );
+    }
+    else
+    { 
+      delegate( new GMLDocumentContentHandler( m_xmlReader, this, m_schemaLocationHint, m_context, m_providerFactory ) );
+      m_delegate.startElement( uri, localName, qName, atts );
+    }
   }
 
   /**
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void endElement( final String uri, final String localName, final String qName ) throws SAXException
+  public void endElement( final String uri, final String localName, final String qName )
   {
-    super.endElement( uri, localName, qName );
-
-    m_depth--;
+    endDelegation();
   }
 
   public GMLWorkspace getWorkspace( ) throws GMLException
   {
-    final ContentHandler delegate = getDelegate();
-
-    if( delegate instanceof AppendingContentHandler )
+    if( m_delegate instanceof AppendingContentHandler )
     {
-      final Appendable buffer = ((AppendingContentHandler) delegate).getAppendable();
+      final Appendable buffer = ((AppendingContentHandler) m_delegate).getAppendable();
       throw new GMLException( buffer.toString() );
     }
 
-    return ((GMLDocumentContentHandler) delegate).getWorkspace();
+    return ((IWorkspaceProvider) m_delegate).getWorkspace();
   }
 }
