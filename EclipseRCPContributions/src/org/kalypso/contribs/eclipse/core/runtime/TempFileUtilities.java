@@ -110,4 +110,14 @@ public class TempFileUtilities
     
     dir.delete();
   }
+
+  public static File getTempDir( )
+  {
+    final String property = System.getProperty( "java.io.tmpdir", null );
+    if( property == null )
+      throw new IllegalStateException( "java.io.tmpdir not found!" );
+
+    return new File( property );
+  }
+
 }
