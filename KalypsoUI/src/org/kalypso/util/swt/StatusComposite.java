@@ -282,11 +282,11 @@ public class StatusComposite extends Composite
         return providerText;
     }
 
-    String message = m_status.getMessage();
-    String message1 = message.replace( "\r\n", " " );
-    String message2 = message1.replace( "\r", " " );
-    String message3 = message2.replace( "\n", " " );
-    String message4 = message3.replace( "\t", " " );
+    final String message = m_status.getMessage();
+    final String message1 = message.replace( "\r\n", " " );
+    final String message2 = message1.replace( "\r", " " );
+    final String message3 = message2.replace( "\n", " " );
+    final String message4 = message3.replace( "\t", " " );
 
     return message4;
   }
