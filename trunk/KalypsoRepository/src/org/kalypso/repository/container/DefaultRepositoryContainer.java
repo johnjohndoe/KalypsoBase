@@ -81,6 +81,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
 
   public void addRepository( final IRepository rep )
   {
+    if( rep == null )
+      return;
+
     m_reps.add( rep );
 
     fireRepositoryChanged();
