@@ -49,7 +49,7 @@ import org.kalypso.commons.xml.NS;
  * @author Felipe Maximino
  *
  */
-public class GMLConstants
+public final class GMLConstants
 {
   public static final QName QN_GEOMETRY = new QName( NS.GML3, "_Geometry" );
 
