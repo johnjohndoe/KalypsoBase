@@ -60,6 +60,7 @@ import net.opengeospatial.wps.SupportedComplexDataType;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
@@ -567,7 +568,7 @@ public class SimulationDelegate
             final String relativePathTo = inputResource.getFullPath().makeRelative().toString();
             final FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
             final String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
-            wpsInputs.put( identifier.getValue(), new URI( serverUrl ) );
+            wpsInputs.put( identifier.getValue(), new URI( URIUtil.encodePath( serverUrl ) ) );
           }
           else
           // maybe check the protocols?
