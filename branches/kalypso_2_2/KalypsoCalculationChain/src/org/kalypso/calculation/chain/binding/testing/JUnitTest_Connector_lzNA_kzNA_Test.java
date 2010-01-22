@@ -27,7 +27,7 @@ public class JUnitTest_Connector_lzNA_kzNA_Test extends TestCase
     final List<CalculationChainMemberJobSpecification> jobSpecificationList = new ArrayList<CalculationChainMemberJobSpecification>();
 
     final IContainer calcCaseKZ = ResourcesPlugin.getWorkspace().getRoot().getProject( "DemoModell" ).getFolder( "Rechenvarianten/kurzzeit1" );
-    final CalculationChainMemberJobSpecification jobSpec = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_LZNA_KZNA", calcCaseKZ.getFullPath() );
+    final CalculationChainMemberJobSpecification jobSpec = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_LZNA_KZNA", calcCaseKZ.getFullPath(),null );
     jobSpec.addInput( "LZNA_ERGEBNISSE_AKTUEL_ANFANGWERTE", "platform:/resource//DemoModell/Rechenvarianten/langzeitTest1/Ergebnisse/Aktuell/Anfangswerte", false );
 //    jobSpec.addInput( "KZNA_CALCULATION", "platform:/resource//DemoModell/Rechenvarianten/kurzzeit1/.calculation", false );
 //    jobSpec.addOutput( "KZNA_ANFANGWERTE_LZSIM", "platform:/resource//DemoModell/Rechenvarianten/kurzzeit1/Anfangswerte/lzsim.gml", false );
