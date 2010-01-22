@@ -40,17 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
-
 /**
  * @author Dirk Kuch
  */
 public interface ICopyObservationMetaDataConstants extends TimeserieConstants
 {
-  String MD_TIME_SERIES_SOURCE = "CopyObsVisitor_Src_Reference";
+  final String MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC = "CopyObsVisitor_Src"; //$NON-NLS-1$
 
-  String MD_TIME_SERIES_FILTER = "CopyObsVisitor_Src_Filter";
+  String MD_TIME_SERIES_SOURCE = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_Reference"; //$NON-NLS-1$
 
-  String MD_TIME_SERIES_SRC_DATE_RANGE_FROM = "CopyObsVisitor_Src_DateRange_From";
+  String MD_TIME_SERIES_FILTER = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_Filter"; //$NON-NLS-1$
 
-  String MD_TIME_SERIES_SRC_DATE_RANGE_TO = "CopyObsVisitor_Src_DateRange_To";
+  String MD_TIME_SERIES_SRC_DATE_RANGE_FROM = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_DateRange_From"; //$NON-NLS-1$
+
+  String MD_TIME_SERIES_SRC_DATE_RANGE_TO = MD_TIME_SERIES_PREFIX_COPY_OBS_VISITOR_SRC + "_DateRange_To"; //$NON-NLS-1$
 }
