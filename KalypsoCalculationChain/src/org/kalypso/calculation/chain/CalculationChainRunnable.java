@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -13,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.calculation.chain.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.refactoring.ISimulationRunner;
@@ -85,11 +88,11 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     {
       for( final CalculationChainMemberJobSpecification job : m_jobSpecificationList )
       {
-        setTask( String.format( "Processing calculation chain member \"%s\"", job.getCalculationTypeID() ), monitor );
+        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor );
 
         if( status.isOK() )
         {
-          System.out.println( String.format( "Starting calc job: %s", job.getCalculationTypeID() ) ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.INFO, String.format( "Starting calc job: %s [%s]", job.getDescription(), job.getCalculationTypeID() ) ); //$NON-NLS-1$
 
           final IPath workspace = job.getContainer();
           final IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember( workspace );
@@ -118,7 +121,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
         }
       }
 
-      setTask( String.format( "Processed calculation chain" ), monitor );
+      setTask( String.format( Messages.getString( "CalculationChainRunnable_1" ) ), monitor );
     }
     catch( final Exception e )
     {

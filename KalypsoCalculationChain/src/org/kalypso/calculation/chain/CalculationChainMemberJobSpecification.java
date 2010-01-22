@@ -25,10 +25,18 @@ public class CalculationChainMemberJobSpecification
 
   private final IPath m_container;
 
+  private final String m_description;
+
   public CalculationChainMemberJobSpecification( final String calculationTypeID, final IPath container )
+  {
+    this( calculationTypeID, container, null );
+  }
+
+  public CalculationChainMemberJobSpecification( final String calculationTypeID, final IPath container, final String description )
   {
     m_calculationTypeID = calculationTypeID;
     m_container = container;
+    m_description = (description == null || description.length() == 0) ? calculationTypeID : description;
   }
 
   public void addInput( final String id, final String path )
@@ -74,13 +82,18 @@ public class CalculationChainMemberJobSpecification
     return m_calculationTypeID;
   }
 
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
   public IPath getContainer( )
   {
     return m_container;
   }
 
   public Modeldata getModeldata( final URL context ) throws MalformedURLException
-  { 
+  {
     return SimulationUtilitites.createModelData( context, m_calculationTypeID, m_inputList, m_outputList );
   }
 
