@@ -41,6 +41,7 @@
 package org.kalypso.simulation.ui.ant;
 
 import java.net.URL;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -48,8 +49,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
-import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor;
 import org.kalypso.simulation.ui.ant.AbstractFeatureVisitorTask;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -62,8 +65,14 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 public class CommitObservationsTask extends AbstractFeatureVisitorTask
 {
   private String m_localObs;
+
   private String m_remoteObs;
+
   private String m_sourceFilter;
+
+  private Date m_from;
+
+  private Date m_to;
 
   public final void setLocalObs( final String localObs )
   {
@@ -80,7 +89,17 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     m_sourceFilter = sourceFilter;
   }
 
-  public CommitObservationsTask()
+  public void setFrom( final String lexicalFrom )
+  {
+    m_from = DateUtilities.parseDateTime( lexicalFrom );
+  }
+
+  public void setTo( final String lexicalTo )
+  {
+    m_to = DateUtilities.parseDateTime( lexicalTo );
+  }
+
+  public CommitObservationsTask( )
   {
     super( false );
   }
@@ -90,16 +109,26 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
+  public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
-    return new CommitPrognoseFeatureVisitor( context, m_localObs, m_remoteObs, m_sourceFilter );
+    final DateRange dateRange = getDateRange();
+
+    return new CommitPrognoseFeatureVisitor( context, m_localObs, m_remoteObs, m_sourceFilter, dateRange );
+  }
+
+  private DateRange getDateRange( )
+  {
+    if( m_from == null || m_to == null )
+      return null;
+
+    return new DateRange( m_from, m_to );
   }
 
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#statusFromVisitor(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   @Override
-  protected final IStatus statusFromVisitor( final FeatureVisitor visitor )
+  public final IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
     final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor) visitor;
     if( v.getStati().length > 0 )
@@ -109,19 +138,11 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   }
 
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
-   */
-  @Override
-  protected void validateInput()
-  {}
-
-  /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
    */
   public final void handleError( final Shell shell, final IStatus status )
   {
-    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ),
-        "Fehler beim Zurückschreiben der Zeitreihen", status );
+    ErrorDialog.openError( shell, ClassUtilities.getOnlyClassName( getClass() ), "Fehler beim Zurückschreiben der Zeitreihen", status );
   }
 }

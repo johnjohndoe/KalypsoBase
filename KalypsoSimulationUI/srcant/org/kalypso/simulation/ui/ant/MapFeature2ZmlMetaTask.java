@@ -91,18 +91,9 @@ public class MapFeature2ZmlMetaTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
+  public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
     return new MapFeature2ZmlMetaVisitor( context, m_zmlLink, m_mappings.toArray( new Feature2ZmlMapping[m_mappings.size()] ) );
-  }
-
-  /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
-   */
-  @Override
-  protected void validateInput()
-  {
-  // nothing to validate
   }
 
   /**

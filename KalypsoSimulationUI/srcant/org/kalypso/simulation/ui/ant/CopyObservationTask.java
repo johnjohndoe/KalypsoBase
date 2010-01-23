@@ -133,7 +133,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
+  public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   { 
     final DateRange forecastRange = DateRange.createDateRangeOrNull( parseDateTime( m_forecastFrom ), parseDateTime( m_forecastTo ) );
     final DateRange targetRange = DateRange.createDateRangeOrNull( parseDateTime( m_targetFrom ), parseDateTime( m_targetTo ) );
@@ -252,15 +252,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     {
       m_value = value;
     }
-  }
-
-  /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
-   */
-  @Override
-  protected void validateInput( )
-  {
-    // nothing to do
   }
 
   /**

@@ -88,7 +88,7 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
+  public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
     return new MergeObservationFeatureVisitor( m_sourceContext, context, m_observationProperty, logger );
   }
@@ -101,15 +101,6 @@ public class MergeObservationTask extends AbstractFeatureVisitorTask
   public final void setObservationProperty( final String observationProperty )
   {
     m_observationProperty = observationProperty;
-  }
-
-  /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
-   */
-  @Override
-  protected void validateInput()
-  {
-  // nothing to do
   }
 
   /**
