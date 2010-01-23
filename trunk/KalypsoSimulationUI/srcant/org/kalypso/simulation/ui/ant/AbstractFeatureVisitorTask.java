@@ -41,33 +41,23 @@
 
 package org.kalypso.simulation.ui.ant;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.logging.Level;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
@@ -75,13 +65,9 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.simulation.core.ant.FeatureVisitorOperation;
+import org.kalypso.simulation.core.ant.IFeatureVisitorTask;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.visitors.CountFeatureVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
 /**
  * Abstract task for task which starts a visitor on some features.<br/>
@@ -90,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRunnableWithProgress, IErrorHandler
+public abstract class AbstractFeatureVisitorTask extends Task implements IErrorHandler, IFeatureVisitorTask
 {
   /**
    * Separator between feature-pathes ; can be used to give this Task multiple feature-pathes. The task will then
@@ -119,7 +105,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   /**
    * Feature-Path innerhalb des GMLs. Alle durch diesen Pfad denotierten Features werden behandelt.
    */
-  private String[] m_featurePath;
+  private String[] m_featurePathes;
 
   /** Kontext (=URL), gegen welche die Links innerhalb des GML aufgelöst werden. */
   private URL m_context;
@@ -160,7 +146,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
 
   public final void setFeaturePath( final String featurePath )
   {
-    m_featurePath = featurePath.split( FEATURE_PATH_SEPARATOR );
+    m_featurePathes = featurePath.split( FEATURE_PATH_SEPARATOR );
   }
 
   public final void setGml( final String gml )
@@ -173,11 +159,82 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     m_depth = depth;
   }
 
-  private synchronized ILogger getLogger( )
+  public synchronized ILogger getLogger( )
   {
     if( m_logger == null )
       m_logger = createLogger();
     return m_logger;
+  }
+
+  /**
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
+   */
+  @Override
+  public void validateInput( )
+  {
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#getContext()
+   */
+  @Override
+  public final URL getContext( )
+  {
+    return m_context;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#getGmlLocation()
+   */
+  @Override
+  public final URL getGmlLocation( ) throws MalformedURLException
+  {
+    return UrlResolverSingleton.getDefault().resolveURL( m_context, m_gml );
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#getFeaturePathes()
+   */
+  @Override
+  public final String[] getFeaturePathes( )
+  {
+    return m_featurePathes;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#doSaveGml()
+   */
+  @Override
+  public boolean doSaveGml( )
+  {
+    return m_doSaveGml;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#doIgnoreIllegalFeaturePath()
+   */
+  @Override
+  public boolean doIgnoreIllegalFeaturePath( )
+  {
+    return m_ignoreIllegalFeaturePath;
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ant.IFeatureVisitorTask#getDepth()
+   */
+  @Override
+  public final int getDepth( )
+  {
+    if( m_depth.compareToIgnoreCase( "infinite" ) == 0 )
+      return FeatureVisitor.DEPTH_INFINITE;
+
+    if( m_depth.compareToIgnoreCase( "infinite_links" ) == 0 )
+      return FeatureVisitor.DEPTH_INFINITE;
+
+    if( m_depth.compareToIgnoreCase( "zero" ) == 0 )
+      return FeatureVisitor.DEPTH_ZERO;
+
+    throw new BuildException( "Unsupported value of 'depth': " + m_depth );
   }
 
   /**
@@ -188,18 +245,16 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   {
     try
     {
-      if( m_runAsync )
-        executeInDialog();
-      else
-      {
-        final IProgressMonitor monitor = getProgressMonitor();
-        final IStatus status = execute( monitor );
-        if( status.isOK() )
-          return;
+      final String taskDescription = getDescription();
+      if( taskDescription != null )
+        getLogger().log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDescription );
 
-        final String message = StatusUtilities.messageFromStatus( status );
-        throw new BuildException( message, status.getException() );
-      }
+      final FeatureVisitorOperation operation = new FeatureVisitorOperation( this );
+
+      if( m_runAsync )
+        executeInDialog( operation );
+      else
+        executeSynchron( operation );
     }
     catch( final BuildException be )
     {
@@ -214,149 +269,28 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     }
   }
 
-  protected abstract FeatureVisitor createVisitor( final URL context, final ILogger logger ) throws CoreException, InvocationTargetException, InterruptedException;
-
-  protected abstract void validateInput( );
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public final IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+  public String getVisitorTaskDescription( )
   {
-    try
-    {
-      final String taskDescription = getDescription();
-      final String monitorDescription = taskDescription == null ? getClass().getSimpleName() : taskDescription;
-      monitor.beginTask( monitorDescription, m_featurePath.length );
+    final String taskDescription = getDescription();
+    if( taskDescription == null )
+      return getClass().getSimpleName();
 
-      final String taskDesk = getDescription();
-      if( taskDesk != null )
-        getLogger().log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
-
-      monitor.subTask( "Input wird validiert" );
-      validateInput();
-
-      monitor.subTask( "Lese GML" );
-      final URL gmlURL = UrlResolverSingleton.getDefault().resolveURL( m_context, m_gml );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
-
-      final List<IStatus> stati = new ArrayList<IStatus>();
-      for( final String featurePath : m_featurePath )
-      {
-        if( monitor.isCanceled() )
-          throw new InterruptedException();
-
-        try
-        {
-          if( m_featurePath.length > 1 )
-            monitor.subTask( String.format( "Bearbeite %s", featurePath ) );
-
-          final IStatus result = visitPath( workspace, featurePath, new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
-          if( !result.isOK() )
-            stati.add( result );
-        }
-        catch( final IllegalArgumentException e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          if( m_ignoreIllegalFeaturePath )
-          {
-            getLogger().log( Level.WARNING, -1, "Feature wird ignoriert (" + status.getMessage() + ")" );
-          }
-          else
-          {
-            getLogger().log( Level.WARNING, -1, status.getMessage() );
-            stati.add( status );
-          }
-        }
-        catch( final Throwable t )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( t );
-          getLogger().log( Level.SEVERE, -1, status.getMessage() );
-          stati.add( status );
-        }
-      }
-
-      saveGML( gmlURL, workspace );
-
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "", null );
-    }
-    catch( final Exception e )
-    {
-      if( e instanceof InterruptedException )
-        throw (InterruptedException) e;
-
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    finally
-    {
-      monitor.done();
-    }
+    return taskDescription;
   }
 
-  private void saveGML( final URL gmlURL, final GMLWorkspace workspace ) throws IOException, GmlSerializeException
+  private void executeSynchron( final FeatureVisitorOperation operation ) throws InterruptedException
   {
-    if( !m_doSaveGml )
+    final IProgressMonitor monitor = getProgressMonitor();
+    final IStatus status = operation.execute( monitor );
+    if( status.isOK() )
       return;
 
-    OutputStreamWriter writer = null;
-    try
-    {
-      writer = UrlResolverSingleton.getDefault().createWriter( gmlURL );
-      GmlSerializer.serializeWorkspace( writer, workspace );
-      writer.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
+    final String message = StatusUtilities.messageFromStatus( status );
+    throw new BuildException( message, status.getException() );
   }
 
-  private IStatus visitPath( final GMLWorkspace workspace, final String featurePath, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
-  {
+ 
 
-    FeatureVisitor visitor;
-    try
-    {
-      final ILogger logger = getLogger();
-      visitor = createVisitor( m_context, logger );
-
-      // count features
-      final int count = countFeatures( workspace, featurePath );
-      final MonitorFeatureVisitor wrappedVisitor = new MonitorFeatureVisitor( monitor, count, visitor );
-      workspace.accept( wrappedVisitor, featurePath, getDepth() );
-    }
-    catch( final OperationCanceledException e )
-    {
-      throw new InterruptedException();
-    }
-    finally
-    {
-      monitor.done();
-    }
-
-    return statusFromVisitor( visitor );
-  }
-
-  private int countFeatures( final GMLWorkspace workspace, final String featurePath )
-  {
-    final CountFeatureVisitor countFeatureVisitor = new CountFeatureVisitor();
-    workspace.accept( countFeatureVisitor, featurePath, getDepth() );
-    return 0;
-  }
-
-  private int getDepth( )
-  {
-    if( m_depth.compareToIgnoreCase( "infinite" ) == 0 )
-      return FeatureVisitor.DEPTH_INFINITE;
-
-    if( m_depth.compareToIgnoreCase( "infinite_links" ) == 0 )
-      return FeatureVisitor.DEPTH_INFINITE;
-
-    if( m_depth.compareToIgnoreCase( "zero" ) == 0 )
-      return FeatureVisitor.DEPTH_ZERO;
-
-    throw new BuildException( "Unsupported value of 'depth': " + m_depth );
-  }
 
   /**
    * REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
@@ -397,22 +331,17 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
    * @param visitor
    *          The visitor previously created by {@link #createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)}.
    */
-  protected IStatus statusFromVisitor( final FeatureVisitor visitor )
+  public IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
-    if( visitor != null )
-    {
-      // only, to avoid yellow thingies
-    }
-
     return Status.OK_STATUS;
   }
 
-  private void executeInDialog( )
+  private void executeInDialog( final FeatureVisitorOperation operation )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Shell shell = new GetShellFromDisplay( display ).getShell();
 
-    RunnableContextHelper.executeInProgressDialog( shell, this, this );
+    RunnableContextHelper.executeInProgressDialog( shell, operation, this );
   }
 
   /**

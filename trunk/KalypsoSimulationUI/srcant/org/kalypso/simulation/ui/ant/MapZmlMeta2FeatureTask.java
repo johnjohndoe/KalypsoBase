@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.simulation.core.ant.MapZmlMeta2FeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * Reads data from a zml (linked into the visited features) and puts it as property into the same feature.
  * 
@@ -60,9 +61,9 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
 {
   /** FeatureProperty which holds the Zml-Link */
-  private String m_zmlLink;
+  private GMLXPath m_zmlLink;
   
-  /** List of mapoings to perform */
+  /** List of mappings to perform */
   private  final List<MapZmlMeta2FeatureVisitor.Mapping> m_mappings = new ArrayList<MapZmlMeta2FeatureVisitor.Mapping>( 5 );
 
   public MapZmlMeta2FeatureTask(  )
@@ -72,7 +73,7 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
   
   public final void setZmlLink( final String zmlLink )
   {
-    m_zmlLink = zmlLink;
+    m_zmlLink = new GMLXPath( zmlLink, null );
   }
   
   public final void addConfiguredMapping( final MapZmlMeta2FeatureVisitor.Mapping mapping )
@@ -84,20 +85,11 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected final FeatureVisitor createVisitor( final URL context, final ILogger logger )
+  public final FeatureVisitor createVisitor( final URL context, final ILogger logger )
   {
     return new MapZmlMeta2FeatureVisitor( context, m_zmlLink, m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );
   }
-
-  /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#validateInput()
-   */
-  @Override
-  protected void validateInput()
-  {
-  // nothing to validate
-  }
-
+ 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
    *      org.eclipse.core.runtime.IStatus)
