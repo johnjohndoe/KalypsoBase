@@ -50,6 +50,15 @@ public abstract class AbstractMonitoredFeatureVisitor implements IMonitoredFeatu
   private String m_currentSubTask;
 
   /**
+   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getTaskName()
+   */
+  @Override
+  public final String getTaskName( )
+  {
+    return "";
+  }
+
+  /**
    * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentSubTask()
    */
   @Override

@@ -60,11 +60,14 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
+public class MapZmlMeta2FeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor
 {
   public static class Metadata
   {
@@ -127,11 +130,11 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
   private final URL m_context;
 
-  private final String m_zmlLink;
+  private final GMLXPath m_zmlLink;
 
   private final Mapping[] m_mappings;
 
-  public MapZmlMeta2FeatureVisitor( final URL context, final String zmlLink, final Mapping[] mappings )
+  public MapZmlMeta2FeatureVisitor( final URL context, final GMLXPath zmlLink, final Mapping[] mappings )
   {
     m_context = context;
     m_zmlLink = zmlLink;
@@ -143,25 +146,13 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
    */
   public final boolean visit( final Feature f )
   {
-    // load observation
-    if( f.getFeatureType().getProperty( m_zmlLink ) == null )
-    {
-      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.0" ) + m_zmlLink ); //$NON-NLS-1$
-      return true;
-    }
-
-    final Object property = f.getProperty( m_zmlLink );
-    if( property == null )
+    final TimeseriesLinkType link = fetchTimeseriesLink( f );
+    if( link == null )
       return true;
 
-    if( !(property instanceof TimeseriesLinkType) )
-    {
-      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.1" ) + TimeseriesLinkType.class.getName() ); //$NON-NLS-1$
-      return true;
-    }
-
-    final TimeseriesLinkType link = (TimeseriesLinkType) property;
     final String href = link.getHref();
+    setCurrentSubTask( href );
+
     try
     {
       final URL url = UrlResolverSingleton.getDefault().resolveURL( m_context, href );
@@ -184,6 +175,27 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     }
 
     return true;
+  }
+
+  private TimeseriesLinkType fetchTimeseriesLink( final Feature f )
+  {
+    try
+    {
+      final Object property = GMLXPathUtilities.query( m_zmlLink, f );
+      if( property == null )
+        return null;
+
+      if( property instanceof TimeseriesLinkType )
+        return (TimeseriesLinkType) property;
+
+      m_logger.warning( Messages.getString( "org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.1" ) + TimeseriesLinkType.class.getName() ); //$NON-NLS-1$
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   private void applyMapping( final Mapping mapping, final IObservation observation, final Feature f )
@@ -212,5 +224,4 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values, false );
     f.setProperty( ftp, object );
   }
-
 }
