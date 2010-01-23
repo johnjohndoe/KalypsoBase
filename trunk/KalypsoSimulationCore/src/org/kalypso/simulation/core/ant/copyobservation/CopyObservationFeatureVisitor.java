@@ -201,13 +201,4 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
 
     return new SimpleObservation( null, null, null, false, metadataList, axes, tuppleModel );
   }
-
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getTaskName()
-   */
-  @Override
-  public final String getTaskName( )
-  {
-    return "";
-  }
 }
