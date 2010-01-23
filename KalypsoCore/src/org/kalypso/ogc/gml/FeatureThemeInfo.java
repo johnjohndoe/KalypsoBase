@@ -51,7 +51,9 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -70,6 +72,8 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
   private String m_format;
 
   private QName m_geom;
+
+  private String m_noHitString;
 
   /**
    * Needed for construction via extension-point.
@@ -95,6 +99,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
 
     m_theme = (IKalypsoFeatureTheme) theme;
 
+    m_noHitString = props.getProperty( "noFeatureMsg", "-" ); //$NON-NLS-1$ $NON-NLS-2$
     m_format = props.getProperty( "format" ); //$NON-NLS-1$
     final String geomStr = props.getProperty( "geometry" ); //$NON-NLS-1$
     m_geom = geomStr == null ? null : QName.valueOf( geomStr );
@@ -128,38 +133,58 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
       return;
     }
 
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    // TODO: the query by position does not return the excepted result.... :-( does not works for point geometries
     final List< ? > foundFeatures = featureList.query( pos, null );
-    final Feature feature = findFeature( foundFeatures, pos );
+    final Feature feature = findFeature( workspace, foundFeatures, pos );
     formatInfo( formatter, feature );
   }
 
-  private Feature findFeature( final List< ? > foundFeatures, final GM_Position pos )
+  private Feature findFeature( final GMLWorkspace workspace, final List< ? > foundFeatures, final GM_Position pos )
   {
-    /**
-     * explanation: it is possible (with ATKIS data) that one shape covers the part of another's shape area, without
-     * intersecting (one shape "inside" another) If several such features contains the same position, the topmost is
-     * actually drawn - and that feature is the last in the query list. That is the reason why we are here searching for
-     * the last one.
-     */
-    // TODO: dubious: probably the above mentioned shape was not correctly read (solution would be to show
-    // all found features)
+    int leastDistanceIndex = -1;
+    double leastDistance = Double.MAX_VALUE;
     for( int i = foundFeatures.size() - 1; i >= 0; i-- )
     {
-      final Feature feature = (Feature) foundFeatures.get( i );
-      final Object geom = getGeom( feature );
-      if( geom instanceof GM_Object && ((GM_Object) geom).contains( pos ) )
+      final Object object = foundFeatures.get( i );
+      final Feature feature = FeatureHelper.resolveLinkedFeature( workspace, object );
+      final GM_Object geom = getGeom( feature );
+
+      if( geom == null )
+        continue;
+
+      if( geom instanceof GM_Point )
+      {
+        final double distance = pos.getDistance( ((GM_Point) geom).getPosition() );
+        if( distance < leastDistance )
+        {
+          leastDistance = distance;
+          leastDistanceIndex = i;
+        }
+      }
+      else if( geom.contains( pos ) )
         return feature;
+    }
+
+    if( leastDistanceIndex != -1 )
+    {
+      final Object object = foundFeatures.get( leastDistanceIndex );
+      return FeatureHelper.resolveLinkedFeature( workspace, object );
     }
 
     return null;
   }
 
-  private Object getGeom( final Feature feature )
+  private GM_Object getGeom( final Feature feature )
   {
     if( m_geom == null )
       return feature.getDefaultGeometryPropertyValue();
 
-    return feature.getProperty( m_geom );
+    final Object property = feature.getProperty( m_geom );
+    if( property instanceof GM_Object )
+      return (GM_Object) property;
+
+    return null;
   }
 
   /**
@@ -179,7 +204,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
   protected String getInfo( final Feature feature )
   {
     if( feature == null )
-      return "-"; //$NON-NLS-1$
+      return m_noHitString;
 
     if( m_format == null )
       return FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
