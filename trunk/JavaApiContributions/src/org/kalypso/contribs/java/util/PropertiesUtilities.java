@@ -75,10 +75,9 @@ public class PropertiesUtilities
     final String[] params = query.split( propSeparator );
     for( final String element : params )
     {
-      final String[] keyValuePair = element.split( allocationString );
-      if( keyValuePair.length != 2 )
-        continue;
-      collector.setProperty( keyValuePair[0], keyValuePair[1] );
+      final String[] keyValuePair = element.split( allocationString, 2 );
+      if( keyValuePair.length == 2 )
+        collector.setProperty( keyValuePair[0], keyValuePair[1] );
     }
     return collector;
   }
