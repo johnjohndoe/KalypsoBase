@@ -79,6 +79,9 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
   public void setThemes( final IKalypsoTheme[] themes )
   {
     m_themes = themes;
+
+    if( getMapPanel() != null )
+      moved( getCurrentPoint() );
   }
 
   /**

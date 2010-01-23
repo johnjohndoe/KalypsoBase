@@ -134,19 +134,16 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 
   protected void handleSelectionChanged( final ISelection selection )
   {
-    final List<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
 
     final IStructuredSelection sel = (IStructuredSelection) selection;
     final Object[] selectedElements = sel.toArray();
     for( final Object object : selectedElements )
     {
       if( object instanceof IKalypsoTheme )
-        m_themes.add( (IKalypsoTheme) object );
+        themes.add( (IKalypsoTheme) object );
     }
 
-    setThemes( m_themes.toArray( new IKalypsoTheme[m_themes.size()] ) );
-
-    if( getMapPanel() != null )
-      moved( getCurrentPoint() );
+    setThemes( themes.toArray( new IKalypsoTheme[themes.size()] ) );
   }
 }
