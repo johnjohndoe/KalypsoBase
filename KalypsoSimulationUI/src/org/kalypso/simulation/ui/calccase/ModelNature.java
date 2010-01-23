@@ -326,7 +326,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public IStatus launchAnt( final String progressText, final String launchName, final Map<String, Object> antProps, final IContainer folder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( progressText + " - ", 1000 ); //$NON-NLS-1$
+    monitor.beginTask( progressText, 1000 ); //$NON-NLS-1$
 
     // TODO: check, if already another ant-task is running in the platform
     // if yes, wait until it has finished
