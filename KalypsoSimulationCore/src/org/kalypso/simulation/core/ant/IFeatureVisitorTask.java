@@ -40,35 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.ant;
 
-import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public abstract class AbstractMonitoredFeatureVisitor implements IMonitoredFeatureVisitor
+public interface IFeatureVisitorTask
 {
-  private String m_currentSubTask;
+  String getVisitorTaskDescription( );
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getTaskName()
-   */
-  @Override
-  public final String getTaskName( )
-  {
-    return "";
-  }
+  URL getGmlLocation( ) throws MalformedURLException;
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor#getCurrentSubTask()
-   */
-  @Override
-  public String getCurrentSubTask( )
-  {
-    return m_currentSubTask;
-  }
+  String[] getFeaturePathes( );
 
-  protected void setCurrentSubTask( final String currentSubTask )
-  {
-    m_currentSubTask = currentSubTask;
-  }
+  FeatureVisitor createVisitor( final URL context, final ILogger logger ) throws CoreException, InvocationTargetException, InterruptedException;
+
+  void validateInput( );
+
+  boolean doSaveGml( );
+
+  ILogger getLogger( );
+
+  boolean doIgnoreIllegalFeaturePath( );
+
+  URL getContext( );
+
+  IStatus statusFromVisitor( FeatureVisitor visitor );
+
+  int getDepth( );
+
 }
