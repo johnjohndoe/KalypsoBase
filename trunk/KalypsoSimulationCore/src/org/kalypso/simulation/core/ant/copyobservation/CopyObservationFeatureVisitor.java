@@ -72,12 +72,11 @@ import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor.IMonitoredFeatureVisitor;
 
 /**
  * @author Gernot Belger
  */
-public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor, IMonitoredFeatureVisitor
+public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor
 {
   private final ILogger m_logger;
 
