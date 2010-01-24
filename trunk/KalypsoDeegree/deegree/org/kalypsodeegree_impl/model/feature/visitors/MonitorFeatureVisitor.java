@@ -64,10 +64,15 @@ public class MonitorFeatureVisitor implements FeatureVisitor
 
   private final FeatureVisitor m_visitor;
 
+  private final int m_expectedCOunt;
+
+  private int m_count = 0;
+
   public MonitorFeatureVisitor( final IProgressMonitor monitor, final int count, final FeatureVisitor delegateVisitor )
   {
     m_monitor = monitor;
     m_visitor = delegateVisitor;
+    m_expectedCOunt = count;
 
     initVisitor( count );
   }
@@ -88,6 +93,8 @@ public class MonitorFeatureVisitor implements FeatureVisitor
   @Override
   public boolean visit( final Feature f )
   {
+    m_count++;
+
     if( m_monitor.isCanceled() )
       throw new OperationCanceledException();
 
@@ -109,7 +116,10 @@ public class MonitorFeatureVisitor implements FeatureVisitor
     {
       final String currentTaskName = ((IMonitoredFeatureVisitor) m_visitor).getCurrentSubTask();
       if( currentTaskName != null )
-        m_monitor.subTask( currentTaskName );
+      {
+        final String msg = String.format( "%s [%d/%d]", currentTaskName, m_count, m_expectedCOunt );
+        m_monitor.subTask( msg );
+      }
     }
   }
 
