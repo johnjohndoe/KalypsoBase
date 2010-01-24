@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -281,7 +282,9 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
   private void executeSynchron( final FeatureVisitorOperation operation ) throws InterruptedException
   {
     final IProgressMonitor monitor = getProgressMonitor();
-    final IStatus status = operation.execute( monitor );
+    // IMPORTANT: we put the monitor into a SubPRogressMonitor but do not call beginTask
+    // This is important, as the ant-monitor is already started and calling beginTask again will deactivate the monitor.
+    final IStatus status = operation.execute( new SubProgressMonitor( monitor, 1 ) );
     if( status.isOK() )
       return;
 
