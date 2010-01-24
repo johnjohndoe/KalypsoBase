@@ -44,6 +44,7 @@ import java.awt.Graphics;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -85,8 +86,7 @@ public class SelectionMapLayer implements IMapLayer
     monitor.beginTask( getLabel(), m_selectionThemes.length );
     for( final IKalypsoFeatureTheme theme : m_selectionThemes )
     {
-      theme.paint( g, world2screen, Boolean.TRUE, monitor );
-
+      theme.paint( g, world2screen, Boolean.TRUE, new SubProgressMonitor( monitor, 1 ) );
       ProgressUtilities.worked( monitor, 0 );
     }
   }
