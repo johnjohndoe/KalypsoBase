@@ -389,14 +389,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
        * exception was thrown before).
        */
       final IProgressMonitor subMon = monitor.isCanceled() ? new NullProgressMonitor() : new SubProgressMonitor( monitor, 1000 );
-
+      // FIXME: This should not be necessary and is also a major performance problem, as the folder might be very big.
+      // The ant-launch itself is responsible to refresh any changed resources.
       folder.refreshLocal( IResource.DEPTH_INFINITE, subMon );
 
       monitor.done();
     }
   }
 
-  private static final IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm, final Properties properties )
+  private static IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm, final Properties properties )
   {
     final IValueVariable[] variables = new IValueVariable[properties.size()];
     int count = 0;
