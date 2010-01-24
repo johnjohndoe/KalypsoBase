@@ -62,27 +62,27 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 class HorizontalLabel implements Label
 {
 
-  private String caption;
+  private final String caption;
 
-  private int[] xpoints = new int[4];
+  private final int[] xpoints = new int[4];
 
-  private int[] ypoints = new int[4];
+  private final int[] ypoints = new int[4];
 
   // width and height of the caption
-  private int w, h;
+  private final int w, h;
 
-  private Color m_color;
+  private final Color m_color;
 
-  private Font font;
+  private final Font font;
 
-  private int descent, ascent;
+  private final int descent, ascent;
 
-  private Halo m_halo;
+  private final Halo m_halo;
 
-  private Feature feature;
+  private final Feature feature;
 
-  HorizontalLabel( String caption, Font font, Color color, LineMetrics metrics, Feature feature, Halo halo, int x,
-      int y, int w, int h, double anchorPoint[], double[] displacement )
+  HorizontalLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x,
+      final int y, final int w, final int h, final double anchorPoint[], final double[] displacement )
   {
 
     this.caption = caption;
@@ -96,8 +96,8 @@ class HorizontalLabel implements Label
     this.w = w;
     this.h = h;
 
-    int dx = (int)( -anchorPoint[0] * w + displacement[0] + 0.5 );
-    int dy = (int)( anchorPoint[1] * h - displacement[1] + 0.5 );
+    final int dx = (int)( -anchorPoint[0] * w + displacement[0] + 0.5 );
+    final int dy = (int)( anchorPoint[1] * h - displacement[1] + 0.5 );
 
     // vertices of label boundary
     xpoints[0] = x + dx;
@@ -115,7 +115,7 @@ class HorizontalLabel implements Label
     return caption;
   }
 
-  public void paintBoundaries( Graphics2D g )
+  public void paintBoundaries( final Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
     g.fillPolygon( xpoints, ypoints, xpoints.length );
@@ -132,9 +132,8 @@ class HorizontalLabel implements Label
    * @param g
    *          <tt>Graphics2D</tt> context to be used
    */
-  public void paint( Graphics2D g )
+  public void paint( final Graphics2D g )
   {
-
     // render the halo (only if specified)
     if( m_halo != null )
     {
@@ -142,7 +141,7 @@ class HorizontalLabel implements Label
       {
         paintHalo( g, m_halo, xpoints[0], ypoints[0] - descent );
       }
-      catch( FilterEvaluationException e )
+      catch( final FilterEvaluationException e )
       {
         e.printStackTrace();
       }
@@ -151,7 +150,7 @@ class HorizontalLabel implements Label
     // render the text
     setColor( g, m_color, 1.0 );
     g.setFont( font );
-    g.drawString( caption, xpoints[0], ypoints[0] - descent );
+    g.drawString( caption, xpoints[0] + 0.5f, (ypoints[0] - descent) );
   }
 
   /**
@@ -170,28 +169,27 @@ class HorizontalLabel implements Label
    * @throws FilterEvaluationException
    *           if the evaluation of a <tt>ParameterValueType</tt> fails
    */
-  private void paintHalo( Graphics2D g, Halo halo, int x, int y ) throws FilterEvaluationException
+  private void paintHalo( final Graphics2D g, final Halo halo, final int x, final int y ) throws FilterEvaluationException
   {
-
-    int radius = (int)halo.getRadius( feature );
+    final int radius = (int)halo.getRadius( feature );
 
     // only draw filled rectangle or circle, if Fill-Element is given
-    Fill fill = halo.getFill();
+    final Fill fill = halo.getFill();
 
     if( fill != null )
     {
-      GraphicFill gFill = fill.getGraphicFill();
+      final GraphicFill gFill = fill.getGraphicFill();
 
       if( gFill != null )
       {
-        BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
-        Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
+        final BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
+        final Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
         g.setPaint( new TexturePaint( texture, anchor ) );
       }
       else
       {
-        double opacity = fill.getOpacity( feature );
-        Color color = fill.getFill( feature );
+        final double opacity = fill.getOpacity( feature );
+        final Color color = fill.getFill( feature );
         setColor( g, color, opacity );
       }
     }
@@ -212,27 +210,27 @@ class HorizontalLabel implements Label
     }
 
     // only stroke outline, if Stroke-Element is given
-    org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
 
     if( stroke != null )
     {
-      double opacity = stroke.getOpacity( feature );
+      final double opacity = stroke.getOpacity( feature );
 
       if( opacity > 0.01 )
       {
         Color color = stroke.getStroke( feature );
-        int alpha = (int)Math.round( opacity * 255 );
-        int red = color.getRed();
-        int green = color.getGreen();
-        int blue = color.getBlue();
+        final int alpha = (int)Math.round( opacity * 255 );
+        final int red = color.getRed();
+        final int green = color.getGreen();
+        final int blue = color.getBlue();
         color = new Color( red, green, blue, alpha );
         g.setColor( color );
 
-        float[] dash = stroke.getDashArray( feature );
+        final float[] dash = stroke.getDashArray( feature );
 
         // use a simple Stroke if dash == null or dash length < 2
         BasicStroke bs = null;
-        float strokeWidth = (float)stroke.getWidth( feature );
+        final float strokeWidth = (float)stroke.getWidth( feature );
 
         if( ( dash == null ) || ( dash.length < 2 ) )
         {
@@ -298,9 +296,8 @@ class HorizontalLabel implements Label
    *          label to test
    * @return true if the labels intersect
    */
-  public boolean intersects( Label that )
+  public boolean intersects( final Label that )
   {
-
     if( !( that instanceof HorizontalLabel ) )
     {
       System.out.println( "Intersection test for rotated labels is " + "not implemented yet!" );
@@ -308,16 +305,16 @@ class HorizontalLabel implements Label
     }
 
     // coordinates of this GM_Envelope's BBOX
-    double west1 = getMinX();
-    double south1 = getMinY();
-    double east1 = getMaxX();
-    double north1 = getMaxY();
+    final double west1 = getMinX();
+    final double south1 = getMinY();
+    final double east1 = getMaxX();
+    final double north1 = getMaxY();
 
     // coordinates of the other GM_Envelope's BBOX
-    double west2 = ( (HorizontalLabel)that ).getMinX();
-    double south2 = ( (HorizontalLabel)that ).getMinY();
-    double east2 = ( (HorizontalLabel)that ).getMaxX();
-    double north2 = ( (HorizontalLabel)that ).getMaxY();
+    final double west2 = ( (HorizontalLabel)that ).getMinX();
+    final double south2 = ( (HorizontalLabel)that ).getMinY();
+    final double east2 = ( (HorizontalLabel)that ).getMaxX();
+    final double north2 = ( (HorizontalLabel)that ).getMaxY();
 
     // special cases: one box lays completly inside the other one
     if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && ( north1 >= north2 ) )
@@ -389,7 +386,7 @@ class HorizontalLabel implements Label
     return false;
   }
 
-  private Graphics2D setColor( Graphics2D g2, Color color, double opacity )
+  private Graphics2D setColor( final Graphics2D g2, Color color, final double opacity )
   {
     if( opacity < 0.999 )
     {
@@ -404,6 +401,7 @@ class HorizontalLabel implements Label
     return g2;
   }
 
+  @Override
   public String toString()
   {
     return caption;
