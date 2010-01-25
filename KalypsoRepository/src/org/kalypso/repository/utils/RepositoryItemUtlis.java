@@ -218,4 +218,9 @@ public final class RepositoryItemUtlis
     final String[] parts = identifier.split( "://" );
     return parts[0];
   }
+
+  public static boolean isPrognose( final IRepositoryItem item )
+  {
+    return item.getIdentifier().toLowerCase().contains( "prognose" );
+  }
 }
