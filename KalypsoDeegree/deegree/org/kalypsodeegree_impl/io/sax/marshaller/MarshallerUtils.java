@@ -48,25 +48,33 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Common helper code for sax marshelling.
  * 
- * @author Felipe Maximino *
+ * @author Felipe Maximino
  */
 public class MarshallerUtils implements IMashallerConstants
 {
-  public static AttributesImpl createCrsAttributes( final String crs ) throws SAXException
+  public static AttributesImpl createCrsAttributes( final String crs )
   {
     final AttributesImpl atts = new AttributesImpl();
+    atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
     
-    try{
-      atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
+    return atts;
+  }
+  
+  public static AttributesImpl createCrsAttributesWSrsDimension( final String crs ) throws SAXException
+  {
+    AttributesImpl atts = createCrsAttributes( crs );
+    try
+    {
       atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
-    }  
-    catch( final UnknownCRSException e )
+    }
+    catch( UnknownCRSException e )
     {
       throw new SAXException( e );
     }
     
     return atts;
   }
+  
   
   public static String getQName( String tag )
   {

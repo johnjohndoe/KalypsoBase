@@ -77,7 +77,7 @@ public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends 
     final AttributesImpl atts;
     if( crsTri != null && m_surfaceCrs!= null && !crsTri.equals( m_surfaceCrs ) )
     {
-      atts = MarshallerUtils.createCrsAttributes( crsTri );
+      atts = MarshallerUtils.createCrsAttributesWSrsDimension( crsTri );
     }
     else
     {

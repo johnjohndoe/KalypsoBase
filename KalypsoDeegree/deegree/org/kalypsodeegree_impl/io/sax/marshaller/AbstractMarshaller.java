@@ -81,15 +81,15 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
     endMarshalling();    
   }
   
-  public void startMarshalling( ) throws SAXException
+  protected void startMarshalling( ) throws SAXException
   {
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();    
     contentHandler.startElement( NS.GML3, m_tag, m_qName, EMPTY_ATTRIBUTES );
   }
 
-  public abstract void doMarshall() throws SAXException;  
+  protected abstract void doMarshall() throws SAXException;  
   
-  public void endMarshalling( ) throws SAXException
+  protected void endMarshalling( ) throws SAXException
   {
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();    
     contentHandler.endElement( NS.GML3, m_tag, m_qName );    
