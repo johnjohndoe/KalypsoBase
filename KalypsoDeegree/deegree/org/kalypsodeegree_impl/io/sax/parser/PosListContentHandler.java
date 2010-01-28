@@ -75,7 +75,7 @@ public class PosListContentHandler extends GMLElementContentHandler
   
   private IPositionHandler m_positionHandler;
   
-  public PosListContentHandler( final ContentHandler parentContentHandler, final IControlPointHandler<GM_Position[]> positionHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PosListContentHandler( final ContentHandler parentContentHandler, final IControlPointHandler positionHandler, final String defaultSrs, final XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_POSLIST, xmlReader, defaultSrs, parentContentHandler );
     m_positionHandler = ( IPositionHandler ) positionHandler;
@@ -110,9 +110,7 @@ public class PosListContentHandler extends GMLElementContentHandler
     
     Integer dimension = findDimension();
     
-    /*
-     * !!HACK if it's still null, we will have to guess it: 2
-     */
+    /* if it's still null, we use a default value: 2 */
     if( dimension == null)
     {
       dimension = 2;
@@ -121,6 +119,9 @@ public class PosListContentHandler extends GMLElementContentHandler
     return dimension;
   }
   
+  /**
+   * Simple heuristic to get the dimension of the posList element
+   */
   private Integer findDimension()
   {
     try
@@ -154,7 +155,7 @@ public class PosListContentHandler extends GMLElementContentHandler
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
     m_coordBuffer = null;    
     
-    final List<Double> doubles = (List<Double>) m_positionHandler.parseType( coordsString );  
+    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );  
     
     final int coordsSize = doubles.size();
     
@@ -186,7 +187,7 @@ public class PosListContentHandler extends GMLElementContentHandler
         positions.add( GeometryFactory.createGM_Position( doubles.get( i++ ), doubles.get( i++ ) ) );
       }
     }
-    else
+    else // dimension = 3
     {
       for( int i = 0; i < coordsSize;)
       { 

@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.xml.sax.ContentHandler;
+import java.util.List;
 
+import org.xml.sax.SAXParseException;
 
 /**
  * @author Felipe Maximino
+ *
  */
-public interface IControlPointHandler extends ContentHandler
+public interface ICoordinatesHandler extends IControlPointHandler
 {
+  public void handle( List<Double[]> element ) throws SAXParseException;
 }

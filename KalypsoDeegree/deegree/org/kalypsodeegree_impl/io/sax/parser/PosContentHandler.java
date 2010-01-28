@@ -85,7 +85,7 @@ public class PosContentHandler extends GMLElementContentHandler
   {
     final String coordsString = m_coordBuffer == null ? "" : m_coordBuffer.toString().trim();
     m_coordBuffer = null;
-    final List<Double> doubles = (List<Double>) m_positionHandler.parseType( coordsString );
+    final List<Double> doubles = ContentHandlerUtils.parseDoublesString( coordsString );
 
 // final int dimension = m_currentCrs.getDimension();
 // TODO: check against crs

@@ -52,20 +52,22 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A content handler that parses control points. Actually, it delegates the parsing to a child content handler that
- * parses an especific sub-element. The control points to which this content handler can delegate are provided in a Map.   
+ * When a feature can be specified using more than one property, this content handler can be set as delegate, and
+ * the properties that can specify the feature must be registered. 
+ * This content handler then delegates the parsing to a child content handler that
+ * parses an specific sub-element.   
  * 
  * @author Felipe Maximino
  */
-public class GMLControlPointsContentHandler extends DelegatingContentHandler
+public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
 {
-  private Map<QName, ContentHandler> m_registeredCtrlPoints;
+  private Map<QName, ContentHandler> m_registeredProperties;
   
-  public GMLControlPointsContentHandler( IControlPointHandler ctrlPointHandler, final XMLReader xmlReader )
+  public GMLPropertyChoiceContentHandler( ContentHandler parentContentHandler, final XMLReader xmlReader )
   {
-    super( xmlReader, ctrlPointHandler );
+    super( xmlReader, parentContentHandler );
     
-    m_registeredCtrlPoints = new HashMap<QName, ContentHandler>();
+    m_registeredProperties = new HashMap<QName, ContentHandler>();
   }
   
   @Override
@@ -97,11 +99,11 @@ public class GMLControlPointsContentHandler extends DelegatingContentHandler
 
   private ContentHandler findDelegate( final QName qName )
   {
-    return m_registeredCtrlPoints.get( qName );
+    return m_registeredProperties.get( qName );
   }
   
-  public void registerControlPoint( final QName qName, final ContentHandler contentHandler )
+  public void registerProperty( final QName qName, final ContentHandler contentHandler )
   {
-    m_registeredCtrlPoints.put( qName, contentHandler );
+    m_registeredProperties.put( qName, contentHandler );
   }
 }

@@ -52,6 +52,8 @@ import org.xml.sax.XMLReader;
  * Typically used to delegate calls to a content handler to a child content handler that parses a sub-element of the
  * current scope.
  * 
+ * A GMLContentHandler has a 'localName' which is the name of the element to be parsed, e.g, "triangle". * 
+ * 
  * @author Gernot Belger
  * @author Felipe Maximino
  */
@@ -87,6 +89,10 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
   }   
     
   /**
+   * By default, this methods compares the incoming end xml tag with the expected tag (localName). If they match,
+   * the method {@link doEndElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedEndElement}, also
+   * to allow specific actions. 
+   * 
    * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
@@ -101,9 +107,20 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
       handleUnexpectedEndElement( uri, localName, name);
   }
   
+  /**
+   * This method must be implemented by the subclasses to perform specific actions when the xml end tag matches
+   * this content handler 'localName'.
+   * 
+   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   */
   protected abstract void doEndElement( String uri, String localName, String name ) throws SAXException;
   
   /**
+   * By default, this methods compares the incoming start xml tag with the expected tag (localName). If they match,
+   * the method {@link doStartElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedStartElement}, also
+   * to allow specific actions. 
+   * 
+   * 
    * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
@@ -134,6 +151,14 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
     return m_defaultSrs;
   }  
   
+  /**
+   * This method must be implemented by the subclasses to perform specific actions when the start xml tag matches
+   * this content handler 'localName'.
+   * 
+   * Inside this method, a {@link setDelegate} call must be done, otherwise, there will be no delegation.
+   * 
+   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   */
   protected abstract void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException;
   
   /*

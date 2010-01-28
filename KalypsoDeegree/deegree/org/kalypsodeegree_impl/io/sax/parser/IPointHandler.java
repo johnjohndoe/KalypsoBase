@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.xml.sax.ContentHandler;
-
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Felipe Maximino
+ *
  */
-public interface IControlPointHandler extends ContentHandler
+public interface IPointHandler extends IGMLElementHandler<GM_Point>
 {
+
 }

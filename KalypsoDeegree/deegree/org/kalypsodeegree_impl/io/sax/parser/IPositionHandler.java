@@ -41,11 +41,12 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.xml.sax.SAXParseException;
 
 /**
  * @author Gernot Belger
  */
-public interface IPositionHandler extends IControlPointHandler<GM_Position[]>
-{ 
- 
+public interface IPositionHandler extends IControlPointHandler
+{
+  public void handle( GM_Position[] element, String srs ) throws SAXParseException;
 }
