@@ -76,7 +76,10 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     if( status == null )
       return null;
 
-    return createGeoStatus( status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), status.getException(), location, time );
+    if( !status.isMultiStatus() )
+      return createGeoStatus( status.getSeverity(), status.getPlugin(), status.getCode(), status.getMessage(), status.getException(), location, time );
+
+    return createMultiGeoStatus( status, location, time );
   }
 
   /**
@@ -87,7 +90,10 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
     if( geoStatus == null )
       return null;
 
-    return createGeoStatus( geoStatus.getSeverity(), geoStatus.getPlugin(), geoStatus.getCode(), geoStatus.getMessage(), geoStatus.getException(), geoStatus.getLocation(), geoStatus.getTime() );
+    if( !geoStatus.isMultiStatus() )
+      return createGeoStatus( geoStatus.getSeverity(), geoStatus.getPlugin(), geoStatus.getCode(), geoStatus.getMessage(), geoStatus.getException(), geoStatus.getLocation(), geoStatus.getTime() );
+
+    return createMultiGeoStatus( geoStatus );
   }
 
   /**
@@ -114,5 +120,158 @@ public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> imple
       geoStatus.setTime( new Date() );
 
     return geoStatus;
+  }
+
+  private IGeoStatus createMultiGeoStatus( IStatus status, GM_Object location, Date time )
+  {
+    /* Add a new feature. */
+    IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
+
+    /* Set its properties. */
+    multiGeoStatus.setSeverity( status.getSeverity() );
+    multiGeoStatus.setPlugin( status.getPlugin() );
+    multiGeoStatus.setCode( status.getCode() );
+    multiGeoStatus.setMessage( status.getMessage() );
+    multiGeoStatus.setException( status.getException() );
+    multiGeoStatus.setLocation( location );
+
+    /* If a time was provided, use it. Otherwise set the current time. */
+    if( time != null )
+      multiGeoStatus.setTime( time );
+    else
+      multiGeoStatus.setTime( new Date() );
+
+    /* Get the children. */
+    IStatus[] children = status.getChildren();
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
+
+    return multiGeoStatus;
+  }
+
+  private void addToMultiGeoStatus( IGeoStatus parent, IStatus status, GM_Object location, Date time )
+  {
+    /* If the given status is no multi status, simply add a new geo status and return. */
+    if( !status.isMultiStatus() )
+    {
+      /* Add a new feature. */
+      IGeoStatus geoStatus = parent.addNew( IGeoStatus.QNAME );
+
+      /* Set its properties. */
+      geoStatus.setSeverity( status.getSeverity() );
+      geoStatus.setPlugin( status.getPlugin() );
+      geoStatus.setCode( status.getCode() );
+      geoStatus.setMessage( status.getMessage() );
+      geoStatus.setException( status.getException() );
+      geoStatus.setLocation( location );
+
+      /* If a time was provided, use it. Otherwise set the current time. */
+      if( time != null )
+        geoStatus.setTime( time );
+      else
+        geoStatus.setTime( new Date() );
+
+      return;
+    }
+
+    /* Add a new feature. */
+    IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
+
+    /* Set its properties. */
+    multiGeoStatus.setSeverity( status.getSeverity() );
+    multiGeoStatus.setPlugin( status.getPlugin() );
+    multiGeoStatus.setCode( status.getCode() );
+    multiGeoStatus.setMessage( status.getMessage() );
+    multiGeoStatus.setException( status.getException() );
+    multiGeoStatus.setLocation( location );
+
+    /* If a time was provided, use it. Otherwise set the current time. */
+    if( time != null )
+      multiGeoStatus.setTime( time );
+    else
+      multiGeoStatus.setTime( new Date() );
+
+    /* Get the children. */
+    IStatus[] children = status.getChildren();
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
+  }
+
+  private IGeoStatus createMultiGeoStatus( IGeoStatus geoStatus )
+  {
+    /* Add a new feature. */
+    IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
+
+    /* Set its properties. */
+    multiGeoStatus.setSeverity( geoStatus.getSeverity() );
+    multiGeoStatus.setPlugin( geoStatus.getPlugin() );
+    multiGeoStatus.setCode( geoStatus.getCode() );
+    multiGeoStatus.setMessage( geoStatus.getMessage() );
+    multiGeoStatus.setException( geoStatus.getException() );
+    multiGeoStatus.setLocation( geoStatus.getLocation() );
+
+    /* If a time was provided, use it. Otherwise set the current time. */
+    Date time = geoStatus.getTime();
+    if( time != null )
+      multiGeoStatus.setTime( time );
+    else
+      multiGeoStatus.setTime( new Date() );
+
+    /* Get the children. */
+    IStatus[] children = geoStatus.getChildren();
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
+
+    return multiGeoStatus;
+  }
+
+  private void addToMultiGeoStatus( IGeoStatus parent, IGeoStatus geoStatus )
+  {
+    /* If the given geo status is no multi geo status, simply add a new geo status and return. */
+    if( !geoStatus.isMultiStatus() )
+    {
+      /* Add a new feature. */
+      IGeoStatus children = parent.addNew( IGeoStatus.QNAME );
+
+      /* Set its properties. */
+      children.setSeverity( geoStatus.getSeverity() );
+      children.setPlugin( geoStatus.getPlugin() );
+      children.setCode( geoStatus.getCode() );
+      children.setMessage( geoStatus.getMessage() );
+      children.setException( geoStatus.getException() );
+      children.setLocation( geoStatus.getLocation() );
+
+      /* If a time was provided, use it. Otherwise set the current time. */
+      Date time = geoStatus.getTime();
+      if( time != null )
+        children.setTime( time );
+      else
+        children.setTime( new Date() );
+
+      return;
+    }
+
+    /* Add a new feature. */
+    IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
+
+    /* Set its properties. */
+    multiGeoStatus.setSeverity( geoStatus.getSeverity() );
+    multiGeoStatus.setPlugin( geoStatus.getPlugin() );
+    multiGeoStatus.setCode( geoStatus.getCode() );
+    multiGeoStatus.setMessage( geoStatus.getMessage() );
+    multiGeoStatus.setException( geoStatus.getException() );
+    multiGeoStatus.setLocation( geoStatus.getLocation() );
+
+    /* If a time was provided, use it. Otherwise set the current time. */
+    Date time = geoStatus.getTime();
+    if( time != null )
+      multiGeoStatus.setTime( time );
+    else
+      multiGeoStatus.setTime( new Date() );
+
+    /* Get the children. */
+    IStatus[] children = geoStatus.getChildren();
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
   }
 }
