@@ -111,7 +111,7 @@ public class ColorUtilities
    * 
    * @param color
    * @param alpha
-   *            0 - 255
+   *          0 - 255
    * @return transparent color
    */
   public static Color createTransparent( final Color color, final int alpha )
@@ -123,7 +123,7 @@ public class ColorUtilities
    * Creates a color from the given color with the indicated opacity.
    * 
    * @param opacity
-   *            0.0 - 1.0: Corresponds to alpha value from 0 to 255.
+   *          0.0 - 1.0: Corresponds to alpha value from 0 to 255.
    */
   public static Color createTransparent( final Color color, final double opacity )
   {
@@ -152,8 +152,7 @@ public class ColorUtilities
     final int blue = color.getBlue();
     return new Color( red, green, blue, alpha );
   }
-  
-  
+
   public static Color interpolateLinear( final Color color1, final Color color2, final double factor )
   {
     final float[] hsba1 = new float[4];
@@ -171,5 +170,21 @@ public class ColorUtilities
 
     final Color hsbColor = Color.getHSBColor( (float) hsba[0], (float) hsba[1], (float) hsba[2] );
     return new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue(), (int) hsba[3] );
+  }
+
+  public static Color decodeWithAlpha( final String color )
+  {
+    if( color.length() > 8 )
+    {
+      final Long l = Long.decode( color );
+      final int r = (int) ((l >> 24) & 0xFF);
+      final int g = (int) ((l >> 16) & 0xFF);
+      final int b = (int) ((l >> 8) & 0xFF);
+      final int a = (int) (l & 0xFF);
+
+      return new Color( r, g, b, a );
+    }
+
+    return Color.decode( color );
   }
 }
