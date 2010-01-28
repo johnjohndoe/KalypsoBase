@@ -64,7 +64,11 @@ public final class GMLConstants
   public static final QName QN_CURVE = new QName( NS.GML3, "_Curve" );
 
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
+  
+  public static final QName QN_POINT_MEMBER = new QName( NS.GML3, "pointMember" );
 
+  public static final QName QN_POINT_MEMBERS = new QName( NS.GML3, "pointMembers" );
+  
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
 
   public static final QName QN_MULTI_CURVE = new QName( NS.GML3, "MultiCurve" );
@@ -80,6 +84,8 @@ public final class GMLConstants
   public static final QName QN_POS_LIST = new QName( NS.GML3, "posList" );
   
   public static final QName QN_COORDINATES = new QName( NS.GML3, "coordinates" );
+  
+  public static final QName QN_COORD = new QName( NS.GML3, "coord" );
 
   public static final String DEFAULT_CS = ",";
 
