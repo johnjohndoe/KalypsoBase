@@ -50,6 +50,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.kalypso.gml.GMLException;
 import org.kalypso.gml.GMLorExceptionContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -59,6 +60,7 @@ import org.xml.sax.XMLReader;
 
 import junit.framework.TestCase;
 
+@Ignore
 public class GmlParsingTester extends TestCase
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();

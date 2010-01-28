@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TinResult xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults" gml:id="root">
  <triangulatedSurfaceMember>
-  <gml:TriangulatedSurface srsName="EPSG:31467" srsDimension="2">
+ <gml:TriangulatedSurface srsName="EPSG:31467" srsDimension="2">
    <gml:trianglePatches>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
@@ -13,30 +13,30 @@
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
-	 <gml:Triangle interpolation="planar">
+    <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3342489.9148048 5700000.7499127 24.2502342 </gml:pos>
-       <gml:pos>3342485.6290606 5700006.9609788 24.2552079 </gml:pos>
-       <gml:pos>3342478.755478725 5700002.7514955755 24.273782775 </gml:pos>
-       <gml:pos>3342489.9148048 5700000.7499127 24.2502342 </gml:pos>
+       <gml:pos>3342956.6525826 5698373.2691856 21.0535021 </gml:pos>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
+       <gml:pos>3342966.2677769 5698371.404639674 19.6082573 </gml:pos>
+       <gml:pos>3342956.6525826 5698373.2691856 21.0535021 </gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:pos>3342485.6290606 5700006.9609788 24.2552079 </gml:pos>
-       <gml:pos>3342481.3433164 5700013.1720448 24.2601816 </gml:pos>
-       <gml:pos>3342478.755478725 5700002.7514955755 24.273782775 </gml:pos>
-       <gml:pos>3342485.6290606 5700006.9609788 24.2552079 </gml:pos>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
+       <gml:pos>3342964.2005407 5698357.9442815 19.5874579 </gml:pos>
+       <gml:pos>3342966.2677769 5698371.404639674 19.6082573 </gml:pos>
+       <gml:pos>3342954.1483418 5698359.9776409 21.0620896 </gml:pos>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
-   </gml:trianglePatches>
+     </gml:trianglePatches>
   </gml:TriangulatedSurface>
+	 <unit>m</unit>
+	 <parameter>Geländehöhe</parameter>
+	 <date>2009-09-02T01:00:00+02:00</date> 
  </triangulatedSurfaceMember>
-  <unit>m</unit>
-  <parameter>Geländehöhe</parameter>
-  <date>2009-09-02T01:00:00+02:00</date>
 </TinResult>

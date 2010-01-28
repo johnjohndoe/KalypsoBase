@@ -63,8 +63,6 @@ public class GmlParsingTest extends GmlParsingTester
   
   public final static String NS_1D2D = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"; 
 
-  //private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
-
   public void testEmptyGml( ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {
     final GMLWorkspace emptyWorkspace = readGml( "resources/empty.gml" );
@@ -125,9 +123,9 @@ public class GmlParsingTest extends GmlParsingTester
     final GM_Position[] triangle = gmTriangle.getExteriorRing();
     assertNotNull( triangle );
     assertEquals( 4, triangle.length );
-    assertEquals( triangle[0], triangle[3] ); 
+    assertEquals( triangle[0], triangle[3] );
     
     final String unit = (String) rootFeature.getProperty( new QName( NS_1D2D, "unit" ) );
     assertEquals( "m", unit);
-  }  
+  }
 }
