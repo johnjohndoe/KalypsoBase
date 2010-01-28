@@ -42,12 +42,11 @@ package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.xml.sax.XMLReader;
 
 /**
  * 
- * A marshaller for gml: polygonPatches
+ * A marshaller for gml:polygonPatches
  * 
  * @author Felipe Maximino
  */

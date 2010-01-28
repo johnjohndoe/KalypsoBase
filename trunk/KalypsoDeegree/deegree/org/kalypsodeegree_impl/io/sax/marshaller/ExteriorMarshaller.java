@@ -42,7 +42,6 @@ package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 

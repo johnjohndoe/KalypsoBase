@@ -41,7 +41,6 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.xml.sax.Attributes;
@@ -56,7 +55,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller< GM_Surface<T> >
+public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller< GM_Surface<T> >
 {
   protected PatchesMarshaller<T> m_patchesMarshaller;
   
@@ -64,20 +63,7 @@ public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends Abstr
   {
     super( xmlReader, tag, surface );
   }
-    
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#startMarshalling()
-   */
-  @Override
-  public void startMarshalling( ) throws SAXException
-  {
-    final String crs = m_marshalledObject == null ? null : ( (GM_Object) m_marshalledObject ).getCoordinateSystem();
-    
-    final Attributes atts = crs == null ? EMPTY_ATTRIBUTES : MarshallerUtils.createCrsAttributes( crs );
-    
-    startMarshalling( atts );
-  }
-  
+
   public void startMarshalling( Attributes atts ) throws SAXException
   {
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
