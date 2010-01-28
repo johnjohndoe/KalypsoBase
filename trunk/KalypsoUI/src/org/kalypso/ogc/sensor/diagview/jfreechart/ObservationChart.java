@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
@@ -139,6 +140,10 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
   protected void setLegendProperties( final String legendName, final boolean showLegend )
   {
     m_legend.setTitle( legendName );
+// m_legend.setDisplaySeriesLines( true );
+    m_legend.setDisplaySeriesShapes( false );
+    m_legend.setOutlineStroke( new BasicStroke( 0.0f ) );
+    m_legend.setOutlinePaint( Color.white );
 
     if( showLegend )
       setLegend( m_legend );
