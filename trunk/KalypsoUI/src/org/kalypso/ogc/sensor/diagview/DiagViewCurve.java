@@ -64,6 +64,8 @@ public class DiagViewCurve extends ObsViewItem
 
   private final AxisMapping[] m_mappings;
 
+  private boolean m_showLegend = true;
+
   public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color, final Stroke stroke, final AxisMapping[] mappings )
   {
     super( view, obsProvider, name );
@@ -177,5 +179,15 @@ public class DiagViewCurve extends ObsViewItem
     }
 
     return false;
+  }
+
+  public void setShowLegend( final boolean showLegend )
+  {
+    m_showLegend = showLegend;
+  }
+
+  public boolean getShowLegend( )
+  {
+    return m_showLegend;
   }
 }

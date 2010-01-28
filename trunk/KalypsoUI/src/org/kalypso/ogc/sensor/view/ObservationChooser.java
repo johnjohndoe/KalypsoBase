@@ -101,8 +101,8 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
   }
 
   /**
-   * @return checks if given selection is a <code>IRepository</code>. Returns a repository or null if no repository
-   *         is selected.
+   * @return checks if given selection is a <code>IRepository</code>. Returns a repository or null if no repository is
+   *         selected.
    */
   public IRepository isRepository( final ISelection selection )
   {

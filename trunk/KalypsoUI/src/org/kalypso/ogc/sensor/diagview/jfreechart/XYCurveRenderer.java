@@ -41,9 +41,12 @@
 
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import org.jfree.chart.LegendItem;
 import org.jfree.chart.labels.XYToolTipGenerator;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.urls.XYURLGenerator;
+import org.jfree.data.xy.XYDataset;
 
 /**
  * TODO: is this needed at all?
@@ -52,23 +55,43 @@ import org.jfree.chart.urls.XYURLGenerator;
  */
 public class XYCurveRenderer extends StandardXYItemRenderer
 {
-  public XYCurveRenderer()
+  public XYCurveRenderer( )
   {
     super();
   }
 
-  public XYCurveRenderer( int type )
+  public XYCurveRenderer( final int type )
   {
     super( type );
   }
 
-  public XYCurveRenderer( int type, XYToolTipGenerator toolTipGenerator )
+  public XYCurveRenderer( final int type, final XYToolTipGenerator toolTipGenerator )
   {
     super( type, toolTipGenerator );
   }
 
-  public XYCurveRenderer( int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator )
+  public XYCurveRenderer( final int type, final XYToolTipGenerator toolTipGenerator, final XYURLGenerator urlGenerator )
   {
     super( type, toolTipGenerator, urlGenerator );
+  }
+
+  /**
+   * @see org.jfree.chart.renderer.xy.StandardXYItemRenderer#getLegendItem(int, int)
+   */
+  @Override
+  public LegendItem getLegendItem( final int datasetIndex, final int series )
+  {
+    final XYPlot plot = getPlot();
+    if( plot == null )
+      return null;
+
+    final XYDataset dataset = plot.getDataset( datasetIndex );
+    if( dataset == null )
+      return null;
+
+    if( dataset instanceof CurveDataset && ((CurveDataset) dataset).hideLegend( series ) )
+      return null;
+
+    return super.getLegendItem( datasetIndex, series );
   }
 }

@@ -118,9 +118,9 @@ class CurveDataset extends AbstractIntervalXYDataset
 
   public void removeCurveSerie( final XYCurveSerie xyc )
   {
-    for( final Iterator iter = m_curves.iterator(); iter.hasNext(); )
+    for( final Iterator<RendererInfo> iter = m_curves.iterator(); iter.hasNext(); )
     {
-      final RendererInfo element = (RendererInfo)iter.next();
+      final RendererInfo element = iter.next();
       if( element.getSerie() == xyc )
       {
         iter.remove();
@@ -143,7 +143,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.general.SeriesDataset#getSeriesName(int)
    */
   @Override
-  public String getSeriesName( int series )
+  public String getSeriesName( final int series )
   {
     final RendererInfo[] curveArray = getCurveArray();
     return ( curveArray[series] ).getSerie().getName();
@@ -152,14 +152,14 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getItemCount(int)
    */
-  public int getItemCount( int series )
+  public int getItemCount( final int series )
   {
     final RendererInfo[] curveArray = getCurveArray();
     try
     {
       return curveArray[series].getSerie().getItemCount();
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return 0;
@@ -170,7 +170,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.XYDataset#getXValue(int, int)
    */
   @Override
-  public double getXValue( int series, int item )
+  public double getXValue( final int series, final int item )
   {
     final Number x = getX( series, item );
 
@@ -180,7 +180,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getX(int, int)
    */
-  public Number getX( int series, int item )
+  public Number getX( final int series, final int item )
   {
     final RendererInfo[] curveArray = getCurveArray();
     try
@@ -188,7 +188,7 @@ class CurveDataset extends AbstractIntervalXYDataset
       final Number value = curveArray[series].getSerie().getXValue( item );
       return value;
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return null;
@@ -199,7 +199,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.XYDataset#getYValue(int, int)
    */
   @Override
-  public double getYValue( int series, int item )
+  public double getYValue( final int series, final int item )
   {
     final Number y = getY( series, item );
 
@@ -209,7 +209,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.XYDataset#getY(int, int)
    */
-  public Number getY( int series, int item )
+  public Number getY( final int series, final int item )
   {
     final RendererInfo[] curveArray = getCurveArray();
     try
@@ -217,7 +217,7 @@ class CurveDataset extends AbstractIntervalXYDataset
       final Number value = curveArray[series].getSerie().getYValue( item );
       return value;
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return null;
@@ -228,7 +228,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.IntervalXYDataset#getStartXValue(int, int)
    */
   @Override
-  public double getStartXValue( int series, int item )
+  public double getStartXValue( final int series, final int item )
   {
     if( item > 0 )
       return getXValue( series, item - 1 );
@@ -240,7 +240,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.IntervalXYDataset#getEndXValue(int, int)
    */
   @Override
-  public double getEndXValue( int series, int item )
+  public double getEndXValue( final int series, final int item )
   {
     return getXValue( series, item );
   }
@@ -249,7 +249,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.IntervalXYDataset#getStartYValue(int, int)
    */
   @Override
-  public double getStartYValue( int series, int item )
+  public double getStartYValue( final int series, final int item )
   {
     if( item > 0 )
       return getYValue( series, item - 1 );
@@ -261,7 +261,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.xy.IntervalXYDataset#getEndYValue(int, int)
    */
   @Override
-  public double getEndYValue( int series, int item )
+  public double getEndYValue( final int series, final int item )
   {
     return getYValue( series, item );
   }
@@ -269,7 +269,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartX(int, int)
    */
-  public Number getStartX( int series, int item )
+  public Number getStartX( final int series, final int item )
   {
     if( item > 0 )
       return getX( series, item - 1 );
@@ -280,7 +280,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndX(int, int)
    */
-  public Number getEndX( int series, int item )
+  public Number getEndX( final int series, final int item )
   {
     return getX( series, item );
   }
@@ -288,7 +288,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getStartY(int, int)
    */
-  public Number getStartY( int series, int item )
+  public Number getStartY( final int series, final int item )
   {
     if( item > 0 )
       return getY( series, item - 1 );
@@ -299,7 +299,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * @see org.jfree.data.xy.IntervalXYDataset#getEndY(int, int)
    */
-  public Number getEndY( int series, int item )
+  public Number getEndY( final int series, final int item )
   {
     return getY( series, item );
   }
@@ -324,7 +324,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * 
    * @return status-number or null if not existing
    */
-  public Number getStatusFor( int series, int item )
+  public Number getStatusFor( final int series, final int item )
   {
     final RendererInfo[] curveArray = getCurveArray();
     try
@@ -333,7 +333,7 @@ class CurveDataset extends AbstractIntervalXYDataset
 
       return value;
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
       return null;
@@ -343,6 +343,13 @@ class CurveDataset extends AbstractIntervalXYDataset
   private RendererInfo[] getCurveArray()
   {
     return m_curves.toArray( new RendererInfo[m_curves.size()] );
+  }
+
+  public boolean hideLegend( final int series )
+  {
+    final RendererInfo rendererInfo = m_curves.get( series );
+    final XYCurveSerie serie = rendererInfo.getSerie();
+    return !serie.getShowLegend();
   }
 
 }
