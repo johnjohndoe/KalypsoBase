@@ -75,6 +75,8 @@ class XYCurveSerie extends Series
 
   private transient IAxis m_statusAxis = null;
 
+  private final boolean m_showLegend = true;
+
   /**
    * Constructor. Fetches the values (ITuppleModel).
    * 
@@ -182,5 +184,10 @@ class XYCurveSerie extends Series
       return (Number)obj;
 
     return null;
+  }
+
+  public boolean getShowLegend( )
+  {
+    return m_curve.getShowLegend();
   }
 }

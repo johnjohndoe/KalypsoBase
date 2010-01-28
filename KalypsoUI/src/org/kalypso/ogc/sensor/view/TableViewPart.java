@@ -142,7 +142,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
     {
-      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
     }
   }
 

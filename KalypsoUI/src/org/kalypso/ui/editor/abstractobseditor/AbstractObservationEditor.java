@@ -206,7 +206,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   public void loadObservation( final URL context, final String href )
   {
     if( m_view != null )
-      m_view.loadObservation( context, href, false, ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null ) );
+      m_view.loadObservation( context, href, false, ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( true, null, null, true ) );
   }
 
   /**

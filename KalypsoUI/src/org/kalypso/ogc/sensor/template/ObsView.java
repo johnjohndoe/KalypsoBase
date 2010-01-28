@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
  */
 public abstract class ObsView implements IObsViewEventProvider
 {
-  public static final ItemData DEFAULT_ITEM_DATA = new ItemData( true, null, null );
+  public static final ItemData DEFAULT_ITEM_DATA = new ItemData( true, null, null, true );
 
   /** Additional hints for new items */
   public static class ItemData
@@ -82,11 +82,14 @@ public abstract class ObsView implements IObsViewEventProvider
 
     public final Stroke stroke;
 
-    public ItemData( final boolean bEditable, final Color c, final Stroke s )
+    public final boolean showLegend;
+
+    public ItemData( final boolean bEditable, final Color c, final Stroke s, final boolean showInLegend )
     {
       this.color = c;
       this.editable = bEditable;
       this.stroke = s;
+      this.showLegend = showInLegend;
     }
   }
 

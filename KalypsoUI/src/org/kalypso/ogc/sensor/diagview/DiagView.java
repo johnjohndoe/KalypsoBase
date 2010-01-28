@@ -206,12 +206,12 @@ public class DiagView extends ObsView
 
       final IAxis keyAxis = keyAxes[0];
 
-      for( int i = 0; i < valueAxis.length; i++ )
+      for( final IAxis valueAxi : valueAxis )
       {
-        if( valueAxis[i].isKey() )
+        if( valueAxi.isKey() )
           continue;
 
-        final String valueAxisType = valueAxis[i].getType();
+        final String valueAxisType = valueAxi.getType();
         if( !ignoreTypeList.contains( valueAxisType ) )
         {
           final AxisMapping[] mappings = new AxisMapping[2];
@@ -229,18 +229,19 @@ public class DiagView extends ObsView
           DiagramAxis daValue = getDiagramAxis( valueAxisType );
           if( daValue == null )
           {
-            daValue = DiagViewUtils.createAxisFor( valueAxis[i] );
+            daValue = DiagViewUtils.createAxisFor( valueAxi );
             addAxis( daValue );
           }
-          mappings[1] = new AxisMapping( valueAxis[i], daValue );
+          mappings[1] = new AxisMapping( valueAxi, daValue );
 
           // if color not defined, find suitable one
           final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
           final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
 
-          final String name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis[i] );
+          final String name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxi );
 
           final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
+          curve.setShowLegend( data.showLegend );
 
           addItem( curve );
         }

@@ -453,7 +453,7 @@ public class ObservationViewer extends Composite
 
       final PlainObsProvider pop = new PlainObsProvider( obs, null );
 
-      final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null );
+      final ItemData itd = new ObsView.ItemData( obs.isEditable(), null, null, true );
       m_diagView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
       m_tableView.addObservation( pop, ObservationTokenHelper.DEFAULT_ITEM_NAME, itd );
     }

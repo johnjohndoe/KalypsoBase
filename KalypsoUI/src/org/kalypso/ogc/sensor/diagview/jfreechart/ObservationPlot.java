@@ -134,11 +134,6 @@ public class ObservationPlot extends XYPlot
     final TimeZone timezone = viewzone == null ? KalypsoCorePlugin.getDefault().getTimeZone() : viewzone;
     setTimezone( timezone );
 
-    // FIXME
-// final DiagramAxis[] diagAxes = view.getDiagramAxes();
-// for( final DiagramAxis diagAxis : diagAxes )
-// addDiagramAxis( diagAxis, null );
-
     final ObsViewItem[] curves = view.getItems();
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
@@ -165,13 +160,6 @@ public class ObservationPlot extends XYPlot
     try
     {
       final String axisType = axis == null ? null : axis.getType();
-      // FIXME
-// final String dataType = diagAxis.getIdentifier();
-//
-// if( axisType != null )
-// Assert.isTrue( axisType.equals( dataType ) );
-
-// final String axisDataType = axisType == null ? dataType : axisType;
       final String axisClass = TimeserieUtils.getAxisClassFor( axisType );
       if( axisClass == null )
       {
@@ -340,7 +328,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" , curve ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2", curve ) ); //$NON-NLS-1$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
@@ -626,13 +614,14 @@ public class ObservationPlot extends XYPlot
    */
   private XYItemRenderer getRenderer( final String axisType )
   {
+    // TODO: also overwrite bar renderer in order to hide legend
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
 
     if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
       return new XYBarRenderer();
 
-    return new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
+    return new XYCurveRenderer( StandardXYItemRenderer.LINES );
   }
 
   /**
