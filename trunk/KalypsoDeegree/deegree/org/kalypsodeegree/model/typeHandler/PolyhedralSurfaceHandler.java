@@ -44,7 +44,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshallerMy;
+import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PolyhedralSurfaceContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -83,7 +83,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   {
     final GM_Surface<GM_Polygon> surface = (GM_Surface<GM_Polygon>) value;
 
-    new PolyhedralSurfaceMarshallerMy( reader, surface ).marshall();
+    new PolyhedralSurfaceMarshaller( reader, surface ).marshall();
   }
 
   /**
