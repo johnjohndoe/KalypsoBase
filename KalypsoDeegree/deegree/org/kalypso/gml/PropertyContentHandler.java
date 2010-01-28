@@ -124,7 +124,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
       return true;    
     
     /* HACK: if we set a ValuePropertyContentHandler(JAXB binding) as delegate, the end tag of this property maybe was
-     * already consumed during binding. We should be able to verify if the end tag was correctly ended during binding. 
+     * already consumed during binding, maybe not. We should be able to verify if the end tag was correctly ended during binding. 
      */
     if( m_scopeProperty instanceof IValuePropertyType )
     {
