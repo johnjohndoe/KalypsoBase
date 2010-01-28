@@ -316,7 +316,7 @@ public class DiagViewUtils
     // TODO: move this stuff into config.properties as everything else
 
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
-      return new DiagramAxis( axisType, "date", label, unit, direction, position, false ); //$NON-NLS-1$
+      return new DiagramAxis( axisType, "date", null, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_HOURS ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
