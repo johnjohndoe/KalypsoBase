@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
+import org.xml.sax.ContentHandler;
+
 
 /**
  * @author Felipe Maximino
- *
  */
-public interface IControlPointHandler<T> extends IGMLElementHandler<T>
+public interface IControlPointHandler extends ContentHandler
 {
-  public void handle( T element, String text );
-  
-  public Object parseType( final String text );
 }

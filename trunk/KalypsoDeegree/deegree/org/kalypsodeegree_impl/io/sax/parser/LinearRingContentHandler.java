@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -55,12 +54,12 @@ import org.xml.sax.XMLReader;
  * 
  * @author Gernot Belger
  */
-public class LinearRingContentHandler extends GMLElementContentHandler implements IPositionHandler
+public class LinearRingContentHandler extends GMLElementContentHandler implements IPositionHandler, ICoordinatesHandler
 {
   public static final String ELEMENT_LINEAR_RING = "LinearRing";
   
-  private final List<GM_Position> m_poses = new ArrayList<GM_Position>( 4 );
-
+  private final List<GM_Position> m_poses;
+  
   private final IRingHandler m_lineaRingHandler;
 
   private String m_srs;
@@ -68,8 +67,9 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   public LinearRingContentHandler( final IRingHandler lineaRingHandler, final String defaultSrs, final XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_LINEAR_RING, xmlReader, defaultSrs, lineaRingHandler );
-
+    
     m_lineaRingHandler = lineaRingHandler;
+    m_poses = new ArrayList<GM_Position>( );
   }
 
   @Override
@@ -77,13 +77,17 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   { 
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
     
-    GMLControlPointsContentHandler ctrlPointsContentHandler = new GMLControlPointsContentHandler( this, m_xmlReader );
+    GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader );
     
-    // the current supported control points for LinearRings.
-    // TODO: gml:pointProperty may also be supported
-    // gml:coordinates, gml:coord and gml:pointRep are deprecated
-    ctrlPointsContentHandler.registerControlPoint( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
-    ctrlPointsContentHandler.registerControlPoint( GMLConstants.QN_POS_LIST, new PosListContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
+    // the current supported control points for gml:LinearRings: gml:pos, gml:posList, gml:coordinates, gml:coords    
+    // TODO: gml:pointProperty must also be supported
+    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
+    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS_LIST, new PosListContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
+    
+    // gml:coordinates for gml:LinearRing is deprecated with GML Version 3.1.0
+    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORDINATES, new CoordinatesContentHandler( ctrlPointsContentHandler, this, m_srs, m_xmlReader ) );
+    // gml:coord for gml:LinearRing is deprecated with GML Version 3.0
+    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORD, new CoordContentHandler( ctrlPointsContentHandler, this, m_srs, m_xmlReader ) );
     
     setDelegate( ctrlPointsContentHandler );
   }
@@ -91,8 +95,13 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   { 
+    // a LinearRing is defined by four or more coordinate tuples
     if( m_poses.size() < 4 )
-      throw new SAXParseException( "LinearRing must contain at least 4 coordinates: " + m_poses.size(), m_locator );
+      throw new SAXParseException( "A gml:LinearRing must contain at least 4 coordinates: " + m_poses.size(), m_locator );
+    
+    // the first and last coordinates must be coincident
+    if( !m_poses.get( 0 ).equals( m_poses.get( m_poses.size() - 1 ) ) )
+      throw new SAXParseException( "The first and last coordinates of this gml:LinearRing must be coincident: " + m_poses.size(), m_locator );
     
     final GM_Position[] poses = new GM_Position[m_poses.size()]; 
     
@@ -115,16 +124,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
       throw new SAXParseException( "Failed to create ring", m_locator, e );
     }
   }
-  
-  @Override
-  public void handle( final GM_Position[] positions )
-  {
-    for(GM_Position pos : positions)
-    {
-      m_poses.add( pos );
-    }
-  }  
-  
+
   /**
    * @see org.kalypsodeegree_impl.io.sax.IPositionHandler#handlePosition(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.lang.String)
@@ -136,25 +136,35 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     if( m_srs == null )
       m_srs = srs;
     
-    handle( positions );
+    for(GM_Position pos : positions)
+    {
+      m_poses.add( pos );
+    }
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.IPositionHandler#parseType(java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List<java.lang.Double>[])
    */
   @Override
-  public Object parseType( String text )
-  { 
-    final List<Double> doubles = new ArrayList<Double>();
-
-    final StringTokenizer st = new StringTokenizer( text );    
-    while ( st.hasMoreTokens() )
+  public void handle( List<Double[]> element ) throws SAXParseException
+  {
+    for( Double[] tuple : element)
     {
-      final String token = st.nextToken();
-      final Double d = Double.valueOf( token );
-      doubles.add( d );  
-    }
-    
-    return doubles;
+      if( tuple.length < 2 )
+      {
+        throw new SAXParseException( "A position must have at least 2 coordinates.", m_locator );
+      }
+      
+      GM_Position position;      
+      if( tuple.length == 2 )
+      {
+        position = GeometryFactory.createGM_Position( tuple[0], tuple[1] );
+      }
+      else // >2
+      {
+        position = GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] );
+      }      
+      m_poses.add( position );
+    }    
   }
 }

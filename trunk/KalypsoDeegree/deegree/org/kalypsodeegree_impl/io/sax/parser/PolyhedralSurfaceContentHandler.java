@@ -79,6 +79,8 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     super( NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, xmlReader, parentContentHandler );
 
     m_resultEater = resultEater;
+    
+    m_polyhedralSurface = null;
   }
 
 
@@ -105,7 +107,25 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     
     m_resultEater.unmarshallSuccesful( m_polyhedralSurface );    
   }
-
+  
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  {
+    // maybe the property was expecting a triangulated surface, but it was empty */
+    if( m_polyhedralSurface == null )
+    {
+      m_parentContentHandler.endElement( uri, localName, name );
+    }
+    else
+    {
+      super.handleUnexpectedEndElement( uri, localName, name );
+    }
+  }
+  
+  
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */

@@ -62,7 +62,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
 
   private final UnmarshallResultEater m_resultEater;
 
-  private List<GM_Triangle> m_triangles = new ArrayList<GM_Triangle>();
+  private List<GM_Triangle> m_triangles;
 
   private GM_TriangulatedSurface_Impl m_triangulatedSurface;
   
@@ -76,6 +76,9 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     super( NS.GML3, ELEMENT_TRIANGULATED_SURFACE, xmlReader, parentContentHandler );
 
     m_resultEater = resultEater;
+    
+    m_triangles = new ArrayList<GM_Triangle>();
+    m_triangulatedSurface = null;
   }
 
   @Override
@@ -104,6 +107,23 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     }
 
     m_resultEater.unmarshallSuccesful( m_triangulatedSurface );
+  }  
+
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
+  {
+    // maybe the property was expecting a triangulated surface, but it was empty */
+    if( m_triangulatedSurface == null )
+    {
+      m_parentContentHandler.endElement( uri, localName, name );
+    }
+    else
+    {
+      super.handleUnexpectedEndElement( uri, localName, name );
+    }
   }
 
   /**

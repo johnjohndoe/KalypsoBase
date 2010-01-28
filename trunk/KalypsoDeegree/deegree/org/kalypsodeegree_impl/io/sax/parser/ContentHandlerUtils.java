@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.xml.sax.Attributes;
 
@@ -47,17 +51,39 @@ import org.xml.sax.Attributes;
  * Common helper code for gml sax parsing.
  * 
  * @author Gernot Belger
+ * @author Felipe Maximino
  */
 public class ContentHandlerUtils
 {
+  private static String parseStringFromAttributes( final Attributes attributes, final String attribute, final String defaultValue )
+  {
+    final String value = AttributesUtilities.getAttributeValue( attributes, "", attribute, null );
+    if( value == null )
+      return defaultValue;
+
+    return value;
+  }
+  
+  
   /** Get srs from attributes, fallback to default crs */
   public static String parseSrsFromAttributes( final Attributes attributes, final String defaultSrs )
   {
-    final String srsName = AttributesUtilities.getAttributeValue( attributes, "", "srsName", null );
-    if( srsName == null )
-      return defaultSrs;
-
-    return srsName;
+    return parseStringFromAttributes( attributes, "srsName", defaultSrs );
+  }
+    
+  public static String parseCsFromAttributes( final Attributes attributes, final String defaultCs )
+  {
+    return parseStringFromAttributes( attributes, "cs", defaultCs );
+  }
+  
+  public static String parseTsFromAttributes( final Attributes attributes, final String defaultTs )
+  {
+    return parseStringFromAttributes( attributes, "ts", defaultTs );
+  }
+  
+  public static String parseDecimalFromAttributes( final Attributes attributes, final String defaultDecimal )
+  {
+    return parseStringFromAttributes( attributes, "decimal", defaultDecimal );
   }
   
   public static Integer parseSrsDimensionFromAttributes( final Attributes attributes )
@@ -68,6 +94,20 @@ public class ContentHandlerUtils
   public static Integer parseCountFromAttributes( final Attributes attributes )
   {
     return AttributesUtilities.getAttributeIntegerValue( attributes, "", "count", null );
-  }
+  }  
   
+  public static List<Double> parseDoublesString( String text )
+  { 
+    final List<Double> doubles = new ArrayList<Double>();
+
+    final StringTokenizer st = new StringTokenizer( text );    
+    while ( st.hasMoreTokens() )
+    {
+      final String token = st.nextToken();
+      final Double d = Double.valueOf( token );
+      doubles.add( d );  
+    }
+    
+    return doubles;
+  }
 }
