@@ -227,7 +227,7 @@ public final class RepositoryItemUtlis
     final String[] parts = identifier.split( "\\." );
     if( parts.length > 2 )
     {
-      return parts[1].toLowerCase().contains( "prognose" );
+      return parts[1].toLowerCase().contains( "_prog_" );
     }
 
     return false;
