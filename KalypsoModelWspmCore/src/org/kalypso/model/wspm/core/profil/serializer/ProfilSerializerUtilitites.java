@@ -70,18 +70,18 @@ public class ProfilSerializerUtilitites
   }
 
   /** Read a file via the given profile source and creates a profile from it. */
-  public static IProfil readProfile( final IProfilSource source, final File prfFile, final String profilType ) throws IOException
+  public static IProfil[] readProfile( final IProfilSource source, final File file, final String profilType ) throws IOException
   {
-    final IProfil profile = ProfilFactory.createProfil( profilType );
+    ProfilFactory.createProfil( profilType );
 
     Reader fileReader = null;
     try
     {
-      fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( prfFile ) ) );
-      source.read( profile, fileReader );
+      fileReader = new InputStreamReader( new FileInputStream( file ) );
+      final IProfil[] profiles = source.read( profilType, fileReader );
       fileReader.close();
 
-      return profile;
+      return profiles;
     }
     finally
     {
@@ -90,12 +90,56 @@ public class ProfilSerializerUtilitites
   }
 
   /**
+   * Writes profiles into a file.
+   * 
+   * @param file
+   *          The file to write into
+   * @param profile
+   *          This profiles gets written
+   */
+  public static void writeProfile( final IProfilSink sink, final IProfil[] profiles, final File file ) throws IOException
+  {
+    Writer writer = null;
+    try
+    {
+      writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
+      sink.write( profiles, writer );
+      writer.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+// /** Read a file via the given profile source and creates profiles from it. */
+// public static IProfil[] readProfile( final IProfilSource source, final File csvFile, final String profilType ) throws
+  // IOException
+// {
+// final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
+//
+// Reader fileReader = null;
+// try
+// {
+// fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( csvFile ) ) );
+// source.read( profiles, fileReader );
+// fileReader.close();
+//
+// return profiles.toArray(new IProfil[]{});
+// }
+// finally
+// {
+// IOUtils.closeQuietly( fileReader );
+// }
+// }
+
+  /**
    * Writes a single profile into a file.
    * 
    * @param file
-   *            The file to write into
+   *          The file to write into
    * @param profile
-   *            This profiles gets written
+   *          This profiles gets written
    */
   public static void writeProfile( final IProfilSink sink, final IProfil profile, final File file ) throws IOException
   {
@@ -116,9 +160,9 @@ public class ProfilSerializerUtilitites
    * Writes a single profile into a stream.
    * 
    * @param file
-   *            The file to write into
+   *          The file to write into
    * @param profile
-   *            This profiles gets written
+   *          This profiles gets written
    */
   public static void writeProfile( final IProfilSink sink, final IProfil profile, final OutputStream stream ) throws IOException
   {
@@ -138,16 +182,15 @@ public class ProfilSerializerUtilitites
   /** Read a file via the given profile source and creates a profile from it. */
   public static IProfil readProfile( final IProfilSource source, final InputStream stream, final String profilType ) throws IOException
   {
-    final IProfil profile = ProfilFactory.createProfil( profilType );
 
     Reader fileReader = null;
     try
     {
       fileReader = new BufferedReader( new InputStreamReader( stream ) );
-      source.read( profile, fileReader );
+      final IProfil[] profiles = source.read( profilType, fileReader );
       fileReader.close();
 
-      return profile;
+      return profiles[0];
     }
     finally
     {

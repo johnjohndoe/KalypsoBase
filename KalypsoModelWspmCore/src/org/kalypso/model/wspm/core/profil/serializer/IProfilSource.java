@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.serializer;
 
+import java.io.IOException;
 import java.io.Reader;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -49,5 +50,5 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilSource
 {
-  public boolean read( final IProfil profil,final Reader reader );
+  public IProfil[] read(final String profileTyp, final Reader reader ) throws IOException;
 }

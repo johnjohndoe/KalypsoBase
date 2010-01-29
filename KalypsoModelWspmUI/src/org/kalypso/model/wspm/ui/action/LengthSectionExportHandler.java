@@ -64,7 +64,6 @@ import org.kalypso.observation.result.TupleResult;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author kimwerner

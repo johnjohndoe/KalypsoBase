@@ -33,7 +33,7 @@ public class KalypsoModelWspmCoreExtensions
 
   private static Map<String, ProfileType> THE_PROFILE_TYPE_MAP = null;
 
-//  private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
+// private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
   public static IProfilMarkerResolution[] createReparatorRules( )
   {
@@ -61,7 +61,7 @@ public class KalypsoModelWspmCoreExtensions
     if( stati.size() > 0 )
     {
       final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString("org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0"), null ); //$NON-NLS-1$
+      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString( "org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0" ), null ); //$NON-NLS-1$
       if( status != null )
       {
         // TODO: what to do whith this status?
@@ -98,6 +98,18 @@ public class KalypsoModelWspmCoreExtensions
     return null;
   }
 
+  public static final Map<String, String> getProfilSinks( )
+  {
+    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" );
+    final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
+    for( final String key : sinks.keySet() )
+    {
+      final IConfigurationElement sink = sinks.get( key );
+      sinkMap.put(key, sink.getAttribute( "name" ) );
+    }
+    return sinkMap;
+  }
+
   public static IProfilSink createProfilSink( final String fileExtension ) throws CoreException
   {
     final Map<String, IConfigurationElement> sinkMap = getSinksOrSources( "sink" ); //$NON-NLS-1$
@@ -111,7 +123,7 @@ public class KalypsoModelWspmCoreExtensions
 
   /**
    * @param fileExtension
-   *            File extension without '.'
+   *          File extension without '.'
    */
   public static IProfilSource createProfilSource( final String fileExtension ) throws CoreException
   {
@@ -252,46 +264,46 @@ public class KalypsoModelWspmCoreExtensions
     return THE_MARKER_PROVIDER_MAP;
   }
 
-//  public static IProfileObjectProvider[] getObjectProviders( final String profilType )
-//  {
-//    final Map<String, List<IProfileObjectProvider>> map = getObjectProviders();
-//    final List<IProfileObjectProvider> list = map.get( profilType );
-//    if( list == null )
-//      return new IProfileObjectProvider[0];
+// public static IProfileObjectProvider[] getObjectProviders( final String profilType )
+// {
+// final Map<String, List<IProfileObjectProvider>> map = getObjectProviders();
+// final List<IProfileObjectProvider> list = map.get( profilType );
+// if( list == null )
+// return new IProfileObjectProvider[0];
 //
-//    return list.toArray( new IProfileObjectProvider[list.size()] );
-//  }
+// return list.toArray( new IProfileObjectProvider[list.size()] );
+// }
 //
-//  private static synchronized Map<String, List<IProfileObjectProvider>> getObjectProviders( )
-//  {
-//    if( THE_OBJECT_PROVIDER_MAP != null )
-//      return THE_OBJECT_PROVIDER_MAP;
+// private static synchronized Map<String, List<IProfileObjectProvider>> getObjectProviders( )
+// {
+// if( THE_OBJECT_PROVIDER_MAP != null )
+// return THE_OBJECT_PROVIDER_MAP;
 //
-//    THE_OBJECT_PROVIDER_MAP = new HashMap<String, List<IProfileObjectProvider>>();
+// THE_OBJECT_PROVIDER_MAP = new HashMap<String, List<IProfileObjectProvider>>();
 //
-//    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+// final IExtensionRegistry registry = Platform.getExtensionRegistry();
 //    final IConfigurationElement[] objectProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileObjectProvider" ); //$NON-NLS-1$
-//    for( final IConfigurationElement configurationElement : objectProvider )
-//    {
-//      try
-//      {
+// for( final IConfigurationElement configurationElement : objectProvider )
+// {
+// try
+// {
 //        final String profilType = configurationElement.getAttribute( "profiletype" ); //$NON-NLS-1$
 //        final Object protoProvider = configurationElement.createExecutableExtension( "provider" ); //$NON-NLS-1$
-//        final IProfileObjectProvider provider = (IProfileObjectProvider) protoProvider;
+// final IProfileObjectProvider provider = (IProfileObjectProvider) protoProvider;
 //
-//        if( !THE_OBJECT_PROVIDER_MAP.containsKey( profilType ) )
-//          THE_OBJECT_PROVIDER_MAP.put( profilType, new ArrayList<IProfileObjectProvider>() );
+// if( !THE_OBJECT_PROVIDER_MAP.containsKey( profilType ) )
+// THE_OBJECT_PROVIDER_MAP.put( profilType, new ArrayList<IProfileObjectProvider>() );
 //
-//        THE_OBJECT_PROVIDER_MAP.get( profilType ).add( provider );
-//      }
-//      catch( final CoreException e )
-//      {
-//        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
-//      }
-//    }
+// THE_OBJECT_PROVIDER_MAP.get( profilType ).add( provider );
+// }
+// catch( final CoreException e )
+// {
+// KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+// }
+// }
 //
-//    return THE_OBJECT_PROVIDER_MAP;
-//  }
+// return THE_OBJECT_PROVIDER_MAP;
+// }
 
   public static IProfilPointPropertyProvider getPointPropertyProviders( final String profilType )
   {
