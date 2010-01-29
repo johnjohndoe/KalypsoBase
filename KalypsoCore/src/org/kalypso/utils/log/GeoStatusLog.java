@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.utils.log;
 
@@ -61,12 +61,12 @@ public class GeoStatusLog implements ILog
   /**
    * The log file.
    */
-  private File m_logFile;
+  private final File m_logFile;
 
   /**
    * The workspace.
    */
-  private GMLWorkspace m_workspace;
+  private final GMLWorkspace m_workspace;
 
   /**
    * The collection of geo status objects.
@@ -79,7 +79,7 @@ public class GeoStatusLog implements ILog
    * @param logFile
    *          The log file.
    */
-  public GeoStatusLog( File logFile )
+  public GeoStatusLog( final File logFile )
   {
     m_logFile = logFile;
     m_workspace = createWorkspace();
@@ -92,7 +92,7 @@ public class GeoStatusLog implements ILog
    * @see org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)
    */
   @Override
-  public void log( IStatus status )
+  public void log( final IStatus status )
   {
     /* Without a collection of geo status objects, nothing can be done. */
     if( m_statusCollection == null )
@@ -106,7 +106,7 @@ public class GeoStatusLog implements ILog
    * @see org.eclipse.core.runtime.ILog#addLogListener(org.eclipse.core.runtime.ILogListener)
    */
   @Override
-  public void addLogListener( ILogListener listener )
+  public void addLogListener( final ILogListener listener )
   {
   }
 
@@ -114,7 +114,7 @@ public class GeoStatusLog implements ILog
    * @see org.eclipse.core.runtime.ILog#removeLogListener(org.eclipse.core.runtime.ILogListener)
    */
   @Override
-  public void removeLogListener( ILogListener listener )
+  public void removeLogListener( final ILogListener listener )
   {
   }
 
@@ -156,7 +156,7 @@ public class GeoStatusLog implements ILog
       /* Create the GML workspace which will hold the geo status objects. */
       return FeatureFactory.createGMLWorkspace( IStatusCollection.QNAME, null, null );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
       return null;
