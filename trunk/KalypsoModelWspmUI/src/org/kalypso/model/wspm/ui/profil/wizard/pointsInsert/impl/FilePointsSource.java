@@ -41,11 +41,8 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -60,8 +57,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
 import org.kalypso.observation.result.IRecord;
 
@@ -78,16 +75,6 @@ public class FilePointsSource extends AbstractPointsSource
   public List<IRecord> getPoints( )
   {
     final File f = new File( m_fileName.getText() );
-    final FileReader fr;
-    try
-    {
-      fr = new FileReader( f );
-    }
-    catch( final FileNotFoundException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
 
     try
     {
@@ -95,12 +82,12 @@ public class FilePointsSource extends AbstractPointsSource
       // TODO: here the profile type is directly given (always read as pasche)
       // change this later to let the user choose how to read
 
-      final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
-      if( prfS.read( profil, fr ) )
-        return profil.getResult();
+      final IProfil[] profiles = ProfilSerializerUtilitites.readProfile( prfS, f, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+      return (profiles == null || profiles.length < 0) ? null : profiles[0].getResult();
     }
-    catch( final CoreException e )
+    catch( final Exception e )
     {
+      // TODO: ErrorHandling
       e.printStackTrace();
     }
     return null;
@@ -115,7 +102,7 @@ public class FilePointsSource extends AbstractPointsSource
 
     final Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData() );
-    label.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource.0") ); //$NON-NLS-1$
+    label.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource.0" ) ); //$NON-NLS-1$
     m_fileName = new Text( panel, SWT.BORDER );
     m_fileName.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
 

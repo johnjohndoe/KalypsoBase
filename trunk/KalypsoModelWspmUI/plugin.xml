@@ -267,6 +267,14 @@
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.ExportProfileCsvActionDelegate"
+               id="org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
+               label="%org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
+               menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
+               style="push"
+               tooltip="%org.kalypso.model.wspm.ui.action.ExportProfileCsvAction.description">
+         </action>
       </objectContribution>
  
         <objectContribution

@@ -141,13 +141,13 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     if( profiles.size() == 0 )
     {
-      MessageDialog.openInformation( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.0") ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.0" ) ); //$NON-NLS-1$
       return;
     }
 
     if( !prfReadStatus.isOK() )
     {
-      if( !MessageDialog.openConfirm( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.1") ) ) //$NON-NLS-1$
+      if( !MessageDialog.openConfirm( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.1" ) ) ) //$NON-NLS-1$
         return;
     }
 
@@ -161,13 +161,13 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, m_action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.2"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, m_action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.2" ), status ); //$NON-NLS-1$
     }
   }
 
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
-    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.3"), null ); //$NON-NLS-1$
+    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.3" ), null ); //$NON-NLS-1$
     // final Date today = new Date();
     // final String todayString = DF.format( today );
     for( final File file : files )
@@ -175,16 +175,17 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       try
       {
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
-        final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
-
-        profil.setName( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4") ); //$NON-NLS-1$
+        final IProfil[] profs = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+        if( profs == null || profs.length < 0 )
+          continue;
+        profs[0].setName( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4" ) ); //$NON-NLS-1$
 
         // do not overwrite original comment from wspwin profile
         // TODO: put this information into metadata strings
         // final String description = String.format( "Importiert am %s aus %s", todayString, file.getAbsolutePath() );
         // profil.setComment( description );
 
-        profiles.add( profil );
+        profiles.add( profs[0] );
       }
       catch( final IOException e )
       {
@@ -199,7 +200,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     }
 
     if( prfReadStatus.getChildren().length > 0 )
-      ErrorDialog.openError( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.5"), prfReadStatus ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.5" ), prfReadStatus ); //$NON-NLS-1$
     return prfReadStatus;
   }
 
