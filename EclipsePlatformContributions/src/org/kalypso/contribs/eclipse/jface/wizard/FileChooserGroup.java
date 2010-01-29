@@ -72,34 +72,24 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDel
  */
 public class FileChooserGroup
 {
+  public interface FileChangedListener
+  {
+    public void fileChanged( final File file );
+  }
+
   static public class FileChooserDelegate
   {
-    private final FILE_CHOOSER_GROUP_TYPE m_type;
-
     public enum FILE_CHOOSER_GROUP_TYPE
     {
       eOpen,
       eSave
     }
 
+    private final FILE_CHOOSER_GROUP_TYPE m_type;
+
     public FileChooserDelegate( final FILE_CHOOSER_GROUP_TYPE type )
     {
       m_type = type;
-    }
-
-    public int getTextBoxStyle( )
-    {
-      switch( m_type )
-      {
-        case eOpen:
-          return SWT.BORDER;
-
-        case eSave:
-          return SWT.BORDER | SWT.READ_ONLY;
-
-        default:
-          throw new UnsupportedOperationException();
-      }
     }
 
     public String getButtonText( )
@@ -148,6 +138,21 @@ public class FileChooserGroup
       return new String[] {};
     }
 
+    public int getTextBoxStyle( )
+    {
+      switch( m_type )
+      {
+        case eOpen:
+          return SWT.BORDER;
+
+        case eSave:
+          return SWT.BORDER | SWT.READ_ONLY;
+
+        default:
+          throw new UnsupportedOperationException();
+      }
+    }
+
     public String updateFileName( final FileDialog dialog, final String newFilename )
     {
       switch( m_type )
@@ -177,11 +182,6 @@ public class FileChooserGroup
 
   private final FileChooserDelegate m_delegate;
 
-  public interface FileChangedListener
-  {
-    public void fileChanged( final File file );
-  }
-
   public FileChooserGroup( )
   {
     this( new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eOpen ) );
@@ -192,36 +192,30 @@ public class FileChooserGroup
     m_delegate = delegate;
   }
 
-  protected void dispose( )
+  /**
+   * Has no effekt if the same listener has already been added.
+   */
+  public void addFileChangedListener( final FileChangedListener l )
   {
-    m_listeners.clear();
+    m_listeners.add( l );
   }
 
-  /**
-   * Sets the dialog settings used to remember the last entered filename.
-   * 
-   * @param settings
-   *          If <code>null</code>, the filename will not be stored.
-   */
-  public void setDialogSettings( final IDialogSettings settings )
+  protected void buttonPressed( )
   {
-    m_settings = settings;
+    final String currentFilename = m_text.getText();
 
-    if( (m_settings != null) && (m_text != null) && !m_text.isDisposed() )
-    {
-      final String filename = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
-      if( filename != null )
-      {
-        final Text text = m_text;
-        text.getDisplay().syncExec( new Runnable()
-        {
-          public void run( )
-          {
-            text.setText( filename );
-          }
-        } );
-      }
-    }
+    final FileDialog dialog = new FileDialog( m_text.getShell(), m_delegate.getFileDialogType() );
+    dialog.setFileName( currentFilename );
+    dialog.setText( m_delegate.getButtonText() );
+
+    dialog.setFilterExtensions( m_delegate.getFilterExtensions() );
+    dialog.setFilterNames( m_delegate.getFilterNames() );
+
+    final String newFilename = dialog.open();
+    if( newFilename == null )
+      return;
+
+    m_text.setText( m_delegate.updateFileName( dialog, newFilename ) );
   }
 
   public Group createControl( final Composite parent, final int style )
@@ -283,40 +277,9 @@ public class FileChooserGroup
     return group;
   }
 
-  protected void textModified( final String text )
+  protected void dispose( )
   {
-    setFile( new File( text ) );
-  }
-
-  protected void buttonPressed( )
-  {
-    final String currentFilename = m_text.getText();
-
-    final FileDialog dialog = new FileDialog( m_text.getShell(), m_delegate.getFileDialogType() );
-    dialog.setFileName( currentFilename );
-    dialog.setText( m_delegate.getButtonText() );
-
-    dialog.setFilterExtensions( m_delegate.getFilterExtensions() );
-    dialog.setFilterNames( m_delegate.getFilterNames() );
-
-    final String newFilename = dialog.open();
-    if( newFilename == null )
-      return;
-
-    m_text.setText( m_delegate.updateFileName( dialog, newFilename ) );
-  }
-
-  private void setFile( final File file )
-  {
-    if( m_file == file )
-      return;
-
-    m_file = file;
-
-    if( m_settings != null )
-      m_settings.put( FileChooserGroup.SETTINGS_FILENAME, file.getAbsolutePath() );
-
-    fireFileChanged( m_file );
+    m_listeners.clear();
   }
 
   private void fireFileChanged( final File file )
@@ -332,16 +295,58 @@ public class FileChooserGroup
       }
   }
 
-  /**
-   * Has no effekt if the same listener has already been added.
-   */
-  public void addFileChangedListener( final FileChangedListener l )
+  public File getFile( )
   {
-    m_listeners.add( l );
+    return m_file;
   }
 
   public void removeFileChangedListener( final FileChangedListener l )
   {
     m_listeners.remove( l );
+  }
+
+  /**
+   * Sets the dialog settings used to remember the last entered filename.
+   * 
+   * @param settings
+   *          If <code>null</code>, the filename will not be stored.
+   */
+  public void setDialogSettings( final IDialogSettings settings )
+  {
+    m_settings = settings;
+
+    if( (m_settings != null) && (m_text != null) && !m_text.isDisposed() )
+    {
+      final String filename = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
+      if( filename != null )
+      {
+        final Text text = m_text;
+        text.getDisplay().syncExec( new Runnable()
+        {
+          public void run( )
+          {
+            text.setText( filename );
+          }
+        } );
+      }
+    }
+  }
+
+  private void setFile( final File file )
+  {
+    if( m_file == file )
+      return;
+
+    m_file = file;
+
+    if( m_settings != null )
+      m_settings.put( FileChooserGroup.SETTINGS_FILENAME, file.getAbsolutePath() );
+
+    fireFileChanged( m_file );
+  }
+
+  protected void textModified( final String text )
+  {
+    setFile( new File( text ) );
   }
 }
