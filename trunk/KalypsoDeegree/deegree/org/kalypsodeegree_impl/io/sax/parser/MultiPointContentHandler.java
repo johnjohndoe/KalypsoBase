@@ -126,6 +126,7 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_multiPoint == null )
     {
+      endDelegation();
       m_parentContentHandler.endElement( uri, localName, name );
     }
     else

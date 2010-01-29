@@ -96,7 +96,6 @@ public class DelegatingContentHandler implements ContentHandler
     delegate();
   }
   
-  
   public void endDelegation()
   {
     if ( m_parentContentHandler != null )
