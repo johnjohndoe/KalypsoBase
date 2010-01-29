@@ -74,7 +74,8 @@ public class GMLPropertyChoiceContentHandler extends DelegatingContentHandler
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   { 
     GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
-    if(parentContentHandler.getLocalName().equals( localName ))
+    
+    if( parentContentHandler.getLocalName().equals( localName ) )
     {
       endDelegation();
       parentContentHandler.endElement( uri, localName, name );      

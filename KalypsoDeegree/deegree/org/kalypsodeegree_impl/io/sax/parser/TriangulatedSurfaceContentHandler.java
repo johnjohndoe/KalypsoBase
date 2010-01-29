@@ -118,6 +118,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     // maybe the property was expecting a triangulated surface, but it was empty */
     if( m_triangulatedSurface == null )
     {
+      endDelegation();
       m_parentContentHandler.endElement( uri, localName, name );
     }
     else

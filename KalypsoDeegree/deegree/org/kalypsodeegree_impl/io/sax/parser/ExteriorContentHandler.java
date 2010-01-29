@@ -94,6 +94,7 @@ public class ExteriorContentHandler extends GMLElementContentHandler implements 
   {
     if( m_elementMinOccurs == 0 && localName.equals( ( ( GMLElementContentHandler ) m_parentContentHandler ).getLocalName() ) )
     {
+      endDelegation();
       ( ( GMLElementContentHandler ) m_parentContentHandler ).endElement( uri, localName, name );
     }
     else

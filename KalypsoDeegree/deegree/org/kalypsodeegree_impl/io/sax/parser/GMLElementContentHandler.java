@@ -104,7 +104,9 @@ public abstract class GMLElementContentHandler extends DelegatingContentHandler
       endDelegation();
     }
     else
+    {
       handleUnexpectedEndElement( uri, localName, name);
+    } 
   }
   
   /**
