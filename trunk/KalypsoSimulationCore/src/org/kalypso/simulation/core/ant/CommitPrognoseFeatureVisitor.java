@@ -173,7 +173,6 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     try
     {
       // IMPORTANT: Die ZIELzeitreihe bestimmt, welche Achsen geschrieben werden!
-      // FIXME: Die Datenhaltung funktioniert so noch nicht richtig, weil die Prognosezeitreihen keine Metadaten haben.
       // Die Datenhaltung muss die Metadaten von WISKI beziehen
       // Wenn Daten in die Datenhaltung geschrieben werden, dürfen nur die Werte, keine
       // Metadaten o.ä. geändert werden.
