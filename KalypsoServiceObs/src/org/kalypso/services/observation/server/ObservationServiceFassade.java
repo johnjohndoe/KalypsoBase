@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
@@ -81,7 +81,6 @@ import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItemUtlis;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObsActivator;
-import org.kalypso.services.observation.i18n.Messages;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -188,11 +187,10 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
       if( requestType != null )
       {
         request = ObservationRequest.createWith( requestType );
-
-        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request ); //$NON-NLS-1$ //$NON-NLS-2$
+//        m_logger.info( "Reading data for observation: " + obean.getId() + " Request: " + request ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      else
-        m_logger.info( "Reading data for observation: " + obean.getId() ); //$NON-NLS-1$
+// else
+//        m_logger.info( "Reading data for observation: " + obean.getId() ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
@@ -222,7 +220,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( obs == null )
     {
       // obs could not be created, use the request now
-      m_logger.info( "Creating request-based observation for " + obean.getId() ); //$NON-NLS-1$
+//      m_logger.info( "Creating request-based observation for " + obean.getId() ); //$NON-NLS-1$
       obs = RequestFactory.createDefaultObservation( requestType );
     }
 
@@ -267,13 +265,14 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     final File file = m_mapDataId2File.get( dataId );
     if( file != null )
     {
-      final boolean b = file.delete();
+// final boolean b =
+      file.delete();
 
-      if( !b )
-        m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString(), dataId ) ); //$NON-NLS-1$
+// if( !b )
+//        m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.0", file.toString(), dataId ) ); //$NON-NLS-1$
     }
-    else
-      m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
+// else
+//      m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
   public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
