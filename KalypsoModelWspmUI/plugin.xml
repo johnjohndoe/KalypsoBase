@@ -268,7 +268,7 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
          <action
-               class="org.kalypso.model.wspm.ui.action.ExportProfileCsvActionDelegate"
+               class="org.kalypso.model.wspm.ui.action.ExportProfileActionDelegate"
                id="org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
                label="%org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
                menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"

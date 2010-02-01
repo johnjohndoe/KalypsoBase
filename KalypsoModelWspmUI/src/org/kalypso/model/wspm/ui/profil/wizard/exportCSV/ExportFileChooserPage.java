@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -66,7 +67,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 /**
  * @author kimwerner
  */
-public class CsvFileChooserPage extends WizardPage implements IWizardPage
+public class ExportFileChooserPage extends WizardPage implements IWizardPage
 {
 
   /**
@@ -78,14 +79,14 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
 
     return m_filePanel.getFile() != null;
   }
-
+   
   private static String DEFAULT_MSG = "Auf dieser Seite wählen Sie die Datei, welche importiert werden soll.";
 
   private FileChooserGroup m_filePanel;
 
-  private ComboViewer m_comboViewer;
+  protected ComboViewer m_comboViewer;
 
-  public CsvFileChooserPage( )
+  public ExportFileChooserPage( )
   {
     super( "wsvFileChooserPage", "Datei wählen", null );
 
@@ -110,7 +111,7 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
 
   final protected void updateControl( )
   {
-//
+   
   }
 
   private Group createFileGroup( final Composite parent )
@@ -118,7 +119,8 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
     m_filePanel = new FileChooserGroup( new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eSave )
     {
 
-      final public Map<String, String> sinks = KalypsoModelWspmCoreExtensions.getProfilSinks();
+    
+      
 
       /**
        * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#updateFileName(org.eclipse.swt.widgets.FileDialog,
@@ -133,10 +135,12 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
       /**
        * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterNames()
        */
+      @SuppressWarnings("unchecked")
       @Override
       public String[] getFilterNames( )
       {
-        return sinks.values().toArray( new String[] {} );
+        final Object selection= ((StructuredSelection)m_comboViewer.getSelection()).getFirstElement();
+        return new String[] { ((Map< String , String >)m_comboViewer.getInput()).get( selection.toString() ) };
       }
 
       /**
@@ -146,13 +150,14 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
       public String[] getFilterExtensions( )
       {
 
-        final String[] ext = new String[sinks.size()];
-        int i = 0;
-        for( String s : sinks.keySet() )
-        {
-          ext[i++] = "*." + s;
-        }
-        return ext;
+// final String[] ext = new String[sinks.size()];
+// int i = 0;
+// for( String s : sinks.keySet() )
+// {
+// ext[i++] = "*." + s;
+// }
+        final Object selection = ((StructuredSelection)m_comboViewer.getSelection()).getFirstElement();
+        return new String[] { "*." + selection };
       }
 
     } );
@@ -175,11 +180,22 @@ public class CsvFileChooserPage extends WizardPage implements IWizardPage
       @Override
       public Object[] getElements( Object inputElement )
       {
-        return ((Map< ? , ? >) inputElement).values().toArray();
+        return ((Map< ? , ? >) inputElement).keySet().toArray();
       }
-    } );
+    } 
+    );
 
-    m_comboViewer.setLabelProvider( new LabelProvider() );
+    m_comboViewer.setLabelProvider( new LabelProvider(){
+
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @SuppressWarnings("unchecked")
+      @Override
+      public String getText( Object element )
+      {
+        return ((Map< String , String >)m_comboViewer.getInput()).get( element.toString() );
+      }} );
     m_comboViewer.setInput( KalypsoModelWspmCoreExtensions.getProfilSinks() );
     m_comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

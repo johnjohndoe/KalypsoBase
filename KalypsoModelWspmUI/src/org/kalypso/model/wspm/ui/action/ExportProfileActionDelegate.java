@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.ui.profil.wizard.exportCSV.ExportProfileCsvWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.exportCSV.ExportProfileWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 /**
  * @author kimwerner
  */
-public class ExportProfileCsvActionDelegate extends ActionDelegate
+public class ExportProfileActionDelegate extends ActionDelegate
 {
   private IFeatureSelection m_selection;
 
@@ -126,7 +126,7 @@ public class ExportProfileCsvActionDelegate extends ActionDelegate
       return;
     }
 
-    final IWizard exportProfileCsvWizard = new ExportProfileCsvWizard( ws,  foundProfiles, selectedProfiles );
+    final IWizard exportProfileCsvWizard = new ExportProfileWizard( ws,  foundProfiles, selectedProfiles );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileCsvWizard );

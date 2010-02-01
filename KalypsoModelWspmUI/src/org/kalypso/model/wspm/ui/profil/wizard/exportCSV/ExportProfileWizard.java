@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.exportCSV;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,12 +69,12 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public class ExportProfileCsvWizard extends Wizard
+public class ExportProfileWizard extends Wizard
 {
 
   final private ArrayChooserPage m_profileChooserPage;
 
-  final private CsvFileChooserPage m_csvFileChooserPage = new CsvFileChooserPage();
+  final private ExportFileChooserPage m_csvFileChooserPage = new ExportFileChooserPage();
 
   final private List<Feature> m_profiles;
 
@@ -84,18 +82,18 @@ public class ExportProfileCsvWizard extends Wizard
 
   final protected CommandableWorkspace m_workspace;
 
-  public ExportProfileCsvWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public ExportProfileWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
- 
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.0" ) ); //$NON-NLS-1$
+
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "Exportiere Profildateien" ) );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ) ); //$NON-NLS-1$
+    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "Profile wählen" ) );
   }
 
   /**
@@ -133,7 +131,7 @@ public class ExportProfileCsvWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.7" ), 2 * profilFeatures.length ); //$NON-NLS-1$
+        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "profile exportieren" ), profilFeatures.length );
         for( int i = 0; i < profilFeatures.length; i++ )
         {
           if( profilFeatures[i] instanceof Feature )
@@ -147,12 +145,9 @@ public class ExportProfileCsvWizard extends Wizard
 
         try
         {
-          final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink(FileUtilities.getSuffix( file )); 
-          ProfilSerializerUtilitites.writeProfile( sink, profiles.toArray(new IProfil[]{}), file );
-//          Writer writer = new PrintWriter( file );
-//          sink.write( profiles, writer );
-//          writer.close();
-          return  new Status( IStatus.OK,"","");
+          final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( FileUtilities.getSuffix( file ) );
+          ProfilSerializerUtilitites.writeProfile( sink, profiles.toArray( new IProfil[] {} ), file );
+          return new Status( IStatus.OK, "", "" );
         }
         catch( Exception e )
         {
