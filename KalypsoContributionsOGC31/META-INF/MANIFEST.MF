@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoOGCContributions Plug-in
+Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
+Bundle-Version: 2.2.0.qualifier
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.junit;resolution:=optional,
+ org.kalypso.commons;bundle-version="0.0.1"
+Bundle-ActivationPolicy: lazy
+Export-Package: au.csiro.seegrid.xml.st,
+ ogc31.org.w3.smil20,
+ ogc31.www.isotc211.org.gco,
+ ogc31.www.isotc211.org.gmd,
+ ogc31.www.isotc211.org.gsr,
+ ogc31.www.isotc211.org.gss,
+ ogc31.www.isotc211.org.gts,
+ ogc31.www.opengis.net.gml,
+ ogc31.www.opengis.net.ogc,
+ ogc31.www.opengis.net.ows,
+ ogc31.www.opengis.net.swe,
+ org.kalypso.contribs.ogc31,
+ org.kalypso.contribs.ogc31.test,
+ org.w3._2001.smil20.language
+Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
