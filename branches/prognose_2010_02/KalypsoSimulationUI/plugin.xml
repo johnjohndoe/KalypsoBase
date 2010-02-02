@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         id="actionSets"
+         name="actionSets"
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%org.kalypso.simulation.ui.debug.actionSet.label"
+            description="%org.kalypso.simulation.ui.debug.actionSet.description"
+            visible="false"
+            id="org.kalypso.simulation.ui.debug.actionSet">
+         <menu
+               label="%org.kalypso.simulation.ui.menu.debug.label"
+               path="additions"
+               id="org.kalypso.simulation.ui.menu.debug">
+            <groupMarker name="start"/>
+         </menu>
+         <action
+               label="%org.kalypso.action.debug.testCalcCase.label"
+               class="org.kalypso.simulation.ui.actions.TestCalculationDelegate"
+               tooltip="%org.kalypso.action.debug.testCalcCase.tooltip"
+               style="push"
+               menubarPath="org.kalypso.simulation.ui.menu.debug/start"
+               id="org.kalypso.action.debug.testCalcCase"/>
+      </actionSet>
+   </extension>
+   
+   <extension
+         id="ModelNature"
+         name="ModelNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.simulation.ui.calccase.ModelNature">
+         </run>
+      </runtime>
+      <options
+            allowLinking="true">
+      </options>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+        <antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.RunCalculationTask" library="lib/anttasks.jar" name="kalypso.runCalculation"/>
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.CopyObservationTask" library="lib/anttasks.jar" name="kalypso.copyObservation" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.GmlPropertyTask" library="lib/anttasks.jar" name="kalypso.gmlProperty" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.KrigingTask" library="lib/anttasks.jar" name="kalypso.kriging" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.GMLWeightingTask" library="lib/anttasks.jar" name="kalypso.gmlWeight" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.CommitObservationsTask" library="lib/anttasks.jar" name="kalypso.commitPrognoses" />
+		<antTask class="org.kalypso.simulation.ui.ant.MultiEqualsTask" library="lib/anttasks.jar" name="kalypso.multiequals" />
+		<antTask class="org.kalypso.simulation.ui.ant.MapZmlMeta2FeatureTask" library="lib/anttasks.jar" name="kalypso.mapZmlMeta2Feature" />
+		<antTask class="org.kalypso.simulation.ui.ant.MapFeature2ZmlMetaTask" library="lib/anttasks.jar" name="kalypso.mapFeature2ZmlMeta" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.FetchFromURLsTask" library="lib/anttasks.jar" name="Kalypso.fetchFromURL" />
+		<antTask class="org.kalypso.simulation.ui.ant.PropertyReplaceTask" headless="true" library="lib/anttasks.jar" name="kalypso.propertyReplace" />
+		<antTask eclipseRuntime="false" class="org.kalypso.simulation.ui.ant.GetFileTask" headless="false" library="lib/anttasks.jar" name="kalypso.getFileTask" />
+		<antTask class="org.kalypso.simulation.ui.ant.ThiessenWeightTask" headless="true" library="lib/anttasks.jar" name="kalypso.thiessenWeightTask" />
+		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.MergeObservationTask" library="lib/anttasks.jar" name="kalypso.mergeObservation" />
+		<antTask class="org.kalypso.simulation.ui.ant.ChangeGmlTask" eclipseRuntime="true" library="lib/anttasks.jar" name="kalypso.changeGml"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.variables.dynamicVariables">
+      <variable
+            name="simulation_project_loc"
+            description="Substitution for project_loc, will be replaced by the simulation framework with the choosen projekt. Has the same behaviour as project_loc."
+            resolver="org.eclipse.debug.internal.core.variables.ProjectResolver">
+      </variable>
+   </extension>
+  
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/anttasks.jar">
+      </extraClasspathEntry>
+   </extension>
+</plugin>
