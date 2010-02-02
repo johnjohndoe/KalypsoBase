@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoRepository
+Bundle-SymbolicName: org.kalypso.repository; singleton:=true
+Bundle-Version: 2.2.0.qualifier
+Bundle-Vendor: kalypso.sourceforge.net
+Export-Package: org.kalypso.repository,
+ org.kalypso.repository.conf,
+ org.kalypso.repository.container,
+ org.kalypso.repository.factory,
+ org.kalypso.repository.file,
+ org.kalypso.repository.utils
+Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
+ org.kalypso.commons;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: org.kalypso.repository.KalypsoRepositoryPlugin
+Bundle-ActivationPolicy: lazy
