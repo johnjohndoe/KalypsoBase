@@ -53,6 +53,10 @@ import org.kalypso.repository.RepositoryException;
  */
 public final class RepositoryItemUtlis
 {
+  public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_";
+
+  public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
+
   private RepositoryItemUtlis( )
   {
 
@@ -244,5 +248,15 @@ public final class RepositoryItemUtlis
       return true;
 
     return false;
+  }
+
+  public static boolean isZrxpItem( final String identifier )
+  {
+    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
+  }
+
+  public static boolean isZrxpItem( final IRepositoryItem item )
+  {
+    return isZrxpItem( item.getIdentifier() );
   }
 }
