@@ -289,4 +289,21 @@ public final class StringUtilities
     // s.replaceAll("\\s\$", "")
     return s.trim();
   }
+
+  public static boolean isEqual( final String s1, final String s2 )
+  {
+    if( s1 == null || s2 == null )
+      return false;
+
+    return s1.equals( s2 );
+  }
+
+  public static boolean isEqualIgnoreCase( final String s1, final String s2 )
+  {
+    if( s1 == null || s2 == null )
+      return false;
+
+    return s1.equalsIgnoreCase( s2 );
+
+  }
 }
