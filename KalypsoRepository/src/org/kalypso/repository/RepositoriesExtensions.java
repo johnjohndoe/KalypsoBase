@@ -1,5 +1,7 @@
 package org.kalypso.repository;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
@@ -15,19 +17,26 @@ import org.kalypso.repository.factory.IRepositoryFactory;
  * 
  * @author schlienger
  */
-public class RepositoriesExtensions
+public final class RepositoriesExtensions
 {
-  public final static String REPOSITORIES_EXTENSION_POINT = "org.kalypso.repository.factories"; //$NON-NLS-1$
+  public static final String FACTORY_EXTENSION_POINT = "org.kalypso.repository.factories"; //$NON-NLS-1$
 
-  public final static String ATT_NAME = "name"; //$NON-NLS-1$
+  public static final String BROWSER_EXTENSION_POINT = "org.kalypso.repository.repositoryBrowser"; //$NON-NLS-1$
 
-  public final static String ATT_FACTORY = "factory"; //$NON-NLS-1$
+  public static final String ATT_NAME = "name"; //$NON-NLS-1$
 
-  public final static String ATT_CONF = "conf"; //$NON-NLS-1$
+  public static final String ATT_FACTORY = "factory"; //$NON-NLS-1$
 
-  public final static String ATT_RO = "readOnly"; //$NON-NLS-1$
+  public static final String ATT_CONF = "conf"; //$NON-NLS-1$
 
-  public final static String ATT_CACHED = "cached"; //$NON-NLS-1$
+  public static final String ATT_RO = "readOnly"; //$NON-NLS-1$
+
+  public static final String ATT_CACHED = "cached"; //$NON-NLS-1$
+
+  private RepositoriesExtensions( )
+  {
+
+  }
 
   /**
    * Uses the platform extension registry to retrieve all extensions for the repositories extension point.
@@ -37,11 +46,11 @@ public class RepositoriesExtensions
    * @return array of config items
    * @throws CoreException
    */
-  public static RepositoryFactoryConfig[] retrieveExtensions( ) throws CoreException
+  public static RepositoryFactoryConfig[] retrieveFactories( ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( FACTORY_EXTENSION_POINT );
 
     if( extensionPoint == null )
       return new RepositoryFactoryConfig[0];
@@ -74,11 +83,11 @@ public class RepositoriesExtensions
    * @param readOnly
    * @throws CoreException
    */
-  public static IRepositoryFactory retrieveExtensionFor( final String factoryClassName ) throws CoreException
+  public static IRepositoryFactory retrieveFactoryFor( final String factoryClassName ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( REPOSITORIES_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( FACTORY_EXTENSION_POINT );
 
     if( extensionPoint == null )
       return null;
@@ -93,5 +102,24 @@ public class RepositoriesExtensions
     }
 
     return null;
+  }
+
+  public static IRepositoryResolver[] retrieveTimeSeriesBrowserRepositories( ) throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( BROWSER_EXTENSION_POINT );
+    if( extensionPoint == null )
+      return new IRepositoryResolver[] {};
+
+    final Set<IRepositoryResolver> resolvers = new HashSet<IRepositoryResolver>();
+
+    final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : elements )
+    {
+      final IRepositoryResolver reolver = (IRepositoryResolver) element.createExecutableExtension( "repository" );//$NON-NLS-1$
+      resolvers.add( reolver );
+    }
+
+    return resolvers.toArray( new IRepositoryResolver[] {} );
   }
 }

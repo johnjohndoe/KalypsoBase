@@ -61,7 +61,7 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AddRepositoryRunnable implements Runnable
 {
@@ -87,7 +87,7 @@ public class AddRepositoryRunnable implements Runnable
 
     try
     {
-      dlg.setInput( RepositoriesExtensions.retrieveExtensions() );
+      dlg.setInput( RepositoriesExtensions.retrieveFactories() );
 
       if( dlg.open() != Window.OK )
         return;

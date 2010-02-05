@@ -54,8 +54,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.RepositoryLabelProvider;
 import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
 
@@ -72,7 +72,7 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
 
   public ObservationChooser( final Composite parent )
   {
-    m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
+    m_repContainer = RepositoryContainerSingelton.getInstance().getContainer();
 
     m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );

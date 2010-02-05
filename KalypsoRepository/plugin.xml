@@ -3,5 +3,6 @@
 <plugin>
 
      <extension-point id="factories" name="RepositoryFactories" schema="schema/repfactories.exsd"/>
+     <extension-point id="repositoryBrowser" name="RepositoryBrowser" schema="schema/repositoryBrowser.exsd"/>
      
 </plugin>
