@@ -65,8 +65,6 @@ import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
-import org.kalypso.repository.container.DefaultRepositoryContainer;
-import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 
@@ -76,9 +74,6 @@ import org.osgi.framework.BundleContext;
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
   private static KalypsoGisPlugin THE_PLUGIN = null;
-
-  /** Manages the list of repositories. */
-  private IRepositoryContainer m_tsRepositoryContainer = null;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
 
@@ -190,9 +185,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // clear the observation cache
     ObservationCache.clearCache();
 
-    if( m_tsRepositoryContainer != null )
-      m_tsRepositoryContainer.dispose();
-
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
 
@@ -256,15 +248,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
-  public IRepositoryContainer getRepositoryContainer( )
-  {
-    if( m_tsRepositoryContainer == null )
-    {
-      m_tsRepositoryContainer = new DefaultRepositoryContainer();
-    }
-
-    return m_tsRepositoryContainer;
-  }
 
   public int getDefaultMapSelectionID( )
   {

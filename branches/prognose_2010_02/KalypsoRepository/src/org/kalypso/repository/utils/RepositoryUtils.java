@@ -32,7 +32,7 @@ package org.kalypso.repository.utils;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryRegistry;
-import org.kalypso.repository.KalypsoRepositoryPlugin;
+import org.kalypso.repository.KalypsoRepository;
 import org.kalypso.repository.RepositoryException;
 
 
@@ -113,7 +113,7 @@ public final class RepositoryUtils
   public static IRepository findRegisteredRepository( final String itemIdentifier )
   {
     final String protocol = RepositoryItemUtlis.getProtocol( itemIdentifier );
-    final IRepositoryRegistry repositoryRegistry = KalypsoRepositoryPlugin.getDefault().getRepositoryRegistry();
+    final IRepositoryRegistry repositoryRegistry = KalypsoRepository.getDefault().getRepositoryRegistry();
 
     return repositoryRegistry.getRepository( protocol );
   }

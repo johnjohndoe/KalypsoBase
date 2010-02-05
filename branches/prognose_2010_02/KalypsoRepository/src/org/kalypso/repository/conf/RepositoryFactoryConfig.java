@@ -121,7 +121,7 @@ public class RepositoryFactoryConfig
     if( m_rf != null )
       return m_rf;
 
-    final IRepositoryFactory rf = RepositoriesExtensions.retrieveExtensionFor( m_factory );
+    final IRepositoryFactory rf = RepositoriesExtensions.retrieveFactoryFor( m_factory );
     if( rf == null )
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Factory not found for repository: %s", m_factory ) ) ); //$NON-NLS-1$
 
