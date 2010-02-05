@@ -23,6 +23,8 @@ public final class RepositoriesExtensions
 
   public static final String BROWSER_EXTENSION_POINT = "org.kalypso.repository.repositoryBrowser"; //$NON-NLS-1$
 
+  public static final String FILTER_EXTENSION_POINT = "org.kalypso.repository.repositoryFilter"; //$NON-NLS-1$
+
   public static final String ATT_NAME = "name"; //$NON-NLS-1$
 
   public static final String ATT_FACTORY = "factory"; //$NON-NLS-1$
@@ -121,5 +123,24 @@ public final class RepositoriesExtensions
     }
 
     return resolvers.toArray( new IRepositoryResolver[] {} );
+  }
+
+  public static IRepositoryFilter[] retrieveRepositoryFilters( ) throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( FILTER_EXTENSION_POINT );
+    if( extensionPoint == null )
+      return new IRepositoryFilter[] {};
+
+    final Set<IRepositoryFilter> filters = new HashSet<IRepositoryFilter>();
+
+    final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : elements )
+    {
+      final IRepositoryFilter filter = (IRepositoryFilter) element.createExecutableExtension( "filter" );//$NON-NLS-1$
+      filters.add( filter );
+    }
+
+    return filters.toArray( new IRepositoryFilter[] {} );
   }
 }
