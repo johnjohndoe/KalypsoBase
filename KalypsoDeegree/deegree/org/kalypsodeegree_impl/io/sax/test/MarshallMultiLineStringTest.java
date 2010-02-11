@@ -53,9 +53,9 @@ import org.apache.xml.serializer.ToXMLStream;
 import org.junit.Test;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
+import org.kalypsodeegree_impl.io.sax.marshaller.MultiLineStringMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -65,45 +65,78 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Felipe Maximino
  *
  */
-public class MarshallLineStringTest extends TestCase
+public class MarshallMultiLineStringTest extends TestCase
 {
-private ToXMLStream m_xmlStream;  
+  private ToXMLStream m_xmlStream;  
+
+  private static GM_Curve LINESTRING_1;
+  private static GM_Curve LINESTRING_2;
   
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
+  { 
+    super.setUp();
+    
+    GM_Position position1 = GeometryFactory.createGM_Position( 0.0, 1.0, 0.0 );
+    GM_Position position2 = GeometryFactory.createGM_Position( 1.0, 1.0, 1.0 );
+    GM_Position position3 = GeometryFactory.createGM_Position( 2.0, 2.0, 1.0 );
+    GM_Position position4 = GeometryFactory.createGM_Position( 0.0, 1.0, 1.0 );
+    
+    GM_Position[] positions1 = new GM_Position[]{ position1, position2, position3 };
+    GM_Position[] positions2 = new GM_Position[]{ position4, position2, position3 };
+    
+    LINESTRING_1 = GeometryFactory.createGM_Curve( positions1, "EPSG:31467" );
+    LINESTRING_2 = GeometryFactory.createGM_Curve( positions2, "EPSG:31467" );
+  }
+
   @Test
-  public void testLineString() throws IOException, SAXException, GM_Exception
+  public void testMultiLineString1() throws Exception
   {
-      File temp = File.createTempFile( "lineString", "gml" );
+      File temp = File.createTempFile( "multiLineString", "gml" );
       temp.deleteOnExit();
       
-      GM_Curve lineString = createLineString();      
+      GM_MultiCurve multiLineString = GeometryFactory.createGM_MultiCurve( new GM_Curve[]{LINESTRING_1},"EPSG:31467" );   
       
-      XMLReader xmlReader = initMarshalling( new FileOutputStream( temp ) );
-      LineStringMarshaller marshaller = new LineStringMarshaller( xmlReader, lineString );
-      marshaller.marshall();      
-      endMarshalling();
+      marshallMultiLineString( multiLineString, temp );
       
-      URL url = getClass().getResource( "resources/lineString_marshall.gml" );
+      URL url = getClass().getResource( "resources/multiLineString_marshall1.gml" );
       
       assertContentEquals( temp, url );
   }
+
+
+  @Test
+  public void testMultiLineString2() throws Exception
+  {
+    File temp = File.createTempFile( "multiLineString", "gml" );
+    temp.deleteOnExit();
+    
+    GM_MultiCurve multiLineString = GeometryFactory.createGM_MultiCurve( new GM_Curve[]{LINESTRING_1, LINESTRING_2},"EPSG:31467" );   
+    
+    marshallMultiLineString( multiLineString, temp );
+    
+    URL url = getClass().getResource( "resources/multiLineString_marshall2.gml" );
+    
+    assertContentEquals( temp, url );
+  }  
+  
+  private void marshallMultiLineString( GM_MultiCurve multiLineString, File temp ) throws Exception
+  {     
+    XMLReader xmlReader = initMarshalling( new FileOutputStream( temp ) );
+    MultiLineStringMarshaller marshaller = new MultiLineStringMarshaller( xmlReader, multiLineString );
+    marshaller.marshall();      
+    endMarshalling();    
+  }
+  
   
   private void assertContentEquals( File file, URL fileExpected ) throws IOException
   {
     String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
     String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );
     assertEquals( expected, actual );
-  }
-
-  private GM_Curve createLineString( ) throws GM_Exception
-  {
-    GM_Position[] positions = new GM_Position[5];
-    positions[0] = GeometryFactory.createGM_Position( 0.0, 0.0, 0.0 );
-    positions[1] = GeometryFactory.createGM_Position( 0.0, 1.0, 2.0 );
-    positions[2] = GeometryFactory.createGM_Position( 1.0, 2.0, 2.0 );
-    positions[3] = GeometryFactory.createGM_Position( 2.0, 2.0, 2.0 );
-    positions[4] = GeometryFactory.createGM_Position( 2.5, 2.0, 1.0 );
-    
-    return GeometryFactory.createGM_Curve( positions, "EPSG:31467" );
   }
 
   private XMLReader initMarshalling( OutputStream os ) throws SAXException

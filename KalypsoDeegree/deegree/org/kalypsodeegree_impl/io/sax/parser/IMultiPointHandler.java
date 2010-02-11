@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
+import org.kalypso.gmlschema.types.IGMLElementHandler;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**

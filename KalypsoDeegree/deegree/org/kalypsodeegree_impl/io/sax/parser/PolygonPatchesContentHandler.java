@@ -54,13 +54,13 @@ import org.xml.sax.XMLReader;
  * @author Felipe Maximino 
  * 
  */
-public class PolygonPatchesContenHandler extends GMLElementContentHandler implements IPolygonHandler
+public class PolygonPatchesContentHandler extends GMLElementContentHandler implements IPolygonHandler
 {
   public static final String ELEMENT_POLYGON_PATCHES = "polygonPatches";
 
   private final IPolygonHandler m_polygonHandler;  
 
-  public PolygonPatchesContenHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PolygonPatchesContentHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
   { 
     super( NS.GML3, ELEMENT_POLYGON_PATCHES, xmlReader, defaultSrs, polygonHandler );    
     m_polygonHandler = polygonHandler;    
@@ -81,7 +81,7 @@ public class PolygonPatchesContenHandler extends GMLElementContentHandler implem
   @Override
   protected void doStartElement( String uri, String localName, String name, Attributes atts )
   { 
-    setDelegate( new PolygonPatchContenHandler( this, m_defaultSrs, m_xmlReader ) );
+    setDelegate( new PolygonPatchContentHandler( this, m_defaultSrs, m_xmlReader ) );
   }
 
   /**
@@ -96,9 +96,9 @@ public class PolygonPatchesContenHandler extends GMLElementContentHandler implem
   @Override
   public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
-    if( localName.equals( PolygonPatchContenHandler.ELEMENT_POLYGON_PATCH ) )
+    if( localName.equals( PolygonPatchContentHandler.ELEMENT_POLYGON_PATCH ) )
     {
-      ContentHandler polygonPatchContentHandler = new PolygonPatchContenHandler( this, m_defaultSrs, m_xmlReader );
+      ContentHandler polygonPatchContentHandler = new PolygonPatchContentHandler( this, m_defaultSrs, m_xmlReader );
       delegate( polygonPatchContentHandler );    
       polygonPatchContentHandler.startElement( uri, localName, name, atts );        
     }

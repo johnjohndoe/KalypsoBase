@@ -178,9 +178,11 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
 
   private void delegateToProperContentHandler( final IPropertyType pt, final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   { 
+    
     if( pt instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) pt;
+
       if( vpt.getTypeHandler() instanceof ISimpleMarshallingTypeHandler )
       {
         delegate( new SimpleContentContentHandler( m_xmlReader, this ) );
@@ -221,7 +223,7 @@ public class PropertyContentHandler extends DelegatingContentHandler implements 
     if( typeHandler instanceof IMarshallingTypeHandler2 )
     {
       final IMarshallingTypeHandler2 th2 = (IMarshallingTypeHandler2) typeHandler;
-      delegate( th2.createContentHandler( m_xmlReader, this, this, uri, localName, qName, atts ) );
+      delegate( th2.createContentHandler( m_xmlReader, this, this ) );
     }
     else //else is a IMarshallingTypeHandler
     {

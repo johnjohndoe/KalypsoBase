@@ -38,16 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml;
+package org.kalypso.gmlschema.types;
 
-import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypsodeegree.model.feature.Feature;
+import org.xml.sax.ContentHandler;
 
 /**
+ * 
  * @author Felipe Maximino
  *
  */
-public interface IFeatureHandler extends IGMLElementHandler<Feature>
+public interface IValueHandler extends ContentHandler
 {
 
 }

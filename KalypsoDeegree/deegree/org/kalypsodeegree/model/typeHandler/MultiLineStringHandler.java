@@ -46,29 +46,28 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
-import org.kalypsodeegree_impl.io.sax.parser.LineStringContentHandler;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree_impl.io.sax.marshaller.MultiLineStringMarshaller;
+import org.kalypsodeegree_impl.io.sax.parser.MultiLineStringContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
  *
  */
-public class LineStringHandler implements IMarshallingTypeHandler2
+public class MultiLineStringHandler implements IMarshallingTypeHandler2
 {
-  private static final QName QNAME_TYPE = GMLConstants.QN_LINE_STRING;
-  
+  private static final QName QNAME_TYPE = GMLConstants.QN_MULTI_LINE_STRING;
+
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater )
   {
-    return new LineStringContentHandler( resultEater, parentContentHandler, xmlReader );
+    return new MultiLineStringContentHandler( resultEater, parentContentHandler, xmlReader );
   }
 
   /**
@@ -93,9 +92,9 @@ public class LineStringHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion ) throws SAXException
-  {
-    new LineStringMarshaller( xmlReader, (GM_Curve) value ).marshall();
+  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion )
+  { 
+    new MultiLineStringMarshaller( xmlReader, (GM_MultiCurve) value );
   }
 
   /**
@@ -131,7 +130,7 @@ public class LineStringHandler implements IMarshallingTypeHandler2
   @Override
   public Class< ? > getValueClass( )
   {
-    return GM_Curve.class;
+    return GM_MultiCurve.class; 
   }
 
   /**

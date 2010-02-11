@@ -38,16 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml;
+package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
+ * A marshaller for gml:MultiLineString. 
+ * 
  * @author Felipe Maximino
- *
  */
-public interface IFeatureHandler extends IGMLElementHandler<Feature>
+public class MultiLineStringMarshaller extends GeometryMarshaller<GM_MultiCurve>
 {
+public final static String TAG_MULTI_LINE_STRING = "MultiLineString";
+  
+  public MultiLineStringMarshaller( XMLReader xmlReader, GM_MultiCurve multiLineString )
+  {
+    super( xmlReader, TAG_MULTI_LINE_STRING, multiLineString );
+  }  
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   */
+  @Override
+  protected void doMarshall( ) throws SAXException
+  {    
+    LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( m_xmlReader );
+    
+    GM_Curve[] lineStrings = m_marshalledObject.getAllCurves();
+    for( GM_Curve lineString : lineStrings )
+    {
+      lineStringMemberMarshaller.setLineString( lineString );
+      lineStringMemberMarshaller.marshall();
+    }    
+  }
 }

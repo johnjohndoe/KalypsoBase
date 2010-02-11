@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.XMLReader;
 
@@ -54,5 +53,5 @@ import org.xml.sax.XMLReader;
  */
 public interface IMarshallingTypeHandler2 extends IMarshallingTypeHandler
 {
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater, final String uri, final String localName, final String name, final Attributes atts );
+  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater );
 }

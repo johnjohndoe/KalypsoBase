@@ -41,18 +41,15 @@
 package org.kalypsodeegree.model.typeHandler;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.sax.marshaller.PointMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PointContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -69,7 +66,7 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater, String uri, String localName, String name, Attributes atts )
+  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater )
   { 
     return new PointContentHandler( resultEater, parentContentHandler, xmlReader );
   }
@@ -105,7 +102,7 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   @Override
-  public Object parseType( String text ) throws ParseException
+  public Object parseType( String text )
   {
     throw new UnsupportedOperationException();
   }
@@ -114,7 +111,7 @@ public class PointHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion )
   {
     throw new UnsupportedOperationException();    
   }

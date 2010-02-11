@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.TriangulatedSurfaceContentHandler;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -130,7 +129,7 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String,
    *      org.xml.sax.Attributes)
    */
-  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater, final String uri, final String localName, final String name, final Attributes atts )
+  public ContentHandler createContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
     return new TriangulatedSurfaceContentHandler(resultEater,  parentContentHandler, xmlReader );
   }

@@ -38,16 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml;
+package org.kalypso.gmlschema.types;
 
-import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypsodeegree.model.feature.Feature;
+import org.xml.sax.SAXException;
 
 /**
+ * 
  * @author Felipe Maximino
- *
  */
-public interface IFeatureHandler extends IGMLElementHandler<Feature>
+public interface IGMLElementHandler<T> extends IValueHandler
 {
-
+  public void handle( T element ) throws SAXException;
 }

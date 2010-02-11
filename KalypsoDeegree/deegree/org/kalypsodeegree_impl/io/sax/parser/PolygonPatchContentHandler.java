@@ -58,7 +58,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public class PolygonPatchContenHandler extends GMLElementContentHandler implements IRingHandler
+public class PolygonPatchContentHandler extends GMLElementContentHandler implements IRingHandler
 {
   public static final String ELEMENT_POLYGON_PATCH = "PolygonPatch";
 
@@ -66,7 +66,7 @@ public class PolygonPatchContenHandler extends GMLElementContentHandler implemen
   
   private GM_Ring m_ring;
 
-  public PolygonPatchContenHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
+  public PolygonPatchContentHandler( final IPolygonHandler polygonHandler, final String defaultSrs, final XMLReader xmlReader )
   { 
     super( NS.GML3, ELEMENT_POLYGON_PATCH, xmlReader, defaultSrs, polygonHandler );
     
