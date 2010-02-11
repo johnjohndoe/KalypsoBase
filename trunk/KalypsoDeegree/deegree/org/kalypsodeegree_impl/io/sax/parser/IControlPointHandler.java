@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.xml.sax.ContentHandler;
+import org.kalypso.gmlschema.types.IValueHandler;
 
 
 /**
  * @author Felipe Maximino
  */
-public interface IControlPointHandler extends ContentHandler
+public interface IControlPointHandler extends IValueHandler
 {
 }

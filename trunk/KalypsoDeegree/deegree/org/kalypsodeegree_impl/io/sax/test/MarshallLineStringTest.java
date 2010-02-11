@@ -70,7 +70,7 @@ public class MarshallLineStringTest extends TestCase
 private ToXMLStream m_xmlStream;  
   
   @Test
-  public void testeMultiPoint() throws IOException, SAXException, GM_Exception
+  public void testLineString() throws IOException, SAXException, GM_Exception
   {
       File temp = File.createTempFile( "lineString", "gml" );
       temp.deleteOnExit();

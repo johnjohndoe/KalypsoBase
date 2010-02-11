@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import org.kalypso.gmlschema.types.IGMLElementHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.sax.parser.IGMLElementHandler;
 
 /**
  * @author Felipe Maximino

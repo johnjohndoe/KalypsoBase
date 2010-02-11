@@ -63,7 +63,7 @@ public class CoordContentHandler extends GMLElementContentHandler
   public static final String ELEMENT_Y = "Y";
   public static final String ELEMENT_Z = "Z";  
   
-  private final ICoordinatesHandler m_coordinatesHandler;
+  private ICoordinatesHandler m_coordinatesHandler;
   
   private int m_xyz;
   
@@ -72,8 +72,8 @@ public class CoordContentHandler extends GMLElementContentHandler
   private StringBuffer m_coordBuffer;
 
   private String m_currentName;
-  
-  public CoordContentHandler( ContentHandler parentContentHandler, ICoordinatesHandler coordinatesHandler, String defaultSrs, XMLReader xmlReader )
+
+  public CoordContentHandler( final ContentHandler parentContentHandler, final ICoordinatesHandler coordinatesHandler, final String defaultSrs, final XMLReader xmlReader )
   { 
     super( NS.GML3, ELEMENT_COORD, xmlReader, defaultSrs, parentContentHandler );
     
@@ -164,5 +164,5 @@ public class CoordContentHandler extends GMLElementContentHandler
       m_coordBuffer = new StringBuffer();
 
     m_coordBuffer.append( ch, start, length );
-  }    
+  }
 }

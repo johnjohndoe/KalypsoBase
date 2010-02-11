@@ -134,7 +134,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   protected void doStartElement( String uri, String localName, String name, Attributes atts )
   {
     m_crs = ContentHandlerUtils.parseSrsFromAttributes( atts, null );
-    setDelegate(  new PolygonPatchesContenHandler( this, m_crs, m_xmlReader )  );
+    setDelegate(  new PolygonPatchesContentHandler( this, m_crs, m_xmlReader )  );
   }
 
   /**

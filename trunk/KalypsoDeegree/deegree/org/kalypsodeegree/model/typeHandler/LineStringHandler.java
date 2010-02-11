@@ -41,19 +41,17 @@
 package org.kalypsodeegree.model.typeHandler;
 
 import java.net.URL;
-import java.text.ParseException;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.LineStringContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -68,7 +66,7 @@ public class LineStringHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater, String uri, String localName, String name, Attributes atts )
+  public ContentHandler createContentHandler( XMLReader xmlReader, ContentHandler parentContentHandler, UnmarshallResultEater resultEater )
   {
     return new LineStringContentHandler( resultEater, parentContentHandler, xmlReader );
   }
@@ -95,16 +93,16 @@ public class LineStringHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
   @Override
-  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion )
+  public void marshal( Object value, XMLReader xmlReader, URL context, String gmlVersion ) throws SAXException
   {
-    new LineStringMarshaller( xmlReader, (GM_Curve) value );
+    new LineStringMarshaller( xmlReader, (GM_Curve) value ).marshall();
   }
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
    */
   @Override
-  public Object parseType( String text ) throws ParseException
+  public Object parseType( String text )
   {
     throw new UnsupportedOperationException();
   }
@@ -113,7 +111,7 @@ public class LineStringHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
-  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( XMLReader xmlReader, URL context, UnmarshallResultEater marshalResultEater, String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }

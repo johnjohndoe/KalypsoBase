@@ -69,7 +69,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   
   private StringBuffer m_coordBuffer = new StringBuffer();
   
-  private final ICoordinatesHandler m_coordinatesHandler;
+  private ICoordinatesHandler m_coordinatesHandler;
   
   /* separator for coordinate values */ 
   private String m_cs;
@@ -79,7 +79,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   
   /* decimal indicator */
   private String m_decimal;
-
+  
   public CoordinatesContentHandler( ContentHandler parentContentHandler, ICoordinatesHandler coordinatesHandler, String defaultSrs, XMLReader xmlReader )
   {
     super( NS.GML3, ELEMENT_COORDINATES, xmlReader, defaultSrs, parentContentHandler );

@@ -92,4 +92,6 @@ public final class GMLConstants
   public static final String DEFAULT_TS = " ";
 
   public static final String DEFAULT_DECIMAL = ".";
+
+  public static final QName QN_LINEAR_RING = new QName( NS.GML3, "LinearRing" );
 }
