@@ -128,21 +128,14 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXParseException
   {
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
      
     /* creates the controlPointsContentHandler allowing it to parse either gml:coordinates or gml:coord or gml:pos*/
-    GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader );    
-    
-    /* gml:pos */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    /* Deprecated with GML version 3.1.0 for coordinates with ordinate values that are numbers. Use "pos" instead */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORDINATES, new CoordinatesContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    /* Deprecated with GML version 3.0. Use "pos" instead. */ 
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORD, new CoordContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    
-    setDelegate( ctrlPointsContentHandler );    
+    GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_activeSrs );    
+    ctrlPointsContentHandler.loadPropertiesFor( GMLConstants.QN_POINT );
+    setDelegate( ctrlPointsContentHandler ); 
   }
 
   /**

@@ -105,7 +105,7 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
   protected void doEndElement( String uri, String localName, String name ) throws SAXException
   {
     m_lineString = endLineString();
-   
+
     if( m_resultEater != null )
     {
       m_resultEater.unmarshallSuccesful( m_lineString );
@@ -123,7 +123,7 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
   @Override
   public void handleUnexpectedEndElement( String uri, String localName, String name ) throws SAXException
   {
-    // maybe the property was expecting a triangulated surface, but it was empty */
+    // maybe the property was expecting a line string, but it was empty */
     if( m_lineString == null )
     {
       endDelegation();
@@ -139,23 +139,15 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXParseException
   {
+
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
     
-    GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader );
-    /* register the ways to specify control points for a gml:LineString.*/    
-    /* gml:pos */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    /* gml:posList */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS_LIST, new PosListContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    /* gml:coord - deprecated with GML version 3.0. Use "pos" instead */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORD, new CoordContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    /* gml: coordinates - deprecated with GML version 3.1.0. Use "posList" instead */
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORDINATES, new CoordinatesContentHandler( ctrlPointsContentHandler, this, m_activeSrs, m_xmlReader ) );
-    
-    setDelegate( ctrlPointsContentHandler );
+    GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_activeSrs );
+    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINE_STRING );
+    setDelegate( choiceContentHandler );
   }  
 
   private GM_Curve endLineString( ) throws SAXParseException

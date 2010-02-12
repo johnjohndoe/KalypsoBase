@@ -155,20 +155,14 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( String uri, String localName, String name, Attributes atts )
+  protected void doStartElement( String uri, String localName, String name, Attributes atts ) throws SAXParseException
   { 
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
     
-    GMLPropertyChoiceContentHandler membersContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader );
-    
-    /* register the properties that can specify a gml:MultiPoint: */
-    /* gml:pointMember */
-    membersContentHandler.registerProperty( GMLConstants.QN_POINT_MEMBER, new PointMemberContentHandler( membersContentHandler, this, m_activeSrs, m_xmlReader  ) );
-    /* gml:pointMembers*/
-    membersContentHandler.registerProperty( GMLConstants.QN_POINT_MEMBERS, new PointMembersContentHandler( membersContentHandler, this, m_activeSrs, m_xmlReader  ) );
-    
-    setDelegate( membersContentHandler );
+    GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_activeSrs );
+    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_MULTI_POINT );
+    setDelegate( choiceContentHandler );
   }
 
   /**

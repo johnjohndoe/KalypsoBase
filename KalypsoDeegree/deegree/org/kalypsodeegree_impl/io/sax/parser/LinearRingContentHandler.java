@@ -73,23 +73,13 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   }
 
   @Override
-  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
+  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes ) throws SAXParseException
   { 
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
     
-    GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader );
-    
-    // the current supported control points for gml:LinearRings: gml:pos, gml:posList, gml:coordinates, gml:coords    
-    // TODO: gml:pointProperty must also be supported
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS, new PosContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_POS_LIST, new PosListContentHandler( ctrlPointsContentHandler, this, m_defaultSrs, m_xmlReader ) );
-    
-    // gml:coordinates for gml:LinearRing is deprecated with GML Version 3.1.0
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORDINATES, new CoordinatesContentHandler( ctrlPointsContentHandler, this, m_srs, m_xmlReader ) );
-    // gml:coord for gml:LinearRing is deprecated with GML Version 3.0
-    ctrlPointsContentHandler.registerProperty( GMLConstants.QN_COORD, new CoordContentHandler( ctrlPointsContentHandler, this, m_srs, m_xmlReader ) );
-    
-    setDelegate( ctrlPointsContentHandler );
+    GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_defaultSrs );
+    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINEAR_RING );
+    setDelegate( choiceContentHandler );
   }
 
   @Override
@@ -101,7 +91,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     
     // the first and last coordinates must be coincident
     if( !m_poses.get( 0 ).equals( m_poses.get( m_poses.size() - 1 ) ) )
-      throw new SAXParseException( "The first and last coordinates of this gml:LinearRing must be coincident: " + m_poses.size(), m_locator );
+      throw new SAXParseException( "The first and last coordinates of this gml:LinearRing must be coincident: " + m_poses.get(0) + "/" + m_poses.get(m_poses.size()-1), m_locator );
     
     final GM_Position[] poses = new GM_Position[m_poses.size()]; 
     
