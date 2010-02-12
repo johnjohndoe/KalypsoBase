@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
@@ -59,7 +60,16 @@ public class MapOutline extends ContentOutline
   @Override
   protected boolean isImportant( final IWorkbenchPart part )
   {
-    return part.getAdapter( IMapPanel.class ) != null;
+    // REMARK: Problem if there are two map views with an outline...
+    // If the perspective containing one map view and outline is hidden,
+    // the outline gets the page (along with its buttons) of the other outline (which perspective is activated) set.
+    // So the parent toolbar manager has now wrong buttons.
+
+    /* Editors are ignored. */
+    if( part instanceof IViewPart )
+      return part.getAdapter( IMapPanel.class ) != null;
+
+    return false;
   }
 
   public IMapPanel getMapPanel( )

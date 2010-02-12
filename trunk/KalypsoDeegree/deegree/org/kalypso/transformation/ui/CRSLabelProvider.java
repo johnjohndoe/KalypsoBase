@@ -60,7 +60,7 @@ public class CRSLabelProvider extends LabelProvider
    * The constructor.
    * 
    * @param showCode
-   *            If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
+   *          If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
    */
   public CRSLabelProvider( boolean showCode )
   {
@@ -93,7 +93,7 @@ public class CRSLabelProvider extends LabelProvider
       if( !m_showCode )
         return name;
 
-      return name + " (" + crs.getCRS().getIdentifier() + ")";
+      return name + " (" + crs.getCRS().getIdentifier() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return super.getText( element );
