@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -118,6 +118,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     }
     m_level++;
     // System.out.println( indent() + "<" + qname + ">" );
+
     try
     {
       m_unmarshallerHandler.startElement( uri, local, qname, atts );
@@ -133,6 +134,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   @SuppressWarnings("unchecked")
   public void endElement( final String uri, String local, String qname ) throws SAXException
   {
+    
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
@@ -156,6 +158,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
     
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
+    
     m_unmarshallerHandler.endElement( uri, local, qname );
 
     if( m_level < 0 )

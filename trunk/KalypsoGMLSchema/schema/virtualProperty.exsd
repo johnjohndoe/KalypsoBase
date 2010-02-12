@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.gmlschema">
+<schema targetNamespace="org.kalypso.gmlschema" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.kalypso.gmlschema" id="virtualProperty" name="virtualProperty"/>
@@ -12,6 +12,11 @@ In contrast to define a virtual property as an annotation within the gml applica
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="virtualProperty" minOccurs="1" maxOccurs="unbounded"/>
@@ -156,10 +161,11 @@ Defaults to &lt;code&gt;true&lt;/code&gt;.
 
    <annotation>
       <appInfo>
-         <meta.section type="apiInfo"/>
+         <meta.section type="apiinfo"/>
       </appInfo>
       <documentation>
-         
+         See org.kalypso.gmlschema.types.IGeometrySpecification
+
       </documentation>
    </annotation>
 
@@ -172,13 +178,5 @@ Defaults to &lt;code&gt;true&lt;/code&gt;.
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

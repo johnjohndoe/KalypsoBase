@@ -7,13 +7,13 @@
    <extension-point id="functionExpression" name="functionExpression" schema="schema/functionExpression.exsd"/>
    <extension-point id="featureBinding" name="featureBinding" schema="schema/featureBinding.exsd"/>
 
-     <extension
+   <extension
          id="org.kalypso.deegree.catalog"
          name="UrlCatalog"
          point="org.kalypso.contribs.java.urlCatalog">
-        <catalog
+      <catalog
               class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC"
-              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>
+              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>     
       <catalog
             class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
             id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>
@@ -181,7 +181,25 @@
       <feature
             class="org.kalypsodeegree_impl.gml.binding.commons.Image"
             qname="{org.kalypso.gml.common}Image">
-      </feature>
+      </feature>     
    </extension>
-
+   <extension
+         point="org.kalypso.gmlschema.geometrySpecification">
+      <GeometrySpecification
+      	qName="{http://www.opengis.net/gml}LinearRing"
+      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LinearRingSpecification">
+      </GeometrySpecification>
+      <GeometrySpecification
+      	qName="{http://www.opengis.net/gml}Point"
+      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PointSpecification">
+      </GeometrySpecification>
+      <GeometrySpecification
+      	qName="{http://www.opengis.net/gml}MultiPoint"
+      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiPointSpecification">
+      </GeometrySpecification>
+      <GeometrySpecification
+      	qName="{http://www.opengis.net/gml}LineString"
+      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LineStringSpecification">
+      </GeometrySpecification>
+   </extension>
 </plugin>

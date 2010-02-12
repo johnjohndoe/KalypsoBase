@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.kalypso.gmlschema" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.kalypso.gmlschema" id="geometrySpecification" name="geometrySpecification"/>
+      </appInfo>
+      <documentation>
+         This extension point allows the registration of how a gml geometry may be specified, i.e, which properties are allowed by the schema. For each property a content handler is also set. 
+&lt;br&gt;
+Designed for geometries which allow to be specified by more than one property.
+&lt;br&gt;
+For example, a gml:Point may be specified by the gml:pos, gml:coordinates or gml:coord.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="GeometrySpecification" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="GeometrySpecification">
+      <complexType>
+         <attribute name="qName" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The qName of the geometry
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class with the geometry specification
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.gmlschema.types.IGeometrySpecification"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Example of properties registration for gml:LinearRing
+&lt;pre&gt;
+&lt;GeometrySpecification
+      	qName=&quot;{http://www.opengis.net/gml}LinearRing&quot;
+      	class=&quot;org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LinearRingSpecification&quot;&gt;
+&lt;/GeometrySpecification&gt;
+&lt;/pre&gt;
+The class LinearRingSpecification, which extends IGeometrySpecification, fills a catalog with handlers for the properties allowed.
+
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>
