@@ -126,10 +126,10 @@ public class ExportProfileActionDelegate extends ActionDelegate
       return;
     }
 
-    final IWizard exportProfileCsvWizard = new ExportProfileWizard( ws,  foundProfiles, selectedProfiles );
+    final IWizard exportProfileWizard = new ExportProfileWizard( ws,  foundProfiles, selectedProfiles );
 
     /* show wizard */
-    final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileCsvWizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
     dialog.setRememberSize( true );
     dialog.open();
   }

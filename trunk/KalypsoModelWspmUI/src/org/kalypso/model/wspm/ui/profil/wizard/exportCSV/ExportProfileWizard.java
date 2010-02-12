@@ -50,20 +50,18 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -74,7 +72,7 @@ public class ExportProfileWizard extends Wizard
 
   final private ArrayChooserPage m_profileChooserPage;
 
-  final private ExportFileChooserPage m_csvFileChooserPage = new ExportFileChooserPage();
+  final protected ExportFileChooserPage m_profileFileChooserPage = new ExportFileChooserPage();
 
   final private List<Feature> m_profiles;
 
@@ -88,12 +86,10 @@ public class ExportProfileWizard extends Wizard
     m_profiles = profiles;
     m_selectedProfiles = selection;
 
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "Exportiere Profildateien" ) );
+    setWindowTitle( "Exportiere Profildateien" );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "Profile wählen" ) );
+    m_profileChooserPage = new ProfilesChooserPage( "Bitte wählen Sie die Profile aus die exportiert werden sollen.", m_profiles, new Object[0], m_selectedProfiles.toArray(), 1 );
   }
 
   /**
@@ -104,7 +100,7 @@ public class ExportProfileWizard extends Wizard
   {
     super.addPages();
     addPage( m_profileChooserPage );
-    addPage( m_csvFileChooserPage );
+    addPage( m_profileFileChooserPage );
 
   }
 
@@ -114,7 +110,7 @@ public class ExportProfileWizard extends Wizard
   @Override
   public boolean canFinish( )
   {
-    return m_csvFileChooserPage.isPageComplete() && m_profileChooserPage.isPageComplete();
+    return m_profileFileChooserPage.isPageComplete() && m_profileChooserPage.isPageComplete();
   }
 
   /**
@@ -124,28 +120,28 @@ public class ExportProfileWizard extends Wizard
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
-    final File file = m_csvFileChooserPage.getFile();
+    final File file = m_profileFileChooserPage.getFile();
+
     final ArrayList<IProfil> profiles = new ArrayList<IProfil>( profilFeatures.length );
 
     final ICoreRunnableWithProgress m_exportJob = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "profile exportieren" ), profilFeatures.length );
-        for( int i = 0; i < profilFeatures.length; i++ )
-        {
-          if( profilFeatures[i] instanceof Feature )
-          {
-            final IProfileFeature wspmProfil = (IProfileFeature) profilFeatures[i];
-            if( wspmProfil != null )
-              profiles.add( wspmProfil.getProfil() );
-          }
-          monitor.worked( i );
-        }
-
         try
         {
-          final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( FileUtilities.getSuffix( file ) );
+          monitor.beginTask( "Profile exportieren", profilFeatures.length );
+          final IProfilSink sink = m_profileFileChooserPage.getProfilSink();
+          for( int i = 0; i < profilFeatures.length; i++ )
+          {
+            if( profilFeatures[i] instanceof Feature )
+            {
+              final IProfileFeature wspmProfil = (IProfileFeature) profilFeatures[i];
+              if( wspmProfil != null )
+                profiles.add( wspmProfil.getProfil() );
+            }
+            monitor.worked( i );
+          }
           ProfilSerializerUtilitites.writeProfile( sink, profiles.toArray( new IProfil[] {} ), file );
           return new Status( IStatus.OK, "", "" );
         }
@@ -162,7 +158,6 @@ public class ExportProfileWizard extends Wizard
       public void run( )
       {
         RunnableContextHelper.execute( new ProgressMonitorDialog( getShell() ), true, true, m_exportJob );
-
       }
     } );
     return true;

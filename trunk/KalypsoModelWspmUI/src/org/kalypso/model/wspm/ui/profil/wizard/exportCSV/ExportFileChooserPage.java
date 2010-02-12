@@ -41,10 +41,14 @@
 package org.kalypso.model.wspm.ui.profil.wizard.exportCSV;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -56,41 +60,29 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 
 /**
  * @author kimwerner
  */
 public class ExportFileChooserPage extends WizardPage implements IWizardPage
 {
-
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-   */
-  @Override
-  public boolean isPageComplete( )
-  {
-
-    return m_filePanel.getFile() != null;
-  }
-   
-  private static String DEFAULT_MSG = "Auf dieser Seite wählen Sie die Datei, welche importiert werden soll.";
-
-  private FileChooserGroup m_filePanel;
+  private File m_file = null;
 
   protected ComboViewer m_comboViewer;
 
+  private FileChooserGroup m_fileChooserGroup;
+
   public ExportFileChooserPage( )
   {
-    super( "wsvFileChooserPage", "Datei wählen", null );
+    super( "exportProfileFileChooserPage", "Datei wählen", null );
 
-    setMessage( DEFAULT_MSG );
+    setMessage( "Auswahl des Export-Filters" );
   }
 
   /**
@@ -104,32 +96,31 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage
     createTypeGroup( comp ).setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     createFileGroup( comp ).setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    /* Called after type-combo is created, because this eventually leads to a 'setFile' */
-    m_filePanel.setDialogSettings( getDialogSettings() );
+    m_fileChooserGroup.setDialogSettings( getDialogSettings() );
+
     setControl( comp );
   }
 
-  final protected void updateControl( )
+  protected Group createFileGroup( final Composite parent )
   {
-   
-  }
-
-  private Group createFileGroup( final Composite parent )
-  {
-    m_filePanel = new FileChooserGroup( new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eSave )
+    m_fileChooserGroup = new FileChooserGroup( new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eSave )
     {
-
-    
-      
-
       /**
-       * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#updateFileName(org.eclipse.swt.widgets.FileDialog,
-       *      java.lang.String)
+       * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterExtensions()
        */
+      @SuppressWarnings("unchecked")
       @Override
-      public String updateFileName( FileDialog dialog, String newFilename )
+      public String[] getFilterNames( )
       {
-        return FileUtilities.setSuffix( newFilename, dialog.getFilterExtensions()[dialog.getFilterIndex()].substring( 1 ) );
+        if( m_comboViewer.getInput() == null )
+          return new String[] { "all Files" };
+        final Map<String, String> map = ((Map<String, String>) m_comboViewer.getInput());
+        final ArrayList<String> list = new ArrayList( map.size() );
+        for( final String name : map.keySet() )
+        {
+          list.add( map.get( name ) );
+        }
+        return list.toArray( new String[] {} );
       }
 
       /**
@@ -137,32 +128,81 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage
        */
       @SuppressWarnings("unchecked")
       @Override
-      public String[] getFilterNames( )
-      {
-        final Object selection= ((StructuredSelection)m_comboViewer.getSelection()).getFirstElement();
-        return new String[] { ((Map< String , String >)m_comboViewer.getInput()).get( selection.toString() ) };
-      }
-
-      /**
-       * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate#getFilterExtensions()
-       */
-      @Override
       public String[] getFilterExtensions( )
       {
-
-// final String[] ext = new String[sinks.size()];
-// int i = 0;
-// for( String s : sinks.keySet() )
-// {
-// ext[i++] = "*." + s;
-// }
-        final Object selection = ((StructuredSelection)m_comboViewer.getSelection()).getFirstElement();
-        return new String[] { "*." + selection };
+        if( m_comboViewer.getInput() == null )
+          return new String[] { "*.*" };
+        final Map<String, String> map = ((Map<String, String>) m_comboViewer.getInput());
+        final ArrayList<String> list = new ArrayList( map.size() );
+        for( final String filter : map.keySet() )
+        {
+          list.add( "*." + filter );
+        }
+        return list.toArray( new String[] {} );
       }
 
     } );
-    return m_filePanel.createControl( parent, SWT.NONE );
+
+    m_fileChooserGroup.addFileChangedListener( new FileChooserGroup.FileChangedListener()
+    {
+      public void fileChanged( final File file )
+      {
+        setFile( file );
+      }
+    } );
+    final Group group = m_fileChooserGroup.createControl( parent, SWT.NONE );
+    return group;
   }
+
+  private void setFile( final File file, final String errorMessage )
+  {
+    setErrorMessage( errorMessage );
+    m_file = file;
+  }
+
+  protected void setFile( final File file )
+  {
+    if( file.equals( m_file ) )
+      return;
+    /* Validate file */
+    final String path = file.getPath().trim();
+    if( path.length() == 0 )
+      setFile( null, "Es muss ein Vetzeichnis oder eine Datei angegeben werden" );
+    else
+    {
+      setFile( file, null );
+    }
+    /* Choose type corresponding to file */
+    final boolean comboEnabled = m_file != null;
+    final ISelection comboSelection;
+    if( m_file == null )
+    {
+      setPageComplete( false );
+      comboSelection = m_comboViewer.getSelection();
+    }
+    else
+    {
+      final int index = file.getAbsolutePath().lastIndexOf( '.' );
+      comboSelection = index < 0 ? new StructuredSelection( FileChooserGroup.DIRECTORY_FILTER_SUFFIX ) : new StructuredSelection( file.getAbsolutePath().substring( index + 1 ) );
+    }
+
+    /* Invalidate combo */
+
+    final ComboViewer comboViewer = m_comboViewer;
+    final Control combo = comboViewer.getControl();
+    if( combo != null && !combo.isDisposed() )
+      combo.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !combo.isDisposed() )
+            combo.setEnabled( comboEnabled );
+          if( comboSelection != null )
+            comboViewer.setSelection( comboSelection );
+        }
+      } );
+  }
+
 
   private Control createTypeGroup( final Composite parent )
   {
@@ -182,10 +222,10 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage
       {
         return ((Map< ? , ? >) inputElement).keySet().toArray();
       }
-    } 
-    );
+    } );
 
-    m_comboViewer.setLabelProvider( new LabelProvider(){
+    m_comboViewer.setLabelProvider( new LabelProvider()
+    {
 
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -194,60 +234,48 @@ public class ExportFileChooserPage extends WizardPage implements IWizardPage
       @Override
       public String getText( Object element )
       {
-        return ((Map< String , String >)m_comboViewer.getInput()).get( element.toString() );
-      }} );
+        return ((Map<String, String>) m_comboViewer.getInput()).get( element.toString() );
+      }
+    } );
     m_comboViewer.setInput( KalypsoModelWspmCoreExtensions.getProfilSinks() );
     m_comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        updateControl();
+        final IDialogSettings settings = getDialogSettings();
+        final String fileName = settings.get( FileChooserGroup.SETTINGS_FILENAME );
+        final String suffix = ((StructuredSelection) event.getSelection()).getFirstElement().toString();
+        final String newFileName = FileChooserGroup.setSuffix( fileName, suffix );
+        if( !newFileName.equalsIgnoreCase( fileName ) )
+        {
+          settings.put( FileChooserGroup.SETTINGS_FILENAME, newFileName );
+          m_fileChooserGroup.setDialogSettings( settings );
+        }
       }
     } );
-
     return typeGroup;
   }
 
-// protected void setFile( final File file )
-// {
-// /* Validate file */
-// if( file.getPath().trim().length() == 0 )
-// setErrorMessage( "Es muss eine Datei angegeben werden" );
-//    
-// else if( !file.isFile() )
-// setErrorMessage( "Der angegebene Pfad verweist nicht auf eine Datei" );
-// else
-// setPageComplete( true );
-//
-// /* Choose type corresponding to file */
-// final boolean comboEnabled = m_filePanel.getFile() != null;
-// // final ISelection comboSelection;
-// if( m_filePanel.getFile() == null )
-// {
-//    
-// setPageComplete( false );
-// // comboSelection = StructuredSelection.EMPTY;
-// }
-//   
-//
-// /* Invalidate combo */
-// final ComboViewer comboViewer = m_comboViewer;
-// final Control combo = comboViewer.getControl();
-// if( combo != null && !combo.isDisposed() )
-// combo.getDisplay().asyncExec( new Runnable()
-// {
-// public void run( )
-// {
-// if( !combo.isDisposed() )
-// combo.setEnabled( comboEnabled );
-// // comboViewer.setSelection( comboSelection );
-// }
-// } );
-//
-// }
-
   public File getFile( )
   {
-    return m_filePanel.getFile();
+    return m_file;
   }
-} // @jve:decl-index=0:visual-constraint="258,97"
+
+  public final IProfilSink getProfilSink( ) throws CoreException
+  {
+    final Object selection = ((StructuredSelection) m_comboViewer.getSelection()).getFirstElement();
+    return selection == null ? null : KalypsoModelWspmCoreExtensions.createProfilSink( selection.toString() );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+   */
+  @Override
+  public boolean isPageComplete( )
+  {
+
+    return m_file != null;
+  }
+
+}
