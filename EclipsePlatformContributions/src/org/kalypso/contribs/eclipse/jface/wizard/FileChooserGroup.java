@@ -67,7 +67,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDel
 
 /**
  * A group to choose a file from the file system.
- *
+ * 
  * @author Gernot Belger
  */
 public class FileChooserGroup
@@ -97,10 +97,10 @@ public class FileChooserGroup
       switch( m_type )
       {
         case eOpen:
-          return Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.0"); //$NON-NLS-1$
+          return Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.0" ); //$NON-NLS-1$
 
         case eSave:
-          return Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.1"); //$NON-NLS-1$
+          return Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.1" ); //$NON-NLS-1$
 
         default:
           throw new UnsupportedOperationException();
@@ -138,6 +138,15 @@ public class FileChooserGroup
       return new String[] {};
     }
 
+    
+    public String getFileName( final File currentFile )
+    {
+      if( currentFile != null && currentFile.isDirectory() )
+        return currentFile.getPath() + File.separator + "ignore." + FileChooserGroup.DIRECTORY_FILTER_SUFFIX;//$NON-NLS-1$
+      else
+        return currentFile == null ? null : currentFile.getAbsolutePath();
+    }
+
     public int getTextBoxStyle( )
     {
       switch( m_type )
@@ -153,6 +162,8 @@ public class FileChooserGroup
       }
     }
 
+ 
+
     public String updateFileName( final FileDialog dialog, final String newFilename )
     {
       switch( m_type )
@@ -161,8 +172,10 @@ public class FileChooserGroup
           return newFilename;
 
         case eSave:
-          final String[] extensions = dialog.getFilterExtensions();
-          return newFilename + "." + extensions[0]; //$NON-NLS-1$
+
+          final int index = dialog.getFilterIndex();
+          final String suffix = dialog.getFilterExtensions()[index].substring( 2 );
+          return index < 0 ? newFilename : setSuffix( newFilename, suffix );
 
         default:
           throw new UnsupportedOperationException();
@@ -170,7 +183,13 @@ public class FileChooserGroup
     }
   }
 
-  private static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
+  public static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
+
+  /**
+   *   used as Filter like "*.txt" if this dialog can choose directories instead of files
+   *   @see FileChooserDelegate#getFilterExtensions()
+   */
+  public static final String DIRECTORY_FILTER_SUFFIX = "DIRECTORY_FILTER_SUFFIX"; //$NON-NLS-1$
 
   private File m_file;
 
@@ -200,16 +219,34 @@ public class FileChooserGroup
     m_listeners.add( l );
   }
 
+  private final int getFilterIndex( final String fileName )
+  {
+
+    final int index = fileName.lastIndexOf( "." );
+    final String suffix = index < 0 ? "*.*" : "*" + fileName.substring( index );
+
+    int i = 0;
+    for( final String filter : m_delegate.getFilterExtensions() )
+    {
+      if( filter.equalsIgnoreCase( suffix ) )
+        return i;
+      i++;
+    }
+    return -1;
+  }
+
   protected void buttonPressed( )
   {
-    final String currentFilename = m_text.getText();
+    final String currentFilename = m_delegate.getFileName( m_file );
 
     final FileDialog dialog = new FileDialog( m_text.getShell(), m_delegate.getFileDialogType() );
-    dialog.setFileName( currentFilename );
+    dialog.setFilterPath( currentFilename );
+    dialog.setFileName( m_file != null && m_file.isDirectory() ? Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.2" ) : currentFilename );
     dialog.setText( m_delegate.getButtonText() );
 
     dialog.setFilterExtensions( m_delegate.getFilterExtensions() );
     dialog.setFilterNames( m_delegate.getFilterNames() );
+    dialog.setFilterIndex( getFilterIndex( currentFilename ) );
 
     final String newFilename = dialog.open();
     if( newFilename == null )
@@ -217,7 +254,31 @@ public class FileChooserGroup
 
     m_text.setText( m_delegate.updateFileName( dialog, newFilename ) );
   }
+  public final static String setSuffix( final String fileName, final String suffix )
+  {
 
+    if( "*".equals( suffix ) )
+      return fileName;
+
+    final int indexDot = fileName.lastIndexOf( '.' );
+
+    if( FileChooserGroup.DIRECTORY_FILTER_SUFFIX.equals( suffix ) )
+    {
+      if( fileName.endsWith( File.separator ) )
+        return fileName;
+      if( indexDot < 0 )
+        return fileName + File.separator;
+      return fileName.substring( 0, fileName.lastIndexOf( File.separator ) + 1 );
+    }
+
+    if( fileName.endsWith( File.separator ) )
+      return fileName + "*." + suffix;
+    if( indexDot < 0 )
+      return fileName + File.separator + "*." + suffix;
+
+    return fileName.substring( 0, indexDot + 1 ) + suffix;
+
+  }
   public Group createControl( final Composite parent, final int style )
   {
     final Group group = new Group( parent, style );
@@ -241,7 +302,7 @@ public class FileChooserGroup
     group.setLayout( gridLayout );
 
     final Label label = new Label( group, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4" ) ); //$NON-NLS-1$
 
     final Text text = new Text( group, m_delegate.getTextBoxStyle() );
     m_text = text;
@@ -295,11 +356,6 @@ public class FileChooserGroup
       }
   }
 
-  public File getFile( )
-  {
-    return m_file;
-  }
-
   public void removeFileChangedListener( final FileChangedListener l )
   {
     m_listeners.remove( l );
@@ -318,7 +374,7 @@ public class FileChooserGroup
     if( (m_settings != null) && (m_text != null) && !m_text.isDisposed() )
     {
       final String filename = m_settings.get( FileChooserGroup.SETTINGS_FILENAME );
-      if( filename != null )
+      if( filename != null && !filename.equalsIgnoreCase( m_text.getText() ) )
       {
         final Text text = m_text;
         text.getDisplay().syncExec( new Runnable()
