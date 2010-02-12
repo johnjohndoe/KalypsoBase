@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.ui.AvailableCRSPanel;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.IAvailableCRSPanelListener;
@@ -127,7 +128,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
 
     /* Set the description. */
-    setDescription( "Hier können Sie die Koordinaten-Systeme für Kalypso verwalten." );
+    setDescription( Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -144,8 +145,8 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the panel for the coordinate system. */
-    m_crsPanel = new CRSSelectionPanel( main, SWT.NONE, "( Neustart erforderlich )" );
-    m_crsPanel.setToolTipText( "Wählen Sie das Koordinaten-System aus, das Sie verwenden möchten (Neustart erforderlich)." );
+    m_crsPanel = new CRSSelectionPanel( main, SWT.NONE, Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.1" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.2" ) ); //$NON-NLS-1$
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Add a listener. */
@@ -169,7 +170,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
 
     /* Create the panel for the available coordinate systems. */
     m_availableCRSPanel = new AvailableCRSPanel( main, SWT.NONE );
-    m_availableCRSPanel.setToolTipText( "Management der verfügbaren Koordinaten-Systeme." );
+    m_availableCRSPanel.setToolTipText( Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.3" ) ); //$NON-NLS-1$
     m_availableCRSPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Add a listener. */
@@ -214,7 +215,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
         if( m_availableCoordinateSystems != null && m_availableCoordinateSystems.length() > 0 )
         {
           /* The names of the coordinate systems as array. */
-          String[] namesArray = m_availableCoordinateSystems.split( ";" );
+          String[] namesArray = m_availableCoordinateSystems.split( ";" ); //$NON-NLS-1$
 
           /* Get all coordinate system names. */
           names = Arrays.asList( namesArray );
@@ -247,13 +248,13 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
 
     if( m_availableCoordinateSystems == null || m_availableCoordinateSystems.length() == 0 )
     {
-      setErrorMessage( "Bitte wählen Sie mindestens ein verfügbares Koordinaten-System aus ..." );
+      setErrorMessage( Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.5" ) ); //$NON-NLS-1$
       return;
     }
 
     if( m_coordinateSystem == null || m_coordinateSystem.length() == 0 )
     {
-      setErrorMessage( "Bitte wählen Sie ein Koordinaten-System aus ..." );
+      setErrorMessage( Messages.getString( "org.kalypso.preferences.KalypsoDeegreePreferencePage.6" ) ); //$NON-NLS-1$
       return;
     }
   }
