@@ -56,9 +56,9 @@ import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
  */
 public class FeatureAssociationQNameActionFilter implements IActionFilterEx
 {
-  public final static String ATTR_QNAME = "featureAssociationQname"; //$NON-NLS-1$
+  public static final String ATTR_QNAME = "featureAssociationQname"; //$NON-NLS-1$
 
-  public final static String ATTR_LIST = "featureAssociationList"; //$NON-NLS-1$
+  public static final String ATTR_LIST = "featureAssociationList"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.eclipse.ui.actionfilters.IActionFilterEx#getNames()
