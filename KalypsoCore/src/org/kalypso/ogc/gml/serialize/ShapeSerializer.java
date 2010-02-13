@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.serialize;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +53,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
@@ -76,12 +78,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
- * Helper-Klasse zum lesen und schreiben von GML TODO: Problem: reading/writing a shape will change the precision/size
- * of the columns!
+ * Helper-Klasse zum lesen und schreiben von GML <br>
+ * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
  * 
  * @author gernot
  */
-public class ShapeSerializer
+public final class ShapeSerializer
 {
   private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
@@ -413,8 +415,6 @@ public class ShapeSerializer
       final int count = sf.getRecordNum();
 
       moni.setWorkRemaining( count );
-      final IFeatureType membersFT = listRelation.getTargetFeatureType();
-      final IPropertyType geomProperty = membersFT.getProperty( "GEOM" ); //$NON-NLS-1$
       for( int i = 0; i < count; i++ )
       {
         if( i % 100 == 0 )
@@ -495,6 +495,36 @@ public class ShapeSerializer
           e.printStackTrace();
         }
       }
+    }
+  }
+
+  /**
+   * This function tries to load a prj file, which contains the coordinate system. If it exists and is a valid one, this
+   * coordinate system is returned. If it is not found, the source coordinate system is returned (this should be the one
+   * in the gmt). If it does also not exist, null will be returned.
+   * 
+   * @param prjLocation
+   *          Location of the .prj file.
+   * @param defaultSrs
+   *          Will be returned, if the .prj file could not be read.
+   * @return The coordinate system, which should be used to load the shape.
+   */
+  public static String loadCrs( final URL prjLocation, final String defaultSrs )
+  {
+    try
+    {
+      // TODO: Should in the first instance interpret the prj content ...
+      // Does not work now because we must create a coordinate system instance then, but we use string codes right now
+      final String prjString = UrlUtilities.toString( prjLocation, "UTF-8" ); //$NON-NLS-1$
+      if( prjString.startsWith( "EPSG:" ) ) //$NON-NLS-1$
+        return prjString;
+
+      return defaultSrs;
+    }
+    catch( final IOException ex )
+    {
+      System.out.println( "No prj file found for: " + prjLocation.toString() ); //$NON-NLS-1$
+      return defaultSrs;
     }
   }
 
