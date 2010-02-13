@@ -388,6 +388,11 @@ public class FileChooserGroup
     }
   }
 
+  public File getFile( )
+  {
+    return m_file;
+  }
+
   private void setFile( final File file )
   {
     if( m_file == file )
