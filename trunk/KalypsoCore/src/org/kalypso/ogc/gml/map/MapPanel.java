@@ -221,7 +221,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {
-      invalidateMap();
+// invalidateMap();
     }
   };
 
