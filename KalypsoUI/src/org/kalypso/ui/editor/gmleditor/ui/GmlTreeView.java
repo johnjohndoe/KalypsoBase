@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -34,7 +35,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
@@ -77,7 +77,7 @@ import org.xml.sax.InputSource;
  */
 public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener
 {
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private final IFeatureSelectionListener m_globalSelectionChangedListener = new IFeatureSelectionListener()
   {
@@ -283,7 +283,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     // add drag and drop support
     final int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-    final Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance() };
+    final Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getTransfer() };
     m_treeViewer.addDragSupport( ops, transfers, new GmlTreeDragListener( this ) );
     m_treeViewer.addDropSupport( ops, transfers, new GmlTreeDropAdapter( this ) );
   }
