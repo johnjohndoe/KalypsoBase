@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.action;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -120,9 +119,6 @@ public class ImportProfileTrippelAction extends ActionDelegate implements IObjec
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
-    if( dialog.open() != Window.OK )
-      return;
-
+    dialog.open();
   }
-
 }
