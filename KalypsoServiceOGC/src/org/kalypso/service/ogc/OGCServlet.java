@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.service.ogc.RequestBean.TYPE;
 import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.ogc.interceptor.RequestInterceptor;
+import org.kalypso.service.ogc.interceptor.RequestInterceptorExtensions;
 
 /**
  * @author Gernot Belger
@@ -29,24 +31,7 @@ public class OGCServlet extends HttpServlet implements Servlet
   @Override
   protected void doGet( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    final RequestBean requestBean = new RequestBean( TYPE.GET, request );
-    final ResponseBean responseBean = new ResponseBean( response );
-
-    /* Check the request. */
-    try
-    {
-      executeRequests( requestBean, responseBean );
-    }
-    catch( final OWSException e )
-    {
-      e.printStackTrace();
-
-      final OutputStream os = responseBean.getOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( os );
-      osw.write( e.toXMLString() );
-      osw.close();
-      os.close();
-    }
+    executeRequests( TYPE.GET, request, response );
   }
 
   /**
@@ -56,23 +41,14 @@ public class OGCServlet extends HttpServlet implements Servlet
   @Override
   public void doPost( final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
-    final RequestBean requestBean = new RequestBean( TYPE.POST, request );
-    final ResponseBean responseBean = new ResponseBean( response );
+    executeRequests( TYPE.POST, request, response );
+  }
 
-    /* Check the request. */
-    try
+  private void intercept( final HttpServletRequest request ) throws CoreException
+  {
+    for( final RequestInterceptor interceptor : RequestInterceptorExtensions.getInterceptors() )
     {
-      executeRequests( requestBean, responseBean );
-    }
-    catch( final OWSException e )
-    {
-      e.printStackTrace();
-
-      final OutputStream os = responseBean.getOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( os );
-      osw.write( e.toXMLString() );
-      osw.close();
-      os.close();
+      interceptor.intercept( request );
     }
   }
 
@@ -84,14 +60,26 @@ public class OGCServlet extends HttpServlet implements Servlet
    * @param response
    *          The response.
    */
-  private void executeRequests( final RequestBean request, final ResponseBean response ) throws OWSException
+  private void executeRequests( final TYPE requestType, final HttpServletRequest request, final HttpServletResponse response ) throws IOException
   {
+    final ResponseBean responseBean = new ResponseBean( response );
     try
     {
-      /* Get all registered services. */
-      final Map<String, IOGCService> services = OGCServiceExtensions.createServices();
+      final Map<String, IOGCService> services;
+      try
+      {
+        /* Call all interceptors for request */
+        intercept( request );
+        /* Get all registered services. */
+        services = OGCServiceExtensions.createServices();
+      }
+      catch( final CoreException e )
+      {
+        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" ); //$NON-NLS-1$
+      }
 
       /* Ask everyone, if he could handle the request. The first which says yes, is taken. */
+      final RequestBean requestBean = new RequestBean( requestType, request );
       String foundKey = null;
       IOGCService foundService = null;
       final Iterator<String> itr = services.keySet().iterator();
@@ -100,7 +88,7 @@ public class OGCServlet extends HttpServlet implements Servlet
         final String key = itr.next();
         final IOGCService service = services.get( key );
         System.out.println( "Asking service " + key + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
-        if( service.responsibleFor( request ) )
+        if( service.responsibleFor( requestBean ) )
         {
           /* Found a service. */
           System.out.println( "Service " + key + " answered positivly." ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -115,28 +103,32 @@ public class OGCServlet extends HttpServlet implements Servlet
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "No service found, which can handle this request.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Check, if all required parameters are there. But only, if the request was send via the get method. */
-      if( !request.isPost() )
+      if( !requestBean.isPost() )
       {
         System.out.println( "GET detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
-        checkMandadoryParameter( request, foundKey );
+        checkMandadoryParameter( requestBean, foundKey );
       }
-      else if( request.isPost() && request.getBody() == null )
+      else if( requestBean.isPost() && requestBean.getBody() == null || requestBean.getBody().isEmpty() )
       {
-        System.out.println( "POST without XML detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
-        checkMandadoryParameter( request, foundKey );
+        System.out.println( "POST without body detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
+        checkMandadoryParameter( requestBean, foundKey );
       }
       else
       {
         /* The service itself should check his parameters in the XML. */
-        System.out.println( "POST with XML detected: Let the service check if all mandatory parameters are available ..." ); //$NON-NLS-1$
+        System.out.println( "POST detected: Let the service check if all mandatory parameters are available ..." ); //$NON-NLS-1$
       }
 
       /* Execute the operation. */
-      foundService.executeOperation( request, response );
+      foundService.executeOperation( requestBean, responseBean );
     }
-    catch( final CoreException e )
+    catch( final OWSException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" ); //$NON-NLS-1$
+      final OutputStream os = responseBean.getOutputStream();
+      final OutputStreamWriter osw = new OutputStreamWriter( os );
+      osw.write( e.toXMLString() );
+      osw.close();
+      os.close();
     }
   }
 
