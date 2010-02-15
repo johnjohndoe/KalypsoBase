@@ -27,53 +27,48 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.gmleditor.ui;
-
-import java.util.Properties;
+package org.kalypso.ui.editor.actions;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 
 /**
- * TODO: insert type comment here
- * 
  * @author kuepfer
  */
 public class NewFeatureAction extends Action
 {
-  private final IRelationType m_fatp;
+  private final NewFeatureScope m_scope;
 
-  private final CommandableWorkspace m_workspace;
+  private final IFeatureType m_featureType;
 
-  private final Feature m_parentFeature;
-
-  private final IFeatureType m_targetType;
-
-  private final IFeatureSelectionManager m_selectionManager;
-
-  public NewFeatureAction( final String text, final ImageDescriptor image, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType fatp, final IFeatureType targetType, final IFeatureSelectionManager selectionManager )
+  public NewFeatureAction( final NewFeatureScope scope, final IFeatureType featureType )
   {
-    super( text, image );
+    m_scope = scope;
 
-    m_workspace = workspace;
-    m_parentFeature = parentFeature;
-    m_fatp = fatp;
-    m_targetType = targetType;
-    m_selectionManager = selectionManager;
+    m_featureType = featureType;
+
+    final String actionLabel = FeatureActionUtilities.newFeatureActionLabel( featureType );
+    setText( actionLabel );
+
+    setImageDescriptor( createImage() );
+  }
+
+  private ImageDescriptor createImage( )
+  {
+    final ImageDescriptor catalogDescriptor = FeatureTypeImageCatalog.getImage( null, m_featureType.getQName() );
+
+    if( catalogDescriptor == null )
+      return ImageProvider.IMAGE_FEATURE_NEW;
+
+    return catalogDescriptor;
   }
 
   /**
@@ -84,19 +79,13 @@ public class NewFeatureAction extends Action
   {
     try
     {
-      final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), m_targetType.getQName() );
-      final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH_DEFAULT );
-      final int depth = Integer.parseInt(depthStr);
-
-      final ICommand command = new AddFeatureCommand( m_workspace, m_targetType, m_parentFeature, m_fatp, 0, null, m_selectionManager, depth );
-      m_workspace.postCommand( command );
+      m_scope.createNewFeature( m_featureType );
     }
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString("org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0" ), status ); //$NON-NLS-1$
     }
-
   }
 
 }

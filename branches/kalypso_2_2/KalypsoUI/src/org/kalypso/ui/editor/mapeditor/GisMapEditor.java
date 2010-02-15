@@ -44,13 +44,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * <p>
- * Eclipse-Editor zum editieren der GML-Gis-Templates.
+ * Eclipse-Editor zum Editieren der GML-Gis-Templates.
  * </p>
  *
  * @author belger, Stefan Kurzbach
