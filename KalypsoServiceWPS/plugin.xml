@@ -28,4 +28,11 @@
             typeID="org.kalypso.service.wps.complexJob">
       </simulation>
    </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.service.wps.utils.ogc.WPS04UrlCatalog"
+            id="org.kalypso.service.wps.catalog">
+      </catalog>
+   </extension>
 </plugin>
