@@ -58,6 +58,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
@@ -151,10 +152,13 @@ public class FeatureSelectionActionGroup extends ActionGroup
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
 
-    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( fs, selectionManager );
-    manager.add( newMenuManager );
+    // HACK: we know this works, as this must be the TreeFeatureSelection here
+    CommandableWorkspace workspace = fs.getWorkspace( null );
+    
+    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager ); 
+    manager.add( scope.createMenu() );
 
-    // add additions seperator: if not, eclipse whines
+    // add additions separator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
