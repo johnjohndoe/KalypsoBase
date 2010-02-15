@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Export-Package: net.opengeospatial.ows,
  org.kalypso.service.ogc,
- org.kalypso.service.ogc.exception
+ org.kalypso.service.ogc.exception,
+ org.kalypso.service.ogc.interceptor
 Import-Package: javax.servlet,
  javax.servlet.http
 Bundle-Vendor: kalypso.sourceforge.net
