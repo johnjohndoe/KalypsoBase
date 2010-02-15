@@ -46,6 +46,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +83,22 @@ public class DefaultProcess implements IProcess
 
     m_executable = executable;
 
-    final File sandbox = FileUtilities.createNewTempDir( tempDirName );
+    File sandbox = null;
+
+    try
+    {
+      // create sandbox if non-existent
+      final URL url = new URL( tempDirName );
+      sandbox = new File( url.getFile() );
+    }
+    catch( final MalformedURLException e )
+    {
+      // ignore
+    }
+
+    if( sandbox == null || !sandbox.exists() )
+      sandbox = FileUtilities.createNewTempDir( tempDirName );
+
     m_command = findCommand( sandbox, executable );
 
     final List<String> commandLine = new ArrayList<String>();
