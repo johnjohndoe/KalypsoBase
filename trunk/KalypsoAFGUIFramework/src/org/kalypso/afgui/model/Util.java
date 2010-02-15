@@ -40,38 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.model;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -79,58 +66,14 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * TODO: most of the methods should be moved into {@link FeatureHelper}.
- *
+ * 
  * Holds utility methods
- *
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class Util
 {
-
-  /**
-   * Gets the scenario folder
-   */
-  public static final IFolder getScenarioFolder( )
-  {
-    try
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-
-      final IFolder scenarioFolder = (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-
-      // / scenario
-      return scenarioFolder;
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-      throw new RuntimeException( th );
-    }
-  }
-
-  /**
-   * Gets the szenario model
-   */
-  @SuppressWarnings("unchecked")
-  public static final ICaseDataProvider<IModel> getScenarioDataProvider( )
-  {
-    try
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      return caseDataProvider;
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-      return null;
-    }
-  }
 
   @SuppressWarnings("unchecked")
   public static final CommandableWorkspace getCommandableWorkspace( final Class< ? extends IModel> modelClass )
@@ -197,105 +140,15 @@ public class Util
     }
   }
 
-  public static final void addModelInputSpec( final Modeldata modelSpec, final String id, final Class< ? extends IModel> modelClass )
-  {
-    final List<Modeldata.Input> input = modelSpec.getInput();
-    final Modeldata.Input controlModelInput = new Modeldata.Input();
-    controlModelInput.setPath( Util.getWorkspaceSpec( modelClass ) );
-    controlModelInput.setId( id );
-    controlModelInput.setRelativeToCalcCase( false );
-    input.add( controlModelInput );
-  }
-
-  public static final String getWorkspaceSpec( final Class< ? extends IModel> modelClass )
-  {
-    try
-    {
-      final IFeatureWrapper2 model = getModel( modelClass );
-      final URL context = model.getFeature().getWorkspace().getContext();
-
-      // String path2 = context.getPath();
-      // IResource resource = new Path(path2);
-
-      final URL resolvedUrl = FileLocator.resolve( context );
-      return resolvedUrl.getFile();
-    }
-    catch( final Exception e )
-    {
-      throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.2" ) + modelClass, e ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * Saves all dirty submodels in the current scenario. A workbench and an active workbench window is required.
-   *
-   */
-  @SuppressWarnings("unchecked")
-  public static final void saveAllModel( )
-  {
-    try
-    {
-
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final IRunnableWithProgress rwp = new IRunnableWithProgress()
-      {
-
-        public void run( final IProgressMonitor monitor ) throws InvocationTargetException
-        {
-          try
-          {
-            caseDataProvider.saveModel( null );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-            throw new InvocationTargetException( e );
-          }
-        }
-
-      };
-
-      activeWorkbenchWindow.run( true, false, rwp );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-      throw new RuntimeException( th );
-    }
-  }
-
-  /**
-   * Test whether the given feature is an elmenent of the type specified by the q-name.
-   *
-   * @param feature
-   *            the feature instance, which type is to be access
-   * @param typeQname --
-   *            the required qname for the feature type
-   * @return true if qname of the given feature match the one passed otherwise false
-   */
-  public static final boolean directInstanceOf( final Feature feature, final QName typeQname )
-  {
-    if( feature == null || typeQname == null )
-    {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.model.Util.3" ) + "\tfeature=" + feature + "\ttypeQname=" + typeQname ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-
-    return typeQname.equals( feature.getFeatureType().getQName() );
-  }
-
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   *
+   * 
    * @param parentFeature
-   *            the parent feature
+   *          the parent feature
    * @param propQName
-   *            the q-name of the property linking the parent and the newly created child
+   *          the q-name of the property linking the parent and the newly created child
    * @param featureQName
-   *            the q-name denoting the type of the feature
+   *          the q-name denoting the type of the feature
    */
   public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName ) throws IllegalArgumentException
   {
@@ -363,71 +216,20 @@ public class Util
   }
 
   /**
-   * TODO complete and test this method
-   */
-
-  /**
-   * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   *
-   * @param parentFeature
-   *            the parent feature
-   * @param propQName
-   *            the q-name of the property linking the parent and the newly created child
-   * @param featureQName
-   *            the q-name denoting the type of the feature
-   * @param throws
-   *            {@link IllegalArgumentException} if parentFeature is null or propQName is null, or featureQName is null
-   *            or featureID is null or empty or there is a feature in the workspace with the same id
-   */
-  public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, final String featureID ) throws IllegalArgumentException
-  {
-    Assert.isNotNull( propQName, Messages.getString( "org.kalypso.afgui.model.Util.23" ) ); //$NON-NLS-1$
-    Assert.isNotNull( parentFeature, Messages.getString( "org.kalypso.afgui.model.Util.24" ) ); //$NON-NLS-1$
-    Assert.isTrue( featureID != null && !featureID.isEmpty() );
-
-    // try
-    // {
-    final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
-    final IFeatureType featureType = schema.getFeatureType( featureQName );
-    final IPropertyType propertyType = featureType.getProperty( propQName );
-    if( !(propertyType instanceof IRelationType) )
-    {
-      throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.25" ) ); //$NON-NLS-1$
-    }
-    return FeatureFactory.createFeature( parentFeature, (IRelationType) propertyType,// parentRelation,
-    featureID, featureType, true,// initializeWithDefaults,
-    1// depth
-    );
-    // return FeatureHelper.addFeature(
-    // parentFeature,
-    // propQName,
-    // featureQName);
-    // }
-    // catch(GMLSchemaException ex)
-    // {
-    // throw new IllegalArgumentException(
-    // "Property "+propQName+
-    // " does not accept element of type"+
-    // featureQName,
-    // ex);
-    // }
-  }
-
-  /**
    * Get an {@link IFeatureWrapperCollection} from a feature list property. The feature type, the property type and the
    * type of the collection elements can be return
-   *
+   * 
    * @param feature
-   *            the feature whose property is to be wrapped in a {@link IFeatureWrapperCollection}
+   *          the feature whose property is to be wrapped in a {@link IFeatureWrapperCollection}
    * @param listPropQName
-   *            the Q Name of the property
+   *          the Q Name of the property
    * @param bindingInterface
-   *            the class of the collection elements
+   *          the class of the collection elements
    * @param doCreate
-   *            a boolean controling the handling of the property creation. if true a listProperty is created if its not
-   *            allready availayble
-   *
-   *
+   *          a boolean controling the handling of the property creation. if true a listProperty is created if its not
+   *          allready availayble
+   * 
+   * 
    */
   public static final <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> get( final Feature feature, final QName featureQName, final QName listPropQName, final Class<T> bindingInterface, final boolean doCreate )
   {
