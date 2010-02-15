@@ -43,6 +43,7 @@ package org.kalypso.service.wps.utils.simulation;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,6 +54,10 @@ import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.wps.ComplexValueType;
@@ -69,6 +74,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /**
@@ -114,7 +120,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   {
     final Object input = m_inputList.get( id );
     if( input == null )
-      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id), null ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id ), null ); //$NON-NLS-1$
 
     if( input instanceof ComplexValueType )
       return parseComplexValue( (ComplexValueType) input );
@@ -155,7 +161,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         }
         catch( final URISyntaxException e2 )
         {
-          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1"), e2 ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1" ), e2 ); //$NON-NLS-1$
         }
       }
     }
@@ -174,26 +180,54 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
     if( content.size() == 0 )
       return null;
 
-    final String textContent = (String) content.get( 0 );
+    final Object firstContent = content.get( 0 );
+    final String textContent;
+    if( firstContent instanceof String )
+    {
+      textContent = (String) firstContent;
+    }
+    else if( firstContent instanceof Element )
+    {
+      final DOMSource domSource = new DOMSource( (Element) firstContent );
+      final TransformerFactory factory = TransformerFactory.newInstance();
+      Transformer transformer;
+      try
+      {
+        transformer = factory.newTransformer();
+        final StringWriter writer = new StringWriter();
+        transformer.transform( domSource, new StreamResult( writer ) );
+        textContent = writer.toString();
+      }
+      catch( final Exception e )
+      {
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2" ), e ); //$NON-NLS-1$
+      }
+    }
+    else
+    {
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2" ) ); //$NON-NLS-1$
+    }
 
     // distinguish by mime type, default to binary
     if( TYPE_GML.equals( mimeType ) )
     {
-      final InputSource inputSource = new InputSource( new StringReader( textContent ) );
+      final StringReader reader = new StringReader( textContent );
+      final InputSource inputSource = new InputSource( reader );
+
       try
       {
         final String schema = complexValue.getSchema();
-        if( schema == null )
+        if( schema == null || schema.isEmpty())
         {
           return GmlSerializer.createGMLWorkspace( inputSource, null, null, null );
         }
-        
+
         final URL schemaLocationHint = new URL( schema );
         return GmlSerializer.createGMLWorkspace( inputSource, schemaLocationHint, null, null );
       }
       catch( final Exception e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2" ), e ); //$NON-NLS-1$
       }
     }
     else
@@ -211,7 +245,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3" ), e ); //$NON-NLS-1$
       }
     }
   }
