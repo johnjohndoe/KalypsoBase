@@ -55,6 +55,7 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
 {
 
+  private static final String ABSTRACT_GML_TYPE_STRING = "AbstractGMLType";
   private final String m_version;
 
   public ComplexType2FeatureContentTypeBuilder( final String version )
@@ -104,7 +105,7 @@ public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
     if( !(object instanceof ComplexType) )
       return false;
     final ComplexType complexType = (ComplexType) object;
-    if( "AbstractGMLType".equals( complexType.getName() ) && NS.GML2.equals( gmlSchema.getTargetNamespace() ) ) //$NON-NLS-1$
+    if( ABSTRACT_GML_TYPE_STRING.equals( complexType.getName() ) && NS.GML2.equals( gmlSchema.getTargetNamespace() ) ) //$NON-NLS-1$
       return true;
     final QName baseType = GMLSchemaUtilities.findBaseType( gmlSchema, complexType, m_version );
     if( baseType == null )
