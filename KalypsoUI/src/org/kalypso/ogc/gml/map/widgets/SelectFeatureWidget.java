@@ -303,11 +303,13 @@ public class SelectFeatureWidget extends AbstractWidget
     final GM_Point point = MapUtilities.transform( mapPanel, p );
     try
     {
-      m_selectionTypeDelegate.addPoint( point );
-      final GM_Object selectGeometry = m_selectionTypeDelegate.finish();
-      doSelect( selectGeometry );
-      m_selectionTypeDelegate.reset();
-
+      if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
+      {
+        m_selectionTypeDelegate.addPoint( point );
+        final GM_Object selectGeometry = m_selectionTypeDelegate.finish();
+        doSelect( selectGeometry );
+        m_selectionTypeDelegate.reset();
+      }
     }
     catch( final Exception e )
     {
@@ -488,7 +490,7 @@ public class SelectFeatureWidget extends AbstractWidget
   public static QName[] findGeomQName( final IFeatureType targetFeatureType, final QName defaultGeometries )
   {
     if( defaultGeometries != null )
-      return new QName[]{defaultGeometries};
+      return new QName[] { defaultGeometries };
 
     final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeomteryProperties();
     final QName[] result = new QName[geomProperties.length];
@@ -573,7 +575,7 @@ public class SelectFeatureWidget extends AbstractWidget
             final IPropertyType pt = featureType.getProperty( geomQName );
             if( pt == null )
               continue;
-            
+
             final Object property = feature.getProperty( pt );
             if( pt.isList() )
             {
