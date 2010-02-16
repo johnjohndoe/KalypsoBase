@@ -254,24 +254,7 @@ public class PageSelectGeodataFiles extends WizardPage
 
   protected void updatePageComplete( )
   {
-    setPageComplete( false );
-
     final String error = validate();
-
-// if( m_crs != null )
-// {
-// try
-// {
-// m_rasterReader = verifier.getRasterMetaReader( docLocation.toFile().toURL(), m_crs );
-// }
-// catch( final MalformedURLException e )
-// {
-// e.printStackTrace();
-// }
-//
-// updateTextBoxes( m_rasterReader );
-// }
-
     setPageComplete( error == null );
     setErrorMessage( error );
 

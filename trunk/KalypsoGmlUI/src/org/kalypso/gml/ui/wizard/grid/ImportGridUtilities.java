@@ -289,7 +289,7 @@ public class ImportGridUtilities
 
   /**
    * Reads the grid domain for a given grid file. Tries to determine its file-format (.asc, tif, etc.) and reads the
-   * world-information accoding to the format.
+   * world-information according to the format.
    */
   public static RectifiedGridDomain readDomain( final File gridFile, final String crs ) throws CoreException
   {
