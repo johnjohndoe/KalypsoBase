@@ -15,9 +15,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
 
@@ -119,26 +118,12 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
     } );
 
     /* fileChooser */
-
-    final FileChooserDelegate delegate = new FileChooserGroup.FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eSave )
-    {
-      @Override
-      public String[] getFilterExtensions( )
-      {
-        return new String[] { "kmz", "KMZ" }; //$NON-NLS-1$ //$NON-NLS-2$
-      }
-
-      @Override
-      public String[] getFilterNames( )
-      {
-
-        return new String[] { Messages.PageGoogleExport_9 };
-      }
-    };
+    final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
+    saveDelegate.addFilter( Messages.PageGoogleExport_9, "*.kmz" );
 
     if( m_file == null )
     {
-      final FileChooserGroup fc = new FileChooserGroup( delegate );
+      final FileChooserGroup fc = new FileChooserGroup( saveDelegate );
       final Group fcGroup = fc.createControl( container, SWT.NONE );
       fcGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 

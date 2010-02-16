@@ -92,7 +92,6 @@ public class KalypsoModelWspmCoreExtensions
       {
         e.printStackTrace();
       }
-
     }
 
     return null;

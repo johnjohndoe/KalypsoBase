@@ -47,9 +47,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -143,23 +142,18 @@ public class ExportProfileWizard extends Wizard
             monitor.worked( i );
           }
           ProfilSerializerUtilitites.writeProfile( sink, profiles.toArray( new IProfil[] {} ), file );
-          return new Status( IStatus.OK, "", "" );
+          return Status.OK_STATUS;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           monitor.done();
-          return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), e.getLocalizedMessage() );
+          return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), e.getLocalizedMessage(), e );
         }
       }
     };
 
-    Display.getDefault().asyncExec( new Runnable()
-    {
-      public void run( )
-      {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( getShell() ), true, true, m_exportJob );
-      }
-    } );
-    return true;
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, m_exportJob );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to export profiles", result );
+    return !result.matches( IStatus.ERROR );
   }
 }
