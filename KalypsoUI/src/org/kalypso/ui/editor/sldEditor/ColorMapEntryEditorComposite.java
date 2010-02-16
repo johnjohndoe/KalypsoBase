@@ -76,14 +76,18 @@ public class ColorMapEntryEditorComposite extends Composite
 
   private void createControl( )
   {
-    setLayout( new GridLayout( 1, false ) );
+    final GridLayout layout = new GridLayout( 1, false );
+    layout.marginWidth = 0;
+    layout.marginHeight = 0;
+
+    setLayout( layout );
 
     m_fill = StyleFactory.createFill( m_entry.getColor(), m_entry.getOpacity() );
     m_fillEditor = new FillEditorComposite( this, SWT.NONE, m_fill, true );
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
-      public void onFillChanged( Object source, Fill fill )
+      public void onFillChanged( final Object source, final Fill fill )
       {
         contentChanged();
       }
@@ -126,7 +130,7 @@ public class ColorMapEntryEditorComposite extends Composite
 
       fireModified();
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       e.printStackTrace();
     }
