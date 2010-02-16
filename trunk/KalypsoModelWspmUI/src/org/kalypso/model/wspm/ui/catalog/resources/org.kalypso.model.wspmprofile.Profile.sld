@@ -4,8 +4,8 @@
 	<Title>ProfileThroughputLine</Title>
 	<FeatureTypeName>{org.kalypso.model.wspmprofile}Profile</FeatureTypeName>
     <Rule>
-		<Name>Durchfluß Bereiche</Name>
-		<Title>Durchfluß Bereiche</Title>
+		<Name>durchströmte Bereiche</Name>
+		<Title>durchströmte Bereiche</Title>
 		<Abstract />
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
