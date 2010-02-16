@@ -346,9 +346,12 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     final ImageDescriptor icon = legendElement.getImage();
 
     /* Draw for the theme itself. */
-    final Image imageIcon = icon.createImage();
-    gc.drawImage( imageIcon, BORDER, BORDER );
-    imageIcon.dispose();
+    if( icon != null )
+    {
+      final Image imageIcon = icon.createImage();
+      gc.drawImage( imageIcon, BORDER, BORDER );
+      imageIcon.dispose();
+    }
 
     /* Draw the text. */
     gc.drawString( legendElement.getText(), BORDER + ICON_SIZE + GAP, BORDER, true );
