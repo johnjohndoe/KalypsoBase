@@ -513,7 +513,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( ftsURL == null )
     {
-      // REMARK: in theorie, we could also create a default selection style, but this
+      // REMARK: in theory, we could also create a default selection style, but this
       // breaks too much old projects. So in this case the HighlightGraphics will still
       // be used
       if( usedForSelection )

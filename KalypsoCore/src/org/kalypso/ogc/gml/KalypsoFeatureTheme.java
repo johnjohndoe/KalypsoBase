@@ -203,7 +203,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
-    final Graphics graphics = wrapGrahicForSelection( g, selected );
+    final Graphics graphics = wrapGraphicForSelection( g, selected );
 
     try
     {
@@ -225,7 +225,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * Determines, if a {@link HighlightGraphics} will be used to draw the selection or not.
    */
-  private Graphics wrapGrahicForSelection( final Graphics g, final Boolean selected )
+  private Graphics wrapGraphicForSelection( final Graphics g, final Boolean selected )
   {
     /* If we draw normally, never use highlight graphics */
     if( selected == null || selected == false )
@@ -292,7 +292,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
-        // HACK: for sinlge-feature lists (see flag), we must invalidate the list ourselves.
+        // HACK: for single-feature lists (see flag), we must invalidate the list ourselves.
         if( m_isSingleFeature )
         {
           // TODO: we do not know which one of the changed features is the right one... (ses FIXME below)

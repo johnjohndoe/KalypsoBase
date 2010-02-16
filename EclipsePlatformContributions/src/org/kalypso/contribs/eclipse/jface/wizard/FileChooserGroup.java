@@ -44,7 +44,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -56,14 +58,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.i18n.Messages;
-import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 
 /**
  * A group to choose a file from the file system.
@@ -77,117 +75,12 @@ public class FileChooserGroup
     public void fileChanged( final File file );
   }
 
-  static public class FileChooserDelegate
-  {
-    public enum FILE_CHOOSER_GROUP_TYPE
-    {
-      eOpen,
-      eSave
-    }
-
-    private final FILE_CHOOSER_GROUP_TYPE m_type;
-
-    public FileChooserDelegate( final FILE_CHOOSER_GROUP_TYPE type )
-    {
-      m_type = type;
-    }
-
-    public String getButtonText( )
-    {
-      switch( m_type )
-      {
-        case eOpen:
-          return Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.0" ); //$NON-NLS-1$
-
-        case eSave:
-          return Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.1" ); //$NON-NLS-1$
-
-        default:
-          throw new UnsupportedOperationException();
-      }
-    }
-
-    public int getFileDialogType( )
-    {
-      switch( m_type )
-      {
-        case eOpen:
-          return SWT.OPEN;
-
-        case eSave:
-          return SWT.SAVE;
-
-        default:
-          throw new UnsupportedOperationException();
-      }
-    }
-
-    /**
-     * overwrite
-     */
-    public String[] getFilterExtensions( )
-    {
-      return new String[] {};
-    }
-
-    /**
-     * overwrite
-     */
-    public String[] getFilterNames( )
-    {
-      return new String[] {};
-    }
-
-    
-    public String getFileName( final File currentFile )
-    {
-      if( currentFile != null && currentFile.isDirectory() )
-        return currentFile.getPath() + File.separator + "ignore." + FileChooserGroup.DIRECTORY_FILTER_SUFFIX;//$NON-NLS-1$
-      else
-        return currentFile == null ? null : currentFile.getAbsolutePath();
-    }
-
-    public int getTextBoxStyle( )
-    {
-      switch( m_type )
-      {
-        case eOpen:
-          return SWT.BORDER;
-
-        case eSave:
-          return SWT.BORDER | SWT.READ_ONLY;
-
-        default:
-          throw new UnsupportedOperationException();
-      }
-    }
-
- 
-
-    public String updateFileName( final FileDialog dialog, final String newFilename )
-    {
-      switch( m_type )
-      {
-        case eOpen:
-          return newFilename;
-
-        case eSave:
-
-          final int index = dialog.getFilterIndex();
-          final String suffix = dialog.getFilterExtensions()[index].substring( 2 );
-          return index < 0 ? newFilename : setSuffix( newFilename, suffix );
-
-        default:
-          throw new UnsupportedOperationException();
-      }
-    }
-  }
-
-  public static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
+  private static final String SETTINGS_FILENAME = "fileChooserGroup.filename"; //$NON-NLS-1$
 
   /**
-   *   used as Filter like "*.txt" if this dialog can choose directories instead of files
-   *   @see FileChooserDelegate#getFilterExtensions()
+   * used as Filter like "*.txt" if this dialog can choose directories instead of files
+   * 
+   * @see FileChooserDelegate#getFilterExtensions()
    */
   public static final String DIRECTORY_FILTER_SUFFIX = "DIRECTORY_FILTER_SUFFIX"; //$NON-NLS-1$
 
@@ -199,67 +92,40 @@ public class FileChooserGroup
 
   private final Set<FileChangedListener> m_listeners = new HashSet<FileChangedListener>();
 
-  private final FileChooserDelegate m_delegate;
+  private final IFileChooserDelegate m_delegate;
 
   public FileChooserGroup( )
   {
-    this( new FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eOpen ) );
+    this( new FileChooserDelegateOpen() );
   }
 
-  public FileChooserGroup( final FileChooserDelegate delegate )
+  public FileChooserGroup( final IFileChooserDelegate delegate )
   {
     m_delegate = delegate;
   }
 
   /**
-   * Has no effekt if the same listener has already been added.
+   * Has no effect if the same listener has already been added.
    */
   public void addFileChangedListener( final FileChangedListener l )
   {
     m_listeners.add( l );
   }
 
-  private final int getFilterIndex( final String fileName )
-  {
-
-    final int index = fileName.lastIndexOf( "." );
-    final String suffix = index < 0 ? "*.*" : "*" + fileName.substring( index );
-
-    int i = 0;
-    for( final String filter : m_delegate.getFilterExtensions() )
-    {
-      if( filter.equalsIgnoreCase( suffix ) )
-        return i;
-      i++;
-    }
-    return -1;
-  }
-
   protected void buttonPressed( )
   {
-    final String currentFilename = m_delegate.getFileName( m_file );
-
-    final FileDialog dialog = new FileDialog( m_text.getShell(), m_delegate.getFileDialogType() );
-    dialog.setFilterPath( currentFilename );
-    dialog.setFileName( m_file != null && m_file.isDirectory() ? Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.2" ) : currentFilename );
-    dialog.setText( m_delegate.getButtonText() );
-
-    dialog.setFilterExtensions( m_delegate.getFilterExtensions() );
-    dialog.setFilterNames( m_delegate.getFilterNames() );
-    dialog.setFilterIndex( getFilterIndex( currentFilename ) );
-
-    final String newFilename = dialog.open();
-    if( newFilename == null )
+    final File newFile = m_delegate.chooseFile( m_text.getShell(), m_file );
+    if( newFile == null )
       return;
 
-    m_text.setText( m_delegate.updateFileName( dialog, newFilename ) );
+    m_text.setText( newFile.getAbsolutePath() );
   }
+
   public final static String setSuffix( final String fileName, final String suffix )
   {
-
     if( "*".equals( suffix ) )
       return fileName;
-
+// FIXME: use FilenameUtils !
     final int indexDot = fileName.lastIndexOf( '.' );
 
     if( FileChooserGroup.DIRECTORY_FILTER_SUFFIX.equals( suffix ) )
@@ -277,8 +143,8 @@ public class FileChooserGroup
       return fileName + File.separator + "*." + suffix;
 
     return fileName.substring( 0, indexDot + 1 ) + suffix;
-
   }
+
   public Group createControl( final Composite parent, final int style )
   {
     final Group group = new Group( parent, style );
@@ -346,14 +212,16 @@ public class FileChooserGroup
   private void fireFileChanged( final File file )
   {
     for( final FileChangedListener l : m_listeners )
-      try
+    {
+      SafeRunner.run( new SafeRunnable()
       {
-        l.fileChanged( file );
-      }
-      catch( final Throwable e )
-      {
-        EclipsePlatformContributionsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+        @Override
+        public void run( ) throws Exception
+        {
+          l.fileChanged( file );
+        }
+      } );
+    }
   }
 
   public void removeFileChangedListener( final FileChangedListener l )
@@ -393,15 +261,20 @@ public class FileChooserGroup
     return m_file;
   }
 
-  private void setFile( final File file )
+  public void setFile( final File file )
   {
-    if( m_file == file )
+    if( m_file != null && m_file.equals( file ) )
       return;
 
     m_file = file;
 
     if( m_settings != null )
       m_settings.put( FileChooserGroup.SETTINGS_FILENAME, file.getAbsolutePath() );
+
+    final String text = m_text.getText();
+    final String text2set = file == null ? "" : file.getAbsolutePath();
+    if( !text2set.equals( text ) )
+      m_text.setText( file.getAbsolutePath() );
 
     fireFileChanged( m_file );
   }

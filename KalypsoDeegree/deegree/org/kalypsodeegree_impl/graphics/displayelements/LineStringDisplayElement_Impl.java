@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * DisplayElement that encapsulates a linestring (<tt>GM_Curve</tt>) or multi-linestring geometry (
@@ -91,8 +90,6 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
-    Debug.debugMethodBegin( this, "paint" );
-
     final Graphics2D g2 = (Graphics2D) g;
 
     final LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
@@ -121,8 +118,6 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     {
       e.printStackTrace();
     }
-
-    Debug.debugMethodEnd();
   }
 
   private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final StrokePainter painter ) throws GM_Exception
