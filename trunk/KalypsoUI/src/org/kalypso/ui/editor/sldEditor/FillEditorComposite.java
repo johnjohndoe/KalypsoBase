@@ -126,7 +126,11 @@ public class FillEditorComposite extends Composite
 
   private void createControl( ) throws FilterEvaluationException
   {
-    setLayout( new GridLayout( 2, false ) );
+    final GridLayout layout = new GridLayout( 2, false );
+    layout.marginWidth = 0;
+    layout.marginHeight = 0;
+
+    setLayout( layout );
 
     createColorControl();
 
