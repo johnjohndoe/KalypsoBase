@@ -66,7 +66,8 @@ public class FileChooserDelegateDirectory implements IFileChooserDelegate
   public File chooseFile( final Shell shell, final File currentFile )
   {
     final DirectoryDialog dialog = new DirectoryDialog( shell );
-    dialog.setFilterPath( currentFile.getAbsolutePath() );
+    if( currentFile != null )
+      dialog.setFilterPath( currentFile.getAbsolutePath() );
     dialog.setText( getButtonText() );
     dialog.setMessage( "Please choose a directory: " );
     final String dir = dialog.open();

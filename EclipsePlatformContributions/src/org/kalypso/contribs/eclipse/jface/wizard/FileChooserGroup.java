@@ -86,6 +86,8 @@ public class FileChooserGroup
 
   private File m_file;
 
+  private boolean m_showLabel = true;
+
   private IDialogSettings m_settings;
 
   private Text m_text;
@@ -102,6 +104,15 @@ public class FileChooserGroup
   public FileChooserGroup( final IFileChooserDelegate delegate )
   {
     m_delegate = delegate;
+  }
+
+  /**
+   * Show or hide the label (the label before the text-control).<br>
+   * Must be called before {@link #createControl(Composite, int)} is invoked.
+   */
+  public void setShowLabel( final boolean showLabel )
+  {
+    m_showLabel = showLabel;
   }
 
   /**
@@ -163,12 +174,15 @@ public class FileChooserGroup
     } );
 
     final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
+    gridLayout.numColumns = m_showLabel ? 3 : 2;
 
     group.setLayout( gridLayout );
 
-    final Label label = new Label( group, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4" ) ); //$NON-NLS-1$
+    if( m_showLabel )
+    {
+      final Label label = new Label( group, SWT.NONE );
+      label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.4" ) ); //$NON-NLS-1$
+    }
 
     final Text text = new Text( group, m_delegate.getTextBoxStyle() );
     m_text = text;
