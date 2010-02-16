@@ -100,6 +100,9 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
       return;
 
     final GM_Point location = MapUtilities.transform( getMapPanel(), p );
+    if( location == null )
+      return;
+
     final GM_Position position = location.getPosition();
 
     final String tooltip = formatInfo( position );
