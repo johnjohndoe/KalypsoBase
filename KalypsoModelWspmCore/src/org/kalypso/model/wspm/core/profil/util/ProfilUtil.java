@@ -992,7 +992,7 @@ public class ProfilUtil
   }
 
   /**
-   * Fills missing values of one property by interpolating between neighbors.
+   * Fills missing values of one property by interpolating between neighbours.
    */
   public static void interpolateProperty( final IProfil profil, final int valueCompIndex )
   {
