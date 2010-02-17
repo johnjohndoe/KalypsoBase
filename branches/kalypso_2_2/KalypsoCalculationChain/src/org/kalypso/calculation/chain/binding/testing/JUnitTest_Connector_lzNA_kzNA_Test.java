@@ -14,9 +14,9 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.calculation.chain.CalculationChainMemberJobSpecification;
 import org.kalypso.calculation.chain.CalculationChainRunnable;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.simulation.core.SimulationJobSpecification;
 
 public class JUnitTest_Connector_lzNA_kzNA_Test extends TestCase
 {
@@ -24,10 +24,10 @@ public class JUnitTest_Connector_lzNA_kzNA_Test extends TestCase
   public final void testExecute( ) throws UnsupportedEncodingException
   {
 
-    final List<CalculationChainMemberJobSpecification> jobSpecificationList = new ArrayList<CalculationChainMemberJobSpecification>();
+    final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<SimulationJobSpecification>();
 
     final IContainer calcCaseKZ = ResourcesPlugin.getWorkspace().getRoot().getProject( "DemoModell" ).getFolder( "Rechenvarianten/kurzzeit1" );
-    final CalculationChainMemberJobSpecification jobSpec = new CalculationChainMemberJobSpecification( "KalypsoModelConnector_LZNA_KZNA", calcCaseKZ.getFullPath(),null );
+    final SimulationJobSpecification jobSpec = new SimulationJobSpecification( "KalypsoModelConnector_LZNA_KZNA", calcCaseKZ.getFullPath(),null );
     jobSpec.addInput( "LZNA_ERGEBNISSE_AKTUEL_ANFANGWERTE", "platform:/resource//DemoModell/Rechenvarianten/langzeitTest1/Ergebnisse/Aktuell/Anfangswerte", false );
 //    jobSpec.addInput( "KZNA_CALCULATION", "platform:/resource//DemoModell/Rechenvarianten/kurzzeit1/.calculation", false );
 //    jobSpec.addOutput( "KZNA_ANFANGWERTE_LZSIM", "platform:/resource//DemoModell/Rechenvarianten/kurzzeit1/Anfangswerte/lzsim.gml", false );

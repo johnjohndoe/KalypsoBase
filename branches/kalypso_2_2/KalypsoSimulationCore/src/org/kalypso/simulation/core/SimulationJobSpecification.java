@@ -1,4 +1,4 @@
-package org.kalypso.calculation.chain;
+package org.kalypso.simulation.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,7 +13,7 @@ import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
-public class CalculationChainMemberJobSpecification
+public class SimulationJobSpecification
 {
   private boolean m_useAntLauncher = false;
 
@@ -27,12 +27,12 @@ public class CalculationChainMemberJobSpecification
 
   private final String m_description;
 
-  public CalculationChainMemberJobSpecification( final String calculationTypeID, final IPath container )
+  public SimulationJobSpecification( final String calculationTypeID, final IPath container )
   {
     this( calculationTypeID, container, null );
   }
 
-  public CalculationChainMemberJobSpecification( final String calculationTypeID, final IPath container, final String description )
+  public SimulationJobSpecification( final String calculationTypeID, final IPath container, final String description )
   {
     m_calculationTypeID = calculationTypeID;
     m_container = container;
