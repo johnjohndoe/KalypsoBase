@@ -63,15 +63,15 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
  */
 public class Feature_Impl extends PlatformObject implements Feature
 {
-  private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
+  private static final GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 
-  /**
-   * FIXME - bad idea to cache a geometry in the generic feature implementation. A feature can constists of more than
-   * one geometries. Who decides a cached geometry is valid / dirty? instead use feature binding and the
-   * AbstractCachedFeature Implementation to cache properties of a feature!
-   */
-  @Deprecated
-  private Object m_Geometry = null;
+// /**
+// * FIXME - bad idea to cache a geometry in the generic feature implementation. A feature can constists of more than
+// * one geometries. Who decides a cached geometry is valid / dirty? instead use feature binding and the
+// * AbstractCachedFeature Implementation to cache properties of a feature!
+// */
+// @Deprecated
+// private Object m_geometry = null;
   
 
   /**
@@ -262,8 +262,9 @@ public class Feature_Impl extends PlatformObject implements Feature
   @Deprecated
   public void setProperty( final String propLocalName, final Object value )
   {
-    final IPropertyType pt = FeatureHelper.getPT( this, propLocalName );
-    setProperty( pt, value );
+    final IPropertyType property = getFeatureType().getProperty( propLocalName );
+    if( property != null )
+      setProperty( property, value );
   }
 
   /**
@@ -577,24 +578,24 @@ public class Feature_Impl extends PlatformObject implements Feature
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
-   */
-  @Deprecated
-  @Override
-  public void setCachedGeometry( final Object value )
-  {
-    m_Geometry = value;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
-   */
-  @Deprecated
-  @Override
-  public Object getCachedGeometry( )
-  {
-    return m_Geometry;
-  }
+// /**
+// * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
+// */
+// @Deprecated
+// @Override
+// public void setCachedGeometry( final Object value )
+// {
+// m_geometry = value;
+// }
+//
+// /**
+// * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
+// */
+// @Deprecated
+// @Override
+// public Object getCachedGeometry( )
+// {
+// return m_geometry;
+// }
 
 }

@@ -55,10 +55,11 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
     m_workspace = workspace;
     m_features = features;
     
-    // reset cached values for changed features
-    for ( final Feature lFeature: m_features ) {
-      lFeature.setCachedGeometry( null );
-    }
+
+// // reset cached values for changed features
+// for ( final Feature lFeature: m_features ) {
+// lFeature.setCachedGeometry( null );
+// }
   }
 
   public Feature[] getFeatures( )
@@ -77,7 +78,7 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 128 );
+    final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "FeatureChangedModellEvent[" );
     if( m_features != null )
     {

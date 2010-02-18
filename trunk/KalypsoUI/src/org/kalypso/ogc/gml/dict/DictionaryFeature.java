@@ -272,7 +272,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
-  public void setFeatureType( IFeatureType ft )
+  public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
@@ -280,7 +280,7 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
-  public void setId( String fid )
+  public void setId( final String fid )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
@@ -322,7 +322,7 @@ public class DictionaryFeature implements Feature
    */
   public GM_Object getLocation( )
   {
-    Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
+    final Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
       return (GM_Object) property;
 
@@ -335,22 +335,5 @@ public class DictionaryFeature implements Feature
   public void setLocation( final GM_Object location )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getCachedGeometry()
-   */
-  @Override
-  public Object getCachedGeometry( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setCachedGeometry(java.lang.Object)
-   */
-  @Override
-  public void setCachedGeometry( Object value )
-  {
   }
 }
