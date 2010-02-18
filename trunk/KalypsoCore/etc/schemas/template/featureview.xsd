@@ -132,6 +132,25 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+    <xs:element name="dynamicTabFolder" substitutionGroup="fv:control">
+        <xs:annotation>
+            <xs:documentation>The dynamicTabFolder shows a list of features as tab-items in a tabFolder. 
+            The given property must hence denote a list of features (or links to features).</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="fv:PropertyControlType">
+                <!-- 
+                    <xs:attribute name="tabLabel" type="xs:QName" use="required" >
+                        <xs:annotation>
+                            <xs:documentation>The property that is used to label the tab-items.</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                 -->
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 	<xs:element name="control" type="fv:ControlType" />
 	<xs:element name="label" type="fv:LabelType" substitutionGroup="fv:control" />
 	<xs:complexType name="LabelType">
@@ -269,7 +288,6 @@
 					<xs:sequence>
 						<xs:element name="text" type="xs:string" minOccurs="0" />
 					</xs:sequence>
-					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
