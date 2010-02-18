@@ -46,6 +46,11 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
@@ -54,10 +59,16 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -66,9 +77,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ImageFeatureControl extends AbstractFeatureControl
 {
+  private final ISchedulingRule m_mutex = new MutexRule();
+
   private ImageCanvas m_imgCanvas;
 
   private static final QName QNAME_STRING = new QName( XMLConstants.W3C_XPATH_DATATYPE_NS_URI, "string" ); //$NON-NLS-1$
+
+  private static final String DATA_DISPOSE_IMAGE = "doDisposeImage"; //$NON-NLS-1$
 
   public ImageFeatureControl( final IPropertyType ftp )
   {
@@ -92,16 +107,24 @@ public class ImageFeatureControl extends AbstractFeatureControl
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        final Image image = imgCanvas.getImage();
-        if( image != null && !image.isDisposed() )
-          image.dispose();
+        disposeOldImage();
       }
     } );
 
     updateControl();
 
-
     return m_imgCanvas;
+  }
+
+  protected void disposeOldImage( )
+  {
+    if( m_imgCanvas.isDisposed() )
+      return;
+
+    final Image oldImage = m_imgCanvas.getImage();
+    final Boolean oldDoDispose = (Boolean) m_imgCanvas.getData( DATA_DISPOSE_IMAGE );
+    if( oldImage != null && oldDoDispose != null && oldDoDispose )
+      oldImage.dispose();
   }
 
   protected void handleControlResized( )
@@ -139,71 +162,120 @@ public class ImageFeatureControl extends AbstractFeatureControl
    */
   public void updateControl( )
   {
-    final Image oldImage = m_imgCanvas.getImage();
-    if( oldImage != null )
-      oldImage.dispose();
-    m_imgCanvas.setImage( null );
-    m_imgCanvas.setToolTipText( null );
+    final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
+    setImage( waitingImage, "Loading...", false );
 
+    // must be a string property
+    final String imgPath = getImagePath();
+    
+    final String error = loadImage( imgPath );
+    if( error != null )
+      setImage( StatusComposite.getStatusImage( IStatus.WARNING ), error, false );
+  }
+
+  void setImage( final Image image, final String tooltipText, final boolean disposeImageAfterUse )
+  {
+    disposeOldImage();
+
+    if( m_imgCanvas.isDisposed() )
+    {
+      if( disposeImageAfterUse && image != null )
+        image.dispose();
+      return;
+    }
+
+    m_imgCanvas.setData( DATA_DISPOSE_IMAGE, disposeImageAfterUse );
+    m_imgCanvas.setImage( image );
+    m_imgCanvas.setToolTipText( tooltipText );
+
+    layoutScrolledParent( m_imgCanvas );
+  }
+
+  private String loadImage( final String imgPath )
+  {
+    if( imgPath == null )
+      return Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2" ) + getFeatureTypeProperty(); //$NON-NLS-1$
+
+    if( imgPath.length() == 0 )
+      return ""; //$NON-NLS-1$
+
+    try
+    {
+      final GMLWorkspace workspace = getFeature().getWorkspace();
+      final URL context = workspace.getContext();
+      final URL url = new URL( context, imgPath );
+
+      startImageJob( url );
+      return null;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+
+      return Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5" ) + imgPath; //$NON-NLS-1$
+    }
+  }
+
+  private void startImageJob( final URL url )
+  {
+    final Job loadImageJob = new Job( "Load Image" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
+        final Image image = imgDesc.createImage( false );
+        if( image == null )
+        {
+          final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
+          setImageInUIJob( null, msg, false );
+          return Status.OK_STATUS;
+        }
+
+        final String tooltip = url.toExternalForm();
+        setImageInUIJob( image, tooltip, true );
+        return Status.OK_STATUS;
+      }
+    };
+    loadImageJob.setRule( m_mutex );
+    loadImageJob.setSystem( true );
+    loadImageJob.schedule();
+  }
+
+  protected void setImageInUIJob( final Image image, final String tooltip, final boolean disposeImageAfterUse )
+  {
+    if( m_imgCanvas.isDisposed() )
+      return;
+
+    final Display display = m_imgCanvas.getDisplay();
+    final UIJob uiJob = new UIJob( display, "Update image" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        setImage( image, tooltip, disposeImageAfterUse );
+        return Status.OK_STATUS;
+      }
+    };
+
+    uiJob.setRule( m_mutex );
+    uiJob.setSystem( true );
+    uiJob.schedule();
+  }
+
+  private String getImagePath( )
+  {
     final Feature feature = getFeature();
     final IPropertyType pt = getFeatureTypeProperty();
 
-    // must be a string property
-    final String imgPath;
     if( feature == null || pt == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), QNAME_STRING ) )
-      imgPath = null;
-    else
-    {
-      final Object uriString = feature.getProperty( pt );
-      imgPath = uriString == null ? "" : (String) uriString; //$NON-NLS-1$
-    }
+      return null;
 
-    String problemMessage = null;
-    Image image = null;
-    String tooltip = null;
+    final String uriString = (String) feature.getProperty( pt );
+    if( uriString == null )
+      return "";
 
-    if( imgPath == null )
-      problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2" ) + pt; //$NON-NLS-1$
-    else if( imgPath.length() == 0 )
-      problemMessage = ""; //$NON-NLS-1$
-    else
-    {
-      final GMLWorkspace workspace = feature.getWorkspace();
-      final URL context = workspace.getContext();
-      try
-      {
-        final URL url = new URL( context, imgPath );
-        final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
-        image = imgDesc.createImage( false );
-
-        // TODO: create image, so it fits into the current control
-
-        if( image == null )
-          problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
-        else
-          tooltip = url.toExternalForm();
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-
-        problemMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5" ) + imgPath; //$NON-NLS-1$
-      }
-    }
-
-    if( image == null )
-    {
-      m_imgCanvas.setToolTipText( problemMessage );
-      // SAD: label is not able to display image AND text
-      // m_label.setImage( JFaceResources.getImage( Dialog.DLG_IMG_MESSAGE_WARNING ) );
-    }
-    else
-    {
-      m_imgCanvas.setImage( image );
-      m_imgCanvas.setToolTipText( tooltip );
-    }
-
-    layoutScrolledParent( m_imgCanvas );
+    return uriString;
   }
 
   public static void layoutScrolledParent( final Control control )
