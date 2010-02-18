@@ -40,37 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.gml;
         
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
-import org.kalypso.model.wspm.schema.i18n.Messages;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author barbarins
@@ -92,19 +68,18 @@ public class ProfileThroughputLocationCreator extends FeaturePropertyFunction
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    // TODO: interpolate geometry onto profile points?
-    // see IProfilPointProperty.doInterpolation(value1,value2)
     return null;
   }
 
-  // $ANALYSIS-IGNORE
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    return ProfileCacherFeaturePropertyFunction.createProfileSegment( feature, pt, currentValue, "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE" ); //$NON-NLS-1$
+    final IProfileFeature profile = (IProfileFeature) feature;
+    // FIXME: fetch from constant class
+    return ProfileFeatureBinding.createProfileSegment( profile, "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE" ); //$NON-NLS-1$
   }
 
 }
