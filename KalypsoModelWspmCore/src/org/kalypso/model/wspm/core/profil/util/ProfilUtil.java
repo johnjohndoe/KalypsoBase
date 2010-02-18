@@ -243,6 +243,9 @@ public class ProfilUtil
 
   }
 
+  /**
+   * Returns all points between within the given markers (closed interval).
+   */
   public static final List<IRecord> getInnerPoints( final IProfil profil, final IComponent markerTyp )
   {
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( markerTyp );

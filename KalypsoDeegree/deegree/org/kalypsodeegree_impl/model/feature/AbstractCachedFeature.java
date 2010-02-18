@@ -54,11 +54,13 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  * <br>
  * TODO on workspace save -> reset dirty flag
  * 
+ * @deprecated Use {@link AbstractCachedFeature2} instead. This one leads to bugs.
  * @author Dirk Kuch
  */
+@Deprecated
 public class AbstractCachedFeature extends Feature_Impl
 {
-  Set<String> m_dirty = new HashSet<String>();
+  private final Set<String> m_dirty = new HashSet<String>();
 
   protected AbstractCachedFeature( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -91,6 +93,7 @@ public class AbstractCachedFeature extends Feature_Impl
   /**
    * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(java.lang.String, java.lang.Object)
    */
+  @Deprecated
   @Override
   public void setProperty( final String propLocalName, final Object value )
   {
@@ -99,22 +102,17 @@ public class AbstractCachedFeature extends Feature_Impl
     super.setProperty( propLocalName, value );
   }
 
-  public boolean isDirty( )
+  protected boolean isDirty( )
   {
     return !m_dirty.isEmpty();
   }
 
-  public boolean isDirty( final String localPart )
-  {
-    return m_dirty.contains( localPart );
-  }
-
-  public boolean isDirty( final QName qname )
+  protected boolean isDirty( final QName qname )
   {
     return m_dirty.contains( qname.toString() );
   }
 
-  public boolean isDirty( final QName... qnames )
+  protected boolean isDirty( final QName... qnames )
   {
     for( final QName qn : qnames )
     {
@@ -127,12 +125,12 @@ public class AbstractCachedFeature extends Feature_Impl
     return false;
   }
 
-  public void setValid( final QName qname )
+  protected void setValid( final QName qname )
   {
     m_dirty.remove( qname.toString() );
   }
 
-  public void setValid( final QName... qnames )
+  protected void setValid( final QName... qnames )
   {
     for( final QName qn : qnames )
     {
