@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
 /**
  * @author Dirk Kuch
@@ -111,5 +112,5 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   public void setProfileType( final String type );
 
-  public void setImage( URL photoURL );
+  public Image addImage( URL photoURL );
 }
