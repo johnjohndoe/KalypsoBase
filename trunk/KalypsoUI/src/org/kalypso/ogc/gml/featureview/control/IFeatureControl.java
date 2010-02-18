@@ -51,31 +51,31 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureControl
 {
-  public Control createControl( final Composite parent, final int style );
+  Control createControl( Composite parent, int style );
 
-  public void dispose();
+  void dispose( );
 
-  public Feature getFeature();
+  Feature getFeature( );
 
-  public void setFeature( final Feature feature );
+  void setFeature( Feature feature );
 
   /**
    * Render this control as string
    * 
    * @return string
    */
-  public String toString();
+  String toString( );
 
   /** Update Control from Feature */
-  public void updateControl();
+  void updateControl( );
 
-  public boolean isValid();
+  boolean isValid( );
 
-  public void addModifyListener( final ModifyListener l );
+  void addModifyListener( ModifyListener l );
 
-  public void removeModifyListener( final ModifyListener l );
+  void removeModifyListener( ModifyListener l );
 
-  public void addChangeListener( final IFeatureChangeListener l );
+  void addChangeListener( IFeatureChangeListener l );
 
-  public void removeChangeListener( final IFeatureChangeListener l );
+  void removeChangeListener( IFeatureChangeListener l );
 }

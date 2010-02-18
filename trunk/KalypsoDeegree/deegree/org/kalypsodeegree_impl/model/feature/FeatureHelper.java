@@ -182,8 +182,11 @@ public final class FeatureHelper
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
 
     for( final IPropertyType type : properties )
+    {
       if( propName.equals( type.getQName().getLocalPart() ) )
         return type;
+    }
+
     return null;
   }
 

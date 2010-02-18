@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control.comparators;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -61,7 +61,7 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
   /**
    * Stores the parameter, if any are given.
    */
-  private HashMap<String, String> m_params;
+  private Map<String, String> m_params;
 
   /**
    * This comparator will be used to compare the elements, instead of the one of the parent.
@@ -80,14 +80,14 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
    * @see org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator#init(org.kalypsodeegree.model.feature.Feature,
    *      java.util.HashMap)
    */
-  public void init( Feature parent, HashMap<String, String> params )
+  public void init( final Feature parent, final Map<String, String> params )
   {
     /* Store the parameter. */
     m_params = params;
 
     /* Read the parameter. */
-    String namespaceURI = m_params.get( "namespaceURI" ); //$NON-NLS-1$
-    String localPart = m_params.get( "localPart" ); //$NON-NLS-1$
+    final String namespaceURI = m_params.get( "namespaceURI" ); //$NON-NLS-1$
+    final String localPart = m_params.get( "localPart" ); //$NON-NLS-1$
 
     /* If both required parameter are given, create the comparator. */
     if( namespaceURI != null && localPart != null )
@@ -99,7 +99,7 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
    *      java.lang.Object)
    */
   @Override
-  public int compare( Viewer viewer, Object e1, Object e2 )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
     if( m_comparator == null )
       return super.compare( viewer, e1, e2 );

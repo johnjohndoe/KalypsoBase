@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control.comparators;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -60,5 +60,5 @@ public interface IViewerComparator
    * @param params
    *            The map containing the parameter names (keys) and parameter values (value).
    */
-  public void init( Feature parent, HashMap<String, String> params );
+  public void init( Feature parent, Map<String, String> params );
 }

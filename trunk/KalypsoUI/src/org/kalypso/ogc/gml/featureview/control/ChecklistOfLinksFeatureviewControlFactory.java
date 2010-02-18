@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class ChecklistOfLinksFeatureviewControlFactory implements IFeatureviewControlFactory
+public class ChecklistOfLinksFeatureviewControlFactory implements IExtensionsFeatureControlFactory
 {
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,

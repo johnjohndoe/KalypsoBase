@@ -73,7 +73,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final String m_text;
 
-  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp, String text )
+  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp, final String text )
   {
     super( feature, ftp );
 
@@ -100,7 +100,6 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   public Control createControl( final Composite parent, final int style )
   {
     m_checkbox = new Button( parent, style | SWT.CHECK );
-
     m_checkbox.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( final SelectionEvent e )
@@ -129,11 +128,6 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
   public boolean isValid( )
   {
     return true;
-  }
-
-  public void setEnabled( final boolean enabled )
-  {
-    m_checkbox.setEnabled( enabled );
   }
 
   /**

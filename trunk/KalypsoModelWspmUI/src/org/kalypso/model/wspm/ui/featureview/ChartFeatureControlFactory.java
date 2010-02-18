@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -73,7 +73,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
  * 
  * @author Gernot Belger
  */
-public class ChartFeatureControlFactory implements IFeatureviewControlFactory
+public class ChartFeatureControlFactory implements IExtensionsFeatureControlFactory
 {
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,

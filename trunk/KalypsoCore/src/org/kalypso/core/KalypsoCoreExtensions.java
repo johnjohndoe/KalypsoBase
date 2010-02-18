@@ -53,6 +53,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.catalog.CatalogManager;
@@ -68,7 +71,7 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- *
+ * 
  * @author belger
  */
 public class KalypsoCoreExtensions
@@ -125,7 +128,7 @@ public class KalypsoCoreExtensions
   {
     if( !Platform.isRunning() )
     {
-      System.out.println( Messages.getString("org.kalypso.core.KalypsoCoreExtensions.7") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.core.KalypsoCoreExtensions.7" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -194,8 +197,8 @@ public class KalypsoCoreExtensions
 
   /**
    * @param themeInfoId
-   *            Id of the requested extension. Can contain properties. Example:
-   *            <code>org.kalypso.core.someId?prop1=value1&props2=values</code>
+   *          Id of the requested extension. Can contain properties. Example:
+   *          <code>org.kalypso.core.someId?prop1=value1&props2=values</code>
    */
   public static IKalypsoThemeInfo createThemeInfo( final String themeInfoId, final IKalypsoTheme theme )
   {
@@ -249,8 +252,8 @@ public class KalypsoCoreExtensions
 
   /**
    * @param category
-   *            If non-<code>null</code>, returned providers are filtered by this category. Else all registered
-   *            providers are returned.
+   *          If non-<code>null</code>, returned providers are filtered by this category. Else all registered providers
+   *          are returned.
    */
   public static IGmlSourceProvider[] createGmlSourceProvider( final String category )
   {
@@ -275,7 +278,7 @@ public class KalypsoCoreExtensions
           }
           catch( final Throwable e )
           {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.core.KalypsoCoreExtensions.25") + providerId ); //$NON-NLS-1$
+            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.core.KalypsoCoreExtensions.25" ) + providerId ); //$NON-NLS-1$
             KalypsoCorePlugin.getDefault().getLog().log( status );
           }
 
@@ -287,5 +290,38 @@ public class KalypsoCoreExtensions
     }
 
     return result.toArray( new IGmlSourceProvider[result.size()] );
+  }
+
+  public static ViewerFilter createViewerFilter( final String id ) throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
+    for( final IConfigurationElement element : elements )
+    {
+      final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
+      if( id.equals( elementId ) )
+        return (ViewerFilter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    }
+
+    final String msg = String.format( "No registered filter with id '%s'", id ); //$NON-NLS-1$
+    final IStatus missingStatus = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg );
+    throw new CoreException( missingStatus );
+  }
+
+  public static ViewerComparator createComparator( final String id ) throws CoreException
+  {
+    /* Get the sorter of the id. */
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" ); //$NON-NLS-1$
+    for( final IConfigurationElement element : elements )
+    {
+      final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
+      if( id.equals( elementId ) )
+        return (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    }
+
+    final String msg = String.format( "No registered comparator with id '%s'", id ); //$NON-NLS-1$
+    final IStatus missingStatus = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg );
+    throw new CoreException( missingStatus );
   }
 }

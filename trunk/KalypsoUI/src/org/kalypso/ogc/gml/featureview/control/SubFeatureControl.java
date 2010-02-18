@@ -27,30 +27,18 @@ public class SubFeatureControl extends AbstractFeatureControl
 {
   private IFeatureControl m_fc;
 
-  private final IFeatureSelectionManager m_selectionManager;
-
-  private final FormToolkit m_formToolkit;
-
-  private final boolean m_showOk;
-
-  private final IFeatureviewFactory m_featureviewFactory;
-
   private QName m_selector;
 
   private Composite m_container;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final boolean showOk, final IFeatureviewFactory featureviewFactory )
-  {
-    this( ftp, selectionManager, formToolkit, showOk, featureviewFactory, null );
-  }
+  private final IFeatureComposite m_parentFeatureComposite;
 
-  public SubFeatureControl( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final FormToolkit formToolkit, final boolean showOk, final IFeatureviewFactory featureviewFactory, final String selector )
+  public SubFeatureControl( final IPropertyType ftp, final IFeatureComposite parentFeatureComposite, final String selector )
   {
     super( ftp );
-    m_selectionManager = selectionManager;
-    m_formToolkit = formToolkit;
-    m_showOk = showOk;
-    m_featureviewFactory = featureviewFactory;
+
+    m_parentFeatureComposite = parentFeatureComposite;
+
     if( selector != null && ftp != null )
       // TODO: NO! Please ALWAYS use full qnames inside the .gft!! The namespace of the property is not always the
       // namespace of the feature!!
@@ -95,9 +83,14 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
       else
       {
-        final FeatureComposite fc = new FeatureComposite( featureToSet, m_selectionManager, m_featureviewFactory );
-        fc.setFormToolkit( m_formToolkit );
-        fc.setShowOk( m_showOk );
+        final IFeatureSelectionManager selectionManager = m_parentFeatureComposite.getSelectionManager();
+        final IFeatureviewFactory featureviewFactory = m_parentFeatureComposite.getFeatureviewFactory();
+        final FormToolkit formToolkit = m_parentFeatureComposite.getFormToolkit();
+        final boolean showOk = m_parentFeatureComposite.isShowOk();
+
+        final FeatureComposite fc = new FeatureComposite( featureToSet, selectionManager, featureviewFactory );
+        fc.setFormToolkit( formToolkit );
+        fc.setShowOk( showOk );
 
         m_fc = fc;
       }

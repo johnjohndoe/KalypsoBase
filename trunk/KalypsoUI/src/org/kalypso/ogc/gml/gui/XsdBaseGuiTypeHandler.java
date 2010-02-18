@@ -106,7 +106,6 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     {
       final Checkbox checkbox = factory.createCheckbox();
       checkbox.setStyle( "SWT.NONE" ); //$NON-NLS-1$
-      checkbox.setEditable( true );
       checkbox.setProperty( qname );
       checkbox.setText( " " ); // set invisible string to suppress automatic text from property //$NON-NLS-1$
 

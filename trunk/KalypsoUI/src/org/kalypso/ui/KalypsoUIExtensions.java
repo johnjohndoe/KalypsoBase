@@ -59,7 +59,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.IFeatureModifierExtension;
-import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
@@ -95,7 +95,7 @@ public class KalypsoUIExtensions
 
   private static Map<String, IConfigurationElement> OBSERVATION_TABLE_HEADER_POPUP_MENUS = null;
 
-  public static IFeatureviewControlFactory getFeatureviewControlFactory( final String id ) throws CoreException
+  public static IExtensionsFeatureControlFactory getFeatureviewControlFactory( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> map = getFeatureviewControlMap();
     if( map == null )
@@ -105,7 +105,7 @@ public class KalypsoUIExtensions
     if( factoryElement == null )
       throw new CoreException( StatusUtilities.createErrorStatus( "No feature-control-factory found with id: " + id ) ); //$NON-NLS-1$
 
-    return (IFeatureviewControlFactory) factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$
+    return (IExtensionsFeatureControlFactory) factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   private static synchronized Map<String, IConfigurationElement> getFeatureviewControlMap( )

@@ -78,11 +78,24 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final ICommandTarget m_templateTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-  protected Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
+  protected final Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
 
   protected final IFeatureSelectionManager m_selectionManager;
 
-  private final IFeatureChangeListener m_fcl;
+  private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
+  {
+    @Override
+    public void openFeatureRequested( final Feature feature, final IPropertyType pt )
+    {
+      fireOpenFeatureRequested( feature, pt );
+    }
+
+    @Override
+    public void featureChanged( final ICommand changeCommand )
+    {
+      fireFeatureChange( changeCommand );
+    }
+  };
 
   private Gistableview m_tableView;
 
@@ -92,7 +105,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private ToolBarManager m_toolbarManager;
 
-  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final boolean showToolbar, final boolean showContextMenu )
+  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final boolean showToolbar, final boolean showContextMenu )
   {
     super( ftp );
 
@@ -100,7 +113,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     m_factory = factory;
     m_selectionManager = selectionManager;
-    m_fcl = fcl;
 
     m_showToolbar = showToolbar;
     m_showContextMenu = showContextMenu;
