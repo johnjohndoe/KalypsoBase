@@ -71,6 +71,10 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
 
   private Spinner m_spinner;
 
+  private int m_increment = 1;
+
+  private int m_pageIncrement = 10;
+
   public SpinnerFeatureControl( final Feature feature, final IValuePropertyType ftp )
   {
     super( feature, ftp );
@@ -102,6 +106,9 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   public Spinner createControl( final Composite parent, final int style )
   {
     m_spinner = new Spinner( parent, style );
+
+    m_spinner.setIncrement( m_increment );
+    m_spinner.setPageIncrement( m_pageIncrement );
 
     final IValuePropertyType vpt = (IValuePropertyType) getFeatureTypeProperty();
 
@@ -232,6 +239,16 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   {
     for( final ModifyListener l : m_modlistener )
       l.modifyText( null );
+  }
+
+  public void setIncrement( final int increment )
+  {
+    m_increment = increment;
+  }
+
+  public void setPageIncrement( final int pageIncrement )
+  {
+    m_pageIncrement = pageIncrement;
   }
 
 }

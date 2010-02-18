@@ -40,27 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -71,7 +60,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -79,17 +67,12 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
-import org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -98,6 +81,7 @@ import org.kalypso.template.featureview.ColorLabelType;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.DynamicTabFolder;
 import org.kalypso.template.featureview.Extensioncontrol;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GeometryLabelType;
@@ -115,20 +99,13 @@ import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
-import org.kalypso.template.featureview.Combo.Entry;
-import org.kalypso.template.featureview.Combo.Filter;
-import org.kalypso.template.featureview.Combo.Sorter;
-import org.kalypso.template.featureview.Extensioncontrol.Param;
-import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIDebug;
-import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.AbstractOperation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -137,7 +114,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Gernot Belger
  */
-public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
+public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener, IFeatureComposite
 {
   private static final String DATA_LAYOUTDATA = "layoutData"; //$NON-NLS-1$
 
@@ -280,7 +257,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     // Set tooltip: an explicitly set tooltip always wins
     final String tooltipControlText = controlType.getTooltip();
 
-    final String tooltipText = getAnnotation( annotation, tooltipControlText, IAnnotation.ANNO_TOOLTIP );
+    final String tooltipText = AnnotationUtilities.getAnnotation( annotation, tooltipControlText, IAnnotation.ANNO_TOOLTIP );
     control.setToolTipText( tooltipText );
 
     /* If a toolkit is set, use it. */
@@ -315,20 +292,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     updateLayoutData( control );
 
     return control;
-  }
-
-  /**
-   * Return the desired annotation value. A given explicit value is preferred, if not empty.
-   */
-  private String getAnnotation( final IAnnotation annotation, final String explicitValue, final String annoElement )
-  {
-    if( annotation == null )
-      return explicitValue == null ? "" : explicitValue; //$NON-NLS-1$
-
-    if( explicitValue != null && explicitValue.length() > 0 )
-      return explicitValue;
-
-    return annotation.getValue( annoElement );
   }
 
   private void updateLayoutData( final Control control )
@@ -450,6 +413,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return composite;
     }
 
+    // FIXME: create TabFolderFeatureControl
     if( controlType instanceof TabFolder )
     {
       final TabFolder tabFolderType = (TabFolder) controlType;
@@ -460,7 +424,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
       {
         final String label = tabItemType.getTabLabel();
-        final String itemLabel = getAnnotation( annotation, label, IAnnotation.ANNO_LABEL );
+        final String itemLabel = AnnotationUtilities.getAnnotation( annotation, label, IAnnotation.ANNO_LABEL );
 
         final ControlType control = tabItemType.getControl().getValue();
 
@@ -470,6 +434,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
         // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used
+        // FIXME: The parent if a TabItem MUST be the TabFolder! Everything else is just nonsense
         try
         {
           item.setControl( tabControl );
@@ -483,339 +448,77 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return tabFolder;
     }
 
+    /* TODO: move all from above into the factory method */
+    final IFeatureControlFactory controlFactory = createControlFactory( controlType );
+    final IFeatureControl featureControl = createFeatureControl( controlFactory, feature, ftp, controlType, annotation );
+    final Control control = featureControl.createControl( parent, style );
+    addFeatureControl( featureControl );
+    return control;
+  }
+
+  private IFeatureControl createFeatureControl( final IFeatureControlFactory controlFactory, final Feature feature, final IPropertyType ftp, final ControlType controlType, final IAnnotation annotation )
+  {
+    if( controlFactory == null )
+    {
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ); //$NON-NLS-1$
+      return new LabelFeatureControl( feature, ftp, msg );
+    }
+
+    return controlFactory.createFeatureControl( this, feature, ftp, controlType, annotation );
+  }
+
+  // TODO: use extension point instead?
+  private IFeatureControlFactory createControlFactory( final ControlType controlType )
+  {
     if( controlType instanceof LabelType )
-    {
-      final LabelType labelType = (LabelType) controlType;
-      final Label label = new Label( parent, style );
+      return new LabelFeatureControlFactory();
 
-      final String labelControlText = labelType.getText();
-
-      label.setText( getAnnotation( annotation, labelControlText, IAnnotation.ANNO_LABEL ) );
+    if( controlType instanceof Extensioncontrol )
+      return new ExtensionFeatureControlFactory();
 
-      return label;
-    }
-    else if( controlType instanceof ValidatorLabelType )
-    {
-      if( ftp == null )
-        // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
-        System.out.println( "ValidatorLabelType without property" ); //$NON-NLS-1$
-      else
-      {
-        final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
-        final Control control = vfc.createControl( parent, style );
-        addFeatureControl( vfc );
-
-        return control;
-      }
-    }
-    else if( controlType instanceof GeometryLabelType )
-    {
-      final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
-      final Control control = vfc.createControl( parent, style );
-      addFeatureControl( vfc );
-
-      return control;
-    }
-    else if( controlType instanceof ColorLabelType )
-    {
-      final ColorFeatureControl vfc = new ColorFeatureControl( feature, ftp );
-
-      final Control control = vfc.createControl( parent, style );
-
-      addFeatureControl( vfc );
-
-      return control;
-    }
-    else if( controlType instanceof Text )
-    {
-      final Text editorType = (Text) controlType;
-
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-
-      final Object objFormat = editorType.getFormat();
-      String format = null;
-      if( objFormat instanceof String )
-        format = (String) objFormat;
-      else if( objFormat instanceof Node )
-        format = XMLTools.getStringValue( ((Node) objFormat) );
-
-      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format );
-
-      final Control control = tfc.createControl( parent, style );
-      tfc.setEditable( editorType.isEditable() );
-
-      addFeatureControl( tfc );
-
-      return control;
-    }
-    else if( controlType instanceof Checkbox )
-    {
-      final Checkbox checkboxType = (Checkbox) controlType;
-
-      final String checkboxControlText = checkboxType.getText();
-      final String text = getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
-
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
-
-      final Control control = cfc.createControl( parent, style );
-      cfc.setEnabled( checkboxType.isEditable() );
-
-      addFeatureControl( cfc );
-
-      return control;
-    }
-    else if( controlType instanceof Button )
-    {
-      final ButtonFeatureControl bfc = new ButtonFeatureControl( feature, ftp );
-
-      final Control control = bfc.createControl( parent, style );
-
-      addFeatureControl( bfc );
-
-      return control;
-    }
-    else if( controlType instanceof TupleResult )
-    {
-      final TupleResult editorType = (TupleResult) controlType;
-
-      final TupleResultFeatureControl tfc = TupleResultFeatureControl.create( editorType, feature, ftp );
-
-      final Control control = tfc.createControl( parent, style );
-
-      addFeatureControl( tfc );
-
-      return control;
-    }
-    else if( controlType instanceof Combo )
-    {
-      final Combo comboType = (Combo) controlType;
-
-      /* Look, if the user wants something sorted. */
-      final Sorter sorter = comboType.getSorter();
-
-      /* The comparator. */
-      ViewerComparator comparator = null;
-
-      /* If there is a sorter, look deeper. */
-      if( sorter != null )
-      {
-        /* The id of the sorter. */
-        String id = sorter.getId();
-        if( id == null || id.length() == 0 )
-          id = "org.kalypso.ui.featureview.comparators.defaultComparator"; //$NON-NLS-1$
-
-        /* Get the sorter of the id. */
-        final IExtensionRegistry registry = Platform.getExtensionRegistry();
-        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" ); //$NON-NLS-1$
-        for( final IConfigurationElement element : elements )
-        {
-          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
-          if( id.equals( elementId ) )
-          {
-            try
-            {
-              comparator = (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-            }
-            catch( final CoreException e )
-            {
-              e.printStackTrace();
-            }
-          }
-        }
-
-        /* If a valid id was given ... */
-        if( comparator != null && (comparator instanceof IViewerComparator) )
-        {
-          /* The parameter map. */
-          final HashMap<String, String> params = new HashMap<String, String>();
-
-          /* Get all parameter. */
-          final List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
-          if( parameter != null )
-            /* Collect all parameter. */
-            for( final org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
-              params.put( param.getName(), param.getValue() );
-
-          ((IViewerComparator) comparator).init( feature, params );
-        }
-      }
-
-      /* Should a filter be added? */
-      final Filter filter = comboType.getFilter();
-
-      /* The filter. */
-      ViewerFilter viewerFilter = null;
-
-      /* If there is a filter, look deeper. */
-      if( filter != null )
-      {
-        /* The id of the sorter. */
-        String id = filter.getId();
-        if( id == null || id.length() == 0 )
-          id = "org.kalypso.ui.featureview.filters.defaultFilter"; //$NON-NLS-1$
-
-        /* Get the filter with this id. */
-        final IExtensionRegistry registry = Platform.getExtensionRegistry();
-        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
-        for( final IConfigurationElement element : elements )
-        {
-          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
-          if( id.equals( elementId ) )
-          {
-            try
-            {
-              viewerFilter = (ViewerFilter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-            }
-            catch( final CoreException ex )
-            {
-              ex.printStackTrace();
-            }
-          }
-        }
-
-        /* If a valid id was given ... */
-        if( viewerFilter != null && (viewerFilter instanceof IViewerFilter) )
-          ((IViewerFilter) viewerFilter).init( feature, filter.getExpression() );
-      }
-
-      /* Handle the entries. */
-      final List<Entry> entryList = comboType.getEntry();
-      final Map<Object, String> comboEntries = new LinkedHashMap<Object, String>( entryList.size() );
-
-      if( ftp instanceof IValuePropertyType )
-      {
-        final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-        final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( ftp );
-
-        for( final Entry entry : entryList )
-        {
-          final String label = entry.getLabel();
-          final String any = entry.getValue();
-          try
-          {
-            final Object object = typeHandler.parseType( any );
-            comboEntries.put( object, label );
-          }
-          catch( final ParseException e )
-          {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.parse" ) + any ); //$NON-NLS-1$
-            KalypsoGisPlugin.getDefault().getLog().log( status );
-          }
-        }
-      }
-
-      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries, comparator, viewerFilter );
-
-      final Control control = cfc.createControl( parent, style );
-
-      addFeatureControl( cfc );
-
-      return control;
-    }
-    else if( controlType instanceof Radiobutton )
-    {
-      final Radiobutton radioType = (Radiobutton) controlType;
-
-      final Object valueToSet = radioType.getValueToSet();
-      final String text = getAnnotation( annotation, radioType.getText(), IAnnotation.ANNO_LABEL );
-
-      final RadioFeatureControl rfc = new RadioFeatureControl( feature, ftp, valueToSet, text );
-
-      final Control control = rfc.createControl( parent, style );
-
-      addFeatureControl( rfc );
-
-      return control;
-    }
-    else if( controlType instanceof Spinner )
-    {
-      final Spinner spinnerType = (Spinner) controlType;
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final SpinnerFeatureControl sfc = new SpinnerFeatureControl( feature, vpt );
-      final org.eclipse.swt.widgets.Spinner control = sfc.createControl( parent, style );
-
-      control.setIncrement( (int) spinnerType.getIncrement() );
-      control.setPageIncrement( (int) spinnerType.getPageIncrement() );
-
-      addFeatureControl( sfc );
-
-      return control;
-    }
-    else if( controlType instanceof Image )
-    {
-      final ImageFeatureControl ifc = new ImageFeatureControl( feature, ftp );
-
-      final Control control = ifc.createControl( parent, style );
-
-      addFeatureControl( ifc );
-
-      return control;
-    }
-    else if( controlType instanceof Extensioncontrol )
-    {
-      final Extensioncontrol extControl = (Extensioncontrol) controlType;
-      final String extensionId = extControl.getExtensionId();
-      final List<Param> param = extControl.getParam();
-      final Properties parameters = new Properties();
-      for( final Param controlParam : param )
-        parameters.setProperty( controlParam.getName(), controlParam.getValue() );
-
-      try
-      {
-        final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
-        final IFeatureControl fc = controlFactory.createFeatureControl( feature, ftp, parameters );
-        final Control control = fc.createControl( parent, style );
-        addFeatureControl( fc );
-        return control;
-      }
-      catch( final CoreException ce )
-      {
-        final Label label = new Label( parent, SWT.NONE );
-        label.setText( ce.getStatus().getMessage() );
-        return label;
-      }
-    }
-    else if( controlType instanceof SubcompositeType )
-    {
-      final SubcompositeType compoType = (SubcompositeType) controlType;
-
-      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_showOk, m_featureviewFactory, compoType.getSelector() );
-
-      fc.setFeature( feature );
-
-      final Control control = fc.createControl( parent, style );
-
-      addFeatureControl( fc );
-
-      return control;
-    }
-    else if( controlType instanceof Table )
-    {
-      final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final Table tableType = (Table) controlType;
-
-      final TableFeatureContol fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this, tableType.isShowToolbar(), tableType.isShowContextMenu() );
-
-      final Gistableview gistableview = tableType.getGistableview();
-      if( gistableview != null )
-        fc.setTableTemplate( gistableview );
-
-      fc.setFeature( feature );
-
-      addFeatureControl( fc );
-
-      final Control control = fc.createControl( parent, style );
-      // FIXME: Arrg, who did this? Must be defined in .gft file!
-      control.setLayoutData( new GridData() );
-
-      return control;
-    }
-
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ) ); //$NON-NLS-1$
-
-    return label;
+    if( controlType instanceof Text )
+      return new TextFeatureControlFactory();
+
+    if( controlType instanceof DynamicTabFolder )
+      return new DynamicTabFolderFeatureControlFactory();
+
+    if( controlType instanceof Button )
+      return new ButtonFeatureControlFactory();
+
+    if( controlType instanceof Image )
+      return new ImageFeatureControlFactory();
+
+    if( controlType instanceof TupleResult )
+      return new TupleResultFeatureControlFactory();
+
+    if( controlType instanceof SubcompositeType )
+      return new SubFeatureControlFactory();
+
+    if( controlType instanceof Table )
+      return new TableFeatureContolFactory();
+
+    if( controlType instanceof ValidatorLabelType )
+      return new ValidatorLabelTypeFactory();
+
+    if( controlType instanceof Spinner )
+      return new SpinnerFeatureControlFactory();
+
+    if( controlType instanceof ColorLabelType )
+      return new ColorFeatureControlFactory();
+
+    if( controlType instanceof Radiobutton )
+      return new RadioFeatureControlFactory();
+
+    if( controlType instanceof Checkbox )
+      return new CheckboxFeatureControlFactory();
+
+    if( controlType instanceof Combo )
+      return new ComboFeatureControlFactory();
+
+    if( controlType instanceof GeometryLabelType )
+      return new GeometryFeatureControlFactory();
+
+    return null;
   }
 
   private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType, final IAnnotation annotation )
@@ -826,7 +529,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final String groupControlText = ((org.kalypso.template.featureview.Group) compositeType).getText();
 
-      final String groupText = getAnnotation( annotation, groupControlText, IAnnotation.ANNO_LABEL );
+      final String groupText = AnnotationUtilities.getAnnotation( annotation, groupControlText, IAnnotation.ANNO_LABEL );
       group.setText( groupText );
 
       return group;
@@ -1007,6 +710,24 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         if( fc instanceof FeatureComposite )
           ((FeatureComposite) fc).collectViewTypes( types );
       }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureComposite#getFeatureviewFactory()
+   */
+  @Override
+  public IFeatureviewFactory getFeatureviewFactory( )
+  {
+    return m_featureviewFactory;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureComposite#getSelectionManager()
+   */
+  @Override
+  public IFeatureSelectionManager getSelectionManager( )
+  {
+    return m_selectionManager;
   }
 
   public FormToolkit getFormToolkit( )

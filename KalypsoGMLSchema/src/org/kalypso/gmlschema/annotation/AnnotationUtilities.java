@@ -432,4 +432,18 @@ public class AnnotationUtilities
     return nl.startsWith( lang );
   }
 
+  /**
+   * Return the desired annotation value. A given explicit value is preferred, if not empty.
+   */
+  public static String getAnnotation( final IAnnotation annotation, final String explicitValue, final String annoElement )
+  {
+    if( annotation == null )
+      return explicitValue == null ? "" : explicitValue; //$NON-NLS-1$
+
+    if( explicitValue != null && explicitValue.length() > 0 )
+      return explicitValue;
+
+    return annotation.getValue( annoElement );
+  }
+
 }

@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public interface IFeatureviewControlFactory
+public interface IExtensionsFeatureControlFactory
 {
   /**
    * Create the feature control.
