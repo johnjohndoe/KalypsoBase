@@ -329,7 +329,12 @@ public class StatusComposite extends Composite
 
   public static Image getStatusImage( final IStatus status )
   {
-    switch( status.getSeverity() )
+    return getStatusImage( status.getSeverity() );
+  }
+
+  public static Image getStatusImage( final int severity )
+  {
+    switch( severity )
     {
       case IStatus.OK:
         return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
