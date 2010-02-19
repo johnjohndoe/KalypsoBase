@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.refactoring;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import net.opengeospatial.ows.BoundingBoxType;
 import net.opengeospatial.ows.CodeType;
 import net.opengeospatial.wps.ComplexValueType;
 import net.opengeospatial.wps.DataInputsType;
+import net.opengeospatial.wps.Execute;
 import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.IOValueType;
 import net.opengeospatial.wps.InputDescriptionType;
@@ -70,6 +72,8 @@ import net.opengeospatial.wps.ProcessDescriptionType.DataInputs;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -77,15 +81,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.service.ogc.exception.OWSException;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
+import org.kalypso.service.wps.utils.ogc.ExecuteMediator;
+import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 import org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationInfo;
+import org.kalypso.service.wps.utils.simulation.WPSSimulationManager;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -144,28 +155,26 @@ public class DefaultWPSProcess implements IWPSProcess
   {
     if( m_processDescription == null )
     {
-      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.0" ), 300 ); //$NON-NLS-1$
+      monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.0" ) ); //$NON-NLS-1$
       KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process description ...\n" ); //$NON-NLS-1$
 
-// // decide between local and remote invocation
-// if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
-// {
-// final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( WPS_VERSION.V040 );
-// m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( m_identifier );
-// }
-// else
-// {
-      final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
-      if( processDescriptionList.size() != 1 )
+      // decide between local and remote invocation
+      if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
       {
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.1" ), null ) ); //$NON-NLS-1$
+        final ProcessDescriptionMediator processDescriptionMediator = new ProcessDescriptionMediator( WPS_VERSION.V040 );
+        m_processDescription = (ProcessDescriptionType) processDescriptionMediator.getProcessDescription( m_identifier );
       }
+      else
+      {
+        final List<ProcessDescriptionType> processDescriptionList = WPSUtilities.callDescribeProcess( m_serviceEndpoint, m_identifier );
+        if( processDescriptionList.size() != 1 )
+        {
+          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.1" ), null ) ); //$NON-NLS-1$
+        }
 
-      ProgressUtilities.worked( monitor, 300 );
-
-      /* We will always take the first one. */
-      m_processDescription = processDescriptionList.get( 0 );
-// }
+        /* We will always take the first one. */
+        m_processDescription = processDescriptionList.get( 0 );
+      }
     }
 
     return m_processDescription;
@@ -277,73 +286,64 @@ public class DefaultWPSProcess implements IWPSProcess
     /* Get the output data. */
     m_outputDefinitions = WPSUtilities.createOutputDefinitions( processDescription, outputs );
 
-    /* Send the request. */
-    monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.refactoring.DefaultWPSProcess.5" ) ); //$NON-NLS-1$
-    KalypsoServiceWPSDebug.DEBUG.printf( "Start the simulation ...\n" ); //$NON-NLS-1$
+    /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
+    final String title = processDescription.getTitle();
+    monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title ); //$NON-NLS-1$
 
-// final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
+    final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier );
 
-// try
-// {
     // decide between local and remote invocation
-// if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
-// {
-// FileObject resultFile = null;
-// try
-// {
-// /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
-// final Execute execute = WPS040ObjectFactoryUtilities.buildExecute( simulationIdentifier, m_dataInputs,
-    // m_outputDefinitions, true, true );
-// final WPSSimulationManager manager = WPSSimulationManager.getInstance();
-//
-// final ExecuteMediator executeMediator = new ExecuteMediator( execute );
-// final WPSSimulationInfo info = manager.startSimulation( executeMediator );
-//
-// /* Prepare the execute response. */
-// final FileObject resultDir = manager.getResultDir( info.getId() );
-// resultFile = resultDir.resolveFile( "executeResponse.xml" );
-// final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
-// final StatusType status = WPS040ObjectFactoryUtilities.buildStatusType( "Process accepted.", true );
-// executeResponse = WPS040ObjectFactoryUtilities.buildExecuteResponseType( simulationIdentifier, status, m_dataInputs,
-    // m_outputDefinitions, null, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
-// }
-// catch( final IOException e )
-// {
-// throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-// }
-// catch( final SimulationException e )
-// {
-// throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-// }
-// catch( final OWSException e )
-// {
-// throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-// }
-// finally
-// {
-// if( resultFile != null )
-// try
-// {
-// resultFile.close();
-// }
-// catch( final FileSystemException e )
-// {
-// // gobble
-// }
-// }
-// }
-// else
-// {
-    m_executionResponse = WPSUtilities.callExecute( m_serviceEndpoint, m_identifier, dataInputs, m_outputDefinitions );
+    if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) )
+    {
+      FileObject resultFile = null;
+      try
+      {
+        /* Execute the simulation via a manager, so that more than one simulation can be run at the same time. */
+        final Execute execute = WPS040ObjectFactoryUtilities.buildExecute( simulationIdentifier, dataInputs, m_outputDefinitions, true, true );
+        final WPSSimulationManager manager = WPSSimulationManager.getInstance();
 
-    // TODO: check status, should now at least be 'accepted'
+        final ExecuteMediator executeMediator = new ExecuteMediator( execute );
+        final WPSSimulationInfo info = manager.startSimulation( executeMediator );
 
-    // }
-// }
-// catch( final CoreException e )
-// {
-// return e.getStatus();
-// }
+        /* Prepare the execute response. */
+        final FileObject resultDir = manager.getResultDir( info.getId() );
+        resultFile = resultDir.resolveFile( "executeResponse.xml" );
+        final String statusLocation = WPSUtilities.convertInternalToClient( resultFile.getURL().toExternalForm() );
+        final StatusType status = WPS040ObjectFactoryUtilities.buildStatusType( "Process accepted.", true );
+        m_executionResponse = WPS040ObjectFactoryUtilities.buildExecuteResponseType( simulationIdentifier, status, dataInputs, m_outputDefinitions, null, statusLocation, WPSUtilities.WPS_VERSION.V040.toString() );
+      }
+      catch( final IOException e )
+      {
+        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      }
+      catch( final SimulationException e )
+      {
+        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      }
+      catch( final OWSException e )
+      {
+        throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      }
+      finally
+      {
+        if( resultFile != null )
+          try
+          {
+            resultFile.close();
+          }
+          catch( final FileSystemException e )
+          {
+            // gobble
+          }
+      }
+    }
+    else
+    {
+      m_executionResponse = WPSUtilities.callExecute( m_serviceEndpoint, m_identifier, dataInputs, m_outputDefinitions );
+
+      // TODO: check status, should now at least be 'accepted'
+
+    }
 
     // TODO: move outside
 // final StatusType status = executeResponse.getStatus();
@@ -355,7 +355,7 @@ public class DefaultWPSProcess implements IWPSProcess
 // }
 
     /* If the user aborted the job. */
-    ProgressUtilities.worked( monitor, 100 );
+// ProgressUtilities.worked( monitor, 100 );
   }
 
   private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws CoreException
@@ -594,6 +594,8 @@ public class DefaultWPSProcess implements IWPSProcess
     // TODO: maybe check, if all desired outputs have been created??
 
     final Map<String, Object[]> result = new HashMap<String, Object[]>();
+    if( processOutputs == null )
+      return result;
 
     /* Collect all data for the client. */
     final List<IOValueType> ioValues = processOutputs.getOutput();
