@@ -110,9 +110,9 @@ public class AsynchronousWPSWatchdog
         else if( state.getProcessStarted() != null )
           m_observer.handleStarted( monitor, exState );
         else if( state.getProcessFailed() != null )
-          m_observer.handleFailed( exState );
+          return m_observer.handleFailed( exState );
         else if( state.getProcessSucceeded() != null )
-          m_observer.handleSucceeded( exState );
+          return m_observer.handleSucceeded( exState );
         else
           return m_observer.handleUnknownState( exState );
 
