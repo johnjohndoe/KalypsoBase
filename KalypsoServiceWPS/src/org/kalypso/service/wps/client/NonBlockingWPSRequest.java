@@ -283,7 +283,7 @@ public class NonBlockingWPSRequest
     // So the client can tell the server to release any resources.
 
     /* Monitor. */
-    monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.2" ), 200 ); //$NON-NLS-1$
+    monitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.4" ), 200 ); //$NON-NLS-1$
     KalypsoServiceWPSDebug.DEBUG.printf( "Checking for service URL ...\n" ); //$NON-NLS-1$
 
     /* Check, if we have a service endpoint. */
@@ -294,9 +294,6 @@ public class NonBlockingWPSRequest
     }
 
     /* Send the request. */
-    monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.NonBlockingWPSRequest.4" ) ); //$NON-NLS-1$
-    KalypsoServiceWPSDebug.DEBUG.printf( "Start the simulation ...\n" ); //$NON-NLS-1$
-
     ExecuteResponseType executeResponse;
     final CodeType simulationIdentifier = WPS040ObjectFactoryUtilities.buildCodeType( "", m_identifier ); //$NON-NLS-1$
 

@@ -237,15 +237,15 @@ public class WPSRequest
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
       final ProcessDescriptionType processDescription = getProcessDescription( monitor );
       final String title = processDescription.getTitle();
-      monitor.setTaskName( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       m_manager = VFSUtilities.getNewManager();
       while( run )
       {
         try
         {
-          Thread.sleep( 2000 );
-          executed += 2000;
+          Thread.sleep( 500 );
+          executed += 500;
         }
         catch( final InterruptedException e )
         {
