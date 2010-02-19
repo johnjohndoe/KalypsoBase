@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.service.wps.client.exceptions.WPSException;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
@@ -96,8 +97,9 @@ public class DefaultWpsObserver implements IWPSObserver
    * @see org.kalypso.service.wps.client.IWPSObserver#handleStarted(org.eclipse.core.runtime.IProgressMonitor,
    *      net.opengeospatial.wps.ExecuteResponseType)
    */
+  @SuppressWarnings("unused")
   @Override
-  public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState )
+  public void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException
   {
     // nothing to do
   }
