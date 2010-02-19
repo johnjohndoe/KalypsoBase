@@ -125,7 +125,7 @@ public class ProfilUtil
 
     return new FeatureComponent( itemDefinition, dictionaryUrn );
   }
-  
+
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
    * 
@@ -153,8 +153,8 @@ public class ProfilUtil
     for( final IRecord point : points )
     {
       final Object value = point.getValue( iProp );
-     // if( value == null )
-       // Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", pointProperty.getName(), iProp ) ); //$NON-NLS-1$
+      // if( value == null )
+      // Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", pointProperty.getName(), iProp ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -262,23 +262,27 @@ public class ProfilUtil
   {
     for( final IComponent property : properties )
     {
-
       final Double x1 = getDoubleValueFor( property.getId(), point1 );
       final Double x2 = getDoubleValueFor( property.getId(), point2 );
 
       if( x1.isNaN() || x2.isNaN() )
       {
-
         final int index = point1.getOwner().indexOf( property );
         final Object o1 = point1.getValue( index );
         final Object o2 = point2.getValue( index );
         if( o1 == null || o2 == null || o1.equals( o2 ) )
           continue;
       }
+
       if( Math.abs( x1 - x2 ) > property.getPrecision() )
         return false;
     }
     return true;
+  }
+
+  public static boolean compareValues( final Double x1, final Double x2, final double precision )
+  {
+    return Math.abs( x1 - x2 ) <= precision;
   }
 
   /**
@@ -651,34 +655,43 @@ public class ProfilUtil
     }
     return points2D;
   }
-  public static final Double getSectionMinValueFor(final IRecord[] section, final IComponent property )
+
+  public static final Double getSectionMinValueFor( final IRecord[] section, final IComponent property )
   {
-    if(section.length <1)return Double.NaN;
+    if( section.length < 1 )
+      return Double.NaN;
     final TupleResult owner = section[0].getOwner();
     final int index = owner.indexOfComponent( property );
-    if(index < 0)return Double.NaN ;
-    Double minValue = getDoubleValueFor( property, section[0]);
-    if(minValue.isNaN())return minValue;
-    for(final IRecord rec :section)
+    if( index < 0 )
+      return Double.NaN;
+    Double minValue = getDoubleValueFor( property, section[0] );
+    if( minValue.isNaN() )
+      return minValue;
+    for( final IRecord rec : section )
     {
-      minValue=Math.min( minValue, (Double)rec.getValue( index ) );
+      minValue = Math.min( minValue, (Double) rec.getValue( index ) );
     }
     return minValue;
   }
-  public static final Double getSectionMaxValueFor(final IRecord[] section, final IComponent property )
+
+  public static final Double getSectionMaxValueFor( final IRecord[] section, final IComponent property )
   {
-    if(section.length <1)return Double.NaN;
+    if( section.length < 1 )
+      return Double.NaN;
     final TupleResult owner = section[0].getOwner();
     final int index = owner.indexOfComponent( property );
-    if(index < 0)return Double.NaN ;
-    Double maxValue = getDoubleValueFor( property, section[0]);
-    if(maxValue.isNaN())return maxValue;
-    for(final IRecord rec :section)
+    if( index < 0 )
+      return Double.NaN;
+    Double maxValue = getDoubleValueFor( property, section[0] );
+    if( maxValue.isNaN() )
+      return maxValue;
+    for( final IRecord rec : section )
     {
-      maxValue=Math.max( maxValue, (Double)rec.getValue( index ) );
+      maxValue = Math.max( maxValue, (Double) rec.getValue( index ) );
     }
     return maxValue;
   }
+
   public static Double getMinValueFor( final IProfil profil, final IComponent property )
   {
     final IRecord minPoint = getMinPoint( profil, property );
@@ -1001,8 +1014,7 @@ public class ProfilUtil
   {
     final int distanceCompIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    IRecord prevPoint = null;
-    IRecord nextPoint = null;
+    IRecord lastGood = null;
     final List<IRecord> toInterpolate = new ArrayList<IRecord>();
 
     for( final IRecord point : profil.getPoints() )
@@ -1011,16 +1023,18 @@ public class ProfilUtil
 
       if( value == null )
       {
-        if( prevPoint != null )
+        if( lastGood != null )
           toInterpolate.add( point );
       }
       else
       {
         if( !toInterpolate.isEmpty() )
-          doInterpolate( distanceCompIndex, valueCompIndex, prevPoint, nextPoint, toInterpolate.toArray( new IRecord[toInterpolate.size()] ) );
+        {
+          final IRecord[] pointsToInterpolate = toInterpolate.toArray( new IRecord[toInterpolate.size()] );
+          doInterpolate( distanceCompIndex, valueCompIndex, lastGood, point, pointsToInterpolate );
+        }
 
-        prevPoint = point;
-        nextPoint = null;
+        lastGood = point;
         toInterpolate.clear();
       }
     }
