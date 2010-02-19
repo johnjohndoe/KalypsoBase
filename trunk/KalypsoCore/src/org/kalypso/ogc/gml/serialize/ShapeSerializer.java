@@ -423,7 +423,7 @@ public final class ShapeSerializer
         workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
 
         if( i % 100 == 0 )
-          ProgressUtilities.worked( moni, 1 );
+          ProgressUtilities.worked( moni, 100 );
       }
 
       return workspace;
