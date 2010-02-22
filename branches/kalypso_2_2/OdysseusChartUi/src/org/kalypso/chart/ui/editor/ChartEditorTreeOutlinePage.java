@@ -170,14 +170,20 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         if( elt instanceof IChartLayer )
         {
           // ((IChartLayer) event.getElement()).setVisible( event.getChecked() );
-          handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
+//          handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
+          
+          ((IChartLayer)elt).setVisible( event.getChecked() );
         }
         else
         {
           // children of layers cannot be unchecked
-          final Object treeParent = m_contentProvider.getParent( elt );
-          m_treeViewer.setChecked( elt, m_treeViewer.getChecked( treeParent ) );
+          // FIXME: still needed?
+//          final Object treeParent = m_contentProvider.getParent( elt );
+//          m_treeViewer.setChecked( elt, m_treeViewer.getChecked( treeParent ) );
+
+          m_treeViewer.update( elt, null );
         }
+        
       }
     };
     m_selectionChangeListener = new ISelectionChangedListener()
@@ -307,6 +313,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
     m_treeViewer.setContentProvider( m_contentProvider );
     m_treeViewer.setLabelProvider( new ChartTreeLabelProvider() );
+    
+    m_treeViewer.setCheckStateProvider( new ChartTreeCheckstateProvider() );
+    
     m_treeViewer.addCheckStateListener( m_checkStateListener );
 
     m_treeViewer.addSelectionChangedListener( m_selectionChangeListener );
@@ -368,9 +377,11 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
   {
     layer.setVisible( checked );
-
-    final Object[] children = m_contentProvider.getChildren( layer );
-    setChildChecked( children,checked );
+    
+    // FIXME: still neded?
+//    final Object[] children = m_contentProvider.getChildren( layer );
+//    setChildChecked( children,checked );
+    
 // if( checked )
 // setParentChecked( m_contentProvider.getParent( layer ), true );
   }
