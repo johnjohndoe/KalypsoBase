@@ -82,7 +82,7 @@ public interface IProfilLayerProvider
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 
-  public IAxis[] registerAxis(IMapperRegistry mapperRegistry );
+  public IAxis[] registerAxis( IMapperRegistry mapperRegistry );
 
   public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
 
