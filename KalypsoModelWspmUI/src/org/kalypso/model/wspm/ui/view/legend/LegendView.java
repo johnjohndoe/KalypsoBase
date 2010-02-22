@@ -117,7 +117,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     m_chartlegend = new ChartEditorTreeOutlinePage( chartModel );
 
     m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( chartModel ) );
-     m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
+    m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)

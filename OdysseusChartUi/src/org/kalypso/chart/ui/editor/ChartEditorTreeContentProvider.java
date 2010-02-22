@@ -54,7 +54,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
  */
 public class ChartEditorTreeContentProvider implements ITreeContentProvider
 {
-
   private IChartModel m_model;
 
   public ChartEditorTreeContentProvider( final IChartModel model )
@@ -188,6 +187,9 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       return;
     if( newInput instanceof IChartModel )
       m_model = (IChartModel) newInput;
+    
+// TODO: 
+    //    m_model.addListener( listener );
   }
 
   private final Object findParent( final Object parent, final IChartLayer[] childs, final IChartLayer child )
