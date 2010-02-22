@@ -13,16 +13,17 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 public class GenericLinearAxis extends AbstractAxis
 {
 
+  
+
   private IDataRange<Number> m_numericRange;
 
   private int m_height = 1;
 
-
   public GenericLinearAxis( final String id, final POSITION pos, Class< ? > clazz )
   {
     super( id, pos, clazz );
-    //set initial range, so we can prevent NPEs
-    setNumericRange( new DataRange<Number>(0,1));
+    // set initial range, so we can prevent NPEs
+    setNumericRange( new DataRange<Number>( 0, 1 ) );
   }
 
   public double numericToNormalized( final Number value )
@@ -138,7 +139,18 @@ public class GenericLinearAxis extends AbstractAxis
   {
     return m_height;
   }
-
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setLabel(java.lang.String)
+   */
+  @Override
+  public void setLabel( String label )
+  {
+    if( !getLabel().equals( label ) )
+    {
+      super.setLabel( label );
+      getEventHandler().fireMapperRangeChanged( this );
+    }
+  }
   public void setScreenHeight( int height )
   {
     m_height = height;
