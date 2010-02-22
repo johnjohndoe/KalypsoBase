@@ -121,7 +121,7 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
 
-  public static final String TYPE_PATH = "path"; //$NON-NLS-1$
+  public static final String TYPE_DESCRIPTION = "description"; //$NON-NLS-1$
 
   public static final String[] TYPES_ALL;
 

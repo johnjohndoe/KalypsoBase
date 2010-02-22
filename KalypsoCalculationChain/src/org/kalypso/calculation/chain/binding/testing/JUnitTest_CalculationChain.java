@@ -42,7 +42,7 @@ public class JUnitTest_CalculationChain extends TestCase
     final SimulationJobSpecification jobSpecification_NA_WSPM = new SimulationJobSpecification( "KalypsoModelConnector_NA_WSPM", calcCaseWSPM.getFullPath(), "Kalypso Model Connector NA WSPM" );
     jobSpecification_NA_WSPM.addInput( "NA_Model", "platform:/resource//01-Kollau-NA-PlanerClient/modell.gml", false );
     jobSpecification_NA_WSPM.addInput( "NA_ControlModel", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/.calculation", false );
-    jobSpecification_NA_WSPM.addInput( "NA_StatisticalReport", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/Ergebnisse/Aktuell/Report/nodesMax.zml", false );
+    jobSpecification_NA_WSPM.addInput( "NA_StatisticalReport", "platform:/resource//01-Kollau-NA-PlanerClient/Rechenvarianten/kz-2002_10_26/Ergebnisse/Aktuell/Report/statistics.zml", false );
     jobSpecification_NA_WSPM.addInput( "NA_RiverCode", "" );
     jobSpecification_NA_WSPM.addInput( "WSPM_RunoffEventID", "RunOffEvent1228494901140881" );
     jobSpecification_NA_WSPM.addInput( "WSPM_Model", "modell.gml", true );
