@@ -129,6 +129,10 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     /* open file dialog and choose profile files */
     final File dir = askForDir( shell );
+
+    // FIXME: where to get this flag from...?
+    final boolean wspwinFileNames = true;
+
     if( dir == null )
       return;
 
@@ -152,7 +156,8 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
             final String name = entry.getValue();
             monitor.subTask( name );
 
-            final File file = new File( dir, name );
+            final String fileName = wspwinFileNames ? createWspWinFileName( profile ) : name;
+            final File file = new File( dir, fileName );
 
             try
             {
@@ -179,6 +184,14 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       ErrorDialog.openError( shell, STR_DIALOG_TITLE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.5"), status ); //$NON-NLS-1$
     }
+  }
+
+  protected String createWspWinFileName( final IProfil profile )
+  {
+    final double station = profile.getStation();
+    final String stationString = String.format( "%.4f", station ).replace( '.', '+' ).replace( ' ', '0' );
+
+    return String.format( "%s.prf", stationString );
   }
 
   /**
