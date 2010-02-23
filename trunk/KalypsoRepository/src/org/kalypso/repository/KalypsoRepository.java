@@ -38,19 +38,19 @@ package org.kalypso.repository;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-public class KalypsoRepositoryPlugin extends Plugin
+public class KalypsoRepository extends Plugin
 {
   /**
    * The shared instance.
    */
-  private static KalypsoRepositoryPlugin PLUGIN;
+  private static KalypsoRepository PLUGIN;
 
   private RepositoryRegistry m_registry;
 
   /**
    * The constructor.
    */
-  public KalypsoRepositoryPlugin( )
+  public KalypsoRepository( )
   {
     super();
 
@@ -80,7 +80,7 @@ public class KalypsoRepositoryPlugin extends Plugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoRepositoryPlugin getDefault( )
+  public static KalypsoRepository getDefault( )
   {
     return PLUGIN;
   }

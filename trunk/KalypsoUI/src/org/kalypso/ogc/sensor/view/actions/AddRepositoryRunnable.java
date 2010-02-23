@@ -45,7 +45,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -61,7 +60,7 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AddRepositoryRunnable implements Runnable
 {
@@ -82,12 +81,12 @@ public class AddRepositoryRunnable implements Runnable
   {
     final ListDialog dlg = new ListDialog( m_shell );
     dlg.setLabelProvider( new ChooseRepositoryLabelProvider() );
-    dlg.setContentProvider( new ArrayContentProvider() );
+    dlg.setContentProvider( new RepositoryArrayContentProvider() );
     dlg.setTitle( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.0") ); //$NON-NLS-1$
 
     try
     {
-      dlg.setInput( RepositoriesExtensions.retrieveExtensions() );
+      dlg.setInput( RepositoriesExtensions.retrieveFactories() );
 
       if( dlg.open() != Window.OK )
         return;

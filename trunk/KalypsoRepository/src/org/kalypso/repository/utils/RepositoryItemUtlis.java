@@ -53,6 +53,12 @@ import org.kalypso.repository.RepositoryException;
  */
 public final class RepositoryItemUtlis
 {
+  private static final int PARAMETER_START_BORDER = 4;
+
+  public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_";
+
+  public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
+
   private RepositoryItemUtlis( )
   {
 
@@ -244,5 +250,58 @@ public final class RepositoryItemUtlis
       return true;
 
     return false;
+  }
+
+  public static boolean isZrxpItem( final String identifier )
+  {
+    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
+  }
+
+  public static boolean isZrxpItem( final IRepositoryItem item )
+  {
+    return isZrxpItem( item.getIdentifier() );
+  }
+
+  public static String getStationKennziffer( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length >= 3 )
+      return parts[2];
+
+    return null;
+  }
+
+  public static boolean isEqualStationKennziffer( final String id1, final String id2 )
+  {
+    final String station1 = getStationKennziffer( id1 );
+    final String station2 = getStationKennziffer( id2 );
+
+    return StringUtilities.isEqualIgnoreCase( station1, station2 );
+  }
+
+  public static boolean isEqualType( final String id1, final String id2 )
+  {
+    final String type1 = getParameterType( id1 );
+    final String type2 = getParameterType( id2 );
+
+    return StringUtilities.isEqualIgnoreCase( type1, type2 );
+  }
+
+  /**
+   * @return parameter from identifier
+   */
+  private static String getParameterType( final String identifier )
+  {
+    final String[] parts = identifier.split( "\\." );
+    if( parts.length < PARAMETER_START_BORDER )
+      return null;
+
+    final StringBuffer parameter = new StringBuffer();
+    for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
+    {
+      parameter.append( parts[i] + "." );
+    }
+
+    return StringUtilities.chomp( parameter.toString() );
   }
 }
