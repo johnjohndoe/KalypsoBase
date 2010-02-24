@@ -153,7 +153,10 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
   {
     final IViewPart vp = getSite().getPage().findView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
     if( vp != null && vp instanceof LayerView )
+    {
       ((LayerView) vp).updatePanel( m_chart.getChart() );
+      ((LayerView) vp).setPartName( String.format( "Station km %10.4f", m_chart.getProfil().getStation() ) );
+    }
   }
 
   /**
@@ -171,7 +174,7 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     bodyLayout.marginWidth = 0;
 
     m_composite.getBody().setLayout( bodyLayout );
-    
+
     updateChartLegend();
   }
 
@@ -309,10 +312,10 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
 
       if( m_chartlegend == null )
         return;
-      
 
       final IChartModel cm = chartView.getChart().getChartModel();
-     
+
+      setPartName( String.format( "Station km %10.4f", m_chart.getProfilChartView().getProfil().getStation() ) );
       for( final IChartLayer layer : cm.getLayerManager().getLayers() )
       {
         if( layer.isActive() )
