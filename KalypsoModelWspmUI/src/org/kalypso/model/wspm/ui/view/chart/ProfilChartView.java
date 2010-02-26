@@ -171,6 +171,8 @@ public class ProfilChartView implements IChartPart, IProfilListener
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     gD.exclude = true;
     m_chartComposite.setLayoutData( gD );
+    m_chartComposite.getChartModel().setHideUnusedAxes( true );
+
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
