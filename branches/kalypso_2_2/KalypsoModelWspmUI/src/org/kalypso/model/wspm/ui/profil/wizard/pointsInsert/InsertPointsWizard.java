@@ -63,12 +63,14 @@ public class InsertPointsWizard extends Wizard
 
   public InsertPointsWizard( final IProfil profile )
   {
-    m_profile = profile;
 
+    m_profile = profile;
+    if( m_profile == null )
+      return;
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), "InsertPointsWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( wizardSettings );
 
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.InsertPointsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.InsertPointsWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
