@@ -155,7 +155,8 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
     if( vp != null && vp instanceof LayerView )
     {
       ((LayerView) vp).updatePanel( m_chart.getChart() );
-      ((LayerView) vp).setPartName( String.format( "Station km %10.4f", m_chart.getProfil().getStation() ) );
+      if( m_chart.getProfil() != null )
+        ((LayerView) vp).setPartName( String.format( "Station km %10.4f", m_chart.getProfil().getStation() ) );
     }
   }
 

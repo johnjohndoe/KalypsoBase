@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -81,6 +83,17 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   public final Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_control = doCreateControl( parent, toolkit );
+    
+    m_control.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( DisposeEvent e )
+      {
+        AbstractProfilView.this.dispose();
+        m_control.removeDisposeListener( this );
+      }
+    });
+    
     return m_control;
   }
 
