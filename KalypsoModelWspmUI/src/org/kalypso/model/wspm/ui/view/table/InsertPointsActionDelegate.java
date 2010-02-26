@@ -41,12 +41,14 @@
 package org.kalypso.model.wspm.ui.view.table;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.InsertPointsWizard;
-
 
 /**
  * @author Belger
@@ -60,13 +62,24 @@ public class InsertPointsActionDelegate extends ActionDelegate implements IViewA
    */
   public void init( final IViewPart view )
   {
-    m_view = (TableView)view;
+    m_view = (TableView) view;
   }
 
   @Override
   public void run( final IAction action )
   {
-    final InsertPointsWizard wizard = new InsertPointsWizard( m_view.getProfil());
+    final Shell viewShell = m_view.getViewSite().getShell();
+
+    final IProfil profile = m_view.getProfil();
+
+    if( profile == null )
+    {
+      // should never happen
+      MessageDialog.openError( viewShell, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return;
+    }
+
+    final InsertPointsWizard wizard = new InsertPointsWizard( m_view.getProfil() );
     final WizardDialog dialog = new WizardDialog( m_view.getViewSite().getShell(), wizard );
     dialog.open();
   }

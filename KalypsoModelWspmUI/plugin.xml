@@ -39,7 +39,6 @@
                  label="%com.bce.profil.eclipse.view.table.insertPoints"
                  menubarPath="points"
                  style="push"
-                 toolbarPath="points"
                  tooltip="%com.bce.profil.eclipse.view.table.insertPoints.tooltip"/>
            <action
                  class="org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate"
