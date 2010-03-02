@@ -50,7 +50,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 public interface IAdvancedEditWidgetGeometry
 {
-  Point getBasePoint( );
+  Point getCurrentPoint( );
 
   Feature getFeature( );
 

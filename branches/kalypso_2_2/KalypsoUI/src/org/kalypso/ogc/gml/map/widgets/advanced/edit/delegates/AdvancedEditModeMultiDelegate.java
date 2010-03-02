@@ -78,7 +78,6 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
 
   public void paint( final Graphics g )
   {
-
     final GM_Point gmp = getWidget().getCurrentGmPoint();
     if( gmp == null )
       return;
@@ -180,5 +179,11 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate.0"); //$NON-NLS-1$
   }
 
+  public double getRange( )
+  {
+    final double width = getWidget().getIMapPanel().getBoundingBox().getWidth();
+    final double factor = width / 10;
 
+    return factor;
+  }
 }

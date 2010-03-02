@@ -48,16 +48,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import org.kalypso.i18n.Messages;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidget;
@@ -79,7 +78,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * @author Dirk Kuch
@@ -141,7 +139,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), mapGeometries.keySet().toArray( new Geometry[] {} ), VERTEX );
 
       /* find underlying geometry */
-      final IAdvancedEditWidgetGeometry underlying = findUnderlyingGeometry( mapGeometries, jtsPoint );
+      final IAdvancedEditWidgetGeometry underlying = DelegateHelper.findUnderlyingGeometry( mapGeometries, jtsPoint );
       if( underlying == null )
       {
         m_lastPossibleVertexPoints = null;
@@ -192,12 +190,11 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
         continue;
       }
 
-      final double range = getRange();
 
       final Polygon polygon = (Polygon) geometry;
       final LineString ring = polygon.getExteriorRing();
 
-      final Point resnapped = MapUtilities.snap( ring, snapped, SNAP_TYPE.SNAP_TO_LINE, range / 32 );
+      final Point resnapped = MapUtilities.snap( ring, snapped, SNAP_TYPE.SNAP_TO_LINE, getRange() );
       if( resnapped != null )
       {
         // System.out.println( String.format( "distance %f", resnapped.distance( snapped ) ) );
@@ -221,59 +218,10 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
 
     final Polygon polygon = (Polygon) geometry;
     final LineString ring = polygon.getExteriorRing();
-    final double range = getRange();
 
-    final Point snapped = MapUtilities.snap( ring, underlying.getBasePoint(), SNAP_TYPE.SNAP_TO_LINE, range / 32 );
+    final Point snapped = MapUtilities.snap( ring, underlying.getCurrentPoint(), SNAP_TYPE.SNAP_TO_LINE, getRange() );
 
     return snapped;
-  }
-
-  private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
-  {
-    final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
-    for( final Entry<Geometry, Feature> entry : entries )
-    {
-      try
-      {
-        final Geometry geometry = entry.getKey();
-        final Geometry intersection = geometry.intersection( point );
-
-        if( !intersection.isEmpty() )
-          return new IAdvancedEditWidgetGeometry()
-          {
-            @Override
-            public Point getBasePoint( )
-            {
-              return point;
-            }
-
-            @Override
-            public Feature getFeature( )
-            {
-              return entry.getValue();
-            }
-
-            @Override
-            public Geometry getUnderlyingGeometry( )
-            {
-              return geometry;
-            }
-          };
-      }
-      catch( final TopologyException e )
-      {
-        // nothing to do
-        // System.out.println( "JTS TopologyException" );
-      }
-    }
-
-    return null;
-  }
-
-  public double getRange( )
-  {
-    final IMapPanel mapPanel = m_widget.getIMapPanel();
-    return mapPanel.getCurrentScale() * 4;
   }
 
   /**
@@ -352,4 +300,11 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
     }
   }
 
+  public double getRange( )
+  {
+    final double width = m_widget.getIMapPanel().getBoundingBox().getWidth();
+    final double factor = width / 10;
+
+    return factor;
+  }
 }
