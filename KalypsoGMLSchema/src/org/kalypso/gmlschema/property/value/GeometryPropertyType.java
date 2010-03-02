@@ -34,7 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -63,7 +63,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
 
   private final static IMarshallingTypeHandler TH_GMOBJECT = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.GML3, "_Geometry" ) ); //$NON-NLS-1$
   
-  public GeometryPropertyType( final GMLSchema gmlSchema, final Element element, final QName[] geometries, final Occurs occurs, final IFeatureType featureType )
+  public GeometryPropertyType( final IGMLSchema gmlSchema, final Element element, final QName[] geometries, final Occurs occurs, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
 

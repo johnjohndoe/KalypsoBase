@@ -89,7 +89,7 @@ public class FeatureContentTypeFromRestriction extends FeatureContentType
       {
         final QName base = m_restriction.getBase();
         final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
+        final GMLSchema schema = (GMLSchema) reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_restrictionBase = schema.getFeatureContentTypeFor( complexType );
       }

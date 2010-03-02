@@ -37,7 +37,7 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -55,9 +55,9 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class FeatureTypeVisitor implements FeatureVisitor
 {
-  private final QName m_typename;
-  private final long m_fullID;
-  private final long m_localID;
+  private final QNameUnique m_typename;
+
+  private final QNameUnique m_localTypename;
 
   /** Falls true, werden auch features acceptiert, welche den angegebenen Typ substituieren */
   private final boolean m_acceptIfSubstituting;
@@ -66,19 +66,14 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   public FeatureTypeVisitor( final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
   {
-    m_fullID = ft.getFullID();
-    m_localID = ft.getLocalID();
-    m_visitor = visitor;
-    m_typename = ft.getQName();
-    m_acceptIfSubstituting = acceptIfSubstituting;
+    this( visitor, ft.getQName(), ft.getLocalQName(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final FeatureVisitor visitor, final QName typename, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final QNameUnique typename, final QNameUnique localQName, final boolean acceptIfSubstituting )
   {
-    m_fullID = QNameUtilities.getFullID( typename );
-    m_localID = QNameUtilities.getLocalID( typename );
     m_visitor = visitor;
     m_typename = typename;
+    m_localTypename = localQName;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
@@ -109,11 +104,11 @@ public class FeatureTypeVisitor implements FeatureVisitor
       return false;
 
     final IFeatureType featureType = f.getFeatureType();
-    if (m_localID == featureType.getLocalID()) 
+    if( m_localTypename == featureType.getLocalQName() )
       return true;
     
     if( m_acceptIfSubstituting )
-      return GMLSchemaUtilities.substitutes( featureType, m_typename, m_fullID, m_localID );
+      return GMLSchemaUtilities.substitutes( featureType, m_typename, m_localTypename );
 
     return false;
   }

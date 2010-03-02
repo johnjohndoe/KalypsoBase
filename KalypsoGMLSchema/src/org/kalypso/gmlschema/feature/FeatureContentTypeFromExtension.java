@@ -115,7 +115,7 @@ public class FeatureContentTypeFromExtension extends FeatureContentType
       {
         final QName base = m_extension.getBase();
         final ComplexTypeReference reference = getGMLSchema().resolveComplexTypeReference( base );
-        final GMLSchema schema = reference.getGMLSchema();
+        final GMLSchema schema = (GMLSchema) reference.getGMLSchema();
         final ComplexType complexType = reference.getComplexType();
         m_extensionBase = schema.getFeatureContentTypeFor( complexType );
       }

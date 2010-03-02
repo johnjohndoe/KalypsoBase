@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * Empty implementation of {@link IGMLSchema}, used by {@link org.kalypso.gmlschema.feature.CustomFeatureType}.
@@ -118,6 +119,15 @@ public class EmptyGMLSchema implements IGMLSchema
   public IGMLSchema[] getAdditionalSchemas( )
   {
     return new IGMLSchema[0];
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.IGMLSchema#resolveComplexTypeReference(javax.xml.namespace.QName)
+   */
+  @Override
+  public ComplexTypeReference resolveComplexTypeReference( final QName qName )
+  {
+    return null;
   }
 
 }

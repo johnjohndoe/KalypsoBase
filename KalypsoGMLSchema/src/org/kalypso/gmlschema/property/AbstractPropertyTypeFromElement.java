@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -52,14 +52,14 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
 
   private final IAnnotation m_annotation;
 
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final QName qName, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
+  public AbstractPropertyTypeFromElement( final IGMLSchema gmlSchema, final QName qName, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
   {
     super( gmlSchema, element, qName );
     m_occurs = occurs;
     m_annotation = AnnotationUtilities.createAnnotation( qName, featureType, element, reference );
   }
 
-  public AbstractPropertyTypeFromElement( final GMLSchema gmlSchema, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
+  public AbstractPropertyTypeFromElement( final IGMLSchema gmlSchema, final IFeatureType featureType, final Element element, final Occurs occurs, final ElementReference reference )
   {
     super( gmlSchema, element, createQName( gmlSchema, element ) );
     m_occurs = occurs;

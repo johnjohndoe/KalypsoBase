@@ -40,7 +40,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -55,15 +55,16 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
 {
   private final Feature m_featureToBind;
 
-  private final QName m_qnameToBind;
+  private final QNameUnique m_qnameToBind;
 
   public AbstractFeatureBinder( final Feature featureToBind, final QName qnameToBind )
   {
     m_featureToBind = featureToBind;
-    m_qnameToBind = qnameToBind;
+    m_qnameToBind = QNameUnique.create( qnameToBind );
+    final QNameUnique qnameLocal = m_qnameToBind.asLocal();
 
     // REMARK: first check, then create error message... Always producing the error message costs very much performance!
-    if( !GMLSchemaUtilities.substitutes( featureToBind.getFeatureType(), qnameToBind, QNameUtilities.getFullID( qnameToBind ), QNameUtilities.getLocalID( qnameToBind ) ) )
+    if( !GMLSchemaUtilities.substitutes( featureToBind.getFeatureType(), m_qnameToBind, qnameLocal ) )
     {
       final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
       Assert.isLegal( false, msg );

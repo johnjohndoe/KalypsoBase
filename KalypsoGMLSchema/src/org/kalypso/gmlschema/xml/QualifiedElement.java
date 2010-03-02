@@ -29,12 +29,11 @@
  */
 package org.kalypso.gmlschema.xml;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.IGMLSchema;
 
 /**
@@ -49,33 +48,43 @@ public class QualifiedElement
     return new QName( targetNamespace, name );
   }
 
-  private final GMLSchema m_gmlSchema;
+  private final IGMLSchema m_gmlSchema;
 
   private final Element m_element;
 
-  private final QName m_qName;
+  private final QNameUnique m_qName;
 
-  private long m_fullIDHash;
+  private final QNameUnique m_localQName;
+
+// private final long m_fullIDHash;
   
-  public QualifiedElement( final GMLSchema gmlSchema, final Element element, final QName qName )
+  public QualifiedElement( final IGMLSchema gmlSchema, final Element element, final QName qName )
   {
     m_gmlSchema = gmlSchema;
     m_element = element;
-    m_qName = qName;
-    m_fullIDHash = QNameUtilities.getFullID( qName );
+
+    m_qName = QNameUnique.create( qName );
+    m_localQName = QNameUnique.create( XMLConstants.NULL_NS_URI, qName.getLocalPart() );
+
+// m_fullIDHash = QNameUtilities.getFullID( qName );
   }
 
-  public final GMLSchema getGMLSchema( )
+  public final IGMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }
 
-  /**
-   * <b>do not use QName as key, it is qualified, but not unique ! </b>
-   */
-  public QName getQName( )
+  public QNameUnique getQName( )
   {
     return m_qName;
+  }
+
+  /**
+   * Returns the {@link QName} of this element as localPart (i.e. namepspace is empty)
+   */
+  public QNameUnique getLocalQName( )
+  {
+    return m_localQName;
   }
 
   /**
@@ -85,15 +94,6 @@ public class QualifiedElement
   public String getName( )
   {
     return m_qName.getLocalPart();
-  }
-
-  /**
-   * @deprecated No more used, so we can delete it?
-   */
-  @Deprecated
-  public String getNamespace( )
-  {
-    return m_qName.getNamespaceURI();
   }
 
   public Element getElement( )
@@ -113,13 +113,13 @@ public class QualifiedElement
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof QualifiedElement ){
+    if( obj instanceof QualifiedElement )
+    {
       final QualifiedElement lEl = ((QualifiedElement) obj);
-      if( m_fullIDHash == lEl.m_fullIDHash )
-          return true;
+      return m_qName == lEl.m_qName;
+// if( m_fullIDHash == lEl.m_fullIDHash )
+// return true;
     }
-//    if( obj instanceof QualifiedElement )
-//      return ObjectUtils.equals( m_qName, ((QualifiedElement) obj).m_qName );
 
     return false;
   }

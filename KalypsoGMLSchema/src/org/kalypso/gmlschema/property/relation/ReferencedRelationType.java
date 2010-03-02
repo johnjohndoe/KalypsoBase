@@ -43,6 +43,7 @@ package org.kalypso.gmlschema.property.relation;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -59,7 +60,7 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
 
   private final ElementReference m_reference;
 
-  public ReferencedRelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final ElementReference reference, final IFeatureType featureType )
+  public ReferencedRelationType( final IGMLSchema gmlSchema, final Element element, final Occurs occurs, final ElementReference reference, final IFeatureType featureType )
   {
     // minOccurs and maxOccurs are used from local definition (according to XMLSCHEMA-Specs)
     super( gmlSchema, element.getRef(), featureType, element, occurs, reference );
@@ -116,7 +117,8 @@ public class ReferencedRelationType extends AbstractPropertyTypeFromElement impl
     switch( initializeRun )
     {
       case INITIALIZE_RUN_FIRST:
-        m_globalRT = (IRelationType) m_reference.getGMLSchema().getBuildedObjectFor( m_reference.getElement() );
+        final GMLSchema gmlSchema = (GMLSchema) m_reference.getGMLSchema();
+        m_globalRT = (IRelationType) gmlSchema.getBuildedObjectFor( m_reference.getElement() );
         if( m_globalRT == null )
           throw new GMLSchemaException( "Unable to finde referenced IRelationType for: " + getQName() ); //$NON-NLS-1$
 

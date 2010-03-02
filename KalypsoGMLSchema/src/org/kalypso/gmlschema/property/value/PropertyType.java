@@ -73,7 +73,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
 
   private final QName m_featureQName;
 
-  public PropertyType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
+  public PropertyType( final IGMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
 
@@ -85,7 +85,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
    */
   public void init( final int initializeRun ) throws GMLSchemaException
   {
-    final GMLSchema gmlSchema = getGMLSchema();
+    final GMLSchema gmlSchema = (GMLSchema) getGMLSchema();
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
@@ -101,7 +101,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
           else
           {
             final TypeReference reference = gmlSchema.resolveTypeReference( type );
-            final GMLSchema schema = reference.getGMLSchema();
+            final GMLSchema schema = (GMLSchema) reference.getGMLSchema();
             if( reference instanceof SimpleTypeReference )
             {
               final SimpleType referencedSimpleType = ((SimpleTypeReference) reference).getSimpleType();

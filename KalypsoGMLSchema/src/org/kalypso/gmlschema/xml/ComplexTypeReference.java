@@ -30,7 +30,7 @@
 package org.kalypso.gmlschema.xml;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 
 /**
  * representation of a complex type reference to a xml schema complex type
@@ -39,10 +39,9 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public class ComplexTypeReference extends TypeReference
 {
-
   private final ComplexType m_complexType;
 
-  public ComplexTypeReference( final GMLSchema gmlSchema, final ComplexType complexType )
+  public ComplexTypeReference( final IGMLSchema gmlSchema, final ComplexType complexType )
   {
     super( gmlSchema );
     m_complexType = complexType;

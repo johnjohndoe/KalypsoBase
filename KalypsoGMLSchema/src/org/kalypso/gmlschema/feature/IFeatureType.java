@@ -31,6 +31,7 @@ package org.kalypso.gmlschema.feature;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.IInitialize;
@@ -86,18 +87,12 @@ public interface IFeatureType extends IInitialize
 
   public IFeatureType getSubstitutionGroupFT( );
 
-  public QName getQName();
+  public QNameUnique getQName( );
 
-  public long getFullID();
-  public long getLocalID();
+  public QNameUnique getLocalQName( );
 
-
-  /**
-   * @return namespace
-   * @deprecated use getQName
-   */
-  @Deprecated
-  public String getNamespace( );
+// public long getFullID();
+// public long getLocalID();
 
   // TODO: remove this method from interface, declare it private in implementation
   public int getPropertyPosition( final IPropertyType propertyType );
