@@ -633,7 +633,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       }
 
       /* Should a filter be added? */
-      Filter filter = comboType.getFilter();
+      final Filter filter = comboType.getFilter();
 
       /* The filter. */
       ViewerFilter viewerFilter = null;
@@ -647,11 +647,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           id = "org.kalypso.ui.featureview.filters.defaultFilter"; //$NON-NLS-1$
 
         /* Get the filter with this id. */
-        IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
-        for( IConfigurationElement element : elements )
+        final IExtensionRegistry registry = Platform.getExtensionRegistry();
+        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewFilter" ); //$NON-NLS-1$
+        for( final IConfigurationElement element : elements )
         {
-          String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
+          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           if( id.equals( elementId ) )
           {
             try
@@ -983,6 +983,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           listener.modifyText( e );
         }
       } );
+
   }
 
   /** Traverse the tree feature controls adds all found feature view types to the given collection */

@@ -179,5 +179,11 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate.0"); //$NON-NLS-1$
   }
 
+  public double getRange( )
+  {
+    final double width = getWidget().getIMapPanel().getBoundingBox().getWidth();
+    final double factor = width / 32;
 
+    return factor;
+  }
 }

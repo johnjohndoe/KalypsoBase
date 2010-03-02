@@ -236,4 +236,9 @@ public class GeometryPainter
     g.setColor( original );
     
   }
+
+  public static void highlightPoints( final Graphics graphics, final IMapPanel mapPanel, final Geometry geometry, final IPointHighLighter highlighter )
+  {
+    highlightPoints( graphics, mapPanel, new Geometry[] { geometry }, highlighter );
+  }
 }

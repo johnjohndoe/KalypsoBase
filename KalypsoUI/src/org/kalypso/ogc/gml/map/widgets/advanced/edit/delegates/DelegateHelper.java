@@ -38,21 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.advanced.edit;
+package org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetGeometry;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedEditWidgetGeometry
+public class DelegateHelper
 {
-  Point getCurrentPoint( );
+  public static IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
+  {
+    final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
+    for( final Entry<Geometry, Feature> entry : entries )
+    {
+      try
+      {
+        final Geometry geometry = entry.getKey();
+        final Geometry intersection = geometry.intersection( point );
 
-  Feature getFeature( );
+        if( !intersection.isEmpty() )
+          return new IAdvancedEditWidgetGeometry()
+          {
+            @Override
+            public Point getCurrentPoint( )
+            {
+              return point;
+            }
 
-  Geometry getUnderlyingGeometry( );
+            @Override
+            public Feature getFeature( )
+            {
+              return entry.getValue();
+            }
+
+            @Override
+            public Geometry getUnderlyingGeometry( )
+            {
+              return geometry;
+            }
+          };
+      }
+      catch( final TopologyException e )
+      {
+        // nothing to do
+        // System.out.println( "JTS TopologyException" );
+      }
+    }
+
+    return null;
+  }
+
 }
