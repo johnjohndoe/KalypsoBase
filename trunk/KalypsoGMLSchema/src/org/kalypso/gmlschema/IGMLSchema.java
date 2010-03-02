@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.visitor.IGMLSchemaVisitor;
+import org.kalypso.gmlschema.xml.ComplexTypeReference;
 
 /**
  * @author Gernot Belger
@@ -73,4 +74,7 @@ public interface IGMLSchema
   public IFeatureType[] getAllFeatureTypes( );
 
   public IGMLSchema[] getAdditionalSchemas( );
+
+  public ComplexTypeReference resolveComplexTypeReference( final QName qName ) throws GMLSchemaException;
+
 }

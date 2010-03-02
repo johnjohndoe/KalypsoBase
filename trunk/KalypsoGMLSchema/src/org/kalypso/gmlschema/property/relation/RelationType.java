@@ -34,6 +34,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.AbstractPropertyTypeFromElement;
@@ -48,7 +49,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
 {
   private IRelationContentType m_relationContentType;
 
-  public RelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
+  public RelationType( final IGMLSchema gmlSchema, final Element element, final Occurs occurs, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
   }
@@ -64,7 +65,7 @@ public class RelationType extends AbstractPropertyTypeFromElement implements IRe
 
         final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
         final ComplexType complexType = complexTypeReference.getComplexType();
-        final GMLSchema schema = complexTypeReference.getGMLSchema();
+        final GMLSchema schema = (GMLSchema) complexTypeReference.getGMLSchema();
         m_relationContentType = (RelationContentType) schema.getBuildedObjectFor( complexType );
         if( m_relationContentType == null )
           throw new UnsupportedOperationException();

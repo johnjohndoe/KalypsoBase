@@ -119,7 +119,7 @@ public abstract class FeatureContentType implements IFeatureContentType
               if( reference != null )
               {
                 final Element element = reference.getElement();
-                final GMLSchema schema = reference.getGMLSchema();
+                final GMLSchema schema = (GMLSchema) reference.getGMLSchema();
                 buildedObject = schema.getBuildedObjectFor( element );
               }
             }

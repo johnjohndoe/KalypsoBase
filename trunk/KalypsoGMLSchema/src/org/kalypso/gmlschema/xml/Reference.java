@@ -29,7 +29,7 @@
  */
 package org.kalypso.gmlschema.xml;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 
 /**
  * representation of a reference to a xml schema fragment
@@ -38,14 +38,14 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public abstract class Reference
 {
-  private final GMLSchema m_gmlSchema;
+  private final IGMLSchema m_gmlSchema;
 
-  public Reference( final GMLSchema gmlSchema )
+  public Reference( final IGMLSchema gmlSchema )
   {
     m_gmlSchema = gmlSchema;
   }
 
-  public GMLSchema getGMLSchema( )
+  public IGMLSchema getGMLSchema( )
   {
     return m_gmlSchema;
   }

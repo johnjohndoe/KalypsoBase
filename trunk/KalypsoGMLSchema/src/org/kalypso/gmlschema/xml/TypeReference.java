@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.xml;
 
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.IGMLSchema;
 
 /**
  * QUESTION: what is the difference to Reference?
@@ -49,7 +49,7 @@ import org.kalypso.gmlschema.GMLSchema;
  */
 public abstract class TypeReference extends Reference
 {
-  public TypeReference( final GMLSchema gmlSchema )
+  public TypeReference( final IGMLSchema gmlSchema )
   {
     super( gmlSchema );
   }

@@ -41,7 +41,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.xb.xsdschema.ComplexType;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -70,8 +69,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 {
   private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
-  private final long m_fullID;
-  private final long m_localID;
+// private final long m_fullID;
+// private final long m_localID;
   
   private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
@@ -98,9 +97,8 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     super( gmlSchema, element, QualifiedElement.createQName( gmlSchema, element ) );
 
     final QName qname = getQName();
-
-    m_fullID = QNameUtilities.getFullID( qname );
-    m_localID = QNameUtilities.getLocalID( qname );
+// m_fullID = QNameUtilities.getFullID( qname );
+// m_localID = QNameUtilities.getLocalID( qname );
 
     final IAnnotation annotation = AnnotationUtilities.annotationFromProperties( gmlSchema.getResourceBundle(), new QName[] { qname }, qname.getLocalPart() );
     if( annotation == null )
@@ -139,18 +137,18 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   {
     final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
     final ComplexType complexType = complexTypeReference.getComplexType();
-    final GMLSchema schema = complexTypeReference.getGMLSchema();
+    final GMLSchema schema = (GMLSchema) complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
 
     // initialize substitution group
     final QName substitutionGroup = getElement().getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = getGMLSchema().resolveElementReference( substitutionGroup );
+      final ElementReference substitutesReference = ((GMLSchema) getGMLSchema()).resolveElementReference( substitutionGroup );
       if( substitutesReference == null )
         throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup ); //$NON-NLS-1$
 
-      final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
+      final GMLSchema substiututesGMLSchema = (GMLSchema) substitutesReference.getGMLSchema();
       final Element substitutesElement = substitutesReference.getElement();
       if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
         m_substituteFT = null;
@@ -408,16 +406,16 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     return m_annotation;
   }
 
-  @Override
-  public long getFullID()
-  {
-    return m_fullID;
-  }
-  
-  @Override
-  public long getLocalID()
-  {
-    return m_localID;
-  }
+// @Override
+// public long getFullID()
+// {
+// return m_fullID;
+// }
+//  
+// @Override
+// public long getLocalID()
+// {
+// return m_localID;
+// }
 
 }

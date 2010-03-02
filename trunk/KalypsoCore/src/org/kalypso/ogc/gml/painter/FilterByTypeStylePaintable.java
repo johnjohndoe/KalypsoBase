@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,20 +58,15 @@ public class FilterByTypeStylePaintable implements IStylePaintable
 {
   private final IStylePaintable m_paintable;
 
-  private final QName m_featureTypeName;
+  private final QNameUnique m_featureTypeName;
 
-  private final long m_fullID;
-
-  private final long m_localID;
+  private final QNameUnique m_localFeatureTypeName;
 
   public FilterByTypeStylePaintable( final IStylePaintable paintable, final QName featureTypeName )
   {
-    // use hashes for faster GMLSchemaUtilities.substitutes call
-    m_fullID = QNameUtilities.getFullID( featureTypeName );
-    m_localID = QNameUtilities.getLocalID( featureTypeName );
-
     m_paintable = paintable;
-    m_featureTypeName = featureTypeName;
+    m_featureTypeName = QNameUnique.create( featureTypeName );
+    m_localFeatureTypeName = m_featureTypeName.asLocal();
   }
 
   public GM_Envelope getBoundingBox( )
@@ -92,7 +87,7 @@ public class FilterByTypeStylePaintable implements IStylePaintable
   public boolean shouldPaintFeature( final Feature feature )
   {
     /* Only paint features which applies to the given qname */
-    if( !GMLSchemaUtilities.substitutes( feature.getFeatureType(), m_featureTypeName, m_fullID, m_localID ) )
+    if( !GMLSchemaUtilities.substitutes( feature.getFeatureType(), m_featureTypeName, m_localFeatureTypeName ) )
       return false;
 
     return m_paintable.shouldPaintFeature( feature );

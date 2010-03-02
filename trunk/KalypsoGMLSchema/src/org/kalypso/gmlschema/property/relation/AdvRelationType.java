@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.IInitialize;
 import org.kalypso.gmlschema.feature.FeatureType;
@@ -56,7 +57,7 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
 
   private IAnnotation m_annotation;
 
-  public AdvRelationType( final GMLSchema gmlSchema, final Element element, final Occurs occurs, final QName advReferenziertesElement, final IFeatureType featureType )
+  public AdvRelationType( final IGMLSchema gmlSchema, final Element element, final Occurs occurs, final QName advReferenziertesElement, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
     m_advReferenziertesElement = advReferenziertesElement;
@@ -70,16 +71,15 @@ public class AdvRelationType extends AbstractPropertyTypeFromElement implements 
     switch( initializeRun )
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
-
-        final ElementReference reference = getGMLSchema().resolveElementReference( m_advReferenziertesElement );
-        final GMLSchema schema = reference.getGMLSchema();
+        final GMLSchema gmlSchema = (GMLSchema) getGMLSchema();
+        final ElementReference reference = gmlSchema.resolveElementReference( m_advReferenziertesElement );
+        final GMLSchema referencedSchema = (GMLSchema) reference.getGMLSchema();
         final Element element = reference.getElement();
-        final Object buildedObject = schema.getBuildedObjectFor( element );
+        final Object buildedObject = referencedSchema.getBuildedObjectFor( element );
         if( buildedObject instanceof FeatureType )
           m_ftRelationTarget = (IFeatureType) buildedObject;
         else
           throw new UnsupportedOperationException();
-
         break;
     }
   }

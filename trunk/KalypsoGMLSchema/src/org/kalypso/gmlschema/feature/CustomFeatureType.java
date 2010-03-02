@@ -43,15 +43,14 @@ package org.kalypso.gmlschema.feature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -61,24 +60,20 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.xml.ElementReference;
+import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * This is a FeatureType created programatically.
  *
  * @author doemming, kurzbach
  */
-public class CustomFeatureType implements IFeatureType
+public class CustomFeatureType extends QualifiedElement implements IFeatureType
 {
-  private final QName m_qName;
-  
-  private final long m_fullID;
-  private final long m_localID;
+  private final Map<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
 
-  private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
+  private final Map<String, IPropertyType> m_locatPartMap = new HashMap<String, IPropertyType>();
 
-  private final HashMap<String, IPropertyType> m_locatPartMap = new HashMap<String, IPropertyType>();
-
-  private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
+  private final Map<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
 
   private final IPropertyType[] m_properties;
 
@@ -86,9 +81,7 @@ public class CustomFeatureType implements IFeatureType
 
   private final int m_defaultGeometryPosition;
 
-  private final IGMLSchema m_schema;
-
-  private final DefaultAnnotation m_annotation;
+  private final IAnnotation m_annotation;
 
   private IFeatureType m_substitutionGroupFT = null;
 
@@ -110,7 +103,7 @@ public class CustomFeatureType implements IFeatureType
         final ElementReference substitutesReference = ((GMLSchema)schema).resolveElementReference( substitutionGroup );
         if( substitutesReference == null )
           return;
-        final GMLSchema substiututesGMLSchema = substitutesReference.getGMLSchema();
+        final GMLSchema substiututesGMLSchema = (GMLSchema) substitutesReference.getGMLSchema();
         final Element substitutesElement = substitutesReference.getElement();
         if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
           return;
@@ -135,12 +128,8 @@ public class CustomFeatureType implements IFeatureType
   @Deprecated
   public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
-    m_schema = schema;
-    m_qName = qName;
+    super( schema, null, qName );
 
-    m_fullID = QNameUtilities.getFullID( qName );
-    m_localID = QNameUtilities.getLocalID( qName );
-    
     m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     int geoPos = -1;
     final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
@@ -171,11 +160,12 @@ public class CustomFeatureType implements IFeatureType
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
    */
+  @Override
   @SuppressWarnings("deprecation")
   @Deprecated
   public String getName( )
   {
-    return m_qName.getLocalPart();
+    return getQName().getLocalPart();
   }
 
   /**
@@ -235,37 +225,7 @@ public class CustomFeatureType implements IFeatureType
   {
     return m_substitutionGroupFT;
   }
-
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getQName()
-   */
-  public QName getQName( )
-  {
-    return m_qName;
-  }
-
-  @Override
-  public long getFullID()
-  {
-    return m_fullID;
-  }
   
-  @Override
-  public long getLocalID()
-  {
-    return m_localID;
-  }
-  
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getNamespace()
-   */
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public String getNamespace( )
-  {
-    return m_qName.getNamespaceURI();
-  }
-
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getDefaultGeometryPropertyPosition()
    */
@@ -312,55 +272,10 @@ public class CustomFeatureType implements IFeatureType
   }
 
   /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getGMLSchema()
-   */
-  public IGMLSchema getGMLSchema( )
-  {
-    return m_schema;
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return m_qName.toString();
-  }
-
-  /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getAnnotation()
    */
   public IAnnotation getAnnotation( )
   {
     return m_annotation;
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof CustomFeatureType ){
-      final CustomFeatureType lEl = ((CustomFeatureType) obj);
-      if (m_fullID == 0 || lEl.m_fullID == 0)
-        return false;
-      if( m_fullID == lEl.m_fullID )
-        return true;
-    }
-    else if( obj instanceof IFeatureType ){
-      return ObjectUtils.equals( m_qName, ((IFeatureType) obj).getQName() );
-    }
-    return false;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    return m_qName.hashCode();
   }
 }

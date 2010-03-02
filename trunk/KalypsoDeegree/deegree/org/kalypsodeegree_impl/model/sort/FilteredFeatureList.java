@@ -45,6 +45,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,7 +76,8 @@ public class FilteredFeatureList implements FeatureList
   public FilteredFeatureList( final FeatureList original, final QName filterQName, final boolean acceptIfSubstituting )
   {
     m_original = original;
-    m_filterVisitor = new FeatureTypeVisitor( null, filterQName, acceptIfSubstituting );
+    final QNameUnique uniqueFilterQName = QNameUnique.create( filterQName );
+    m_filterVisitor = new FeatureTypeVisitor( null, uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
   }
 
   /**
@@ -360,11 +362,10 @@ public class FilteredFeatureList implements FeatureList
 
     // only remove new elements, which do not match type
     final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    List< Object > lListActualResult = new ArrayList< Object >();
+    final List< Object > lListActualResult = new ArrayList< Object >();
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
-    for( final Iterator< ? > sIt = sublist.iterator(); sIt.hasNext(); )
+    for( final Object lObjNext : sublist )
     {
-      final Object lObjNext = sIt.next();
       final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), lObjNext );
       if( m_filterVisitor.matchesType( f ) )
       {
@@ -383,7 +384,7 @@ public class FilteredFeatureList implements FeatureList
   private List<Feature> filterList( final List<?> originalList )
   {
     final List<Feature> filteredList = new LinkedList<Feature>();
-    for( Object object : originalList )
+    for( final Object object : originalList )
     {
       final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), object );
       if( m_filterVisitor.matchesType( f ) )
@@ -468,7 +469,7 @@ public class FilteredFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
-  public List<Feature> searchFeatures( GM_Object geometry )
+  public List<Feature> searchFeatures( final GM_Object geometry )
   {
     return filterList( m_original.searchFeatures( geometry ) );
   }
