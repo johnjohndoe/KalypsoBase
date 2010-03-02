@@ -50,5 +50,8 @@
     <!-- TODO: move to gml-ui plug-in or similar -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.gml.common:Image:featureview:default" uri="org.kalypso.gml.common.Image.gft" />
  
+    <!-- org.kalypso.model.wspmprofile.assignment -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile.assignment:Assignment:uiproperties:default" uri="org.kalypso.model.wspmprofile.assignment.Assignment.properties" />
+ 
 </catalog:catalog>
 
