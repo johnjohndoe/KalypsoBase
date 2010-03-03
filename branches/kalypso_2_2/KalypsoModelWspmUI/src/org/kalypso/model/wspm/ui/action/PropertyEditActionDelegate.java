@@ -91,27 +91,31 @@ public class PropertyEditActionDelegate extends ActionDelegate
 
     final Shell shell = event.display.getActiveShell();
     final Object fe = m_selection.getFirstElement();
-    CommandableWorkspace ws=null;
+    CommandableWorkspace ws = null;
 
     if( fe instanceof FeatureAssociationTypeElement )
     {
-      final  FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
       final IRelationType rt = fate.getAssociationTypeProperty();
       final Feature parentFeature = fate.getParentFeature();
       if( rt.isList() )
+      {
         foundProfiles.addAll( (FeatureList) parentFeature.getProperty( rt ) );
+        selectedProfiles.addAll( (FeatureList) parentFeature.getProperty( rt ) );
+      }
       else
       {
         foundProfiles.add( (Feature) parentFeature.getProperty( rt ) );
+        selectedProfiles.add( (Feature) parentFeature.getProperty( rt ) );
       }
-      ws=m_selection.getWorkspace( parentFeature );
+      ws = m_selection.getWorkspace( parentFeature );
     }
     else if( fe instanceof Feature )
     {
       final IRelationType rt = ((Feature) fe).getParentRelation();
       final Feature parentFeature = ((Feature) fe).getOwner();
       selectedProfiles.addAll( m_selection.toList() );
-      ws=m_selection.getWorkspace( parentFeature );
+      ws = m_selection.getWorkspace( parentFeature );
       if( rt.isList() )
         foundProfiles.addAll( (FeatureList) parentFeature.getProperty( rt ) );
       else
@@ -122,10 +126,10 @@ public class PropertyEditActionDelegate extends ActionDelegate
 
     if( foundProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
-    final IWizard propertyEditWizard = new PropertyEditWizard(ws, foundProfiles, selectedProfiles );
+    final IWizard propertyEditWizard = new PropertyEditWizard( ws, foundProfiles, selectedProfiles );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, propertyEditWizard );
