@@ -21,7 +21,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
    * Calculates the ticks shown for the given Axis *
    * 
    * @param minDisplayInterval
-   *            interval division should stop when intervals become smaller than this value
+   *          interval division should stop when intervals become smaller than this value
    */
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
@@ -64,6 +64,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
     int rangepow = 0;
     // Normalisierte Range
+
     double normrange = numericRange;
     if( normrange != 0 )
     {
@@ -99,15 +100,23 @@ public class GenericNumberTickCalculator implements ITickCalculator
       interval = minDisplayInterval.doubleValue();
     }
 
+    // to fit the range into axissize we need a small distance here
+//    if(normmin == normmax)
+//    {
+//      normmin*= 0.9999;
+//      normmax*= 1.0001;
+//    }
+    
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
     // 3 w�rde z.B. schnell krumme werte erzeugen
     final LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
 
     goodDivisors.add( 5 );
     goodDivisors.add( 2 );
+      
 
-    ticks.add( new Double( normmin ) );
-    ticks.add( new Double( normmax ) );
+    ticks.add( new Double(normmin ));
+    ticks.add( new Double( normmax )) ;
 
     if( normmid == 1 )
     {
@@ -131,8 +140,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
    * divisions have to have a larger range than the param interval *
    * 
    * @param minDisplayInterval
-   *            if value is greater than 0, the interval division should stop when intervals become smaller than this
-   *            value
+   *          if value is greater than 0, the interval division should stop when intervals become smaller than this
+   *          value
    * @param axis
    */
   private static void findBetweens( final double from, final double to, final double interval, final List<Integer> divisors, final SortedSet<Number> ticks, final Number minDisplayInterval, final IAxis axis )
