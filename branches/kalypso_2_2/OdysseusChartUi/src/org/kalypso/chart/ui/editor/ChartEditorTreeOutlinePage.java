@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -80,7 +81,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 {
   protected ICheckStateListener m_checkStateListener = null;
 
-  protected ChartEditorTreeContentProvider m_contentProvider = null;
+  protected ChartEditorTreeContentProvider m_contentProvider;
+
+  private final ChartTreeLabelProvider m_labelProvider;
 
   private final ILayerManagerEventListener m_eventListener;
 
@@ -90,21 +93,21 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected final IChartModel m_model;
 
+
   public ChartEditorTreeOutlinePage( final IChartModel model )
   {
     m_model = model;
 
+    m_labelProvider = new ChartTreeLabelProvider();
     m_contentProvider = new ChartEditorTreeContentProvider( model );
     m_eventListener = new AbstractLayerManagerEventListener()
     {
-
       /**
        * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
        */
       @Override
       public void onLayerVisibilityChanged( IChartLayer layer )
       {
-
         if( layer instanceof IExpandableChartLayer )
         {
           for( final IChartLayer l : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
@@ -114,7 +117,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         }
         m_treeViewer.setChecked( layer, layer.isVisible() );
         m_treeViewer.refresh( layer );
-
       }
 
       /**
@@ -124,11 +126,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerAdded( final IChartLayer layer )
       {
-        // updateControl();
-        m_treeViewer.update( m_contentProvider.getParent( layer ), null );
+//        m_treeViewer.update( m_contentProvider.getParent( layer ), null );
         refreshItems( m_contentProvider.getParent( layer ) );
-// m_treeViewer.setChecked( layer, true );
-// handleCheckStateChanged( layer, true );
       }
 
       /**
@@ -159,8 +158,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       public void onLayerRemoved( final IChartLayer layer )
       {
         m_treeViewer.remove( layer );
+        m_labelProvider.clearLayer(layer);
       }
-
     };
     m_checkStateListener = new ICheckStateListener()
     {
@@ -169,21 +168,12 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         final Object elt = event.getElement();
         if( elt instanceof IChartLayer )
         {
-          // ((IChartLayer) event.getElement()).setVisible( event.getChecked() );
-//          handleCheckStateChanged( (IChartLayer) event.getElement(), event.getChecked() );
-          
           ((IChartLayer)elt).setVisible( event.getChecked() );
         }
         else
         {
-          // children of layers cannot be unchecked
-          // FIXME: still needed?
-//          final Object treeParent = m_contentProvider.getParent( elt );
-//          m_treeViewer.setChecked( elt, m_treeViewer.getChecked( treeParent ) );
-
           m_treeViewer.update( elt, null );
         }
-        
       }
     };
     m_selectionChangeListener = new ISelectionChangedListener()
@@ -312,7 +302,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer = new CheckboxTreeViewer( tree );
 
     m_treeViewer.setContentProvider( m_contentProvider );
-    m_treeViewer.setLabelProvider( new ChartTreeLabelProvider() );
+    m_treeViewer.setLabelProvider( m_labelProvider );
     
     m_treeViewer.setCheckStateProvider( new ChartTreeCheckstateProvider() );
     
@@ -369,21 +359,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     return m_selectionChangeListener;
   }
 
-  public CheckboxTreeViewer getTreeViewer( )
-  {
-    return m_treeViewer;
-  }
-
   protected void handleCheckStateChanged( final IChartLayer layer, final boolean checked )
   {
     layer.setVisible( checked );
-    
-    // FIXME: still neded?
-//    final Object[] children = m_contentProvider.getChildren( layer );
-//    setChildChecked( children,checked );
-    
-// if( checked )
-// setParentChecked( m_contentProvider.getParent( layer ), true );
   }
 
   protected void handleSelectionChanged( final IChartLayer layer )
@@ -394,13 +372,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 
   protected void refreshItems( final Object parent )
   {
-    // final Object[] o = m_treeViewer.getCheckedElements();
     m_treeViewer.refresh( parent );
-// if (parent instanceof IChartLayer)
-// {
-// m_treeViewer.setChecked( parent, ((IChartLayer)parent).isVisible() );
-// }
-    // m_treeViewer.setCheckedElements( o );
   }
 
   /**
@@ -436,19 +408,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_checkStateListener = checkStateListener;
   }
 
-  final private void setChildChecked( final Object[] children ,final boolean checked)
-  {
-    for( final Object child : children )
-    {
-      if( child instanceof IChartLayer )
-      {
-        final IChartLayer l = (IChartLayer) child;
-       l.setVisible( checked );
-        setChildChecked( m_contentProvider.getChildren( child ),checked );
-      }
-    }
-  }
-
   public void setContentProvider( final ChartEditorTreeContentProvider contentProvider )
   {
     m_contentProvider = contentProvider;
@@ -460,16 +419,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   public void setFocus( )
   {
     m_treeViewer.getControl().setFocus();
-  }
-
-  final private void setParentChecked( final Object parent, final boolean checked )
-  {
-// if( parent == null )
-// return;
-// if( parent instanceof IChartLayer )
-// ((IChartLayer) parent).setVisible( checked );
-// m_treeViewer.setChecked( parent, checked );
-// setParentChecked( m_contentProvider.getParent( parent ), checked );
   }
 
   /**
@@ -496,4 +445,13 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     m_treeViewer.refresh();
   }
 
+  /**
+   * Selects ands shows the given layer.<br> If needed, the tree is expanded to show the element.
+   */
+  public void selectLayer( final IChartLayer layer )
+  {
+    m_treeViewer.setExpandedElements( new Object[] { layer } );
+    m_treeViewer.expandToLevel( 2 );
+    setSelection( new StructuredSelection( layer ) );
+  }
 }
