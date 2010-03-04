@@ -42,9 +42,6 @@ package org.kalypso.chart.ui.view;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -83,33 +80,6 @@ public class ChartOutlinePopupDialog extends PopupDialog
       da.setLayout( new GridLayout( 1, true ) );
       final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getAdapter( IContentOutlinePage.class );
       cop.createControl( da );
-
-      final TreeViewer tv = cop.getTreeViewer();
-      tv.addTreeListener( new ITreeViewerListener()
-      {
-
-        public void treeCollapsed( TreeExpansionEvent event )
-        {
-          // TODO: need to resize dialog window according to new tree size
-          // parent.getParent().setSize( 200, 200 );
-
-          // das bringt nix;
-          // parent.setSize(200,200);
-
-          // parent.layout();
-          // tv.getTree().layout();
-        }
-
-        public void treeExpanded( TreeExpansionEvent event )
-        {
-          // TODO: need to resize dialog window according to new tree size
-          // parent.getParent().setSize( 400, 200 );
-          // parent.layout();
-          // da.layout();
-          // tv.getTree().layout();
-        }
-
-      } );
 
       setTitleText( m_chartPart.getChartComposite().getChartModel().getTitle() );
       return da;
