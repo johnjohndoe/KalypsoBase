@@ -173,7 +173,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_chartComposite.setLayoutData( gD );
     m_chartComposite.getChartModel().setHideUnusedAxes( true );
 
-
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
       /**
@@ -473,7 +472,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_profile != null )
     {
       m_profile.removeProfilListener( this );
-
     }
 
     final IProfil old = m_profile;
@@ -484,16 +482,18 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
       lm.dispose();
-
-      return;
     }
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+    else
     {
-      m_profile.addProfilListener( this );
-      m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
-      ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
-      updateLayer();
+      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      {
+        m_profile.addProfilListener( this );
+        m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
+        ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
+        updateLayer();
+      }
     }
+    
     fireProfilChanged( old );
   }
 
