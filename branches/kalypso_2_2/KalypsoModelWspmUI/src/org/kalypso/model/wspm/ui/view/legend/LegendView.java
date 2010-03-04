@@ -45,7 +45,6 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
@@ -151,12 +150,19 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
 
   protected final void fireSelectionChanged( )
   {
+    final IProfil profil = m_chart.getProfil();
+    updatePartName( profil );
+
     final IViewPart vp = getSite().getPage().findView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
-    if( vp != null && vp instanceof LayerView )
+    if( vp instanceof LayerView )
     {
-      ((LayerView) vp).updatePanel( m_chart.getChart() );
-      if( m_chart.getProfil() != null )
-        ((LayerView) vp).setPartName( String.format( "Station km %10.4f", m_chart.getProfil().getStation() ) );
+      final LayerView layerView = (LayerView) vp;
+      layerView.updatePanel( m_chart.getChart() );
+      // FIXME: ugly! code copy/past and also: the LayerView should set its own state, not from outside!
+      if( profil == null )
+        layerView.setPartName( String.format( "No profile selected" ) );
+      else
+        layerView.setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
     }
   }
 
@@ -316,20 +322,29 @@ public class LegendView extends ViewPart implements IAdapterEater<ChartView>, IP
 
       final IChartModel cm = chartView.getChart().getChartModel();
 
-      setPartName( String.format( "Station km %10.4f", m_chart.getProfilChartView().getProfil().getStation() ) );
+      final ProfilChartView profilChartView = m_chart.getProfilChartView();
+      final IProfil profil = profilChartView.getProfil();
+      updatePartName( profil );
+
       for( final IChartLayer layer : cm.getLayerManager().getLayers() )
       {
         if( layer.isActive() )
         {
-          m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
-          m_chartlegend.getTreeViewer().expandToLevel( 2 );
-          m_chartlegend.setSelection( new StructuredSelection( layer ) );
+          m_chartlegend.selectLayer( layer );
           break;
         }
       }
 
       m_composite.layout();
     }
+  }
+
+  private void updatePartName( IProfil profil )
+  {
+    if( profil == null )
+      setPartName( String.format( "No profile selected" ) );
+    else
+      setPartName( String.format( "Station km %10.4f", profil.getStation() ) );
   }
 
 }
