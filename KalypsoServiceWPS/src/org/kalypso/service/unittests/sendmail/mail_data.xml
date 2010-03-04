@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="SendMailV1.0">
+  <!-- Input -->
+  <input id="SENDER" path="" relativeToCalcCase="false" />
+  <input id="RECEIVER" path="" relativeToCalcCase="false" />
+  <input id="TYPE" path="" relativeToCalcCase="false" />
+  <input id="TITLE" path="" relativeToCalcCase="false" />
+  <input id="TEXT" path="" relativeToCalcCase="false" />
+
+  <!-- Output -->
+  <output id="RESULT" relativeToCalcCase="false" />
+
+  <!-- Output des CalcJobs -->
+  <output id="SimulationLog" path="simulation.log" relativeToCalcCase="false" />
+</modeldata>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="org.kalypso.service.wps"
+         name="WPS"
+         point="org.kalypso.service.ogc.ogcService">
+      <service
+            class="org.kalypso.service.wps.server.WPSService"
+            serviceName="WPS">
+         <parameter parameterName="Service"/>
+         <parameter parameterName="Request"/>
+         <parameter parameterName="Version"/>
+      </service>
+   </extension>
+   <extension
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.literals.LiteralsJob"
+            typeID="LiteralsV1.0">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.sendmail.SendMailJob"
+            typeID="SendMailV1.0">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.service.calcjobs.complex.ComplexJob"
+            typeID="org.kalypso.service.wps.complexJob">
+      </simulation>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.kalypso.service.wps.commands"
+            description="Monitors an asynchronous process execution"
+            id="org.kalypso.service.wps.commands.startExecutionMonitor"
+            name="Start execution monitor">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any">
+         <command
+               commandId="org.kalypso.service.wps.commands.startExecutionMonitor"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.kalypso.service.wps.client.StartExecutionMonitorJob"
+            commandId="org.kalypso.service.wps.commands.startExecutionMonitor">
+         <enabledWhen>
+            <iterate>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        property="org.eclipse.core.resources.name"
+                        value="*executeResponse.xml">
+                  </test>
+               </adapt></iterate>
+         </enabledWhen>
+      </handler>
+   </extension>
+</plugin>
