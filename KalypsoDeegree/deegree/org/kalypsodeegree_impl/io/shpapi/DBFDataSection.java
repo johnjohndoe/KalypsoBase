@@ -100,7 +100,7 @@ public class DBFDataSection
    * dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set at the
    * constructor.
    */
-  public void setRecord( ArrayList recData ) throws DBaseException
+  public void setRecord( final ArrayList recData ) throws DBaseException
   {
     setRecord( data.size(), recData );
   }
@@ -111,9 +111,9 @@ public class DBFDataSection
    * at the constructor. index specifies the location of the retrieved record in the datasection. if an invalid index is
    * used an exception will be thrown
    */
-  public void setRecord( int index, ArrayList recData ) throws DBaseException
+  public void setRecord( final int index, final ArrayList recData ) throws DBaseException
   {
-    ByteContainer datasec = new ByteContainer( recordlength );
+    final ByteContainer datasec = new ByteContainer( recordlength );
 
     if( (index < 0) || (index > data.size()) )
       throw new DBaseException( "invalid index: " + index );
@@ -233,12 +233,14 @@ public class DBFDataSection
 
   private void writeEntry( final ByteContainer datasec, final int offset, final int length, final byte[] b, final byte fillByte ) throws DBaseException
   {
-    if( b.length > length )
-      throw new DBaseException( "Entry contains too many characters " + new String( b ) );
+// if( b.length > length )
+// throw new DBaseException( "Entry contains too many characters " + new String( b ) );
 
-    for( int j = 0; j < b.length; j++ )
+    final int lengthToWrite = Math.min( b.length, length );
+
+    for( int j = 0; j < lengthToWrite; j++ )
       datasec.data[offset + j] = b[j];
-    for( int j = b.length; j < length; j++ )
+    for( int j = lengthToWrite; j < length; j++ )
       datasec.data[offset + j] = fillByte;
   }
 
@@ -249,7 +251,7 @@ public class DBFDataSection
   {
 
     // allocate memory for all datarecords on one array + 1 byte
-    byte[] outdata = new byte[data.size() * recordlength + 1];
+    final byte[] outdata = new byte[data.size() * recordlength + 1];
 
     // set the file terminating byte
     outdata[outdata.length - 1] = 0x1A;
@@ -260,7 +262,7 @@ public class DBFDataSection
     for( int i = 0; i < data.size(); i++ )
     {
 
-      ByteContainer bc = data.get( i );
+      final ByteContainer bc = data.get( i );
 
       for( int k = 0; k < recordlength; k++ )
       {
@@ -290,7 +292,7 @@ class ByteContainer
 
   public byte[] data = null;
 
-  public ByteContainer( int size )
+  public ByteContainer( final int size )
   {
 
     data = new byte[size];
