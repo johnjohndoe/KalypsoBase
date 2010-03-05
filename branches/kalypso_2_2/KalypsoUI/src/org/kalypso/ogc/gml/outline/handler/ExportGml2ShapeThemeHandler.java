@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.outline.handler;
 
 import java.io.File;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -58,6 +60,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -98,7 +101,8 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
       return Status.CANCEL_STATUS;
     }
 
-    final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( theme.getFeatureType() );
+    final IFeatureType type = resolveFeatureType( theme );
+    final Gml2ShapeConverter converter = Gml2ShapeConverter.createDefault( type );
 
     // examine what we got and ask user
     // TODO: only use file extension which make sense (dbf OR shp)
@@ -151,5 +155,29 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     return Status.OK_STATUS;
   }
 
+  /**
+   * @hack special handling for wfs-themes!
+   */
+  private IFeatureType resolveFeatureType( final IKalypsoFeatureTheme theme )
+  {
+    final IFeatureType featureType = theme.getFeatureType();
+    final QName qname = featureType.getQName();
+    if( Feature.QNAME_FEATURE.equals( qname ) )
+    {
+      final FeatureList list = theme.getFeatureList();
+      if( list.size() == 0 )
+        return featureType;
+
+      final Object object = list.get( 0 );
+      if( object instanceof Feature )
+      {
+        final Feature feature = (Feature) object;
+
+        return feature.getFeatureType();
+      }
+    }
+
+    return featureType;
+  }
 
 }
