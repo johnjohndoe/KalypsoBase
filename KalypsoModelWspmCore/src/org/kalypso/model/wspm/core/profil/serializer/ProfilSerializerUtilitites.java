@@ -90,50 +90,6 @@ public class ProfilSerializerUtilitites
   }
 
   /**
-   * Writes profiles into a file.
-   * 
-   * @param file
-   *          The file to write into
-   * @param profile
-   *          This profiles gets written
-   */
-  public static void writeProfile( final IProfilSink sink, final IProfil[] profiles, final File file ) throws IOException
-  {
-    Writer writer = null;
-    try
-    {
-      writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
-      sink.write( profiles, writer );
-      writer.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
-  }
-
-// /** Read a file via the given profile source and creates profiles from it. */
-// public static IProfil[] readProfile( final IProfilSource source, final File csvFile, final String profilType ) throws
-  // IOException
-// {
-// final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
-//
-// Reader fileReader = null;
-// try
-// {
-// fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( csvFile ) ) );
-// source.read( profiles, fileReader );
-// fileReader.close();
-//
-// return profiles.toArray(new IProfil[]{});
-// }
-// finally
-// {
-// IOUtils.closeQuietly( fileReader );
-// }
-// }
-
-  /**
    * Writes a single profile into a file.
    * 
    * @param file
@@ -182,7 +138,6 @@ public class ProfilSerializerUtilitites
   /** Read a file via the given profile source and creates a profile from it. */
   public static IProfil readProfile( final IProfilSource source, final InputStream stream, final String profilType ) throws IOException
   {
-
     Reader fileReader = null;
     try
     {

@@ -116,7 +116,7 @@ public class ValidateProfilesWizard extends Wizard
     setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ProfilesChooserPage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ), m_profiles, new Object[0], m_selectedProfiles.toArray(), 1 ); //$NON-NLS-1$ 
+    m_profileChooserPage = new ProfilesChooserPage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ), m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, false ); //$NON-NLS-1$ 
   }
 
   /**
@@ -203,7 +203,7 @@ public class ValidateProfilesWizard extends Wizard
                   marker.delete();
               }
             }
-            catch( CoreException e )
+            catch( final CoreException e )
             {
               monitor.done();
               return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), e.getLocalizedMessage() );
@@ -225,7 +225,7 @@ public class ValidateProfilesWizard extends Wizard
               }
               final IMarker[] markers = collector.getMarkers();
 
-              for( IMarker marker : markers )
+              for( final IMarker marker : markers )
               {
                 final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, null );
 
@@ -295,7 +295,7 @@ public class ValidateProfilesWizard extends Wizard
         {
           m_workspace.postCommand( new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[] {} ) ) );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }

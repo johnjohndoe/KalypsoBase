@@ -49,10 +49,9 @@ import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
  */
 public class ProfilesChooserPage extends ArrayChooserPage
 {
-
-  public ProfilesChooserPage( final String message, final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect )
+  public ProfilesChooserPage( final String message, final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final boolean useDialogSettings )
   {
-    super( chooseables, selected, checked, numToSelect, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ), null, true );//$NON-NLS-1$//$NON-NLS-2$
+    super( chooseables, selected, checked, numToSelect, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ), null, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
     setLabelProvider( new GMLLabelProvider() );
     setMessage( message );
   }

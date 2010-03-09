@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.core.profil.serializer;
 import java.io.IOException;
 import java.io.Writer;
 
-
 /**
  * @author kimwerner
  */

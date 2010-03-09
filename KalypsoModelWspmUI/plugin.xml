@@ -225,26 +225,12 @@
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
          <menu
-               id="org.kalypso.model.wspm.ui.menu.export"
-               label="%org.kalypso.model.wspm.ui.menu.export"
-               path="additions">
-            <groupMarker name="exports"/>
-            <separator name="additions"/>
-         </menu>
-         <menu
                id="org.kalypso.model.wspm.ui.menu.import"
                label="%org.kalypso.model.wspm.ui.menu.import"
                path="additions">
             <groupMarker name="imports"/>
             <separator name="additions"/>
          </menu>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
-               id="KalypsoModelWspmUI.action1"
-               label="%org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
-               menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
@@ -267,14 +253,6 @@
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ExportProfileActionDelegate"
-               id="org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
-               label="%org.kalypso.model.wspm.ui.action.ExportProfileCsvAction"
-               menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.ExportProfileCsvAction.description">
-         </action>
       </objectContribution>
  
         <objectContribution
@@ -594,5 +572,54 @@
 			</with>
 		</definition>
 	</extension>
+
+<extension point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+       <toolbar
+             id="org.kalypso.model.wspm.ui.toolbars.ProfileToolbar">
+         <command
+               commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
+               icon="icons/elcl16/profil_from_dem.gif"
+               style="radio"
+               tooltip="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM">
+            <visibleWhen checkEnabled="false">
+                <and>
+                    <with variable="activeEditorId">
+                        <equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+                    </with>
+                    <!--reference definitionId="mapContext" /-->
+                    <with variable="activeMapPanel">
+                        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+                    </with>
+                </and>
+            </visibleWhen>
+         </command>
+       </toolbar>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.kalypso.ui.editor.GmlEditor?after=additions">
+       <menu
+             icon="icons/elcl16/import_profiles.gif"
+             id="org.kalypso.model.wspm.ui.profileImport"
+             label="Import"
+             mnemonic="i">
+          <separator
+                name="additions"
+                visible="false">
+          </separator>
+       </menu>
+       <menu
+             icon="icons/elcl16/export_profiles.gif"
+             id="org.kalypso.model.wspm.ui.profileExport"
+             label="Export"
+             mnemonic="e">
+          <separator
+                name="additions"
+                visible="false">
+          </separator>
+       </menu>
+    </menuContribution>
+  </extension>
 
 </plugin>
