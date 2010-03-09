@@ -40,8 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
+import java.io.File;
+
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.kalypso.contribs.eclipse.i18n.Messages;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 public class FileChooserDelegateSave extends FileChooserDelegateFile
 {
@@ -71,5 +75,24 @@ public class FileChooserDelegateSave extends FileChooserDelegateFile
   protected String updateFileName( final String filename, final String suffix )
   {
     return FileChooserGroup.setSuffix( filename, suffix );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateFile#validate(java.io.File)
+   */
+  @Override
+  public IMessageProvider validate( final File file )
+  {
+    final IMessageProvider validate = super.validate( file );
+    if( validate != null )
+      return validate;
+
+    if( !file.exists() )
+      return null;
+
+    if( file.isDirectory() )
+      return new MessageProvider( "Die angegebene Datei ist ein Verzeichnis.", IMessageProvider.ERROR );
+
+    return new MessageProvider( "Die angegebene Datei existiert bereits und wird überschrieben.", IMessageProvider.WARNING );
   }
 }
