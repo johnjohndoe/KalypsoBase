@@ -36,7 +36,7 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -66,24 +66,24 @@ public class DBFDataSection
 
   private final ArrayList<ByteContainer> data = new ArrayList<ByteContainer>();
 
-  private final String m_charset;
+  private final Charset m_charset;
 
   /**
    * @param charset
    *          name of the charset string value will be encoded with.
    * @see String#getBytes(java.lang.String)
    */
-  public DBFDataSection( final FieldDescriptor[] fieldDesc, final String charset )
+  public DBFDataSection( final FieldDescriptor[] fieldDesc, final Charset charset )
   {
     m_fieldDesc = fieldDesc;
     m_charset = charset;
 
     // calculate length of the data section
     recordlength = 0;
-    for( int i = 0; i < this.m_fieldDesc.length; i++ )
+    for( final FieldDescriptor element : this.m_fieldDesc )
     {
 
-      byte[] fddata = this.m_fieldDesc[i].getFieldDescriptor();
+      byte[] fddata = element.getFieldDescriptor();
 
       recordlength += fddata[16];
 
@@ -100,7 +100,7 @@ public class DBFDataSection
    * dBase file. The method gets the data type of each field in recData from fieldDesc wich has been set at the
    * constructor.
    */
-  public void setRecord( ArrayList recData ) throws DBaseException
+  public void setRecord( final ArrayList recData ) throws DBaseException
   {
     setRecord( data.size(), recData );
   }
@@ -111,9 +111,9 @@ public class DBFDataSection
    * at the constructor. index specifies the location of the retrieved record in the datasection. if an invalid index is
    * used an exception will be thrown
    */
-  public void setRecord( int index, ArrayList recData ) throws DBaseException
+  public void setRecord( final int index, final ArrayList recData ) throws DBaseException
   {
-    ByteContainer datasec = new ByteContainer( recordlength );
+    final ByteContainer datasec = new ByteContainer( recordlength );
 
     if( (index < 0) || (index > data.size()) )
       throw new DBaseException( "invalid index: " + index );
@@ -145,16 +145,7 @@ public class DBFDataSection
           else if( m_charset == null )
             b = ((String) recdata).getBytes();
           else
-          {
-            try
-            {
-              b = ((String) recdata).getBytes( m_charset );
-            }
-            catch( final UnsupportedEncodingException e )
-            {
-              throw new DBaseException( "Unsupported encoding: " + e.getLocalizedMessage() );
-            }
-          }
+            b = ((String) recdata).getBytes( m_charset );
 
           writeEntry( datasec, offset, fddata[16], b, (byte) 0x20 );
         }
@@ -249,7 +240,7 @@ public class DBFDataSection
   {
 
     // allocate memory for all datarecords on one array + 1 byte
-    byte[] outdata = new byte[data.size() * recordlength + 1];
+    final byte[] outdata = new byte[data.size() * recordlength + 1];
 
     // set the file terminating byte
     outdata[outdata.length - 1] = 0x1A;
@@ -260,7 +251,7 @@ public class DBFDataSection
     for( int i = 0; i < data.size(); i++ )
     {
 
-      ByteContainer bc = data.get( i );
+      final ByteContainer bc = data.get( i );
 
       for( int k = 0; k < recordlength; k++ )
       {
@@ -290,7 +281,7 @@ class ByteContainer
 
   public byte[] data = null;
 
-  public ByteContainer( int size )
+  public ByteContainer( final int size )
   {
 
     data = new byte[size];

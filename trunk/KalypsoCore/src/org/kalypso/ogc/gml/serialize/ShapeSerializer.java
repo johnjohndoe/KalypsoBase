@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,6 +51,7 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -85,6 +87,9 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public final class ShapeSerializer
 {
+  /** The default charset of a shape (really the .dbf) is IBM850. */
+  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850";
+
   private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
   private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
@@ -396,6 +401,29 @@ public final class ShapeSerializer
 
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
   {
+    final Charset charset = getShapeDefaultCharset();
+    return deserialize( fileBase, sourceCrs, charset, monitor );
+  }
+
+  // FIXME:...
+  // The shape default charset if IBM850. We use this if it exists on this platform.
+  public static Charset getShapeDefaultCharset( )
+  {
+    try
+    {
+      return Charset.forName( SHAPE_DEFAULT_CHARSET_IBM850 );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    /* If the shape default charset is not available on this platform, we use the platforms default. */
+    return Charset.defaultCharset();
+  }
+
+  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
+  {
     final String taskName = Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
@@ -403,7 +431,7 @@ public final class ShapeSerializer
 
     try
     {
-      sf = new ShapeFile( fileBase );
+      sf = new ShapeFile( fileBase, charset );
       final IFeatureType featureType = sf.getFeatureType();
       final int fileShapeType = sf.getFileShapeType();
 
@@ -427,6 +455,10 @@ public final class ShapeSerializer
       }
 
       return workspace;
+    }
+    catch( final CoreException e )
+    {
+      throw new GmlSerializeException( "Abbruch durch Benutzer" );
     }
     catch( final Exception e )
     {
@@ -453,12 +485,14 @@ public final class ShapeSerializer
   /** REMARK: we return a simple collection of features with no parent. Better we would return a GMLWorkspace. */
   public static Collection<Feature> readFeaturesFromDbf( final String basename )
   {
+    final Charset charset = getShapeDefaultCharset();
+
     DBaseFile dbf = null;
     try
     {
       // todo: zur Zeit gehen wird davon aus, dass der Typ immer '1' ist
       // ist das immer so?
-      dbf = new DBaseFile( basename, 1 );
+      dbf = new DBaseFile( basename, 1, charset );
 
       final int recordNum = dbf.getRecordNum();
       final Collection<Feature> features = new ArrayList<Feature>( recordNum );

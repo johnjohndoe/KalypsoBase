@@ -44,6 +44,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,13 +107,27 @@ public class ShapeFile
    */
   private boolean m_hasRTreeIndex = true;
 
+  private Charset m_charset;
+
+  /**
+   * Open shape file for reading with platforms default charset.
+   * 
+   * @deprecated Use {@link #ShapeFile(String, Charset)} instead.
+   */
+  @Deprecated
+  public ShapeFile( final String filePath ) throws IOException
+  {
+    this( filePath, Charset.defaultCharset() );
+  }
+
   /**
    * constructor: <BR>
    * Construct a ShapeFile from a file name. <BR>
    */
-  public ShapeFile( final String filePath ) throws IOException
+  public ShapeFile( final String filePath, final Charset charset ) throws IOException
   {
     m_filePath = filePath;
+    m_charset = charset;
 
     /*
      * initialize the MainFile
@@ -124,7 +139,7 @@ public class ShapeFile
      */
     try
     {
-      m_dbf = new DBaseFile( filePath, m_shp.getFileShapeType() );
+      m_dbf = new DBaseFile( filePath, m_shp.getFileShapeType(), charset );
     }
     catch( final IOException e )
     {
@@ -331,7 +346,7 @@ public class ShapeFile
     return m_dbf.getRow( rowNo );
   }
 
-  private void createDBaseFile( final String filePath, final IFeatureType featT ) throws DBaseException
+  private void createDBaseFile( final String filePath, final IFeatureType featT, final Charset charset ) throws DBaseException
   {
     // count regular fields
     final IPropertyType[] ftp = featT.getProperties();
@@ -402,7 +417,7 @@ public class ShapeFile
 
     // allocate memory for fielddescriptors
     final FieldDescriptor[] fieldDesc = fieldList.toArray( new FieldDescriptor[fieldList.size()] );
-    m_dbf = new DBaseFile( filePath, fieldDesc );
+    m_dbf = new DBaseFile( filePath, fieldDesc, charset );
   }
 
   // TODO: rework this. Especially, we should get all information from the shape data provider. The shape data provider
@@ -426,7 +441,7 @@ public class ShapeFile
 
     /* initialize the dbasefile associated with the shape file */
     final IFeatureType featureType = dataProvider.getFeatureType();
-    createDBaseFile( m_filePath, featureType );
+    createDBaseFile( m_filePath, featureType, m_charset );
 
     /* loop through the Geometries of the feature collection and write them to a bytearray */
     final IPropertyType[] ftp = featureType.getProperties();
