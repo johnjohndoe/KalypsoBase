@@ -154,16 +154,16 @@ public class DBaseFile
 
   private String m_suffix;
 
-  // TODO: isn't it possible to get that from the file or an extra file besides the shape?
-  private final String m_charsetname = Charset.defaultCharset().name();
+  private Charset m_charset;
 
   /**
    * constructor <BR>
    * only for reading a dBase file <BR>
    */
-  public DBaseFile( final String filePath, final int defaultFileShapeType ) throws IOException
+  public DBaseFile( final String filePath, final int defaultFileShapeType, final Charset charset ) throws IOException
   {
     m_fname = filePath;
+    m_charset = charset;
     m_suffix = "" + m_fname.hashCode();
     m_customNamespaceURI = "org.kalypso.shape.custom_" + m_suffix;
     m_propertyCustomFeatureMember = new QName( m_customNamespaceURI, "featureMember" );
@@ -188,18 +188,9 @@ public class DBaseFile
   /**
    * constructor <BR>
    * only for writing a dBase file <BR>
-   */
-  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc )
-  {
-    this( url, fieldDesc, null );
-  }
-
-  /**
-   * constructor <BR>
-   * only for writing a dBase file <BR>
    * name of the charset string value will be encoded with. If null, the default charset will be used.
    */
-  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc, final String charset )
+  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc, final Charset charset )
   {
     m_defaultFileShapeType = -1;
     m_fname = url;
@@ -563,7 +554,9 @@ public class DBaseFile
         pos = 0;
       }
 
-      return new String( m_dataArray, (int) pos + column.position, column.size, m_charsetname ).trim();
+      // IMPORTANT: calling with m_charsrt.name() is WAY faster than with the charset itself...?
+      // even, if not the platform default is used...
+      return new String( m_dataArray, (int) pos + column.position, column.size, m_charset.name() ).trim();
     }
     catch( final Exception e )
     {
