@@ -42,6 +42,7 @@ package org.kalypso.contribs.eclipse.jface.wizard;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Shell;
 
 public interface IFileChooserDelegate
@@ -56,4 +57,6 @@ public interface IFileChooserDelegate
    * @return <code>null</code>, if the dialog was cancelled.
    */
   File chooseFile( Shell shell, File currentFile );
+
+  IMessageProvider validate( File file );
 }

@@ -42,9 +42,11 @@ package org.kalypso.contribs.eclipse.jface.wizard;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 public class FileChooserDelegateDirectory implements IFileChooserDelegate
 {
@@ -75,6 +77,25 @@ public class FileChooserDelegateDirectory implements IFileChooserDelegate
       return null;
 
     return new File( dir );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#validate(java.io.File)
+   */
+  @Override
+  public IMessageProvider validate( final File file )
+  {
+    final String path = file == null ? "" : file.getPath().trim();
+    if( path.length() == 0 )
+      return new MessageProvider( "Es muss ein Verzeichnis angegeben werden", IMessageProvider.ERROR );
+
+    if( !file.exists() )
+      return new MessageProvider( "Das angegebene Verzeichnis existiert nicht", IMessageProvider.ERROR );
+
+    if( !file.isDirectory() )
+      return new MessageProvider( "Die angegebene Datei ist kein Verzeichnis", IMessageProvider.ERROR );
+
+    return null;
   }
 
 }

@@ -45,8 +45,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 
 public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 {
@@ -149,5 +151,18 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
       i++;
     }
     return -1;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#validate(java.io.File)
+   */
+  @Override
+  public IMessageProvider validate( final File file )
+  {
+    final String path = file == null ? "" : file.getPath().trim();
+    if( path.length() == 0 )
+      return new MessageProvider( "Es muss eine Datei angegeben werden.", IMessageProvider.ERROR );
+
+    return null;
   }
 }
