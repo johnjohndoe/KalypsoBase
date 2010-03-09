@@ -107,7 +107,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   }
 
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
     monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditor.1"), 1000 ); //$NON-NLS-1$
     try

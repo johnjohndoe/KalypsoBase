@@ -555,6 +555,14 @@
 			<separator name="additions" visible="false"/>
 		</menuContribution-->
 	</extension>
+
+
+    <!-- org.kalypso.ui.editor.gmleditor.ui.GmlEditor: standard tool/menu-items -->
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="popup:org.kalypso.ui.editor.gmleditor.ui.GmlEditor">
+            <separator name="additions" visible="false"/>
+        </menuContribution>
+    </extension>
 	
 	<!-- Map -->
 	<extension point="org.eclipse.ui.commandImages">
@@ -1316,6 +1324,13 @@
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
+        <propertyTester
+              class="org.kalypso.ui.editor.gmleditor.ui.GmlEditorPropertyTester"
+              id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
+              namespace="org.kalypso.ui.test.gmleditor"
+              properties="qname"
+              type="java.lang.Object">
+        </propertyTester>
 	</extension>
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">
