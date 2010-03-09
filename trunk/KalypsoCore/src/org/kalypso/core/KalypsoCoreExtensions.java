@@ -99,10 +99,9 @@ public class KalypsoCoreExtensions
 
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
     if( THE_VISITOR_MAP == null )
     {
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( VISITOR_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
