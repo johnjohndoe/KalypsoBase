@@ -413,8 +413,8 @@ public class ChartFactory
   private static DIRECTION getAxisDirection( final AxisType at )
   {
     final AxisDirectionParser app = new AxisDirectionParser();
-    final String position = at.getPosition().toString();
-    final DIRECTION dir = app.stringToLogical( position );
+    final String direction = at.getDirection().toString();
+    final DIRECTION dir = app.stringToLogical( direction );
     return dir;
   }
 
@@ -444,8 +444,8 @@ public class ChartFactory
    */
   private static IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
   {
-    Number min = 0;
-    Number max = 1;
+    final Number min;
+    final Number max;
 
     if( at.isSetDateRange() )
     {
@@ -479,6 +479,11 @@ public class ChartFactory
       final GDuration maxDur = range.getMaxValue();
       final Calendar maxValue = addDurationToCal( now, maxDur );
       max = dataOperator.logicalToNumeric( maxValue );
+    }
+    else
+    {
+      min = null;
+      max = null;
     }
     final IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
     return range;

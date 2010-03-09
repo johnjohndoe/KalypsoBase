@@ -1,6 +1,10 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -11,8 +15,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -23,7 +25,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  * @author burtscher Implementation of IAxisComponent; AxisComponent is a widget displaying the charts' axes; its used
  *         to calculate screen coordinates for normalized values
  */
-public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent, Listener
+public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent
 {
   /**
    * the corresponding axis
@@ -43,8 +45,38 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent,
     super( parent, style );
     m_axis = axis;
     addPaintListener( this );
-    addListener( SWT.Resize, this );
-    addListener( SWT.Dispose, this );
+
+    addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( ControlEvent e )
+      {
+        handleControlResized();
+      }
+    } );
+
+    addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( DisposeEvent e )
+      {
+        dispose();
+      }
+    });
+  }
+
+  protected void handleControlResized( )
+  {
+    setAxisHeight();
+    if( m_bufferImage != null )
+    {
+      m_bufferImage.dispose();
+      m_bufferImage = null;
+
+      m_renderer = m_axis.getRegistry().getRenderer( m_axis );
+      m_renderer.invalidateTicks( m_axis );
+    }
+    redraw();
   }
 
   protected void recalcTicks( )
@@ -255,33 +287,6 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent,
   }
 
   /**
-   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-   */
-  public void handleEvent( final Event event )
-  {
-    setAxisHeight();
-    
-    switch( event.type )
-    {
-      case SWT.RESIZE:
-        if( m_bufferImage != null )
-        {
-          m_bufferImage.dispose();
-          m_bufferImage = null;
-
-          m_renderer = m_axis.getRegistry().getRenderer( m_axis );
-          m_renderer.invalidateTicks( m_axis );
-        }
-        redraw();
-        break;
-
-      case SWT.Dispose:
-        dispose();
-        break;
-    }
-  }
-
-  /**
    * does nothing right now as theres an error displaying the drag intervall
    */
   public void setDragInterval( int y1, int y2 )
@@ -303,7 +308,7 @@ public class AxisCanvas extends Canvas implements PaintListener, IAxisComponent,
     {
       return;
     }
-    
+
     m_panOffset = offset;
     redraw();
   }

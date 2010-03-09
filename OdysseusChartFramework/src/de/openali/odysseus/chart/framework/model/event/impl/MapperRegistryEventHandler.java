@@ -8,7 +8,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
  */
 public class MapperRegistryEventHandler extends AbstractEventProvider<IMapperRegistryEventListener>
 {
-
   public void fireMapperAdded( final IMapper mapper )
   {
     for( final IMapperRegistryEventListener l : getListeners() )

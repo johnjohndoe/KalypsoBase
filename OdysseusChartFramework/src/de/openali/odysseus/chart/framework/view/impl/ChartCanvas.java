@@ -24,7 +24,7 @@ import de.openali.odysseus.chart.framework.view.IChartViewer;
 
 /**
  * Displays a chart in a canvas using no sub components. ONLY FOR TESTING PURPOSES
- * 
+ *
  * @author burtscher1
  */
 public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
