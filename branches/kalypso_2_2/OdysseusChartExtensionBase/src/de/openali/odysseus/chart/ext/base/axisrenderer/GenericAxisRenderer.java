@@ -416,12 +416,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         offset = coords[1];
 
       Number[] ticks = getTicks( axis, gc );
-      if( ticks.length == 1 )
-      {
-        drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
-      }
-      else
-        drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
+
+      drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
       drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3], offset );
     }
 

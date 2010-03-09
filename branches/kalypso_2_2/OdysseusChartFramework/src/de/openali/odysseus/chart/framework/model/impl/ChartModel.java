@@ -55,8 +55,8 @@ public class ChartModel implements IChartModel
     {
       /*
        * (non-Javadoc)
-       * 
-       * @see org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
+       * @see
+       * org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
        */
       @Override
       public void onLayerAdded( final IChartLayer layer )
@@ -66,8 +66,9 @@ public class ChartModel implements IChartModel
 
       /*
        * (non-Javadoc)
-       * 
-       * @see org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer)
+       * @see
+       * org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer
+       * )
        */
       @Override
       public void onLayerRemoved( final IChartLayer layer )
@@ -83,9 +84,9 @@ public class ChartModel implements IChartModel
 
   /**
    * adds layers to or removes layers from the chart
-   * 
+   *
    * @param bAdding
-   *            if true, the layer will be added; if false, the layer will be removed
+   *          if true, the layer will be added; if false, the layer will be removed
    */
   protected void updateAxisLayerMap( final IChartLayer layer, final boolean bAdding )
   {
@@ -168,7 +169,6 @@ public class ChartModel implements IChartModel
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
    */
   public IMapperRegistry getMapperRegistry( )
@@ -178,7 +178,6 @@ public class ChartModel implements IChartModel
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
    */
   public ILayerManager getLayerManager( )
@@ -188,7 +187,6 @@ public class ChartModel implements IChartModel
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.chart.framework.model.IChartModel#clear()
    */
   public void clear( )
@@ -200,7 +198,6 @@ public class ChartModel implements IChartModel
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.chart.framework.model.IChartModel#getAxis2Layers()
    */
   public Map<IAxis, List<IChartLayer>> getAxis2Layers( )
@@ -210,7 +207,6 @@ public class ChartModel implements IChartModel
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.chart.framework.model.IChartModel#setHideUnusedAxes(boolean)
    */
   public void setHideUnusedAxes( final boolean b )
@@ -288,8 +284,9 @@ public class ChartModel implements IChartModel
 
         final double rangeMax = mergedDataRange.getMax().doubleValue();
         final double rangeMin = mergedDataRange.getMin().doubleValue();
-        final double rangeSize = rangeMax - rangeMin;
 
+        // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
+        final double rangeSize = rangeMax == rangeMin ? rangeMax : rangeMax - rangeMin;
         final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
         final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 
@@ -302,6 +299,7 @@ public class ChartModel implements IChartModel
     }
 
   }
+
 
   /**
    * @return DataRange of all domain or target data available in the given layer
@@ -323,9 +321,9 @@ public class ChartModel implements IChartModel
 
   /**
    * sets autoscaling
-   * 
+   *
    * @param b
-   *            if true, axes are automatically scaled to show the layers full data range
+   *          if true, axes are automatically scaled to show the layers full data range
    */
   public void setAutoscale( final boolean b )
   {
