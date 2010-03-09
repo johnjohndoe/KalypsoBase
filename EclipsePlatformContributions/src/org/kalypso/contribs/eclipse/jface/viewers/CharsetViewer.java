@@ -42,6 +42,8 @@ package org.kalypso.contribs.eclipse.jface.viewers;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -63,6 +65,9 @@ public class CharsetViewer extends ComboViewer
 {
   private Charset m_charset;
 
+  /** Charset-Name -> Charset-Label */
+  final Map<String, String> m_labelMappings = new HashMap<String, String>();
+
   public CharsetViewer( final Composite parent )
   {
     super( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -74,8 +79,9 @@ public class CharsetViewer extends ComboViewer
       public String getText( final Object element )
       {
         final Charset charset = (Charset) element;
-        if( charset == Charset.defaultCharset() )
-          return charset.displayName() + " (default)";
+        if( m_labelMappings.containsKey( charset.name() ) )
+          return m_labelMappings.get( charset.name() );
+
         return charset.displayName();
       }
     } );
@@ -92,6 +98,16 @@ public class CharsetViewer extends ComboViewer
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );
       }
     } );
+    
+    final Charset defaultCharset = Charset.defaultCharset();
+    final String defaultCharsetLabel = String.format( "%s (platform default)", defaultCharset.displayName());
+    addLabelMapping( defaultCharset, defaultCharsetLabel );
+  }
+
+  public void addLabelMapping( final Charset charset, final String label )
+  {
+    m_labelMappings.put( charset.name(), label );
+    update( charset, null );
   }
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
