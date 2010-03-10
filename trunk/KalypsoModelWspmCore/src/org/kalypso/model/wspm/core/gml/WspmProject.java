@@ -76,10 +76,7 @@ public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
     final FeatureList waters = getWaterBodyList();
     final List<WspmWaterBody> waterList = new ArrayList<WspmWaterBody>( waters.size() );
     for( final Object object : waters )
-    {
-      final Feature f = (Feature) object;
-      waterList.add( new WspmWaterBody( f ) );
-    }
+      waterList.add( (WspmWaterBody) object );
 
     return waterList.toArray( new WspmWaterBody[waterList.size()] );
   }
@@ -113,9 +110,7 @@ public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
     if( water != null )
       return water;
 
-    final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_WATER_BODY_MEMBER, null );
-
-    final WspmWaterBody wspmWaterBody = new WspmWaterBody( feature );
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( getFeature(), QNAME_WATER_BODY_MEMBER, null );
 
     // set default values
     wspmWaterBody.setName( name );

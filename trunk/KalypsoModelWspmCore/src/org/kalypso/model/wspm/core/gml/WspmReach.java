@@ -42,24 +42,20 @@ package org.kalypso.model.wspm.core.gml;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public abstract class WspmReach extends AbstractFeatureBinder implements IWspmConstants
+public abstract class WspmReach extends Feature_Impl implements IWspmConstants
 {
   public final static QName QNAME_WSPM_REACH = new QName( NS_WSPM, "AbstractReach" ); //$NON-NLS-1$
 
-  protected WspmReach( final Feature reach, final QName qname )
+  public WspmReach( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( reach, qname );
-  }
-  
-  public WspmReach( final Feature reach )
-  {
-    super( reach, QNAME_WSPM_REACH );
+    super( parent, parentRelation, ft, id, propValues );
   }
 }
