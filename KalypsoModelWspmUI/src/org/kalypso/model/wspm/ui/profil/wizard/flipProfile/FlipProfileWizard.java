@@ -46,45 +46,38 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kimwerner
  */
 public class FlipProfileWizard extends Wizard
 {
-
-  final private ArrayChooserPage m_profileChooserPage;
-
-  final private List<Feature> m_profiles;
-
-  final private List<Feature> m_selectedProfiles;
+  final private ProfilesChooserPage m_profileChooserPage;
 
   final private CommandableWorkspace m_workspace;
 
-  public FlipProfileWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public FlipProfileWizard( final ProfileSelection profileSelection )
   {
-    m_workspace = workspace;
-    m_profiles = profiles;
-    m_selectedProfiles = selection;
+    m_workspace = profileSelection.getWorkspace();
     setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2") ); //$NON-NLS-1$
+
+    final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
   }
+
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -123,13 +116,12 @@ public class FlipProfileWizard extends Wizard
       featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
     }
 
-    GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[0] ) );
     try
     {
       m_workspace.postCommand( command );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

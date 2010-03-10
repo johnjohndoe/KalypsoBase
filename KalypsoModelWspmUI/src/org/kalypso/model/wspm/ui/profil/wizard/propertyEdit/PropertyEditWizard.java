@@ -62,13 +62,13 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -85,15 +85,13 @@ public class PropertyEditWizard extends Wizard
     }
   };
 
-  final private ArrayChooserPage m_profileChooserPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_propertyChooserPage;
 
   final private IProfil m_profile;
 
-  final private List<Feature> m_profiles;
-
-  final private List<Feature> m_selectedProfiles;
+  final private IProfileFeature[] m_profiles;
 
   private OperationChooserPage m_operationChooserPage;
 
@@ -101,20 +99,19 @@ public class PropertyEditWizard extends Wizard
 
   final private IStructuredSelection m_selectedPoints;
 
-  public PropertyEditWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public PropertyEditWizard( final ProfileSelection profileSelection )
   {
     m_profile = null;
-    m_workspace = workspace;
-    m_profiles = profiles;
-    m_selectedProfiles = selection;
+    m_workspace = profileSelection.getWorkspace();
+    m_profiles = profileSelection.getProfiles();
     m_selectedPoints = null;
 
     setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.1" ), null, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ) ); //$NON-NLS-1$
+
+    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
   }
 
   public PropertyEditWizard( final IProfil profile, final ISelection selection )
@@ -123,7 +120,6 @@ public class PropertyEditWizard extends Wizard
     m_profile = profile;
     m_workspace = null;
     m_profiles = null;
-    m_selectedProfiles = null;
     m_profileChooserPage = null;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
@@ -213,31 +209,13 @@ public class PropertyEditWizard extends Wizard
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
-//    IProfilChange[] profilChanges = null;
 
-    for( int i = 0; i < choosenProfiles.length; i++ )
-    {
-      m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
-//      if( m_profile == null )
-//      {
-//        try
-//        {
-//          for( final IProfilChange change : profilChanges )
-//          {
-//            change.doChange( null );
-//          }
-//        }
-//        catch( final IllegalProfileOperationException e )
-//        {
-//          KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
-//        }
-      
-//        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
-      }
-//    }
+    for( final IProfil choosenProfile : choosenProfiles )
+      m_operationChooserPage.changeProfile( choosenProfile, choosenProperties );
+
     if( m_profile == null )
     {
-      final GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
+      final GMLWorkspace workspace = m_profiles[0].getWorkspace();
       final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
       try
       {
@@ -254,8 +232,6 @@ public class PropertyEditWizard extends Wizard
       final ProfilChangeHint hint = new ProfilChangeHint();
       hint.setPointValuesChanged();
       m_profile.fireProfilChanged( hint,new IProfilChange[]{new TupleResultChange()} );
-//      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.3" ), m_profile, profilChanges, true ); //$NON-NLS-1$
-//      new ProfilOperationJob( operation ).schedule();
     }
 
     return true;
