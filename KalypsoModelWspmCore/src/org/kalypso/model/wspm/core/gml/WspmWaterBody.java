@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Gernot Belger
  */
-public class WspmWaterBody extends Feature_Impl implements IWspmConstants
+public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProfileSelectionProvider
 {
   public final static QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
@@ -122,5 +122,25 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants
     }
 
     return reachList.toArray( new WspmReach[reachList.size()] );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileSelectionProvider#getSelectedProfiles(org.kalypso.gmlschema.property.relation.IRelationType)
+   */
+  @Override
+  public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
+  {
+    final List<IProfileFeature> profile = new ArrayList<IProfileFeature>();
+    if( selectionHint != null && selectionHint.isList() )
+    {
+      final FeatureList property = (FeatureList) getProperty( selectionHint );
+      for( final Object object : property )
+      {
+        if( object instanceof IProfileFeature )
+          profile.add( (IProfileFeature) object );
+      }
+    }
+
+    return profile.toArray( new IProfileFeature[profile.size()] );
   }
 }

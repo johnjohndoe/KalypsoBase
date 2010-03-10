@@ -571,6 +571,15 @@
 				</and>
 			</with>
 		</definition>
+  <definition
+        id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+     <with
+           variable="selection">
+        <test
+              property="org.kalypso.model.wspm.ui.hasProfileSelection">
+        </test>
+     </with>
+  </definition>
 	</extension>
 
 <extension point="org.eclipse.ui.menus">
@@ -621,5 +630,15 @@
        </menu>
     </menuContribution>
   </extension>
+<extension
+      point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+         class="org.kalypso.model.wspm.ui.action.ProfileSelectionTester"
+         id="org.kalypso.model.wspm.ui.propertyTester.profiles"
+         namespace="org.kalypso.model.wspm.ui"
+         properties="hasProfileSelection"
+         type="org.eclipse.jface.viewers.ISelection">
+   </propertyTester>
+</extension>
 
 </plugin>
