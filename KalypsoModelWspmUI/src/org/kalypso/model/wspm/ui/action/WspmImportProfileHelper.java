@@ -80,7 +80,7 @@ public class WspmImportProfileHelper
 
       private GMLWorkspace m_workspace;
 
-      private Feature m_waterFeature;
+      private WspmWaterBody m_water;
 
       public String getDescription( )
       {
@@ -94,16 +94,15 @@ public class WspmImportProfileHelper
 
       public void process( ) throws Exception
       {
-        m_waterFeature = fate.getParentFeature();
-        m_profileList = (FeatureList) m_waterFeature.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
+        m_water = (WspmWaterBody) fate.getParentFeature();
+        m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
 
-        final WspmWaterBody water = new WspmWaterBody( m_waterFeature );
         final List<Feature> newFeatureList = new ArrayList<Feature>();
         try
         {
           for( final IProfil profile : profiles )
           {
-            final IProfileFeature gmlProfile = water.createNewProfile();
+            final IProfileFeature gmlProfile = m_water.createNewProfile();
 
             // TODO: set coordinate system
             if( crs != null )
@@ -125,8 +124,8 @@ public class WspmImportProfileHelper
         finally
         {
           m_addedFeatures = newFeatureList.toArray( new Feature[newFeatureList.size()] );
-          m_workspace = m_waterFeature.getWorkspace();
-          final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+          m_workspace = m_water.getWorkspace();
+          final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_water, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
           m_workspace.fireModellEvent( event );
         }
       }
@@ -135,7 +134,7 @@ public class WspmImportProfileHelper
       public void redo( ) throws Exception
       {
         m_profileList.addAll( Arrays.asList( m_addedFeatures ) );
-        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_water, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         m_workspace.fireModellEvent( event );
       }
 
@@ -143,7 +142,7 @@ public class WspmImportProfileHelper
       public void undo( ) throws Exception
       {
         m_profileList.removeAll( Arrays.asList( m_addedFeatures ) );
-        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_waterFeature, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+        final ModellEvent event = new FeatureStructureChangeModellEvent( m_workspace, m_water, m_addedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
         m_workspace.fireModellEvent( event );
       }
     };

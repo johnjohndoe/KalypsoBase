@@ -9,7 +9,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -142,8 +141,8 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   public WspmWaterBody getWater( )
   {
     final Feature parent = getOwner();
-    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) ) //$NON-NLS-1$
-      return new WspmWaterBody( parent );
+    if( parent instanceof WspmWaterBody )
+      return (WspmWaterBody) parent;
 
     return null;
   }

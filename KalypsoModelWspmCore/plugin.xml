@@ -15,6 +15,10 @@
             class="org.kalypso.model.wspm.core.gml.ProfileFeatureBinding"
             qname="{org.kalypso.model.wspmprofile}Profile">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.WspmWaterBody"
+            qname="{org.kalypso.model.wspm}WaterBody">
+      </feature>
    </extension>
    
 </plugin>

@@ -46,16 +46,18 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstants
+public class WspmWaterBody extends Feature_Impl implements IWspmConstants
 {
   public final static QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
@@ -65,14 +67,14 @@ public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstan
 
   public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
-  public WspmWaterBody( final Feature water )
+  public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    super( water, QNAME );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
   public IProfileFeature createNewProfile( ) throws GMLSchemaException
   {
-    final Feature profile = FeatureHelper.addFeature( getFeature(), QNAME_PROP_PROFILEMEMBER, IProfileFeature.QNAME_PROFILE );
+    final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QNAME_PROFILE );
     if( profile instanceof IProfileFeature )
       return (IProfileFeature) profile;
 
@@ -91,12 +93,12 @@ public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstan
 
   public Feature createRunOffEvent( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return FeatureHelper.addFeature( this, new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( getFeature(), QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
+    return FeatureHelper.addFeature( this, QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
   }
 
   public List< ? > getWspFixations( )
@@ -111,14 +113,12 @@ public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstan
 
   public WspmReach[] getReaches( )
   {
-    final FeatureList reaches = (FeatureList) getFeature().getProperty( QNAME_REACH_MEMBER );
+    final FeatureList reaches = (FeatureList) getProperty( QNAME_REACH_MEMBER );
     final List<WspmReach> reachList = new ArrayList<WspmReach>( reaches.size() );
     for( final Object object : reaches )
     {
       final Feature f = (Feature) object;
-      reachList.add( new WspmReach( f )
-      {
-      } );
+      reachList.add( (WspmReach) f );
     }
 
     return reachList.toArray( new WspmReach[reachList.size()] );
