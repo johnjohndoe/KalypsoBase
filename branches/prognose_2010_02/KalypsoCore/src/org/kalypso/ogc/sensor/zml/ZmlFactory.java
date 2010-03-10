@@ -72,6 +72,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.ParserFactory;
@@ -644,66 +645,57 @@ public class ZmlFactory
    */
   private static String buildValueString( final ITuppleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
   {
-    final StringBuffer sb = new StringBuffer();
+    if( model.getCount() == 0 )
+      return "";
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
-      buildStringDateAxis( model, axis, sb, timezone );
+      return buildStringDateAxis( model, axis, timezone );
     else if( Number.class.isAssignableFrom( axis.getDataClass() ) || Boolean.class.isAssignableFrom( axis.getDataClass() ) )
-      buildStringNumberAxis( model, axis, sb );
+      return buildStringNumberAxis( model, axis );
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
-      buildStringAxis( model, axis, sb );
+      return buildStringAxis( model, axis );
     else
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.21" ) ); //$NON-NLS-1$
-
-    return sb.toString();
   }
 
-  private static void buildStringAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb ) throws SensorException
+  private static String buildStringAxis( final ITuppleModel model, final IAxis axis ) throws SensorException
   {
-    final int amount = model.getCount() - 1;
-    for( int i = 0; i < amount; i++ )
-      sb.append( model.getElement( i, axis ) ).append( ";" ); //$NON-NLS-1$
+    final StringBuffer buffer = new StringBuffer();
 
-    if( amount > 0 )
-      sb.append( model.getElement( amount, axis ) );
+    for( int i = 0; i < model.getCount(); i++ )
+      buffer.append( model.getElement( i, axis ) ).append( ";" ); //$NON-NLS-1$
+
+    return StringUtilities.chomp( buffer.toString() );
   }
 
-  private static void buildStringDateAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb, final TimeZone timezone ) throws SensorException
+  private static String buildStringDateAxis( final ITuppleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
   {
+    final StringBuffer buffer = new StringBuffer();
     final DateParser dateParser = XmlTypes.getDateParser( timezone );
 
-    final int amount = model.getCount() - 1;
-    for( int i = 0; i < amount; i++ )
-      sb.append( dateParser.toString( model.getElement( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
+    for( int i = 0; i < model.getCount(); i++ )
+      buffer.append( dateParser.toString( model.getElement( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
 
-    if( amount > 0 )
-      sb.append( dateParser.toString( model.getElement( amount, axis ) ) );
+    return StringUtilities.chomp( buffer.toString() );
   }
 
   /**
    * Uses the default toString() method of the elements
    */
-  private static void buildStringNumberAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb ) throws SensorException
+  private static String buildStringNumberAxis( final ITuppleModel model, final IAxis axis ) throws SensorException
   {
-    final int amount = model.getCount() - 1;
-    for( int i = 0; i < amount; i++ )
+    final StringBuffer buffer = new StringBuffer();
+
+    for( int i = 0; i < model.getCount(); i++ )
     {
       final Object elt = model.getElement( i, axis );
-
       if( elt == null )
         LOG.warning( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.24" ) + i + Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.25" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
-      sb.append( elt ).append( ";" ); //$NON-NLS-1$
+
+      buffer.append( elt ).append( ";" ); //$NON-NLS-1$
     }
-
-    if( amount > 0 )
-    {
-      final Object elt = model.getElement( amount, axis );
-
-      if( elt == null )
-        LOG.warning( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.27" ) + amount + Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.28" ) + axis ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      sb.append( elt );
-    }
+    
+    return StringUtilities.chomp( buffer.toString() );
   }
 
   /**
