@@ -186,33 +186,6 @@
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
-               id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               label="%org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description">
-         </action>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate"
-               icon="icons/obj16/validation_inputok.gif"
-               id="org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
-               label="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description">
-         </action>
-      </objectContribution>
-            <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.ui.objectContribution.flipProfile"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspmprofile#Profile"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.FlipProfileAction"
-               icon="icons/obj16/flipProfile.gif"
-               id="org.kalypso.model.wspm.ui.action.FlipProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.FlipProfileAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -517,7 +490,27 @@
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-               icon="icons/obj16/wspmPerspective.gif">
+               icon="icons/elcl16/">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
+               icon="KalypsoModelWspmUI.image2">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.command.profile.validate"
+               icon="icons/obj16/validation_inputok.gif">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.command.profile.flip"
+               icon="icons/obj16/flipProfile.gif">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+               icon="icons/obj16/WspWinPlotter.gif">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
+               icon="KalypsoModelWspmUI.image1">
          </image>
       </extension>
      
@@ -529,6 +522,30 @@
         defaultHandler="org.kalypso.model.wspm.ui.action.LengthSectionExportHandler"
         id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
         name="LengthSectionExport">
+  </command>
+  <command
+        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
+        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
+        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
+  </command>
+  <command
+        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
+        id="org.kalypso.model.wspm.ui.command.profile.validate"
+        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
+  </command>
+  <command
+        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
+        id="org.kalypso.model.wspm.ui.command.profile.flip"
+        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
+  </command>
+  <command
+        id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+        name="PlotterExport">
+  </command>
+  <command
+        description="Simplify profile by removing unimportant points"
+        id="org.kalypso.model.wspm.ui.command.profile.simplify"
+        name="Simplify">
   </command>
 	</extension>
 
@@ -627,6 +644,54 @@
                 name="additions"
                 visible="false">
           </separator>
+          <command
+                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+                style="push">
+          </command>
+       </menu>
+       <menu
+             id="org.kalypso.model.wspm.ui.profileChange"
+             label="Profile"
+             mnemonic="p">
+          <command
+                commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
+                style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
+          </command>
+          <command
+                commandId="org.kalypso.model.wspm.ui.command.profile.validate"
+                style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
+          </command>
+          <command
+                commandId="org.kalypso.model.wspm.ui.command.profile.flip"
+                style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
+          </command>
+          <command
+                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+                style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
+          </command>
+          <command
+                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
+                style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
+          </command>
+          <separator
+                name="additions"
+                visible="false">
+          </separator>
        </menu>
     </menuContribution>
   </extension>
@@ -639,6 +704,52 @@
          properties="hasProfileSelection"
          type="org.eclipse.jface.viewers.ISelection">
    </propertyTester>
+</extension>
+<extension
+      point="org.eclipse.ui.handlers">
+   <handler
+         class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditHandler"
+         commandId="org.kalypso.model.wspm.ui.command.profile.editProperties">
+      <enabledWhen>
+         <reference
+               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         </reference>
+      </enabledWhen>
+   </handler>
+   <handler
+         class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesHandler"
+         commandId="org.kalypso.model.wspm.ui.command.profile.validate">
+      <enabledWhen>
+         <reference
+               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         </reference>
+      </enabledWhen>
+   </handler>
+   <handler
+         class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileHandler"
+         commandId="org.kalypso.model.wspm.ui.command.profile.flip">
+      <enabledWhen>
+         <reference
+               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         </reference>
+      </enabledWhen>
+   </handler>
+   <handler
+         commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
+      <enabledWhen>
+         <reference
+               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         </reference>
+      </enabledWhen>
+   </handler>
+   <handler
+         commandId="org.kalypso.model.wspm.ui.command.profile.simplify">
+      <enabledWhen>
+         <reference
+               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         </reference>
+      </enabledWhen>
+   </handler>
 </extension>
 
 </plugin>

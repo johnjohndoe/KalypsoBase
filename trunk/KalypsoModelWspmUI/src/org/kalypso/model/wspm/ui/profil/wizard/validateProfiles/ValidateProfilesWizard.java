@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.validateProfiles;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -72,6 +71,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.validation.ResourceValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -92,32 +92,31 @@ public class ValidateProfilesWizard extends Wizard
 
   final private IProfilMarkerResolution[] m_reparatorRules;
 
-  final private ArrayChooserPage m_profileChooserPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_validatorChooserPage;
 
   private ArrayChooserPage m_quickFixChoosePage;
 
-  final private List<Feature> m_profiles;
-
-  final private List<Feature> m_selectedProfiles;
+  final private IProfileFeature[] m_profiles;
 
   final protected CommandableWorkspace m_workspace;
 
-  public ValidateProfilesWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public ValidateProfilesWizard( final ProfileSelection profileSelection )
   {
-    m_workspace = workspace;
-    m_profiles = profiles;
-    m_selectedProfiles = selection;
-    m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
+    m_workspace = profileSelection.getWorkspace();
+    m_profiles = profileSelection.getProfiles();
+    m_profiletype = (String) m_profiles[0].getProperty( ProfileFeatureFactory.QNAME_TYPE );
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
     setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ProfilesChooserPage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ), m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, false ); //$NON-NLS-1$ 
+    final String description = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ); //$NON-NLS-1$ 
+    m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
+
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()

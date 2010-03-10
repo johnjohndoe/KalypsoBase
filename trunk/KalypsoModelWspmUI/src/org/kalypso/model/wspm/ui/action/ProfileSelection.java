@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,21 +68,31 @@ public class ProfileSelection
 
   private final Collection<IProfileFeature> m_selectedProfiles = new LinkedHashSet<IProfileFeature>();
 
+  private final CommandableWorkspace m_workspace;
+
   public ProfileSelection( final ISelection selection )
   {
     m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
 
-    findProfiles();
+    m_workspace = findProfiles();
   }
 
-  private void findProfiles( )
+  private CommandableWorkspace findProfiles( )
   {
     if( m_selection == null )
-      return;
+      return null;
 
     final List< ? > items = m_selection.toList();
     for( final Object item : items )
       addItem( item );
+
+    if( m_foundProfiles.size() > 0 )
+    {
+      final IProfileFeature firstProfile = m_foundProfiles.iterator().next();
+      return m_selection.getWorkspace( firstProfile );
+    }
+
+    return null;
   }
 
   private void addItem( final Object item )
@@ -140,6 +151,11 @@ public class ProfileSelection
   public IProfileFeature[] getSelectedProfiles( )
   {
     return m_selectedProfiles.toArray( new IProfileFeature[m_selectedProfiles.size()] );
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_workspace;
   }
 
 }
