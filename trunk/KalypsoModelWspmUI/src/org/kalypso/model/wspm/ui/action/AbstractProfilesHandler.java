@@ -46,9 +46,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
  * @author Gernot Belger
@@ -75,6 +78,12 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     }
 
     final IWizard wizard = createWizard( profileSelection );
+    if( wizard instanceof Wizard)
+    {
+      Wizard wizard2 = (Wizard) wizard;
+      wizard2.setWindowTitle( getTitle() );
+      wizard2.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), wizard.getClass().getName() ) );
+    }
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
@@ -88,5 +97,9 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
 
   protected abstract IWizard createWizard( final ProfileSelection profileSelection );
 
+  /**
+   * @deprecated We should always show the same error message here
+   */
+  @Deprecated
   protected abstract String getErrorMessage( );
 }

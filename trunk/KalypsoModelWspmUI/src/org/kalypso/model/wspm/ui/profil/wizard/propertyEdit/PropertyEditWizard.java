@@ -106,9 +106,7 @@ public class PropertyEditWizard extends Wizard
     m_profiles = profileSelection.getProfiles();
     m_selectedPoints = null;
 
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.5" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );

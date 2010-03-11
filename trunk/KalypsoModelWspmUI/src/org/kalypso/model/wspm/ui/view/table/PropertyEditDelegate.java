@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view.table;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -79,11 +78,12 @@ public class PropertyEditDelegate implements IViewActionDelegate
     if( profile == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( viewShell, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    final IWizard propertyEditWizard = new PropertyEditWizard( profile,((TableView)m_view).getTupleResultViewer().getSelection() );
+    final PropertyEditWizard propertyEditWizard = new PropertyEditWizard( profile, ((TableView) m_view).getTupleResultViewer().getSelection() );
+    propertyEditWizard.setWindowTitle( action.getText() );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );
