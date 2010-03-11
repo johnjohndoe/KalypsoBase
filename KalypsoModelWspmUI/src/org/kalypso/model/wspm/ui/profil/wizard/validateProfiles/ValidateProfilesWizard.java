@@ -57,7 +57,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -110,13 +109,10 @@ public class ValidateProfilesWizard extends Wizard
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     final String description = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ); //$NON-NLS-1$ 
     m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
-
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()

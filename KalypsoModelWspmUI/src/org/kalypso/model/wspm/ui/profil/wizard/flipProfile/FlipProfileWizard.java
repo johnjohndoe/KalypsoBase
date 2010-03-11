@@ -70,9 +70,7 @@ public class FlipProfileWizard extends Wizard
   public FlipProfileWizard( final ProfileSelection profileSelection )
   {
     m_workspace = profileSelection.getWorkspace();
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
