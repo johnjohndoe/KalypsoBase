@@ -45,12 +45,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -75,7 +73,6 @@ public class FlipProfileWizard extends Wizard
     final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
   }
-
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -110,7 +107,7 @@ public class FlipProfileWizard extends Wizard
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
-      ProfilUtil.flipProfile( choosenProfiles[i],true );
+      ProfilUtil.flipProfile( choosenProfiles[i], true );
       featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
     }
 
