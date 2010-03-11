@@ -72,15 +72,16 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     if( !profileSelection.hasProfiles() )
     {
       final String title = getTitle();
-      final String message = getErrorMessage();
+      final String errorMessage = getErrorMessage();
+      final String message = errorMessage == null ? "No profiles found in selection. Please select one or more profiles." : errorMessage;
       MessageDialog.openWarning( shell, title, message ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
     final IWizard wizard = createWizard( profileSelection );
-    if( wizard instanceof Wizard)
+    if( wizard instanceof Wizard )
     {
-      Wizard wizard2 = (Wizard) wizard;
+      final Wizard wizard2 = (Wizard) wizard;
       wizard2.setWindowTitle( getTitle() );
       wizard2.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), wizard.getClass().getName() ) );
     }

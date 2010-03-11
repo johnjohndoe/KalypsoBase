@@ -70,14 +70,13 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class LengthSectionExportHandler extends AbstractHandler
 {
-
   public static String PLOTTER_FILE_NOT_FOUND = "plotter_file_not_found";
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event )
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
@@ -114,7 +113,7 @@ public class LengthSectionExportHandler extends AbstractHandler
       KalypsoCorePlugin.getDefault().getPreferenceStore().putValue( IWspmConstants.WSPWIN_PLOTTER_PATH, plotterPath );
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       KalypsoCorePlugin.getDefault().getPreferenceStore().putValue( IWspmConstants.WSPWIN_PLOTTER_PATH, PLOTTER_FILE_NOT_FOUND );
@@ -125,14 +124,14 @@ public class LengthSectionExportHandler extends AbstractHandler
 
   private final IObservation<TupleResult> getLSObservation( final IChartPart chartPart )
   {
-    IChartModel chartModel = chartPart.getChartComposite().getChartModel();
-    ILayerManager layerManager = chartModel.getLayerManager();
-    IChartLayer[] layers = layerManager.getLayers();
-    for( IChartLayer iChartLayer : layers )
+    final IChartModel chartModel = chartPart.getChartComposite().getChartModel();
+    final ILayerManager layerManager = chartModel.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer iChartLayer : layers )
     {
       if( iChartLayer instanceof TupleResultLineLayer )
       {
-        IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
+        final IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
         if( obs != null )
         {
           for( final IComponent comp : obs.getResult().getComponents() )
