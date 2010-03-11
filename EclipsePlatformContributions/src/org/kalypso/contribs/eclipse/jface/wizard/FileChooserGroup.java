@@ -84,7 +84,7 @@ public class FileChooserGroup
    */
   public static final String DIRECTORY_FILTER_SUFFIX = "DIRECTORY_FILTER_SUFFIX"; //$NON-NLS-1$
 
-  private File m_file;
+  private String m_path;
 
   private boolean m_showLabel = true;
 
@@ -125,7 +125,8 @@ public class FileChooserGroup
 
   protected void buttonPressed( )
   {
-    final File newFile = m_delegate.chooseFile( m_text.getShell(), m_file );
+    final File currentFile = getFile();
+    final File newFile = m_delegate.chooseFile( m_text.getShell(), currentFile );
     if( newFile == null )
       return;
 
@@ -270,31 +271,38 @@ public class FileChooserGroup
     }
   }
 
+  /**
+   * Returns the current content of the text control.
+   */
+  public String getPath( )
+  {
+    return m_path;
+  }
+
   public File getFile( )
   {
-    return m_file;
+    if( m_path == null || m_path.length() == 0 )
+      return null;
+
+    return new File( m_path );
   }
 
   public void setFile( final File file )
   {
-    if( m_file != null && m_file.equals( file ) )
-      return;
-
-    m_file = file;
-
-    if( m_settings != null )
-      m_settings.put( FileChooserGroup.SETTINGS_FILENAME, file.getAbsolutePath() );
+    final String path = file == null ? "" : file.getAbsolutePath();
 
     final String text = m_text.getText();
-    final String text2set = file == null ? "" : file.getAbsolutePath();
-    if( !text2set.equals( text ) )
-      m_text.setText( file.getAbsolutePath() );
-
-    fireFileChanged( m_file );
+    if( !path.equals( text ) )
+      m_text.setText( path );
   }
 
   protected void textModified( final String text )
   {
-    setFile( new File( text ) );
+    m_path = text;
+
+    if( m_settings != null )
+      m_settings.put( FileChooserGroup.SETTINGS_FILENAME, text );
+
+    fireFileChanged( getFile() );
   }
 }
