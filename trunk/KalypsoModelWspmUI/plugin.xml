@@ -242,21 +242,6 @@
                  style="push"
                  tooltip="%com.bce.profil.app.profilLayerContributions.showProperties.tooltip"/>
         </objectContribution>
-        <objectContribution
-              adaptable="false"
-              id="org.kalypso.model.wspm.ui.objectContribution.plotterExport"
-              objectClass="org.kalypsodeegree.model.feature.Feature">
-           <action
-                 class="org.kalypso.model.wspm.ui.action.PlotterExportAction"
-                 icon="icons/obj16/WspWinPlotter.gif"
-                 id="org.kalypso.model.wspm.ui.action.PlotterExportAction"
-                 label="PlotterExport">
-           </action>
-           <filter
-                 name="featureType"
-                 value="org.kalypso.model.wspmprofile#Profile">
-           </filter>
-        </objectContribution>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
@@ -425,9 +410,6 @@
                   style="push">
                <visibleWhen
                      checkEnabled="true">
-                  <reference
-                        definitionId="org.kalypso.chart.ui.chartEditorActive">
-                  </reference>
                </visibleWhen>
             </command>
          </menuContribution>
@@ -489,16 +471,12 @@
                icon="icons/etool16/delete_layer.gif">
          </image>
          <image
-               commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-               icon="icons/elcl16/">
-         </image>
-         <image
                commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
-               icon="KalypsoModelWspmUI.image2">
+               icon="icons/etool16/profile_property_edit.gif">
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.command.profile.validate"
-               icon="icons/obj16/validation_inputok.gif">
+               icon="icons/etool16/profile_validate.gif">
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.command.profile.flip"
@@ -506,7 +484,7 @@
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-               icon="icons/obj16/WspWinPlotter.gif">
+               icon="icons/etool16/profile_plotter.gif">
          </image>
          <image
                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
@@ -519,7 +497,6 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
   <command
-        defaultHandler="org.kalypso.model.wspm.ui.action.LengthSectionExportHandler"
         id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
         name="LengthSectionExport">
   </command>
@@ -540,7 +517,7 @@
   </command>
   <command
         id="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
-        name="PlotterExport">
+        name="WspWin Plotter">
   </command>
   <command
         description="Simplify profile by removing unimportant points"
@@ -645,11 +622,15 @@
                 visible="false">
           </separator>
           <command
-                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
                 style="push">
+             <visibleWhen
+                   checkEnabled="true">
+             </visibleWhen>
           </command>
        </menu>
        <menu
+             icon="icons/etool16/profileChange.gif"
              id="org.kalypso.model.wspm.ui.profileChange"
              label="Profile"
              mnemonic="p">
@@ -708,6 +689,16 @@
 <extension
       point="org.eclipse.ui.handlers">
    <handler
+         class="org.kalypso.model.wspm.ui.action.LengthSectionExportHandler"
+         commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
+      <enabledWhen>
+                  <reference
+                        definitionId="org.kalypso.chart.ui.chartEditorActive">
+                  </reference>
+      </enabledWhen>
+   </handler>
+      
+   <handler
          class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.editProperties">
       <enabledWhen>
@@ -735,6 +726,7 @@
       </enabledWhen>
    </handler>
    <handler
+         class="org.kalypso.model.wspm.ui.action.PlotterExportHandler"
          commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter">
       <enabledWhen>
          <reference
