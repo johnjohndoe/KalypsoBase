@@ -43,7 +43,11 @@ package org.kalypso.ogc.sensor.filter.filters;
 import java.util.Calendar;
 
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
+/**
+ * @author doemming
+ */
 public class Intervall
 {
   // DO NOT CHANGE NUMBERING
@@ -80,9 +84,6 @@ public class Intervall
 
   private double[] m_value;
 
-  /**
-   * @author doemming
-   */
   public Intervall( final Calendar start, final Calendar end, final int[] status, final double[] value )
   {
     m_start = (Calendar) start.clone();
@@ -91,9 +92,6 @@ public class Intervall
     m_value = value.clone();
   }
 
-  /*
-   * @author doemming
-   */
   public Intervall( final Calendar start, final Calendar end )
   {
     m_start = (Calendar) start.clone();
@@ -102,9 +100,6 @@ public class Intervall
     m_value = null;
   }
 
-  /*
-   * @author doemming
-   */
   public Intervall( final Calendar start, final Calendar end, final Integer[] status, final Double[] values )
   {
     m_start = start;
@@ -203,7 +198,16 @@ public class Intervall
 
     for( int i = 0; i < values.length; i++ )
       intervallValues[i] = factor * values[i];
-    result.setStatus( getStatus() );
+
+    final int[] status = getStatus();
+    /* Bugfix: empty intervals never get a status */
+    if( result.getDurationInMillis() == 0 )
+    {
+      for( int i = 0; i < status.length; i++ )
+        status[i] = KalypsoStati.BIT_OK;
+    }
+    result.setStatus( status );
+
     result.setValue( intervallValues );
     return result;
   }
