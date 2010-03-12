@@ -736,7 +736,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
-  public synchronized void setBoundingBox( final GM_Envelope wishBBox )
+  public void setBoundingBox( final GM_Envelope wishBBox )
   {
     setBoundingBox( wishBBox, true );
   }
@@ -754,33 +754,36 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap )
   {
-    /* The wished bounding box. */
-    m_wishBBox = wishBBox;
+    final GM_Envelope oldExtent;
 
-    /* We do remember the wish-box here, this behaves more nicely if the size of the view changed meanwhile. */
-    if( useHistory && m_wishBBox != null )
-      m_extentHistory.push( m_wishBBox );
-
-    /* Store the old extent */
-    final GM_Envelope oldExtent = m_boundingBox;
-
-    /* Adjust the new extent (using the wish bounding box). */
-    final double ratio = MapPanelUtilities.getRatio( this );
-    final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
-    m_boundingBox = boundingBox;
-
-    if( boundingBox != null )
+    synchronized( this )
     {
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() ); //$NON-NLS-1$
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() ); //$NON-NLS-1$
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() ); //$NON-NLS-1$
+      oldExtent = m_boundingBox;
+
+      /* The wished bounding box. */
+      m_wishBBox = wishBBox;
+
+      /* We do remember the wish-box here, this behaves more nicely if the size of the view changed meanwhile. */
+      if( useHistory && m_wishBBox != null )
+        m_extentHistory.push( m_wishBBox );
+
+      /* Adjust the new extent (using the wish bounding box). */
+      final double ratio = MapPanelUtilities.getRatio( this );
+      final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
+      m_boundingBox = boundingBox;
+      if( boundingBox != null )
+      {
+        KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() ); //$NON-NLS-1$
+        KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() ); //$NON-NLS-1$
+        KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() ); //$NON-NLS-1$
+        KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() ); //$NON-NLS-1$
+      }
     }
 
     if( invalidateMap )
     {
       /* Tell everyone, that the extent has changed. */
-      fireExtentChanged( oldExtent, boundingBox );
+      fireExtentChanged( oldExtent, m_boundingBox );
 
       invalidateMap();
     }
