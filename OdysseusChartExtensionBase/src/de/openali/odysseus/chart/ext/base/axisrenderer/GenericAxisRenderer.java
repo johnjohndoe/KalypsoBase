@@ -106,8 +106,10 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final Insets tickLabelInsets = getTickLabelInsets();
 
     IDataRange<Number> range = axis.getNumericRange();
-    final int axisMin = axis.numericToScreen( range.getMin() );
-    final int axisMax = axis.numericToScreen( range.getMax() );
+    final double numericMin = range.getMin().doubleValue();
+    final double numericMax = range.getMax().doubleValue();
+    final int axisMin = axis.numericToScreen( numericMin );// == numericMax ? numericMin * 0.9999 : numericMin );
+    final int axisMax = axis.numericToScreen( numericMax );// == numericMin ? numericMax * 1.0001 : numericMax );
     final int screenMin = Math.min( axisMin, axisMax );
     final int screenMax = Math.max( axisMin, axisMax );
 
@@ -414,6 +416,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         offset = coords[1];
 
       Number[] ticks = getTicks( axis, gc );
+
       drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
       drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3], offset );
     }

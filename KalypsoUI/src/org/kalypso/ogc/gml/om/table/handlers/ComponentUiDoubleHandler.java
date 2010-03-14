@@ -61,8 +61,6 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
  */
 public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
 {
-  final NumberFormat m_nf = NumberFormat.getInstance( Locale.getDefault() );
-
   public ComponentUiDoubleHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
@@ -107,15 +105,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final String text )
   {
-//    try
-//    {
-     return NumberUtils.parseDouble( text );// return m_nf.parse( text ).doubleValue();
-//    }
-//    catch( final ParseException e )
-//    {
-//      throw new NumberFormatException( e.getLocalizedMessage() );
-//    }
-
+    return NumberUtils.parseDouble( text );
   }
 
   /**

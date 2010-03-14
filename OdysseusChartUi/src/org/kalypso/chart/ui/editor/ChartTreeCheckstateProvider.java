@@ -38,21 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.advanced.edit;
+package org.kalypso.chart.ui.editor;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
- * @author Dirk Kuch
+ * @author kimwerner
+ *
  */
-public interface IAdvancedEditWidgetGeometry
+public class ChartTreeCheckstateProvider implements ICheckStateProvider
 {
-  Point getCurrentPoint( );
+  /**
+   * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
+   */
+  @Override
+  public boolean isChecked( Object element )
+  {
+    if( element instanceof IChartModel )
+      return true;
+    
+   if( element instanceof IChartLayer )
+     return ((IChartLayer) element).isVisible();
+    
+    return false;
+  }
 
-  Feature getFeature( );
+  /**
+   * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
+   */
+  @Override
+  public boolean isGrayed( Object element )
+  {
+    return false;
+  }
 
-  Geometry getUnderlyingGeometry( );
 }

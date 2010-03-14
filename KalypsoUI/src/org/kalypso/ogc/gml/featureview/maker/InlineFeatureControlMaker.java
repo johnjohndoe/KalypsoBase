@@ -84,8 +84,8 @@ public class InlineFeatureControlMaker implements IControlMaker
     final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     final JAXBElement<GridDataType> jaxbgriddata = TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata );
 
-    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    griddata.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
+    griddata.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     griddata.setGrabExcessHorizontalSpace( true );
     griddata.setGrabExcessVerticalSpace( true );
     griddata.setHorizontalSpan( 2 );
@@ -97,8 +97,8 @@ public class InlineFeatureControlMaker implements IControlMaker
     final GridDataType groupdata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     groupdata.setGrabExcessHorizontalSpace( true );
     groupdata.setGrabExcessVerticalSpace( true );
-    groupdata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    groupdata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    groupdata.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
+    groupdata.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     groupdata.setHorizontalSpan( ((GridLayout) parentLayout).getNumColumns() );
 
     group.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( groupdata ) );
@@ -108,6 +108,8 @@ public class InlineFeatureControlMaker implements IControlMaker
     
     final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 2 );
+    gridLayout.setMarginWidth( 0 );
+    gridLayout.setMarginHeight( 0 );
     group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
 
     group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createSubcomposite( compo ) );

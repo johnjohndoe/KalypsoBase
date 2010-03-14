@@ -118,9 +118,9 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
 
       // als StorageInput zurückgeben
       final String basename = FilenameUtils.removeExtension( file.getName() );
-      final String gftName = basename + ".gmv"; //$NON-NLS-1$
-      final IFile gftFile = file.getParent().getFile( new Path( gftName ) );
-      final IPath fullPath = gftFile.getFullPath();
+      final String gmvName = basename + ".gmv"; //$NON-NLS-1$
+      final IFile gmvFile = file.getParent().getFile( new Path( gmvName ) );
+      final IPath fullPath = gmvFile.getFullPath();
 
       return new StorageEditorInput( new StringStorage( string, fullPath ) );
     }

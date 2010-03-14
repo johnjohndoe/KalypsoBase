@@ -321,13 +321,13 @@ public class MapHandlerUtils
     {
       final Object object = selIt.next();
       if( object instanceof IKalypsoFeatureTheme )
-        return (T) object;
+        return classToFind.cast( object );
 
       if( object instanceof IAdaptable )
       {
         final Object adapter = ((IAdaptable) object).getAdapter( classToFind );
         if( adapter != null )
-          return (T) adapter;
+          return classToFind.cast( adapter );
       }
     }
 

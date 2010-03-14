@@ -45,7 +45,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * <p>
- * Eclipse-Editor zum editieren der GML-Gis-Templates.
+ * Eclipse-Editor zum Editieren der GML-Gis-Templates.
  * </p>
  *
  * @author belger, Stefan Kurzbach
@@ -59,28 +59,6 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
   private static final String OUTLINE_URI_MENU = "menu:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
   private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
-
-//  /**
-//   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#createPartControl(org.eclipse.swt.widgets.Composite)
-//   */
-//  @Override
-//  public void createPartControl( final Composite parent )
-//  {
-//    super.createPartControl( parent );
-//
-//    final IEditorInput input = getEditorInput();
-//    if( input instanceof IStorageEditorInput )
-//    {
-//      try
-//      {
-//        startLoadJob( ((IStorageEditorInput) input).getStorage() );
-//      }
-//      catch( final CoreException e )
-//      {
-//        e.printStackTrace();
-//      }
-//    }
-//  }
 
   @SuppressWarnings("unchecked")
   @Override

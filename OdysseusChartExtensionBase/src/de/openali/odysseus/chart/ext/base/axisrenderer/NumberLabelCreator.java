@@ -65,6 +65,8 @@ public class NumberLabelCreator implements ILabelCreator
    */
   public String getLabel( Number value, IDataRange<Number> range )
   {
+    if( value == null )
+      return "";
     if( m_formatString.equals( "%s" ) )
     {
       Format format = getFormat( range );
@@ -82,22 +84,22 @@ public class NumberLabelCreator implements ILabelCreator
     if( min == null )
       return null;
     // FIXME while runs into endlos loop
-    if( Double.valueOf( min.doubleValue() ).isInfinite() )
-    {
-      min = 0.0;
-    }
+// if( Double.valueOf( min.doubleValue() ).isInfinite() )
+// {
+// min = 0.0;
+// }
 
     Number max = range.getMax();
     if( max == null )
       return null;
     // FIXME while runs into endlos loop
-    if( Double.valueOf( max.doubleValue() ).isInfinite() )
-    {
-      max = 1.0;
-    }
+// if( Double.valueOf( max.doubleValue() ).isInfinite() )
+// {
+// max = 1.0;
+// }
 
     // Differenz bilden und sicherstellen, dass sie positiv ist
-    Double diff = Math.abs( max.doubleValue() - min.doubleValue() );
+    Double diff = (max == null || min == null) ? 0.0 : Math.abs( max.doubleValue() - min.doubleValue() );
 
     final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
@@ -108,13 +110,13 @@ public class NumberLabelCreator implements ILabelCreator
     int id = 1;
 
     // Minuszeichen einplanen
-    if( max.doubleValue() < 0 || min.doubleValue() < 0 )
+    if( min != null && max != null && (max.doubleValue() < 0 || min.doubleValue() < 0) )
     {
       id++;
     }
 
     // Vorkommastellen ausrechnen
-    double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
+    double tmpmax = (max == null || min == null) ? 0.0 : Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
     {
       while( tmpmax >= 1 )

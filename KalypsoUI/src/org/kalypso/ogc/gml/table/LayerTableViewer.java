@@ -126,7 +126,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
- * @author Belger
+ * @author Gernot Belger
  */
 public class LayerTableViewer extends TableViewer implements ModellEventListener, ModellEventProvider, ICellModifier
 {

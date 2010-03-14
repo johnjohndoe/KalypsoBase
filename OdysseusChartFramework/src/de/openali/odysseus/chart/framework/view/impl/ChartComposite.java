@@ -33,7 +33,6 @@ import de.openali.odysseus.chart.framework.view.IChartView;
  */
 public class ChartComposite extends Canvas implements IChartView
 {
-
   /** axis pos --> axis placeholder */
   final Map<POSITION, Composite> m_axisPlaces = new HashMap<POSITION, Composite>();
 
@@ -105,7 +104,6 @@ public class ChartComposite extends Canvas implements IChartView
       @Override
       public void onMapperRangeChanged( final IMapper mapper )
       {
-
         layout();
         if( mapper instanceof IAxis )
         {
@@ -232,6 +230,8 @@ public class ChartComposite extends Canvas implements IChartView
   }
 
   /**
+   * FIXME: we should listen to dipsoe-event instead
+   *
    * @see org.eclipse.swt.widgets.Widget#dispose()
    */
   @Override
@@ -250,7 +250,7 @@ public class ChartComposite extends Canvas implements IChartView
 
   /**
    * No Layout can be set on this chart. It manages its children and the layout on its own.
-   * 
+   *
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
