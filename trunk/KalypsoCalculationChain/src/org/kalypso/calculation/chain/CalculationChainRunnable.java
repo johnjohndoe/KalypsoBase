@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -13,8 +15,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.calculation.chain.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationJobSpecification;
 import org.kalypso.simulation.core.refactoring.ISimulationRunner;
 import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -31,7 +35,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     FINISHED
   }
 
-  private final List<CalculationChainMemberJobSpecification> m_jobSpecificationList = new ArrayList<CalculationChainMemberJobSpecification>();
+  private final List<SimulationJobSpecification> m_jobSpecificationList = new ArrayList<SimulationJobSpecification>();
 
   private CHAIN_STATUS m_chainStatus;
 
@@ -41,15 +45,15 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
   public CalculationChainRunnable( final URL context )
   {
-    this( new ArrayList<CalculationChainMemberJobSpecification>(), context );
+    this( new ArrayList<SimulationJobSpecification>(), context );
   }
 
-  public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList, final URL context )
+  public CalculationChainRunnable( final List<SimulationJobSpecification> jobSpecificationList, final URL context )
   {
     this( jobSpecificationList, context, null );
   }
 
-  public CalculationChainRunnable( final List<CalculationChainMemberJobSpecification> jobSpecificationList, final URL context, ISimulationMonitor monitor )
+  public CalculationChainRunnable( final List<SimulationJobSpecification> jobSpecificationList, final URL context, ISimulationMonitor monitor )
   {
     m_monitor = monitor;
     m_jobSpecificationList.addAll( jobSpecificationList );
@@ -66,12 +70,12 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     }
   }
 
-  public void addJob( final CalculationChainMemberJobSpecification jobSpecification )
+  public void addJob( final SimulationJobSpecification jobSpecification )
   {
     m_jobSpecificationList.add( jobSpecification );
   }
 
-  public void addJob( final int index, final CalculationChainMemberJobSpecification jobSpecification )
+  public void addJob( final int index, final SimulationJobSpecification jobSpecification )
   {
     m_jobSpecificationList.add( index, jobSpecification );
   }
@@ -83,13 +87,13 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     IStatus status = Status.OK_STATUS;
     try
     {
-      for( final CalculationChainMemberJobSpecification job : m_jobSpecificationList )
+      for( final SimulationJobSpecification job : m_jobSpecificationList )
       {
-        setTask( String.format( "Processing calculation chain member \"%s\"", job.getCalculationTypeID() ), monitor );
+        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor );
 
         if( status.isOK() )
         {
-          System.out.println( String.format( "Starting calc job: %s", job.getCalculationTypeID() ) ); //$NON-NLS-1$
+          Logger.getAnonymousLogger().log( Level.INFO, String.format( "Starting calc job: %s [%s]", job.getDescription(), job.getCalculationTypeID() ) ); //$NON-NLS-1$
 
           final IPath workspace = job.getContainer();
           final IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember( workspace );
@@ -118,7 +122,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
         }
       }
 
-      setTask( String.format( "Processed calculation chain" ), monitor );
+      setTask( String.format( Messages.getString( "CalculationChainRunnable_1" ) ), monitor );
     }
     catch( final Exception e )
     {

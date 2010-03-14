@@ -38,6 +38,9 @@
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="gml:description" />
+				</sequence>
 				<!-- Force id attribute, because Kalypso needs it -->
 				<attribute ref="gml:id" use="required" />
 			</restriction>
