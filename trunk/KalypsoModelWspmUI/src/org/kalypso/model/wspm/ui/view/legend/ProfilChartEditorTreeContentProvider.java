@@ -53,15 +53,15 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContentProvider
 {
-
   private final IExpandableChartLayer m_modelLayer;
-  
+
   public ProfilChartEditorTreeContentProvider( final IChartModel model )
   {
     super( model );
-     m_modelLayer = new AbstractExpandableLayer()
+    
+    m_modelLayer = new AbstractExpandableLayer()
     {
-  
+
       /**
        * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
        */
@@ -80,9 +80,8 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
         return getModel().getLayerManager();
       }
     };
-    
-    m_modelLayer.setVisible( true );
 
+    m_modelLayer.setVisible( true );
   }
 
   /**
@@ -109,7 +108,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     }
     if( element instanceof AbstractProfilTheme )
     {
-      return ((AbstractProfilTheme)element).getLegendNodes();
+      return ((AbstractProfilTheme) element).getLegendNodes();
     }
     return super.getChildren( element );
   }
@@ -126,7 +125,7 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     }
     if( element instanceof AbstractProfilTheme )
     {
-      return ((AbstractProfilTheme)element).getLegendNodes().length > 0;
+      return ((AbstractProfilTheme) element).getLegendNodes().length > 0;
     }
     return super.hasChildren( element );
   }

@@ -113,7 +113,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   {
     setLayerProvider( m_chart );
   }
-  
+
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -179,7 +179,6 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
     m_profile = newProfile;
 
     onProfilChanged();
@@ -286,17 +285,16 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
     {
       m_form.setMessage( null );
       m_chart.setProfil( getProfil() );
-      
+
       final ChartComposite chart = m_chart.getChart();
       if( chart != null )
         ChartUtilities.maximize( chart.getChartModel() );
-      
+
       m_form.getBody().layout();
     }
 
     return getChartComposite();
   }
-
 
   /**
    * Can be overridden if one wants to set the layer provider.
@@ -331,7 +329,7 @@ public class ChartView extends ViewPart implements IChartPart, IProfilListener, 
       ChartHandlerUtilities.updateElements( m_chart );
       m_chart.dispose();
     }
-    
+
     m_adapterPartListener.dispose();
     m_control.dispose();
 

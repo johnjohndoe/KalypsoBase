@@ -39,7 +39,6 @@
                  label="%com.bce.profil.eclipse.view.table.insertPoints"
                  menubarPath="points"
                  style="push"
-                 toolbarPath="points"
                  tooltip="%com.bce.profil.eclipse.view.table.insertPoints.tooltip"/>
            <action
                  class="org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate"
@@ -226,6 +225,13 @@
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
+               id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
+               label="%org.kalypso.model.wspm.ui.action.PropertyEditAction"
+               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
+               tooltip="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description">
+         </action>
       </objectContribution>
  
         <objectContribution

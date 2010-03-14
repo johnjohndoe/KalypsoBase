@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 import org.eclipse.core.resources.IMarker;
@@ -82,24 +83,27 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   private static final String IMAGE_NO_ERROR = "profilLabelProvider.img.no_error"; //$NON-NLS-1$
 
-  private final ImageRegistry m_imgRegistry = new ImageRegistry();
+  /* Static as this class is created quite often, but cannot be disposed. */
+  private static final ImageRegistry IMG_REGISTRY = new ImageRegistry();
 
+  static
+  {
+    IMG_REGISTRY.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
+    
+    IMG_REGISTRY.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+    
+    IMG_REGISTRY.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+    
+    IMG_REGISTRY.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
+  }
+  
   private final IProfil m_profile;
 
   public ComponentUiProblemHandler( final IProfil profile )
   {
     m_profile = profile;
-
-    m_imgRegistry.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
-
-    m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-
-    m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-
-    m_imgRegistry.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
-
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
@@ -166,9 +170,8 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public Image getImage( final IRecord record )
   {
-
     final MarkerIndex markerIndex = m_profile.getProblemMarker();
-    Image backgroundImage = m_imgRegistry.get( IMAGE_NO_ERROR );
+    Image backgroundImage = IMG_REGISTRY.get( IMAGE_NO_ERROR );
     final StringBuffer buffer = new StringBuffer();
     int severity = -1;
     if( markerIndex != null )
@@ -179,11 +182,11 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       {
         severity = MarkerUtils.getSeverity( worst );
         if( IMarker.SEVERITY_ERROR == severity )
-          backgroundImage = m_imgRegistry.get( IMAGE_ERROR );
+          backgroundImage = IMG_REGISTRY.get( IMAGE_ERROR );
         else if( IMarker.SEVERITY_WARNING == severity )
-          backgroundImage = m_imgRegistry.get( IMAGE_WARNING );
+          backgroundImage = IMG_REGISTRY.get( IMAGE_WARNING );
         else if( IMarker.SEVERITY_INFO == severity )
-          backgroundImage = m_imgRegistry.get( IMAGE_INFO );
+          backgroundImage = IMG_REGISTRY.get( IMAGE_INFO );
       }
     }
     final String[] deviderTypes = getMarkerTypes( record );
@@ -191,11 +194,11 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       return backgroundImage;
 
     buffer.append( severity );
-    buffer.append( deviderTypes );
+    buffer.append( Arrays.toString( deviderTypes ) );
     final String key = buffer.toString();
 
     final IProfilPointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
-    final Image image = m_imgRegistry.get( key );
+    final Image image = IMG_REGISTRY.get( key );
     if( image == null )
     {
       final Display display = Display.getCurrent();
@@ -207,14 +210,14 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
         if( severity != -1 )
           gc.drawImage( backgroundImage, 0, 0 );
         if( img != null )
-          m_imgRegistry.put( key, img );
+          IMG_REGISTRY.put( key, img );
       }
       finally
       {
         gc.dispose();
       }
     }
-    return m_imgRegistry.get( key );
+    return IMG_REGISTRY.get( key );
 
   }
 

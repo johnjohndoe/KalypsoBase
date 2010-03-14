@@ -127,9 +127,12 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      final IRecord[] points = m_profile.getPoints();
-      if( points.length > 0 )
-        m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+      if( m_profile != null )
+      {
+        final IRecord[] points = m_profile.getPoints();
+        if( points.length > 0 )
+          m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+      }
       updateProblemView();
       return Status.OK_STATUS;
     }
@@ -335,7 +338,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( (m_profile == null) )
     {
-      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
 
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
@@ -356,6 +359,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
+    this.setPartName( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.3", m_profile.getStation() ) );
     m_tupleResultContentProvider = new TupleResultContentProvider( handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 

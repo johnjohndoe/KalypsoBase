@@ -171,6 +171,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     gD.exclude = true;
     m_chartComposite.setLayoutData( gD );
+    m_chartComposite.getChartModel().setHideUnusedAxes( true );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
     {
@@ -190,7 +191,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
     updateLayer();
-    
+
     return m_chartComposite;
   }
 
@@ -427,26 +428,10 @@ public class ProfilChartView implements IChartPart, IProfilListener
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
           {
-            if( layer instanceof IProfilChartLayer )
-            {
-              // TODO: Kim, wechsel der Achsentexte ermöglichen
-// final ICoordinateMapper cm = layer.getCoordinateMapper();
-// if( cm != null && (cm.getTargetAxis() == getAxis( ID_AXIS_RIGHT )) )
-// {
-// final IComponent cp = ((IProfilChartLayer) layer).getTargetComponent();
-// if( cp != null )
-// if( !getAxis( ID_AXIS_RIGHT ).getLabel().equals( "[" + cp.getUnit() + "]" ) )
-// {
-// getAxis( ID_AXIS_RIGHT ).setLabel( "[" + cp.getUnit() + "]" );
-// final IAxisComponent ac = chart.getChartModel().getMapperRegistry().getComponent( getAxis( ID_AXIS_RIGHT ) );
-// ((AxisCanvas) ac).layout();
-// }
-// }
-              ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-            }
+            ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
           }
-          redrawChart();
         }
+        redrawChart();
       }
     } );
   }
@@ -487,7 +472,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_profile != null )
     {
       m_profile.removeProfilListener( this );
-
     }
 
     final IProfil old = m_profile;
@@ -498,16 +482,18 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
       final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
       lm.dispose();
-
-      return;
     }
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+    else
     {
-      m_profile.addProfilListener( this );
-      m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
-      ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
-      updateLayer();
+      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      {
+        m_profile.addProfilListener( this );
+        m_chartComposite.getChartModel().setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() ) ); //$NON-NLS-1$
+        ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
+        updateLayer();
+      }
     }
+    
     fireProfilChanged( old );
   }
 
@@ -528,7 +514,8 @@ public class ProfilChartView implements IChartPart, IProfilListener
       return;
 
     final IMapperRegistry mr = chartModel.getMapperRegistry();
-    if( mr.getAxes() == null || mr.getAxes().length == 0 )
+    final IAxis[] existingAxis = mr.getAxes();
+    if( existingAxis == null || existingAxis.length == 0 )
     {
       final IAxis[] axis = m_layerProvider.registerAxis( mr );
       if( axis.length > 0 )

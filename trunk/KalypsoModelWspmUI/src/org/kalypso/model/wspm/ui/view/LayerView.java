@@ -61,6 +61,16 @@ import de.openali.odysseus.chart.framework.view.IChartView;
  */
 public class LayerView extends ViewPart
 {
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#setPartName(java.lang.String)
+   */
+  @Override
+  public void setPartName(final String title)
+  {
+    super.setPartName( title );
+  }
+
   private ScrolledForm m_form;
 
   private FormToolkit m_toolkit;
@@ -79,7 +89,7 @@ public class LayerView extends ViewPart
     bodyLayout.marginWidth = 0;
     m_form.getForm().getBody().setLayout( bodyLayout );
     m_form.getForm().setText( "" ); //$NON-NLS-1$
-    m_form.getForm().setMessage(Messages.getString("org.kalypso.model.wspm.ui.view.LayerView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+    m_form.getForm().setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.LayerView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
   }
 
   /**
@@ -143,7 +153,7 @@ public class LayerView extends ViewPart
     else
     {
       m_form.getForm().setText( "" ); //$NON-NLS-1$
-      m_form.getForm().setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.LayerView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      m_form.getForm().setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.LayerView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
     }
     m_form.reflow( true );
   }
