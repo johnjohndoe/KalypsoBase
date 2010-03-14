@@ -45,8 +45,8 @@ import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.cache.OnCallRefreshFileObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -106,8 +106,8 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       if( !status.isOK() )
         throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2" ) ) ); //$NON-NLS-1$
 
-      FileSystemManager manager = VFSUtilities.getManager();
-      FileObject source = manager.resolveFile( src.getAbsolutePath() );
+      final FileSystemManager manager = VFSUtilities.getManager();
+      final FileObject source = manager.resolveFile( src.getAbsolutePath() );
 
       final String urlDestination = ProjectModelUrlResolver.getUrlAsFtp( new ProjectModelUrlResolver.IResolverInterface()
       {
@@ -119,36 +119,10 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       }, zipName ); //$NON-NLS-1$
 
-      FileObject destination = manager.resolveFile( urlDestination );
+      // change caching strategy of destination file to avoid deadlocks!
+      final FileObject destination = new OnCallRefreshFileObject( manager.resolveFile( urlDestination ) );
 
-      int count = 0;
-      boolean uploaded = false;
-
-      // @hack - under windows apache webdav the first upload try of an Kalypso planer client instance always fails
-      while( count < 5 && uploaded == false )
-      {
-        try
-
-        {
-          VFSUtilities.copy( source, destination );
-          uploaded = true;
-        }
-        catch( final FileSystemException e )
-        {
-          e.printStackTrace();
-          count++;
-
-          Thread.sleep( 100 );
-
-          // reinit components
-          manager = VFSUtilities.getManager();
-          source = manager.resolveFile( src.getAbsolutePath() );
-          destination = manager.resolveFile( urlDestination );
-        }
-      }
-
-      if( uploaded == false )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker.1" ) ) ); //$NON-NLS-1$
+      VFSUtilities.copy( source, destination );
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
@@ -162,7 +136,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       service.createProject( bean, new URL( urlDestination ) );
 
-      WorkspaceJob updateDescription = new WorkspaceJob( "" ) //$NON-NLS-1$
+      final WorkspaceJob updateDescription = new WorkspaceJob( "" ) //$NON-NLS-1$
       {
         int updateCount = 0;
 
@@ -182,13 +156,13 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
             preferences.setIsOnServer( true );
             preferences.setModified( false );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             updateCount += 1;
             if( updateCount < 5 )
               this.schedule( 250 );
             else
-              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0"), e ) ); //$NON-NLS-1$
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0" ), e ) ); //$NON-NLS-1$
 
             return Status.CANCEL_STATUS;
           }

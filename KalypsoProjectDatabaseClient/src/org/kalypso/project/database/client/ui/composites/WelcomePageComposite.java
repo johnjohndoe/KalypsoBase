@@ -118,6 +118,7 @@ public class WelcomePageComposite extends Composite
       content.setHoverImage( handler.getHoverIcon() );
 
       content.setText( handler.getLabel(), MyFonts.WELCOME_PAGE_MODULE, MyColors.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
+      content.setTooltip( handler.getTooltip() );
       content.setMouseListener( new MouseAdapter()
       {
         /**
@@ -128,7 +129,7 @@ public class WelcomePageComposite extends Composite
         {
           m_pageHandler.setSelectedModule( module );
         }
-      }, handler.getTooltip() );
+      } );
 
       mainCanvas.addContentArea( content );
     }
