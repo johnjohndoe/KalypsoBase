@@ -73,17 +73,24 @@ Example: {myVirtualNamespace}anotherProperty
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="minOccurs" type="string">
+            <annotation>
+               <documentation>
+                  Default is 0
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="maxOccurs" type="string">
+            <annotation>
+               <documentation>
+                  Default is 1
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="value" type="string">
             <annotation>
                <documentation>
                   The qname of the type of the values of this property in the form {namespace}localPart. &lt;br&gt;For example: {http://www.w3.org/2001/XMLSchema}string.
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="isList" type="boolean">
-            <annotation>
-               <documentation>
-                  Defaults to &lt;code&gt;false&lt;/code&gt;.
                </documentation>
             </annotation>
          </attribute>
@@ -165,7 +172,6 @@ Defaults to &lt;code&gt;true&lt;/code&gt;.
       </appInfo>
       <documentation>
          See org.kalypso.gmlschema.types.IGeometrySpecification
-
       </documentation>
    </annotation>
 
@@ -177,6 +183,4 @@ Defaults to &lt;code&gt;true&lt;/code&gt;.
          [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
-
-
 </schema>

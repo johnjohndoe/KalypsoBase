@@ -74,14 +74,14 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
 
   /**
    * Value of the property for a format string.<br>
-   * A {@link Formatter}-style format string, can only contain one variable of type f. Example:
-   * <code>Value: %.3f</code>.
+   * A {@link Formatter}-style format string, can only contain one variable of type f. Example: <code>Value: %.3f</code>
+   * .
    */
   public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_theme;
 
-  public String m_formatString;
+  private String m_formatString;
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
@@ -89,13 +89,17 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
-
     m_theme = (IKalypsoFeatureTheme) theme;
 
     final IFeatureType featureType = m_theme.getFeatureType();
     Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.QNAME ) );
 
-    m_formatString = props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
+    m_formatString = initFormatString( props );
+  }
+
+  protected String initFormatString( final Properties props )
+  {
+    return props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
   }
 
   /**
@@ -120,7 +124,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
       final Double value = getValue( pos );
       if( value == null )
         return;
-      formatter.format( m_formatString, value );
+      formatter.format( getFormatString(), value );
     }
     catch( final Exception e )
     {
@@ -130,7 +134,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
   }
 
   // extracted getting the value for easier class extending
-  public Double getValue( final GM_Position pos ) throws Exception
+  protected Double getValue( final GM_Position pos ) throws Exception
   {
     Assert.isNotNull( m_theme );
 
@@ -156,8 +160,13 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     return null;
   }
 
-  public String getFormatString( )
+  protected String getFormatString( )
   {
     return m_formatString;
+  }
+
+  protected String getDefaultFormatString( )
+  {
+    return DEFAULT_FORMAT_STRING;
   }
 }

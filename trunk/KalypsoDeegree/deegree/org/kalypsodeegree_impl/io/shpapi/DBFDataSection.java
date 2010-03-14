@@ -224,12 +224,14 @@ public class DBFDataSection
 
   private void writeEntry( final ByteContainer datasec, final int offset, final int length, final byte[] b, final byte fillByte ) throws DBaseException
   {
-    if( b.length > length )
-      throw new DBaseException( "Entry contains too many characters " + new String( b ) );
+// if( b.length > length )
+// throw new DBaseException( "Entry contains too many characters " + new String( b ) );
 
-    for( int j = 0; j < b.length; j++ )
+    final int lengthToWrite = Math.min( b.length, length );
+
+    for( int j = 0; j < lengthToWrite; j++ )
       datasec.data[offset + j] = b[j];
-    for( int j = b.length; j < length; j++ )
+    for( int j = lengthToWrite; j < length; j++ )
       datasec.data[offset + j] = fillByte;
   }
 

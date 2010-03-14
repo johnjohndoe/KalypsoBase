@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -63,11 +63,11 @@ import org.xml.sax.XMLReader;
 public class GMLContentHandler extends DelegatingContentHandler implements IFeatureHandler, IRootFeatureProvider
 {
   private final URL m_context;
- 
+
   private final GMLSchemaLoaderWithLocalCache m_schemaLoader;
-  
+
   private Feature m_rootFeature;  
-  
+
   /**
    * @param schemaLocations
    *          If non-<code>null</code>, these locations will be used to load the corresponding schmema's (i.e. given to
@@ -77,19 +77,19 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
   public GMLContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final URL context, final GMLSchemaLoaderWithLocalCache schemaLoader )
   {
     super( xmlReader, parentContentHandler );
-    
+
     m_context = context;
-    
+
     m_schemaLoader = schemaLoader;
   }
 
-  public GMLContentHandler( XMLReader xmlReader, final ContentHandler parentContentHandler, URL context, Map<String, URL> namespaces, Map<String, IGMLSchema> preFetchedSchemas )
+  public GMLContentHandler( final XMLReader xmlReader, final ContentHandler parentContentHandler, final URL context, final Map<String, URL> namespaces, final Map<String, IGMLSchema> preFetchedSchemas )
   {
     // TODO Auto-generated constructor stub
     super( xmlReader, parentContentHandler );
-    
+
     m_context = context;
-    
+
     m_schemaLoader = new GMLSchemaLoaderWithLocalCache( namespaces, preFetchedSchemas );
   }
 
@@ -97,7 +97,7 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
    * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void endElement( String uri, String localName, String qName )
+  public void endElement( final String uri, final String localName, final String qName )
   {
     endDelegation();
   }
@@ -106,12 +106,12 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
    * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+  public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {  
     delegate( new FeatureContentHandler ( m_xmlReader, this, m_schemaLoader, m_context ) );
     m_delegate.startElement( uri, localName, qName, atts );
   }
-  
+
   public Feature getRootFeature( ) throws GMLException
   {
     if( m_rootFeature == null )
@@ -119,13 +119,13 @@ public class GMLContentHandler extends DelegatingContentHandler implements IFeat
 
     return m_rootFeature;
   }
-  
+
   public void setRootFeature( final Feature rootFeature )
   {
     m_rootFeature = rootFeature;
   }
 
-  public void handle( Feature feature )
+  public void handle( final Feature feature )
   {
     setRootFeature( feature ); 
   }

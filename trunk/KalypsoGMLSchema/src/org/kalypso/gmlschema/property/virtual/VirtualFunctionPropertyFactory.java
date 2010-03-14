@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -63,6 +64,10 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 public class VirtualFunctionPropertyFactory
 {
   public static final QName QNAME_FUNCTION = new QName( NS.KALYPSO_APPINFO, "functionId" ); //$NON-NLS-1$
+
+  public static final QName QNAME_MINOCCURS = new QName( NS.KALYPSO_APPINFO, "minOccurs" ); //$NON-NLS-1$
+
+  public static final QName QNAME_MAXOCCURS = new QName( NS.KALYPSO_APPINFO, "maxOccurs" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROPERTY = new QName( NS.KALYPSO_APPINFO, "property" ); //$NON-NLS-1$
 
@@ -103,18 +108,36 @@ public class VirtualFunctionPropertyFactory
       // valueQName any more.
 
       final String functionId = funcCursor.getAttributeText( VirtualFunctionPropertyFactory.QNAME_FUNCTION );
+      final int minOccurs = parseInt( funcCursor.getAttributeText( VirtualFunctionPropertyFactory.QNAME_MINOCCURS ), 0 );
+      final int maxOccurs = parseInt( funcCursor.getAttributeText( VirtualFunctionPropertyFactory.QNAME_MAXOCCURS ), 1 );
       final Map<String, String> properties = parseParameters( funcProp );
 
       final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
       final IMarshallingTypeHandler typeHandler = valueTypeQName == null ? null : typeRegistry.getTypeHandlerForTypeName( valueTypeQName );
 
-      return new VirtualFunctionValuePropertyType( featureType, typeHandler, propertyQName, functionId, properties );
+      return new VirtualFunctionValuePropertyType( featureType, typeHandler, propertyQName, functionId, minOccurs, maxOccurs, properties );
     }
     catch( final Throwable th )
     {
       th.printStackTrace();
       throw new GMLSchemaException( "Exception while creating virtual property type for " + featureType.getQName(), th ); //$NON-NLS-1$
     }
+  }
+
+  public static int parseInt( String attributeText, int defaultValue )
+  {
+    if( attributeText == null )
+      return defaultValue;
+    else if( attributeText.trim().isEmpty() )
+      return defaultValue;
+    else if( "unbounded".equals( attributeText ) )
+      return Integer.MAX_VALUE;
+
+    Integer parseQuietInteger = NumberUtils.parseQuietInteger( attributeText );
+    if( parseQuietInteger == null )
+      return defaultValue;
+
+    return parseQuietInteger;
   }
 
   private static final String getPrefixedName( final QName qname ) throws IllegalArgumentException
