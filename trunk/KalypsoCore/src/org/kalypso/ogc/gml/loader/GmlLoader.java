@@ -257,20 +257,10 @@ public class GmlLoader extends WorkspaceLoader
       // ists im Workspace?
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
-      {
-        final SetContentHelper thread = new SetContentHelper()
-        {
-          @Override
-          protected void write( final OutputStreamWriter writer ) throws Throwable
-          {
-            GmlSerializer.serializeWorkspace( writer, workspace );
-          }
-        };
-
-        thread.setFileContents( file, false, true, new NullProgressMonitor() );
-      }
+        saveWorkspaceToFile( workspace, file );
       else if( file == null && gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
+        // TODO: is this really ever used?
         final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );
         GmlSerializer.serializeWorkspace( w, workspace );
       }
@@ -288,6 +278,23 @@ public class GmlLoader extends WorkspaceLoader
       e.printStackTrace();
       throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.19" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
+  }
+
+  private void saveWorkspaceToFile( final GMLWorkspace workspace, final IFile file ) throws CoreException
+  {
+    // FIXME: this is not robust enough against problems when saving (data loss possible).
+    // Possible solution: always write to temporary file (next to real file); after that rename to real file and refresh local.
+    // However we have to check if that works in a robust way.
+    final SetContentHelper thread = new SetContentHelper()
+    {
+      @Override
+      protected void write( final OutputStreamWriter writer ) throws Throwable
+      {
+        GmlSerializer.serializeWorkspace( writer, workspace );
+      }
+    };
+
+    thread.setFileContents( file, false, true, new NullProgressMonitor() );
   }
 
   /**
