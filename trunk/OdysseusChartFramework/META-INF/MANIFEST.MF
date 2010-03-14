@@ -7,7 +7,6 @@ Require-Bundle: org.eclipse.swt;visibility:=reexport,
  org.eclipse.core.runtime,
  org.kalypso.commons
 Export-Package: de.openali.odysseus.chart.framework,
- de.openali.odysseus.chart.framework.controll,
  de.openali.odysseus.chart.framework.exception,
  de.openali.odysseus.chart.framework.logging,
  de.openali.odysseus.chart.framework.logging.impl,

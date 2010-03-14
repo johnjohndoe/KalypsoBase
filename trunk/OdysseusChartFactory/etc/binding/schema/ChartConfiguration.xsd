@@ -368,7 +368,7 @@
 
 	
 
-	<complexType name="AxisNumberRangeType">
+	<complexType name="AxisNumberRangeType" >
 		<sequence>
 					<element name="MinValue" type="double"></element>
 					<element name="MaxValue" type="double"></element>

@@ -348,7 +348,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     {
       /* Create the GetMap request. */
       final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS() );
-
+// FIXME: letzten Request-String merken und in der Properties-Ansicht des WMS-Themas anzeigen
       /* Do the request and wait, until the result is there. */
       final Object result = remoteWMS.doService( request );
 

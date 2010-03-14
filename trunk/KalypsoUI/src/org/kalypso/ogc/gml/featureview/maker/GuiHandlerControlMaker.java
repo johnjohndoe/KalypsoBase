@@ -89,6 +89,8 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
     {
       return null;
     }
+    else if( vpt.isList() )
+      return null;
     else if( valueQName instanceof MixedQName )
     {
       // TODO: what to do?

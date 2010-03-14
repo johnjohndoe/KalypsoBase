@@ -522,20 +522,23 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // we could not find a definition for this feature type. So we use a global default style
       String styleType = "default"; //$NON-NLS-1$
       final IValuePropertyType defaultGeometryProperty = featureType.getDefaultGeometryProperty();
-      if( defaultGeometryProperty != null )
+      if( defaultGeometryProperty == null )
       {
-        // if we have a default geometry (which will be used by the display element)
-        // we try to use a geometrie-specific default-style
-        final String localPart = defaultGeometryProperty.getValueQName().getLocalPart().toLowerCase();
-        if( localPart.endsWith( "point" ) ) //$NON-NLS-1$
-          styleType = "point"; //$NON-NLS-1$
-        else if( localPart.endsWith( "curve" ) || localPart.endsWith( "linestring" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-          styleType = "curve"; //$NON-NLS-1$
-        else if( localPart.endsWith( "surface" ) || localPart.endsWith( "polygon" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-          styleType = "surface"; //$NON-NLS-1$
-        final String styleName = usedForSelection ? CatalogSLD.DEFAULT_STYLE_SELECTED : CatalogSLD.DEFAULT_STYLE_DEFAULT;
-        ftsURN = String.format( styleName, styleType );
+        // No registered style and the features have no geometry; we just do nothing
+        return null;
       }
+
+      // if we have a default geometry (which will be used by the display element)
+      // we try to use a geometry-specific default-style
+      final String localPart = defaultGeometryProperty.getValueQName().getLocalPart().toLowerCase();
+      if( localPart.endsWith( "point" ) ) //$NON-NLS-1$
+        styleType = "point"; //$NON-NLS-1$
+      else if( localPart.endsWith( "curve" ) || localPart.endsWith( "linestring" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        styleType = "curve"; //$NON-NLS-1$
+      else if( localPart.endsWith( "surface" ) || localPart.endsWith( "polygon" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        styleType = "surface"; //$NON-NLS-1$
+      final String styleName = usedForSelection ? CatalogSLD.DEFAULT_STYLE_SELECTED : CatalogSLD.DEFAULT_STYLE_DEFAULT;
+      ftsURN = String.format( styleName, styleType );
     }
 
     final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( "sld", ftsURN, context ); //$NON-NLS-1$

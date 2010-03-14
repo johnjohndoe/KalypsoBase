@@ -200,14 +200,6 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     return true;
   }
 
-  public double getRange( )
-  {
-    final double scale = getWidget().getIMapPanel().getCurrentScale();
-    final double range = scale / 4;
-
-    return range;
-  }
-  
   /**
    * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#leftReleased(java.awt.Point)
    */

@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
@@ -74,6 +75,17 @@ import org.xml.sax.InputSource;
  */
 public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 {
+  private boolean m_resolved = false;
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
+   */
+  @Override
+  public boolean isLoaded( )
+  {
+    return m_resolved;
+  }
+
   private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
     public void resourceChanged( final IResourceChangeEvent event )
@@ -120,6 +132,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     } );
 
     m_file = ResourceUtilities.findFileFromURL( url );
+    m_resolved = true;
     if( m_file != null )
     {
       m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
@@ -209,41 +222,48 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
           ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
+  protected IStatus loadJob( final IProgressMonitor monitor, IFile file )
+  {
+    InputStream contents = null;
+    try
+    {
+      contents = file.getContents();
+      final InputSource inputSource = new InputSource( contents );
+      final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
+      if( innerGisView.getName() != null )
+      {
+        final ITranslator translator = getMapModell().getName().getTranslator();
+        final I10nString innerName = new I10nString( innerGisView.getName(), translator );
+        CascadingKalypsoTheme.this.setName( innerName );
+      }
+
+      getInnerMapModel().createFromTemplate( innerGisView );
+      fireContextChanged();
+    }
+    catch( final Throwable e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      setStatus( status );
+      return status;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contents );
+    }
+    m_resolved = true;
+    return Status.OK_STATUS;
+  }
+
   protected void startLoadJob( )
   {
+    m_resolved = false;
     final IFile file = m_file;
     final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        InputStream contents = null;
-        try
-        {
-          contents = file.getContents();
-          final InputSource inputSource = new InputSource( contents );
-          final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-          if( innerGisView.getName() != null )
-          {
-            final ITranslator translator = getMapModell().getName().getTranslator();
-            final I10nString innerName = new I10nString( innerGisView.getName(), translator );
-            CascadingKalypsoTheme.this.setName( innerName );
-          }
-
-          getInnerMapModel().createFromTemplate( innerGisView );
-          fireContextChanged();
-        }
-        catch( final Throwable e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          setStatus( status );
-          return status;
-        }
-        finally
-        {
-          IOUtils.closeQuietly( contents );
-        }
-        return Status.OK_STATUS;
+        return loadJob( monitor, file );
       }
     };
     job.setRule( m_file );
@@ -278,8 +298,9 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
       case IResourceDelta.REMOVED:
         // TODO: release map and file
-        setStatus( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.2") + m_file.getFullPath() ) ); //$NON-NLS-1$
+        setStatus( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.2" ) + m_file.getFullPath() ) ); //$NON-NLS-1$
         break;
     }
   }
+
 }

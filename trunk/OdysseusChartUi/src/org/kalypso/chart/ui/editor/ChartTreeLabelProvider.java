@@ -83,15 +83,20 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   {
     super.dispose();
 
-    for( final Image img : m_layerImages.values() )
-    {
-      img.dispose();
-    }
-    for( final Image img : m_legendEntryImages.values() )
-    {
-      img.dispose();
-    }
+    clearImages();
+  }
+
+  private void clearImages( )
+  {
+    final Image[] layerImages =  m_layerImages.values().toArray( new Image[m_layerImages.size()] );
     m_layerImages.clear();
+    for( final Image img : layerImages )
+      img.dispose();
+
+    final Image[] legendEntryImages =  m_legendEntryImages.values().toArray( new Image[m_legendEntryImages.size()] );
+    m_legendEntryImages.clear();
+    for( final Image img : legendEntryImages )
+      img.dispose();
   }
 
   /**
@@ -123,7 +128,6 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   @Override
   public Image getImage( final Object element )
   {
-
     final Display display = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay();
 
     if( element instanceof IChartLayer )
@@ -143,7 +147,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
           return null;
 
         final Image img = new Image( display, data );
-        m_layerImages.put( layer, img );
+        addLayerImage( layer, img );
         return img;
       }
       else
@@ -192,7 +196,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         gc.drawLine( width - 5, 1, width - 5, 9 );
 
         gc.dispose();
-        m_layerImages.put( layer, img );
+        addLayerImage( layer, img );
         return img;
       }
 
@@ -202,16 +206,28 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       final ILegendEntry le = (ILegendEntry) element;
 
       if( m_legendEntryImages.containsKey( le ) )
-      {
         return m_legendEntryImages.get( le );
-      }
 
       final Image img = new Image( display, le.getSymbol( m_defaultIconSize ) );
-      m_legendEntryImages.put( le, img );
+      addLegendImage( le, img );
       return img;
     }
 
     return super.getImage( element );
+  }
+
+  private void addLegendImage( final ILegendEntry le, final Image img )
+  {
+    final Image oldImage = m_legendEntryImages.put( le, img );
+    if( oldImage != null )
+      oldImage.dispose();
+  }
+
+  private void addLayerImage( IChartLayer layer, Image img )
+  {
+    final Image oldImage = m_layerImages.put( layer, img );
+    if( oldImage != null )
+      oldImage.dispose();
   }
 
   /**
@@ -228,5 +244,16 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   public String getColumnText( final Object element, final int columnIndex )
   {
     return getText( element );
+  }
+
+  public void clearLayer( IChartLayer layer )
+  {
+    final Image layerImage =  m_layerImages.remove( layer );
+    if( layerImage != null )
+      layerImage.dispose();
+    
+    final Image legendImage =  m_legendEntryImages.remove( layer );
+    if( legendImage != null )
+      legendImage.dispose();
   }
 }

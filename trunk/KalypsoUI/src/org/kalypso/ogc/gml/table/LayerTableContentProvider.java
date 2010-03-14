@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -61,9 +62,10 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author bce
+ * @author Gernot Belger
  */
 public class LayerTableContentProvider implements IStructuredContentProvider
 {
@@ -84,6 +86,22 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     public void statusChanged( final IKalypsoTheme source )
     {
       handleStatusChanged();
+    }
+
+    // HACK: at the moment, we know this event is sent when the data has been loaded. So we refresah all in that case
+    @Override
+    public void contextChanged( IKalypsoTheme source )
+    {
+      handleStatusChanged();
+    }
+    
+    // HACK: at the moment, we know this event is sent when the data changes in any way (i.e. a feature is added). 
+    // So we refresh the table in that case.
+    // FIXME: this should be removed in the head; the layerTable should not use a theme at all....! 
+    @Override
+    public void repaintRequested(IKalypsoTheme source, GM_Envelope invalidExtent )
+    {
+      handleRepaintRequested();
     }
   };
 
@@ -197,7 +215,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     // TODO: remove only previously selected
     // collect elements as "Feature"
     final List<Feature> featureToRemove = new ArrayList<Feature>();
-    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator<?> iter = featureList.iterator(); iter.hasNext(); )
     {
       final Object element = iter.next();
       if( element instanceof Feature )
@@ -208,7 +226,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
     // add current selection
     final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
-    for( final Iterator sIt = selection.iterator(); sIt.hasNext(); )
+    for( final Iterator<?> sIt = selection.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
@@ -240,4 +258,9 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
   }
 
+  protected void handleRepaintRequested( )
+  {
+    ViewerUtilities.refresh( m_viewer, true );
+  }
+  
 }

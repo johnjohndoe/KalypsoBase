@@ -314,11 +314,13 @@ public class SelectFeatureWidget extends AbstractWidget
     final GM_Point point = MapUtilities.transform( mapPanel, p );
     try
     {
-      m_geometryBuilder.addPoint( point );
-      final GM_Object selectGeometry = m_geometryBuilder.finish();
-      doSelect( selectGeometry );
-      m_geometryBuilder.reset();
-
+      if( m_geometryBuilder instanceof PolygonGeometryBuilder )
+      {
+        m_geometryBuilder.addPoint( point );
+        final GM_Object selectGeometry = m_geometryBuilder.finish();
+        doSelect( selectGeometry );
+        m_geometryBuilder.reset();
+      }
     }
     catch( final Exception e )
     {
@@ -350,21 +352,21 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-      // "STRG": Toggle mode
+        // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-      // "ALT": switch between intersect / contains mode
+        // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-      // "SPACE": switch between polygon / rect mode
+        // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder( mapPanel );
         break;
-      // "ESC": deselection
+        // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -425,7 +427,7 @@ public class SelectFeatureWidget extends AbstractWidget
     {
       final QName[] geomQNames = findGeomQName( hoverTheme, geomQName, IKalypsoFeatureTheme.PROPERTY_HOVER_GEOMETRIES, hoverFeature );
       for( final QName qName : geomQNames )
-          MapUtils.paintGrabbedFeature( g, mapPanel, hoverFeature, qName );
+        MapUtils.paintGrabbedFeature( g, mapPanel, hoverFeature, qName );
     }
   }
 

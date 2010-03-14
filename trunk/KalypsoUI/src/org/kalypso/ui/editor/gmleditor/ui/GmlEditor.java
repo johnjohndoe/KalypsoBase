@@ -38,9 +38,10 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.actions.FeatureActionUtilities;
+import org.kalypso.ui.editor.actions.NewFeatureScope;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
@@ -210,14 +211,17 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   {
     final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
-
-    final IMenuManager newMenuManager = FeatureActionUtilities.createFeatureNewMenu( selection, selectionManager );
-    manager.add( newMenuManager );
+    
+    final CommandableWorkspace workspace = m_viewer.getWorkspace();
+    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, selection, selectionManager ); 
+      
+    if( scope != null )
+      manager.add( scope.createMenu() );
 
     // add additions seperator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
-
+  
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
