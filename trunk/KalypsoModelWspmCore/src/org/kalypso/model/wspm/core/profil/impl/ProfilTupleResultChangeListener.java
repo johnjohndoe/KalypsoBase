@@ -80,7 +80,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
      * we only need a refresh here, so fire a "null-change"
      */
     final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setProfilPropertyChanged( true );
+    hint.setPointPropertiesChanged();
     m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
 
   }
