@@ -107,14 +107,15 @@ public class LocalSimulationRunner implements ISimulationRunner
 
       job.run( tmpDir, inputProvider, resultEater, new LocalSimulationMonitor( monitor ) );
       resultEater.transferCurrentResults( new File( m_inputDir.getFile() ) );
-      
-      // TODO delete tmpDir
-// tmpDir.delete();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner.0"), e ) ); //$NON-NLS-1$
+    }
+    finally {
+      // TODO delete tmpDir
+   // tmpDir.delete();
     }
   }
 
