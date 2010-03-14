@@ -50,5 +50,5 @@ package org.kalypso.observation.result;
  */
 public interface IInterpolationHandler
 {
-  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )throws ArithmeticException;
+  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final double distance )throws ArithmeticException;
 }
