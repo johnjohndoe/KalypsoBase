@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -40,11 +41,11 @@ import org.eclipse.ui.part.DrillDownComposite;
 public class ResourceSelectionGroup extends Composite
 {
 
-  private Listener m_listener;
+  private final Listener m_listener;
 
-  private boolean m_allowNewResourceName;
+  private final boolean m_allowNewResourceName;
 
-  private boolean m_showClosedProjects;
+  private final boolean m_showClosedProjects;
 
   private static final String DEFAULT_MSG_NEW_ALLOWED = IDEWorkbenchMessages.ContainerGroup_message;
 
@@ -60,9 +61,9 @@ public class ResourceSelectionGroup extends Composite
 
   private IResource selectedResource;
 
-  private String[] m_allowedResourceExtensions;
+  private final String[] m_allowedResourceExtensions;
 
-  private IContainer m_inputContainer;
+  private final IContainer m_inputContainer;
 
   /*
    * übernommen von ContainerSelectionGroup und leicht verändert @author peiler
@@ -86,6 +87,11 @@ public class ResourceSelectionGroup extends Composite
       createContents( DEFAULT_MSG_NEW_ALLOWED, heightHint );
     else
       createContents( DEFAULT_MSG_SELECT_ONLY, heightHint );
+  }
+
+  public void addViewerFilter( ViewerFilter filter )
+  {
+    treeViewer.addFilter( filter );
   }
 
   public void resourceSelectionChanged( IResource resource )

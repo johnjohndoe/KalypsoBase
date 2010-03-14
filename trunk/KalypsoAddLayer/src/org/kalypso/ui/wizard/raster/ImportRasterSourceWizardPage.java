@@ -51,6 +51,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -97,6 +98,8 @@ public class ImportRasterSourceWizardPage extends WizardPage
   protected String styleName;
 
   boolean checkDefaultStyle = false;
+
+  protected ViewerFilter m_filter;
 
   /*
    * @author peiler
@@ -157,6 +160,9 @@ public class ImportRasterSourceWizardPage extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "gml" } ); //$NON-NLS-1$
+        if( m_filter != null )
+          dialog.setViewerFilter( m_filter );
+
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )
@@ -381,5 +387,11 @@ public class ImportRasterSourceWizardPage extends WizardPage
   public String getStyleName( )
   {
     return styleName;
+  }
+
+  public void setViewerFilter( ViewerFilter filter )
+  {
+    m_filter = filter;
+
   }
 }

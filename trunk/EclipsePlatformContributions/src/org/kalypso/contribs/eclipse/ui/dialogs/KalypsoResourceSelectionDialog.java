@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,6 +46,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   ResourceSelectionGroup group;
 
   private final IContainer m_inputContainer;
+
+  private ViewerFilter m_filter;
 
   /*
    * abgeleitet von ContainerSelectionDialog @author peiler
@@ -112,8 +115,15 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
     // container selection group
     group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects, m_allowedResourceExtensions, m_inputContainer );
+    if( m_filter != null )
+      group.addViewerFilter( m_filter );
 
     return dialogArea;
+  }
+
+  public void setViewerFilter( ViewerFilter filter )
+  {
+    m_filter = filter;
   }
 
   @Override

@@ -61,6 +61,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -117,6 +118,8 @@ public class GmlFileImportPage extends WizardPage
   private boolean m_validAllowFeature = true;
 
   private boolean m_validAllowFeatureAssociation = true;
+
+  protected ViewerFilter m_filter;
 
   public GmlFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
@@ -223,6 +226,9 @@ public class GmlFileImportPage extends WizardPage
     final IContainer container = m_selectedProject == null ? root : m_selectedProject;
 
     final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.3"), new String[] { "gml" }, container, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( m_filter != null )
+      dialog.setViewerFilter( m_filter );
+
     if( dialog.open() != Window.OK )
       return;
 
@@ -363,5 +369,11 @@ public class GmlFileImportPage extends WizardPage
   {
     m_validAllowFeature = allowFeature;
     m_validAllowFeatureAssociation = allowFeatureAssociation;
+  }
+
+  public void setViewerFilter( ViewerFilter filter )
+  {
+    m_filter = filter;
+
   }
 }

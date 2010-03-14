@@ -216,9 +216,13 @@ public abstract class DefaultContentArea implements IContentArea
     m_textPosition = textPosition;
   }
 
-  public void setMouseListener( final MouseAdapter mouseAdapter, final String tooltip )
+  public void setMouseListener( final MouseAdapter mouseAdapter )
   {
     m_mouseAdapter = mouseAdapter;
+  }
+  
+  public void setTooltip( String tooltip )
+  {
     m_tooltip = tooltip;
   }
 

@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -111,6 +112,8 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   private boolean m_wfExists;
 
   private CRSSelectionPanel m_crsPanel;
+
+  protected ViewerFilter m_filter;
 
   public ImportImageWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
@@ -234,6 +237,8 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       if( b.equals( m_browseButton ) )
       {
         final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "tiff", "tif", "jpg", "TIFF", "TIF", "JPG", "png", "PNG", } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+        if( m_filter != null )
+          dialog.setViewerFilter( m_filter );
         // "gif",
         // "GIF"} );
         dialog.open();
@@ -462,5 +467,11 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   public String getCSName( )
   {
     return m_crsPanel.getSelectedCRS();
+  }
+
+  public void setViewerFilter( ViewerFilter filter )
+  {
+    m_filter = filter;
+
   }
 }
