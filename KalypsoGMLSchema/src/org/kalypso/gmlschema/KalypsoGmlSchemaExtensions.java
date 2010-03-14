@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
 import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
+import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
 import org.kalypso.gmlschema.types.GeometrySpecificationCatalog;
 import org.kalypso.gmlschema.types.IGeometrySpecification;
@@ -80,7 +81,9 @@ public class KalypsoGmlSchemaExtensions
 
   private static final String ATTR_VIRTUALPROPERTY_VALUE = "value"; //$NON-NLS-1$
 
-  private static final String ATTR_VIRTUALPROPERTY_ISLIST = "isList"; //$NON-NLS-1$
+  private static final String ATTR_VIRTUALPROPERTY_MIN_OCCURS = "minOccurs"; //$NON-NLS-1$
+
+  private static final String ATTR_VIRTUALPROPERTY_MAX_OCCURS = "maxOccurs"; //$NON-NLS-1$
 
   private static final String ATTR_VIRTUALPROPERTY_FUNCTION = "function"; //$NON-NLS-1$
 
@@ -131,15 +134,15 @@ public class KalypsoGmlSchemaExtensions
   {
     final String qnameString = element.getAttribute( ATTR_VIRTUALPROPERTY_QNAME );
     final String valueQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
-    final String isListString = element.getAttribute( ATTR_VIRTUALPROPERTY_ISLIST );
+
+    int minOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MIN_OCCURS ), 0 );
+    int maxOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MAX_OCCURS ), 1 );
+
     final String functionId = element.getAttribute( ATTR_VIRTUALPROPERTY_FUNCTION );
 
     final QName valueQName = QName.valueOf( valueQNameString );
     final QName propertyQName = QName.valueOf( qnameString );
     final IMarshallingTypeHandler handler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
-    final boolean isList = Boolean.valueOf( isListString );
-    if( isList == true )
-      throw new UnsupportedOperationException( "isList == true not yet supported in virtualProperty extension-point" ); //$NON-NLS-1$
 
     // Read properties from child elements
     final Map<String, String> properties = new HashMap<String, String>();
@@ -152,7 +155,7 @@ public class KalypsoGmlSchemaExtensions
       properties.put( propName, propValue );
     }
 
-    return new VirtualFunctionValuePropertyType( featureType, handler, propertyQName, functionId, properties );
+    return new VirtualFunctionValuePropertyType( featureType, handler, propertyQName, functionId, minOccurs, maxOccurs, properties );
   }
 
   private synchronized static Map<QName, Collection<IConfigurationElement>> getRegisteredVirtualProperties( )

@@ -66,11 +66,9 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
 
   private final IRestriction[] m_restrictions = {};
 
-  private final int m_maxOccurs = 1;
+  private final int m_maxOccurs;
 
-  private final int m_minOccurs = 0;
-
-  private final boolean m_isList = false;
+  private final int m_minOccurs;
 
   private final boolean m_isNillable = false;
 
@@ -100,13 +98,15 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
    * @param propertyQName
    *            the q-name of the virtual property
    */
-  public VirtualFunctionValuePropertyType( final IFeatureType featureType, final IMarshallingTypeHandler handler, final QName propertyQName, final String functionId, final Map<String, String> properties ) throws IllegalArgumentException
+  public VirtualFunctionValuePropertyType( final IFeatureType featureType, final IMarshallingTypeHandler handler, final QName propertyQName, final String functionId, final int minOccurs, final int maxOccurs, final Map<String, String> properties ) throws IllegalArgumentException
   {
     Assert.isNotNull( propertyQName );
 
     m_qName = propertyQName;
     m_handler = handler;
     m_functionId = functionId;
+    m_minOccurs = minOccurs;
+    m_maxOccurs = maxOccurs;
     m_properties = properties;
     m_annotation = AnnotationUtilities.createAnnotation( propertyQName, featureType, null, null );
   }
@@ -148,7 +148,7 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
    */
   public boolean isList( )
   {
-    return m_isList;
+    return m_maxOccurs > 1;
   }
 
   /**
@@ -324,6 +324,6 @@ public class VirtualFunctionValuePropertyType implements IFunctionPropertyType, 
    */
   public IPropertyType cloneForFeatureType( final IFeatureType featureType )
   {
-    return new VirtualFunctionValuePropertyType( featureType, m_handler, m_qName, m_functionId, m_properties );
+    return new VirtualFunctionValuePropertyType( featureType, m_handler, m_qName, m_functionId, m_minOccurs, m_maxOccurs, m_properties );
   }
 }
