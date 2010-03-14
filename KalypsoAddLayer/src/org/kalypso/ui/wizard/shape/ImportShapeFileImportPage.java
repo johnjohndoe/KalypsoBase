@@ -57,6 +57,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -134,6 +135,8 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   private Label styleNameLabel;
 
   private Label styleLabel;
+
+  protected ViewerFilter m_filter;
 
   /**
    * @param pageName
@@ -335,6 +338,11 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     setPageComplete( pageComplete );
   }
 
+  public void setViewerFilter( ViewerFilter filter )
+  {
+    m_filter = filter;
+  }
+
   // SelectionListener
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -348,6 +356,9 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
       if( b.equals( m_browseButton ) )
       {
         final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } ); //$NON-NLS-1$
+        if( m_filter != null )
+          dialog.setViewerFilter( m_filter );
+
         dialog.open();
         final Object[] result = dialog.getResult();
         if( result != null )

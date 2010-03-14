@@ -478,7 +478,7 @@ public class ExcelTableCursor extends TableCursor
     if( m_viewer == null )
       return false;
 
-    Object[] columnProperties = m_viewer.getColumnProperties();
+    final Object[] columnProperties = m_viewer.getColumnProperties();
     if( columnProperties == null )
       return false;
 
@@ -601,6 +601,13 @@ public class ExcelTableCursor extends TableCursor
       System.out.println( "tableMouseDown" );
 
     if( isDisposed() || !isVisible() )
+      return;
+
+    // FIXME: check, merged from Kalypso 2.2, but war originally a change in TableCursor
+    /* Only change the selection on left clicks */
+    // This is not yet perfect, but better than loose the selection when opening the context menu (right click)
+    // However, at the moment the table moves the selection (if only one line is selected) but the cursor is not moved.
+    if( event.button != 1 )
       return;
 
     final Point pt = new Point( event.x, event.y );
