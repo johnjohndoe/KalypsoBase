@@ -42,6 +42,11 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -73,11 +78,19 @@ public class ProfilMidTarget extends AbstractPointsTarget
 
   private final void addPointInternal( final IProfil profile )
   {
-    final IRecord activePoint = profile.getActivePoint();
-    final IRecord endPoint = ProfilUtil.getPointAfter( profile, activePoint );
-    final IRecord point = ProfilUtil.splitSegment( profile, activePoint, endPoint );
-    final TupleResult result = profile.getResult();
-    result.add( result.indexOf( endPoint ), point );
+
+    final TupleResult tupleResult = profile.getResult();
+
+    final int index = tupleResult.indexOf( profile.getActivePoint() );
+
+    final IRecord row = tupleResult.createRecord();
+
+    final boolean success = tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
+
+    if( success )
+      tupleResult.add( index + 1, row );
+    else
+      tupleResult.add( row );
 
   }
 
@@ -124,7 +137,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
-    final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilMidTarget.0"), profile, changes, false ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilMidTarget.0" ), profile, changes, false ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();
   }
 }
