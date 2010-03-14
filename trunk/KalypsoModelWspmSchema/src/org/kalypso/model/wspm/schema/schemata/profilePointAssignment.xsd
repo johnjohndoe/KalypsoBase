@@ -25,35 +25,15 @@
                 <documentation> The purpose of the elements defined in this document is to provide a means to assign values to profile points via polygon-geometries. </documentation>
         </annotation>
         <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
-        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-        <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
-        <element name="AssignmentCollection" type="profass:AssignmentCollectionType" substitutionGroup="gml:_Feature">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <label>Zuordnungstabelle</label>
-                                <label>Zuordnungstabelle</label>
-                        </documentation>
-                </annotation>
-        </element>
+        <import namespace="http://www.opengis.net/gml"/>
+        <import namespace="http://www.opengis.net/swe"/>
+        <element name="AssignmentCollection" type="profass:AssignmentCollectionType" substitutionGroup="gml:_Feature"/>
         <complexType name="AssignmentCollectionType">
                 <complexContent>
                         <extension base="gml:AbstractFeatureType">
                                 <sequence>
-                                        <element name="sourceProperty" type="QName">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Quell-Attribut</label>
-                                                                <tooltip>Name des Attributs der Quell-Datei</tooltip>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="assignmentMember" type="profass:AssignmentPropertyType" minOccurs="0" maxOccurs="unbounded">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Zuordnungen</label>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
+                                        <element name="sourceProperty" type="QName"/>
+                                        <element name="assignmentMember" type="profass:AssignmentPropertyType" minOccurs="0" maxOccurs="unbounded"/>
                                 </sequence>
                         </extension>
                 </complexContent>
@@ -63,35 +43,13 @@
                         <element ref="profass:Assignment"/>
                 </sequence>
         </complexType>
-        <element name="Assignment" type="profass:AssignmentType" substitutionGroup="gml:_Feature">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <name>Zuordnung</name>
-                                <label>${property:org.kalypso.model.wspmprofile.assignment#sourceId;-keine ID gesetzt-}</label>
-                        </documentation>
-                </annotation>
-        </element>
+        <element name="Assignment" type="profass:AssignmentType" substitutionGroup="gml:_Feature"/>
         <complexType name="AssignmentType">
                 <complexContent>
                         <extension base="wspmcommon:EmptyFeatureBaseType">
                                 <sequence>
-                                        <element name="sourceId" type="string">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Quell-ID</label>
-                                                                <tooltip>ID des Quellobjects.</tooltip>
-                                                                <description>Überdeckt ein Polygon einen Profilpunkt, so wird anhand dieses Wertes die entsprechende Zuordnung gefunden.</description>
-                                                        </documentation>
-                                                        <documentation xml:lang="en"> The id of the corresponding source object this assignment is used on. </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="pointAssignmentMember" type="profass:PointAssignmentPropertyType" minOccurs="0" maxOccurs="unbounded">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Profil-Attribut</label>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
+                                        <element name="sourceId" type="string"/>
+                                        <element name="pointAssignmentMember" type="profass:PointAssignmentPropertyType" minOccurs="0" maxOccurs="unbounded"/>
                                 </sequence>
                         </extension>
                 </complexContent>
@@ -101,36 +59,13 @@
                         <element ref="profass:PointAssignment"/>
                 </sequence>
         </complexType>
-        <element name="PointAssignment" type="profass:PointAssignmentType" substitutionGroup="gml:_Feature">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <name>Profilpunkt Zuordnung</name>
-                                <label>Zuordnung: ${property:org.kalypso.model.wspmprofile.assignment#pointProperty;-keine ID gesetzt-}</label>
-                        </documentation>
-                </annotation>
-        </element>
+        <element name="PointAssignment" type="profass:PointAssignmentType" substitutionGroup="gml:_Feature"/>
         <complexType name="PointAssignmentType">
                 <complexContent>
                         <extension base="wspmcommon:EmptyFeatureBaseType">
                                 <sequence>
-                                        <element name="pointProperty" type="profass:PointPropertyPropertyType" minOccurs="1" maxOccurs="1">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>ID</label>
-                                                                <tooltip>ID eines Profildatensatzes</tooltip>
-                                                                <description>Werte dieser Spalte im Profil werden verändert.</description>
-                                                        </documentation>
-                                                        <documentation xml:lang="en"> The id of the profile point property object this assignment is used on. </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="value" type="double">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Wert</label>
-                                                                <tooltip>Zugeordneter Wert</tooltip>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
+                                        <element name="pointProperty" type="profass:PointPropertyPropertyType" minOccurs="1" maxOccurs="1"/>
+                                        <element name="value" type="double"/>
                                 </sequence>
                         </extension>
                 </complexContent>
@@ -142,13 +77,7 @@
                         </appinfo>
                 </annotation>
                 <sequence minOccurs="0" maxOccurs="0">
-                        <element ref="swe:ItemDefinition">
-                                <annotation>
-                                        <documentation xml:lang="de">
-                                                <label>${listProperty:http://www.opengis.net/gml#name;0}</label>
-                                        </documentation>
-                                </annotation>
-                        </element>
+                        <element ref="swe:ItemDefinition"/>
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup"/>
         </complexType>
