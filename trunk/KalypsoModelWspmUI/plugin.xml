@@ -497,7 +497,7 @@
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
   <command
         id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-        name="LengthSectionExport">
+        name="Create Length-Section">
   </command>
   <command
         description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
@@ -616,17 +616,17 @@
              id="org.kalypso.model.wspm.ui.profileExport"
              label="Export"
              mnemonic="e">
-          <separator
-                name="additions"
-                visible="false">
-          </separator>
           <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
+                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
                 style="push">
              <visibleWhen
                    checkEnabled="true">
              </visibleWhen>
           </command>
+          <separator
+                name="additions"
+                visible="false">
+          </separator>
        </menu>
        <menu
              icon="icons/etool16/profileChange.gif"
@@ -655,14 +655,14 @@
              </visibleWhen>
           </command>
           <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.openInPlotter"
+                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
                 style="push">
              <visibleWhen
                    checkEnabled="true">
              </visibleWhen>
           </command>
           <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.simplify"
+                commandId="org.kalypso.model.wspm.ui.command.profile.LengthSectionExport"
                 style="push">
              <visibleWhen
                    checkEnabled="true">
